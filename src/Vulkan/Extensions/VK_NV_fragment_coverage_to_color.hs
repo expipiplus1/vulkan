@@ -71,7 +71,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage
 --
--- -   If @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+-- -   #VUID-VkPipelineCoverageToColorStateCreateInfoNV-coverageToColorEnable-01404#
+--     If @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     then the render pass subpass indicated by
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
 --     and 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@subpass@
@@ -87,10 +88,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineCoverageToColorStateCreateInfoNV-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV'
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkPipelineCoverageToColorStateCreateInfoNV-flags-zerobitmask#
+--     @flags@ /must/ be @0@
 --
 -- = See Also
 --

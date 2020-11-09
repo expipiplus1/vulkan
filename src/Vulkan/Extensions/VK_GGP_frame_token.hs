@@ -29,15 +29,21 @@ import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP))
 -- | VkPresentFrameTokenGGP - The Google Games Platform frame token
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkPresentFrameTokenGGP-frameToken-02680# @frameToken@ /must/
+--     be a valid 'GgpFrameToken'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPresentFrameTokenGGP-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PresentFrameTokenGGP = PresentFrameTokenGGP
   { -- | @frameToken@ is the Google Games Platform frame token.
-    --
-    -- @frameToken@ /must/ be a valid 'GgpFrameToken'
     frameToken :: GgpFrameToken }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

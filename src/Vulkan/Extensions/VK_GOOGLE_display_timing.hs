@@ -79,17 +79,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetRefreshCycleDurationGOOGLE-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @swapchain@ /must/ be a valid
+-- -   #VUID-vkGetRefreshCycleDurationGOOGLE-swapchain-parameter#
+--     @swapchain@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   @pDisplayTimingProperties@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetRefreshCycleDurationGOOGLE-pDisplayTimingProperties-parameter#
+--     @pDisplayTimingProperties@ /must/ be a valid pointer to a
 --     'RefreshCycleDurationGOOGLE' structure
 --
--- -   Both of @device@, and @swapchain@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetRefreshCycleDurationGOOGLE-commonparent# Both of
+--     @device@, and @swapchain@ /must/ have been created, allocated, or
+--     retrieved from the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -161,22 +164,26 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetPastPresentationTimingGOOGLE-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @swapchain@ /must/ be a valid
+-- -   #VUID-vkGetPastPresentationTimingGOOGLE-swapchain-parameter#
+--     @swapchain@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   @pPresentationTimingCount@ /must/ be a valid pointer to a @uint32_t@
+-- -   #VUID-vkGetPastPresentationTimingGOOGLE-pPresentationTimingCount-parameter#
+--     @pPresentationTimingCount@ /must/ be a valid pointer to a @uint32_t@
 --     value
 --
--- -   If the value referenced by @pPresentationTimingCount@ is not @0@,
+-- -   #VUID-vkGetPastPresentationTimingGOOGLE-pPresentationTimings-parameter#
+--     If the value referenced by @pPresentationTimingCount@ is not @0@,
 --     and @pPresentationTimings@ is not @NULL@, @pPresentationTimings@
 --     /must/ be a valid pointer to an array of @pPresentationTimingCount@
 --     'PastPresentationTimingGOOGLE' structures
 --
--- -   Both of @device@, and @swapchain@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetPastPresentationTimingGOOGLE-commonparent# Both of
+--     @device@, and @swapchain@ /must/ have been created, allocated, or
+--     retrieved from the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -386,7 +393,8 @@ instance Zero PastPresentationTimingGOOGLE where
 --
 -- == Valid Usage
 --
--- -   @swapchainCount@ /must/ be the same value as
+-- -   #VUID-VkPresentTimesInfoGOOGLE-swapchainCount-01247#
+--     @swapchainCount@ /must/ be the same value as
 --     'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'::@swapchainCount@,
 --     where 'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR' is
 --     included in the @pNext@ chain of this 'PresentTimesInfoGOOGLE'
@@ -394,13 +402,15 @@ instance Zero PastPresentationTimingGOOGLE where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPresentTimesInfoGOOGLE-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE'
 --
--- -   If @pTimes@ is not @NULL@, @pTimes@ /must/ be a valid pointer to an
---     array of @swapchainCount@ 'PresentTimeGOOGLE' structures
+-- -   #VUID-VkPresentTimesInfoGOOGLE-pTimes-parameter# If @pTimes@ is not
+--     @NULL@, @pTimes@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ 'PresentTimeGOOGLE' structures
 --
--- -   @swapchainCount@ /must/ be greater than @0@
+-- -   #VUID-VkPresentTimesInfoGOOGLE-swapchainCount-arraylength#
+--     @swapchainCount@ /must/ be greater than @0@
 --
 -- = See Also
 --

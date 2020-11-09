@@ -38,6 +38,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-robustImageAccess# @robustImageAccess@ indicates whether
+--     image accesses are tightly bounds-checked against the dimensions of
+--     the image view.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-input-validation Invalid texels>
+--     resulting from out of bounds image loads will be replaced as
+--     described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-texel-replacement Texel Replacement>,
+--     with either (0,0,1) or (0,0,0) values inserted for missing G, B, or
+--     A components based on the format.
+--
 -- If the 'PhysicalDeviceImageRobustnessFeaturesEXT' structure is included
 -- in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -45,19 +55,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceImageRobustnessFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceImageRobustnessFeaturesEXT = PhysicalDeviceImageRobustnessFeaturesEXT
-  { -- | @robustImageAccess@ indicates whether image accesses are tightly
-    -- bounds-checked against the dimensions of the image view.
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-input-validation Invalid texels>
-    -- resulting from out of bounds image loads will be replaced as described
-    -- in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-texel-replacement Texel Replacement>,
-    -- with either (0,0,1) or (0,0,0) values inserted for missing G, B, or A
-    -- components based on the format.
+  { -- No documentation found for Nested "VkPhysicalDeviceImageRobustnessFeaturesEXT" "robustImageAccess"
     robustImageAccess :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

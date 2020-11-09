@@ -31,6 +31,20 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- | VkPhysicalDeviceShaderClockFeaturesKHR - Structure describing features
 -- supported by VK_KHR_shader_clock
 --
+-- = Members
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #features-shaderSubgroupClock# @shaderSubgroupClock@ indicates
+--     whether shaders /can/ perform @Subgroup@ scoped clock reads.
+--
+-- -   #features-shaderDeviceClock# @shaderDeviceClock@ indicates whether
+--     shaders /can/ perform 'Vulkan.Core10.Handles.Device' scoped clock
+--     reads.
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderClockFeaturesKHR' structure is included in
@@ -43,16 +57,18 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceShaderClockFeaturesKHR-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CLOCK_FEATURES_KHR'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderClockFeaturesKHR = PhysicalDeviceShaderClockFeaturesKHR
-  { -- | @shaderSubgroupClock@ indicates whether shaders /can/ perform @Subgroup@
-    -- scoped clock reads.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderClockFeaturesKHR" "shaderSubgroupClock"
     shaderSubgroupClock :: Bool
-  , -- | @shaderDeviceClock@ indicates whether shaders /can/ perform
-    -- 'Vulkan.Core10.Handles.Device' scoped clock reads.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderClockFeaturesKHR" "shaderDeviceClock"
     shaderDeviceClock :: Bool
   }
   deriving (Typeable, Eq)

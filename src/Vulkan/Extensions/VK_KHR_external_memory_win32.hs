@@ -95,6 +95,19 @@ foreign import ccall
 -- If the original object owning the payload is destroyed, all resources
 -- and handles sharing that payload will become invalid.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetMemoryWin32HandleKHR-device-parameter# @device@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetMemoryWin32HandleKHR-pGetWin32HandleInfo-parameter#
+--     @pGetWin32HandleInfo@ /must/ be a valid pointer to a valid
+--     'MemoryGetWin32HandleInfoKHR' structure
+--
+-- -   #VUID-vkGetMemoryWin32HandleKHR-pHandle-parameter# @pHandle@ /must/
+--     be a valid pointer to a
+--     'Vulkan.Extensions.VK_NV_external_memory_win32.HANDLE' value
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -114,14 +127,9 @@ getMemoryWin32HandleKHR :: forall io
                          . (MonadIO io)
                         => -- | @device@ is the logical device that created the device memory being
                            -- exported.
-                           --
-                           -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                            Device
                         -> -- | @pGetWin32HandleInfo@ is a pointer to a 'MemoryGetWin32HandleInfoKHR'
                            -- structure containing parameters of the export operation.
-                           --
-                           -- @pGetWin32HandleInfo@ /must/ be a valid pointer to a valid
-                           -- 'MemoryGetWin32HandleInfoKHR' structure
                            MemoryGetWin32HandleInfoKHR
                         -> io (HANDLE)
 getMemoryWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
@@ -147,6 +155,29 @@ foreign import ccall
 -- | vkGetMemoryWin32HandlePropertiesKHR - Get Properties of External Memory
 -- Win32 Handles
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetMemoryWin32HandlePropertiesKHR-handle-00665# @handle@
+--     /must/ be an external memory handle created outside of the Vulkan
+--     API
+--
+-- -   #VUID-vkGetMemoryWin32HandlePropertiesKHR-handleType-00666#
+--     @handleType@ /must/ not be one of the handle types defined as opaque
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetMemoryWin32HandlePropertiesKHR-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetMemoryWin32HandlePropertiesKHR-handleType-parameter#
+--     @handleType@ /must/ be a valid
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+--     value
+--
+-- -   #VUID-vkGetMemoryWin32HandlePropertiesKHR-pMemoryWin32HandleProperties-parameter#
+--     @pMemoryWin32HandleProperties@ /must/ be a valid pointer to a
+--     'MemoryWin32HandlePropertiesKHR' structure
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -167,21 +198,10 @@ foreign import ccall
 getMemoryWin32HandlePropertiesKHR :: forall io
                                    . (MonadIO io)
                                   => -- | @device@ is the logical device that will be importing @handle@.
-                                     --
-                                     -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                      Device
                                   -> -- | @handleType@ is the type of the handle @handle@.
-                                     --
-                                     -- @handleType@ /must/ not be one of the handle types defined as opaque
-                                     --
-                                     -- @handleType@ /must/ be a valid
-                                     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-                                     -- value
                                      ExternalMemoryHandleTypeFlagBits
                                   -> -- | @handle@ is the handle which will be imported.
-                                     --
-                                     -- @handle@ /must/ be an external memory handle created outside of the
-                                     -- Vulkan API
                                      HANDLE
                                   -> io (MemoryWin32HandlePropertiesKHR)
 getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT $ do
@@ -222,20 +242,23 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
 --
 -- == Valid Usage
 --
--- -   If @handleType@ is not @0@, it /must/ be supported for import, as
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handleType-00658# If
+--     @handleType@ is not @0@, it /must/ be supported for import, as
 --     reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
--- -   The memory from which @handle@ was exported, or the memory named by
---     @name@ /must/ have been created on the same underlying physical
---     device as @device@
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handle-00659# The memory from
+--     which @handle@ was exported, or the memory named by @name@ /must/
+--     have been created on the same underlying physical device as @device@
 --
--- -   If @handleType@ is not @0@, it /must/ be defined as an NT handle or
---     a global share handle
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handleType-00660# If
+--     @handleType@ is not @0@, it /must/ be defined as an NT handle or a
+--     global share handle
 --
--- -   If @handleType@ is not
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handleType-01439# If
+--     @handleType@ is not
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
@@ -243,28 +266,34 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
 --     @name@ /must/ be @NULL@
 --
--- -   If @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/
---     name a valid memory resource of the type specified by @handleType@
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handleType-01440# If
+--     @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/ name a
+--     valid memory resource of the type specified by @handleType@
 --
--- -   If @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be
---     a valid handle of the type specified by @handleType@
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handleType-00661# If
+--     @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be a
+--     valid handle of the type specified by @handleType@
 --
--- -   if @handle@ is not @NULL@, @name@ /must/ be @NULL@
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handle-01441# if @handle@ is
+--     not @NULL@, @name@ /must/ be @NULL@
 --
--- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
---     for @handleType@ in
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handle-01518# If @handle@ is
+--     not @NULL@, it /must/ obey any requirements listed for @handleType@
+--     in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
--- -   If @name@ is not @NULL@, it /must/ obey any requirements listed for
---     @handleType@ in
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-name-01519# If @name@ is not
+--     @NULL@, it /must/ obey any requirements listed for @handleType@ in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR'
 --
--- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handleType-parameter# If
+--     @handleType@ is not @0@, @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     value
 --
@@ -367,7 +396,7 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --
 -- == Valid Usage
 --
--- -   If
+-- -   #VUID-VkExportMemoryWin32HandleInfoKHR-handleTypes-00657# If
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
 --     does not include
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
@@ -380,11 +409,13 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkExportMemoryWin32HandleInfoKHR-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR'
 --
--- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-VkExportMemoryWin32HandleInfoKHR-pAttributes-parameter# If
+--     @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid pointer
+--     to a valid
 --     'Vulkan.Extensions.VK_NV_external_memory_win32.SECURITY_ATTRIBUTES'
 --     value
 --
@@ -453,6 +484,13 @@ instance Zero ExportMemoryWin32HandleInfoKHR where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkMemoryWin32HandlePropertiesKHR-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR'
+--
+-- -   #VUID-VkMemoryWin32HandlePropertiesKHR-pNext-pNext# @pNext@ /must/
+--     be @NULL@
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -512,28 +550,32 @@ instance Zero MemoryWin32HandlePropertiesKHR where
 --
 -- == Valid Usage
 --
--- -   @handleType@ /must/ have been included in
+-- -   #VUID-VkMemoryGetWin32HandleInfoKHR-handleType-00662# @handleType@
+--     /must/ have been included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
 --     when @memory@ was created
 --
--- -   If @handleType@ is defined as an NT handle,
---     'getMemoryWin32HandleKHR' /must/ be called no more than once for
---     each valid unique combination of @memory@ and @handleType@
+-- -   #VUID-VkMemoryGetWin32HandleInfoKHR-handleType-00663# If
+--     @handleType@ is defined as an NT handle, 'getMemoryWin32HandleKHR'
+--     /must/ be called no more than once for each valid unique combination
+--     of @memory@ and @handleType@
 --
--- -   @handleType@ /must/ be defined as an NT handle or a global share
---     handle
+-- -   #VUID-VkMemoryGetWin32HandleInfoKHR-handleType-00664# @handleType@
+--     /must/ be defined as an NT handle or a global share handle
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkMemoryGetWin32HandleInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkMemoryGetWin32HandleInfoKHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
---     handle
+-- -   #VUID-VkMemoryGetWin32HandleInfoKHR-memory-parameter# @memory@
+--     /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   @handleType@ /must/ be a valid
+-- -   #VUID-VkMemoryGetWin32HandleInfoKHR-handleType-parameter#
+--     @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     value
 --

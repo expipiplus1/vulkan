@@ -38,6 +38,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-indexTypeUint8# @indexTypeUint8@ indicates that
+--     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT' can be used
+--     with 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.
+--
 -- If the 'PhysicalDeviceIndexTypeUint8FeaturesEXT' structure is included
 -- in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -48,14 +52,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceIndexTypeUint8FeaturesEXT-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceIndexTypeUint8FeaturesEXT = PhysicalDeviceIndexTypeUint8FeaturesEXT
-  { -- | @indexTypeUint8@ indicates that
-    -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT' can be used with
-    -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.
+  { -- No documentation found for Nested "VkPhysicalDeviceIndexTypeUint8FeaturesEXT" "indexTypeUint8"
     indexTypeUint8 :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

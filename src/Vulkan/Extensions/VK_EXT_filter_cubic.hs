@@ -49,6 +49,14 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT = FORMAT_FEATURE_SAMPL
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceImageViewImageFormatInfoEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT'
+--
+-- -   #VUID-VkPhysicalDeviceImageViewImageFormatInfoEXT-imageViewType-parameter#
+--     @imageViewType@ /must/ be a valid
+--     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' value
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.ImageViewType.ImageViewType',
@@ -56,9 +64,6 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT = FORMAT_FEATURE_SAMPL
 data PhysicalDeviceImageViewImageFormatInfoEXT = PhysicalDeviceImageViewImageFormatInfoEXT
   { -- | @imageViewType@ is a 'Vulkan.Core10.Enums.ImageViewType.ImageViewType'
     -- value specifying the type of the image view.
-    --
-    -- @imageViewType@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.ImageViewType.ImageViewType' value
     imageViewType :: ImageViewType }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -103,12 +108,14 @@ instance Zero PhysicalDeviceImageViewImageFormatInfoEXT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkFilterCubicImageViewImageFormatPropertiesEXT-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT'
 --
 -- == Valid Usage
 --
--- -   If the @pNext@ chain of the
+-- -   #VUID-VkFilterCubicImageViewImageFormatPropertiesEXT-pNext-02627# If
+--     the @pNext@ chain of the
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2'
 --     structure includes a 'FilterCubicImageViewImageFormatPropertiesEXT'
 --     structure, the @pNext@ chain of the

@@ -36,6 +36,20 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #extension-features-subgroup-extended-types#
+--     @shaderSubgroupExtendedTypes@ is a boolean that specifies whether
+--     subgroup operations can use 8-bit integer, 16-bit integer, 64-bit
+--     integer, 16-bit floating-point, and vectors of these types in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
+--     with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>if
+--     the implementation supports the types.
+--
 -- If the 'PhysicalDeviceShaderSubgroupExtendedTypesFeatures' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -46,18 +60,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderSubgroupExtendedTypesFeatures = PhysicalDeviceShaderSubgroupExtendedTypesFeatures
-  { -- | @shaderSubgroupExtendedTypes@ is a boolean that specifies whether
-    -- subgroup operations can use 8-bit integer, 16-bit integer, 64-bit
-    -- integer, 16-bit floating-point, and vectors of these types in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
-    -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>if
-    -- the implementation supports the types.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures" "shaderSubgroupExtendedTypes"
     shaderSubgroupExtendedTypes :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

@@ -100,12 +100,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkEnumeratePhysicalDeviceGroups-instance-parameter# @instance@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pPhysicalDeviceGroupCount@ /must/ be a valid pointer to a
+-- -   #VUID-vkEnumeratePhysicalDeviceGroups-pPhysicalDeviceGroupCount-parameter#
+--     @pPhysicalDeviceGroupCount@ /must/ be a valid pointer to a
 --     @uint32_t@ value
 --
--- -   If the value referenced by @pPhysicalDeviceGroupCount@ is not @0@,
+-- -   #VUID-vkEnumeratePhysicalDeviceGroups-pPhysicalDeviceGroupProperties-parameter#
+--     If the value referenced by @pPhysicalDeviceGroupCount@ is not @0@,
 --     and @pPhysicalDeviceGroupProperties@ is not @NULL@,
 --     @pPhysicalDeviceGroupProperties@ /must/ be a valid pointer to an
 --     array of @pPhysicalDeviceGroupCount@ 'PhysicalDeviceGroupProperties'
@@ -159,6 +162,12 @@ enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
 -- group properties
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceGroupProperties-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES'
+--
+-- -   #VUID-VkPhysicalDeviceGroupProperties-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
 -- = See Also
 --
@@ -258,21 +267,25 @@ instance Zero PhysicalDeviceGroupProperties where
 --
 -- == Valid Usage
 --
--- -   Each element of @pPhysicalDevices@ /must/ be unique
+-- -   #VUID-VkDeviceGroupDeviceCreateInfo-pPhysicalDevices-00375# Each
+--     element of @pPhysicalDevices@ /must/ be unique
 --
--- -   All elements of @pPhysicalDevices@ /must/ be in the same device
---     group as enumerated by 'enumeratePhysicalDeviceGroups'
+-- -   #VUID-VkDeviceGroupDeviceCreateInfo-pPhysicalDevices-00376# All
+--     elements of @pPhysicalDevices@ /must/ be in the same device group as
+--     enumerated by 'enumeratePhysicalDeviceGroups'
 --
--- -   If @physicalDeviceCount@ is not @0@, the @physicalDevice@ parameter
---     of 'Vulkan.Core10.Device.createDevice' /must/ be an element of
+-- -   #VUID-VkDeviceGroupDeviceCreateInfo-physicalDeviceCount-00377# If
+--     @physicalDeviceCount@ is not @0@, the @physicalDevice@ parameter of
+--     'Vulkan.Core10.Device.createDevice' /must/ be an element of
 --     @pPhysicalDevices@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDeviceGroupDeviceCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO'
 --
--- -   If @physicalDeviceCount@ is not @0@, @pPhysicalDevices@ /must/ be a
+-- -   #VUID-VkDeviceGroupDeviceCreateInfo-pPhysicalDevices-parameter# If
+--     @physicalDeviceCount@ is not @0@, @pPhysicalDevices@ /must/ be a
 --     valid pointer to an array of @physicalDeviceCount@ valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handles
 --

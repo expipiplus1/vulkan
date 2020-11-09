@@ -55,7 +55,24 @@ import Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(..
 -- | VkInputAttachmentAspectReference - Structure specifying a subpass\/input
 -- attachment pair and an aspect mask that /can/ be read.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkInputAttachmentAspectReference-aspectMask-01964#
+--     @aspectMask@ /must/ not include
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_METADATA_BIT'
+--
+-- -   #VUID-VkInputAttachmentAspectReference-aspectMask-02250#
+--     @aspectMask@ /must/ not include
+--     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkInputAttachmentAspectReference-aspectMask-parameter#
+--     @aspectMask@ /must/ be a valid combination of
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' values
+--
+-- -   #VUID-VkInputAttachmentAspectReference-aspectMask-requiredbitmask#
+--     @aspectMask@ /must/ not be @0@
 --
 -- = See Also
 --
@@ -70,17 +87,6 @@ data InputAttachmentAspectReference = InputAttachmentAspectReference
     inputAttachmentIndex :: Word32
   , -- | @aspectMask@ is a mask of which aspect(s) /can/ be accessed within the
     -- specified subpass.
-    --
-    -- @aspectMask@ /must/ not include
-    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_METADATA_BIT'
-    --
-    -- @aspectMask@ /must/ not include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@
-    -- for any index @i@
-    --
-    -- @aspectMask@ /must/ be a valid combination of
-    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' values
-    --
-    -- @aspectMask@ /must/ not be @0@
     aspectMask :: ImageAspectFlags
   }
   deriving (Typeable, Eq)
@@ -137,6 +143,18 @@ instance Zero InputAttachmentAspectReference where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkRenderPassInputAttachmentAspectCreateInfo-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO'
+--
+-- -   #VUID-VkRenderPassInputAttachmentAspectCreateInfo-pAspectReferences-parameter#
+--     @pAspectReferences@ /must/ be a valid pointer to an array of
+--     @aspectReferenceCount@ valid 'InputAttachmentAspectReference'
+--     structures
+--
+-- -   #VUID-VkRenderPassInputAttachmentAspectCreateInfo-aspectReferenceCount-arraylength#
+--     @aspectReferenceCount@ /must/ be greater than @0@
+--
 -- = See Also
 --
 -- 'InputAttachmentAspectReference',
@@ -146,9 +164,6 @@ data RenderPassInputAttachmentAspectCreateInfo = RenderPassInputAttachmentAspect
     -- 'InputAttachmentAspectReference' structures containing a mask describing
     -- which aspect(s) /can/ be accessed for a given input attachment within a
     -- given subpass.
-    --
-    -- @pAspectReferences@ /must/ be a valid pointer to an array of
-    -- @aspectReferenceCount@ valid 'InputAttachmentAspectReference' structures
     aspectReferences :: Vector InputAttachmentAspectReference }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -199,6 +214,16 @@ instance Zero RenderPassInputAttachmentAspectCreateInfo where
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #extension-limits-pointClipping# @pointClippingBehavior@ is a
+--     'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior'
+--     value specifying the point clipping behavior supported by the
+--     implementation.
+--
 -- If the 'PhysicalDevicePointClippingProperties' structure is included in
 -- the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -206,14 +231,16 @@ instance Zero RenderPassInputAttachmentAspectCreateInfo where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDevicePointClippingProperties-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePointClippingProperties = PhysicalDevicePointClippingProperties
-  { -- | @pointClippingBehavior@ is a
-    -- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior' value
-    -- specifying the point clipping behavior supported by the implementation.
+  { -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "pointClippingBehavior"
     pointClippingBehavior :: PointClippingBehavior }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -265,6 +292,16 @@ instance Zero PhysicalDevicePointClippingProperties where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkImageViewUsageCreateInfo-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO'
+--
+-- -   #VUID-VkImageViewUsageCreateInfo-usage-parameter# @usage@ /must/ be
+--     a valid combination of
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
+--
+-- -   #VUID-VkImageViewUsageCreateInfo-usage-requiredbitmask# @usage@
+--     /must/ not be @0@
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
@@ -273,11 +310,6 @@ data ImageViewUsageCreateInfo = ImageViewUsageCreateInfo
   { -- | @usage@ is a bitmask describing the allowed usages of the image view.
     -- See 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' for a
     -- description of the supported bits.
-    --
-    -- @usage@ /must/ be a valid combination of
-    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
-    --
-    -- @usage@ /must/ not be @0@
     usage :: ImageUsageFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -331,6 +363,15 @@ instance Zero ImageViewUsageCreateInfo where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPipelineTessellationDomainOriginStateCreateInfo-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO'
+--
+-- -   #VUID-VkPipelineTessellationDomainOriginStateCreateInfo-domainOrigin-parameter#
+--     @domainOrigin@ /must/ be a valid
+--     'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
+--     value
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -339,10 +380,6 @@ data PipelineTessellationDomainOriginStateCreateInfo = PipelineTessellationDomai
   { -- | @domainOrigin@ is a
     -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
     -- value controlling the origin of the tessellation domain space.
-    --
-    -- @domainOrigin@ /must/ be a valid
-    -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
-    -- value
     domainOrigin :: TessellationDomainOrigin }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

@@ -42,6 +42,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-texelBufferAlignment# @texelBufferAlignment@ indicates
+--     whether the implementation uses more specific alignment requirements
+--     advertised in 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT'
+--     rather than
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@.
+--
 -- If the 'PhysicalDeviceTexelBufferAlignmentFeaturesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -52,15 +58,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTexelBufferAlignmentFeaturesEXT = PhysicalDeviceTexelBufferAlignmentFeaturesEXT
-  { -- | @texelBufferAlignment@ indicates whether the implementation uses more
-    -- specific alignment requirements advertised in
-    -- 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT' rather than
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@.
+  { -- No documentation found for Nested "VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT" "texelBufferAlignment"
     texelBufferAlignment :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -110,6 +117,29 @@ instance Zero PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #limits-storageTexelBufferOffsetAlignmentBytes#
+--     @storageTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
+--     sufficient for a storage texel buffer of any format.
+--
+-- -   #limits-storageTexelBufferOffsetSingleTexelAlignment#
+--     @storageTexelBufferOffsetSingleTexelAlignment@ indicates whether
+--     single texel alignment is sufficient for a storage texel buffer of
+--     any format.
+--
+-- -   #limits-uniformTexelBufferOffsetAlignmentBytes#
+--     @uniformTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
+--     sufficient for a uniform texel buffer of any format.
+--
+-- -   #limits-uniformTexelBufferOffsetSingleTexelAlignment#
+--     @uniformTexelBufferOffsetSingleTexelAlignment@ indicates whether
+--     single texel alignment is sufficient for a uniform texel buffer of
+--     any format.
+--
 -- If the 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -134,23 +164,23 @@ instance Zero PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTexelBufferAlignmentPropertiesEXT = PhysicalDeviceTexelBufferAlignmentPropertiesEXT
-  { -- | @storageTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
-    -- sufficient for a storage texel buffer of any format.
+  { -- No documentation found for Nested "VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT" "storageTexelBufferOffsetAlignmentBytes"
     storageTexelBufferOffsetAlignmentBytes :: DeviceSize
-  , -- | @storageTexelBufferOffsetSingleTexelAlignment@ indicates whether single
-    -- texel alignment is sufficient for a storage texel buffer of any format.
+  , -- No documentation found for Nested "VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT" "storageTexelBufferOffsetSingleTexelAlignment"
     storageTexelBufferOffsetSingleTexelAlignment :: Bool
-  , -- | @uniformTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
-    -- sufficient for a uniform texel buffer of any format.
+  , -- No documentation found for Nested "VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT" "uniformTexelBufferOffsetAlignmentBytes"
     uniformTexelBufferOffsetAlignmentBytes :: DeviceSize
-  , -- | @uniformTexelBufferOffsetSingleTexelAlignment@ indicates whether single
-    -- texel alignment is sufficient for a uniform texel buffer of any format.
+  , -- No documentation found for Nested "VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT" "uniformTexelBufferOffsetSingleTexelAlignment"
     uniformTexelBufferOffsetSingleTexelAlignment :: Bool
   }
   deriving (Typeable, Eq)

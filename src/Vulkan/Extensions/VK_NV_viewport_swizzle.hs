@@ -66,6 +66,18 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkViewportSwizzleNV-x-parameter# @x@ /must/ be a valid
+--     'ViewportCoordinateSwizzleNV' value
+--
+-- -   #VUID-VkViewportSwizzleNV-y-parameter# @y@ /must/ be a valid
+--     'ViewportCoordinateSwizzleNV' value
+--
+-- -   #VUID-VkViewportSwizzleNV-z-parameter# @z@ /must/ be a valid
+--     'ViewportCoordinateSwizzleNV' value
+--
+-- -   #VUID-VkViewportSwizzleNV-w-parameter# @w@ /must/ be a valid
+--     'ViewportCoordinateSwizzleNV' value
+--
 -- = See Also
 --
 -- 'PipelineViewportSwizzleStateCreateInfoNV',
@@ -73,23 +85,15 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 data ViewportSwizzleNV = ViewportSwizzleNV
   { -- | @x@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
     -- operation to apply to the x component of the primitive
-    --
-    -- @x@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
     x :: ViewportCoordinateSwizzleNV
   , -- | @y@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
     -- operation to apply to the y component of the primitive
-    --
-    -- @y@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
     y :: ViewportCoordinateSwizzleNV
   , -- | @z@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
     -- operation to apply to the z component of the primitive
-    --
-    -- @z@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
     z :: ViewportCoordinateSwizzleNV
   , -- | @w@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
     -- operation to apply to the w component of the primitive
-    --
-    -- @w@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
     w :: ViewportCoordinateSwizzleNV
   }
   deriving (Typeable, Eq)
@@ -141,7 +145,28 @@ instance Zero ViewportSwizzleNV where
 -- | VkPipelineViewportSwizzleStateCreateInfoNV - Structure specifying
 -- swizzle applied to primitive clip coordinates
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkPipelineViewportSwizzleStateCreateInfoNV-viewportCount-01215#
+--     @viewportCount@ /must/ be greater than or equal to the
+--     @viewportCount@ set in
+--     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPipelineViewportSwizzleStateCreateInfoNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV'
+--
+-- -   #VUID-VkPipelineViewportSwizzleStateCreateInfoNV-flags-zerobitmask#
+--     @flags@ /must/ be @0@
+--
+-- -   #VUID-VkPipelineViewportSwizzleStateCreateInfoNV-pViewportSwizzles-parameter#
+--     @pViewportSwizzles@ /must/ be a valid pointer to an array of
+--     @viewportCount@ valid 'ViewportSwizzleNV' structures
+--
+-- -   #VUID-VkPipelineViewportSwizzleStateCreateInfoNV-viewportCount-arraylength#
+--     @viewportCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -149,14 +174,9 @@ instance Zero ViewportSwizzleNV where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'ViewportSwizzleNV'
 data PipelineViewportSwizzleStateCreateInfoNV = PipelineViewportSwizzleStateCreateInfoNV
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: PipelineViewportSwizzleStateCreateFlagsNV
   , -- | @pViewportSwizzles@ is a pointer to an array of 'ViewportSwizzleNV'
     -- structures, defining the viewport swizzles.
-    --
-    -- @pViewportSwizzles@ /must/ be a valid pointer to an array of
-    -- @viewportCount@ valid 'ViewportSwizzleNV' structures
     viewportSwizzles :: Vector ViewportSwizzleNV
   }
   deriving (Typeable)

@@ -97,6 +97,17 @@ foreign import ccall
 -- in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence State>.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetFenceFdKHR-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetFenceFdKHR-pGetFdInfo-parameter# @pGetFdInfo@ /must/ be a
+--     valid pointer to a valid 'FenceGetFdInfoKHR' structure
+--
+-- -   #VUID-vkGetFenceFdKHR-pFd-parameter# @pFd@ /must/ be a valid pointer
+--     to an @int@ value
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -115,14 +126,9 @@ foreign import ccall
 getFenceFdKHR :: forall io
                . (MonadIO io)
               => -- | @device@ is the logical device that created the fence being exported.
-                 --
-                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                  Device
               -> -- | @pGetFdInfo@ is a pointer to a 'FenceGetFdInfoKHR' structure containing
                  -- parameters of the export operation.
-                 --
-                 -- @pGetFdInfo@ /must/ be a valid pointer to a valid 'FenceGetFdInfoKHR'
-                 -- structure
                  FenceGetFdInfoKHR
               -> io (("fd" ::: Int32))
 getFenceFdKHR device getFdInfo = liftIO . evalContT $ do
@@ -158,6 +164,21 @@ foreign import ccall
 -- of Vulkan, into the same instance from which it was exported, and
 -- multiple times into a given Vulkan instance.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkImportFenceFdKHR-fence-01463# @fence@ /must/ not be
+--     associated with any queue command that has not yet completed
+--     execution on that queue
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkImportFenceFdKHR-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkImportFenceFdKHR-pImportFenceFdInfo-parameter#
+--     @pImportFenceFdInfo@ /must/ be a valid pointer to a valid
+--     'ImportFenceFdInfoKHR' structure
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -176,14 +197,9 @@ foreign import ccall
 importFenceFdKHR :: forall io
                   . (MonadIO io)
                  => -- | @device@ is the logical device that created the fence.
-                    --
-                    -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                     Device
                  -> -- | @pImportFenceFdInfo@ is a pointer to a 'ImportFenceFdInfoKHR' structure
                     -- specifying the fence and import parameters.
-                    --
-                    -- @pImportFenceFdInfo@ /must/ be a valid pointer to a valid
-                    -- 'ImportFenceFdInfoKHR' structure
                     ImportFenceFdInfoKHR
                  -> io ()
 importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
@@ -214,11 +230,13 @@ importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   @handleType@ /must/ be a value included in the
+-- -   #VUID-VkImportFenceFdInfoKHR-handleType-01464# @handleType@ /must/
+--     be a value included in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fence-handletypes-fd Handle Types Supported by >
 --     table
 --
--- -   @fd@ /must/ obey any requirements listed for @handleType@ in
+-- -   #VUID-VkImportFenceFdInfoKHR-fd-01541# @fd@ /must/ obey any
+--     requirements listed for @handleType@ in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
 --
 -- If @handleType@ is
@@ -242,17 +260,20 @@ importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImportFenceFdInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkImportFenceFdInfoKHR-pNext-pNext# @pNext@ /must/ be @NULL@
 --
--- -   @fence@ /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-VkImportFenceFdInfoKHR-fence-parameter# @fence@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Fence' handle
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkImportFenceFdInfoKHR-flags-parameter# @flags@ /must/ be a
+--     valid combination of
 --     'Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlagBits' values
 --
--- -   @handleType@ /must/ be a valid
+-- -   #VUID-VkImportFenceFdInfoKHR-handleType-parameter# @handleType@
+--     /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
 --     value
 --
@@ -340,35 +361,40 @@ instance Zero ImportFenceFdInfoKHR where
 --
 -- == Valid Usage
 --
--- -   @handleType@ /must/ have been included in
+-- -   #VUID-VkFenceGetFdInfoKHR-handleType-01453# @handleType@ /must/ have
+--     been included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'::@handleTypes@
 --     when @fence@’s current payload was created
 --
--- -   If @handleType@ refers to a handle type with copy payload
---     transference semantics, @fence@ /must/ be signaled, or have an
---     associated
+-- -   #VUID-VkFenceGetFdInfoKHR-handleType-01454# If @handleType@ refers
+--     to a handle type with copy payload transference semantics, @fence@
+--     /must/ be signaled, or have an associated
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>
 --     pending execution
 --
--- -   @fence@ /must/ not currently have its payload replaced by an
---     imported payload as described below in
+-- -   #VUID-VkFenceGetFdInfoKHR-fence-01455# @fence@ /must/ not currently
+--     have its payload replaced by an imported payload as described below
+--     in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.ExternalFenceProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@
 --
--- -   @handleType@ /must/ be defined as a POSIX file descriptor handle
+-- -   #VUID-VkFenceGetFdInfoKHR-handleType-01456# @handleType@ /must/ be
+--     defined as a POSIX file descriptor handle
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkFenceGetFdInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkFenceGetFdInfoKHR-pNext-pNext# @pNext@ /must/ be @NULL@
 --
--- -   @fence@ /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-VkFenceGetFdInfoKHR-fence-parameter# @fence@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Fence' handle
 --
--- -   @handleType@ /must/ be a valid
+-- -   #VUID-VkFenceGetFdInfoKHR-handleType-parameter# @handleType@ /must/
+--     be a valid
 --     'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
 --     value
 --

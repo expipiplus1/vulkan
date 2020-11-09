@@ -93,17 +93,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateWin32SurfaceKHR-instance-parameter# @instance@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'Win32SurfaceCreateInfoKHR' structure
+-- -   #VUID-vkCreateWin32SurfaceKHR-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'Win32SurfaceCreateInfoKHR'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateWin32SurfaceKHR-pAllocator-parameter# If @pAllocator@
+--     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+-- -   #VUID-vkCreateWin32SurfaceKHR-pSurface-parameter# @pSurface@ /must/
+--     be a valid pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
+--     handle
 --
 -- == Return Codes
 --
@@ -165,7 +168,19 @@ foreign import ccall
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetPhysicalDeviceWin32PresentationSupportKHR-queueFamilyIndex-01309#
+--     @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+--     returned by
+--     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
+--     for the given @physicalDevice@
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetPhysicalDeviceWin32PresentationSupportKHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- = See Also
 --
@@ -173,16 +188,8 @@ foreign import ccall
 getPhysicalDeviceWin32PresentationSupportKHR :: forall io
                                               . (MonadIO io)
                                              => -- | @physicalDevice@ is the physical device.
-                                                --
-                                                -- @physicalDevice@ /must/ be a valid
-                                                -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                                 PhysicalDevice
                                              -> -- | @queueFamilyIndex@ is the queue family index.
-                                                --
-                                                -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
-                                                -- returned by
-                                                -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
-                                                -- for the given @physicalDevice@
                                                 ("queueFamilyIndex" ::: Word32)
                                              -> io (Bool)
 getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = liftIO $ do
@@ -197,7 +204,24 @@ getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = l
 -- | VkWin32SurfaceCreateInfoKHR - Structure specifying parameters of a newly
 -- created Win32 surface object
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkWin32SurfaceCreateInfoKHR-hinstance-01307# @hinstance@
+--     /must/ be a valid Win32 'HINSTANCE'
+--
+-- -   #VUID-VkWin32SurfaceCreateInfoKHR-hwnd-01308# @hwnd@ /must/ be a
+--     valid Win32 'HWND'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkWin32SurfaceCreateInfoKHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR'
+--
+-- -   #VUID-VkWin32SurfaceCreateInfoKHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
+--
+-- -   #VUID-VkWin32SurfaceCreateInfoKHR-flags-zerobitmask# @flags@ /must/
+--     be @0@
 --
 -- = See Also
 --
@@ -205,17 +229,11 @@ getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = l
 -- 'Win32SurfaceCreateFlagsKHR', 'createWin32SurfaceKHR'
 data Win32SurfaceCreateInfoKHR = Win32SurfaceCreateInfoKHR
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: Win32SurfaceCreateFlagsKHR
   , -- | @hinstance@ is the Win32 'HINSTANCE' for the window to associate the
     -- surface with.
-    --
-    -- @hinstance@ /must/ be a valid Win32 'HINSTANCE'
     hinstance :: HINSTANCE
   , -- | @hwnd@ is the Win32 'HWND' for the window to associate the surface with.
-    --
-    -- @hwnd@ /must/ be a valid Win32 'HWND'
     hwnd :: HWND
   }
   deriving (Typeable, Eq)

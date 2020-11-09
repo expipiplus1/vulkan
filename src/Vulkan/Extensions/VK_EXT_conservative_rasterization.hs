@@ -66,6 +66,90 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #limits-primitiveOverestimationSize# @primitiveOverestimationSize@
+--     is the size in pixels the generating primitive is increased at each
+--     of its edges during conservative rasterization overestimation mode.
+--     Even with a size of 0.0, conservative rasterization overestimation
+--     rules still apply and if any part of the pixel rectangle is covered
+--     by the generating primitive, fragments are generated for the entire
+--     pixel. However implementations /may/ make the pixel coverage area
+--     even more conservative by increasing the size of the generating
+--     primitive.
+--
+-- -   #limits-maxExtraPrimitiveOverestimationSize#
+--     @maxExtraPrimitiveOverestimationSize@ is the maximum size in pixels
+--     of extra overestimation the implementation supports in the pipeline
+--     state. A value of 0.0 means the implementation does not support any
+--     additional overestimation of the generating primitive during
+--     conservative rasterization. A value above 0.0 allows the application
+--     to further increase the size of the generating primitive during
+--     conservative rasterization overestimation.
+--
+-- -   #limits-extraPrimitiveOverestimationSizeGranularity#
+--     @extraPrimitiveOverestimationSizeGranularity@ is the granularity of
+--     extra overestimation that can be specified in the pipeline state
+--     between 0.0 and @maxExtraPrimitiveOverestimationSize@ inclusive. A
+--     value of 0.0 means the implementation can use the smallest
+--     representable non-zero value in the screen space pixel fixed-point
+--     grid.
+--
+-- -   #limits-primitiveUnderestimation# @primitiveUnderestimation@ is true
+--     if the implementation supports the
+--     'CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' conservative
+--     rasterization mode in addition to
+--     'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT'. Otherwise the
+--     implementation only supports
+--     'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT'.
+--
+-- -   #limits-conservativePointAndLineRasterization#
+--     @conservativePointAndLineRasterization@ is true if the
+--     implementation supports conservative rasterization of point and line
+--     primitives as well as triangle primitives. Otherwise the
+--     implementation only supports triangle primitives.
+--
+-- -   #limits-degenerateTrianglesRasterized#
+--     @degenerateTrianglesRasterized@ is false if the implementation culls
+--     primitives generated from triangles that become zero area after they
+--     are quantized to the fixed-point rasterization pixel grid.
+--     @degenerateTrianglesRasterized@ is true if these primitives are not
+--     culled and the provoking vertex attributes and depth value are used
+--     for the fragments. The primitive area calculation is done on the
+--     primitive generated from the clipped triangle if applicable. Zero
+--     area primitives are backfacing and the application /can/ enable
+--     backface culling if desired.
+--
+-- -   #limits-degenerateLinesRasterized# @degenerateLinesRasterized@ is
+--     false if the implementation culls lines that become zero length
+--     after they are quantized to the fixed-point rasterization pixel
+--     grid. @degenerateLinesRasterized@ is true if zero length lines are
+--     not culled and the provoking vertex attributes and depth value are
+--     used for the fragments.
+--
+-- -   #limits-fullyCoveredFragmentShaderInputVariable#
+--     @fullyCoveredFragmentShaderInputVariable@ is true if the
+--     implementation supports the SPIR-V builtin fragment shader input
+--     variable @FullyCoveredEXT@ which specifies that conservative
+--     rasterization is enabled and the fragment area is fully covered by
+--     the generating primitive.
+--
+-- -   #limits-conservativeRasterizationPostDepthCoverage#
+--     @conservativeRasterizationPostDepthCoverage@ is true if the
+--     implementation supports conservative rasterization with the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
+--     execution mode enabled. When supported the
+--     'Vulkan.Core10.FundamentalTypes.SampleMask' built-in input variable
+--     will reflect the coverage after the early per-fragment depth and
+--     stencil tests are applied even when conservative rasterization is
+--     enabled. Otherwise
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
+--     execution mode /must/ not be used when conservative rasterization is
+--     enabled.
+--
 -- If the 'PhysicalDeviceConservativeRasterizationPropertiesEXT' structure
 -- is included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -73,79 +157,32 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceConservativeRasterizationPropertiesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConservativeRasterizationPropertiesEXT
-  { -- | @primitiveOverestimationSize@ is the size in pixels the generating
-    -- primitive is increased at each of its edges during conservative
-    -- rasterization overestimation mode. Even with a size of 0.0, conservative
-    -- rasterization overestimation rules still apply and if any part of the
-    -- pixel rectangle is covered by the generating primitive, fragments are
-    -- generated for the entire pixel. However implementations /may/ make the
-    -- pixel coverage area even more conservative by increasing the size of the
-    -- generating primitive.
+  { -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "primitiveOverestimationSize"
     primitiveOverestimationSize :: Float
-  , -- | @maxExtraPrimitiveOverestimationSize@ is the maximum size in pixels of
-    -- extra overestimation the implementation supports in the pipeline state.
-    -- A value of 0.0 means the implementation does not support any additional
-    -- overestimation of the generating primitive during conservative
-    -- rasterization. A value above 0.0 allows the application to further
-    -- increase the size of the generating primitive during conservative
-    -- rasterization overestimation.
+  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "maxExtraPrimitiveOverestimationSize"
     maxExtraPrimitiveOverestimationSize :: Float
-  , -- | @extraPrimitiveOverestimationSizeGranularity@ is the granularity of
-    -- extra overestimation that can be specified in the pipeline state between
-    -- 0.0 and @maxExtraPrimitiveOverestimationSize@ inclusive. A value of 0.0
-    -- means the implementation can use the smallest representable non-zero
-    -- value in the screen space pixel fixed-point grid.
+  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "extraPrimitiveOverestimationSizeGranularity"
     extraPrimitiveOverestimationSizeGranularity :: Float
-  , -- | @primitiveUnderestimation@ is true if the implementation supports the
-    -- 'CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' conservative
-    -- rasterization mode in addition to
-    -- 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT'. Otherwise the
-    -- implementation only supports
-    -- 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "primitiveUnderestimation"
     primitiveUnderestimation :: Bool
-  , -- | @conservativePointAndLineRasterization@ is true if the implementation
-    -- supports conservative rasterization of point and line primitives as well
-    -- as triangle primitives. Otherwise the implementation only supports
-    -- triangle primitives.
+  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "conservativePointAndLineRasterization"
     conservativePointAndLineRasterization :: Bool
-  , -- | @degenerateTrianglesRasterized@ is false if the implementation culls
-    -- primitives generated from triangles that become zero area after they are
-    -- quantized to the fixed-point rasterization pixel grid.
-    -- @degenerateTrianglesRasterized@ is true if these primitives are not
-    -- culled and the provoking vertex attributes and depth value are used for
-    -- the fragments. The primitive area calculation is done on the primitive
-    -- generated from the clipped triangle if applicable. Zero area primitives
-    -- are backfacing and the application /can/ enable backface culling if
-    -- desired.
+  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "degenerateTrianglesRasterized"
     degenerateTrianglesRasterized :: Bool
-  , -- | @degenerateLinesRasterized@ is false if the implementation culls lines
-    -- that become zero length after they are quantized to the fixed-point
-    -- rasterization pixel grid. @degenerateLinesRasterized@ is true if zero
-    -- length lines are not culled and the provoking vertex attributes and
-    -- depth value are used for the fragments.
+  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "degenerateLinesRasterized"
     degenerateLinesRasterized :: Bool
-  , -- | @fullyCoveredFragmentShaderInputVariable@ is true if the implementation
-    -- supports the SPIR-V builtin fragment shader input variable
-    -- @FullyCoveredEXT@ which specifies that conservative rasterization is
-    -- enabled and the fragment area is fully covered by the generating
-    -- primitive.
+  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "fullyCoveredFragmentShaderInputVariable"
     fullyCoveredFragmentShaderInputVariable :: Bool
-  , -- | @conservativeRasterizationPostDepthCoverage@ is true if the
-    -- implementation supports conservative rasterization with the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
-    -- execution mode enabled. When supported the
-    -- 'Vulkan.Core10.FundamentalTypes.SampleMask' built-in input variable will
-    -- reflect the coverage after the early per-fragment depth and stencil
-    -- tests are applied even when conservative rasterization is enabled.
-    -- Otherwise
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
-    -- execution mode /must/ not be used when conservative rasterization is
-    -- enabled.
+  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "conservativeRasterizationPostDepthCoverage"
     conservativeRasterizationPostDepthCoverage :: Bool
   }
   deriving (Typeable, Eq)
@@ -221,7 +258,26 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
 -- | VkPipelineRasterizationConservativeStateCreateInfoEXT - Structure
 -- specifying conservative raster state
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkPipelineRasterizationConservativeStateCreateInfoEXT-extraPrimitiveOverestimationSize-01769#
+--     @extraPrimitiveOverestimationSize@ /must/ be in the range of @0.0@
+--     to
+--     'PhysicalDeviceConservativeRasterizationPropertiesEXT'::@maxExtraPrimitiveOverestimationSize@
+--     inclusive
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPipelineRasterizationConservativeStateCreateInfoEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT'
+--
+-- -   #VUID-VkPipelineRasterizationConservativeStateCreateInfoEXT-flags-zerobitmask#
+--     @flags@ /must/ be @0@
+--
+-- -   #VUID-VkPipelineRasterizationConservativeStateCreateInfoEXT-conservativeRasterizationMode-parameter#
+--     @conservativeRasterizationMode@ /must/ be a valid
+--     'ConservativeRasterizationModeEXT' value
 --
 -- = See Also
 --
@@ -230,24 +286,15 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationConservativeStateCreateInfoEXT = PipelineRasterizationConservativeStateCreateInfoEXT
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: PipelineRasterizationConservativeStateCreateFlagsEXT
   , -- | @conservativeRasterizationMode@ is the conservative rasterization mode
     -- to use.
-    --
-    -- @conservativeRasterizationMode@ /must/ be a valid
-    -- 'ConservativeRasterizationModeEXT' value
     conservativeRasterizationMode :: ConservativeRasterizationModeEXT
   , -- | @extraPrimitiveOverestimationSize@ is the extra size in pixels to
     -- increase the generating primitive during conservative rasterization at
     -- each of its edges in @X@ and @Y@ equally in screen space beyond the base
     -- overestimation specified in
     -- 'PhysicalDeviceConservativeRasterizationPropertiesEXT'::@primitiveOverestimationSize@.
-    --
-    -- @extraPrimitiveOverestimationSize@ /must/ be in the range of @0.0@ to
-    -- 'PhysicalDeviceConservativeRasterizationPropertiesEXT'::@maxExtraPrimitiveOverestimationSize@
-    -- inclusive
     extraPrimitiveOverestimationSize :: Float
   }
   deriving (Typeable, Eq)

@@ -132,16 +132,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-pSurfaceInfo-parameter#
+--     @pSurfaceInfo@ /must/ be a valid pointer to a valid
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
 --     structure
 --
--- -   @pPresentModeCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-pPresentModeCount-parameter#
+--     @pPresentModeCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPresentModeCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-pPresentModes-parameter#
+--     If the value referenced by @pPresentModeCount@ is not @0@, and
 --     @pPresentModes@ is not @NULL@, @pPresentModes@ /must/ be a valid
 --     pointer to an array of @pPresentModeCount@
 --     'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' values
@@ -216,6 +220,21 @@ foreign import ccall
 -- with the ability to specify extended inputs via chained input
 -- structures.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetDeviceGroupSurfacePresentModes2EXT-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetDeviceGroupSurfacePresentModes2EXT-pSurfaceInfo-parameter#
+--     @pSurfaceInfo@ /must/ be a valid pointer to a valid
+--     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
+--     structure
+--
+-- -   #VUID-vkGetDeviceGroupSurfacePresentModes2EXT-pModes-parameter#
+--     @pModes@ /must/ be a valid pointer to a
+--     'Vulkan.Extensions.VK_KHR_swapchain.DeviceGroupPresentModeFlagsKHR'
+--     value
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -238,17 +257,11 @@ foreign import ccall
 getDeviceGroupSurfacePresentModes2EXT :: forall a io
                                        . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, MonadIO io)
                                       => -- | @device@ is the logical device.
-                                         --
-                                         -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                          Device
                                       -> -- | @pSurfaceInfo@ is a pointer to a
                                          -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
                                          -- structure describing the surface and other fixed parameters that would
                                          -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
-                                         --
-                                         -- @pSurfaceInfo@ /must/ be a valid pointer to a valid
-                                         -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
-                                         -- structure
                                          (PhysicalDeviceSurfaceInfo2KHR a)
                                       -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
 getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ do
@@ -276,14 +289,17 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @swapchain@ /must/ not be in the retired state
+-- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-02674#
+--     @swapchain@ /must/ not be in the retired state
 --
--- -   @swapchain@ /must/ be a swapchain created with a
+-- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-02675#
+--     @swapchain@ /must/ be a swapchain created with a
 --     'SurfaceFullScreenExclusiveInfoEXT' structure, with
 --     @fullScreenExclusive@ set to
 --     'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
 --
--- -   @swapchain@ /must/ not currently have exclusive full-screen access
+-- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-02676#
+--     @swapchain@ /must/ not currently have exclusive full-screen access
 --
 -- A return value of 'Vulkan.Core10.Enums.Result.SUCCESS' indicates that
 -- the @swapchain@ successfully acquired exclusive full-screen access. The
@@ -304,14 +320,16 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @swapchain@ /must/ be a valid
+-- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-parameter#
+--     @swapchain@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   Both of @device@, and @swapchain@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-commonparent# Both of
+--     @device@, and @swapchain@ /must/ have been created, allocated, or
+--     retrieved from the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -370,6 +388,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkReleaseFullScreenExclusiveModeEXT-swapchain-02677#
+--     @swapchain@ /must/ not be in the retired state
+--
+-- -   #VUID-vkReleaseFullScreenExclusiveModeEXT-swapchain-02678#
+--     @swapchain@ /must/ be a swapchain created with a
+--     'SurfaceFullScreenExclusiveInfoEXT' structure, with
+--     @fullScreenExclusive@ set to
+--     'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
@@ -379,13 +406,6 @@ releaseFullScreenExclusiveModeEXT :: forall io
                                      Device
                                   -> -- | @swapchain@ is the swapchain to release exclusive full-screen access
                                      -- from.
-                                     --
-                                     -- @swapchain@ /must/ not be in the retired state
-                                     --
-                                     -- @swapchain@ /must/ be a swapchain created with a
-                                     -- 'SurfaceFullScreenExclusiveInfoEXT' structure, with
-                                     -- @fullScreenExclusive@ set to
-                                     -- 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
                                      SwapchainKHR
                                   -> io ()
 releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
@@ -407,6 +427,14 @@ releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkSurfaceFullScreenExclusiveInfoEXT-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT'
+--
+-- -   #VUID-VkSurfaceFullScreenExclusiveInfoEXT-fullScreenExclusive-parameter#
+--     @fullScreenExclusive@ /must/ be a valid 'FullScreenExclusiveEXT'
+--     value
+--
 -- = See Also
 --
 -- 'FullScreenExclusiveEXT',
@@ -414,8 +442,6 @@ releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
 data SurfaceFullScreenExclusiveInfoEXT = SurfaceFullScreenExclusiveInfoEXT
   { -- | @fullScreenExclusive@ is a 'FullScreenExclusiveEXT' value specifying the
     -- preferred full-screen transition behavior.
-    --
-    -- @fullScreenExclusive@ /must/ be a valid 'FullScreenExclusiveEXT' value
     fullScreenExclusive :: FullScreenExclusiveEXT }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -475,7 +501,16 @@ instance Zero SurfaceFullScreenExclusiveInfoEXT where
 -- APIs. Such changes /may/ alter the surface capabilities reported for the
 -- created surface.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkSurfaceFullScreenExclusiveWin32InfoEXT-hmonitor-02673#
+--     @hmonitor@ /must/ be a valid 'HMONITOR'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkSurfaceFullScreenExclusiveWin32InfoEXT-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT'
 --
 -- = See Also
 --
@@ -483,8 +518,6 @@ instance Zero SurfaceFullScreenExclusiveInfoEXT where
 data SurfaceFullScreenExclusiveWin32InfoEXT = SurfaceFullScreenExclusiveWin32InfoEXT
   { -- | @hmonitor@ is the Win32 'HMONITOR' handle identifying the display to
     -- create the surface with.
-    --
-    -- @hmonitor@ /must/ be a valid 'HMONITOR'
     hmonitor :: HMONITOR }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -542,6 +575,10 @@ instance Zero SurfaceFullScreenExclusiveWin32InfoEXT where
 -- 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkSurfaceCapabilitiesFullScreenExclusiveEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT'
 --
 -- = See Also
 --

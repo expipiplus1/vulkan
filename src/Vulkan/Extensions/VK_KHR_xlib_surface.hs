@@ -95,17 +95,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateXlibSurfaceKHR-instance-parameter# @instance@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'XlibSurfaceCreateInfoKHR' structure
+-- -   #VUID-vkCreateXlibSurfaceKHR-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'XlibSurfaceCreateInfoKHR'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateXlibSurfaceKHR-pAllocator-parameter# If @pAllocator@
+--     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+-- -   #VUID-vkCreateXlibSurfaceKHR-pSurface-parameter# @pSurface@ /must/
+--     be a valid pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
+--     handle
 --
 -- == Return Codes
 --
@@ -167,7 +170,22 @@ foreign import ccall
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetPhysicalDeviceXlibPresentationSupportKHR-queueFamilyIndex-01315#
+--     @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+--     returned by
+--     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
+--     for the given @physicalDevice@
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetPhysicalDeviceXlibPresentationSupportKHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PhysicalDevice' handle
+--
+-- -   #VUID-vkGetPhysicalDeviceXlibPresentationSupportKHR-dpy-parameter#
+--     @dpy@ /must/ be a valid pointer to a 'Display' value
 --
 -- = See Also
 --
@@ -175,20 +193,10 @@ foreign import ccall
 getPhysicalDeviceXlibPresentationSupportKHR :: forall io
                                              . (MonadIO io)
                                             => -- | @physicalDevice@ is the physical device.
-                                               --
-                                               -- @physicalDevice@ /must/ be a valid
-                                               -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                                PhysicalDevice
                                             -> -- | @queueFamilyIndex@ is the queue family index.
-                                               --
-                                               -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
-                                               -- returned by
-                                               -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
-                                               -- for the given @physicalDevice@
                                                ("queueFamilyIndex" ::: Word32)
                                             -> -- | @dpy@ is a pointer to an Xlib 'Display' connection to the server.
-                                               --
-                                               -- @dpy@ /must/ be a valid pointer to a 'Display' value
                                                ("dpy" ::: Ptr Display)
                                             -> -- No documentation found for Nested "vkGetPhysicalDeviceXlibPresentationSupportKHR" "visualID"
                                                VisualID
@@ -205,7 +213,24 @@ getPhysicalDeviceXlibPresentationSupportKHR physicalDevice queueFamilyIndex dpy 
 -- | VkXlibSurfaceCreateInfoKHR - Structure specifying parameters of a newly
 -- created Xlib surface object
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkXlibSurfaceCreateInfoKHR-dpy-01313# @dpy@ /must/ point to a
+--     valid Xlib 'Display'
+--
+-- -   #VUID-VkXlibSurfaceCreateInfoKHR-window-01314# @window@ /must/ be a
+--     valid Xlib 'Window'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkXlibSurfaceCreateInfoKHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR'
+--
+-- -   #VUID-VkXlibSurfaceCreateInfoKHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
+--
+-- -   #VUID-VkXlibSurfaceCreateInfoKHR-flags-zerobitmask# @flags@ /must/
+--     be @0@
 --
 -- = See Also
 --
@@ -213,16 +238,10 @@ getPhysicalDeviceXlibPresentationSupportKHR physicalDevice queueFamilyIndex dpy 
 -- 'XlibSurfaceCreateFlagsKHR', 'createXlibSurfaceKHR'
 data XlibSurfaceCreateInfoKHR = XlibSurfaceCreateInfoKHR
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: XlibSurfaceCreateFlagsKHR
   , -- | @dpy@ is a pointer to an Xlib 'Display' connection to the X server.
-    --
-    -- @dpy@ /must/ point to a valid Xlib 'Display'
     dpy :: Ptr Display
   , -- | @window@ is an Xlib 'Window' to associate the surface with.
-    --
-    -- @window@ /must/ be a valid Xlib 'Window'
     window :: Window
   }
   deriving (Typeable, Eq)

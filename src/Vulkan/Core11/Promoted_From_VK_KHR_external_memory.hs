@@ -44,22 +44,36 @@ import Vulkan.Core10.APIConstants (pattern QUEUE_FAMILY_EXTERNAL)
 -- creation parameters for an image that will be bound to memory that is
 -- either exported or imported.
 --
+-- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   @handleTypes@ is a bitmask of
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+--     specifying one or more external memory handle types.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkExternalMemoryImageCreateInfo-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO'
+--
+-- -   #VUID-VkExternalMemoryImageCreateInfo-handleTypes-parameter#
+--     @handleTypes@ /must/ be a valid combination of
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+--     values
+--
+-- -   #VUID-VkExternalMemoryImageCreateInfo-handleTypes-requiredbitmask#
+--     @handleTypes@ /must/ not be @0@
 --
 -- = See Also
 --
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryImageCreateInfo = ExternalMemoryImageCreateInfo
-  { -- | @handleTypes@ is a bitmask of
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- specifying one or more external memory handle types.
-    --
-    -- @handleTypes@ /must/ be a valid combination of
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- values
-    --
-    -- @handleTypes@ /must/ not be @0@
+  { -- No documentation found for Nested "VkExternalMemoryImageCreateInfo" "handleTypes"
     handleTypes :: ExternalMemoryHandleTypeFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -110,20 +124,34 @@ instance Zero ExternalMemoryImageCreateInfo where
 -- creation parameters for a buffer that will be bound to memory that is
 -- either exported or imported.
 --
+-- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   @handleTypes@ is a bitmask of
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+--     specifying one or more external memory handle types.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkExternalMemoryBufferCreateInfo-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO'
+--
+-- -   #VUID-VkExternalMemoryBufferCreateInfo-handleTypes-parameter#
+--     @handleTypes@ /must/ be a valid combination of
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+--     values
 --
 -- = See Also
 --
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryBufferCreateInfo = ExternalMemoryBufferCreateInfo
-  { -- | @handleTypes@ is a bitmask of
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- specifying one or more external memory handle types.
-    --
-    -- @handleTypes@ /must/ be a valid combination of
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- values
+  { -- No documentation found for Nested "VkExternalMemoryBufferCreateInfo" "handleTypes"
     handleTypes :: ExternalMemoryHandleTypeFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -167,18 +195,19 @@ instance Zero ExternalMemoryBufferCreateInfo where
 --
 -- == Valid Usage
 --
--- -   The bits in @handleTypes@ /must/ be supported and compatible, as
---     reported by
+-- -   #VUID-VkExportMemoryAllocateInfo-handleTypes-00656# The bits in
+--     @handleTypes@ /must/ be supported and compatible, as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkExportMemoryAllocateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO'
 --
--- -   @handleTypes@ /must/ be a valid combination of
+-- -   #VUID-VkExportMemoryAllocateInfo-handleTypes-parameter#
+--     @handleTypes@ /must/ be a valid combination of
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     values
 --

@@ -110,12 +110,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pCombinationCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV-pCombinationCount-parameter#
+--     @pCombinationCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pCombinationCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV-pCombinations-parameter#
+--     If the value referenced by @pCombinationCount@ is not @0@, and
 --     @pCombinations@ is not @NULL@, @pCombinations@ /must/ be a valid
 --     pointer to an array of @pCombinationCount@
 --     'FramebufferMixedSamplesCombinationNV' structures
@@ -174,6 +177,10 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
 --
 -- = Description
 --
+-- -   #features-coverageReductionMode# @coverageReductionMode@ indicates
+--     whether the implementation supports coverage reduction modes. See
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-coverage-reduction Coverage Reduction>.
+--
 -- If the 'PhysicalDeviceCoverageReductionModeFeaturesNV' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -184,14 +191,16 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceCoverageReductionModeFeaturesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COVERAGE_REDUCTION_MODE_FEATURES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCoverageReductionModeFeaturesNV = PhysicalDeviceCoverageReductionModeFeaturesNV
-  { -- | @coverageReductionMode@ indicates whether the implementation supports
-    -- coverage reduction modes. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-coverage-reduction Coverage Reduction>.
+  { -- No documentation found for Nested "VkPhysicalDeviceCoverageReductionModeFeaturesNV" "coverageReductionMode"
     coverageReductionMode :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -253,12 +262,15 @@ instance Zero PhysicalDeviceCoverageReductionModeFeaturesNV where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineCoverageReductionStateCreateInfoNV-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_REDUCTION_STATE_CREATE_INFO_NV'
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkPipelineCoverageReductionStateCreateInfoNV-flags-zerobitmask#
+--     @flags@ /must/ be @0@
 --
--- -   @coverageReductionMode@ /must/ be a valid 'CoverageReductionModeNV'
+-- -   #VUID-VkPipelineCoverageReductionStateCreateInfoNV-coverageReductionMode-parameter#
+--     @coverageReductionMode@ /must/ be a valid 'CoverageReductionModeNV'
 --     value
 --
 -- = See Also
@@ -318,6 +330,13 @@ instance Zero PipelineCoverageReductionStateCreateInfoNV where
 -- supported sample count combination
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkFramebufferMixedSamplesCombinationNV-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FRAMEBUFFER_MIXED_SAMPLES_COMBINATION_NV'
+--
+-- -   #VUID-VkFramebufferMixedSamplesCombinationNV-pNext-pNext# @pNext@
+--     /must/ be @NULL@
 --
 -- = See Also
 --

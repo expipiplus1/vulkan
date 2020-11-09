@@ -55,6 +55,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_VALIDATIO
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkValidationFlagsEXT-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VALIDATION_FLAGS_EXT'
+--
+-- -   #VUID-VkValidationFlagsEXT-pDisabledValidationChecks-parameter#
+--     @pDisabledValidationChecks@ /must/ be a valid pointer to an array of
+--     @disabledValidationCheckCount@ valid 'ValidationCheckEXT' values
+--
+-- -   #VUID-VkValidationFlagsEXT-disabledValidationCheckCount-arraylength#
+--     @disabledValidationCheckCount@ /must/ be greater than @0@
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'ValidationCheckEXT'
@@ -62,9 +72,6 @@ data ValidationFlagsEXT = ValidationFlagsEXT
   { -- | @pDisabledValidationChecks@ is a pointer to an array of
     -- 'ValidationCheckEXT' values specifying the validation checks to be
     -- disabled.
-    --
-    -- @pDisabledValidationChecks@ /must/ be a valid pointer to an array of
-    -- @disabledValidationCheckCount@ valid 'ValidationCheckEXT' values
     disabledValidationChecks :: Vector ValidationCheckEXT }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)

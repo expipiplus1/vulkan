@@ -39,6 +39,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-fragmentShaderSampleInterlock#
+--     @fragmentShaderSampleInterlock@ indicates that the implementation
+--     supports the @FragmentShaderSampleInterlockEXT@ SPIR-V capability.
+--
+-- -   #features-fragmentShaderPixelInterlock#
+--     @fragmentShaderPixelInterlock@ indicates that the implementation
+--     supports the @FragmentShaderPixelInterlockEXT@ SPIR-V capability.
+--
+-- -   #features-fragmentShaderShadingRateInterlock#
+--     @fragmentShaderShadingRateInterlock@ indicates that the
+--     implementation supports the @FragmentShaderShadingRateInterlockEXT@
+--     SPIR-V capability.
+--
 -- If the 'PhysicalDeviceFragmentShaderInterlockFeaturesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -49,19 +62,20 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_INTERLOCK_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentShaderInterlockFeaturesEXT = PhysicalDeviceFragmentShaderInterlockFeaturesEXT
-  { -- | @fragmentShaderSampleInterlock@ indicates that the implementation
-    -- supports the @FragmentShaderSampleInterlockEXT@ SPIR-V capability.
+  { -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT" "fragmentShaderSampleInterlock"
     fragmentShaderSampleInterlock :: Bool
-  , -- | @fragmentShaderPixelInterlock@ indicates that the implementation
-    -- supports the @FragmentShaderPixelInterlockEXT@ SPIR-V capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT" "fragmentShaderPixelInterlock"
     fragmentShaderPixelInterlock :: Bool
-  , -- | @fragmentShaderShadingRateInterlock@ indicates that the implementation
-    -- supports the @FragmentShaderShadingRateInterlockEXT@ SPIR-V capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT" "fragmentShaderShadingRateInterlock"
     fragmentShaderShadingRateInterlock :: Bool
   }
   deriving (Typeable, Eq)

@@ -36,36 +36,48 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- The members of the 'PhysicalDevice4444FormatsFeaturesEXT' structure
 -- describe the following features:
 --
+-- = Description
+--
+-- -   #features-formatA4R4G4B4# @formatA4R4G4B4@ indicates that the
+--     implementation /must/ support using a
+--     'Vulkan.Core10.Enums.Format.Format' of
+--     'Vulkan.Core10.Enums.Format.FORMAT_A4R4G4B4_UNORM_PACK16_EXT' with
+--     at least the following
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'
+--
+--     -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
+--
+--     -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #features-formatA4B4G4R4# @formatA4B4G4R4@ indicates that the
+--     implementation /must/ support using a
+--     'Vulkan.Core10.Enums.Format.Format' of
+--     'Vulkan.Core10.Enums.Format.FORMAT_A4B4G4R4_UNORM_PACK16_EXT' with
+--     at least the following
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'
+--
+--     -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
+--
+--     -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDevice4444FormatsFeaturesEXT-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevice4444FormatsFeaturesEXT = PhysicalDevice4444FormatsFeaturesEXT
-  { -- | @formatA4R4G4B4@ indicates that the implementation /must/ support using
-    -- a 'Vulkan.Core10.Enums.Format.Format' of
-    -- 'Vulkan.Core10.Enums.Format.FORMAT_A4R4G4B4_UNORM_PACK16_EXT' with at
-    -- least the following
-    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
-    --
-    -- -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'
-    --
-    -- -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
-    --
-    -- -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+  { -- No documentation found for Nested "VkPhysicalDevice4444FormatsFeaturesEXT" "formatA4R4G4B4"
     formatA4R4G4B4 :: Bool
-  , -- | @formatA4B4G4R4@ indicates that the implementation /must/ support using
-    -- a 'Vulkan.Core10.Enums.Format.Format' of
-    -- 'Vulkan.Core10.Enums.Format.FORMAT_A4B4G4R4_UNORM_PACK16_EXT' with at
-    -- least the following
-    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
-    --
-    -- -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'
-    --
-    -- -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
-    --
-    -- -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+  , -- No documentation found for Nested "VkPhysicalDevice4444FormatsFeaturesEXT" "formatA4B4G4R4"
     formatA4B4G4R4 :: Bool
   }
   deriving (Typeable, Eq)

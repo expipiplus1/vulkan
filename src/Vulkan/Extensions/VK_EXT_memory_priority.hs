@@ -42,6 +42,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-memoryPriority# @memoryPriority@ indicates that the
+--     implementation supports memory priorities specified at memory
+--     allocation time via 'MemoryPriorityAllocateInfoEXT'.
+--
 -- If the 'PhysicalDeviceMemoryPriorityFeaturesEXT' structure is included
 -- in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -52,14 +56,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceMemoryPriorityFeaturesEXT-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMemoryPriorityFeaturesEXT = PhysicalDeviceMemoryPriorityFeaturesEXT
-  { -- | @memoryPriority@ indicates that the implementation supports memory
-    -- priorities specified at memory allocation time via
-    -- 'MemoryPriorityAllocateInfoEXT'.
+  { -- No documentation found for Nested "VkPhysicalDeviceMemoryPriorityFeaturesEXT" "memoryPriority"
     memoryPriority :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -109,7 +115,15 @@ instance Zero PhysicalDeviceMemoryPriorityFeaturesEXT where
 -- If this structure is not included, it is as if the @priority@ value were
 -- @0.5@.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkMemoryPriorityAllocateInfoEXT-priority-02602# @priority@
+--     /must/ be between @0@ and @1@, inclusive
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkMemoryPriorityAllocateInfoEXT-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT'
 --
 -- = See Also
 --
@@ -119,8 +133,6 @@ data MemoryPriorityAllocateInfoEXT = MemoryPriorityAllocateInfoEXT
     -- priority of the allocation relative to other memory allocations. Larger
     -- values are higher priority. The granularity of the priorities is
     -- implementation-dependent.
-    --
-    -- @priority@ /must/ be between @0@ and @1@, inclusive
     priority :: Float }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

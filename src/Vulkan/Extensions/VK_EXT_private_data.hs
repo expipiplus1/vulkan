@@ -100,22 +100,26 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCreatePrivateDataSlotEXT-privateData-04564# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-privateData privateData>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreatePrivateDataSlotEXT-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreatePrivateDataSlotEXT-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'PrivateDataSlotCreateInfoEXT' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreatePrivateDataSlotEXT-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pPrivateDataSlot@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreatePrivateDataSlotEXT-pPrivateDataSlot-parameter#
+--     @pPrivateDataSlot@ /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.PrivateDataSlotEXT' handle
 --
 -- == Return Codes
@@ -185,27 +189,33 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyPrivateDataSlotEXT-privateDataSlot-04062# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @privateDataSlot@ was created, a compatible set of
 --     callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyPrivateDataSlotEXT-privateDataSlot-04063# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @privateDataSlot@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyPrivateDataSlotEXT-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @privateDataSlot@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @privateDataSlot@ /must/
---     be a valid 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' handle
+-- -   #VUID-vkDestroyPrivateDataSlotEXT-privateDataSlot-parameter# If
+--     @privateDataSlot@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @privateDataSlot@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.PrivateDataSlotEXT' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkDestroyPrivateDataSlotEXT-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @privateDataSlot@ is a valid handle, it /must/ have been created,
+-- -   #VUID-vkDestroyPrivateDataSlotEXT-privateDataSlot-parent# If
+--     @privateDataSlot@ is a valid handle, it /must/ have been created,
 --     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
@@ -250,6 +260,29 @@ foreign import ccall
 
 -- | vkSetPrivateDataEXT - Associate data with a Vulkan object
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkSetPrivateDataEXT-objectHandle-04016# @objectHandle@ /must/
+--     be @device@ or a child of @device@
+--
+-- -   #VUID-vkSetPrivateDataEXT-objectHandle-04017# @objectHandle@ /must/
+--     be a valid handle to an object of type @objectType@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkSetPrivateDataEXT-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkSetPrivateDataEXT-objectType-parameter# @objectType@ /must/
+--     be a valid 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
+--
+-- -   #VUID-vkSetPrivateDataEXT-privateDataSlot-parameter#
+--     @privateDataSlot@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.PrivateDataSlotEXT' handle
+--
+-- -   #VUID-vkSetPrivateDataEXT-privateDataSlot-parent# @privateDataSlot@
+--     /must/ have been created, allocated, or retrieved from @device@
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -268,31 +301,15 @@ foreign import ccall
 setPrivateDataEXT :: forall io
                    . (MonadIO io)
                   => -- | @device@ is the device that created the object.
-                     --
-                     -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                      Device
                   -> -- | @objectType@ is a 'Vulkan.Core10.Enums.ObjectType.ObjectType' specifying
                      -- the type of object to associate data with.
-                     --
-                     -- @objectType@ /must/ be a valid
-                     -- 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
                      ObjectType
                   -> -- | @objectHandle@ is a handle to the object to associate data with.
-                     --
-                     -- @objectHandle@ /must/ be @device@ or a child of @device@
-                     --
-                     -- @objectHandle@ /must/ be a valid handle to an object of type
-                     -- @objectType@
                      ("objectHandle" ::: Word64)
                   -> -- | @privateDataSlot@ is a handle to a
                      -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' specifying location of
                      -- private data storage.
-                     --
-                     -- @privateDataSlot@ /must/ be a valid
-                     -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' handle
-                     --
-                     -- @privateDataSlot@ /must/ have been created, allocated, or retrieved from
-                     -- @device@
                      PrivateDataSlotEXT
                   -> -- | @data@ is user defined data to associate the object with. This data will
                      -- be stored at @privateDataSlot@.
@@ -327,7 +344,29 @@ foreign import ccall
 -- exclusive to the Android platform and objects of type
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetPrivateDataEXT-objectType-04018# @objectType@ /must/ be
+--     'Vulkan.Core10.Handles.Device' or an object type whose parent is
+--     'Vulkan.Core10.Handles.Device'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetPrivateDataEXT-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetPrivateDataEXT-objectType-parameter# @objectType@ /must/
+--     be a valid 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
+--
+-- -   #VUID-vkGetPrivateDataEXT-privateDataSlot-parameter#
+--     @privateDataSlot@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.PrivateDataSlotEXT' handle
+--
+-- -   #VUID-vkGetPrivateDataEXT-pData-parameter# @pData@ /must/ be a valid
+--     pointer to a @uint64_t@ value
+--
+-- -   #VUID-vkGetPrivateDataEXT-privateDataSlot-parent# @privateDataSlot@
+--     /must/ have been created, allocated, or retrieved from @device@
 --
 -- = See Also
 --
@@ -337,29 +376,15 @@ foreign import ccall
 getPrivateDataEXT :: forall io
                    . (MonadIO io)
                   => -- | @device@ is the device that created the object
-                     --
-                     -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                      Device
                   -> -- | @objectType@ is a 'Vulkan.Core10.Enums.ObjectType.ObjectType' specifying
                      -- the type of object data is associated with.
-                     --
-                     -- @objectType@ /must/ be 'Vulkan.Core10.Handles.Device' or an object type
-                     -- whose parent is 'Vulkan.Core10.Handles.Device'
-                     --
-                     -- @objectType@ /must/ be a valid
-                     -- 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
                      ObjectType
                   -> -- | @objectHandle@ is a handle to the object data is associated with.
                      ("objectHandle" ::: Word64)
                   -> -- | @privateDataSlot@ is a handle to a
                      -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' specifying location of
                      -- private data pointer storage.
-                     --
-                     -- @privateDataSlot@ /must/ be a valid
-                     -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' handle
-                     --
-                     -- @privateDataSlot@ /must/ have been created, allocated, or retrieved from
-                     -- @device@
                      PrivateDataSlotEXT
                   -> io (("data" ::: Word64))
 getPrivateDataEXT device objectType objectHandle privateDataSlot = liftIO . evalContT $ do
@@ -376,6 +401,10 @@ getPrivateDataEXT device objectType objectHandle privateDataSlot = liftIO . eval
 -- | VkDevicePrivateDataCreateInfoEXT - Reserve private data slots
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkDevicePrivateDataCreateInfoEXT-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO_EXT'
 --
 -- = See Also
 --
@@ -426,6 +455,15 @@ instance Zero DevicePrivateDataCreateInfoEXT where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPrivateDataSlotCreateInfoEXT-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO_EXT'
+--
+-- -   #VUID-VkPrivateDataSlotCreateInfoEXT-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
+--
+-- -   #VUID-VkPrivateDataSlotCreateInfoEXT-flags-zerobitmask# @flags@
+--     /must/ be @0@
+--
 -- = See Also
 --
 -- 'PrivateDataSlotCreateFlagsEXT',
@@ -434,8 +472,6 @@ instance Zero DevicePrivateDataCreateInfoEXT where
 data PrivateDataSlotCreateInfoEXT = PrivateDataSlotCreateInfoEXT
   { -- | @flags@ is a bitmask of 'PrivateDataSlotCreateFlagsEXT' specifying
     -- additional parameters of the new private data slot
-    --
-    -- @flags@ /must/ be @0@
     flags :: PrivateDataSlotCreateFlagsEXT }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -485,6 +521,10 @@ instance Zero PrivateDataSlotCreateInfoEXT where
 --
 -- = Description
 --
+-- -   #features-privateData# @privateData@ indicates whether the
+--     implementation supports private data. See
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#private-data Private Data>.
+--
 -- If the 'PhysicalDevicePrivateDataFeaturesEXT' structure is included in
 -- the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -494,14 +534,16 @@ instance Zero PrivateDataSlotCreateInfoEXT where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDevicePrivateDataFeaturesEXT-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePrivateDataFeaturesEXT = PhysicalDevicePrivateDataFeaturesEXT
-  { -- | @privateData@ indicates whether the implementation supports private
-    -- data. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#private-data Private Data>.
+  { -- No documentation found for Nested "VkPhysicalDevicePrivateDataFeaturesEXT" "privateData"
     privateData :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

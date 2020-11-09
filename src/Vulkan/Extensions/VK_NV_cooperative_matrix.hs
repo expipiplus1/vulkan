@@ -121,12 +121,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceCooperativeMatrixPropertiesNV-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDeviceCooperativeMatrixPropertiesNV-pPropertyCount-parameter#
+--     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceCooperativeMatrixPropertiesNV-pProperties-parameter#
+--     If the value referenced by @pPropertyCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
 --     to an array of @pPropertyCount@ 'CooperativeMatrixPropertiesNV'
 --     structures
@@ -182,6 +185,15 @@ getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = liftIO . evalCon
 --
 -- = Description
 --
+-- -   #features-cooperativeMatrix# @cooperativeMatrix@ indicates that the
+--     implementation supports the @CooperativeMatrixNV@ SPIR-V capability.
+--
+-- -   #features-cooperativeMatrixRobustBufferAccess#
+--     @cooperativeMatrixRobustBufferAccess@ indicates that the
+--     implementation supports robust buffer access for SPIR-V
+--     @OpCooperativeMatrixLoadNV@ and @OpCooperativeMatrixStoreNV@
+--     instructions.
+--
 -- If the 'PhysicalDeviceCooperativeMatrixFeaturesNV' structure is included
 -- in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -192,17 +204,18 @@ getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = liftIO . evalCon
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceCooperativeMatrixFeaturesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCooperativeMatrixFeaturesNV = PhysicalDeviceCooperativeMatrixFeaturesNV
-  { -- | @cooperativeMatrix@ indicates that the implementation supports the
-    -- @CooperativeMatrixNV@ SPIR-V capability.
+  { -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixFeaturesNV" "cooperativeMatrix"
     cooperativeMatrix :: Bool
-  , -- | @cooperativeMatrixRobustBufferAccess@ indicates that the implementation
-    -- supports robust buffer access for SPIR-V @OpCooperativeMatrixLoadNV@ and
-    -- @OpCooperativeMatrixStoreNV@ instructions.
+  , -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixFeaturesNV" "cooperativeMatrixRobustBufferAccess"
     cooperativeMatrixRobustBufferAccess :: Bool
   }
   deriving (Typeable, Eq)
@@ -257,6 +270,20 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesNV where
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #limits-cooperativeMatrixSupportedStages#
+--     @cooperativeMatrixSupportedStages@ is a bitfield of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
+--     describing the shader stages that cooperative matrix instructions
+--     are supported in. @cooperativeMatrixSupportedStages@ will have the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT'
+--     bit set if any of the physical device’s queues support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+--
 -- If the 'PhysicalDeviceCooperativeMatrixPropertiesNV' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -264,18 +291,16 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesNV where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceCooperativeMatrixPropertiesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCooperativeMatrixPropertiesNV = PhysicalDeviceCooperativeMatrixPropertiesNV
-  { -- | @cooperativeMatrixSupportedStages@ is a bitfield of
-    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' describing
-    -- the shader stages that cooperative matrix instructions are supported in.
-    -- @cooperativeMatrixSupportedStages@ will have the
-    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT' bit
-    -- set if any of the physical device’s queues support
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+  { -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixPropertiesNV" "cooperativeMatrixSupportedStages"
     cooperativeMatrixSupportedStages :: ShaderStageFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -329,6 +354,27 @@ instance Zero PhysicalDeviceCooperativeMatrixPropertiesNV where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkCooperativeMatrixPropertiesNV-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV'
+--
+-- -   #VUID-VkCooperativeMatrixPropertiesNV-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
+--
+-- -   #VUID-VkCooperativeMatrixPropertiesNV-AType-parameter# @AType@
+--     /must/ be a valid 'ComponentTypeNV' value
+--
+-- -   #VUID-VkCooperativeMatrixPropertiesNV-BType-parameter# @BType@
+--     /must/ be a valid 'ComponentTypeNV' value
+--
+-- -   #VUID-VkCooperativeMatrixPropertiesNV-CType-parameter# @CType@
+--     /must/ be a valid 'ComponentTypeNV' value
+--
+-- -   #VUID-VkCooperativeMatrixPropertiesNV-DType-parameter# @DType@
+--     /must/ be a valid 'ComponentTypeNV' value
+--
+-- -   #VUID-VkCooperativeMatrixPropertiesNV-scope-parameter# @scope@
+--     /must/ be a valid 'ScopeNV' value
+--
 -- = See Also
 --
 -- 'ComponentTypeNV', 'ScopeNV',
@@ -342,24 +388,14 @@ data CooperativeMatrixPropertiesNV = CooperativeMatrixPropertiesNV
   , -- | @KSize@ is the number of columns in matrix A and rows in matrix B.
     kSize :: Word32
   , -- | @AType@ is the component type of matrix A, of type 'ComponentTypeNV'.
-    --
-    -- @AType@ /must/ be a valid 'ComponentTypeNV' value
     aType :: ComponentTypeNV
   , -- | @BType@ is the component type of matrix B, of type 'ComponentTypeNV'.
-    --
-    -- @BType@ /must/ be a valid 'ComponentTypeNV' value
     bType :: ComponentTypeNV
   , -- | @CType@ is the component type of matrix C, of type 'ComponentTypeNV'.
-    --
-    -- @CType@ /must/ be a valid 'ComponentTypeNV' value
     cType :: ComponentTypeNV
   , -- | @DType@ is the component type of matrix D, of type 'ComponentTypeNV'.
-    --
-    -- @DType@ /must/ be a valid 'ComponentTypeNV' value
     dType :: ComponentTypeNV
   , -- | @scope@ is the scope of all the matrix types, of type 'ScopeNV'.
-    --
-    -- @scope@ /must/ be a valid 'ScopeNV' value
     scope :: ScopeNV
   }
   deriving (Typeable, Eq)

@@ -35,6 +35,11 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = STRUCTUR
 -- shader draw parameter features that can be supported by an
 -- implementation
 --
+-- = Members
+--
+-- -   #extension-features-shaderDrawParameters# @shaderDrawParameters@
+--     specifies whether shader draw parameters are supported.
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderDrawParametersFeatures' structure is
@@ -44,13 +49,16 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = STRUCTUR
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceShaderDrawParametersFeatures-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderDrawParametersFeatures = PhysicalDeviceShaderDrawParametersFeatures
-  { -- | @shaderDrawParameters@ specifies whether shader draw parameters are
-    -- supported.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParametersFeatures" "shaderDrawParameters"
     shaderDrawParameters :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

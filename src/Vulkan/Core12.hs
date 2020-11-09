@@ -117,6 +117,87 @@ pattern API_VERSION_1_2 = MAKE_VERSION 1 2 0
 --
 -- = Description
 --
+-- -   #features-storageBuffer16BitAccess# @storageBuffer16BitAccess@
+--     specifies whether objects in the @StorageBuffer@ or
+--     @PhysicalStorageBuffer@ storage class with the @Block@ decoration
+--     /can/ have 16-bit integer and 16-bit floating-point members. If this
+--     feature is not enabled, 16-bit integer or 16-bit floating-point
+--     members /must/ not be used in such objects. This also specifies
+--     whether shader modules /can/ declare the @StorageBuffer16BitAccess@
+--     capability.
+--
+-- -   #features-uniformAndStorageBuffer16BitAccess#
+--     @uniformAndStorageBuffer16BitAccess@ specifies whether objects in
+--     the @Uniform@ storage class with the @Block@ decoration and in the
+--     @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the
+--     same decoration /can/ have 16-bit integer and 16-bit floating-point
+--     members. If this feature is not enabled, 16-bit integer or 16-bit
+--     floating-point members /must/ not be used in such objects. This also
+--     specifies whether shader modules /can/ declare the
+--     @UniformAndStorageBuffer16BitAccess@ capability.
+--
+-- -   #features-storagePushConstant16# @storagePushConstant16@ specifies
+--     whether objects in the @PushConstant@ storage class /can/ have
+--     16-bit integer and 16-bit floating-point members. If this feature is
+--     not enabled, 16-bit integer or floating-point members /must/ not be
+--     used in such objects. This also specifies whether shader modules
+--     /can/ declare the @StoragePushConstant16@ capability.
+--
+-- -   #features-storageInputOutput16# @storageInputOutput16@ specifies
+--     whether objects in the @Input@ and @Output@ storage classes /can/
+--     have 16-bit integer and 16-bit floating-point members. If this
+--     feature is not enabled, 16-bit integer or 16-bit floating-point
+--     members /must/ not be used in such objects. This also specifies
+--     whether shader modules /can/ declare the @StorageInputOutput16@
+--     capability.
+--
+-- -   #features-multiview# @multiview@ specifies whether the
+--     implementation supports multiview rendering within a render pass. If
+--     this feature is not enabled, the view mask of each subpass /must/
+--     always be zero.
+--
+-- -   #features-multiview-gs# @multiviewGeometryShader@ specifies whether
+--     the implementation supports multiview rendering within a render
+--     pass, with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#geometry geometry shaders>.
+--     If this feature is not enabled, then a pipeline compiled against a
+--     subpass with a non-zero view mask /must/ not include a geometry
+--     shader.
+--
+-- -   #features-multiview-tess# @multiviewTessellationShader@ specifies
+--     whether the implementation supports multiview rendering within a
+--     render pass, with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#tessellation tessellation shaders>.
+--     If this feature is not enabled, then a pipeline compiled against a
+--     subpass with a non-zero view mask /must/ not include any
+--     tessellation shaders.
+--
+-- -   #features-variablePointersStorageBuffer#
+--     @variablePointersStorageBuffer@ specifies whether the implementation
+--     supports the SPIR-V @VariablePointersStorageBuffer@ capability. When
+--     this feature is not enabled, shader modules /must/ not declare the
+--     @SPV_KHR_variable_pointers@ extension or the
+--     @VariablePointersStorageBuffer@ capability.
+--
+-- -   #features-variablePointers# @variablePointers@ specifies whether the
+--     implementation supports the SPIR-V @VariablePointers@ capability.
+--     When this feature is not enabled, shader modules /must/ not declare
+--     the @VariablePointers@ capability.
+--
+-- -   #features-protectedMemory# @protectedMemory@ specifies whether
+--     protected memory is supported.
+--
+-- -   #features-samplerYcbcrConversion# @samplerYcbcrConversion@ specifies
+--     whether the implementation supports
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
+--     If @samplerYcbcrConversion@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', sampler Y′CBCR conversion is
+--     not supported, and samplers using sampler Y′CBCR conversion /must/
+--     not be used.
+--
+-- -   #features-shaderDrawParameters# @shaderDrawParameters@ specifies
+--     whether shader draw parameters are supported.
+--
 -- If the 'PhysicalDeviceVulkan11Features' structure is included in the
 -- @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -126,79 +207,38 @@ pattern API_VERSION_1_2 = MAKE_VERSION 1 2 0
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceVulkan11Features-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
-  { -- | @storageBuffer16BitAccess@ specifies whether objects in the
-    -- @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the
-    -- @Block@ decoration /can/ have 16-bit integer and 16-bit floating-point
-    -- members. If this feature is not enabled, 16-bit integer or 16-bit
-    -- floating-point members /must/ not be used in such objects. This also
-    -- specifies whether shader modules /can/ declare the
-    -- @StorageBuffer16BitAccess@ capability.
+  { -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "storageBuffer16BitAccess"
     storageBuffer16BitAccess :: Bool
-  , -- | @uniformAndStorageBuffer16BitAccess@ specifies whether objects in the
-    -- @Uniform@ storage class with the @Block@ decoration and in the
-    -- @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the same
-    -- decoration /can/ have 16-bit integer and 16-bit floating-point members.
-    -- If this feature is not enabled, 16-bit integer or 16-bit floating-point
-    -- members /must/ not be used in such objects. This also specifies whether
-    -- shader modules /can/ declare the @UniformAndStorageBuffer16BitAccess@
-    -- capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "uniformAndStorageBuffer16BitAccess"
     uniformAndStorageBuffer16BitAccess :: Bool
-  , -- | @storagePushConstant16@ specifies whether objects in the @PushConstant@
-    -- storage class /can/ have 16-bit integer and 16-bit floating-point
-    -- members. If this feature is not enabled, 16-bit integer or
-    -- floating-point members /must/ not be used in such objects. This also
-    -- specifies whether shader modules /can/ declare the
-    -- @StoragePushConstant16@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "storagePushConstant16"
     storagePushConstant16 :: Bool
-  , -- | @storageInputOutput16@ specifies whether objects in the @Input@ and
-    -- @Output@ storage classes /can/ have 16-bit integer and 16-bit
-    -- floating-point members. If this feature is not enabled, 16-bit integer
-    -- or 16-bit floating-point members /must/ not be used in such objects.
-    -- This also specifies whether shader modules /can/ declare the
-    -- @StorageInputOutput16@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "storageInputOutput16"
     storageInputOutput16 :: Bool
-  , -- | @multiview@ specifies whether the implementation supports multiview
-    -- rendering within a render pass. If this feature is not enabled, the view
-    -- mask of each subpass /must/ always be zero.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "multiview"
     multiview :: Bool
-  , -- | @multiviewGeometryShader@ specifies whether the implementation supports
-    -- multiview rendering within a render pass, with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#geometry geometry shaders>.
-    -- If this feature is not enabled, then a pipeline compiled against a
-    -- subpass with a non-zero view mask /must/ not include a geometry shader.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "multiviewGeometryShader"
     multiviewGeometryShader :: Bool
-  , -- | @multiviewTessellationShader@ specifies whether the implementation
-    -- supports multiview rendering within a render pass, with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#tessellation tessellation shaders>.
-    -- If this feature is not enabled, then a pipeline compiled against a
-    -- subpass with a non-zero view mask /must/ not include any tessellation
-    -- shaders.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "multiviewTessellationShader"
     multiviewTessellationShader :: Bool
-  , -- | @variablePointersStorageBuffer@ specifies whether the implementation
-    -- supports the SPIR-V @VariablePointersStorageBuffer@ capability. When
-    -- this feature is not enabled, shader modules /must/ not declare the
-    -- @SPV_KHR_variable_pointers@ extension or the
-    -- @VariablePointersStorageBuffer@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "variablePointersStorageBuffer"
     variablePointersStorageBuffer :: Bool
-  , -- | @variablePointers@ specifies whether the implementation supports the
-    -- SPIR-V @VariablePointers@ capability. When this feature is not enabled,
-    -- shader modules /must/ not declare the @VariablePointers@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "variablePointers"
     variablePointers :: Bool
-  , -- | @protectedMemory@ specifies whether protected memory is supported.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "protectedMemory"
     protectedMemory :: Bool
-  , -- | @samplerYcbcrConversion@ specifies whether the implementation supports
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
-    -- If @samplerYcbcrConversion@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- sampler Y′CBCR conversion is not supported, and samplers using sampler
-    -- Y′CBCR conversion /must/ not be used.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "samplerYcbcrConversion"
     samplerYcbcrConversion :: Bool
-  , -- | @shaderDrawParameters@ specifies whether shader draw parameters are
-    -- supported.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Features" "shaderDrawParameters"
     shaderDrawParameters :: Bool
   }
   deriving (Typeable, Eq)
@@ -286,6 +326,97 @@ instance Zero PhysicalDeviceVulkan11Features where
 -- | VkPhysicalDeviceVulkan11Properties - Structure specifying physical
 -- device properties for functionality promoted to Vulkan 1.1
 --
+-- = Members
+--
+-- -   @deviceUUID@ is an array of 'Vulkan.Core10.APIConstants.UUID_SIZE'
+--     @uint8_t@ values representing a universally unique identifier for
+--     the device.
+--
+-- -   @driverUUID@ is an array of 'Vulkan.Core10.APIConstants.UUID_SIZE'
+--     @uint8_t@ values representing a universally unique identifier for
+--     the driver build in use by the device.
+--
+-- -   @deviceLUID@ is an array of 'Vulkan.Core10.APIConstants.LUID_SIZE'
+--     @uint8_t@ values representing a locally unique identifier for the
+--     device.
+--
+-- -   @deviceNodeMask@ is a @uint32_t@ bitfield identifying the node
+--     within a linked device adapter corresponding to the device.
+--
+-- -   @deviceLUIDValid@ is a boolean value that will be
+--     'Vulkan.Core10.FundamentalTypes.TRUE' if @deviceLUID@ contains a
+--     valid LUID and @deviceNodeMask@ contains a valid node mask, and
+--     'Vulkan.Core10.FundamentalTypes.FALSE' if they do not.
+--
+-- -   #limits-subgroup-size# @subgroupSize@ is the default number of
+--     invocations in each subgroup. @subgroupSize@ is at least 1 if any of
+--     the physical device’s queues support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+--     @subgroupSize@ is a power-of-two.
+--
+-- -   #limits-subgroupSupportedStages# @subgroupSupportedStages@ is a
+--     bitfield of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
+--     describing the shader stages that
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
+--     with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+--     are supported in. @subgroupSupportedStages@ will have the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT'
+--     bit set if any of the physical device’s queues support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+--
+-- -   @subgroupSupportedOperations@ is a bitmask of
+--     'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits'
+--     specifying the sets of
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
+--     with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+--     supported on this device. @subgroupSupportedOperations@ will have
+--     the
+--     'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_BASIC_BIT'
+--     bit set if any of the physical device’s queues support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+--
+-- -   #limits-subgroupQuadOperationsInAllStages#
+--     @subgroupQuadOperationsInAllStages@ is a boolean specifying whether
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-quad-operations quad group operations>
+--     are available in all stages, or are restricted to fragment and
+--     compute stages.
+--
+-- -   #limits-pointClipping# @pointClippingBehavior@ is a
+--     'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior'
+--     value specifying the point clipping behavior supported by the
+--     implementation.
+--
+-- -   #limits-maxMultiviewViewCount# @maxMultiviewViewCount@ is one
+--     greater than the maximum view index that /can/ be used in a subpass.
+--
+-- -   #limits-maxMultiviewInstanceIndex# @maxMultiviewInstanceIndex@ is
+--     the maximum valid value of instance index allowed to be generated by
+--     a drawing command recorded within a subpass of a multiview render
+--     pass instance.
+--
+-- -   @protectedNoFault@ specifies the behavior of the implementation when
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules protected memory access rules>
+--     are broken. If @protectedNoFault@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', breaking those rules will not
+--     result in process termination or device loss.
+--
+-- -   #limits-maxPerSetDescriptors# @maxPerSetDescriptors@ is a maximum
+--     number of descriptors (summed over all descriptor types) in a single
+--     descriptor set that is guaranteed to satisfy any
+--     implementation-dependent constraints on the size of a descriptor set
+--     itself. Applications /can/ query whether a descriptor set that goes
+--     beyond this limit is supported using
+--     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport'.
+--
+-- -   #limits-maxMemoryAllocationSize# @maxMemoryAllocationSize@ is the
+--     maximum size of a memory allocation that /can/ be created, even if
+--     there is more space available in the heap.
+--
 -- = Description
 --
 -- The members of 'PhysicalDeviceVulkan11Properties' /must/ have the same
@@ -300,6 +431,10 @@ instance Zero PhysicalDeviceVulkan11Features where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceVulkan11Properties-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
@@ -309,87 +444,35 @@ instance Zero PhysicalDeviceVulkan11Features where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlags'
 data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
-  { -- | @deviceUUID@ is an array of 'Vulkan.Core10.APIConstants.UUID_SIZE'
-    -- @uint8_t@ values representing a universally unique identifier for the
-    -- device.
+  { -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "deviceUUID"
     deviceUUID :: ByteString
-  , -- | @driverUUID@ is an array of 'Vulkan.Core10.APIConstants.UUID_SIZE'
-    -- @uint8_t@ values representing a universally unique identifier for the
-    -- driver build in use by the device.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "driverUUID"
     driverUUID :: ByteString
-  , -- | @deviceLUID@ is an array of 'Vulkan.Core10.APIConstants.LUID_SIZE'
-    -- @uint8_t@ values representing a locally unique identifier for the
-    -- device.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "deviceLUID"
     deviceLUID :: ByteString
-  , -- | @deviceNodeMask@ is a @uint32_t@ bitfield identifying the node within a
-    -- linked device adapter corresponding to the device.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "deviceNodeMask"
     deviceNodeMask :: Word32
-  , -- | @deviceLUIDValid@ is a boolean value that will be
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if @deviceLUID@ contains a valid
-    -- LUID and @deviceNodeMask@ contains a valid node mask, and
-    -- 'Vulkan.Core10.FundamentalTypes.FALSE' if they do not.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "deviceLUIDValid"
     deviceLUIDValid :: Bool
-  , -- | @subgroupSize@ is the default number of invocations in each subgroup.
-    -- @subgroupSize@ is at least 1 if any of the physical device’s queues
-    -- support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @subgroupSize@ is
-    -- a power-of-two.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "subgroupSize"
     subgroupSize :: Word32
-  , -- | @subgroupSupportedStages@ is a bitfield of
-    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' describing
-    -- the shader stages that
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
-    -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
-    -- are supported in. @subgroupSupportedStages@ will have the
-    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT' bit
-    -- set if any of the physical device’s queues support
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "subgroupSupportedStages"
     subgroupSupportedStages :: ShaderStageFlags
-  , -- | @subgroupSupportedOperations@ is a bitmask of
-    -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits'
-    -- specifying the sets of
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
-    -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
-    -- supported on this device. @subgroupSupportedOperations@ will have the
-    -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_BASIC_BIT'
-    -- bit set if any of the physical device’s queues support
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "subgroupSupportedOperations"
     subgroupSupportedOperations :: SubgroupFeatureFlags
-  , -- | @subgroupQuadOperationsInAllStages@ is a boolean specifying whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-quad-operations quad group operations>
-    -- are available in all stages, or are restricted to fragment and compute
-    -- stages.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "subgroupQuadOperationsInAllStages"
     subgroupQuadOperationsInAllStages :: Bool
-  , -- | @pointClippingBehavior@ is a
-    -- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior' value
-    -- specifying the point clipping behavior supported by the implementation.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "pointClippingBehavior"
     pointClippingBehavior :: PointClippingBehavior
-  , -- | @maxMultiviewViewCount@ is one greater than the maximum view index that
-    -- /can/ be used in a subpass.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "maxMultiviewViewCount"
     maxMultiviewViewCount :: Word32
-  , -- | @maxMultiviewInstanceIndex@ is the maximum valid value of instance index
-    -- allowed to be generated by a drawing command recorded within a subpass
-    -- of a multiview render pass instance.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "maxMultiviewInstanceIndex"
     maxMultiviewInstanceIndex :: Word32
-  , -- | @protectedNoFault@ specifies the behavior of the implementation when
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules protected memory access rules>
-    -- are broken. If @protectedNoFault@ is
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE', breaking those rules will not
-    -- result in process termination or device loss.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "protectedNoFault"
     protectedNoFault :: Bool
-  , -- | @maxPerSetDescriptors@ is a maximum number of descriptors (summed over
-    -- all descriptor types) in a single descriptor set that is guaranteed to
-    -- satisfy any implementation-dependent constraints on the size of a
-    -- descriptor set itself. Applications /can/ query whether a descriptor set
-    -- that goes beyond this limit is supported using
-    -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport'.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "maxPerSetDescriptors"
     maxPerSetDescriptors :: Word32
-  , -- | @maxMemoryAllocationSize@ is the maximum size of a memory allocation
-    -- that /can/ be created, even if there is more space available in the
-    -- heap.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan11Properties" "maxMemoryAllocationSize"
     maxMemoryAllocationSize :: DeviceSize
   }
   deriving (Typeable)
@@ -496,29 +579,31 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- = Description
 --
--- -   @samplerMirrorClampToEdge@ indicates whether the implementation
---     supports the
+-- -   #features-samplerMirrorClampToEdge# @samplerMirrorClampToEdge@
+--     indicates whether the implementation supports the
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE'
 --     sampler address mode. If this feature is not enabled, the
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE'
 --     sampler address mode /must/ not be used.
 --
--- -   @drawIndirectCount@ indicates whether the implementation supports
---     the
+-- -   #features-drawIndirectCount# @drawIndirectCount@ indicates whether
+--     the implementation supports the
 --     'Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count.cmdDrawIndirectCount'
 --     and
 --     'Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count.cmdDrawIndexedIndirectCount'
 --     functions. If this feature is not enabled, these functions /must/
 --     not be used.
 --
--- -   @storageBuffer8BitAccess@ indicates whether objects in the
---     @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the
---     @Block@ decoration /can/ have 8-bit integer members. If this feature
---     is not enabled, 8-bit integer members /must/ not be used in such
---     objects. This also indicates whether shader modules /can/ declare
---     the @StorageBuffer8BitAccess@ capability.
+-- -   #features-storageBuffer8BitAccess# @storageBuffer8BitAccess@
+--     indicates whether objects in the @StorageBuffer@ or
+--     @PhysicalStorageBuffer@ storage class with the @Block@ decoration
+--     /can/ have 8-bit integer members. If this feature is not enabled,
+--     8-bit integer members /must/ not be used in such objects. This also
+--     indicates whether shader modules /can/ declare the
+--     @StorageBuffer8BitAccess@ capability.
 --
--- -   @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
+-- -   #features-uniformAndStorageBuffer8BitAccess#
+--     @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
 --     @Uniform@ storage class with the @Block@ decoration and in the
 --     @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the
 --     same decoration /can/ have 8-bit integer members. If this feature is
@@ -526,41 +611,46 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     objects. This also indicates whether shader modules /can/ declare
 --     the @UniformAndStorageBuffer8BitAccess@ capability.
 --
--- -   @storagePushConstant8@ indicates whether objects in the
---     @PushConstant@ storage class /can/ have 8-bit integer members. If
---     this feature is not enabled, 8-bit integer members /must/ not be
---     used in such objects. This also indicates whether shader modules
---     /can/ declare the @StoragePushConstant8@ capability.
+-- -   #features-storagePushConstant8# @storagePushConstant8@ indicates
+--     whether objects in the @PushConstant@ storage class /can/ have 8-bit
+--     integer members. If this feature is not enabled, 8-bit integer
+--     members /must/ not be used in such objects. This also indicates
+--     whether shader modules /can/ declare the @StoragePushConstant8@
+--     capability.
 --
--- -   @shaderBufferInt64Atomics@ indicates whether shaders /can/ perform
---     64-bit unsigned and signed integer atomic operations on buffers.
+-- -   #features-shaderBufferInt64Atomics# @shaderBufferInt64Atomics@
+--     indicates whether shaders /can/ perform 64-bit unsigned and signed
+--     integer atomic operations on buffers.
 --
--- -   @shaderSharedInt64Atomics@ indicates whether shaders /can/ perform
---     64-bit unsigned and signed integer atomic operations on shared
---     memory.
+-- -   #features-shaderSharedInt64Atomics# @shaderSharedInt64Atomics@
+--     indicates whether shaders /can/ perform 64-bit unsigned and signed
+--     integer atomic operations on shared memory.
 --
--- -   @shaderFloat16@ indicates whether 16-bit floats (halfs) are
---     supported in shader code. This also indicates whether shader modules
---     /can/ declare the @Float16@ capability. However, this only enables a
---     subset of the storage classes that SPIR-V allows for the @Float16@
---     SPIR-V capability: Declaring and using 16-bit floats in the
---     @Private@, @Workgroup@, and @Function@ storage classes is enabled,
---     while declaring them in the interface storage classes (e.g.,
---     @UniformConstant@, @Uniform@, @StorageBuffer@, @Input@, @Output@,
---     and @PushConstant@) is not enabled.
+-- -   #features-shaderFloat16# @shaderFloat16@ indicates whether 16-bit
+--     floats (halfs) are supported in shader code. This also indicates
+--     whether shader modules /can/ declare the @Float16@ capability.
+--     However, this only enables a subset of the storage classes that
+--     SPIR-V allows for the @Float16@ SPIR-V capability: Declaring and
+--     using 16-bit floats in the @Private@, @Workgroup@, and @Function@
+--     storage classes is enabled, while declaring them in the interface
+--     storage classes (e.g., @UniformConstant@, @Uniform@,
+--     @StorageBuffer@, @Input@, @Output@, and @PushConstant@) is not
+--     enabled.
 --
--- -   @shaderInt8@ indicates whether 8-bit integers (signed and unsigned)
---     are supported in shader code. This also indicates whether shader
---     modules /can/ declare the @Int8@ capability. However, this only
---     enables a subset of the storage classes that SPIR-V allows for the
---     @Int8@ SPIR-V capability: Declaring and using 8-bit integers in the
---     @Private@, @Workgroup@, and @Function@ storage classes is enabled,
---     while declaring them in the interface storage classes (e.g.,
---     @UniformConstant@, @Uniform@, @StorageBuffer@, @Input@, @Output@,
---     and @PushConstant@) is not enabled.
+-- -   #features-shaderInt8# @shaderInt8@ indicates whether 8-bit integers
+--     (signed and unsigned) are supported in shader code. This also
+--     indicates whether shader modules /can/ declare the @Int8@
+--     capability. However, this only enables a subset of the storage
+--     classes that SPIR-V allows for the @Int8@ SPIR-V capability:
+--     Declaring and using 8-bit integers in the @Private@, @Workgroup@,
+--     and @Function@ storage classes is enabled, while declaring them in
+--     the interface storage classes (e.g., @UniformConstant@, @Uniform@,
+--     @StorageBuffer@, @Input@, @Output@, and @PushConstant@) is not
+--     enabled.
 --
--- -   @descriptorIndexing@ indicates whether the implementation supports
---     the minimum set of descriptor indexing features as described in the
+-- -   #features-descriptorIndexing# @descriptorIndexing@ indicates whether
+--     the implementation supports the minimum set of descriptor indexing
+--     features as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-requirements Feature Requirements>
 --     section. Enabling the @descriptorIndexing@ member when
 --     'Vulkan.Core10.Device.createDevice' is called does not imply the
@@ -568,7 +658,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     other descriptor indexing features /must/ be enabled individually as
 --     needed by the application.
 --
--- -   @shaderInputAttachmentArrayDynamicIndexing@ indicates whether arrays
+-- -   #features-shaderInputAttachmentArrayDynamicIndexing#
+--     @shaderInputAttachmentArrayDynamicIndexing@ indicates whether arrays
 --     of input attachments /can/ be indexed by dynamically uniform integer
 --     expressions in shader code. If this feature is not enabled,
 --     resources with a descriptor type of
@@ -578,7 +669,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     shader modules /can/ declare the
 --     @InputAttachmentArrayDynamicIndexing@ capability.
 --
--- -   @shaderUniformTexelBufferArrayDynamicIndexing@ indicates whether
+-- -   #features-shaderUniformTexelBufferArrayDynamicIndexing#
+--     @shaderUniformTexelBufferArrayDynamicIndexing@ indicates whether
 --     arrays of uniform texel buffers /can/ be indexed by dynamically
 --     uniform integer expressions in shader code. If this feature is not
 --     enabled, resources with a descriptor type of
@@ -588,7 +680,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     shader modules /can/ declare the
 --     @UniformTexelBufferArrayDynamicIndexing@ capability.
 --
--- -   @shaderStorageTexelBufferArrayDynamicIndexing@ indicates whether
+-- -   #features-shaderStorageTexelBufferArrayDynamicIndexing#
+--     @shaderStorageTexelBufferArrayDynamicIndexing@ indicates whether
 --     arrays of storage texel buffers /can/ be indexed by dynamically
 --     uniform integer expressions in shader code. If this feature is not
 --     enabled, resources with a descriptor type of
@@ -598,7 +691,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     shader modules /can/ declare the
 --     @StorageTexelBufferArrayDynamicIndexing@ capability.
 --
--- -   @shaderUniformBufferArrayNonUniformIndexing@ indicates whether
+-- -   #features-shaderUniformBufferArrayNonUniformIndexing#
+--     @shaderUniformBufferArrayNonUniformIndexing@ indicates whether
 --     arrays of uniform buffers /can/ be indexed by non-uniform integer
 --     expressions in shader code. If this feature is not enabled,
 --     resources with a descriptor type of
@@ -610,7 +704,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     shader modules /can/ declare the
 --     @UniformBufferArrayNonUniformIndexing@ capability.
 --
--- -   @shaderSampledImageArrayNonUniformIndexing@ indicates whether arrays
+-- -   #features-shaderSampledImageArrayNonUniformIndexing#
+--     @shaderSampledImageArrayNonUniformIndexing@ indicates whether arrays
 --     of samplers or sampled images /can/ be indexed by non-uniform
 --     integer expressions in shader code. If this feature is not enabled,
 --     resources with a descriptor type of
@@ -623,7 +718,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     shader modules /can/ declare the
 --     @SampledImageArrayNonUniformIndexing@ capability.
 --
--- -   @shaderStorageBufferArrayNonUniformIndexing@ indicates whether
+-- -   #features-shaderStorageBufferArrayNonUniformIndexing#
+--     @shaderStorageBufferArrayNonUniformIndexing@ indicates whether
 --     arrays of storage buffers /can/ be indexed by non-uniform integer
 --     expressions in shader code. If this feature is not enabled,
 --     resources with a descriptor type of
@@ -635,7 +731,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     shader modules /can/ declare the
 --     @StorageBufferArrayNonUniformIndexing@ capability.
 --
--- -   @shaderStorageImageArrayNonUniformIndexing@ indicates whether arrays
+-- -   #features-shaderStorageImageArrayNonUniformIndexing#
+--     @shaderStorageImageArrayNonUniformIndexing@ indicates whether arrays
 --     of storage images /can/ be indexed by non-uniform integer
 --     expressions in shader code. If this feature is not enabled,
 --     resources with a descriptor type of
@@ -645,7 +742,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     shader modules /can/ declare the
 --     @StorageImageArrayNonUniformIndexing@ capability.
 --
--- -   @shaderInputAttachmentArrayNonUniformIndexing@ indicates whether
+-- -   #features-shaderInputAttachmentArrayNonUniformIndexing#
+--     @shaderInputAttachmentArrayNonUniformIndexing@ indicates whether
 --     arrays of input attachments /can/ be indexed by non-uniform integer
 --     expressions in shader code. If this feature is not enabled,
 --     resources with a descriptor type of
@@ -655,7 +753,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     shader modules /can/ declare the
 --     @InputAttachmentArrayNonUniformIndexing@ capability.
 --
--- -   @shaderUniformTexelBufferArrayNonUniformIndexing@ indicates whether
+-- -   #features-shaderUniformTexelBufferArrayNonUniformIndexing#
+--     @shaderUniformTexelBufferArrayNonUniformIndexing@ indicates whether
 --     arrays of uniform texel buffers /can/ be indexed by non-uniform
 --     integer expressions in shader code. If this feature is not enabled,
 --     resources with a descriptor type of
@@ -665,7 +764,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     shader modules /can/ declare the
 --     @UniformTexelBufferArrayNonUniformIndexing@ capability.
 --
--- -   @shaderStorageTexelBufferArrayNonUniformIndexing@ indicates whether
+-- -   #features-shaderStorageTexelBufferArrayNonUniformIndexing#
+--     @shaderStorageTexelBufferArrayNonUniformIndexing@ indicates whether
 --     arrays of storage texel buffers /can/ be indexed by non-uniform
 --     integer expressions in shader code. If this feature is not enabled,
 --     resources with a descriptor type of
@@ -675,14 +775,16 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     shader modules /can/ declare the
 --     @StorageTexelBufferArrayNonUniformIndexing@ capability.
 --
--- -   @descriptorBindingUniformBufferUpdateAfterBind@ indicates whether
+-- -   #features-descriptorBindingUniformBufferUpdateAfterBind#
+--     @descriptorBindingUniformBufferUpdateAfterBind@ indicates whether
 --     the implementation supports updating uniform buffer descriptors
 --     after a set is bound. If this feature is not enabled,
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --     /must/ not be used with
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'.
 --
--- -   @descriptorBindingSampledImageUpdateAfterBind@ indicates whether the
+-- -   #features-descriptorBindingSampledImageUpdateAfterBind#
+--     @descriptorBindingSampledImageUpdateAfterBind@ indicates whether the
 --     implementation supports updating sampled image descriptors after a
 --     set is bound. If this feature is not enabled,
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
@@ -692,61 +794,68 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'.
 --
--- -   @descriptorBindingStorageImageUpdateAfterBind@ indicates whether the
+-- -   #features-descriptorBindingStorageImageUpdateAfterBind#
+--     @descriptorBindingStorageImageUpdateAfterBind@ indicates whether the
 --     implementation supports updating storage image descriptors after a
 --     set is bound. If this feature is not enabled,
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --     /must/ not be used with
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'.
 --
--- -   @descriptorBindingStorageBufferUpdateAfterBind@ indicates whether
+-- -   #features-descriptorBindingStorageBufferUpdateAfterBind#
+--     @descriptorBindingStorageBufferUpdateAfterBind@ indicates whether
 --     the implementation supports updating storage buffer descriptors
 --     after a set is bound. If this feature is not enabled,
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --     /must/ not be used with
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'.
 --
--- -   @descriptorBindingUniformTexelBufferUpdateAfterBind@ indicates
+-- -   #features-descriptorBindingUniformTexelBufferUpdateAfterBind#
+--     @descriptorBindingUniformTexelBufferUpdateAfterBind@ indicates
 --     whether the implementation supports updating uniform texel buffer
 --     descriptors after a set is bound. If this feature is not enabled,
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --     /must/ not be used with
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'.
 --
--- -   @descriptorBindingStorageTexelBufferUpdateAfterBind@ indicates
+-- -   #features-descriptorBindingStorageTexelBufferUpdateAfterBind#
+--     @descriptorBindingStorageTexelBufferUpdateAfterBind@ indicates
 --     whether the implementation supports updating storage texel buffer
 --     descriptors after a set is bound. If this feature is not enabled,
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --     /must/ not be used with
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'.
 --
--- -   @descriptorBindingUpdateUnusedWhilePending@ indicates whether the
+-- -   #features-descriptorBindingUpdateUnusedWhilePending#
+--     @descriptorBindingUpdateUnusedWhilePending@ indicates whether the
 --     implementation supports updating descriptors while the set is in
 --     use. If this feature is not enabled,
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
 --     /must/ not be used.
 --
--- -   @descriptorBindingPartiallyBound@ indicates whether the
+-- -   #features-descriptorBindingPartiallyBound#
+--     @descriptorBindingPartiallyBound@ indicates whether the
 --     implementation supports statically using a descriptor set binding in
 --     which some descriptors are not valid. If this feature is not
 --     enabled,
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT'
 --     /must/ not be used.
 --
--- -   @descriptorBindingVariableDescriptorCount@ indicates whether the
+-- -   #features-descriptorBindingVariableDescriptorCount#
+--     @descriptorBindingVariableDescriptorCount@ indicates whether the
 --     implementation supports descriptor sets with a variable-sized last
 --     binding. If this feature is not enabled,
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT'
 --     /must/ not be used.
 --
--- -   @runtimeDescriptorArray@ indicates whether the implementation
---     supports the SPIR-V @RuntimeDescriptorArray@ capability. If this
---     feature is not enabled, descriptors /must/ not be declared in
---     runtime arrays.
+-- -   #features-runtimeDescriptorArray# @runtimeDescriptorArray@ indicates
+--     whether the implementation supports the SPIR-V
+--     @RuntimeDescriptorArray@ capability. If this feature is not enabled,
+--     descriptors /must/ not be declared in runtime arrays.
 --
--- -   @samplerFilterMinmax@ indicates whether the implementation supports
---     a minimum set of required formats supporting min\/max filtering as
---     defined by the
+-- -   #features-samplerFilterMinmax# @samplerFilterMinmax@ indicates
+--     whether the implementation supports a minimum set of required
+--     formats supporting min\/max filtering as defined by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-filterMinmaxSingleComponentFormats-minimum-requirements filterMinmaxSingleComponentFormats>
 --     property minimum requirements. If this feature is not enabled, then
 --     no 'Vulkan.Core10.Sampler.SamplerCreateInfo' @pNext@ chain can
@@ -754,31 +863,34 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
 --     structure.
 --
--- -   @scalarBlockLayout@ indicates that the implementation supports the
---     layout of resource blocks in shaders using
+-- -   #features-scalarBlockLayout# @scalarBlockLayout@ indicates that the
+--     implementation supports the layout of resource blocks in shaders
+--     using
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-alignment-requirements scalar alignment>.
 --
--- -   @imagelessFramebuffer@ indicates that the implementation supports
---     specifying the image view for attachments at render pass begin time
---     via
+-- -   #features-imagelessFramebuffer# @imagelessFramebuffer@ indicates
+--     that the implementation supports specifying the image view for
+--     attachments at render pass begin time via
 --     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.RenderPassAttachmentBeginInfo'.
 --
--- -   @uniformBufferStandardLayout@ indicates that the implementation
---     supports the same layouts for uniform buffers as for storage and
---     other kinds of buffers. See
+-- -   #features-uniformBufferStandardLayout# @uniformBufferStandardLayout@
+--     indicates that the implementation supports the same layouts for
+--     uniform buffers as for storage and other kinds of buffers. See
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
 --
--- -   @shaderSubgroupExtendedTypes@ is a boolean that specifies whether
---     subgroup operations can use 8-bit integer, 16-bit integer, 64-bit
---     integer, 16-bit floating-point, and vectors of these types in
+-- -   #features-subgroup-extended-types# @shaderSubgroupExtendedTypes@ is
+--     a boolean that specifies whether subgroup operations can use 8-bit
+--     integer, 16-bit integer, 64-bit integer, 16-bit floating-point, and
+--     vectors of these types in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
 --     with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>if
 --     the implementation supports the types.
 --
--- -   @separateDepthStencilLayouts@ indicates whether the implementation
---     supports a 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' for a
---     depth\/stencil image with only one of
+-- -   #features-separateDepthStencilLayouts# @separateDepthStencilLayouts@
+--     indicates whether the implementation supports a
+--     'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' for a depth\/stencil
+--     image with only one of
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --     set, and whether
@@ -789,62 +901,69 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --     can be used.
 --
--- -   @hostQueryReset@ indicates that the implementation supports
---     resetting queries from the host with
+-- -   #features-hostQueryReset# @hostQueryReset@ indicates that the
+--     implementation supports resetting queries from the host with
 --     'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.resetQueryPool'.
 --
--- -   @timelineSemaphore@ indicates whether semaphores created with a
+-- -   #features-timelineSemaphore# @timelineSemaphore@ indicates whether
+--     semaphores created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' are
 --     supported.
 --
--- -   @bufferDeviceAddress@ indicates that the implementation supports
---     accessing buffer memory in shaders as storage buffers via an address
---     queried from
+-- -   #features-bufferDeviceAddress# @bufferDeviceAddress@ indicates that
+--     the implementation supports accessing buffer memory in shaders as
+--     storage buffers via an address queried from
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.getBufferDeviceAddress'.
 --
--- -   @bufferDeviceAddressCaptureReplay@ indicates that the implementation
+-- -   #features-bufferDeviceAddressCaptureReplay#
+--     @bufferDeviceAddressCaptureReplay@ indicates that the implementation
 --     supports saving and reusing buffer and device addresses, e.g. for
 --     trace capture and replay.
 --
--- -   @bufferDeviceAddressMultiDevice@ indicates that the implementation
+-- -   #features-bufferDeviceAddressMultiDevice#
+--     @bufferDeviceAddressMultiDevice@ indicates that the implementation
 --     supports the @bufferDeviceAddress@ and @rayTracing@ features for
 --     logical devices created with multiple physical devices. If this
 --     feature is not supported, buffer and acceleration structure
 --     addresses /must/ not be queried on a logical device created with
 --     more than one physical device.
 --
--- -   @vulkanMemoryModel@ indicates whether the Vulkan Memory Model is
---     supported, as defined in
+-- -   #features-vulkanMemoryModel# @vulkanMemoryModel@ indicates whether
+--     the Vulkan Memory Model is supported, as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model Vulkan Memory Model>.
 --     This also indicates whether shader modules /can/ declare the
 --     @VulkanMemoryModel@ capability.
 --
--- -   @vulkanMemoryModelDeviceScope@ indicates whether the Vulkan Memory
+-- -   #features-vulkanMemoryModelDeviceScope#
+--     @vulkanMemoryModelDeviceScope@ indicates whether the Vulkan Memory
 --     Model can use 'Vulkan.Core10.Handles.Device' scope synchronization.
 --     This also indicates whether shader modules /can/ declare the
 --     @VulkanMemoryModelDeviceScope@ capability.
 --
--- -   @vulkanMemoryModelAvailabilityVisibilityChains@ indicates whether
+-- -   #features-vulkanMemoryModelAvailabilityVisibilityChains#
+--     @vulkanMemoryModelAvailabilityVisibilityChains@ indicates whether
 --     the Vulkan Memory Model can use
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model-availability-visibility availability and visibility chains>
 --     with more than one element.
 --
--- -   @shaderOutputViewportIndex@ indicates whether the implementation
---     supports the @ShaderViewportIndex@ SPIR-V capability enabling
---     variables decorated with the @ViewportIndex@ built-in to be exported
---     from vertex or tessellation evaluation shaders. If this feature is
---     not enabled, the @ViewportIndex@ built-in decoration /must/ not be
---     used on outputs in vertex or tessellation evaluation shaders.
+-- -   #features-shaderOutputViewportIndex# @shaderOutputViewportIndex@
+--     indicates whether the implementation supports the
+--     @ShaderViewportIndex@ SPIR-V capability enabling variables decorated
+--     with the @ViewportIndex@ built-in to be exported from vertex or
+--     tessellation evaluation shaders. If this feature is not enabled, the
+--     @ViewportIndex@ built-in decoration /must/ not be used on outputs in
+--     vertex or tessellation evaluation shaders.
 --
--- -   @shaderOutputLayer@ indicates whether the implementation supports
---     the @ShaderLayer@ SPIR-V capability enabling variables decorated
---     with the @Layer@ built-in to be exported from vertex or tessellation
---     evaluation shaders. If this feature is not enabled, the @Layer@
---     built-in decoration /must/ not be used on outputs in vertex or
---     tessellation evaluation shaders.
+-- -   #features-shaderOutputLayer# @shaderOutputLayer@ indicates whether
+--     the implementation supports the @ShaderLayer@ SPIR-V capability
+--     enabling variables decorated with the @Layer@ built-in to be
+--     exported from vertex or tessellation evaluation shaders. If this
+--     feature is not enabled, the @Layer@ built-in decoration /must/ not
+--     be used on outputs in vertex or tessellation evaluation shaders.
 --
--- -   If @subgroupBroadcastDynamicId@ is
+-- -   #features-subgroupBroadcastDynamicId# If
+--     @subgroupBroadcastDynamicId@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', the “Id” operand of
 --     @OpGroupNonUniformBroadcast@ /can/ be dynamically uniform within a
 --     subgroup, and the “Index” operand of
@@ -862,7 +981,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceVulkan12Features-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES'
 --
 -- = See Also
@@ -1190,6 +1310,378 @@ instance Zero PhysicalDeviceVulkan12Features where
 -- | VkPhysicalDeviceVulkan12Properties - Structure specifying physical
 -- device properties for functionality promoted to Vulkan 1.2
 --
+-- = Members
+--
+-- -   @driverID@ is a unique identifier for the driver of the physical
+--     device.
+--
+-- -   @driverName@ is an array of
+--     'Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE' @char@ containing
+--     a null-terminated UTF-8 string which is the name of the driver.
+--
+-- -   @driverInfo@ is an array of
+--     'Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE' @char@ containing
+--     a null-terminated UTF-8 string with additional information about the
+--     driver.
+--
+-- -   @conformanceVersion@ is the version of the Vulkan conformance test
+--     this driver is conformant against (see
+--     'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.ConformanceVersion').
+--
+-- -   #features-denormBehaviorIndependence# @denormBehaviorIndependence@
+--     is a
+--     'Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence'
+--     value indicating whether, and how, denorm behavior can be set
+--     independently for different bit widths.
+--
+-- -   #features-roundingModeIndependence# @roundingModeIndependence@ is a
+--     'Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence'
+--     value indicating whether, and how, rounding modes can be set
+--     independently for different bit widths.
+--
+-- -   #limits-shaderSignedZeroInfNanPreserveFloat16#
+--     @shaderSignedZeroInfNanPreserveFloat16@ is a boolean value
+--     indicating whether sign of a zero, Nans and \(\pm\infty\) /can/ be
+--     preserved in 16-bit floating-point computations. It also indicates
+--     whether the @SignedZeroInfNanPreserve@ execution mode /can/ be used
+--     for 16-bit floating-point types.
+--
+-- -   #limits-shaderSignedZeroInfNanPreserveFloat32#
+--     @shaderSignedZeroInfNanPreserveFloat32@ is a boolean value
+--     indicating whether sign of a zero, Nans and \(\pm\infty\) /can/ be
+--     preserved in 32-bit floating-point computations. It also indicates
+--     whether the @SignedZeroInfNanPreserve@ execution mode /can/ be used
+--     for 32-bit floating-point types.
+--
+-- -   #limits-shaderSignedZeroInfNanPreserveFloat64#
+--     @shaderSignedZeroInfNanPreserveFloat64@ is a boolean value
+--     indicating whether sign of a zero, Nans and \(\pm\infty\) /can/ be
+--     preserved in 64-bit floating-point computations. It also indicates
+--     whether the @SignedZeroInfNanPreserve@ execution mode /can/ be used
+--     for 64-bit floating-point types.
+--
+-- -   #limits-shaderDenormPreserveFloat16# @shaderDenormPreserveFloat16@
+--     is a boolean value indicating whether denormals /can/ be preserved
+--     in 16-bit floating-point computations. It also indicates whether the
+--     @DenormPreserve@ execution mode /can/ be used for 16-bit
+--     floating-point types.
+--
+-- -   #limits-shaderDenormPreserveFloat32# @shaderDenormPreserveFloat32@
+--     is a boolean value indicating whether denormals /can/ be preserved
+--     in 32-bit floating-point computations. It also indicates whether the
+--     @DenormPreserve@ execution mode /can/ be used for 32-bit
+--     floating-point types.
+--
+-- -   #limits-shaderDenormPreserveFloat64# @shaderDenormPreserveFloat64@
+--     is a boolean value indicating whether denormals /can/ be preserved
+--     in 64-bit floating-point computations. It also indicates whether the
+--     @DenormPreserve@ execution mode /can/ be used for 64-bit
+--     floating-point types.
+--
+-- -   #limits-shaderDenormFlushToZeroFloat16#
+--     @shaderDenormFlushToZeroFloat16@ is a boolean value indicating
+--     whether denormals /can/ be flushed to zero in 16-bit floating-point
+--     computations. It also indicates whether the @DenormFlushToZero@
+--     execution mode /can/ be used for 16-bit floating-point types.
+--
+-- -   #limits-shaderDenormFlushToZeroFloat32#
+--     @shaderDenormFlushToZeroFloat32@ is a boolean value indicating
+--     whether denormals /can/ be flushed to zero in 32-bit floating-point
+--     computations. It also indicates whether the @DenormFlushToZero@
+--     execution mode /can/ be used for 32-bit floating-point types.
+--
+-- -   #limits-shaderDenormFlushToZeroFloat64#
+--     @shaderDenormFlushToZeroFloat64@ is a boolean value indicating
+--     whether denormals /can/ be flushed to zero in 64-bit floating-point
+--     computations. It also indicates whether the @DenormFlushToZero@
+--     execution mode /can/ be used for 64-bit floating-point types.
+--
+-- -   #limits-shaderRoundingModeRTEFloat16# @shaderRoundingModeRTEFloat16@
+--     is a boolean value indicating whether an implementation supports the
+--     round-to-nearest-even rounding mode for 16-bit floating-point
+--     arithmetic and conversion instructions. It also indicates whether
+--     the @RoundingModeRTE@ execution mode /can/ be used for 16-bit
+--     floating-point types.
+--
+-- -   #limits-shaderRoundingModeRTEFloat32# @shaderRoundingModeRTEFloat32@
+--     is a boolean value indicating whether an implementation supports the
+--     round-to-nearest-even rounding mode for 32-bit floating-point
+--     arithmetic and conversion instructions. It also indicates whether
+--     the @RoundingModeRTE@ execution mode /can/ be used for 32-bit
+--     floating-point types.
+--
+-- -   #limits-shaderRoundingModeRTEFloat64# @shaderRoundingModeRTEFloat64@
+--     is a boolean value indicating whether an implementation supports the
+--     round-to-nearest-even rounding mode for 64-bit floating-point
+--     arithmetic and conversion instructions. It also indicates whether
+--     the @RoundingModeRTE@ execution mode /can/ be used for 64-bit
+--     floating-point types.
+--
+-- -   #limits-shaderRoundingModeRTZFloat16# @shaderRoundingModeRTZFloat16@
+--     is a boolean value indicating whether an implementation supports the
+--     round-towards-zero rounding mode for 16-bit floating-point
+--     arithmetic and conversion instructions. It also indicates whether
+--     the @RoundingModeRTZ@ execution mode /can/ be used for 16-bit
+--     floating-point types.
+--
+-- -   #limits-shaderRoundingModeRTZFloat32# @shaderRoundingModeRTZFloat32@
+--     is a boolean value indicating whether an implementation supports the
+--     round-towards-zero rounding mode for 32-bit floating-point
+--     arithmetic and conversion instructions. It also indicates whether
+--     the @RoundingModeRTZ@ execution mode /can/ be used for 32-bit
+--     floating-point types.
+--
+-- -   #limits-shaderRoundingModeRTZFloat64# @shaderRoundingModeRTZFloat64@
+--     is a boolean value indicating whether an implementation supports the
+--     round-towards-zero rounding mode for 64-bit floating-point
+--     arithmetic and conversion instructions. It also indicates whether
+--     the @RoundingModeRTZ@ execution mode /can/ be used for 64-bit
+--     floating-point types.
+--
+-- -   #limits-maxUpdateAfterBindDescriptorsInAllPools#
+--     @maxUpdateAfterBindDescriptorsInAllPools@ is the maximum number of
+--     descriptors (summed over all descriptor types) that /can/ be created
+--     across all pools that are created with the
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
+--     bit set. Pool creation /may/ fail when this limit is exceeded, or
+--     when the space this limit represents is unable to satisfy a pool
+--     creation due to fragmentation.
+--
+-- -   #limits-shaderUniformBufferArrayNonUniformIndexingNative#
+--     @shaderUniformBufferArrayNonUniformIndexingNative@ is a boolean
+--     value indicating whether uniform buffer descriptors natively support
+--     nonuniform indexing. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then a single dynamic
+--     instance of an instruction that nonuniformly indexes an array of
+--     uniform buffers /may/ execute multiple times in order to access all
+--     the descriptors.
+--
+-- -   #limits-shaderSampledImageArrayNonUniformIndexingNative#
+--     @shaderSampledImageArrayNonUniformIndexingNative@ is a boolean value
+--     indicating whether sampler and image descriptors natively support
+--     nonuniform indexing. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then a single dynamic
+--     instance of an instruction that nonuniformly indexes an array of
+--     samplers or images /may/ execute multiple times in order to access
+--     all the descriptors.
+--
+-- -   #limits-shaderStorageBufferArrayNonUniformIndexingNative#
+--     @shaderStorageBufferArrayNonUniformIndexingNative@ is a boolean
+--     value indicating whether storage buffer descriptors natively support
+--     nonuniform indexing. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then a single dynamic
+--     instance of an instruction that nonuniformly indexes an array of
+--     storage buffers /may/ execute multiple times in order to access all
+--     the descriptors.
+--
+-- -   #limits-shaderStorageImageArrayNonUniformIndexingNative#
+--     @shaderStorageImageArrayNonUniformIndexingNative@ is a boolean value
+--     indicating whether storage image descriptors natively support
+--     nonuniform indexing. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then a single dynamic
+--     instance of an instruction that nonuniformly indexes an array of
+--     storage images /may/ execute multiple times in order to access all
+--     the descriptors.
+--
+-- -   #limits-shaderInputAttachmentArrayNonUniformIndexingNative#
+--     @shaderInputAttachmentArrayNonUniformIndexingNative@ is a boolean
+--     value indicating whether input attachment descriptors natively
+--     support nonuniform indexing. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then a single dynamic
+--     instance of an instruction that nonuniformly indexes an array of
+--     input attachments /may/ execute multiple times in order to access
+--     all the descriptors.
+--
+-- -   #limits-robustBufferAccessUpdateAfterBind#
+--     @robustBufferAccessUpdateAfterBind@ is a boolean value indicating
+--     whether
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     /can/ be enabled in a device simultaneously with
+--     @descriptorBindingUniformBufferUpdateAfterBind@,
+--     @descriptorBindingStorageBufferUpdateAfterBind@,
+--     @descriptorBindingUniformTexelBufferUpdateAfterBind@, and\/or
+--     @descriptorBindingStorageTexelBufferUpdateAfterBind@. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then either
+--     @robustBufferAccess@ /must/ be disabled or all of these
+--     update-after-bind features /must/ be disabled.
+--
+-- -   #limits-quadDivergentImplicitLod# @quadDivergentImplicitLod@ is a
+--     boolean value indicating whether implicit level of detail
+--     calculations for image operations have well-defined results when the
+--     image and\/or sampler objects used for the instruction are not
+--     uniform within a quad. See
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
+--
+-- -   #limits-maxPerStageDescriptorUpdateAfterBindSamplers#
+--     @maxPerStageDescriptorUpdateAfterBindSamplers@ is similar to
+--     @maxPerStageDescriptorSamplers@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxPerStageDescriptorUpdateAfterBindUniformBuffers#
+--     @maxPerStageDescriptorUpdateAfterBindUniformBuffers@ is similar to
+--     @maxPerStageDescriptorUniformBuffers@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxPerStageDescriptorUpdateAfterBindStorageBuffers#
+--     @maxPerStageDescriptorUpdateAfterBindStorageBuffers@ is similar to
+--     @maxPerStageDescriptorStorageBuffers@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxPerStageDescriptorUpdateAfterBindSampledImages#
+--     @maxPerStageDescriptorUpdateAfterBindSampledImages@ is similar to
+--     @maxPerStageDescriptorSampledImages@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxPerStageDescriptorUpdateAfterBindStorageImages#
+--     @maxPerStageDescriptorUpdateAfterBindStorageImages@ is similar to
+--     @maxPerStageDescriptorStorageImages@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxPerStageDescriptorUpdateAfterBindInputAttachments#
+--     @maxPerStageDescriptorUpdateAfterBindInputAttachments@ is similar to
+--     @maxPerStageDescriptorInputAttachments@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxPerStageUpdateAfterBindResources#
+--     @maxPerStageUpdateAfterBindResources@ is similar to
+--     @maxPerStageResources@ but counts descriptors from descriptor sets
+--     created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxDescriptorSetUpdateAfterBindSamplers#
+--     @maxDescriptorSetUpdateAfterBindSamplers@ is similar to
+--     @maxDescriptorSetSamplers@ but counts descriptors from descriptor
+--     sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxDescriptorSetUpdateAfterBindUniformBuffers#
+--     @maxDescriptorSetUpdateAfterBindUniformBuffers@ is similar to
+--     @maxDescriptorSetUniformBuffers@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxDescriptorSetUpdateAfterBindUniformBuffersDynamic#
+--     @maxDescriptorSetUpdateAfterBindUniformBuffersDynamic@ is similar to
+--     @maxDescriptorSetUniformBuffersDynamic@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set. While an application /can/ allocate dynamic uniform buffer
+--     descriptors from a pool created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT',
+--     bindings for these descriptors /must/ not be present in any
+--     descriptor set layout that includes bindings created with
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'.
+--
+-- -   #limits-maxDescriptorSetUpdateAfterBindStorageBuffers#
+--     @maxDescriptorSetUpdateAfterBindStorageBuffers@ is similar to
+--     @maxDescriptorSetStorageBuffers@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxDescriptorSetUpdateAfterBindStorageBuffersDynamic#
+--     @maxDescriptorSetUpdateAfterBindStorageBuffersDynamic@ is similar to
+--     @maxDescriptorSetStorageBuffersDynamic@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set. While an application /can/ allocate dynamic storage buffer
+--     descriptors from a pool created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT',
+--     bindings for these descriptors /must/ not be present in any
+--     descriptor set layout that includes bindings created with
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'.
+--
+-- -   #limits-maxDescriptorSetUpdateAfterBindSampledImages#
+--     @maxDescriptorSetUpdateAfterBindSampledImages@ is similar to
+--     @maxDescriptorSetSampledImages@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxDescriptorSetUpdateAfterBindStorageImages#
+--     @maxDescriptorSetUpdateAfterBindStorageImages@ is similar to
+--     @maxDescriptorSetStorageImages@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxDescriptorSetUpdateAfterBindInputAttachments#
+--     @maxDescriptorSetUpdateAfterBindInputAttachments@ is similar to
+--     @maxDescriptorSetInputAttachments@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #features-depthResolveModes# @supportedDepthResolveModes@ is a
+--     bitmask of
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits'
+--     indicating the set of supported depth resolve modes.
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_SAMPLE_ZERO_BIT'
+--     /must/ be included in the set but implementations /may/ support
+--     additional modes.
+--
+-- -   #features-stencilResolveModes# @supportedStencilResolveModes@ is a
+--     bitmask of
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits'
+--     indicating the set of supported stencil resolve modes.
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_SAMPLE_ZERO_BIT'
+--     /must/ be included in the set but implementations /may/ support
+--     additional modes.
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_AVERAGE_BIT'
+--     /must/ not be included in the set.
+--
+-- -   #features-independentResolveNone# @independentResolveNone@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports
+--     setting the depth and stencil resolve modes to different values when
+--     one of those modes is
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'.
+--     Otherwise the implementation only supports setting both modes to the
+--     same value.
+--
+-- -   #features-independentResolve# @independentResolve@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports
+--     all combinations of the supported depth and stencil resolve modes,
+--     including setting either depth or stencil resolve mode to
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'. An
+--     implementation that supports @independentResolve@ /must/ also
+--     support @independentResolveNone@.
+--
+-- -   #limits-filterMinmaxSingleComponentFormats#
+--     @filterMinmaxSingleComponentFormats@ is a boolean value indicating
+--     whether a minimum set of required formats support min\/max
+--     filtering.
+--
+-- -   #limits-filterMinmaxImageComponentMapping#
+--     @filterMinmaxImageComponentMapping@ is a boolean value indicating
+--     whether the implementation supports non-identity component mapping
+--     of the image when doing min\/max filtering.
+--
+-- -   #limits-maxTimelineSemaphoreValueDifference#
+--     @maxTimelineSemaphoreValueDifference@ indicates the maximum
+--     difference allowed by the implementation between the current value
+--     of a timeline semaphore and any pending signal or wait operations.
+--
+-- -   #limits-framebufferIntegerColorSampleCounts#
+--     @framebufferIntegerColorSampleCounts@ is a bitmask of
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
+--     indicating the color sample counts that are supported for all
+--     framebuffer color attachments with integer formats.
+--
 -- = Description
 --
 -- The members of 'PhysicalDeviceVulkan12Properties' /must/ have the same
@@ -1204,6 +1696,10 @@ instance Zero PhysicalDeviceVulkan12Features where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceVulkan12Properties-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
@@ -1214,310 +1710,109 @@ instance Zero PhysicalDeviceVulkan12Features where
 -- 'Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
-  { -- | @driverID@ is a unique identifier for the driver of the physical device.
+  { -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "driverID"
     driverID :: DriverId
-  , -- | @driverName@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string which is the name of the driver.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "driverName"
     driverName :: ByteString
-  , -- | @driverInfo@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string with additional information about the
-    -- driver.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "driverInfo"
     driverInfo :: ByteString
-  , -- | @conformanceVersion@ is the version of the Vulkan conformance test this
-    -- driver is conformant against (see
-    -- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.ConformanceVersion').
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "conformanceVersion"
     conformanceVersion :: ConformanceVersion
-  , -- | @denormBehaviorIndependence@ is a
-    -- 'Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence'
-    -- value indicating whether, and how, denorm behavior can be set
-    -- independently for different bit widths.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "denormBehaviorIndependence"
     denormBehaviorIndependence :: ShaderFloatControlsIndependence
-  , -- | @roundingModeIndependence@ is a
-    -- 'Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence'
-    -- value indicating whether, and how, rounding modes can be set
-    -- independently for different bit widths.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "roundingModeIndependence"
     roundingModeIndependence :: ShaderFloatControlsIndependence
-  , -- | @shaderSignedZeroInfNanPreserveFloat16@ is a boolean value indicating
-    -- whether sign of a zero, Nans and \(\pm\infty\) /can/ be preserved in
-    -- 16-bit floating-point computations. It also indicates whether the
-    -- @SignedZeroInfNanPreserve@ execution mode /can/ be used for 16-bit
-    -- floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderSignedZeroInfNanPreserveFloat16"
     shaderSignedZeroInfNanPreserveFloat16 :: Bool
-  , -- | @shaderSignedZeroInfNanPreserveFloat32@ is a boolean value indicating
-    -- whether sign of a zero, Nans and \(\pm\infty\) /can/ be preserved in
-    -- 32-bit floating-point computations. It also indicates whether the
-    -- @SignedZeroInfNanPreserve@ execution mode /can/ be used for 32-bit
-    -- floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderSignedZeroInfNanPreserveFloat32"
     shaderSignedZeroInfNanPreserveFloat32 :: Bool
-  , -- | @shaderSignedZeroInfNanPreserveFloat64@ is a boolean value indicating
-    -- whether sign of a zero, Nans and \(\pm\infty\) /can/ be preserved in
-    -- 64-bit floating-point computations. It also indicates whether the
-    -- @SignedZeroInfNanPreserve@ execution mode /can/ be used for 64-bit
-    -- floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderSignedZeroInfNanPreserveFloat64"
     shaderSignedZeroInfNanPreserveFloat64 :: Bool
-  , -- | @shaderDenormPreserveFloat16@ is a boolean value indicating whether
-    -- denormals /can/ be preserved in 16-bit floating-point computations. It
-    -- also indicates whether the @DenormPreserve@ execution mode /can/ be used
-    -- for 16-bit floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderDenormPreserveFloat16"
     shaderDenormPreserveFloat16 :: Bool
-  , -- | @shaderDenormPreserveFloat32@ is a boolean value indicating whether
-    -- denormals /can/ be preserved in 32-bit floating-point computations. It
-    -- also indicates whether the @DenormPreserve@ execution mode /can/ be used
-    -- for 32-bit floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderDenormPreserveFloat32"
     shaderDenormPreserveFloat32 :: Bool
-  , -- | @shaderDenormPreserveFloat64@ is a boolean value indicating whether
-    -- denormals /can/ be preserved in 64-bit floating-point computations. It
-    -- also indicates whether the @DenormPreserve@ execution mode /can/ be used
-    -- for 64-bit floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderDenormPreserveFloat64"
     shaderDenormPreserveFloat64 :: Bool
-  , -- | @shaderDenormFlushToZeroFloat16@ is a boolean value indicating whether
-    -- denormals /can/ be flushed to zero in 16-bit floating-point
-    -- computations. It also indicates whether the @DenormFlushToZero@
-    -- execution mode /can/ be used for 16-bit floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderDenormFlushToZeroFloat16"
     shaderDenormFlushToZeroFloat16 :: Bool
-  , -- | @shaderDenormFlushToZeroFloat32@ is a boolean value indicating whether
-    -- denormals /can/ be flushed to zero in 32-bit floating-point
-    -- computations. It also indicates whether the @DenormFlushToZero@
-    -- execution mode /can/ be used for 32-bit floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderDenormFlushToZeroFloat32"
     shaderDenormFlushToZeroFloat32 :: Bool
-  , -- | @shaderDenormFlushToZeroFloat64@ is a boolean value indicating whether
-    -- denormals /can/ be flushed to zero in 64-bit floating-point
-    -- computations. It also indicates whether the @DenormFlushToZero@
-    -- execution mode /can/ be used for 64-bit floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderDenormFlushToZeroFloat64"
     shaderDenormFlushToZeroFloat64 :: Bool
-  , -- | @shaderRoundingModeRTEFloat16@ is a boolean value indicating whether an
-    -- implementation supports the round-to-nearest-even rounding mode for
-    -- 16-bit floating-point arithmetic and conversion instructions. It also
-    -- indicates whether the @RoundingModeRTE@ execution mode /can/ be used for
-    -- 16-bit floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderRoundingModeRTEFloat16"
     shaderRoundingModeRTEFloat16 :: Bool
-  , -- | @shaderRoundingModeRTEFloat32@ is a boolean value indicating whether an
-    -- implementation supports the round-to-nearest-even rounding mode for
-    -- 32-bit floating-point arithmetic and conversion instructions. It also
-    -- indicates whether the @RoundingModeRTE@ execution mode /can/ be used for
-    -- 32-bit floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderRoundingModeRTEFloat32"
     shaderRoundingModeRTEFloat32 :: Bool
-  , -- | @shaderRoundingModeRTEFloat64@ is a boolean value indicating whether an
-    -- implementation supports the round-to-nearest-even rounding mode for
-    -- 64-bit floating-point arithmetic and conversion instructions. It also
-    -- indicates whether the @RoundingModeRTE@ execution mode /can/ be used for
-    -- 64-bit floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderRoundingModeRTEFloat64"
     shaderRoundingModeRTEFloat64 :: Bool
-  , -- | @shaderRoundingModeRTZFloat16@ is a boolean value indicating whether an
-    -- implementation supports the round-towards-zero rounding mode for 16-bit
-    -- floating-point arithmetic and conversion instructions. It also indicates
-    -- whether the @RoundingModeRTZ@ execution mode /can/ be used for 16-bit
-    -- floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderRoundingModeRTZFloat16"
     shaderRoundingModeRTZFloat16 :: Bool
-  , -- | @shaderRoundingModeRTZFloat32@ is a boolean value indicating whether an
-    -- implementation supports the round-towards-zero rounding mode for 32-bit
-    -- floating-point arithmetic and conversion instructions. It also indicates
-    -- whether the @RoundingModeRTZ@ execution mode /can/ be used for 32-bit
-    -- floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderRoundingModeRTZFloat32"
     shaderRoundingModeRTZFloat32 :: Bool
-  , -- | @shaderRoundingModeRTZFloat64@ is a boolean value indicating whether an
-    -- implementation supports the round-towards-zero rounding mode for 64-bit
-    -- floating-point arithmetic and conversion instructions. It also indicates
-    -- whether the @RoundingModeRTZ@ execution mode /can/ be used for 64-bit
-    -- floating-point types.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderRoundingModeRTZFloat64"
     shaderRoundingModeRTZFloat64 :: Bool
-  , -- | @maxUpdateAfterBindDescriptorsInAllPools@ is the maximum number of
-    -- descriptors (summed over all descriptor types) that /can/ be created
-    -- across all pools that are created with the
-    -- 'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
-    -- bit set. Pool creation /may/ fail when this limit is exceeded, or when
-    -- the space this limit represents is unable to satisfy a pool creation due
-    -- to fragmentation.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxUpdateAfterBindDescriptorsInAllPools"
     maxUpdateAfterBindDescriptorsInAllPools :: Word32
-  , -- | @shaderUniformBufferArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether uniform buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
-    -- indexes an array of uniform buffers /may/ execute multiple times in
-    -- order to access all the descriptors.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderUniformBufferArrayNonUniformIndexingNative"
     shaderUniformBufferArrayNonUniformIndexingNative :: Bool
-  , -- | @shaderSampledImageArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether sampler and image descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
-    -- indexes an array of samplers or images /may/ execute multiple times in
-    -- order to access all the descriptors.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderSampledImageArrayNonUniformIndexingNative"
     shaderSampledImageArrayNonUniformIndexingNative :: Bool
-  , -- | @shaderStorageBufferArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether storage buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
-    -- indexes an array of storage buffers /may/ execute multiple times in
-    -- order to access all the descriptors.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderStorageBufferArrayNonUniformIndexingNative"
     shaderStorageBufferArrayNonUniformIndexingNative :: Bool
-  , -- | @shaderStorageImageArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether storage image descriptors natively support nonuniform
-    -- indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of storage images /may/ execute multiple times in order to access
-    -- all the descriptors.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderStorageImageArrayNonUniformIndexingNative"
     shaderStorageImageArrayNonUniformIndexingNative :: Bool
-  , -- | @shaderInputAttachmentArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether input attachment descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
-    -- indexes an array of input attachments /may/ execute multiple times in
-    -- order to access all the descriptors.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "shaderInputAttachmentArrayNonUniformIndexingNative"
     shaderInputAttachmentArrayNonUniformIndexingNative :: Bool
-  , -- | @robustBufferAccessUpdateAfterBind@ is a boolean value indicating
-    -- whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
-    -- /can/ be enabled in a device simultaneously with
-    -- @descriptorBindingUniformBufferUpdateAfterBind@,
-    -- @descriptorBindingStorageBufferUpdateAfterBind@,
-    -- @descriptorBindingUniformTexelBufferUpdateAfterBind@, and\/or
-    -- @descriptorBindingStorageTexelBufferUpdateAfterBind@. If this is
-    -- 'Vulkan.Core10.FundamentalTypes.FALSE', then either @robustBufferAccess@
-    -- /must/ be disabled or all of these update-after-bind features /must/ be
-    -- disabled.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "robustBufferAccessUpdateAfterBind"
     robustBufferAccessUpdateAfterBind :: Bool
-  , -- | @quadDivergentImplicitLod@ is a boolean value indicating whether
-    -- implicit level of detail calculations for image operations have
-    -- well-defined results when the image and\/or sampler objects used for the
-    -- instruction are not uniform within a quad. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "quadDivergentImplicitLod"
     quadDivergentImplicitLod :: Bool
-  , -- | @maxPerStageDescriptorUpdateAfterBindSamplers@ is similar to
-    -- @maxPerStageDescriptorSamplers@ but counts descriptors from descriptor
-    -- sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxPerStageDescriptorUpdateAfterBindSamplers"
     maxPerStageDescriptorUpdateAfterBindSamplers :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindUniformBuffers@ is similar to
-    -- @maxPerStageDescriptorUniformBuffers@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxPerStageDescriptorUpdateAfterBindUniformBuffers"
     maxPerStageDescriptorUpdateAfterBindUniformBuffers :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindStorageBuffers@ is similar to
-    -- @maxPerStageDescriptorStorageBuffers@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxPerStageDescriptorUpdateAfterBindStorageBuffers"
     maxPerStageDescriptorUpdateAfterBindStorageBuffers :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindSampledImages@ is similar to
-    -- @maxPerStageDescriptorSampledImages@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxPerStageDescriptorUpdateAfterBindSampledImages"
     maxPerStageDescriptorUpdateAfterBindSampledImages :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindStorageImages@ is similar to
-    -- @maxPerStageDescriptorStorageImages@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxPerStageDescriptorUpdateAfterBindStorageImages"
     maxPerStageDescriptorUpdateAfterBindStorageImages :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindInputAttachments@ is similar to
-    -- @maxPerStageDescriptorInputAttachments@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxPerStageDescriptorUpdateAfterBindInputAttachments"
     maxPerStageDescriptorUpdateAfterBindInputAttachments :: Word32
-  , -- | @maxPerStageUpdateAfterBindResources@ is similar to
-    -- @maxPerStageResources@ but counts descriptors from descriptor sets
-    -- created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxPerStageUpdateAfterBindResources"
     maxPerStageUpdateAfterBindResources :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindSamplers@ is similar to
-    -- @maxDescriptorSetSamplers@ but counts descriptors from descriptor sets
-    -- created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxDescriptorSetUpdateAfterBindSamplers"
     maxDescriptorSetUpdateAfterBindSamplers :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindUniformBuffers@ is similar to
-    -- @maxDescriptorSetUniformBuffers@ but counts descriptors from descriptor
-    -- sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxDescriptorSetUpdateAfterBindUniformBuffers"
     maxDescriptorSetUpdateAfterBindUniformBuffers :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindUniformBuffersDynamic@ is similar to
-    -- @maxDescriptorSetUniformBuffersDynamic@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxDescriptorSetUpdateAfterBindUniformBuffersDynamic"
     maxDescriptorSetUpdateAfterBindUniformBuffersDynamic :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindStorageBuffers@ is similar to
-    -- @maxDescriptorSetStorageBuffers@ but counts descriptors from descriptor
-    -- sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxDescriptorSetUpdateAfterBindStorageBuffers"
     maxDescriptorSetUpdateAfterBindStorageBuffers :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindStorageBuffersDynamic@ is similar to
-    -- @maxDescriptorSetStorageBuffersDynamic@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxDescriptorSetUpdateAfterBindStorageBuffersDynamic"
     maxDescriptorSetUpdateAfterBindStorageBuffersDynamic :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindSampledImages@ is similar to
-    -- @maxDescriptorSetSampledImages@ but counts descriptors from descriptor
-    -- sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxDescriptorSetUpdateAfterBindSampledImages"
     maxDescriptorSetUpdateAfterBindSampledImages :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindStorageImages@ is similar to
-    -- @maxDescriptorSetStorageImages@ but counts descriptors from descriptor
-    -- sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxDescriptorSetUpdateAfterBindStorageImages"
     maxDescriptorSetUpdateAfterBindStorageImages :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindInputAttachments@ is similar to
-    -- @maxDescriptorSetInputAttachments@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxDescriptorSetUpdateAfterBindInputAttachments"
     maxDescriptorSetUpdateAfterBindInputAttachments :: Word32
-  , -- | @supportedDepthResolveModes@ is a bitmask of
-    -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' indicating
-    -- the set of supported depth resolve modes.
-    -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_SAMPLE_ZERO_BIT'
-    -- /must/ be included in the set but implementations /may/ support
-    -- additional modes.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "supportedDepthResolveModes"
     supportedDepthResolveModes :: ResolveModeFlags
-  , -- | @supportedStencilResolveModes@ is a bitmask of
-    -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' indicating
-    -- the set of supported stencil resolve modes.
-    -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_SAMPLE_ZERO_BIT'
-    -- /must/ be included in the set but implementations /may/ support
-    -- additional modes.
-    -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_AVERAGE_BIT'
-    -- /must/ not be included in the set.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "supportedStencilResolveModes"
     supportedStencilResolveModes :: ResolveModeFlags
-  , -- | @independentResolveNone@ is 'Vulkan.Core10.FundamentalTypes.TRUE' if the
-    -- implementation supports setting the depth and stencil resolve modes to
-    -- different values when one of those modes is
-    -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'. Otherwise
-    -- the implementation only supports setting both modes to the same value.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "independentResolveNone"
     independentResolveNone :: Bool
-  , -- | @independentResolve@ is 'Vulkan.Core10.FundamentalTypes.TRUE' if the
-    -- implementation supports all combinations of the supported depth and
-    -- stencil resolve modes, including setting either depth or stencil resolve
-    -- mode to 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'. An
-    -- implementation that supports @independentResolve@ /must/ also support
-    -- @independentResolveNone@.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "independentResolve"
     independentResolve :: Bool
-  , -- | @filterMinmaxSingleComponentFormats@ is a boolean value indicating
-    -- whether a minimum set of required formats support min\/max filtering.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "filterMinmaxSingleComponentFormats"
     filterMinmaxSingleComponentFormats :: Bool
-  , -- | @filterMinmaxImageComponentMapping@ is a boolean value indicating
-    -- whether the implementation supports non-identity component mapping of
-    -- the image when doing min\/max filtering.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "filterMinmaxImageComponentMapping"
     filterMinmaxImageComponentMapping :: Bool
-  , -- | @maxTimelineSemaphoreValueDifference@ indicates the maximum difference
-    -- allowed by the implementation between the current value of a timeline
-    -- semaphore and any pending signal or wait operations.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "maxTimelineSemaphoreValueDifference"
     maxTimelineSemaphoreValueDifference :: Word64
-  , -- | @framebufferIntegerColorSampleCounts@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' indicating
-    -- the color sample counts that are supported for all framebuffer color
-    -- attachments with integer formats.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Properties" "framebufferIntegerColorSampleCounts"
     framebufferIntegerColorSampleCounts :: SampleCountFlags
   }
   deriving (Typeable)

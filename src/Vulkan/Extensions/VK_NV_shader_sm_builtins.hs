@@ -41,6 +41,17 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #limits-shaderSMCount# @shaderSMCount@ is the number of SMs on the
+--     device.
+--
+-- -   #limits-shaderWarpsPerSM# @shaderWarpsPerSM@ is the maximum number
+--     of simultaneously executing warps on an SM.
+--
 -- If the 'PhysicalDeviceShaderSMBuiltinsPropertiesNV' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -48,14 +59,17 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceShaderSMBuiltinsPropertiesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderSMBuiltinsPropertiesNV = PhysicalDeviceShaderSMBuiltinsPropertiesNV
-  { -- | @shaderSMCount@ is the number of SMs on the device.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderSMBuiltinsPropertiesNV" "shaderSMCount"
     shaderSMCount :: Word32
-  , -- | @shaderWarpsPerSM@ is the maximum number of simultaneously executing
-    -- warps on an SM.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderSMBuiltinsPropertiesNV" "shaderWarpsPerSM"
     shaderWarpsPerSM :: Word32
   }
   deriving (Typeable, Eq)
@@ -110,6 +124,9 @@ instance Zero PhysicalDeviceShaderSMBuiltinsPropertiesNV where
 --
 -- = Description
 --
+-- -   #features-shaderSMBuiltins# @shaderSMBuiltins@ indicates whether the
+--     implementation supports the SPIR-V @ShaderSMBuiltinsNV@ capability.
+--
 -- If the 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' structure is included
 -- in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -120,13 +137,16 @@ instance Zero PhysicalDeviceShaderSMBuiltinsPropertiesNV where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceShaderSMBuiltinsFeaturesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderSMBuiltinsFeaturesNV = PhysicalDeviceShaderSMBuiltinsFeaturesNV
-  { -- | @shaderSMBuiltins@ indicates whether the implementation supports the
-    -- SPIR-V @ShaderSMBuiltinsNV@ capability.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderSMBuiltinsFeaturesNV" "shaderSMBuiltins"
     shaderSMBuiltins :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

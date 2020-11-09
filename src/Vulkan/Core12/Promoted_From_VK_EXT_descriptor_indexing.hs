@@ -67,6 +67,201 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Description
 --
+-- -   #extension-features-shaderInputAttachmentArrayDynamicIndexing#
+--     @shaderInputAttachmentArrayDynamicIndexing@ indicates whether arrays
+--     of input attachments /can/ be indexed by dynamically uniform integer
+--     expressions in shader code. If this feature is not enabled,
+--     resources with a descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     /must/ be indexed only by constant integral expressions when
+--     aggregated into arrays in shader code. This also indicates whether
+--     shader modules /can/ declare the
+--     @InputAttachmentArrayDynamicIndexing@ capability.
+--
+-- -   #extension-features-shaderUniformTexelBufferArrayDynamicIndexing#
+--     @shaderUniformTexelBufferArrayDynamicIndexing@ indicates whether
+--     arrays of uniform texel buffers /can/ be indexed by dynamically
+--     uniform integer expressions in shader code. If this feature is not
+--     enabled, resources with a descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     /must/ be indexed only by constant integral expressions when
+--     aggregated into arrays in shader code. This also indicates whether
+--     shader modules /can/ declare the
+--     @UniformTexelBufferArrayDynamicIndexing@ capability.
+--
+-- -   #extension-features-shaderStorageTexelBufferArrayDynamicIndexing#
+--     @shaderStorageTexelBufferArrayDynamicIndexing@ indicates whether
+--     arrays of storage texel buffers /can/ be indexed by dynamically
+--     uniform integer expressions in shader code. If this feature is not
+--     enabled, resources with a descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     /must/ be indexed only by constant integral expressions when
+--     aggregated into arrays in shader code. This also indicates whether
+--     shader modules /can/ declare the
+--     @StorageTexelBufferArrayDynamicIndexing@ capability.
+--
+-- -   #extension-features-shaderUniformBufferArrayNonUniformIndexing#
+--     @shaderUniformBufferArrayNonUniformIndexing@ indicates whether
+--     arrays of uniform buffers /can/ be indexed by non-uniform integer
+--     expressions in shader code. If this feature is not enabled,
+--     resources with a descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
+--     /must/ not be indexed by non-uniform integer expressions when
+--     aggregated into arrays in shader code. This also indicates whether
+--     shader modules /can/ declare the
+--     @UniformBufferArrayNonUniformIndexing@ capability.
+--
+-- -   #extension-features-shaderSampledImageArrayNonUniformIndexing#
+--     @shaderSampledImageArrayNonUniformIndexing@ indicates whether arrays
+--     of samplers or sampled images /can/ be indexed by non-uniform
+--     integer expressions in shader code. If this feature is not enabled,
+--     resources with a descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
+--     /must/ not be indexed by non-uniform integer expressions when
+--     aggregated into arrays in shader code. This also indicates whether
+--     shader modules /can/ declare the
+--     @SampledImageArrayNonUniformIndexing@ capability.
+--
+-- -   #extension-features-shaderStorageBufferArrayNonUniformIndexing#
+--     @shaderStorageBufferArrayNonUniformIndexing@ indicates whether
+--     arrays of storage buffers /can/ be indexed by non-uniform integer
+--     expressions in shader code. If this feature is not enabled,
+--     resources with a descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+--     /must/ not be indexed by non-uniform integer expressions when
+--     aggregated into arrays in shader code. This also indicates whether
+--     shader modules /can/ declare the
+--     @StorageBufferArrayNonUniformIndexing@ capability.
+--
+-- -   #extension-features-shaderStorageImageArrayNonUniformIndexing#
+--     @shaderStorageImageArrayNonUniformIndexing@ indicates whether arrays
+--     of storage images /can/ be indexed by non-uniform integer
+--     expressions in shader code. If this feature is not enabled,
+--     resources with a descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
+--     /must/ not be indexed by non-uniform integer expressions when
+--     aggregated into arrays in shader code. This also indicates whether
+--     shader modules /can/ declare the
+--     @StorageImageArrayNonUniformIndexing@ capability.
+--
+-- -   #extension-features-shaderInputAttachmentArrayNonUniformIndexing#
+--     @shaderInputAttachmentArrayNonUniformIndexing@ indicates whether
+--     arrays of input attachments /can/ be indexed by non-uniform integer
+--     expressions in shader code. If this feature is not enabled,
+--     resources with a descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     /must/ not be indexed by non-uniform integer expressions when
+--     aggregated into arrays in shader code. This also indicates whether
+--     shader modules /can/ declare the
+--     @InputAttachmentArrayNonUniformIndexing@ capability.
+--
+-- -   #extension-features-shaderUniformTexelBufferArrayNonUniformIndexing#
+--     @shaderUniformTexelBufferArrayNonUniformIndexing@ indicates whether
+--     arrays of uniform texel buffers /can/ be indexed by non-uniform
+--     integer expressions in shader code. If this feature is not enabled,
+--     resources with a descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     /must/ not be indexed by non-uniform integer expressions when
+--     aggregated into arrays in shader code. This also indicates whether
+--     shader modules /can/ declare the
+--     @UniformTexelBufferArrayNonUniformIndexing@ capability.
+--
+-- -   #extension-features-shaderStorageTexelBufferArrayNonUniformIndexing#
+--     @shaderStorageTexelBufferArrayNonUniformIndexing@ indicates whether
+--     arrays of storage texel buffers /can/ be indexed by non-uniform
+--     integer expressions in shader code. If this feature is not enabled,
+--     resources with a descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     /must/ not be indexed by non-uniform integer expressions when
+--     aggregated into arrays in shader code. This also indicates whether
+--     shader modules /can/ declare the
+--     @StorageTexelBufferArrayNonUniformIndexing@ capability.
+--
+-- -   #extension-features-descriptorBindingUniformBufferUpdateAfterBind#
+--     @descriptorBindingUniformBufferUpdateAfterBind@ indicates whether
+--     the implementation supports updating uniform buffer descriptors
+--     after a set is bound. If this feature is not enabled,
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
+--     /must/ not be used with
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'.
+--
+-- -   #extension-features-descriptorBindingSampledImageUpdateAfterBind#
+--     @descriptorBindingSampledImageUpdateAfterBind@ indicates whether the
+--     implementation supports updating sampled image descriptors after a
+--     set is bound. If this feature is not enabled,
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
+--     /must/ not be used with
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'.
+--
+-- -   #extension-features-descriptorBindingStorageImageUpdateAfterBind#
+--     @descriptorBindingStorageImageUpdateAfterBind@ indicates whether the
+--     implementation supports updating storage image descriptors after a
+--     set is bound. If this feature is not enabled,
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
+--     /must/ not be used with
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'.
+--
+-- -   #extension-features-descriptorBindingStorageBufferUpdateAfterBind#
+--     @descriptorBindingStorageBufferUpdateAfterBind@ indicates whether
+--     the implementation supports updating storage buffer descriptors
+--     after a set is bound. If this feature is not enabled,
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
+--     /must/ not be used with
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'.
+--
+-- -   #extension-features-descriptorBindingUniformTexelBufferUpdateAfterBind#
+--     @descriptorBindingUniformTexelBufferUpdateAfterBind@ indicates
+--     whether the implementation supports updating uniform texel buffer
+--     descriptors after a set is bound. If this feature is not enabled,
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
+--     /must/ not be used with
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'.
+--
+-- -   #extension-features-descriptorBindingStorageTexelBufferUpdateAfterBind#
+--     @descriptorBindingStorageTexelBufferUpdateAfterBind@ indicates
+--     whether the implementation supports updating storage texel buffer
+--     descriptors after a set is bound. If this feature is not enabled,
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
+--     /must/ not be used with
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'.
+--
+-- -   #extension-features-descriptorBindingUpdateUnusedWhilePending#
+--     @descriptorBindingUpdateUnusedWhilePending@ indicates whether the
+--     implementation supports updating descriptors while the set is in
+--     use. If this feature is not enabled,
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
+--     /must/ not be used.
+--
+-- -   #extension-features-descriptorBindingPartiallyBound#
+--     @descriptorBindingPartiallyBound@ indicates whether the
+--     implementation supports statically using a descriptor set binding in
+--     which some descriptors are not valid. If this feature is not
+--     enabled,
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT'
+--     /must/ not be used.
+--
+-- -   #extension-features-descriptorBindingVariableDescriptorCount#
+--     @descriptorBindingVariableDescriptorCount@ indicates whether the
+--     implementation supports descriptor sets with a variable-sized last
+--     binding. If this feature is not enabled,
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT'
+--     /must/ not be used.
+--
+-- -   #extension-features-runtimeDescriptorArray# @runtimeDescriptorArray@
+--     indicates whether the implementation supports the SPIR-V
+--     @RuntimeDescriptorArray@ capability. If this feature is not enabled,
+--     descriptors /must/ not be declared in runtime arrays.
+--
 -- If the 'PhysicalDeviceDescriptorIndexingFeatures' structure is included
 -- in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -77,172 +272,54 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceDescriptorIndexingFeatures-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDescriptorIndexingFeatures = PhysicalDeviceDescriptorIndexingFeatures
-  { -- | @shaderInputAttachmentArrayDynamicIndexing@ indicates whether arrays of
-    -- input attachments /can/ be indexed by dynamically uniform integer
-    -- expressions in shader code. If this feature is not enabled, resources
-    -- with a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
-    -- /must/ be indexed only by constant integral expressions when aggregated
-    -- into arrays in shader code. This also indicates whether shader modules
-    -- /can/ declare the @InputAttachmentArrayDynamicIndexing@ capability.
+  { -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "shaderInputAttachmentArrayDynamicIndexing"
     shaderInputAttachmentArrayDynamicIndexing :: Bool
-  , -- | @shaderUniformTexelBufferArrayDynamicIndexing@ indicates whether arrays
-    -- of uniform texel buffers /can/ be indexed by dynamically uniform integer
-    -- expressions in shader code. If this feature is not enabled, resources
-    -- with a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
-    -- /must/ be indexed only by constant integral expressions when aggregated
-    -- into arrays in shader code. This also indicates whether shader modules
-    -- /can/ declare the @UniformTexelBufferArrayDynamicIndexing@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "shaderUniformTexelBufferArrayDynamicIndexing"
     shaderUniformTexelBufferArrayDynamicIndexing :: Bool
-  , -- | @shaderStorageTexelBufferArrayDynamicIndexing@ indicates whether arrays
-    -- of storage texel buffers /can/ be indexed by dynamically uniform integer
-    -- expressions in shader code. If this feature is not enabled, resources
-    -- with a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
-    -- /must/ be indexed only by constant integral expressions when aggregated
-    -- into arrays in shader code. This also indicates whether shader modules
-    -- /can/ declare the @StorageTexelBufferArrayDynamicIndexing@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "shaderStorageTexelBufferArrayDynamicIndexing"
     shaderStorageTexelBufferArrayDynamicIndexing :: Bool
-  , -- | @shaderUniformBufferArrayNonUniformIndexing@ indicates whether arrays of
-    -- uniform buffers /can/ be indexed by non-uniform integer expressions in
-    -- shader code. If this feature is not enabled, resources with a descriptor
-    -- type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER' or
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
-    -- /must/ not be indexed by non-uniform integer expressions when aggregated
-    -- into arrays in shader code. This also indicates whether shader modules
-    -- /can/ declare the @UniformBufferArrayNonUniformIndexing@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "shaderUniformBufferArrayNonUniformIndexing"
     shaderUniformBufferArrayNonUniformIndexing :: Bool
-  , -- | @shaderSampledImageArrayNonUniformIndexing@ indicates whether arrays of
-    -- samplers or sampled images /can/ be indexed by non-uniform integer
-    -- expressions in shader code. If this feature is not enabled, resources
-    -- with a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
-    -- or 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
-    -- /must/ not be indexed by non-uniform integer expressions when aggregated
-    -- into arrays in shader code. This also indicates whether shader modules
-    -- /can/ declare the @SampledImageArrayNonUniformIndexing@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "shaderSampledImageArrayNonUniformIndexing"
     shaderSampledImageArrayNonUniformIndexing :: Bool
-  , -- | @shaderStorageBufferArrayNonUniformIndexing@ indicates whether arrays of
-    -- storage buffers /can/ be indexed by non-uniform integer expressions in
-    -- shader code. If this feature is not enabled, resources with a descriptor
-    -- type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER' or
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
-    -- /must/ not be indexed by non-uniform integer expressions when aggregated
-    -- into arrays in shader code. This also indicates whether shader modules
-    -- /can/ declare the @StorageBufferArrayNonUniformIndexing@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "shaderStorageBufferArrayNonUniformIndexing"
     shaderStorageBufferArrayNonUniformIndexing :: Bool
-  , -- | @shaderStorageImageArrayNonUniformIndexing@ indicates whether arrays of
-    -- storage images /can/ be indexed by non-uniform integer expressions in
-    -- shader code. If this feature is not enabled, resources with a descriptor
-    -- type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
-    -- /must/ not be indexed by non-uniform integer expressions when aggregated
-    -- into arrays in shader code. This also indicates whether shader modules
-    -- /can/ declare the @StorageImageArrayNonUniformIndexing@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "shaderStorageImageArrayNonUniformIndexing"
     shaderStorageImageArrayNonUniformIndexing :: Bool
-  , -- | @shaderInputAttachmentArrayNonUniformIndexing@ indicates whether arrays
-    -- of input attachments /can/ be indexed by non-uniform integer expressions
-    -- in shader code. If this feature is not enabled, resources with a
-    -- descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
-    -- /must/ not be indexed by non-uniform integer expressions when aggregated
-    -- into arrays in shader code. This also indicates whether shader modules
-    -- /can/ declare the @InputAttachmentArrayNonUniformIndexing@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "shaderInputAttachmentArrayNonUniformIndexing"
     shaderInputAttachmentArrayNonUniformIndexing :: Bool
-  , -- | @shaderUniformTexelBufferArrayNonUniformIndexing@ indicates whether
-    -- arrays of uniform texel buffers /can/ be indexed by non-uniform integer
-    -- expressions in shader code. If this feature is not enabled, resources
-    -- with a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
-    -- /must/ not be indexed by non-uniform integer expressions when aggregated
-    -- into arrays in shader code. This also indicates whether shader modules
-    -- /can/ declare the @UniformTexelBufferArrayNonUniformIndexing@
-    -- capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "shaderUniformTexelBufferArrayNonUniformIndexing"
     shaderUniformTexelBufferArrayNonUniformIndexing :: Bool
-  , -- | @shaderStorageTexelBufferArrayNonUniformIndexing@ indicates whether
-    -- arrays of storage texel buffers /can/ be indexed by non-uniform integer
-    -- expressions in shader code. If this feature is not enabled, resources
-    -- with a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
-    -- /must/ not be indexed by non-uniform integer expressions when aggregated
-    -- into arrays in shader code. This also indicates whether shader modules
-    -- /can/ declare the @StorageTexelBufferArrayNonUniformIndexing@
-    -- capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "shaderStorageTexelBufferArrayNonUniformIndexing"
     shaderStorageTexelBufferArrayNonUniformIndexing :: Bool
-  , -- | @descriptorBindingUniformBufferUpdateAfterBind@ indicates whether the
-    -- implementation supports updating uniform buffer descriptors after a set
-    -- is bound. If this feature is not enabled,
-    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
-    -- /must/ not be used with
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "descriptorBindingUniformBufferUpdateAfterBind"
     descriptorBindingUniformBufferUpdateAfterBind :: Bool
-  , -- | @descriptorBindingSampledImageUpdateAfterBind@ indicates whether the
-    -- implementation supports updating sampled image descriptors after a set
-    -- is bound. If this feature is not enabled,
-    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
-    -- /must/ not be used with
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
-    -- or 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "descriptorBindingSampledImageUpdateAfterBind"
     descriptorBindingSampledImageUpdateAfterBind :: Bool
-  , -- | @descriptorBindingStorageImageUpdateAfterBind@ indicates whether the
-    -- implementation supports updating storage image descriptors after a set
-    -- is bound. If this feature is not enabled,
-    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
-    -- /must/ not be used with
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "descriptorBindingStorageImageUpdateAfterBind"
     descriptorBindingStorageImageUpdateAfterBind :: Bool
-  , -- | @descriptorBindingStorageBufferUpdateAfterBind@ indicates whether the
-    -- implementation supports updating storage buffer descriptors after a set
-    -- is bound. If this feature is not enabled,
-    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
-    -- /must/ not be used with
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "descriptorBindingStorageBufferUpdateAfterBind"
     descriptorBindingStorageBufferUpdateAfterBind :: Bool
-  , -- | @descriptorBindingUniformTexelBufferUpdateAfterBind@ indicates whether
-    -- the implementation supports updating uniform texel buffer descriptors
-    -- after a set is bound. If this feature is not enabled,
-    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
-    -- /must/ not be used with
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "descriptorBindingUniformTexelBufferUpdateAfterBind"
     descriptorBindingUniformTexelBufferUpdateAfterBind :: Bool
-  , -- | @descriptorBindingStorageTexelBufferUpdateAfterBind@ indicates whether
-    -- the implementation supports updating storage texel buffer descriptors
-    -- after a set is bound. If this feature is not enabled,
-    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
-    -- /must/ not be used with
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "descriptorBindingStorageTexelBufferUpdateAfterBind"
     descriptorBindingStorageTexelBufferUpdateAfterBind :: Bool
-  , -- | @descriptorBindingUpdateUnusedWhilePending@ indicates whether the
-    -- implementation supports updating descriptors while the set is in use. If
-    -- this feature is not enabled,
-    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
-    -- /must/ not be used.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "descriptorBindingUpdateUnusedWhilePending"
     descriptorBindingUpdateUnusedWhilePending :: Bool
-  , -- | @descriptorBindingPartiallyBound@ indicates whether the implementation
-    -- supports statically using a descriptor set binding in which some
-    -- descriptors are not valid. If this feature is not enabled,
-    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT'
-    -- /must/ not be used.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "descriptorBindingPartiallyBound"
     descriptorBindingPartiallyBound :: Bool
-  , -- | @descriptorBindingVariableDescriptorCount@ indicates whether the
-    -- implementation supports descriptor sets with a variable-sized last
-    -- binding. If this feature is not enabled,
-    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT'
-    -- /must/ not be used.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "descriptorBindingVariableDescriptorCount"
     descriptorBindingVariableDescriptorCount :: Bool
-  , -- | @runtimeDescriptorArray@ indicates whether the implementation supports
-    -- the SPIR-V @RuntimeDescriptorArray@ capability. If this feature is not
-    -- enabled, descriptors /must/ not be declared in runtime arrays.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeatures" "runtimeDescriptorArray"
     runtimeDescriptorArray :: Bool
   }
   deriving (Typeable, Eq)
@@ -370,6 +447,200 @@ instance Zero PhysicalDeviceDescriptorIndexingFeatures where
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #extension-limits-maxUpdateAfterBindDescriptorsInAllPools#
+--     @maxUpdateAfterBindDescriptorsInAllPools@ is the maximum number of
+--     descriptors (summed over all descriptor types) that /can/ be created
+--     across all pools that are created with the
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
+--     bit set. Pool creation /may/ fail when this limit is exceeded, or
+--     when the space this limit represents is unable to satisfy a pool
+--     creation due to fragmentation.
+--
+-- -   #extension-limits-shaderUniformBufferArrayNonUniformIndexingNative#
+--     @shaderUniformBufferArrayNonUniformIndexingNative@ is a boolean
+--     value indicating whether uniform buffer descriptors natively support
+--     nonuniform indexing. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then a single dynamic
+--     instance of an instruction that nonuniformly indexes an array of
+--     uniform buffers /may/ execute multiple times in order to access all
+--     the descriptors.
+--
+-- -   #extension-limits-shaderSampledImageArrayNonUniformIndexingNative#
+--     @shaderSampledImageArrayNonUniformIndexingNative@ is a boolean value
+--     indicating whether sampler and image descriptors natively support
+--     nonuniform indexing. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then a single dynamic
+--     instance of an instruction that nonuniformly indexes an array of
+--     samplers or images /may/ execute multiple times in order to access
+--     all the descriptors.
+--
+-- -   #extension-limits-shaderStorageBufferArrayNonUniformIndexingNative#
+--     @shaderStorageBufferArrayNonUniformIndexingNative@ is a boolean
+--     value indicating whether storage buffer descriptors natively support
+--     nonuniform indexing. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then a single dynamic
+--     instance of an instruction that nonuniformly indexes an array of
+--     storage buffers /may/ execute multiple times in order to access all
+--     the descriptors.
+--
+-- -   #extension-limits-shaderStorageImageArrayNonUniformIndexingNative#
+--     @shaderStorageImageArrayNonUniformIndexingNative@ is a boolean value
+--     indicating whether storage image descriptors natively support
+--     nonuniform indexing. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then a single dynamic
+--     instance of an instruction that nonuniformly indexes an array of
+--     storage images /may/ execute multiple times in order to access all
+--     the descriptors.
+--
+-- -   #extension-limits-shaderInputAttachmentArrayNonUniformIndexingNative#
+--     @shaderInputAttachmentArrayNonUniformIndexingNative@ is a boolean
+--     value indicating whether input attachment descriptors natively
+--     support nonuniform indexing. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then a single dynamic
+--     instance of an instruction that nonuniformly indexes an array of
+--     input attachments /may/ execute multiple times in order to access
+--     all the descriptors.
+--
+-- -   #extension-limits-robustBufferAccessUpdateAfterBind#
+--     @robustBufferAccessUpdateAfterBind@ is a boolean value indicating
+--     whether
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     /can/ be enabled in a device simultaneously with
+--     @descriptorBindingUniformBufferUpdateAfterBind@,
+--     @descriptorBindingStorageBufferUpdateAfterBind@,
+--     @descriptorBindingUniformTexelBufferUpdateAfterBind@, and\/or
+--     @descriptorBindingStorageTexelBufferUpdateAfterBind@. If this is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then either
+--     @robustBufferAccess@ /must/ be disabled or all of these
+--     update-after-bind features /must/ be disabled.
+--
+-- -   #extension-limits-quadDivergentImplicitLod#
+--     @quadDivergentImplicitLod@ is a boolean value indicating whether
+--     implicit level of detail calculations for image operations have
+--     well-defined results when the image and\/or sampler objects used for
+--     the instruction are not uniform within a quad. See
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
+--
+-- -   #extension-limits-maxPerStageDescriptorUpdateAfterBindSamplers#
+--     @maxPerStageDescriptorUpdateAfterBindSamplers@ is similar to
+--     @maxPerStageDescriptorSamplers@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxPerStageDescriptorUpdateAfterBindUniformBuffers#
+--     @maxPerStageDescriptorUpdateAfterBindUniformBuffers@ is similar to
+--     @maxPerStageDescriptorUniformBuffers@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxPerStageDescriptorUpdateAfterBindStorageBuffers#
+--     @maxPerStageDescriptorUpdateAfterBindStorageBuffers@ is similar to
+--     @maxPerStageDescriptorStorageBuffers@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxPerStageDescriptorUpdateAfterBindSampledImages#
+--     @maxPerStageDescriptorUpdateAfterBindSampledImages@ is similar to
+--     @maxPerStageDescriptorSampledImages@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxPerStageDescriptorUpdateAfterBindStorageImages#
+--     @maxPerStageDescriptorUpdateAfterBindStorageImages@ is similar to
+--     @maxPerStageDescriptorStorageImages@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxPerStageDescriptorUpdateAfterBindInputAttachments#
+--     @maxPerStageDescriptorUpdateAfterBindInputAttachments@ is similar to
+--     @maxPerStageDescriptorInputAttachments@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxPerStageUpdateAfterBindResources#
+--     @maxPerStageUpdateAfterBindResources@ is similar to
+--     @maxPerStageResources@ but counts descriptors from descriptor sets
+--     created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxDescriptorSetUpdateAfterBindSamplers#
+--     @maxDescriptorSetUpdateAfterBindSamplers@ is similar to
+--     @maxDescriptorSetSamplers@ but counts descriptors from descriptor
+--     sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxDescriptorSetUpdateAfterBindUniformBuffers#
+--     @maxDescriptorSetUpdateAfterBindUniformBuffers@ is similar to
+--     @maxDescriptorSetUniformBuffers@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxDescriptorSetUpdateAfterBindUniformBuffersDynamic#
+--     @maxDescriptorSetUpdateAfterBindUniformBuffersDynamic@ is similar to
+--     @maxDescriptorSetUniformBuffersDynamic@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set. While an application /can/ allocate dynamic uniform buffer
+--     descriptors from a pool created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT',
+--     bindings for these descriptors /must/ not be present in any
+--     descriptor set layout that includes bindings created with
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'.
+--
+-- -   #extension-limits-maxDescriptorSetUpdateAfterBindStorageBuffers#
+--     @maxDescriptorSetUpdateAfterBindStorageBuffers@ is similar to
+--     @maxDescriptorSetStorageBuffers@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxDescriptorSetUpdateAfterBindStorageBuffersDynamic#
+--     @maxDescriptorSetUpdateAfterBindStorageBuffersDynamic@ is similar to
+--     @maxDescriptorSetStorageBuffersDynamic@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set. While an application /can/ allocate dynamic storage buffer
+--     descriptors from a pool created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT',
+--     bindings for these descriptors /must/ not be present in any
+--     descriptor set layout that includes bindings created with
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'.
+--
+-- -   #extension-limits-maxDescriptorSetUpdateAfterBindSampledImages#
+--     @maxDescriptorSetUpdateAfterBindSampledImages@ is similar to
+--     @maxDescriptorSetSampledImages@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxDescriptorSetUpdateAfterBindStorageImages#
+--     @maxDescriptorSetUpdateAfterBindStorageImages@ is similar to
+--     @maxDescriptorSetStorageImages@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #extension-limits-maxDescriptorSetUpdateAfterBindInputAttachments#
+--     @maxDescriptorSetUpdateAfterBindInputAttachments@ is similar to
+--     @maxDescriptorSetInputAttachments@ but counts descriptors from
+--     descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
 -- If the 'PhysicalDeviceDescriptorIndexingProperties' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -377,161 +648,60 @@ instance Zero PhysicalDeviceDescriptorIndexingFeatures where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceDescriptorIndexingProperties-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexingProperties
-  { -- | @maxUpdateAfterBindDescriptorsInAllPools@ is the maximum number of
-    -- descriptors (summed over all descriptor types) that /can/ be created
-    -- across all pools that are created with the
-    -- 'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
-    -- bit set. Pool creation /may/ fail when this limit is exceeded, or when
-    -- the space this limit represents is unable to satisfy a pool creation due
-    -- to fragmentation.
+  { -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxUpdateAfterBindDescriptorsInAllPools"
     maxUpdateAfterBindDescriptorsInAllPools :: Word32
-  , -- | @shaderUniformBufferArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether uniform buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
-    -- indexes an array of uniform buffers /may/ execute multiple times in
-    -- order to access all the descriptors.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "shaderUniformBufferArrayNonUniformIndexingNative"
     shaderUniformBufferArrayNonUniformIndexingNative :: Bool
-  , -- | @shaderSampledImageArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether sampler and image descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
-    -- indexes an array of samplers or images /may/ execute multiple times in
-    -- order to access all the descriptors.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "shaderSampledImageArrayNonUniformIndexingNative"
     shaderSampledImageArrayNonUniformIndexingNative :: Bool
-  , -- | @shaderStorageBufferArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether storage buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
-    -- indexes an array of storage buffers /may/ execute multiple times in
-    -- order to access all the descriptors.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "shaderStorageBufferArrayNonUniformIndexingNative"
     shaderStorageBufferArrayNonUniformIndexingNative :: Bool
-  , -- | @shaderStorageImageArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether storage image descriptors natively support nonuniform
-    -- indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of storage images /may/ execute multiple times in order to access
-    -- all the descriptors.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "shaderStorageImageArrayNonUniformIndexingNative"
     shaderStorageImageArrayNonUniformIndexingNative :: Bool
-  , -- | @shaderInputAttachmentArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether input attachment descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
-    -- indexes an array of input attachments /may/ execute multiple times in
-    -- order to access all the descriptors.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "shaderInputAttachmentArrayNonUniformIndexingNative"
     shaderInputAttachmentArrayNonUniformIndexingNative :: Bool
-  , -- | @robustBufferAccessUpdateAfterBind@ is a boolean value indicating
-    -- whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
-    -- /can/ be enabled in a device simultaneously with
-    -- @descriptorBindingUniformBufferUpdateAfterBind@,
-    -- @descriptorBindingStorageBufferUpdateAfterBind@,
-    -- @descriptorBindingUniformTexelBufferUpdateAfterBind@, and\/or
-    -- @descriptorBindingStorageTexelBufferUpdateAfterBind@. If this is
-    -- 'Vulkan.Core10.FundamentalTypes.FALSE', then either @robustBufferAccess@
-    -- /must/ be disabled or all of these update-after-bind features /must/ be
-    -- disabled.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "robustBufferAccessUpdateAfterBind"
     robustBufferAccessUpdateAfterBind :: Bool
-  , -- | @quadDivergentImplicitLod@ is a boolean value indicating whether
-    -- implicit level of detail calculations for image operations have
-    -- well-defined results when the image and\/or sampler objects used for the
-    -- instruction are not uniform within a quad. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "quadDivergentImplicitLod"
     quadDivergentImplicitLod :: Bool
-  , -- | @maxPerStageDescriptorUpdateAfterBindSamplers@ is similar to
-    -- @maxPerStageDescriptorSamplers@ but counts descriptors from descriptor
-    -- sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxPerStageDescriptorUpdateAfterBindSamplers"
     maxPerStageDescriptorUpdateAfterBindSamplers :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindUniformBuffers@ is similar to
-    -- @maxPerStageDescriptorUniformBuffers@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxPerStageDescriptorUpdateAfterBindUniformBuffers"
     maxPerStageDescriptorUpdateAfterBindUniformBuffers :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindStorageBuffers@ is similar to
-    -- @maxPerStageDescriptorStorageBuffers@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxPerStageDescriptorUpdateAfterBindStorageBuffers"
     maxPerStageDescriptorUpdateAfterBindStorageBuffers :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindSampledImages@ is similar to
-    -- @maxPerStageDescriptorSampledImages@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxPerStageDescriptorUpdateAfterBindSampledImages"
     maxPerStageDescriptorUpdateAfterBindSampledImages :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindStorageImages@ is similar to
-    -- @maxPerStageDescriptorStorageImages@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxPerStageDescriptorUpdateAfterBindStorageImages"
     maxPerStageDescriptorUpdateAfterBindStorageImages :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindInputAttachments@ is similar to
-    -- @maxPerStageDescriptorInputAttachments@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxPerStageDescriptorUpdateAfterBindInputAttachments"
     maxPerStageDescriptorUpdateAfterBindInputAttachments :: Word32
-  , -- | @maxPerStageUpdateAfterBindResources@ is similar to
-    -- @maxPerStageResources@ but counts descriptors from descriptor sets
-    -- created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxPerStageUpdateAfterBindResources"
     maxPerStageUpdateAfterBindResources :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindSamplers@ is similar to
-    -- @maxDescriptorSetSamplers@ but counts descriptors from descriptor sets
-    -- created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxDescriptorSetUpdateAfterBindSamplers"
     maxDescriptorSetUpdateAfterBindSamplers :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindUniformBuffers@ is similar to
-    -- @maxDescriptorSetUniformBuffers@ but counts descriptors from descriptor
-    -- sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxDescriptorSetUpdateAfterBindUniformBuffers"
     maxDescriptorSetUpdateAfterBindUniformBuffers :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindUniformBuffersDynamic@ is similar to
-    -- @maxDescriptorSetUniformBuffersDynamic@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxDescriptorSetUpdateAfterBindUniformBuffersDynamic"
     maxDescriptorSetUpdateAfterBindUniformBuffersDynamic :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindStorageBuffers@ is similar to
-    -- @maxDescriptorSetStorageBuffers@ but counts descriptors from descriptor
-    -- sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxDescriptorSetUpdateAfterBindStorageBuffers"
     maxDescriptorSetUpdateAfterBindStorageBuffers :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindStorageBuffersDynamic@ is similar to
-    -- @maxDescriptorSetStorageBuffersDynamic@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxDescriptorSetUpdateAfterBindStorageBuffersDynamic"
     maxDescriptorSetUpdateAfterBindStorageBuffersDynamic :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindSampledImages@ is similar to
-    -- @maxDescriptorSetSampledImages@ but counts descriptors from descriptor
-    -- sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxDescriptorSetUpdateAfterBindSampledImages"
     maxDescriptorSetUpdateAfterBindSampledImages :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindStorageImages@ is similar to
-    -- @maxDescriptorSetStorageImages@ but counts descriptors from descriptor
-    -- sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxDescriptorSetUpdateAfterBindStorageImages"
     maxDescriptorSetUpdateAfterBindStorageImages :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindInputAttachments@ is similar to
-    -- @maxDescriptorSetInputAttachments@ but counts descriptors from
-    -- descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingProperties" "maxDescriptorSetUpdateAfterBindInputAttachments"
     maxDescriptorSetUpdateAfterBindInputAttachments :: Word32
   }
   deriving (Typeable, Eq)
@@ -675,10 +845,11 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --
 -- == Valid Usage
 --
--- -   If @bindingCount@ is not zero, @bindingCount@ /must/ equal
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-bindingCount-03002#
+--     If @bindingCount@ is not zero, @bindingCount@ /must/ equal
 --     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'::@bindingCount@
 --
--- -   If
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-flags-03003# If
 --     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'::@flags@
 --     includes
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
@@ -688,20 +859,23 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --     or
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT'
 --
--- -   If an element of @pBindingFlags@ includes
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-pBindingFlags-03004#
+--     If an element of @pBindingFlags@ includes
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT',
 --     then all other elements of
 --     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'::@pBindings@
 --     /must/ have a smaller value of @binding@
 --
--- -   If
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingUniformBufferUpdateAfterBind-03005#
+--     If
 --     'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingUniformBufferUpdateAfterBind@
 --     is not enabled, all bindings with descriptor type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     /must/ not use
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --
--- -   If
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingSampledImageUpdateAfterBind-03006#
+--     If
 --     'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingSampledImageUpdateAfterBind@
 --     is not enabled, all bindings with descriptor type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
@@ -711,42 +885,48 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --     /must/ not use
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --
--- -   If
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingStorageImageUpdateAfterBind-03007#
+--     If
 --     'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingStorageImageUpdateAfterBind@
 --     is not enabled, all bindings with descriptor type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
 --     /must/ not use
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --
--- -   If
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingStorageBufferUpdateAfterBind-03008#
+--     If
 --     'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingStorageBufferUpdateAfterBind@
 --     is not enabled, all bindings with descriptor type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     /must/ not use
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --
--- -   If
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingUniformTexelBufferUpdateAfterBind-03009#
+--     If
 --     'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingUniformTexelBufferUpdateAfterBind@
 --     is not enabled, all bindings with descriptor type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
 --     /must/ not use
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --
--- -   If
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingStorageTexelBufferUpdateAfterBind-03010#
+--     If
 --     'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingStorageTexelBufferUpdateAfterBind@
 --     is not enabled, all bindings with descriptor type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
 --     /must/ not use
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --
--- -   If
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingInlineUniformBlockUpdateAfterBind-02211#
+--     If
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockFeaturesEXT'::@descriptorBindingInlineUniformBlockUpdateAfterBind@
 --     is not enabled, all bindings with descriptor type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     /must/ not use
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --
--- -   All bindings with descriptor type
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-None-03011# All
+--     bindings with descriptor type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
 --     or
@@ -754,22 +934,26 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --     /must/ not use
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --
--- -   If
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingUpdateUnusedWhilePending-03012#
+--     If
 --     'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingUpdateUnusedWhilePending@
 --     is not enabled, all elements of @pBindingFlags@ /must/ not include
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
 --
--- -   If
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingPartiallyBound-03013#
+--     If
 --     'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingPartiallyBound@
 --     is not enabled, all elements of @pBindingFlags@ /must/ not include
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT'
 --
--- -   If
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingVariableDescriptorCount-03014#
+--     If
 --     'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingVariableDescriptorCount@
 --     is not enabled, all elements of @pBindingFlags@ /must/ not include
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT'
 --
--- -   If an element of @pBindingFlags@ includes
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-pBindingFlags-03015#
+--     If an element of @pBindingFlags@ includes
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT',
 --     that element’s @descriptorType@ /must/ not be
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
@@ -778,10 +962,12 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO'
 --
--- -   If @bindingCount@ is not @0@, @pBindingFlags@ /must/ be a valid
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-pBindingFlags-parameter#
+--     If @bindingCount@ is not @0@, @pBindingFlags@ /must/ be a valid
 --     pointer to an array of @bindingCount@ valid combinations of
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'
 --     values
@@ -854,11 +1040,13 @@ instance Zero DescriptorSetLayoutBindingFlagsCreateInfo where
 --
 -- == Valid Usage
 --
--- -   If @descriptorSetCount@ is not zero, @descriptorSetCount@ /must/
+-- -   #VUID-VkDescriptorSetVariableDescriptorCountAllocateInfo-descriptorSetCount-03045#
+--     If @descriptorSetCount@ is not zero, @descriptorSetCount@ /must/
 --     equal
 --     'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo'::@descriptorSetCount@
 --
--- -   If
+-- -   #VUID-VkDescriptorSetVariableDescriptorCountAllocateInfo-pSetLayouts-03046#
+--     If
 --     'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo'::@pSetLayouts@[i]
 --     has a variable descriptor count binding, then @pDescriptorCounts@[i]
 --     /must/ be less than or equal to the descriptor count specified for
@@ -866,10 +1054,12 @@ instance Zero DescriptorSetLayoutBindingFlagsCreateInfo where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDescriptorSetVariableDescriptorCountAllocateInfo-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO'
 --
--- -   If @descriptorSetCount@ is not @0@, @pDescriptorCounts@ /must/ be a
+-- -   #VUID-VkDescriptorSetVariableDescriptorCountAllocateInfo-pDescriptorCounts-parameter#
+--     If @descriptorSetCount@ is not @0@, @pDescriptorCounts@ /must/ be a
 --     valid pointer to an array of @descriptorSetCount@ @uint32_t@ values
 --
 -- = See Also
@@ -942,6 +1132,10 @@ instance Zero DescriptorSetVariableDescriptorCountAllocateInfo where
 -- undefined.
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkDescriptorSetVariableDescriptorCountLayoutSupport-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT'
 --
 -- = See Also
 --

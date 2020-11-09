@@ -39,6 +39,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-shaderIntegerFunctions2# @shaderIntegerFunctions2@
+--     indicates that the implementation supports the
+--     @IntegerFunctions2INTEL@ SPIR-V capability.
+--
 -- If the 'PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -49,13 +53,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL = PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
-  { -- | @shaderIntegerFunctions2@ indicates that the implementation supports the
-    -- @IntegerFunctions2INTEL@ SPIR-V capability.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL" "shaderIntegerFunctions2"
     shaderIntegerFunctions2 :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

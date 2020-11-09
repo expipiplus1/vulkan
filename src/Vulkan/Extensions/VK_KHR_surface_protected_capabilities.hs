@@ -33,6 +33,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_P
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkSurfaceProtectedCapabilitiesKHR-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',

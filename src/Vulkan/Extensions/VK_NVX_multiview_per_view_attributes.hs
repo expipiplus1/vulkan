@@ -39,6 +39,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #limits-perViewPositionAllComponents# @perViewPositionAllComponents@
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation
+--     supports per-view position values that differ in components other
+--     than the X component.
+--
 -- If the 'PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX' structure
 -- is included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -46,14 +56,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX = PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
-  { -- | @perViewPositionAllComponents@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
-    -- if the implementation supports per-view position values that differ in
-    -- components other than the X component.
+  { -- No documentation found for Nested "VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX" "perViewPositionAllComponents"
     perViewPositionAllComponents :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

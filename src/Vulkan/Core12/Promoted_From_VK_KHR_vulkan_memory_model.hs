@@ -28,28 +28,42 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- | VkPhysicalDeviceVulkanMemoryModelFeatures - Structure describing
 -- features supported by the memory model
 --
+-- = Description
+--
+-- -   #extension-features-vulkanMemoryModel# @vulkanMemoryModel@ indicates
+--     whether the Vulkan Memory Model is supported, as defined in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model Vulkan Memory Model>.
+--     This also indicates whether shader modules /can/ declare the
+--     @VulkanMemoryModel@ capability.
+--
+-- -   #extension-features-vulkanMemoryModelDeviceScope#
+--     @vulkanMemoryModelDeviceScope@ indicates whether the Vulkan Memory
+--     Model can use 'Vulkan.Core10.Handles.Device' scope synchronization.
+--     This also indicates whether shader modules /can/ declare the
+--     @VulkanMemoryModelDeviceScope@ capability.
+--
+-- -   #extension-features-vulkanMemoryModelAvailabilityVisibilityChains#
+--     @vulkanMemoryModelAvailabilityVisibilityChains@ indicates whether
+--     the Vulkan Memory Model can use
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model-availability-visibility availability and visibility chains>
+--     with more than one element.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceVulkanMemoryModelFeatures-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkanMemoryModelFeatures = PhysicalDeviceVulkanMemoryModelFeatures
-  { -- | @vulkanMemoryModel@ indicates whether the Vulkan Memory Model is
-    -- supported, as defined in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model Vulkan Memory Model>.
-    -- This also indicates whether shader modules /can/ declare the
-    -- @VulkanMemoryModel@ capability.
+  { -- No documentation found for Nested "VkPhysicalDeviceVulkanMemoryModelFeatures" "vulkanMemoryModel"
     vulkanMemoryModel :: Bool
-  , -- | @vulkanMemoryModelDeviceScope@ indicates whether the Vulkan Memory Model
-    -- can use 'Vulkan.Core10.Handles.Device' scope synchronization. This also
-    -- indicates whether shader modules /can/ declare the
-    -- @VulkanMemoryModelDeviceScope@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkanMemoryModelFeatures" "vulkanMemoryModelDeviceScope"
     vulkanMemoryModelDeviceScope :: Bool
-  , -- | @vulkanMemoryModelAvailabilityVisibilityChains@ indicates whether the
-    -- Vulkan Memory Model can use
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model-availability-visibility availability and visibility chains>
-    -- with more than one element.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkanMemoryModelFeatures" "vulkanMemoryModelAvailabilityVisibilityChains"
     vulkanMemoryModelAvailabilityVisibilityChains :: Bool
   }
   deriving (Typeable, Eq)

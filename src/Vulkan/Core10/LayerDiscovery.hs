@@ -94,9 +94,11 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkEnumerateInstanceLayerProperties-pPropertyCount-parameter#
+--     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
+-- -   #VUID-vkEnumerateInstanceLayerProperties-pProperties-parameter# If
+--     the value referenced by @pPropertyCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
 --     to an array of @pPropertyCount@ 'LayerProperties' structures
 --
@@ -170,14 +172,17 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkEnumerateDeviceLayerProperties-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkEnumerateDeviceLayerProperties-pPropertyCount-parameter#
+--     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ 'LayerProperties' structures
+-- -   #VUID-vkEnumerateDeviceLayerProperties-pProperties-parameter# If the
+--     value referenced by @pPropertyCount@ is not @0@, and @pProperties@
+--     is not @NULL@, @pProperties@ /must/ be a valid pointer to an array
+--     of @pPropertyCount@ 'LayerProperties' structures
 --
 -- == Return Codes
 --

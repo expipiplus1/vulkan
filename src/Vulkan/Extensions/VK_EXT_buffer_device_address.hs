@@ -81,6 +81,23 @@ getBufferDeviceAddressEXT = getBufferDeviceAddress
 --
 -- = Description
 --
+-- -   #features-bufferDeviceAddressEXT# @bufferDeviceAddress@ indicates
+--     that the implementation supports accessing buffer memory in shaders
+--     as storage buffers via an address queried from
+--     'getBufferDeviceAddressEXT'.
+--
+-- -   #features-bufferDeviceAddressCaptureReplayEXT#
+--     @bufferDeviceAddressCaptureReplay@ indicates that the implementation
+--     supports saving and reusing buffer addresses, e.g. for trace capture
+--     and replay.
+--
+-- -   #features-bufferDeviceAddressMultiDeviceEXT#
+--     @bufferDeviceAddressMultiDevice@ indicates that the implementation
+--     supports the @bufferDeviceAddress@ feature for logical devices
+--     created with multiple physical devices. If this feature is not
+--     supported, buffer addresses /must/ not be queried on a logical
+--     device created with more than one physical device.
+--
 -- If the 'PhysicalDeviceBufferDeviceAddressFeaturesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -103,24 +120,20 @@ getBufferDeviceAddressEXT = getBufferDeviceAddress
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceBufferDeviceAddressFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceBufferDeviceAddressFeaturesEXT = PhysicalDeviceBufferDeviceAddressFeaturesEXT
-  { -- | @bufferDeviceAddress@ indicates that the implementation supports
-    -- accessing buffer memory in shaders as storage buffers via an address
-    -- queried from 'getBufferDeviceAddressEXT'.
+  { -- No documentation found for Nested "VkPhysicalDeviceBufferDeviceAddressFeaturesEXT" "bufferDeviceAddress"
     bufferDeviceAddress :: Bool
-  , -- | @bufferDeviceAddressCaptureReplay@ indicates that the implementation
-    -- supports saving and reusing buffer addresses, e.g. for trace capture and
-    -- replay.
+  , -- No documentation found for Nested "VkPhysicalDeviceBufferDeviceAddressFeaturesEXT" "bufferDeviceAddressCaptureReplay"
     bufferDeviceAddressCaptureReplay :: Bool
-  , -- | @bufferDeviceAddressMultiDevice@ indicates that the implementation
-    -- supports the @bufferDeviceAddress@ feature for logical devices created
-    -- with multiple physical devices. If this feature is not supported, buffer
-    -- addresses /must/ not be queried on a logical device created with more
-    -- than one physical device.
+  , -- No documentation found for Nested "VkPhysicalDeviceBufferDeviceAddressFeaturesEXT" "bufferDeviceAddressMultiDevice"
     bufferDeviceAddressMultiDevice :: Bool
   }
   deriving (Typeable, Eq)
@@ -188,6 +201,10 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeaturesEXT where
 -- likelihood of 'ERROR_INVALID_DEVICE_ADDRESS_EXT' errors.
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkBufferDeviceAddressCreateInfoEXT-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT'
 --
 -- = See Also
 --

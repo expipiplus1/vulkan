@@ -39,6 +39,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-shaderTerminateInvocation# @shaderTerminateInvocation@
+--     specifies whether the implementation supports SPIR-V modules that
+--     use the @SPV_KHR_terminate_invocation@ extension.
+--
 -- If the 'PhysicalDeviceShaderTerminateInvocationFeaturesKHR' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -49,14 +53,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES_KHR'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderTerminateInvocationFeaturesKHR = PhysicalDeviceShaderTerminateInvocationFeaturesKHR
-  { -- | @shaderTerminateInvocation@ specifies whether the implementation
-    -- supports SPIR-V modules that use the @SPV_KHR_terminate_invocation@
-    -- extension.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR" "shaderTerminateInvocation"
     shaderTerminateInvocation :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

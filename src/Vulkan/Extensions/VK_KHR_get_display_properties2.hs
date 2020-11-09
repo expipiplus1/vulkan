@@ -116,12 +116,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceDisplayProperties2KHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDeviceDisplayProperties2KHR-pPropertyCount-parameter#
+--     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceDisplayProperties2KHR-pProperties-parameter#
+--     If the value referenced by @pPropertyCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
 --     to an array of @pPropertyCount@ 'DisplayProperties2KHR' structures
 --
@@ -185,12 +188,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceDisplayPlaneProperties2KHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDeviceDisplayPlaneProperties2KHR-pPropertyCount-parameter#
+--     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceDisplayPlaneProperties2KHR-pProperties-parameter#
+--     If the value referenced by @pPropertyCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
 --     to an array of @pPropertyCount@ 'DisplayPlaneProperties2KHR'
 --     structures
@@ -254,20 +260,23 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetDisplayModeProperties2KHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @display@ /must/ be a valid 'Vulkan.Extensions.Handles.DisplayKHR'
---     handle
+-- -   #VUID-vkGetDisplayModeProperties2KHR-display-parameter# @display@
+--     /must/ be a valid 'Vulkan.Extensions.Handles.DisplayKHR' handle
 --
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetDisplayModeProperties2KHR-pPropertyCount-parameter#
+--     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ 'DisplayModeProperties2KHR'
---     structures
+-- -   #VUID-vkGetDisplayModeProperties2KHR-pProperties-parameter# If the
+--     value referenced by @pPropertyCount@ is not @0@, and @pProperties@
+--     is not @NULL@, @pProperties@ /must/ be a valid pointer to an array
+--     of @pPropertyCount@ 'DisplayModeProperties2KHR' structures
 --
--- -   @display@ /must/ have been created, allocated, or retrieved from
+-- -   #VUID-vkGetDisplayModeProperties2KHR-display-parent# @display@
+--     /must/ have been created, allocated, or retrieved from
 --     @physicalDevice@
 --
 -- == Return Codes
@@ -331,6 +340,20 @@ foreign import ccall
 -- the ability to specify extended inputs via chained input structures, and
 -- to return extended information via chained output structures.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetDisplayPlaneCapabilities2KHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PhysicalDevice' handle
+--
+-- -   #VUID-vkGetDisplayPlaneCapabilities2KHR-pDisplayPlaneInfo-parameter#
+--     @pDisplayPlaneInfo@ /must/ be a valid pointer to a valid
+--     'DisplayPlaneInfo2KHR' structure
+--
+-- -   #VUID-vkGetDisplayPlaneCapabilities2KHR-pCapabilities-parameter#
+--     @pCapabilities@ /must/ be a valid pointer to a
+--     'DisplayPlaneCapabilities2KHR' structure
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -351,15 +374,9 @@ getDisplayPlaneCapabilities2KHR :: forall io
                                  . (MonadIO io)
                                 => -- | @physicalDevice@ is the physical device associated with
                                    -- @pDisplayPlaneInfo@.
-                                   --
-                                   -- @physicalDevice@ /must/ be a valid
-                                   -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                    PhysicalDevice
                                 -> -- | @pDisplayPlaneInfo@ is a pointer to a 'DisplayPlaneInfo2KHR' structure
                                    -- describing the plane and mode.
-                                   --
-                                   -- @pDisplayPlaneInfo@ /must/ be a valid pointer to a valid
-                                   -- 'DisplayPlaneInfo2KHR' structure
                                    DisplayPlaneInfo2KHR
                                 -> io (DisplayPlaneCapabilities2KHR)
 getDisplayPlaneCapabilities2KHR physicalDevice displayPlaneInfo = liftIO . evalContT $ do
@@ -379,6 +396,11 @@ getDisplayPlaneCapabilities2KHR physicalDevice displayPlaneInfo = liftIO . evalC
 -- device
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkDisplayProperties2KHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR'
+--
+-- -   #VUID-VkDisplayProperties2KHR-pNext-pNext# @pNext@ /must/ be @NULL@
 --
 -- = See Also
 --
@@ -426,6 +448,12 @@ instance Zero DisplayProperties2KHR where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkDisplayPlaneProperties2KHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR'
+--
+-- -   #VUID-VkDisplayPlaneProperties2KHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
+--
 -- = See Also
 --
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPlanePropertiesKHR',
@@ -471,6 +499,12 @@ instance Zero DisplayPlaneProperties2KHR where
 -- mode
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkDisplayModeProperties2KHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR'
+--
+-- -   #VUID-VkDisplayModeProperties2KHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
 -- = See Also
 --
@@ -531,13 +565,13 @@ instance Zero DisplayModeProperties2KHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDisplayPlaneInfo2KHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkDisplayPlaneInfo2KHR-pNext-pNext# @pNext@ /must/ be @NULL@
 --
--- -   @mode@ /must/ be a valid 'Vulkan.Extensions.Handles.DisplayModeKHR'
---     handle
+-- -   #VUID-VkDisplayPlaneInfo2KHR-mode-parameter# @mode@ /must/ be a
+--     valid 'Vulkan.Extensions.Handles.DisplayModeKHR' handle
 --
 -- == Host Synchronization
 --
@@ -601,6 +635,12 @@ instance Zero DisplayPlaneInfo2KHR where
 -- of a mode and plane combination
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkDisplayPlaneCapabilities2KHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR'
+--
+-- -   #VUID-VkDisplayPlaneCapabilities2KHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
 -- = See Also
 --

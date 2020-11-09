@@ -97,17 +97,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateImageView-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'ImageViewCreateInfo' structure
+-- -   #VUID-vkCreateImageView-pCreateInfo-parameter# @pCreateInfo@ /must/
+--     be a valid pointer to a valid 'ImageViewCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateImageView-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pView@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.ImageView' handle
+-- -   #VUID-vkCreateImageView-pView-parameter# @pView@ /must/ be a valid
+--     pointer to a 'Vulkan.Core10.Handles.ImageView' handle
 --
 -- == Return Codes
 --
@@ -178,30 +179,34 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @imageView@ /must/ have
---     completed execution
+-- -   #VUID-vkDestroyImageView-imageView-01026# All submitted commands
+--     that refer to @imageView@ /must/ have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyImageView-imageView-01027# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @imageView@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyImageView-imageView-01028# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @imageView@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyImageView-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @imageView@ /must/ be a valid 'Vulkan.Core10.Handles.ImageView'
---     handle
+-- -   #VUID-vkDestroyImageView-imageView-parameter# If @imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.ImageView' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyImageView-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @imageView@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroyImageView-imageView-parent# If @imageView@ is a valid
+--     handle, it /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Host Synchronization
 --
@@ -238,6 +243,18 @@ destroyImageView device imageView allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkComponentMapping-r-parameter# @r@ /must/ be a valid
+--     'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
+--
+-- -   #VUID-VkComponentMapping-g-parameter# @g@ /must/ be a valid
+--     'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
+--
+-- -   #VUID-VkComponentMapping-b-parameter# @b@ /must/ be a valid
+--     'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
+--
+-- -   #VUID-VkComponentMapping-a-parameter# @a@ /must/ be a valid
+--     'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
+--
 -- = See Also
 --
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID',
@@ -248,30 +265,18 @@ data ComponentMapping = ComponentMapping
   { -- | @r@ is a 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle'
     -- specifying the component value placed in the R component of the output
     -- vector.
-    --
-    -- @r@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
     r :: ComponentSwizzle
   , -- | @g@ is a 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle'
     -- specifying the component value placed in the G component of the output
     -- vector.
-    --
-    -- @g@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
     g :: ComponentSwizzle
   , -- | @b@ is a 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle'
     -- specifying the component value placed in the B component of the output
     -- vector.
-    --
-    -- @b@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
     b :: ComponentSwizzle
   , -- | @a@ is a 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle'
     -- specifying the component value placed in the A component of the output
     -- vector.
-    --
-    -- @a@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
     a :: ComponentSwizzle
   }
   deriving (Typeable, Eq)
@@ -397,15 +402,16 @@ instance Zero ComponentMapping where
 --
 -- == Valid Usage
 --
--- -   If @levelCount@ is not
---     'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS', it /must/ be
+-- -   #VUID-VkImageSubresourceRange-levelCount-01720# If @levelCount@ is
+--     not 'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS', it /must/ be
 --     greater than @0@
 --
--- -   If @layerCount@ is not
---     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', it /must/ be
---     greater than @0@
+-- -   #VUID-VkImageSubresourceRange-layerCount-01721# If @layerCount@ is
+--     not 'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', it /must/
+--     be greater than @0@
 --
--- -   If @aspectMask@ includes
+-- -   #VUID-VkImageSubresourceRange-aspectMask-01670# If @aspectMask@
+--     includes
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
 --     then it /must/ not include any of
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
@@ -413,15 +419,18 @@ instance Zero ComponentMapping where
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
--- -   @aspectMask@ /must/ not include
---     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@
+-- -   #VUID-VkImageSubresourceRange-aspectMask-02278# @aspectMask@ /must/
+--     not include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index
+--     @i@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @aspectMask@ /must/ be a valid combination of
+-- -   #VUID-VkImageSubresourceRange-aspectMask-parameter# @aspectMask@
+--     /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' values
 --
--- -   @aspectMask@ /must/ not be @0@
+-- -   #VUID-VkImageSubresourceRange-aspectMask-requiredbitmask#
+--     @aspectMask@ /must/ not be @0@
 --
 -- = See Also
 --
@@ -737,62 +746,64 @@ instance Zero ImageSubresourceRange where
 --
 -- == Valid Usage
 --
--- -   If @image@ was not created with
+-- -   #VUID-VkImageViewCreateInfo-image-01003# If @image@ was not created
+--     with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT'
 --     then @viewType@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
 --
--- -   If the
+-- -   #VUID-VkImageViewCreateInfo-viewType-01004# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-imageCubeArray image cubemap arrays>
 --     feature is not enabled, @viewType@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
 --
--- -   If @image@ was created with
+-- -   #VUID-VkImageViewCreateInfo-image-01005# If @image@ was created with
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' but without
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
 --     set then @viewType@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
--- -   @image@ /must/ have been created with a @usage@ value containing at
---     least one of the usages defined in the
+-- -   #VUID-VkImageViewCreateInfo-image-04441# @image@ /must/ have been
+--     created with a @usage@ value containing at least one of the usages
+--     defined in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#valid-imageview-imageusage valid image usage>
 --     list for image views
 --
--- -   The
+-- -   #VUID-VkImageViewCreateInfo-None-02273# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     of the resultant image view /must/ contain at least one bit
 --
--- -   If @usage@ contains
+-- -   #VUID-VkImageViewCreateInfo-usage-02274# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     of the resultant image view /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'
 --
--- -   If @usage@ contains
+-- -   #VUID-VkImageViewCreateInfo-usage-02275# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT',
 --     then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_BIT'
 --
--- -   If @usage@ contains
+-- -   #VUID-VkImageViewCreateInfo-usage-02276# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
 --     then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
--- -   If @usage@ contains
+-- -   #VUID-VkImageViewCreateInfo-usage-02277# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
 --     then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
--- -   If @usage@ contains
+-- -   #VUID-VkImageViewCreateInfo-usage-02652# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
 --     then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
@@ -801,21 +812,25 @@ instance Zero ImageSubresourceRange where
 --     or
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
--- -   @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
+-- -   #VUID-VkImageViewCreateInfo-subresourceRange-01478#
+--     @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
 --     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
 --     created
 --
--- -   If @subresourceRange.levelCount@ is not
+-- -   #VUID-VkImageViewCreateInfo-subresourceRange-01718# If
+--     @subresourceRange.levelCount@ is not
 --     'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS',
 --     @subresourceRange.baseMipLevel@ + @subresourceRange.levelCount@
 --     /must/ be less than or equal to the @mipLevels@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
 --
--- -   If @image@ was created with @usage@ containing
+-- -   #VUID-VkImageViewCreateInfo-image-02571# If @image@ was created with
+--     @usage@ containing
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @subresourceRange.levelCount@ /must/ be @1@
 --
--- -   If @image@ is not a 3D image created with
+-- -   #VUID-VkImageViewCreateInfo-image-01482# If @image@ is not a 3D
+--     image created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
 --     set, or @viewType@ is not
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
@@ -824,7 +839,8 @@ instance Zero ImageSubresourceRange where
 --     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
 --     when @image@ was created
 --
--- -   If @subresourceRange.layerCount@ is not
+-- -   #VUID-VkImageViewCreateInfo-subresourceRange-01483# If
+--     @subresourceRange.layerCount@ is not
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', @image@ is not
 --     a 3D image created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
@@ -836,7 +852,8 @@ instance Zero ImageSubresourceRange where
 --     /must/ be less than or equal to the @arrayLayers@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
 --
--- -   If @image@ is a 3D image created with
+-- -   #VUID-VkImageViewCreateInfo-image-02724# If @image@ is a 3D image
+--     created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
 --     set, and @viewType@ is
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
@@ -847,7 +864,8 @@ instance Zero ImageSubresourceRange where
 --     according to the formula defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
 --
--- -   If @subresourceRange.layerCount@ is not
+-- -   #VUID-VkImageViewCreateInfo-subresourceRange-02725# If
+--     @subresourceRange.layerCount@ is not
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', @image@ is a 3D
 --     image created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
@@ -862,7 +880,8 @@ instance Zero ImageSubresourceRange where
 --     according to the formula defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
 --
--- -   If @image@ was created with the
+-- -   #VUID-VkImageViewCreateInfo-image-01761# If @image@ was created with
+--     the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --     flag, but without the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
@@ -872,18 +891,20 @@ instance Zero ImageSubresourceRange where
 --     create @image@, as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
 --
--- -   If @image@ was created with the
+-- -   #VUID-VkImageViewCreateInfo-image-01583# If @image@ was created with
+--     the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
 --     flag, @format@ /must/ be compatible with, or /must/ be an
 --     uncompressed format that is size-compatible with, the @format@ used
 --     to create @image@
 --
--- -   If @image@ was created with the
+-- -   #VUID-VkImageViewCreateInfo-image-01584# If @image@ was created with
+--     the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
 --     flag, the @levelCount@ and @layerCount@ members of
 --     @subresourceRange@ /must/ both be @1@
 --
--- -   If a
+-- -   #VUID-VkImageViewCreateInfo-pNext-01585# If a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure was included in the @pNext@ chain of the
 --     'Vulkan.Core10.Image.ImageCreateInfo' structure used when creating
@@ -892,7 +913,7 @@ instance Zero ImageSubresourceRange where
 --     is not zero then @format@ /must/ be one of the formats in
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
 --
--- -   If a
+-- -   #VUID-VkImageViewCreateInfo-pNext-04082# If a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure was included in the @pNext@ chain of the
 --     'Vulkan.Core10.Image.ImageCreateInfo' structure used when creating
@@ -903,7 +924,7 @@ instance Zero ImageSubresourceRange where
 --     /must/ be compatible with the @format@ as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility compatibility table>
 --
--- -   If @flags@ does not contain
+-- -   #VUID-VkImageViewCreateInfo-flags-04083# If @flags@ does not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --     and the @pNext@ chain include a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
@@ -911,7 +932,8 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
 --     /must/ be @0@ or @1@
 --
--- -   If @image@ was created with the
+-- -   #VUID-VkImageViewCreateInfo-image-01586# If @image@ was created with
+--     the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --     flag, if the @format@ of the @image@ is a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
@@ -925,7 +947,8 @@ instance Zero ImageSubresourceRange where
 --     @format@ indicated by @subresourceRange.aspectMask@, as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes>
 --
--- -   If @image@ was not created with the
+-- -   #VUID-VkImageViewCreateInfo-image-01762# If @image@ was not created
+--     with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --     flag, or if the @format@ of the @image@ is a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
@@ -933,83 +956,91 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
 --     @format@ /must/ be identical to the @format@ used to create @image@
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageViewCreateInfo-pNext-01970# If the @pNext@ chain
+--     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure with a @conversion@ value other than
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', all members of
 --     @components@ /must/ have the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
--- -   If @image@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-VkImageViewCreateInfo-image-01020# If @image@ is non-sparse
+--     then it /must/ be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   @subresourceRange@ and @viewType@ /must/ be compatible with the
+-- -   #VUID-VkImageViewCreateInfo-subResourceRange-01021#
+--     @subresourceRange@ and @viewType@ /must/ be compatible with the
 --     image, as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-compatibility compatibility table>
 --
--- -   If @image@ has an
+-- -   #VUID-VkImageViewCreateInfo-image-02399# If @image@ has an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
 --     @format@ /must/ be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
--- -   If @image@ has an
+-- -   #VUID-VkImageViewCreateInfo-image-02400# If @image@ has an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
 --     the @pNext@ chain /must/ include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure with a @conversion@ object created with the same external
 --     format as @image@
 --
--- -   If @image@ has an
+-- -   #VUID-VkImageViewCreateInfo-image-02401# If @image@ has an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
 --     all members of @components@ /must/ be the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
--- -   If @image@ was created with @usage@ containing
+-- -   #VUID-VkImageViewCreateInfo-image-02086# If @image@ was created with
+--     @usage@ containing
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     @viewType@ /must/ be
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
--- -   If @image@ was created with @usage@ containing
+-- -   #VUID-VkImageViewCreateInfo-image-02087# If @image@ was created with
+--     @usage@ containing
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
 --     @format@ /must/ be 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'
 --
--- -   If the @usage@ for the image view includes
+-- -   #VUID-VkImageViewCreateInfo-usage-04550# If the @usage@ for the
+--     image view includes
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
--- -   If the @usage@ for the image view includes
+-- -   #VUID-VkImageViewCreateInfo-usage-04551# If the @usage@ for the
+--     image view includes
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-layeredShadingRateAttachments layeredShadingRateAttachments>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE',
 --     @subresourceRange.layerCount@ /must/ be @1@
 --
--- -   If
+-- -   #VUID-VkImageViewCreateInfo-flags-02572# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMapDynamic dynamic fragment density map>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'
 --
--- -   If
+-- -   #VUID-VkImageViewCreateInfo-flags-03567# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMapDeferred deferred fragment density map>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageViewCreateInfo-flags-03568# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT',
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'
 --
--- -   If @image@ was created with @flags@ containing
+-- -   #VUID-VkImageViewCreateInfo-image-03569# If @image@ was created with
+--     @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --     and @usage@ containing
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT',
 --     @subresourceRange.layerCount@ /must/ be less than or equal to
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxSubsampledArrayLayers ::maxSubsampledArrayLayers>
 --
--- -   If @flags@ does not contain
+-- -   #VUID-VkImageViewCreateInfo-flags-04116# If @flags@ does not contain
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'
 --     and @image@ was created with @usage@ containing
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
@@ -1020,7 +1051,8 @@ instance Zero ImageSubresourceRange where
 --     or
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT'
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageViewCreateInfo-pNext-02662# If the @pNext@ chain
+--     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo'
 --     structure, and @image@ was not created with a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1030,7 +1062,8 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Image.ImageCreateInfo' structure used to create
 --     @image@
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageViewCreateInfo-pNext-02663# If the @pNext@ chain
+--     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo'
 --     structure, @image@ was created with a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1045,7 +1078,8 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
 --     structure used to create @image@
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageViewCreateInfo-pNext-02664# If the @pNext@ chain
+--     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo'
 --     structure, @image@ was created with a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1059,37 +1093,39 @@ instance Zero ImageSubresourceRange where
 --     @usage@ member of the 'Vulkan.Core10.Image.ImageCreateInfo'
 --     structure used to create @image@
 --
--- -   If @viewType@ is
+-- -   #VUID-VkImageViewCreateInfo-viewType-02960# If @viewType@ is
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE' and
 --     @subresourceRange.layerCount@ is not
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
 --     @subresourceRange.layerCount@ /must/ be @6@
 --
--- -   If @viewType@ is
+-- -   #VUID-VkImageViewCreateInfo-viewType-02961# If @viewType@ is
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY' and
 --     @subresourceRange.layerCount@ is not
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
 --     @subresourceRange.layerCount@ /must/ be a multiple of @6@
 --
--- -   If @viewType@ is
+-- -   #VUID-VkImageViewCreateInfo-viewType-02962# If @viewType@ is
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE' and
 --     @subresourceRange.layerCount@ is
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the remaining
 --     number of layers /must/ be @6@
 --
--- -   If @viewType@ is
+-- -   #VUID-VkImageViewCreateInfo-viewType-02963# If @viewType@ is
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY' and
 --     @subresourceRange.layerCount@ is
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the remaining
 --     number of layers /must/ be a multiple of @6@
 --
--- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+-- -   #VUID-VkImageViewCreateInfo-imageViewFormatSwizzle-04465# If the
+--     @VK_KHR_portability_subset@ extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@imageViewFormatSwizzle@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', all elements of
 --     @components@ /must/ be
 --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'.
 --
--- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+-- -   #VUID-VkImageViewCreateInfo-imageViewFormatReinterpretation-04466#
+--     If the @VK_KHR_portability_subset@ extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@imageViewFormatReinterpretation@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', the
 --     'Vulkan.Core10.Enums.Format.Format' in @format@ /must/ not contain a
@@ -1099,34 +1135,39 @@ instance Zero ImageSubresourceRange where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImageViewCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkImageViewCreateInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_astc_decode_mode.ImageViewASTCDecodeModeEXT',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo',
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkImageViewCreateInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkImageViewCreateInfo-flags-parameter# @flags@ /must/ be a
+--     valid combination of
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.ImageViewCreateFlagBits'
 --     values
 --
--- -   @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+-- -   #VUID-VkImageViewCreateInfo-image-parameter# @image@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Image' handle
 --
--- -   @viewType@ /must/ be a valid
---     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' value
+-- -   #VUID-VkImageViewCreateInfo-viewType-parameter# @viewType@ /must/ be
+--     a valid 'Vulkan.Core10.Enums.ImageViewType.ImageViewType' value
 --
--- -   @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+-- -   #VUID-VkImageViewCreateInfo-format-parameter# @format@ /must/ be a
+--     valid 'Vulkan.Core10.Enums.Format.Format' value
 --
--- -   @components@ /must/ be a valid 'ComponentMapping' structure
+-- -   #VUID-VkImageViewCreateInfo-components-parameter# @components@
+--     /must/ be a valid 'ComponentMapping' structure
 --
--- -   @subresourceRange@ /must/ be a valid 'ImageSubresourceRange'
+-- -   #VUID-VkImageViewCreateInfo-subresourceRange-parameter#
+--     @subresourceRange@ /must/ be a valid 'ImageSubresourceRange'
 --     structure
 --
 -- = See Also

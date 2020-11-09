@@ -46,7 +46,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEDICATED
 --
 -- == Valid Usage
 --
--- -   If @dedicatedAllocation@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+-- -   #VUID-VkDedicatedAllocationImageCreateInfoNV-dedicatedAllocation-00994#
+--     If @dedicatedAllocation@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ /must/ not include
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT',
@@ -55,7 +56,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEDICATED
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDedicatedAllocationImageCreateInfoNV-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV'
 --
 -- = See Also
@@ -109,6 +111,10 @@ instance Zero DedicatedAllocationImageCreateInfoNV where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkDedicatedAllocationBufferCreateInfoNV-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
@@ -160,38 +166,45 @@ instance Zero DedicatedAllocationBufferCreateInfoNV where
 --
 -- == Valid Usage
 --
--- -   At least one of @image@ and @buffer@ /must/ be
+-- -   #VUID-VkDedicatedAllocationMemoryAllocateInfoNV-image-00649# At
+--     least one of @image@ and @buffer@ /must/ be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
---     image /must/ have been created with
+-- -   #VUID-VkDedicatedAllocationMemoryAllocateInfoNV-image-00650# If
+--     @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the image
+--     /must/ have been created with
 --     'DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@ equal
 --     to 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
---     buffer /must/ have been created with
+-- -   #VUID-VkDedicatedAllocationMemoryAllocateInfoNV-buffer-00651# If
+--     @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the buffer
+--     /must/ have been created with
 --     'DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@ equal
 --     to 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
--- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-VkDedicatedAllocationMemoryAllocateInfoNV-image-00652# If
+--     @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/
 --     equal the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ of the
 --     image
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-VkDedicatedAllocationMemoryAllocateInfoNV-buffer-00653# If
+--     @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/
 --     equal the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ of the
 --     buffer
 --
--- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and
+-- -   #VUID-VkDedicatedAllocationMemoryAllocateInfoNV-image-00654# If
+--     @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import
 --     operation, the memory being imported /must/ also be a dedicated
 --     image allocation and @image@ /must/ be identical to the image
 --     associated with the imported memory
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and
+-- -   #VUID-VkDedicatedAllocationMemoryAllocateInfoNV-buffer-00655# If
+--     @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import
 --     operation, the memory being imported /must/ also be a dedicated
 --     buffer allocation and @buffer@ /must/ be identical to the buffer
@@ -199,16 +212,20 @@ instance Zero DedicatedAllocationBufferCreateInfoNV where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDedicatedAllocationMemoryAllocateInfoNV-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV'
 --
--- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @image@
+-- -   #VUID-VkDedicatedAllocationMemoryAllocateInfoNV-image-parameter# If
+--     @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @image@
 --     /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-VkDedicatedAllocationMemoryAllocateInfoNV-buffer-parameter# If
+--     @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
--- -   Both of @buffer@, and @image@ that are valid handles of non-ignored
+-- -   #VUID-VkDedicatedAllocationMemoryAllocateInfoNV-commonparent# Both
+--     of @buffer@, and @image@ that are valid handles of non-ignored
 --     parameters /must/ have been created, allocated, or retrieved from
 --     the same 'Vulkan.Core10.Handles.Device'
 --

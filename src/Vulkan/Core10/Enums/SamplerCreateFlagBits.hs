@@ -26,6 +26,15 @@ import Vulkan.Zero (Zero)
 --
 -- = Description
 --
+-- -   #samplers-subsamplesampler# 'SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'
+--     specifies that the sampler will read from an image created with
+--     @flags@ containing
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'.
+--
+-- -   'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' specifies
+--     that the implementation /may/ use approximations when reconstructing
+--     a full color value for texture access from a subsampled image.
+--
 -- Note
 --
 -- The approximations used when
@@ -41,13 +50,9 @@ import Vulkan.Zero (Zero)
 newtype SamplerCreateFlagBits = SamplerCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- | 'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' specifies that
--- the implementation /may/ use approximations when reconstructing a full
--- color value for texture access from a subsampled image.
+-- No documentation found for Nested "VkSamplerCreateFlagBits" "VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"
 pattern SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT = SamplerCreateFlagBits 0x00000002
--- | 'SAMPLER_CREATE_SUBSAMPLED_BIT_EXT' specifies that the sampler will read
--- from an image created with @flags@ containing
--- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'.
+-- No documentation found for Nested "VkSamplerCreateFlagBits" "VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT"
 pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT = SamplerCreateFlagBits 0x00000001
 
 type SamplerCreateFlags = SamplerCreateFlagBits

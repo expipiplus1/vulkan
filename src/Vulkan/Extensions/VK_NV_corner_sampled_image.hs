@@ -38,6 +38,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-cornersampledimage# @cornerSampledImage@ specifies whether
+--     images can be created with a
+--     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'.
+--     See
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-images-corner-sampled Corner-Sampled Images>.
+--
 -- If the 'PhysicalDeviceCornerSampledImageFeaturesNV' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -48,16 +55,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceCornerSampledImageFeaturesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCornerSampledImageFeaturesNV = PhysicalDeviceCornerSampledImageFeaturesNV
-  { -- | @cornerSampledImage@ specifies whether images can be created with a
-    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
-    -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'.
-    -- See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-images-corner-sampled Corner-Sampled Images>.
+  { -- No documentation found for Nested "VkPhysicalDeviceCornerSampledImageFeaturesNV" "cornerSampledImage"
     cornerSampledImage :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

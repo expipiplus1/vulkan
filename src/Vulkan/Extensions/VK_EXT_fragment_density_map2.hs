@@ -42,6 +42,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-fragmentDensityMapDeferred# @fragmentDensityMapDeferred@
+--     specifies whether the implementation supports deferred reads of
+--     fragment density map image views. If this feature is not enabled,
+--     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT'
+--     /must/ not be included in
+--     'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@flags@.
+--
 -- If the 'PhysicalDeviceFragmentDensityMap2FeaturesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -52,17 +59,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceFragmentDensityMap2FeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentDensityMap2FeaturesEXT = PhysicalDeviceFragmentDensityMap2FeaturesEXT
-  { -- | @fragmentDensityMapDeferred@ specifies whether the implementation
-    -- supports deferred reads of fragment density map image views. If this
-    -- feature is not enabled,
-    -- 'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT'
-    -- /must/ not be included in
-    -- 'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@flags@.
+  { -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMap2FeaturesEXT" "fragmentDensityMapDeferred"
     fragmentDensityMapDeferred :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -111,7 +117,33 @@ instance Zero PhysicalDeviceFragmentDensityMap2FeaturesEXT where
 -- The members of the 'PhysicalDeviceFragmentDensityMap2PropertiesEXT'
 -- structure describe the following implementation-dependent limits:
 --
+-- = Description
+--
+-- -   #limits-subsampledLoads# @subsampledLoads@ specifies if performing
+--     image data read with load operations on subsampled attachments will
+--     be resampled to the fragment density of the render pass
+--
+-- -   #limits-subsampledCoarseReconstructionEarlyAccess#
+--     @subsampledCoarseReconstructionEarlyAccess@ specifies if performing
+--     image data read with samplers created with @flags@ containing
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'
+--     in fragment shader will trigger additional reads during
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT'
+--
+-- -   #limits-maxSubsampledArrayLayers# @maxSubsampledArrayLayers@ is the
+--     maximum number of 'Vulkan.Core10.Handles.ImageView' array layers for
+--     usages supporting subsampled samplers
+--
+-- -   #limits-maxDescriptorSetSubsampledSamplers#
+--     @maxDescriptorSetSubsampledSamplers@ is the maximum number of
+--     subsampled samplers that /can/ be included in a
+--     'Vulkan.Core10.Handles.PipelineLayout'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceFragmentDensityMap2PropertiesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT'
 --
 -- If the 'PhysicalDeviceFragmentDensityMap2PropertiesEXT' structure is
 -- included in the @pNext@ chain of
@@ -123,23 +155,13 @@ instance Zero PhysicalDeviceFragmentDensityMap2FeaturesEXT where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentDensityMap2PropertiesEXT = PhysicalDeviceFragmentDensityMap2PropertiesEXT
-  { -- | @subsampledLoads@ specifies if performing image data read with load
-    -- operations on subsampled attachments will be resampled to the fragment
-    -- density of the render pass
+  { -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMap2PropertiesEXT" "subsampledLoads"
     subsampledLoads :: Bool
-  , -- | @subsampledCoarseReconstructionEarlyAccess@ specifies if performing
-    -- image data read with samplers created with @flags@ containing
-    -- 'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'
-    -- in fragment shader will trigger additional reads during
-    -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT'
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMap2PropertiesEXT" "subsampledCoarseReconstructionEarlyAccess"
     subsampledCoarseReconstructionEarlyAccess :: Bool
-  , -- | @maxSubsampledArrayLayers@ is the maximum number of
-    -- 'Vulkan.Core10.Handles.ImageView' array layers for usages supporting
-    -- subsampled samplers
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMap2PropertiesEXT" "maxSubsampledArrayLayers"
     maxSubsampledArrayLayers :: Word32
-  , -- | @maxDescriptorSetSubsampledSamplers@ is the maximum number of subsampled
-    -- samplers that /can/ be included in a
-    -- 'Vulkan.Core10.Handles.PipelineLayout'
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMap2PropertiesEXT" "maxDescriptorSetSubsampledSamplers"
     maxDescriptorSetSubsampledSamplers :: Word32
   }
   deriving (Typeable, Eq)

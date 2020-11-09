@@ -28,33 +28,48 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- | VkPhysicalDevice8BitStorageFeatures - Structure describing features
 -- supported by VK_KHR_8bit_storage
 --
+-- = Description
+--
+-- -   #extension-features-storageBuffer8BitAccess#
+--     @storageBuffer8BitAccess@ indicates whether objects in the
+--     @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the
+--     @Block@ decoration /can/ have 8-bit integer members. If this feature
+--     is not enabled, 8-bit integer members /must/ not be used in such
+--     objects. This also indicates whether shader modules /can/ declare
+--     the @StorageBuffer8BitAccess@ capability.
+--
+-- -   #extension-features-uniformAndStorageBuffer8BitAccess#
+--     @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
+--     @Uniform@ storage class with the @Block@ decoration and in the
+--     @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the
+--     same decoration /can/ have 8-bit integer members. If this feature is
+--     not enabled, 8-bit integer members /must/ not be used in such
+--     objects. This also indicates whether shader modules /can/ declare
+--     the @UniformAndStorageBuffer8BitAccess@ capability.
+--
+-- -   #extension-features-storagePushConstant8# @storagePushConstant8@
+--     indicates whether objects in the @PushConstant@ storage class /can/
+--     have 8-bit integer members. If this feature is not enabled, 8-bit
+--     integer members /must/ not be used in such objects. This also
+--     indicates whether shader modules /can/ declare the
+--     @StoragePushConstant8@ capability.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDevice8BitStorageFeatures-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevice8BitStorageFeatures = PhysicalDevice8BitStorageFeatures
-  { -- | @storageBuffer8BitAccess@ indicates whether objects in the
-    -- @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the
-    -- @Block@ decoration /can/ have 8-bit integer members. If this feature is
-    -- not enabled, 8-bit integer members /must/ not be used in such objects.
-    -- This also indicates whether shader modules /can/ declare the
-    -- @StorageBuffer8BitAccess@ capability.
+  { -- No documentation found for Nested "VkPhysicalDevice8BitStorageFeatures" "storageBuffer8BitAccess"
     storageBuffer8BitAccess :: Bool
-  , -- | @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
-    -- @Uniform@ storage class with the @Block@ decoration and in the
-    -- @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the same
-    -- decoration /can/ have 8-bit integer members. If this feature is not
-    -- enabled, 8-bit integer members /must/ not be used in such objects. This
-    -- also indicates whether shader modules /can/ declare the
-    -- @UniformAndStorageBuffer8BitAccess@ capability.
+  , -- No documentation found for Nested "VkPhysicalDevice8BitStorageFeatures" "uniformAndStorageBuffer8BitAccess"
     uniformAndStorageBuffer8BitAccess :: Bool
-  , -- | @storagePushConstant8@ indicates whether objects in the @PushConstant@
-    -- storage class /can/ have 8-bit integer members. If this feature is not
-    -- enabled, 8-bit integer members /must/ not be used in such objects. This
-    -- also indicates whether shader modules /can/ declare the
-    -- @StoragePushConstant8@ capability.
+  , -- No documentation found for Nested "VkPhysicalDevice8BitStorageFeatures" "storagePushConstant8"
     storagePushConstant8 :: Bool
   }
   deriving (Typeable, Eq)

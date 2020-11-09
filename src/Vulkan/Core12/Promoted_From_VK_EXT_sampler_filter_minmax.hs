@@ -44,6 +44,21 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #extension-limits-filterMinmaxSingleComponentFormats#
+--     @filterMinmaxSingleComponentFormats@ is a boolean value indicating
+--     whether a minimum set of required formats support min\/max
+--     filtering.
+--
+-- -   #extension-limits-filterMinmaxImageComponentMapping#
+--     @filterMinmaxImageComponentMapping@ is a boolean value indicating
+--     whether the implementation supports non-identity component mapping
+--     of the image when doing min\/max filtering.
+--
 -- If the 'PhysicalDeviceSamplerFilterMinmaxProperties' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -56,6 +71,30 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- feature with 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', if
 -- they support
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'.
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R8_UNORM'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R8_SNORM'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R16_UNORM'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R16_SNORM'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R16_SFLOAT'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R32_SFLOAT'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_D16_UNORM'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_X8_D24_UNORM_PACK32'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_D32_SFLOAT'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_D16_UNORM_S8_UINT'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_D24_UNORM_S8_UINT'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_D32_SFLOAT_S8_UINT'
 --
 -- If the format is a depth\/stencil format, this bit only specifies that
 -- the depth aspect (not the stencil aspect) of an image of this format
@@ -75,17 +114,18 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceSamplerFilterMinmaxProperties-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSamplerFilterMinmaxProperties = PhysicalDeviceSamplerFilterMinmaxProperties
-  { -- | @filterMinmaxSingleComponentFormats@ is a boolean value indicating
-    -- whether a minimum set of required formats support min\/max filtering.
+  { -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxProperties" "filterMinmaxSingleComponentFormats"
     filterMinmaxSingleComponentFormats :: Bool
-  , -- | @filterMinmaxImageComponentMapping@ is a boolean value indicating
-    -- whether the implementation supports non-identity component mapping of
-    -- the image when doing min\/max filtering.
+  , -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxProperties" "filterMinmaxImageComponentMapping"
     filterMinmaxImageComponentMapping :: Bool
   }
   deriving (Typeable, Eq)
@@ -145,6 +185,15 @@ instance Zero PhysicalDeviceSamplerFilterMinmaxProperties where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkSamplerReductionModeCreateInfo-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO'
+--
+-- -   #VUID-VkSamplerReductionModeCreateInfo-reductionMode-parameter#
+--     @reductionMode@ /must/ be a valid
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode'
+--     value
+--
 -- = See Also
 --
 -- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode',
@@ -153,9 +202,6 @@ data SamplerReductionModeCreateInfo = SamplerReductionModeCreateInfo
   { -- | @reductionMode@ is a
     -- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode' value
     -- controlling how texture filtering combines texel values.
-    --
-    -- @reductionMode@ /must/ be a valid
-    -- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode' value
     reductionMode :: SamplerReductionMode }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

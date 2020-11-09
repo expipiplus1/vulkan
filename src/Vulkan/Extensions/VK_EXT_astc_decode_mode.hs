@@ -36,31 +36,34 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage
 --
--- -   @decodeMode@ /must/ be one of
+-- -   #VUID-VkImageViewASTCDecodeModeEXT-decodeMode-02230# @decodeMode@
+--     /must/ be one of
 --     'Vulkan.Core10.Enums.Format.FORMAT_R16G16B16A16_SFLOAT',
 --     'Vulkan.Core10.Enums.Format.FORMAT_R8G8B8A8_UNORM', or
 --     'Vulkan.Core10.Enums.Format.FORMAT_E5B9G9R9_UFLOAT_PACK32'
 --
--- -   If the
+-- -   #VUID-VkImageViewASTCDecodeModeEXT-decodeMode-02231# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-astc-decodeModeSharedExponent decodeModeSharedExponent>
 --     feature is not enabled, @decodeMode@ /must/ not be
 --     'Vulkan.Core10.Enums.Format.FORMAT_E5B9G9R9_UFLOAT_PACK32'
 --
--- -   If @decodeMode@ is
---     'Vulkan.Core10.Enums.Format.FORMAT_R8G8B8A8_UNORM' the image view
+-- -   #VUID-VkImageViewASTCDecodeModeEXT-decodeMode-02232# If @decodeMode@
+--     is 'Vulkan.Core10.Enums.Format.FORMAT_R8G8B8A8_UNORM' the image view
 --     /must/ not include blocks using any of the ASTC HDR modes
 --
--- -   @format@ of the image view /must/ be one of the
+-- -   #VUID-VkImageViewASTCDecodeModeEXT-format-04084# @format@ of the
+--     image view /must/ be one of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#appendix-compressedtex-astc ASTC Compressed Image Formats>
 --
 -- If @format@ uses sRGB encoding then the @decodeMode@ has no effect.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImageViewASTCDecodeModeEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT'
 --
--- -   @decodeMode@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format'
+-- -   #VUID-VkImageViewASTCDecodeModeEXT-decodeMode-parameter#
+--     @decodeMode@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format'
 --     value
 --
 -- = See Also
@@ -119,6 +122,12 @@ instance Zero ImageViewASTCDecodeModeEXT where
 --
 -- = Description
 --
+-- -   #features-astc-decodeModeSharedExponent# @decodeModeSharedExponent@
+--     indicates whether the implementation supports decoding ASTC
+--     compressed formats to
+--     'Vulkan.Core10.Enums.Format.FORMAT_E5B9G9R9_UFLOAT_PACK32' internal
+--     precision.
+--
 -- If the 'PhysicalDeviceASTCDecodeFeaturesEXT' structure is included in
 -- the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -128,15 +137,16 @@ instance Zero ImageViewASTCDecodeModeEXT where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceASTCDecodeFeaturesEXT-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceASTCDecodeFeaturesEXT = PhysicalDeviceASTCDecodeFeaturesEXT
-  { -- | @decodeModeSharedExponent@ indicates whether the implementation supports
-    -- decoding ASTC compressed formats to
-    -- 'Vulkan.Core10.Enums.Format.FORMAT_E5B9G9R9_UFLOAT_PACK32' internal
-    -- precision.
+  { -- No documentation found for Nested "VkPhysicalDeviceASTCDecodeFeaturesEXT" "decodeModeSharedExponent"
     decodeModeSharedExponent :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

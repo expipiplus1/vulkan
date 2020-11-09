@@ -36,6 +36,68 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #limits-shaderEngineCount# @shaderEngineCount@ is an unsigned
+--     integer value indicating the number of shader engines found inside
+--     the shader core of the physical device.
+--
+-- -   #limits-shaderArraysPerEngineCount# @shaderArraysPerEngineCount@ is
+--     an unsigned integer value indicating the number of shader arrays
+--     inside a shader engine. Each shader array has its own scan
+--     converter, set of compute units, and a render back end (color and
+--     depth buffers). Shader arrays within a shader engine share shader
+--     processor input (wave launcher) and shader export (export buffer)
+--     units. Currently, a shader engine can have one or two shader arrays.
+--
+-- -   #limits-computeUnitsPerShaderArray# @computeUnitsPerShaderArray@ is
+--     an unsigned integer value indicating the physical number of compute
+--     units within a shader array. The active number of compute units in a
+--     shader array /may/ be lower. A compute unit houses a set of SIMDs
+--     along with a sequencer module and a local data store.
+--
+-- -   #limits-simdPerComputeUnit# @simdPerComputeUnit@ is an unsigned
+--     integer value indicating the number of SIMDs inside a compute unit.
+--     Each SIMD processes a single instruction at a time.
+--
+-- -   #limits-wavefrontSize# @wavefrontSize@ is an unsigned integer value
+--     indicating the maximum size of a subgroup.
+--
+-- -   #limits-sgprsPerSimd# @sgprsPerSimd@ is an unsigned integer value
+--     indicating the number of physical Scalar General Purpose Registers
+--     (SGPRs) per SIMD.
+--
+-- -   #limits-minSgprAllocation# @minSgprAllocation@ is an unsigned
+--     integer value indicating the minimum number of SGPRs allocated for a
+--     wave.
+--
+-- -   #limits-maxSgprAllocation# @maxSgprAllocation@ is an unsigned
+--     integer value indicating the maximum number of SGPRs allocated for a
+--     wave.
+--
+-- -   #limits-sgprAllocationGranularity# @sgprAllocationGranularity@ is an
+--     unsigned integer value indicating the granularity of SGPR allocation
+--     for a wave.
+--
+-- -   #limits-vgprsPerSimd# @vgprsPerSimd@ is an unsigned integer value
+--     indicating the number of physical Vector General Purpose Registers
+--     (VGPRs) per SIMD.
+--
+-- -   #limits-minVgprAllocation# @minVgprAllocation@ is an unsigned
+--     integer value indicating the minimum number of VGPRs allocated for a
+--     wave.
+--
+-- -   #limits-maxVgprAllocation# @maxVgprAllocation@ is an unsigned
+--     integer value indicating the maximum number of VGPRs allocated for a
+--     wave.
+--
+-- -   #limits-vgprAllocationGranularity# @vgprAllocationGranularity@ is an
+--     unsigned integer value indicating the granularity of VGPR allocation
+--     for a wave.
+--
 -- If the 'PhysicalDeviceShaderCorePropertiesAMD' structure is included in
 -- the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -43,58 +105,41 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceShaderCorePropertiesAMD-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderCorePropertiesAMD = PhysicalDeviceShaderCorePropertiesAMD
-  { -- | @shaderEngineCount@ is an unsigned integer value indicating the number
-    -- of shader engines found inside the shader core of the physical device.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "shaderEngineCount"
     shaderEngineCount :: Word32
-  , -- | @shaderArraysPerEngineCount@ is an unsigned integer value indicating the
-    -- number of shader arrays inside a shader engine. Each shader array has
-    -- its own scan converter, set of compute units, and a render back end
-    -- (color and depth buffers). Shader arrays within a shader engine share
-    -- shader processor input (wave launcher) and shader export (export buffer)
-    -- units. Currently, a shader engine can have one or two shader arrays.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "shaderArraysPerEngineCount"
     shaderArraysPerEngineCount :: Word32
-  , -- | @computeUnitsPerShaderArray@ is an unsigned integer value indicating the
-    -- physical number of compute units within a shader array. The active
-    -- number of compute units in a shader array /may/ be lower. A compute unit
-    -- houses a set of SIMDs along with a sequencer module and a local data
-    -- store.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "computeUnitsPerShaderArray"
     computeUnitsPerShaderArray :: Word32
-  , -- | @simdPerComputeUnit@ is an unsigned integer value indicating the number
-    -- of SIMDs inside a compute unit. Each SIMD processes a single instruction
-    -- at a time.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "simdPerComputeUnit"
     simdPerComputeUnit :: Word32
   , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "wavefrontsPerSimd"
     wavefrontsPerSimd :: Word32
-  , -- | @wavefrontSize@ is an unsigned integer value indicating the maximum size
-    -- of a subgroup.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "wavefrontSize"
     wavefrontSize :: Word32
-  , -- | @sgprsPerSimd@ is an unsigned integer value indicating the number of
-    -- physical Scalar General Purpose Registers (SGPRs) per SIMD.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "sgprsPerSimd"
     sgprsPerSimd :: Word32
-  , -- | @minSgprAllocation@ is an unsigned integer value indicating the minimum
-    -- number of SGPRs allocated for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "minSgprAllocation"
     minSgprAllocation :: Word32
-  , -- | @maxSgprAllocation@ is an unsigned integer value indicating the maximum
-    -- number of SGPRs allocated for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "maxSgprAllocation"
     maxSgprAllocation :: Word32
-  , -- | @sgprAllocationGranularity@ is an unsigned integer value indicating the
-    -- granularity of SGPR allocation for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "sgprAllocationGranularity"
     sgprAllocationGranularity :: Word32
-  , -- | @vgprsPerSimd@ is an unsigned integer value indicating the number of
-    -- physical Vector General Purpose Registers (VGPRs) per SIMD.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vgprsPerSimd"
     vgprsPerSimd :: Word32
-  , -- | @minVgprAllocation@ is an unsigned integer value indicating the minimum
-    -- number of VGPRs allocated for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "minVgprAllocation"
     minVgprAllocation :: Word32
-  , -- | @maxVgprAllocation@ is an unsigned integer value indicating the maximum
-    -- number of VGPRs allocated for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "maxVgprAllocation"
     maxVgprAllocation :: Word32
-  , -- | @vgprAllocationGranularity@ is an unsigned integer value indicating the
-    -- granularity of VGPR allocation for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vgprAllocationGranularity"
     vgprAllocationGranularity :: Word32
   }
   deriving (Typeable, Eq)

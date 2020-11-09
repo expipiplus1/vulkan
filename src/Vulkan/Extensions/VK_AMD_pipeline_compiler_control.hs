@@ -46,6 +46,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPipelineCompilerControlCreateInfoAMD-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COMPILER_CONTROL_CREATE_INFO_AMD'
+--
+-- -   #VUID-VkPipelineCompilerControlCreateInfoAMD-compilerControlFlags-zerobitmask#
+--     @compilerControlFlags@ /must/ be @0@
+--
 -- = See Also
 --
 -- 'PipelineCompilerControlFlagsAMD',
@@ -54,8 +61,6 @@ data PipelineCompilerControlCreateInfoAMD = PipelineCompilerControlCreateInfoAMD
   { -- | @compilerControlFlags@ is a bitmask of
     -- 'PipelineCompilerControlFlagBitsAMD' affecting how the pipeline will be
     -- compiled.
-    --
-    -- @compilerControlFlags@ /must/ be @0@
     compilerControlFlags :: PipelineCompilerControlFlagsAMD }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

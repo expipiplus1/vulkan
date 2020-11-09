@@ -46,20 +46,23 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PRESENT_R
 --
 -- == Valid Usage
 --
--- -   @swapchainCount@ /must/ be the same value as
+-- -   #VUID-VkPresentRegionsKHR-swapchainCount-01260# @swapchainCount@
+--     /must/ be the same value as
 --     'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'::@swapchainCount@,
 --     where 'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR' is
 --     included in the @pNext@ chain of this 'PresentRegionsKHR' structure
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPresentRegionsKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PRESENT_REGIONS_KHR'
 --
--- -   If @pRegions@ is not @NULL@, @pRegions@ /must/ be a valid pointer to
---     an array of @swapchainCount@ valid 'PresentRegionKHR' structures
+-- -   #VUID-VkPresentRegionsKHR-pRegions-parameter# If @pRegions@ is not
+--     @NULL@, @pRegions@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ valid 'PresentRegionKHR' structures
 --
--- -   @swapchainCount@ /must/ be greater than @0@
+-- -   #VUID-VkPresentRegionsKHR-swapchainCount-arraylength#
+--     @swapchainCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -130,9 +133,10 @@ instance Zero PresentRegionsKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   If @rectangleCount@ is not @0@, and @pRectangles@ is not @NULL@,
---     @pRectangles@ /must/ be a valid pointer to an array of
---     @rectangleCount@ valid 'RectLayerKHR' structures
+-- -   #VUID-VkPresentRegionKHR-pRectangles-parameter# If @rectangleCount@
+--     is not @0@, and @pRectangles@ is not @NULL@, @pRectangles@ /must/ be
+--     a valid pointer to an array of @rectangleCount@ valid 'RectLayerKHR'
+--     structures
 --
 -- = See Also
 --
@@ -198,13 +202,14 @@ instance Zero PresentRegionKHR where
 --
 -- == Valid Usage
 --
--- -   The sum of @offset@ and @extent@ /must/ be no greater than the
---     @imageExtent@ member of the
+-- -   #VUID-VkRectLayerKHR-offset-01261# The sum of @offset@ and @extent@
+--     /must/ be no greater than the @imageExtent@ member of the
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --     structure passed to
 --     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'
 --
--- -   @layer@ /must/ be less than the @imageArrayLayers@ member of the
+-- -   #VUID-VkRectLayerKHR-layer-01262# @layer@ /must/ be less than the
+--     @imageArrayLayers@ member of the
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --     structure passed to
 --     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'

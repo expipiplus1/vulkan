@@ -39,6 +39,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-fragmentShaderBarycentric# @fragmentShaderBarycentric@
+--     indicates that the implementation supports the @BaryCoordNV@ and
+--     @BaryCoordNoPerspNV@ SPIR-V fragment shader built-ins and supports
+--     the @PerVertexNV@ SPIR-V decoration on fragment shader input
+--     variables.
+--
 -- See
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-barycentric Barycentric Interpolation>
 -- for more information.
@@ -53,15 +59,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentShaderBarycentricFeaturesNV = PhysicalDeviceFragmentShaderBarycentricFeaturesNV
-  { -- | @fragmentShaderBarycentric@ indicates that the implementation supports
-    -- the @BaryCoordNV@ and @BaryCoordNoPerspNV@ SPIR-V fragment shader
-    -- built-ins and supports the @PerVertexNV@ SPIR-V decoration on fragment
-    -- shader input variables.
+  { -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV" "fragmentShaderBarycentric"
     fragmentShaderBarycentric :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

@@ -48,15 +48,20 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_ME
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkDeviceMemoryOverallocationCreateInfoAMD-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD'
+--
+-- -   #VUID-VkDeviceMemoryOverallocationCreateInfoAMD-overallocationBehavior-parameter#
+--     @overallocationBehavior@ /must/ be a valid
+--     'MemoryOverallocationBehaviorAMD' value
+--
 -- = See Also
 --
 -- 'MemoryOverallocationBehaviorAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceMemoryOverallocationCreateInfoAMD = DeviceMemoryOverallocationCreateInfoAMD
   { -- | @overallocationBehavior@ is the desired overallocation behavior.
-    --
-    -- @overallocationBehavior@ /must/ be a valid
-    -- 'MemoryOverallocationBehaviorAMD' value
     overallocationBehavior :: MemoryOverallocationBehaviorAMD }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

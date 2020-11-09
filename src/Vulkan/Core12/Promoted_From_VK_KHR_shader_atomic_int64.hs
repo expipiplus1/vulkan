@@ -28,18 +28,31 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- | VkPhysicalDeviceShaderAtomicInt64Features - Structure describing
 -- features supported by VK_KHR_shader_atomic_int64
 --
+-- = Description
+--
+-- -   #extension-features-shaderBufferInt64Atomics#
+--     @shaderBufferInt64Atomics@ indicates whether shaders /can/ perform
+--     64-bit unsigned and signed integer atomic operations on buffers.
+--
+-- -   #extension-features-shaderSharedInt64Atomics#
+--     @shaderSharedInt64Atomics@ indicates whether shaders /can/ perform
+--     64-bit unsigned and signed integer atomic operations on shared
+--     memory.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceShaderAtomicInt64Features-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderAtomicInt64Features = PhysicalDeviceShaderAtomicInt64Features
-  { -- | @shaderBufferInt64Atomics@ indicates whether shaders /can/ perform
-    -- 64-bit unsigned and signed integer atomic operations on buffers.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64Features" "shaderBufferInt64Atomics"
     shaderBufferInt64Atomics :: Bool
-  , -- | @shaderSharedInt64Atomics@ indicates whether shaders /can/ perform
-    -- 64-bit unsigned and signed integer atomic operations on shared memory.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64Features" "shaderSharedInt64Atomics"
     shaderSharedInt64Atomics :: Bool
   }
   deriving (Typeable, Eq)

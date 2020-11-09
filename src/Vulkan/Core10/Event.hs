@@ -77,7 +77,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+-- -   #VUID-vkCreateEvent-events-04468# If the @VK_KHR_portability_subset@
+--     extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@events@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the implementation
 --     does not support
@@ -86,17 +87,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateEvent-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid 'EventCreateInfo'
---     structure
+-- -   #VUID-vkCreateEvent-pCreateInfo-parameter# @pCreateInfo@ /must/ be a
+--     valid pointer to a valid 'EventCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateEvent-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pEvent@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.Event' handle
+-- -   #VUID-vkCreateEvent-pEvent-parameter# @pEvent@ /must/ be a valid
+--     pointer to a 'Vulkan.Core10.Handles.Event' handle
 --
 -- == Return Codes
 --
@@ -167,29 +169,33 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @event@ /must/ have completed
---     execution
+-- -   #VUID-vkDestroyEvent-event-01145# All submitted commands that refer
+--     to @event@ /must/ have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyEvent-event-01146# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @event@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyEvent-event-01147# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @event@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyEvent-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @event@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @event@
---     /must/ be a valid 'Vulkan.Core10.Handles.Event' handle
+-- -   #VUID-vkDestroyEvent-event-parameter# If @event@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @event@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Event' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyEvent-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @event@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroyEvent-event-parent# If @event@ is a valid handle, it
+--     /must/ have been created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -260,6 +266,17 @@ foreign import ccall
 -- will return the new state. If an event is already in the requested
 -- state, then updating it to the same state has no effect.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetEventStatus-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetEventStatus-event-parameter# @event@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Event' handle
+--
+-- -   #VUID-vkGetEventStatus-event-parent# @event@ /must/ have been
+--     created, allocated, or retrieved from @device@
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -282,14 +299,8 @@ foreign import ccall
 getEventStatus :: forall io
                 . (MonadIO io)
                => -- | @device@ is the logical device that owns the event.
-                  --
-                  -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                   Device
                -> -- | @event@ is the handle of the event to query.
-                  --
-                  -- @event@ /must/ be a valid 'Vulkan.Core10.Handles.Event' handle
-                  --
-                  -- @event@ /must/ have been created, allocated, or retrieved from @device@
                   Event
                -> io (Result)
 getEventStatus device event = liftIO $ do
@@ -321,12 +332,14 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkSetEvent-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @event@ /must/ be a valid 'Vulkan.Core10.Handles.Event' handle
+-- -   #VUID-vkSetEvent-event-parameter# @event@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Event' handle
 --
--- -   @event@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkSetEvent-event-parent# @event@ /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -383,18 +396,20 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @event@ /must/ not be waited on by a
+-- -   #VUID-vkResetEvent-event-01148# @event@ /must/ not be waited on by a
 --     'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' command that is
 --     currently executing
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkResetEvent-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @event@ /must/ be a valid 'Vulkan.Core10.Handles.Event' handle
+-- -   #VUID-vkResetEvent-event-parameter# @event@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Event' handle
 --
--- -   @event@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkResetEvent-event-parent# @event@ /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -434,14 +449,19 @@ resetEvent device event = liftIO $ do
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkEventCreateInfo-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EVENT_CREATE_INFO'
+--
+-- -   #VUID-VkEventCreateInfo-pNext-pNext# @pNext@ /must/ be @NULL@
+--
+-- -   #VUID-VkEventCreateInfo-flags-zerobitmask# @flags@ /must/ be @0@
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.EventCreateFlags.EventCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createEvent'
 data EventCreateInfo = EventCreateInfo
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: EventCreateFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

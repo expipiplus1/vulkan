@@ -105,17 +105,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateShaderModule-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'ShaderModuleCreateInfo' structure
+-- -   #VUID-vkCreateShaderModule-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'ShaderModuleCreateInfo'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateShaderModule-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pShaderModule@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.ShaderModule' handle
+-- -   #VUID-vkCreateShaderModule-pShaderModule-parameter# @pShaderModule@
+--     /must/ be a valid pointer to a 'Vulkan.Core10.Handles.ShaderModule'
+--     handle
 --
 -- == Return Codes
 --
@@ -192,28 +195,33 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyShaderModule-shaderModule-01092# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @shaderModule@ was created, a compatible set of
 --     callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyShaderModule-shaderModule-01093# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @shaderModule@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyShaderModule-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @shaderModule@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-vkDestroyShaderModule-shaderModule-parameter# If
+--     @shaderModule@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @shaderModule@ /must/ be a valid
 --     'Vulkan.Core10.Handles.ShaderModule' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyShaderModule-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @shaderModule@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroyShaderModule-shaderModule-parent# If @shaderModule@
+--     is a valid handle, it /must/ have been created, allocated, or
+--     retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -251,66 +259,77 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   @codeSize@ /must/ be greater than 0
+-- -   #VUID-VkShaderModuleCreateInfo-codeSize-01085# @codeSize@ /must/ be
+--     greater than 0
 --
--- -   If @pCode@ is a pointer to SPIR-V code, @codeSize@ /must/ be a
---     multiple of 4
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-01376# If @pCode@ is a pointer
+--     to SPIR-V code, @codeSize@ /must/ be a multiple of 4
 --
--- -   @pCode@ /must/ point to either valid SPIR-V code, formatted and
---     packed as described by the
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-01377# @pCode@ /must/ point to
+--     either valid SPIR-V code, formatted and packed as described by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
 --     or valid GLSL code which /must/ be written to the
 --     @GL_KHR_vulkan_glsl@ extension specification
 --
--- -   If @pCode@ is a pointer to SPIR-V code, that code /must/ adhere to
---     the validation rules described by the
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-01378# If @pCode@ is a pointer
+--     to SPIR-V code, that code /must/ adhere to the validation rules
+--     described by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-module-validation Validation Rules within a Module>
 --     section of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
 --     appendix
 --
--- -   If @pCode@ is a pointer to GLSL code, it /must/ be valid GLSL code
---     written to the @GL_KHR_vulkan_glsl@ GLSL extension specification
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-01379# If @pCode@ is a pointer
+--     to GLSL code, it /must/ be valid GLSL code written to the
+--     @GL_KHR_vulkan_glsl@ GLSL extension specification
 --
--- -   @pCode@ /must/ declare the @Shader@ capability for SPIR-V code
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-01089# @pCode@ /must/ declare
+--     the @Shader@ capability for SPIR-V code
 --
--- -   @pCode@ /must/ not declare any capability that is not supported by
---     the API, as described by the
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-01090# @pCode@ /must/ not
+--     declare any capability that is not supported by the API, as
+--     described by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-module-validation Capabilities>
 --     section of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
 --     appendix
 --
--- -   If @pCode@ declares any of the capabilities listed in the
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-01091# If @pCode@ declares any
+--     of the capabilities listed in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table SPIR-V Environment>
 --     appendix, one of the corresponding requirements /must/ be satisfied
 --
--- -   @pCode@ /must/ not declare any SPIR-V extension that is not
---     supported by the API, as described by the
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-04146# @pCode@ /must/ not
+--     declare any SPIR-V extension that is not supported by the API, as
+--     described by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-extensions Extension>
 --     section of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
 --     appendix
 --
--- -   If @pCode@ declares any of the SPIR-V extensions listed in the
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-04147# If @pCode@ declares any
+--     of the SPIR-V extensions listed in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-extensions-table SPIR-V Environment>
 --     appendix, one of the corresponding requirements /must/ be satisfied
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkShaderModuleCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkShaderModuleCreateInfo-pNext-pNext# @pNext@ /must/ be @NULL@
+--     or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_validation_cache.ShaderModuleValidationCacheCreateInfoEXT'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkShaderModuleCreateInfo-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkShaderModuleCreateInfo-flags-zerobitmask# @flags@ /must/ be
+--     @0@
 --
--- -   @pCode@ /must/ be a valid pointer to an array of
---     \(\textrm{codeSize} \over 4\) @uint32_t@ values
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-parameter# @pCode@ /must/ be a
+--     valid pointer to an array of \(\textrm{codeSize} \over 4\)
+--     @uint32_t@ values
 --
 -- = See Also
 --

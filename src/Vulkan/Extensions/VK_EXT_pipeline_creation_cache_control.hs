@@ -46,6 +46,21 @@ pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT = PIPELINE_COMPILE_REQUIRED_EXT
 --
 -- = Description
 --
+-- -   #features-pipelineCreationCacheControl#
+--     @pipelineCreationCacheControl@ indicates that the implementation
+--     supports:
+--
+--     -   The following /can/ be used in @Vk*PipelineCreateInfo@::@flags@:
+--
+--         -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+--
+--         -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
+--
+--     -   The following /can/ be used in
+--         'Vulkan.Core10.PipelineCache.PipelineCacheCreateInfo'::@flags@:
+--
+--         -   'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT'
+--
 -- If the 'PhysicalDevicePipelineCreationCacheControlFeaturesEXT' structure
 -- is included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -56,24 +71,16 @@ pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT = PIPELINE_COMPILE_REQUIRED_EXT
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePipelineCreationCacheControlFeaturesEXT = PhysicalDevicePipelineCreationCacheControlFeaturesEXT
-  { -- | @pipelineCreationCacheControl@ indicates that the implementation
-    -- supports:
-    --
-    -- -   The following /can/ be used in @Vk*PipelineCreateInfo@::@flags@:
-    --
-    --     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
-    --
-    --     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
-    --
-    -- -   The following /can/ be used in
-    --     'Vulkan.Core10.PipelineCache.PipelineCacheCreateInfo'::@flags@:
-    --
-    --     -   'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT'
+  { -- No documentation found for Nested "VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT" "pipelineCreationCacheControl"
     pipelineCreationCacheControl :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

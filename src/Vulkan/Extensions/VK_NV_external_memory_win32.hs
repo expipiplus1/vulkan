@@ -73,6 +73,35 @@ foreign import ccall
 -- | vkGetMemoryWin32HandleNV - retrieve Win32 handle to a device memory
 -- object
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetMemoryWin32HandleNV-handleType-01326# @handleType@ /must/
+--     be a flag specified in
+--     'Vulkan.Extensions.VK_NV_external_memory.ExportMemoryAllocateInfoNV'::@handleTypes@
+--     when allocating @memory@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetMemoryWin32HandleNV-device-parameter# @device@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetMemoryWin32HandleNV-memory-parameter# @memory@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
+--
+-- -   #VUID-vkGetMemoryWin32HandleNV-handleType-parameter# @handleType@
+--     /must/ be a valid combination of
+--     'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
+--     values
+--
+-- -   #VUID-vkGetMemoryWin32HandleNV-handleType-requiredbitmask#
+--     @handleType@ /must/ not be @0@
+--
+-- -   #VUID-vkGetMemoryWin32HandleNV-pHandle-parameter# @pHandle@ /must/
+--     be a valid pointer to a 'HANDLE' value
+--
+-- -   #VUID-vkGetMemoryWin32HandleNV-memory-parent# @memory@ /must/ have
+--     been created, allocated, or retrieved from @device@
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -92,28 +121,12 @@ foreign import ccall
 getMemoryWin32HandleNV :: forall io
                         . (MonadIO io)
                        => -- | @device@ is the logical device that owns the memory.
-                          --
-                          -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                           Device
                        -> -- | @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object.
-                          --
-                          -- @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
-                          --
-                          -- @memory@ /must/ have been created, allocated, or retrieved from @device@
                           DeviceMemory
                        -> -- | @handleType@ is a bitmask of
                           -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
                           -- containing a single bit specifying the type of handle requested.
-                          --
-                          -- @handleType@ /must/ be a flag specified in
-                          -- 'Vulkan.Extensions.VK_NV_external_memory.ExportMemoryAllocateInfoNV'::@handleTypes@
-                          -- when allocating @memory@
-                          --
-                          -- @handleType@ /must/ be a valid combination of
-                          -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
-                          -- values
-                          --
-                          -- @handleType@ /must/ not be @0@
                           ExternalMemoryHandleTypeFlagsNV
                        -> io (HANDLE)
 getMemoryWin32HandleNV device memory handleType = liftIO . evalContT $ do
@@ -136,7 +149,23 @@ getMemoryWin32HandleNV device memory handleType = liftIO . evalContT $ do
 -- If @handleType@ is @0@, this structure is ignored by consumers of the
 -- 'Vulkan.Core10.Memory.MemoryAllocateInfo' structure it is chained from.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkImportMemoryWin32HandleInfoNV-handleType-01327# @handleType@
+--     /must/ not have more than one bit set
+--
+-- -   #VUID-VkImportMemoryWin32HandleInfoNV-handle-01328# @handle@ /must/
+--     be a valid handle to memory, obtained as specified by @handleType@
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkImportMemoryWin32HandleInfoNV-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV'
+--
+-- -   #VUID-VkImportMemoryWin32HandleInfoNV-handleType-parameter#
+--     @handleType@ /must/ be a valid combination of
+--     'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
+--     values
 --
 -- = See Also
 --
@@ -146,17 +175,8 @@ data ImportMemoryWin32HandleInfoNV = ImportMemoryWin32HandleInfoNV
   { -- | @handleType@ is @0@ or a
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
     -- value specifying the type of memory handle in @handle@.
-    --
-    -- @handleType@ /must/ not have more than one bit set
-    --
-    -- @handleType@ /must/ be a valid combination of
-    -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
-    -- values
     handleType :: ExternalMemoryHandleTypeFlagsNV
   , -- | @handle@ is a Windows 'HANDLE' referring to the memory.
-    --
-    -- @handle@ /must/ be a valid handle to memory, obtained as specified by
-    -- @handleType@
     handle :: HANDLE
   }
   deriving (Typeable, Eq)
@@ -218,11 +238,12 @@ instance Zero ImportMemoryWin32HandleInfoNV where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkExportMemoryWin32HandleInfoNV-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV'
 --
--- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
---     pointer to a valid 'SECURITY_ATTRIBUTES' value
+-- -   #VUID-VkExportMemoryWin32HandleInfoNV-pAttributes-parameter# If
+--     @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid pointer
+--     to a valid 'SECURITY_ATTRIBUTES' value
 --
 -- = See Also
 --

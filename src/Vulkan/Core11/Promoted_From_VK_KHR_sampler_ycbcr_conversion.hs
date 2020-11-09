@@ -132,22 +132,26 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCreateSamplerYcbcrConversion-None-01648# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-samplerYcbcrConversion sampler Y′CBCR conversion feature>
 --     /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateSamplerYcbcrConversion-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateSamplerYcbcrConversion-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'SamplerYcbcrConversionCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateSamplerYcbcrConversion-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pYcbcrConversion@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateSamplerYcbcrConversion-pYcbcrConversion-parameter#
+--     @pYcbcrConversion@ /must/ be a valid pointer to a
 --     'Vulkan.Core11.Handles.SamplerYcbcrConversion' handle
 --
 -- == Return Codes
@@ -221,17 +225,21 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroySamplerYcbcrConversion-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @ycbcrConversion@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @ycbcrConversion@ /must/
---     be a valid 'Vulkan.Core11.Handles.SamplerYcbcrConversion' handle
+-- -   #VUID-vkDestroySamplerYcbcrConversion-ycbcrConversion-parameter# If
+--     @ycbcrConversion@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @ycbcrConversion@ /must/ be a valid
+--     'Vulkan.Core11.Handles.SamplerYcbcrConversion' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkDestroySamplerYcbcrConversion-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @ycbcrConversion@ is a valid handle, it /must/ have been created,
+-- -   #VUID-vkDestroySamplerYcbcrConversion-ycbcrConversion-parent# If
+--     @ycbcrConversion@ is a valid handle, it /must/ have been created,
 --     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
@@ -271,6 +279,13 @@ destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalCo
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkSamplerYcbcrConversionInfo-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO'
+--
+-- -   #VUID-VkSamplerYcbcrConversionInfo-conversion-parameter#
+--     @conversion@ /must/ be a valid
+--     'Vulkan.Core11.Handles.SamplerYcbcrConversion' handle
+--
 -- = See Also
 --
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion',
@@ -278,9 +293,6 @@ destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalCo
 data SamplerYcbcrConversionInfo = SamplerYcbcrConversionInfo
   { -- | @conversion@ is a 'Vulkan.Core11.Handles.SamplerYcbcrConversion' handle
     -- created with 'createSamplerYcbcrConversion'.
-    --
-    -- @conversion@ /must/ be a valid
-    -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion' handle
     conversion :: SamplerYcbcrConversion }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -349,21 +361,23 @@ instance Zero SamplerYcbcrConversionInfo where
 --
 -- == Valid Usage
 --
--- -   If an external format conversion is being created, @format@ /must/
---     be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-format-01904# If an
+--     external format conversion is being created, @format@ /must/ be
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
--- -   If an external format conversion is not being created, @format@
---     /must/ represent unsigned normalized values (i.e. the format must be
---     a @UNORM@ format)
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-format-04061# If an
+--     external format conversion is not being created, @format@ /must/
+--     represent unsigned normalized values (i.e. the format must be a
+--     @UNORM@ format)
 --
--- -   The
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-format-01650# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
 --     of the sampler Y′CBCR conversion /must/ support
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'
 --     or
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT'
 --
--- -   If the
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-xChromaOffset-01651# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
 --     of the sampler Y′CBCR conversion do not support
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT',
@@ -372,7 +386,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     the corresponding channels are
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction downsampled>
 --
--- -   If the
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-xChromaOffset-01652# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
 --     of the sampler Y′CBCR conversion do not support
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT',
@@ -381,32 +395,38 @@ instance Zero SamplerYcbcrConversionInfo where
 --     corresponding channels are
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction downsampled>
 --
--- -   If the format has a @_422@ or @_420@ suffix, then @components.g@
---     /must/ be the
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-components-02581# If the
+--     format has a @_422@ or @_420@ suffix, then @components.g@ /must/ be
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
--- -   If the format has a @_422@ or @_420@ suffix, then @components.a@
---     /must/ be the
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-components-02582# If the
+--     format has a @_422@ or @_420@ suffix, then @components.a@ /must/ be
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>,
 --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ONE', or
 --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ZERO'
 --
--- -   If the format has a @_422@ or @_420@ suffix, then @components.r@
---     /must/ be the
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-components-02583# If the
+--     format has a @_422@ or @_420@ suffix, then @components.r@ /must/ be
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --     or 'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_B'
 --
--- -   If the format has a @_422@ or @_420@ suffix, then @components.b@
---     /must/ be the
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-components-02584# If the
+--     format has a @_422@ or @_420@ suffix, then @components.b@ /must/ be
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --     or 'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_R'
 --
--- -   If the format has a @_422@ or @_420@ suffix, and if either
---     @components.r@ or @components.b@ is the
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-components-02585# If the
+--     format has a @_422@ or @_420@ suffix, and if either @components.r@
+--     or @components.b@ is the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>,
 --     both values /must/ be the identity swizzle
 --
--- -   If @ycbcrModel@ is not
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-ycbcrModel-01655# If
+--     @ycbcrModel@ is not
 --     'Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY',
 --     then @components.r@, @components.g@, and @components.b@ /must/
 --     correspond to channels of the @format@; that is, @components.r@,
@@ -417,20 +437,22 @@ instance Zero SamplerYcbcrConversionInfo where
 --     consequence of
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba conversion to RGBA>
 --
--- -   If @ycbcrRange@ is
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-ycbcrRange-02748# If
+--     @ycbcrRange@ is
 --     'Vulkan.Core11.Enums.SamplerYcbcrRange.SAMPLER_YCBCR_RANGE_ITU_NARROW'
 --     then the R, G and B channels obtained by applying the @component@
 --     swizzle to @format@ /must/ each have a bit-depth greater than or
 --     equal to 8
 --
--- -   If the
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-forceExplicitReconstruction-01656#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
 --     of the sampler Y′CBCR conversion do not support
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT'
 --     @forceExplicitReconstruction@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If the
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-chromaFilter-01657# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
 --     of the sampler Y′CBCR conversion do not support
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT',
@@ -439,34 +461,43 @@ instance Zero SamplerYcbcrConversionInfo where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-pNext-pNext# @pNext@ /must/
+--     be @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-sType-unique# The @sType@
+--     value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-format-parameter# @format@
+--     /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
 --
--- -   @ycbcrModel@ /must/ be a valid
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-ycbcrModel-parameter#
+--     @ycbcrModel@ /must/ be a valid
 --     'Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SamplerYcbcrModelConversion'
 --     value
 --
--- -   @ycbcrRange@ /must/ be a valid
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-ycbcrRange-parameter#
+--     @ycbcrRange@ /must/ be a valid
 --     'Vulkan.Core11.Enums.SamplerYcbcrRange.SamplerYcbcrRange' value
 --
--- -   @components@ /must/ be a valid
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-components-parameter#
+--     @components@ /must/ be a valid
 --     'Vulkan.Core10.ImageView.ComponentMapping' structure
 --
--- -   @xChromaOffset@ /must/ be a valid
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-xChromaOffset-parameter#
+--     @xChromaOffset@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation' value
 --
--- -   @yChromaOffset@ /must/ be a valid
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-yChromaOffset-parameter#
+--     @yChromaOffset@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation' value
 --
--- -   @chromaFilter@ /must/ be a valid 'Vulkan.Core10.Enums.Filter.Filter'
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-chromaFilter-parameter#
+--     @chromaFilter@ /must/ be a valid 'Vulkan.Core10.Enums.Filter.Filter'
 --     value
 --
 -- If @chromaFilter@ is 'Vulkan.Core10.Enums.Filter.FILTER_NEAREST', chroma
@@ -603,8 +634,8 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 --
 -- == Valid Usage
 --
--- -   If the image’s @tiling@ is
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
+-- -   #VUID-VkBindImagePlaneMemoryInfo-planeAspect-02283# If the image’s
+--     @tiling@ is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', then
 --     @planeAspect@ /must/ be a single valid /format plane/ for the image
 --     (that is, for a two-plane image @planeAspect@ /must/ be
@@ -617,7 +648,8 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT')
 --
--- -   If the image’s @tiling@ is
+-- -   #VUID-VkBindImagePlaneMemoryInfo-planeAspect-02284# If the image’s
+--     @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then @planeAspect@ /must/ be a single valid /memory plane/ for the
 --     image (that is, @aspectMask@ /must/ specify a plane index that is
@@ -628,10 +660,11 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkBindImagePlaneMemoryInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO'
 --
--- -   @planeAspect@ /must/ be a valid
+-- -   #VUID-VkBindImagePlaneMemoryInfo-planeAspect-parameter#
+--     @planeAspect@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
 --
 -- = See Also
@@ -684,7 +717,8 @@ instance Zero BindImagePlaneMemoryInfo where
 --
 -- == Valid Usage
 --
--- -   If the image’s @tiling@ is
+-- -   #VUID-VkImagePlaneMemoryRequirementsInfo-planeAspect-02281# If the
+--     image’s @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', then
 --     @planeAspect@ /must/ be a single valid /format plane/ for the image
@@ -698,7 +732,8 @@ instance Zero BindImagePlaneMemoryInfo where
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT')
 --
--- -   If the image’s @tiling@ is
+-- -   #VUID-VkImagePlaneMemoryRequirementsInfo-planeAspect-02282# If the
+--     image’s @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then @planeAspect@ /must/ be a single valid /memory plane/ for the
 --     image (that is, @aspectMask@ /must/ specify a plane index that is
@@ -709,10 +744,12 @@ instance Zero BindImagePlaneMemoryInfo where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImagePlaneMemoryRequirementsInfo-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO'
 --
--- -   @planeAspect@ /must/ be a valid
+-- -   #VUID-VkImagePlaneMemoryRequirementsInfo-planeAspect-parameter#
+--     @planeAspect@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
 --
 -- = See Also
@@ -768,18 +805,28 @@ instance Zero ImagePlaneMemoryRequirementsInfo where
 -- The members of the 'PhysicalDeviceSamplerYcbcrConversionFeatures'
 -- structure describe the following feature:
 --
+-- = Description
+--
+-- -   #extension-features-samplerYcbcrConversion# @samplerYcbcrConversion@
+--     specifies whether the implementation supports
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
+--     If @samplerYcbcrConversion@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', sampler Y′CBCR conversion is
+--     not supported, and samplers using sampler Y′CBCR conversion /must/
+--     not be used.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceSamplerYcbcrConversionFeatures-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSamplerYcbcrConversionFeatures = PhysicalDeviceSamplerYcbcrConversionFeatures
-  { -- | @samplerYcbcrConversion@ specifies whether the implementation supports
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
-    -- If @samplerYcbcrConversion@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- sampler Y′CBCR conversion is not supported, and samplers using sampler
-    -- Y′CBCR conversion /must/ not be used.
+  { -- No documentation found for Nested "VkPhysicalDeviceSamplerYcbcrConversionFeatures" "samplerYcbcrConversion"
     samplerYcbcrConversion :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -823,6 +870,10 @@ instance Zero PhysicalDeviceSamplerYcbcrConversionFeatures where
 -- combined image sampler descriptor count for multi-planar images
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkSamplerYcbcrConversionImageFormatProperties-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES'
 --
 -- = See Also
 --

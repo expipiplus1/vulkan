@@ -35,6 +35,17 @@ foreign import ccall
 
 -- | vkReleaseDisplayEXT - Release access to an acquired VkDisplayKHR
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkReleaseDisplayEXT-physicalDevice-parameter# @physicalDevice@
+--     /must/ be a valid 'Vulkan.Core10.Handles.PhysicalDevice' handle
+--
+-- -   #VUID-vkReleaseDisplayEXT-display-parameter# @display@ /must/ be a
+--     valid 'Vulkan.Extensions.Handles.DisplayKHR' handle
+--
+-- -   #VUID-vkReleaseDisplayEXT-display-parent# @display@ /must/ have been
+--     created, allocated, or retrieved from @physicalDevice@
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -48,17 +59,8 @@ foreign import ccall
 releaseDisplayEXT :: forall io
                    . (MonadIO io)
                   => -- | @physicalDevice@ The physical device the display is on.
-                     --
-                     -- @physicalDevice@ /must/ be a valid
-                     -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                      PhysicalDevice
                   -> -- | @display@ The display to release control of.
-                     --
-                     -- @display@ /must/ be a valid 'Vulkan.Extensions.Handles.DisplayKHR'
-                     -- handle
-                     --
-                     -- @display@ /must/ have been created, allocated, or retrieved from
-                     -- @physicalDevice@
                      DisplayKHR
                   -> io ()
 releaseDisplayEXT physicalDevice display = liftIO $ do

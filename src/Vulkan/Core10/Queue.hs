@@ -111,24 +111,27 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @queueFamilyIndex@ /must/ be one of the queue family indices
---     specified when @device@ was created, via the
+-- -   #VUID-vkGetDeviceQueue-queueFamilyIndex-00384# @queueFamilyIndex@
+--     /must/ be one of the queue family indices specified when @device@
+--     was created, via the 'Vulkan.Core10.Device.DeviceQueueCreateInfo'
+--     structure
+--
+-- -   #VUID-vkGetDeviceQueue-queueIndex-00385# @queueIndex@ /must/ be less
+--     than the number of queues created for the specified queue family
+--     index when @device@ was created, via the @queueCount@ member of the
 --     'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
 --
--- -   @queueIndex@ /must/ be less than the number of queues created for
---     the specified queue family index when @device@ was created, via the
---     @queueCount@ member of the
---     'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
---
--- -   'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@flags@ /must/ have
+-- -   #VUID-vkGetDeviceQueue-flags-01841#
+--     'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@flags@ /must/ have
 --     been set to zero when @device@ was created
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetDeviceQueue-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pQueue@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.Queue' handle
+-- -   #VUID-vkGetDeviceQueue-pQueue-parameter# @pQueue@ /must/ be a valid
+--     pointer to a 'Vulkan.Core10.Handles.Queue' handle
 --
 -- = See Also
 --
@@ -226,14 +229,17 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@
---     /must/ be unsignaled
+-- -   #VUID-vkQueueSubmit-fence-00063# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ be
+--     unsignaled
 --
--- -   If @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@
---     /must/ not be associated with any other queue command that has not
---     yet completed execution on that queue
+-- -   #VUID-vkQueueSubmit-fence-00064# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ not be
+--     associated with any other queue command that has not yet completed
+--     execution on that queue
 --
--- -   Any calls to 'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent',
+-- -   #VUID-vkQueueSubmit-pCommandBuffers-00065# Any calls to
+--     'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent',
 --     'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' or
 --     'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' that have been
 --     recorded into any of the command buffer elements of the
@@ -242,45 +248,50 @@ foreign import ccall
 --     any of those commands in a command buffer that has been submitted to
 --     another queue and is still in the /pending state/
 --
--- -   Any stage flag included in any element of the @pWaitDstStageMask@
---     member of any element of @pSubmits@ /must/ be a pipeline stage
---     supported by one of the capabilities of @queue@, as specified in the
+-- -   #VUID-vkQueueSubmit-pWaitDstStageMask-00066# Any stage flag included
+--     in any element of the @pWaitDstStageMask@ member of any element of
+--     @pSubmits@ /must/ be a pipeline stage supported by one of the
+--     capabilities of @queue@, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
--- -   Each element of the @pSignalSemaphores@ member of any element of
---     @pSubmits@ /must/ be unsignaled when the semaphore signal operation
---     it defines is executed on the device
+-- -   #VUID-vkQueueSubmit-pSignalSemaphores-00067# Each element of the
+--     @pSignalSemaphores@ member of any element of @pSubmits@ /must/ be
+--     unsignaled when the semaphore signal operation it defines is
+--     executed on the device
 --
--- -   When a semaphore wait operation referring to a binary semaphore
---     defined by any element of the @pWaitSemaphores@ member of any
---     element of @pSubmits@ executes on @queue@, there /must/ be no other
---     queues waiting on the same semaphore
+-- -   #VUID-vkQueueSubmit-pWaitSemaphores-00068# When a semaphore wait
+--     operation referring to a binary semaphore defined by any element of
+--     the @pWaitSemaphores@ member of any element of @pSubmits@ executes
+--     on @queue@, there /must/ be no other queues waiting on the same
+--     semaphore
 --
--- -   All elements of the @pWaitSemaphores@ member of all elements of
---     @pSubmits@ created with a
---     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
+-- -   #VUID-vkQueueSubmit-pWaitSemaphores-03238# All elements of the
+--     @pWaitSemaphores@ member of all elements of @pSubmits@ created with
+--     a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY' /must/
 --     reference a semaphore signal operation that has been submitted for
 --     execution and any semaphore signal operations on which it depends
 --     (if any) /must/ have also been submitted for execution
 --
--- -   Each element of the @pCommandBuffers@ member of each element of
---     @pSubmits@ /must/ be in the
+-- -   #VUID-vkQueueSubmit-pCommandBuffers-00070# Each element of the
+--     @pCommandBuffers@ member of each element of @pSubmits@ /must/ be in
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending or executable state>
 --
--- -   If any element of the @pCommandBuffers@ member of any element of
---     @pSubmits@ was not recorded with the
+-- -   #VUID-vkQueueSubmit-pCommandBuffers-00071# If any element of the
+--     @pCommandBuffers@ member of any element of @pSubmits@ was not
+--     recorded with the
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT',
 --     it /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
--- -   Any
+-- -   #VUID-vkQueueSubmit-pCommandBuffers-00072# Any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-secondary secondary command buffers recorded>
 --     into any element of the @pCommandBuffers@ member of any element of
 --     @pSubmits@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending or executable state>
 --
--- -   If any
+-- -   #VUID-vkQueueSubmit-pCommandBuffers-00073# If any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-secondary secondary command buffers recorded>
 --     into any element of the @pCommandBuffers@ member of any element of
 --     @pSubmits@ was not recorded with the
@@ -288,12 +299,13 @@ foreign import ccall
 --     it /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
--- -   Each element of the @pCommandBuffers@ member of each element of
---     @pSubmits@ /must/ have been allocated from a
---     'Vulkan.Core10.Handles.CommandPool' that was created for the same
---     queue family @queue@ belongs to
+-- -   #VUID-vkQueueSubmit-pCommandBuffers-00074# Each element of the
+--     @pCommandBuffers@ member of each element of @pSubmits@ /must/ have
+--     been allocated from a 'Vulkan.Core10.Handles.CommandPool' that was
+--     created for the same queue family @queue@ belongs to
 --
--- -   If any element of @pSubmits->pCommandBuffers@ includes a
+-- -   #VUID-vkQueueSubmit-pSubmits-02207# If any element of
+--     @pSubmits->pCommandBuffers@ includes a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers-acquire Queue Family Transfer Acquire Operation>,
 --     there /must/ exist a previously submitted
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers-release Queue Family Transfer Release Operation>
@@ -303,7 +315,8 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers-acquire acquire operations>,
 --     and which happens-before the acquire operation
 --
--- -   If a command recorded into any element of @pCommandBuffers@ was a
+-- -   #VUID-vkQueueSubmit-pCommandBuffers-03220# If a command recorded
+--     into any element of @pCommandBuffers@ was a
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBeginQuery' whose
 --     @queryPool@ was created with a @queryType@ of
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
@@ -313,7 +326,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.Device' that @queue@ was retrieved from,
 --     throughout recording of those command buffers
 --
--- -   Any resource created with
+-- -   #VUID-vkQueueSubmit-pSubmits-02808# Any resource created with
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE' that is
 --     read by an operation specified by @pSubmits@ /must/ not be owned by
 --     any queue family other than the one which @queue@ belongs to, at the
@@ -321,17 +334,21 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
+-- -   #VUID-vkQueueSubmit-queue-parameter# @queue@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Queue' handle
 --
--- -   If @submitCount@ is not @0@, @pSubmits@ /must/ be a valid pointer to
---     an array of @submitCount@ valid 'SubmitInfo' structures
+-- -   #VUID-vkQueueSubmit-pSubmits-parameter# If @submitCount@ is not @0@,
+--     @pSubmits@ /must/ be a valid pointer to an array of @submitCount@
+--     valid 'SubmitInfo' structures
 --
--- -   If @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@
---     /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-vkQueueSubmit-fence-parameter# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Fence' handle
 --
--- -   Both of @fence@, and @queue@ that are valid handles of non-ignored
---     parameters /must/ have been created, allocated, or retrieved from
---     the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-vkQueueSubmit-commonparent# Both of @fence@, and @queue@ that
+--     are valid handles of non-ignored parameters /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -427,7 +444,8 @@ queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
+-- -   #VUID-vkQueueWaitIdle-queue-parameter# @queue@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Queue' handle
 --
 -- == Host Synchronization
 --
@@ -512,7 +530,8 @@ deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdle device = liftIO $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDeviceWaitIdle-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
 -- == Host Synchronization
 --
@@ -567,17 +586,17 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --
 -- == Valid Usage
 --
--- -   Each element of @pCommandBuffers@ /must/ not have been allocated
---     with
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-00075# Each element of
+--     @pCommandBuffers@ /must/ not have been allocated with
 --     'Vulkan.Core10.Enums.CommandBufferLevel.COMMAND_BUFFER_LEVEL_SECONDARY'
 --
--- -   If the
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-00076# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, each element of @pWaitDstStageMask@ /must/
 --     not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
--- -   If the
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-00077# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
 --     feature is not enabled, each element of @pWaitDstStageMask@ /must/
 --     not contain
@@ -585,17 +604,20 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     or
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
--- -   Each element of @pWaitDstStageMask@ /must/ not include
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-00078# Each element of
+--     @pWaitDstStageMask@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'
 --
--- -   If any element of @pWaitSemaphores@ or @pSignalSemaphores@ was
---     created with a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
+-- -   #VUID-VkSubmitInfo-pWaitSemaphores-03239# If any element of
+--     @pWaitSemaphores@ or @pSignalSemaphores@ was created with a
+--     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE', then
 --     the @pNext@ chain /must/ include a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'
 --     structure
 --
--- -   If the @pNext@ chain of this structure includes a
+-- -   #VUID-VkSubmitInfo-pNext-03240# If the @pNext@ chain of this
+--     structure includes a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'
 --     structure and any element of @pWaitSemaphores@ was created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
@@ -603,7 +625,8 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     its @waitSemaphoreValueCount@ member /must/ equal
 --     @waitSemaphoreCount@
 --
--- -   If the @pNext@ chain of this structure includes a
+-- -   #VUID-VkSubmitInfo-pNext-03241# If the @pNext@ chain of this
+--     structure includes a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'
 --     structure and any element of @pSignalSemaphores@ was created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
@@ -611,7 +634,8 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     its @signalSemaphoreValueCount@ member /must/ equal
 --     @signalSemaphoreCount@
 --
--- -   For each element of @pSignalSemaphores@ created with a
+-- -   #VUID-VkSubmitInfo-pSignalSemaphores-03242# For each element of
+--     @pSignalSemaphores@ created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
@@ -621,7 +645,8 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 --     is executed
 --
--- -   For each element of @pWaitSemaphores@ created with a
+-- -   #VUID-VkSubmitInfo-pWaitSemaphores-03243# For each element of
+--     @pWaitSemaphores@ created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
@@ -631,7 +656,8 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     signal operation on that semaphore by more than
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
--- -   For each element of @pSignalSemaphores@ created with a
+-- -   #VUID-VkSubmitInfo-pSignalSemaphores-03244# For each element of
+--     @pSignalSemaphores@ created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
@@ -641,25 +667,27 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     signal operation on that semaphore by more than
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
--- -   If the
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-02089# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
 --     feature is not enabled, each element of @pWaitDstStageMask@ /must/
 --     not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
 --
--- -   If the
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-02090# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
 --     feature is not enabled, each element of @pWaitDstStageMask@ /must/
 --     not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
--- -   If the @pNext@ chain of this structure does not include a
+-- -   #VUID-VkSubmitInfo-pNext-04120# If the @pNext@ chain of this
+--     structure does not include a
 --     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.ProtectedSubmitInfo'
 --     structure with @protectedSubmit@ set to
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then each element of the
 --     @pCommandBuffers@ array /must/ be an unprotected command buffer
 --
--- -   If the @pNext@ chain of this structure includes a
+-- -   #VUID-VkSubmitInfo-pNext-04148# If the @pNext@ chain of this
+--     structure includes a
 --     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.ProtectedSubmitInfo'
 --     structure with @protectedSubmit@ set to
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then each element of the
@@ -667,12 +695,12 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkSubmitInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBMIT_INFO'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkSubmitInfo-pNext-pNext# Each @pNext@ member of any structure
+--     (including this one) in the @pNext@ chain /must/ be either @NULL@ or
+--     a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_external_semaphore_win32.D3D12FenceSubmitInfoKHR',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupSubmitInfo',
 --     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceQuerySubmitInfoKHR',
@@ -682,32 +710,38 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     or
 --     'Vulkan.Extensions.VK_NV_win32_keyed_mutex.Win32KeyedMutexAcquireReleaseInfoNV'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkSubmitInfo-sType-unique# The @sType@ value of each struct in
+--     the @pNext@ chain /must/ be unique
 --
--- -   If @waitSemaphoreCount@ is not @0@, @pWaitSemaphores@ /must/ be a
---     valid pointer to an array of @waitSemaphoreCount@ valid
+-- -   #VUID-VkSubmitInfo-pWaitSemaphores-parameter# If
+--     @waitSemaphoreCount@ is not @0@, @pWaitSemaphores@ /must/ be a valid
+--     pointer to an array of @waitSemaphoreCount@ valid
 --     'Vulkan.Core10.Handles.Semaphore' handles
 --
--- -   If @waitSemaphoreCount@ is not @0@, @pWaitDstStageMask@ /must/ be a
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-parameter# If
+--     @waitSemaphoreCount@ is not @0@, @pWaitDstStageMask@ /must/ be a
 --     valid pointer to an array of @waitSemaphoreCount@ valid combinations
 --     of 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
 --
--- -   Each element of @pWaitDstStageMask@ /must/ not be @0@
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-requiredbitmask# Each element
+--     of @pWaitDstStageMask@ /must/ not be @0@
 --
--- -   If @commandBufferCount@ is not @0@, @pCommandBuffers@ /must/ be a
---     valid pointer to an array of @commandBufferCount@ valid
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-parameter# If
+--     @commandBufferCount@ is not @0@, @pCommandBuffers@ /must/ be a valid
+--     pointer to an array of @commandBufferCount@ valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handles
 --
--- -   If @signalSemaphoreCount@ is not @0@, @pSignalSemaphores@ /must/ be
---     a valid pointer to an array of @signalSemaphoreCount@ valid
+-- -   #VUID-VkSubmitInfo-pSignalSemaphores-parameter# If
+--     @signalSemaphoreCount@ is not @0@, @pSignalSemaphores@ /must/ be a
+--     valid pointer to an array of @signalSemaphoreCount@ valid
 --     'Vulkan.Core10.Handles.Semaphore' handles
 --
--- -   Each of the elements of @pCommandBuffers@, the elements of
---     @pSignalSemaphores@, and the elements of @pWaitSemaphores@ that are
---     valid handles of non-ignored parameters /must/ have been created,
---     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-VkSubmitInfo-commonparent# Each of the elements of
+--     @pCommandBuffers@, the elements of @pSignalSemaphores@, and the
+--     elements of @pWaitSemaphores@ that are valid handles of non-ignored
+--     parameters /must/ have been created, allocated, or retrieved from
+--     the same 'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --

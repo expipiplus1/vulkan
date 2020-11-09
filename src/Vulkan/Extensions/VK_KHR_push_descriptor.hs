@@ -119,42 +119,51 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
+-- -   #VUID-vkCmdPushDescriptorSetKHR-pipelineBindPoint-00363#
+--     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
 --     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
 --
--- -   @set@ /must/ be less than
+-- -   #VUID-vkCmdPushDescriptorSetKHR-set-00364# @set@ /must/ be less than
 --     'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'::@setLayoutCount@
 --     provided when @layout@ was created
 --
--- -   @set@ /must/ be the unique set number in the pipeline layout that
---     uses a descriptor set layout that was created with
+-- -   #VUID-vkCmdPushDescriptorSetKHR-set-00365# @set@ /must/ be the
+--     unique set number in the pipeline layout that uses a descriptor set
+--     layout that was created with
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdPushDescriptorSetKHR-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pipelineBindPoint@ /must/ be a valid
+-- -   #VUID-vkCmdPushDescriptorSetKHR-pipelineBindPoint-parameter#
+--     @pipelineBindPoint@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
 --
--- -   @layout@ /must/ be a valid 'Vulkan.Core10.Handles.PipelineLayout'
---     handle
+-- -   #VUID-vkCmdPushDescriptorSetKHR-layout-parameter# @layout@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.PipelineLayout' handle
 --
--- -   @pDescriptorWrites@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkCmdPushDescriptorSetKHR-pDescriptorWrites-parameter#
+--     @pDescriptorWrites@ /must/ be a valid pointer to an array of
 --     @descriptorWriteCount@ valid
 --     'Vulkan.Core10.DescriptorSet.WriteDescriptorSet' structures
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdPushDescriptorSetKHR-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdPushDescriptorSetKHR-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
--- -   @descriptorWriteCount@ /must/ be greater than @0@
+-- -   #VUID-vkCmdPushDescriptorSetKHR-descriptorWriteCount-arraylength#
+--     @descriptorWriteCount@ /must/ be greater than @0@
 --
--- -   Both of @commandBuffer@, and @layout@ /must/ have been created,
---     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-vkCmdPushDescriptorSetKHR-commonparent# Both of
+--     @commandBuffer@, and @layout@ /must/ have been created, allocated,
+--     or retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -225,14 +234,14 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The @pipelineBindPoint@ specified during the creation of the
---     descriptor update template /must/ be supported by the
---     @commandBuffer@’s parent 'Vulkan.Core10.Handles.CommandPool'’s queue
---     family
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-00366# The
+--     @pipelineBindPoint@ specified during the creation of the descriptor
+--     update template /must/ be supported by the @commandBuffer@’s parent
+--     'Vulkan.Core10.Handles.CommandPool'’s queue family
 --
--- -   @pData@ /must/ be a valid pointer to a memory containing one or more
---     valid instances of
---     'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-pData-01686# @pData@
+--     /must/ be a valid pointer to a memory containing one or more valid
+--     instances of 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
 --     'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
 --     'Vulkan.Core10.Handles.BufferView' in a layout defined by
 --     @descriptorUpdateTemplate@ when it was created with
@@ -240,23 +249,29 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @descriptorUpdateTemplate@ /must/ be a valid
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-descriptorUpdateTemplate-parameter#
+--     @descriptorUpdateTemplate@ /must/ be a valid
 --     'Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle
 --
--- -   @layout@ /must/ be a valid 'Vulkan.Core10.Handles.PipelineLayout'
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-layout-parameter#
+--     @layout@ /must/ be a valid 'Vulkan.Core10.Handles.PipelineLayout'
 --     handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-cmdpool#
+--     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
--- -   Each of @commandBuffer@, @descriptorUpdateTemplate@, and @layout@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commonparent# Each of
+--     @commandBuffer@, @descriptorUpdateTemplate@, and @layout@ /must/
+--     have been created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
@@ -369,6 +384,17 @@ cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layou
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #limits-maxPushDescriptors# @maxPushDescriptors@ is the maximum
+--     number of descriptors that /can/ be used in a descriptor set created
+--     with
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
+--     set.
+--
 -- If the 'PhysicalDevicePushDescriptorPropertiesKHR' structure is included
 -- in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -376,14 +402,15 @@ cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layou
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDevicePushDescriptorPropertiesKHR-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePushDescriptorPropertiesKHR = PhysicalDevicePushDescriptorPropertiesKHR
-  { -- | @maxPushDescriptors@ is the maximum number of descriptors that /can/ be
-    -- used in a descriptor set created with
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
-    -- set.
+  { -- No documentation found for Nested "VkPhysicalDevicePushDescriptorPropertiesKHR" "maxPushDescriptors"
     maxPushDescriptors :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

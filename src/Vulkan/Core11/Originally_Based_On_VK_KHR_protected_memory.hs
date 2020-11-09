@@ -90,6 +90,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-vkGetDeviceQueue2-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetDeviceQueue2-pQueueInfo-parameter# @pQueueInfo@ /must/ be
+--     a valid pointer to a valid 'DeviceQueueInfo2' structure
+--
+-- -   #VUID-vkGetDeviceQueue2-pQueue-parameter# @pQueue@ /must/ be a valid
+--     pointer to a 'Vulkan.Core10.Handles.Queue' handle
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'DeviceQueueInfo2',
@@ -97,14 +106,9 @@ foreign import ccall
 getDeviceQueue2 :: forall io
                  . (MonadIO io)
                 => -- | @device@ is the logical device that owns the queue.
-                   --
-                   -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                    Device
                 -> -- | @pQueueInfo@ is a pointer to a 'DeviceQueueInfo2' structure, describing
                    -- the parameters used to create the device queue.
-                   --
-                   -- @pQueueInfo@ /must/ be a valid pointer to a valid 'DeviceQueueInfo2'
-                   -- structure
                    DeviceQueueInfo2
                 -> io (Queue)
 getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
@@ -125,12 +129,13 @@ getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   If the protected memory feature is not enabled, @protectedSubmit@
---     /must/ not be 'Vulkan.Core10.FundamentalTypes.TRUE'
+-- -   #VUID-VkProtectedSubmitInfo-protectedSubmit-01816# If the protected
+--     memory feature is not enabled, @protectedSubmit@ /must/ not be
+--     'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkProtectedSubmitInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO'
 --
 -- = See Also
@@ -186,6 +191,11 @@ instance Zero ProtectedSubmitInfo where
 -- | VkPhysicalDeviceProtectedMemoryFeatures - Structure describing protected
 -- memory features that can be supported by an implementation
 --
+-- = Members
+--
+-- -   #extension-features-protectedMemory# @protectedMemory@ specifies
+--     whether protected memory is supported.
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceProtectedMemoryFeatures' structure is included in
@@ -195,12 +205,16 @@ instance Zero ProtectedSubmitInfo where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceProtectedMemoryFeatures-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProtectedMemoryFeatures = PhysicalDeviceProtectedMemoryFeatures
-  { -- | @protectedMemory@ specifies whether protected memory is supported.
+  { -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryFeatures" "protectedMemory"
     protectedMemory :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -245,6 +259,12 @@ instance Zero PhysicalDeviceProtectedMemoryFeatures where
 --
 -- = Description
 --
+-- -   @protectedNoFault@ specifies the behavior of the implementation when
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules protected memory access rules>
+--     are broken. If @protectedNoFault@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', breaking those rules will not
+--     result in process termination or device loss.
+--
 -- If the 'PhysicalDeviceProtectedMemoryProperties' structure is included
 -- in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -253,16 +273,16 @@ instance Zero PhysicalDeviceProtectedMemoryFeatures where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceProtectedMemoryProperties-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProperties
-  { -- | @protectedNoFault@ specifies the behavior of the implementation when
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules protected memory access rules>
-    -- are broken. If @protectedNoFault@ is
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE', breaking those rules will not
-    -- result in process termination or device loss.
+  { -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryProperties" "protectedNoFault"
     protectedNoFault :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -313,7 +333,32 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 -- @flags@ were specified at device creation time, then the handle returned
 -- in @pQueue@ /must/ be @NULL@.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkDeviceQueueInfo2-queueFamilyIndex-01842# @queueFamilyIndex@
+--     /must/ be one of the queue family indices specified when @device@
+--     was created, via the 'Vulkan.Core10.Device.DeviceQueueCreateInfo'
+--     structure
+--
+-- -   #VUID-VkDeviceQueueInfo2-queueIndex-01843# @queueIndex@ /must/ be
+--     less than the number of queues created for the specified queue
+--     family index and
+--     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags'
+--     member @flags@ equal to this @flags@ value when @device@ was
+--     created, via the @queueCount@ member of the
+--     'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkDeviceQueueInfo2-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2'
+--
+-- -   #VUID-VkDeviceQueueInfo2-pNext-pNext# @pNext@ /must/ be @NULL@
+--
+-- -   #VUID-VkDeviceQueueInfo2-flags-parameter# @flags@ /must/ be a valid
+--     combination of
+--     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlagBits'
+--     values
 --
 -- = See Also
 --
@@ -323,27 +368,12 @@ data DeviceQueueInfo2 = DeviceQueueInfo2
   { -- | @flags@ is a
     -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags'
     -- value indicating the flags used to create the device queue.
-    --
-    -- @flags@ /must/ be a valid combination of
-    -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlagBits'
-    -- values
     flags :: DeviceQueueCreateFlags
   , -- | @queueFamilyIndex@ is the index of the queue family to which the queue
     -- belongs.
-    --
-    -- @queueFamilyIndex@ /must/ be one of the queue family indices specified
-    -- when @device@ was created, via the
-    -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
     queueFamilyIndex :: Word32
   , -- | @queueIndex@ is the index within this queue family of the queue to
     -- retrieve.
-    --
-    -- @queueIndex@ /must/ be less than the number of queues created for the
-    -- specified queue family index and
-    -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags'
-    -- member @flags@ equal to this @flags@ value when @device@ was created,
-    -- via the @queueCount@ member of the
-    -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
     queueIndex :: Word32
   }
   deriving (Typeable, Eq)

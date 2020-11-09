@@ -32,6 +32,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- shader image footprint features that can be supported by an
 -- implementation
 --
+-- = Members
+--
+-- -   #features-imageFootprint# @imageFootprint@ specifies whether the
+--     implementation supports the @ImageFootprintNV@ SPIR-V capability.
+--
 -- = Description
 --
 -- See
@@ -48,13 +53,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceShaderImageFootprintFeaturesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderImageFootprintFeaturesNV = PhysicalDeviceShaderImageFootprintFeaturesNV
-  { -- | @imageFootprint@ specifies whether the implementation supports the
-    -- @ImageFootprintNV@ SPIR-V capability.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderImageFootprintFeaturesNV" "imageFootprint"
     imageFootprint :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

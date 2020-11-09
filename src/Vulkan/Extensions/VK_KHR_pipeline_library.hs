@@ -38,18 +38,21 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage
 --
--- -   Each element of @pLibraries@ /must/ have been created with
+-- -   #VUID-VkPipelineLibraryCreateInfoKHR-pLibraries-03381# Each element
+--     of @pLibraries@ /must/ have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineLibraryCreateInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkPipelineLibraryCreateInfoKHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   If @libraryCount@ is not @0@, @pLibraries@ /must/ be a valid pointer
---     to an array of @libraryCount@ valid 'Vulkan.Core10.Handles.Pipeline'
+-- -   #VUID-VkPipelineLibraryCreateInfoKHR-pLibraries-parameter# If
+--     @libraryCount@ is not @0@, @pLibraries@ /must/ be a valid pointer to
+--     an array of @libraryCount@ valid 'Vulkan.Core10.Handles.Pipeline'
 --     handles
 --
 -- = See Also

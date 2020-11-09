@@ -35,6 +35,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Description
 --
+-- -   #extension-features-scalarBlockLayout# @scalarBlockLayout@ indicates
+--     that the implementation supports the layout of resource blocks in
+--     shaders using
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-alignment-requirements scalar alignment>.
+--
 -- If the 'PhysicalDeviceScalarBlockLayoutFeatures' structure is included
 -- in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -45,14 +50,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceScalarBlockLayoutFeatures-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceScalarBlockLayoutFeatures = PhysicalDeviceScalarBlockLayoutFeatures
-  { -- | @scalarBlockLayout@ indicates that the implementation supports the
-    -- layout of resource blocks in shaders using
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-alignment-requirements scalar alignment>.
+  { -- No documentation found for Nested "VkPhysicalDeviceScalarBlockLayoutFeatures" "scalarBlockLayout"
     scalarBlockLayout :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

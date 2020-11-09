@@ -137,16 +137,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateValidationCacheEXT-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateValidationCacheEXT-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'ValidationCacheCreateInfoEXT' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateValidationCacheEXT-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pValidationCache@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateValidationCacheEXT-pValidationCache-parameter#
+--     @pValidationCache@ /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.ValidationCacheEXT' handle
 --
 -- == Return Codes
@@ -216,27 +220,33 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyValidationCacheEXT-validationCache-01537# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @validationCache@ was created, a compatible set of
 --     callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyValidationCacheEXT-validationCache-01538# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @validationCache@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyValidationCacheEXT-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @validationCache@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @validationCache@ /must/
---     be a valid 'Vulkan.Extensions.Handles.ValidationCacheEXT' handle
+-- -   #VUID-vkDestroyValidationCacheEXT-validationCache-parameter# If
+--     @validationCache@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @validationCache@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.ValidationCacheEXT' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkDestroyValidationCacheEXT-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @validationCache@ is a valid handle, it /must/ have been created,
+-- -   #VUID-vkDestroyValidationCacheEXT-validationCache-parent# If
+--     @validationCache@ is a valid handle, it /must/ have been created,
 --     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
@@ -346,18 +356,22 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetValidationCacheDataEXT-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @validationCache@ /must/ be a valid
+-- -   #VUID-vkGetValidationCacheDataEXT-validationCache-parameter#
+--     @validationCache@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.ValidationCacheEXT' handle
 --
--- -   @pDataSize@ /must/ be a valid pointer to a @size_t@ value
+-- -   #VUID-vkGetValidationCacheDataEXT-pDataSize-parameter# @pDataSize@
+--     /must/ be a valid pointer to a @size_t@ value
 --
--- -   If the value referenced by @pDataSize@ is not @0@, and @pData@ is
---     not @NULL@, @pData@ /must/ be a valid pointer to an array of
---     @pDataSize@ bytes
+-- -   #VUID-vkGetValidationCacheDataEXT-pData-parameter# If the value
+--     referenced by @pDataSize@ is not @0@, and @pData@ is not @NULL@,
+--     @pData@ /must/ be a valid pointer to an array of @pDataSize@ bytes
 --
--- -   @validationCache@ /must/ have been created, allocated, or retrieved
+-- -   #VUID-vkGetValidationCacheDataEXT-validationCache-parent#
+--     @validationCache@ /must/ have been created, allocated, or retrieved
 --     from @device@
 --
 -- == Return Codes
@@ -423,26 +437,31 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @dstCache@ /must/ not appear in the list of source caches
+-- -   #VUID-vkMergeValidationCachesEXT-dstCache-01536# @dstCache@ /must/
+--     not appear in the list of source caches
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkMergeValidationCachesEXT-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @dstCache@ /must/ be a valid
---     'Vulkan.Extensions.Handles.ValidationCacheEXT' handle
+-- -   #VUID-vkMergeValidationCachesEXT-dstCache-parameter# @dstCache@
+--     /must/ be a valid 'Vulkan.Extensions.Handles.ValidationCacheEXT'
+--     handle
 --
--- -   @pSrcCaches@ /must/ be a valid pointer to an array of
---     @srcCacheCount@ valid 'Vulkan.Extensions.Handles.ValidationCacheEXT'
---     handles
+-- -   #VUID-vkMergeValidationCachesEXT-pSrcCaches-parameter# @pSrcCaches@
+--     /must/ be a valid pointer to an array of @srcCacheCount@ valid
+--     'Vulkan.Extensions.Handles.ValidationCacheEXT' handles
 --
--- -   @srcCacheCount@ /must/ be greater than @0@
+-- -   #VUID-vkMergeValidationCachesEXT-srcCacheCount-arraylength#
+--     @srcCacheCount@ /must/ be greater than @0@
 --
--- -   @dstCache@ /must/ have been created, allocated, or retrieved from
+-- -   #VUID-vkMergeValidationCachesEXT-dstCache-parent# @dstCache@ /must/
+--     have been created, allocated, or retrieved from @device@
+--
+-- -   #VUID-vkMergeValidationCachesEXT-pSrcCaches-parent# Each element of
+--     @pSrcCaches@ /must/ have been created, allocated, or retrieved from
 --     @device@
---
--- -   Each element of @pSrcCaches@ /must/ have been created, allocated, or
---     retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -491,23 +510,28 @@ mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   If @initialDataSize@ is not @0@, it /must/ be equal to the size of
+-- -   #VUID-VkValidationCacheCreateInfoEXT-initialDataSize-01534# If
+--     @initialDataSize@ is not @0@, it /must/ be equal to the size of
 --     @pInitialData@, as returned by 'getValidationCacheDataEXT' when
 --     @pInitialData@ was originally retrieved
 --
--- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ have been
+-- -   #VUID-VkValidationCacheCreateInfoEXT-initialDataSize-01535# If
+--     @initialDataSize@ is not @0@, @pInitialData@ /must/ have been
 --     retrieved from a previous call to 'getValidationCacheDataEXT'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkValidationCacheCreateInfoEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkValidationCacheCreateInfoEXT-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkValidationCacheCreateInfoEXT-flags-zerobitmask# @flags@
+--     /must/ be @0@
 --
--- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
+-- -   #VUID-VkValidationCacheCreateInfoEXT-pInitialData-parameter# If
+--     @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
 --     pointer to an array of @initialDataSize@ bytes
 --
 -- = See Also
@@ -575,6 +599,14 @@ instance Zero ValidationCacheCreateInfoEXT where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkShaderModuleValidationCacheCreateInfoEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT'
+--
+-- -   #VUID-VkShaderModuleValidationCacheCreateInfoEXT-validationCache-parameter#
+--     @validationCache@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.ValidationCacheEXT' handle
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -584,9 +616,6 @@ data ShaderModuleValidationCacheCreateInfoEXT = ShaderModuleValidationCacheCreat
     -- of prior validation attempts will be written, and to which new
     -- validation results for this 'Vulkan.Core10.Handles.ShaderModule' will be
     -- written (if not already present).
-    --
-    -- @validationCache@ /must/ be a valid
-    -- 'Vulkan.Extensions.Handles.ValidationCacheEXT' handle
     validationCache :: ValidationCacheEXT }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

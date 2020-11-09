@@ -158,6 +158,7 @@ import {-# SOURCE #-} Vulkan.Core10.Enums.Format (Format)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (FormatProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (FormatProperties2)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (FragmentShadingRateCombinerOpKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (FragmentShadingRateNV)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Framebuffer)
 import {-# SOURCE #-} Vulkan.Core10.Pass (FramebufferCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (FramebufferMixedSamplesCombinationNV)
@@ -931,6 +932,7 @@ data DeviceCmds = DeviceCmds
   , pVkCmdCopyImageToBuffer2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pCopyImageToBufferInfo" ::: Ptr CopyImageToBufferInfo2KHR) -> IO ())
   , pVkCmdResolveImage2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pResolveImageInfo" ::: Ptr ResolveImageInfo2KHR) -> IO ())
   , pVkCmdSetFragmentShadingRateKHR :: FunPtr (Ptr CommandBuffer_T -> ("pFragmentSize" ::: Ptr Extent2D) -> ("combinerOps" ::: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)) -> IO ())
+  , pVkCmdSetFragmentShadingRateEnumNV :: FunPtr (Ptr CommandBuffer_T -> FragmentShadingRateNV -> ("combinerOps" ::: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)) -> IO ())
   }
 
 deriving instance Eq DeviceCmds
@@ -976,6 +978,7 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1300,6 +1303,7 @@ initDeviceCmds instanceCmds handle = do
   vkCmdCopyImageToBuffer2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdCopyImageToBuffer2KHR"#)
   vkCmdResolveImage2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdResolveImage2KHR"#)
   vkCmdSetFragmentShadingRateKHR <- getDeviceProcAddr' handle (Ptr "vkCmdSetFragmentShadingRateKHR"#)
+  vkCmdSetFragmentShadingRateEnumNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetFragmentShadingRateEnumNV"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1612,4 +1616,5 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pCopyImageToBufferInfo" ::: Ptr CopyImageToBufferInfo2KHR) -> IO ()) vkCmdCopyImageToBuffer2KHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pResolveImageInfo" ::: Ptr ResolveImageInfo2KHR) -> IO ()) vkCmdResolveImage2KHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pFragmentSize" ::: Ptr Extent2D) -> ("combinerOps" ::: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)) -> IO ()) vkCmdSetFragmentShadingRateKHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> FragmentShadingRateNV -> ("combinerOps" ::: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)) -> IO ()) vkCmdSetFragmentShadingRateEnumNV)
 

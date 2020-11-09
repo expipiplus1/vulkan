@@ -102,6 +102,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-vkGetDescriptorSetLayoutSupport-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetDescriptorSetLayoutSupport-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'
+--     structure
+--
+-- -   #VUID-vkGetDescriptorSetLayoutSupport-pSupport-parameter# @pSupport@
+--     /must/ be a valid pointer to a 'DescriptorSetLayoutSupport'
+--     structure
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
@@ -110,15 +122,10 @@ getDescriptorSetLayoutSupport :: forall a b io
                                . (Extendss DescriptorSetLayoutCreateInfo a, Extendss DescriptorSetLayoutSupport b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
                               => -- | @device@ is the logical device that would create the descriptor set
                                  -- layout.
-                                 --
-                                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                  Device
                               -> -- | @pCreateInfo@ is a pointer to a
                                  -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
                                  -- specifying the state of the descriptor set layout object.
-                                 --
-                                 -- @pCreateInfo@ /must/ be a valid pointer to a valid
-                                 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
                                  (DescriptorSetLayoutCreateInfo a)
                               -> io (DescriptorSetLayoutSupport b)
 getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
@@ -143,6 +150,23 @@ getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #extension-limits-maxPerSetDescriptors# @maxPerSetDescriptors@ is a
+--     maximum number of descriptors (summed over all descriptor types) in
+--     a single descriptor set that is guaranteed to satisfy any
+--     implementation-dependent constraints on the size of a descriptor set
+--     itself. Applications /can/ query whether a descriptor set that goes
+--     beyond this limit is supported using
+--     'getDescriptorSetLayoutSupport'.
+--
+-- -   #extension-limits-maxMemoryAllocationSize# @maxMemoryAllocationSize@
+--     is the maximum size of a memory allocation that /can/ be created,
+--     even if there is more space available in the heap.
+--
 -- If the 'PhysicalDeviceMaintenance3Properties' structure is included in
 -- the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -150,21 +174,18 @@ getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceMaintenance3Properties-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMaintenance3Properties = PhysicalDeviceMaintenance3Properties
-  { -- | @maxPerSetDescriptors@ is a maximum number of descriptors (summed over
-    -- all descriptor types) in a single descriptor set that is guaranteed to
-    -- satisfy any implementation-dependent constraints on the size of a
-    -- descriptor set itself. Applications /can/ query whether a descriptor set
-    -- that goes beyond this limit is supported using
-    -- 'getDescriptorSetLayoutSupport'.
+  { -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "maxPerSetDescriptors"
     maxPerSetDescriptors :: Word32
-  , -- | @maxMemoryAllocationSize@ is the maximum size of a memory allocation
-    -- that /can/ be created, even if there is more space available in the
-    -- heap.
+  , -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "maxMemoryAllocationSize"
     maxMemoryAllocationSize :: DeviceSize
   }
   deriving (Typeable, Eq)
@@ -220,14 +241,15 @@ instance Zero PhysicalDeviceMaintenance3Properties where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDescriptorSetLayoutSupport-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkDescriptorSetLayoutSupport-pNext-pNext# @pNext@ /must/ be
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountLayoutSupport'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkDescriptorSetLayoutSupport-sType-unique# The @sType@ value
+--     of each struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --

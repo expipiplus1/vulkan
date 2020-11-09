@@ -92,20 +92,23 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkGetBufferOpaqueCaptureAddress-None-03326# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
 --     feature /must/ be enabled
 --
--- -   If @device@ was created with multiple physical devices, then the
+-- -   #VUID-vkGetBufferOpaqueCaptureAddress-device-03327# If @device@ was
+--     created with multiple physical devices, then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetBufferOpaqueCaptureAddress-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
---     'BufferDeviceAddressInfo' structure
+-- -   #VUID-vkGetBufferOpaqueCaptureAddress-pInfo-parameter# @pInfo@
+--     /must/ be a valid pointer to a valid 'BufferDeviceAddressInfo'
+--     structure
 --
 -- = See Also
 --
@@ -160,13 +163,14 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkGetBufferDeviceAddress-bufferDeviceAddress-03324# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressEXT ::bufferDeviceAddress>
 --     feature /must/ be enabled
 --
--- -   If @device@ was created with multiple physical devices, then the
+-- -   #VUID-vkGetBufferDeviceAddress-device-03325# If @device@ was created
+--     with multiple physical devices, then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDeviceEXT ::bufferDeviceAddressMultiDevice>
@@ -174,10 +178,11 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetBufferDeviceAddress-device-parameter# @device@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
---     'BufferDeviceAddressInfo' structure
+-- -   #VUID-vkGetBufferDeviceAddress-pInfo-parameter# @pInfo@ /must/ be a
+--     valid pointer to a valid 'BufferDeviceAddressInfo' structure
 --
 -- = See Also
 --
@@ -227,19 +232,22 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkGetDeviceMemoryOpaqueCaptureAddress-None-03334# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
 --     feature /must/ be enabled
 --
--- -   If @device@ was created with multiple physical devices, then the
+-- -   #VUID-vkGetDeviceMemoryOpaqueCaptureAddress-device-03335# If
+--     @device@ was created with multiple physical devices, then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetDeviceMemoryOpaqueCaptureAddress-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetDeviceMemoryOpaqueCaptureAddress-pInfo-parameter# @pInfo@
+--     /must/ be a valid pointer to a valid
 --     'DeviceMemoryOpaqueCaptureAddressInfo' structure
 --
 -- = See Also
@@ -273,6 +281,24 @@ getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
 --
 -- = Description
 --
+-- -   #extension-features-bufferDeviceAddress# @bufferDeviceAddress@
+--     indicates that the implementation supports accessing buffer memory
+--     in shaders as storage buffers via an address queried from
+--     'getBufferDeviceAddress'.
+--
+-- -   #extension-features-bufferDeviceAddressCaptureReplay#
+--     @bufferDeviceAddressCaptureReplay@ indicates that the implementation
+--     supports saving and reusing buffer and device addresses, e.g. for
+--     trace capture and replay.
+--
+-- -   #extension-features-bufferDeviceAddressMultiDevice#
+--     @bufferDeviceAddressMultiDevice@ indicates that the implementation
+--     supports the @bufferDeviceAddress@ and @rayTracing@ features for
+--     logical devices created with multiple physical devices. If this
+--     feature is not supported, buffer and acceleration structure
+--     addresses /must/ not be queried on a logical device created with
+--     more than one physical device.
+--
 -- Note
 --
 -- @bufferDeviceAddressMultiDevice@ exists to allow certain legacy
@@ -291,24 +317,20 @@ getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceBufferDeviceAddressFeatures-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceBufferDeviceAddressFeatures = PhysicalDeviceBufferDeviceAddressFeatures
-  { -- | @bufferDeviceAddress@ indicates that the implementation supports
-    -- accessing buffer memory in shaders as storage buffers via an address
-    -- queried from 'getBufferDeviceAddress'.
+  { -- No documentation found for Nested "VkPhysicalDeviceBufferDeviceAddressFeatures" "bufferDeviceAddress"
     bufferDeviceAddress :: Bool
-  , -- | @bufferDeviceAddressCaptureReplay@ indicates that the implementation
-    -- supports saving and reusing buffer and device addresses, e.g. for trace
-    -- capture and replay.
+  , -- No documentation found for Nested "VkPhysicalDeviceBufferDeviceAddressFeatures" "bufferDeviceAddressCaptureReplay"
     bufferDeviceAddressCaptureReplay :: Bool
-  , -- | @bufferDeviceAddressMultiDevice@ indicates that the implementation
-    -- supports the @bufferDeviceAddress@ and @rayTracing@ features for logical
-    -- devices created with multiple physical devices. If this feature is not
-    -- supported, buffer and acceleration structure addresses /must/ not be
-    -- queried on a logical device created with more than one physical device.
+  , -- No documentation found for Nested "VkPhysicalDeviceBufferDeviceAddressFeatures" "bufferDeviceAddressMultiDevice"
     bufferDeviceAddressMultiDevice :: Bool
   }
   deriving (Typeable, Eq)
@@ -362,22 +384,26 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeatures where
 --
 -- == Valid Usage
 --
--- -   If @buffer@ is non-sparse and was not created with the
+-- -   #VUID-VkBufferDeviceAddressInfo-buffer-02600# If @buffer@ is
+--     non-sparse and was not created with the
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --     flag, then it /must/ be bound completely and contiguously to a
 --     single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   @buffer@ /must/ have been created with
+-- -   #VUID-VkBufferDeviceAddressInfo-buffer-02601# @buffer@ /must/ have
+--     been created with
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkBufferDeviceAddressInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkBufferDeviceAddressInfo-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-VkBufferDeviceAddressInfo-buffer-parameter# @buffer@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
 -- = See Also
 --
@@ -470,6 +496,10 @@ instance Zero BufferDeviceAddressInfo where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkBufferOpaqueCaptureAddressCreateInfo-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -544,6 +574,10 @@ instance Zero BufferOpaqueCaptureAddressCreateInfo where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkMemoryOpaqueCaptureAddressAllocateInfo-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -592,7 +626,24 @@ instance Zero MemoryOpaqueCaptureAddressAllocateInfo where
 -- | VkDeviceMemoryOpaqueCaptureAddressInfo - Structure specifying the memory
 -- object to query an address for
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkDeviceMemoryOpaqueCaptureAddressInfo-memory-03336# @memory@
+--     /must/ have been allocated with
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkDeviceMemoryOpaqueCaptureAddressInfo-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO'
+--
+-- -   #VUID-VkDeviceMemoryOpaqueCaptureAddressInfo-pNext-pNext# @pNext@
+--     /must/ be @NULL@
+--
+-- -   #VUID-VkDeviceMemoryOpaqueCaptureAddressInfo-memory-parameter#
+--     @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
+--     handle
 --
 -- = See Also
 --
@@ -602,11 +653,6 @@ instance Zero MemoryOpaqueCaptureAddressAllocateInfo where
 -- 'Vulkan.Extensions.VK_KHR_buffer_device_address.getDeviceMemoryOpaqueCaptureAddressKHR'
 data DeviceMemoryOpaqueCaptureAddressInfo = DeviceMemoryOpaqueCaptureAddressInfo
   { -- | @memory@ specifies the memory whose address is being queried.
-    --
-    -- @memory@ /must/ have been allocated with
-    -- 'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
-    --
-    -- @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
     memory :: DeviceMemory }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

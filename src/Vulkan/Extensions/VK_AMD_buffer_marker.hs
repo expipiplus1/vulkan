@@ -70,81 +70,91 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @pipelineStage@ /must/ be a
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-04074# @pipelineStage@
+--     /must/ be a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported valid stage>
 --     for the queue family that was used to create the command pool that
 --     @commandBuffer@ was allocated from
 --
--- -   If the
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-04075# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
--- -   If the
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-04076# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
 --     feature is not enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
 --     or
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
--- -   If the
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-04077# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
 --     feature is not enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
 --
--- -   If the
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-04078# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
 --     feature is not enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 --
--- -   If the
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-04079# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
 --     feature is not enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
 --
--- -   If the
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-04080# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
 --     feature is not enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
 --     or
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
--- -   If the
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-04081# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   @dstOffset@ /must/ be less than or equal to the size of @dstBuffer@
---     minus @4@
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-dstOffset-01798# @dstOffset@ /must/
+--     be less than or equal to the size of @dstBuffer@ minus @4@
 --
--- -   @dstBuffer@ /must/ have been created with
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-dstBuffer-01799# @dstBuffer@ /must/
+--     have been created with
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
 --     usage flag
 --
--- -   If @dstBuffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-dstBuffer-01800# If @dstBuffer@ is
+--     non-sparse then it /must/ be bound completely and contiguously to a
+--     single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   @dstOffset@ /must/ be a multiple of @4@
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-dstOffset-01801# @dstOffset@ /must/
+--     be a multiple of @4@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pipelineStage@ /must/ be a valid
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-parameter#
+--     @pipelineStage@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     value
 --
--- -   @dstBuffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-dstBuffer-parameter# @dstBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support transfer, graphics, or compute
 --     operations
 --
--- -   Both of @commandBuffer@, and @dstBuffer@ /must/ have been created,
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-commonparent# Both of
+--     @commandBuffer@, and @dstBuffer@ /must/ have been created,
 --     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization

@@ -102,17 +102,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateQueryPool-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'QueryPoolCreateInfo' structure
+-- -   #VUID-vkCreateQueryPool-pCreateInfo-parameter# @pCreateInfo@ /must/
+--     be a valid pointer to a valid 'QueryPoolCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateQueryPool-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pQueryPool@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.QueryPool' handle
+-- -   #VUID-vkCreateQueryPool-pQueryPool-parameter# @pQueryPool@ /must/ be
+--     a valid pointer to a 'Vulkan.Core10.Handles.QueryPool' handle
 --
 -- == Return Codes
 --
@@ -183,30 +184,34 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @queryPool@ /must/ have
---     completed execution
+-- -   #VUID-vkDestroyQueryPool-queryPool-00793# All submitted commands
+--     that refer to @queryPool@ /must/ have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyQueryPool-queryPool-00794# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @queryPool@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyQueryPool-queryPool-00795# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @queryPool@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyQueryPool-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @queryPool@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @queryPool@ /must/ be a valid 'Vulkan.Core10.Handles.QueryPool'
---     handle
+-- -   #VUID-vkDestroyQueryPool-queryPool-parameter# If @queryPool@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @queryPool@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.QueryPool' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyQueryPool-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @queryPool@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroyQueryPool-queryPool-parent# If @queryPool@ is a valid
+--     handle, it /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Host Synchronization
 --
@@ -346,54 +351,62 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @firstQuery@ /must/ be less than the number of queries in
---     @queryPool@
+-- -   #VUID-vkGetQueryPoolResults-firstQuery-00813# @firstQuery@ /must/ be
+--     less than the number of queries in @queryPool@
 --
--- -   If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is
---     not set in @flags@, then @pData@ and @stride@ /must/ be multiples of
---     @4@
+-- -   #VUID-vkGetQueryPoolResults-flags-02827# If
+--     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is not
+--     set in @flags@, then @pData@ and @stride@ /must/ be multiples of @4@
 --
--- -   If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is
---     not set in @flags@ and the @queryType@ used to create @queryPool@
---     was not
+-- -   #VUID-vkGetQueryPoolResults-flags-02828# If
+--     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is not
+--     set in @flags@ and the @queryType@ used to create @queryPool@ was
+--     not
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     then @pData@ and @stride@ /must/ be multiples of @4@
 --
--- -   If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is
---     set in @flags@ then @pData@ and @stride@ /must/ be multiples of @8@
+-- -   #VUID-vkGetQueryPoolResults-flags-00815# If
+--     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is set
+--     in @flags@ then @pData@ and @stride@ /must/ be multiples of @8@
 --
--- -   If the @queryType@ used to create @queryPool@ was
+-- -   #VUID-vkGetQueryPoolResults-queryType-03229# If the @queryType@ used
+--     to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     then @pData@ and @stride@ /must/ be multiples of the size of
 --     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'
 --
--- -   If the @queryType@ used to create @queryPool@ was
+-- -   #VUID-vkGetQueryPoolResults-queryType-04519# If the @queryType@ used
+--     to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     then @stride@ /must/ be large enough to contain
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'::@counterIndexCount@
 --     used to create @queryPool@ times the size of
 --     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'.
 --
--- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
---     equal to the number of queries in @queryPool@
+-- -   #VUID-vkGetQueryPoolResults-firstQuery-00816# The sum of
+--     @firstQuery@ and @queryCount@ /must/ be less than or equal to the
+--     number of queries in @queryPool@
 --
--- -   @dataSize@ /must/ be large enough to contain the result of each
---     query, as described
+-- -   #VUID-vkGetQueryPoolResults-dataSize-00817# @dataSize@ /must/ be
+--     large enough to contain the result of each query, as described
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-memorylayout here>
 --
--- -   If the @queryType@ used to create @queryPool@ was
+-- -   #VUID-vkGetQueryPoolResults-queryType-00818# If the @queryType@ used
+--     to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIMESTAMP', @flags@ /must/
 --     not contain
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT'
 --
--- -   If the @queryType@ used to create @queryPool@ was
+-- -   #VUID-vkGetQueryPoolResults-queryType-03230# If the @queryType@ used
+--     to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT',
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT'
 --     or 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT'
 --
--- -   If the @queryType@ used to create @queryPool@ was
+-- -   #VUID-vkGetQueryPoolResults-queryType-03231# If the @queryType@ used
+--     to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     the @queryPool@ /must/ have been recorded once for each pass as
 --     retrieved via a call to
@@ -401,20 +414,24 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetQueryPoolResults-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @queryPool@ /must/ be a valid 'Vulkan.Core10.Handles.QueryPool'
---     handle
+-- -   #VUID-vkGetQueryPoolResults-queryPool-parameter# @queryPool@ /must/
+--     be a valid 'Vulkan.Core10.Handles.QueryPool' handle
 --
--- -   @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
+-- -   #VUID-vkGetQueryPoolResults-pData-parameter# @pData@ /must/ be a
+--     valid pointer to an array of @dataSize@ bytes
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-vkGetQueryPoolResults-flags-parameter# @flags@ /must/ be a
+--     valid combination of
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlagBits' values
 --
--- -   @dataSize@ /must/ be greater than @0@
+-- -   #VUID-vkGetQueryPoolResults-dataSize-arraylength# @dataSize@ /must/
+--     be greater than @0@
 --
--- -   @queryPool@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkGetQueryPoolResults-queryPool-parent# @queryPool@ /must/
+--     have been created, allocated, or retrieved from @device@
 --
 -- == Return Codes
 --
@@ -482,43 +499,44 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 --
 -- == Valid Usage
 --
--- -   If the
+-- -   #VUID-VkQueryPoolCreateInfo-queryType-00791# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
 --     feature is not enabled, @queryType@ /must/ not be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'
 --
--- -   If @queryType@ is
+-- -   #VUID-VkQueryPoolCreateInfo-queryType-00792# If @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS',
 --     @pipelineStatistics@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlagBits'
 --     values
 --
--- -   If @queryType@ is
+-- -   #VUID-VkQueryPoolCreateInfo-queryType-03222# If @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     the @pNext@ chain /must/ include a structure of type
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'
 --
--- -   @queryCount@ /must/ be greater than 0
+-- -   #VUID-VkQueryPoolCreateInfo-queryCount-02763# @queryCount@ /must/ be
+--     greater than 0
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkQueryPoolCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkQueryPoolCreateInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'
 --     or
 --     'Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkQueryPoolCreateInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkQueryPoolCreateInfo-flags-zerobitmask# @flags@ /must/ be @0@
 --
--- -   @queryType@ /must/ be a valid
---     'Vulkan.Core10.Enums.QueryType.QueryType' value
+-- -   #VUID-VkQueryPoolCreateInfo-queryType-parameter# @queryType@ /must/
+--     be a valid 'Vulkan.Core10.Enums.QueryType.QueryType' value
 --
 -- = See Also
 --

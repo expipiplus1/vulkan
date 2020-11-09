@@ -40,6 +40,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-dedicatedAllocationImageAliasing#
+--     @dedicatedAllocationImageAliasing@ indicates that the implementation
+--     supports aliasing of compatible image objects on a dedicated
+--     allocation.
+--
 -- If the 'PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV'
 -- structure is included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -50,13 +55,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
-  { -- | @dedicatedAllocationImageAliasing@ indicates that the implementation
-    -- supports aliasing of compatible image objects on a dedicated allocation.
+  { -- No documentation found for Nested "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV" "dedicatedAllocationImageAliasing"
     dedicatedAllocationImageAliasing :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

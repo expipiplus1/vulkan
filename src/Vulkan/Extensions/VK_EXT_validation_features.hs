@@ -67,26 +67,30 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_VALIDATIO
 --
 -- == Valid Usage
 --
--- -   If the @pEnabledValidationFeatures@ array contains
+-- -   #VUID-VkValidationFeaturesEXT-pEnabledValidationFeatures-02967# If
+--     the @pEnabledValidationFeatures@ array contains
 --     'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT',
 --     then it /must/ also contain
 --     'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT'
 --
--- -   If the @pEnabledValidationFeatures@ array contains
+-- -   #VUID-VkValidationFeaturesEXT-pEnabledValidationFeatures-02968# If
+--     the @pEnabledValidationFeatures@ array contains
 --     'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT', then it /must/ not
 --     contain 'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkValidationFeaturesEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VALIDATION_FEATURES_EXT'
 --
--- -   If @enabledValidationFeatureCount@ is not @0@,
+-- -   #VUID-VkValidationFeaturesEXT-pEnabledValidationFeatures-parameter#
+--     If @enabledValidationFeatureCount@ is not @0@,
 --     @pEnabledValidationFeatures@ /must/ be a valid pointer to an array
 --     of @enabledValidationFeatureCount@ valid
 --     'ValidationFeatureEnableEXT' values
 --
--- -   If @disabledValidationFeatureCount@ is not @0@,
+-- -   #VUID-VkValidationFeaturesEXT-pDisabledValidationFeatures-parameter#
+--     If @disabledValidationFeatureCount@ is not @0@,
 --     @pDisabledValidationFeatures@ /must/ be a valid pointer to an array
 --     of @disabledValidationFeatureCount@ valid
 --     'ValidationFeatureDisableEXT' values

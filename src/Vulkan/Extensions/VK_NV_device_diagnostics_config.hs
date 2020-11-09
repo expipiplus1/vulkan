@@ -61,6 +61,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-features-diagnosticsConfig# @diagnosticsConfig@ indicates
+--     whether the implementation supports the ability to configure
+--     diagnostic tools.
+--
 -- If the 'PhysicalDeviceDiagnosticsConfigFeaturesNV' structure is included
 -- in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -71,13 +75,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceDiagnosticsConfigFeaturesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDiagnosticsConfigFeaturesNV = PhysicalDeviceDiagnosticsConfigFeaturesNV
-  { -- | @diagnosticsConfig@ indicates whether the implementation supports the
-    -- ability to configure diagnostic tools.
+  { -- No documentation found for Nested "VkPhysicalDeviceDiagnosticsConfigFeaturesNV" "diagnosticsConfig"
     diagnosticsConfig :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -122,6 +129,14 @@ instance Zero PhysicalDeviceDiagnosticsConfigFeaturesNV where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkDeviceDiagnosticsConfigCreateInfoNV-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV'
+--
+-- -   #VUID-VkDeviceDiagnosticsConfigCreateInfoNV-flags-parameter# @flags@
+--     /must/ be a valid combination of 'DeviceDiagnosticsConfigFlagBitsNV'
+--     values
+--
 -- = See Also
 --
 -- 'DeviceDiagnosticsConfigFlagsNV',
@@ -129,9 +144,6 @@ instance Zero PhysicalDeviceDiagnosticsConfigFeaturesNV where
 data DeviceDiagnosticsConfigCreateInfoNV = DeviceDiagnosticsConfigCreateInfoNV
   { -- | @flags@ is a bitmask of 'DeviceDiagnosticsConfigFlagBitsNV' specifying
     -- addtional parameters for configuring diagnostic tools.
-    --
-    -- @flags@ /must/ be a valid combination of
-    -- 'DeviceDiagnosticsConfigFlagBitsNV' values
     flags :: DeviceDiagnosticsConfigFlagsNV }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

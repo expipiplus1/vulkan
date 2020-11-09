@@ -96,7 +96,29 @@ foreign import ccall
 -- | vkGetDeviceGroupPeerMemoryFeatures - Query supported peer memory
 -- features of a device
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetDeviceGroupPeerMemoryFeatures-heapIndex-00691#
+--     @heapIndex@ /must/ be less than @memoryHeapCount@
+--
+-- -   #VUID-vkGetDeviceGroupPeerMemoryFeatures-localDeviceIndex-00692#
+--     @localDeviceIndex@ /must/ be a valid device index
+--
+-- -   #VUID-vkGetDeviceGroupPeerMemoryFeatures-remoteDeviceIndex-00693#
+--     @remoteDeviceIndex@ /must/ be a valid device index
+--
+-- -   #VUID-vkGetDeviceGroupPeerMemoryFeatures-localDeviceIndex-00694#
+--     @localDeviceIndex@ /must/ not equal @remoteDeviceIndex@
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetDeviceGroupPeerMemoryFeatures-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetDeviceGroupPeerMemoryFeatures-pPeerMemoryFeatures-parameter#
+--     @pPeerMemoryFeatures@ /must/ be a valid pointer to a
+--     'Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits.PeerMemoryFeatureFlags'
+--     value
 --
 -- = See Also
 --
@@ -105,25 +127,15 @@ foreign import ccall
 getDeviceGroupPeerMemoryFeatures :: forall io
                                   . (MonadIO io)
                                  => -- | @device@ is the logical device that owns the memory.
-                                    --
-                                    -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                     Device
                                  -> -- | @heapIndex@ is the index of the memory heap from which the memory is
                                     -- allocated.
-                                    --
-                                    -- @heapIndex@ /must/ be less than @memoryHeapCount@
                                     ("heapIndex" ::: Word32)
                                  -> -- | @localDeviceIndex@ is the device index of the physical device that
                                     -- performs the memory access.
-                                    --
-                                    -- @localDeviceIndex@ /must/ be a valid device index
-                                    --
-                                    -- @localDeviceIndex@ /must/ not equal @remoteDeviceIndex@
                                     ("localDeviceIndex" ::: Word32)
                                  -> -- | @remoteDeviceIndex@ is the device index of the physical device that the
                                     -- memory is allocated for.
-                                    --
-                                    -- @remoteDeviceIndex@ /must/ be a valid device index
                                     ("remoteDeviceIndex" ::: Word32)
                                  -> io (("peerMemoryFeatures" ::: PeerMemoryFeatureFlags))
 getDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceIndex = liftIO . evalContT $ do
@@ -159,28 +171,34 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @deviceMask@ /must/ be a valid device mask value
+-- -   #VUID-vkCmdSetDeviceMask-deviceMask-00108# @deviceMask@ /must/ be a
+--     valid device mask value
 --
--- -   @deviceMask@ /must/ not be zero
+-- -   #VUID-vkCmdSetDeviceMask-deviceMask-00109# @deviceMask@ /must/ not
+--     be zero
 --
--- -   @deviceMask@ /must/ not include any set bits that were not in the
+-- -   #VUID-vkCmdSetDeviceMask-deviceMask-00110# @deviceMask@ /must/ not
+--     include any set bits that were not in the
 --     'DeviceGroupCommandBufferBeginInfo'::@deviceMask@ value when the
 --     command buffer began recording
 --
--- -   If 'cmdSetDeviceMask' is called inside a render pass instance,
---     @deviceMask@ /must/ not include any set bits that were not in the
+-- -   #VUID-vkCmdSetDeviceMask-deviceMask-00111# If 'cmdSetDeviceMask' is
+--     called inside a render pass instance, @deviceMask@ /must/ not
+--     include any set bits that were not in the
 --     'DeviceGroupRenderPassBeginInfo'::@deviceMask@ value when the render
 --     pass instance began recording
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
+-- -   #VUID-vkCmdSetDeviceMask-commandBuffer-parameter# @commandBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetDeviceMask-commandBuffer-recording# @commandBuffer@
+--     /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetDeviceMask-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, compute, or transfer
 --     operations
 --
@@ -242,7 +260,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a 'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+-- -   #VUID-vkCmdDispatchBase-magFilter-04553# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
 --     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
 --     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
 --     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
@@ -251,20 +270,23 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using atomic
+-- -   #VUID-vkCmdDispatchBase-None-02691# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
+-- -   #VUID-vkCmdDispatchBase-None-02692# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdDispatchBase-filterCubic-02694# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command /must/ have a
 --     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' and format that
@@ -273,7 +295,8 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdDispatchBase-filterCubicMinmax-02695# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' with a
 --     reduction mode of either
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
@@ -287,53 +310,58 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.Image' created with a
+-- -   #VUID-vkCmdDispatchBase-flags-02696# Any
+--     'Vulkan.Core10.Handles.Image' created with a
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
--- -   For each set /n/ that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a descriptor set /must/ have been bound to /n/
---     at the same pipeline bind point, with a
+-- -   #VUID-vkCmdDispatchBase-None-02697# For each set /n/ that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a descriptor set /must/
+--     have been bound to /n/ at the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
 --     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   For each push constant that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a push constant value /must/ have been set for
---     the same pipeline bind point, with a
+-- -   #VUID-vkCmdDispatchBase-None-02698# For each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a push constant value
+--     /must/ have been set for the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
 --     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   Descriptors in each bound descriptor set, specified via
+-- -   #VUID-vkCmdDispatchBase-None-02699# Descriptors in each bound
+--     descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
 --     be valid if they are statically used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     used by this command
 --
--- -   A valid pipeline /must/ be bound to the pipeline bind point used by
---     this command
+-- -   #VUID-vkCmdDispatchBase-None-02700# A valid pipeline /must/ be bound
+--     to the pipeline bind point used by this command
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command requires any dynamic state, that
---     state /must/ have been set for @commandBuffer@, and done so after
---     any previously bound pipeline with the corresponding state not
---     specified as dynamic
---
--- -   There /must/ not have been any calls to dynamic state setting
---     commands for any state not specified as dynamic in the
+-- -   #VUID-vkCmdDispatchBase-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command, since that pipeline was bound
+--     point used by this command requires any dynamic state, that state
+--     /must/ have been set for @commandBuffer@, and done so after any
+--     previously bound pipeline with the corresponding state not specified
+--     as dynamic
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDispatchBase-None-02859# There /must/ not have been any
+--     calls to dynamic state setting commands for any state not specified
+--     as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object bound to
+--     the pipeline bind point used by this command, since that pipeline
+--     was bound
+--
+-- -   #VUID-vkCmdDispatchBase-None-02702# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -345,21 +373,23 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDispatchBase-None-02703# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDispatchBase-None-02704# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   If the
+-- -   #VUID-vkCmdDispatchBase-None-02705# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -367,7 +397,7 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If the
+-- -   #VUID-vkCmdDispatchBase-None-02706# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -375,46 +405,52 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+-- -   #VUID-vkCmdDispatchBase-commandBuffer-02707# If @commandBuffer@ is
+--     an unprotected command buffer, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdDispatchBase-None-04115# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdDispatchBase-OpImageWrite-04469# If a
+--     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdDispatchBase-SampledType-04470# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdDispatchBase-SampledType-04471# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdDispatchBase-SampledType-04472# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdDispatchBase-SampledType-04473# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If the
+-- -   #VUID-vkCmdDispatchBase-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
 --     created with the
@@ -423,7 +459,7 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   If the
+-- -   #VUID-vkCmdDispatchBase-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
 --     created with the
@@ -432,43 +468,53 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   @baseGroupX@ /must/ be less than
+-- -   #VUID-vkCmdDispatchBase-baseGroupX-00421# @baseGroupX@ /must/ be
+--     less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
 --
--- -   @baseGroupX@ /must/ be less than
+-- -   #VUID-vkCmdDispatchBase-baseGroupX-00422# @baseGroupX@ /must/ be
+--     less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
 --
--- -   @baseGroupZ@ /must/ be less than
+-- -   #VUID-vkCmdDispatchBase-baseGroupZ-00423# @baseGroupZ@ /must/ be
+--     less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
 --
--- -   @groupCountX@ /must/ be less than or equal to
+-- -   #VUID-vkCmdDispatchBase-groupCountX-00424# @groupCountX@ /must/ be
+--     less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
 --     minus @baseGroupX@
 --
--- -   @groupCountY@ /must/ be less than or equal to
+-- -   #VUID-vkCmdDispatchBase-groupCountY-00425# @groupCountY@ /must/ be
+--     less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
 --     minus @baseGroupY@
 --
--- -   @groupCountZ@ /must/ be less than or equal to
+-- -   #VUID-vkCmdDispatchBase-groupCountZ-00426# @groupCountZ@ /must/ be
+--     less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
 --     minus @baseGroupZ@
 --
--- -   If any of @baseGroupX@, @baseGroupY@, or @baseGroupZ@ are not zero,
---     then the bound compute pipeline /must/ have been created with the
+-- -   #VUID-vkCmdDispatchBase-baseGroupX-00427# If any of @baseGroupX@,
+--     @baseGroupY@, or @baseGroupZ@ are not zero, then the bound compute
+--     pipeline /must/ have been created with the
 --     'PIPELINE_CREATE_DISPATCH_BASE' flag
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
+-- -   #VUID-vkCmdDispatchBase-commandBuffer-parameter# @commandBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdDispatchBase-commandBuffer-recording# @commandBuffer@
+--     /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdDispatchBase-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support compute operations
 --
--- -   This command /must/ only be called outside of a render pass instance
+-- -   #VUID-vkCmdDispatchBase-renderpass# This command /must/ only be
+--     called outside of a render pass instance
 --
 -- == Host Synchronization
 --
@@ -558,20 +604,21 @@ pattern PIPELINE_CREATE_DISPATCH_BASE = PIPELINE_CREATE_DISPATCH_BASE_BIT
 --
 -- == Valid Usage
 --
--- -   If
+-- -   #VUID-VkMemoryAllocateFlagsInfo-deviceMask-00675# If
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_MASK_BIT'
 --     is set, @deviceMask@ /must/ be a valid device mask
 --
--- -   If
+-- -   #VUID-VkMemoryAllocateFlagsInfo-deviceMask-00676# If
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_MASK_BIT'
 --     is set, @deviceMask@ /must/ not be zero
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkMemoryAllocateFlagsInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO'
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkMemoryAllocateFlagsInfo-flags-parameter# @flags@ /must/ be a
+--     valid combination of
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MemoryAllocateFlagBits'
 --     values
 --
@@ -665,22 +712,28 @@ instance Zero MemoryAllocateFlagsInfo where
 --
 -- == Valid Usage
 --
--- -   @deviceMask@ /must/ be a valid device mask value
+-- -   #VUID-VkDeviceGroupRenderPassBeginInfo-deviceMask-00905#
+--     @deviceMask@ /must/ be a valid device mask value
 --
--- -   @deviceMask@ /must/ not be zero
+-- -   #VUID-VkDeviceGroupRenderPassBeginInfo-deviceMask-00906#
+--     @deviceMask@ /must/ not be zero
 --
--- -   @deviceMask@ /must/ be a subset of the command buffer’s initial
+-- -   #VUID-VkDeviceGroupRenderPassBeginInfo-deviceMask-00907#
+--     @deviceMask@ /must/ be a subset of the command buffer’s initial
 --     device mask
 --
--- -   @deviceRenderAreaCount@ /must/ either be zero or equal to the number
+-- -   #VUID-VkDeviceGroupRenderPassBeginInfo-deviceRenderAreaCount-00908#
+--     @deviceRenderAreaCount@ /must/ either be zero or equal to the number
 --     of physical devices in the logical device
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDeviceGroupRenderPassBeginInfo-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO'
 --
--- -   If @deviceRenderAreaCount@ is not @0@, @pDeviceRenderAreas@ /must/
+-- -   #VUID-VkDeviceGroupRenderPassBeginInfo-pDeviceRenderAreas-parameter#
+--     If @deviceRenderAreaCount@ is not @0@, @pDeviceRenderAreas@ /must/
 --     be a valid pointer to an array of @deviceRenderAreaCount@
 --     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
 --
@@ -751,17 +804,25 @@ instance Zero DeviceGroupRenderPassBeginInfo where
 -- buffer’s device mask is set to include all physical devices in the
 -- logical device when the command buffer begins recording.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkDeviceGroupCommandBufferBeginInfo-deviceMask-00106#
+--     @deviceMask@ /must/ be a valid device mask value
+--
+-- -   #VUID-VkDeviceGroupCommandBufferBeginInfo-deviceMask-00107#
+--     @deviceMask@ /must/ not be zero
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkDeviceGroupCommandBufferBeginInfo-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupCommandBufferBeginInfo = DeviceGroupCommandBufferBeginInfo
   { -- | @deviceMask@ is the initial value of the command buffer’s device mask.
-    --
-    -- @deviceMask@ /must/ be a valid device mask value
-    --
-    -- @deviceMask@ /must/ not be zero
     deviceMask :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -811,35 +872,42 @@ instance Zero DeviceGroupCommandBufferBeginInfo where
 --
 -- == Valid Usage
 --
--- -   @waitSemaphoreCount@ /must/ equal
+-- -   #VUID-VkDeviceGroupSubmitInfo-waitSemaphoreCount-00082#
+--     @waitSemaphoreCount@ /must/ equal
 --     'Vulkan.Core10.Queue.SubmitInfo'::@waitSemaphoreCount@
 --
--- -   @commandBufferCount@ /must/ equal
+-- -   #VUID-VkDeviceGroupSubmitInfo-commandBufferCount-00083#
+--     @commandBufferCount@ /must/ equal
 --     'Vulkan.Core10.Queue.SubmitInfo'::@commandBufferCount@
 --
--- -   @signalSemaphoreCount@ /must/ equal
+-- -   #VUID-VkDeviceGroupSubmitInfo-signalSemaphoreCount-00084#
+--     @signalSemaphoreCount@ /must/ equal
 --     'Vulkan.Core10.Queue.SubmitInfo'::@signalSemaphoreCount@
 --
--- -   All elements of @pWaitSemaphoreDeviceIndices@ and
+-- -   #VUID-VkDeviceGroupSubmitInfo-pWaitSemaphoreDeviceIndices-00085# All
+--     elements of @pWaitSemaphoreDeviceIndices@ and
 --     @pSignalSemaphoreDeviceIndices@ /must/ be valid device indices
 --
--- -   All elements of @pCommandBufferDeviceMasks@ /must/ be valid device
---     masks
+-- -   #VUID-VkDeviceGroupSubmitInfo-pCommandBufferDeviceMasks-00086# All
+--     elements of @pCommandBufferDeviceMasks@ /must/ be valid device masks
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDeviceGroupSubmitInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO'
 --
--- -   If @waitSemaphoreCount@ is not @0@, @pWaitSemaphoreDeviceIndices@
+-- -   #VUID-VkDeviceGroupSubmitInfo-pWaitSemaphoreDeviceIndices-parameter#
+--     If @waitSemaphoreCount@ is not @0@, @pWaitSemaphoreDeviceIndices@
 --     /must/ be a valid pointer to an array of @waitSemaphoreCount@
 --     @uint32_t@ values
 --
--- -   If @commandBufferCount@ is not @0@, @pCommandBufferDeviceMasks@
+-- -   #VUID-VkDeviceGroupSubmitInfo-pCommandBufferDeviceMasks-parameter#
+--     If @commandBufferCount@ is not @0@, @pCommandBufferDeviceMasks@
 --     /must/ be a valid pointer to an array of @commandBufferCount@
 --     @uint32_t@ values
 --
--- -   If @signalSemaphoreCount@ is not @0@,
+-- -   #VUID-VkDeviceGroupSubmitInfo-pSignalSemaphoreDeviceIndices-parameter#
+--     If @signalSemaphoreCount@ is not @0@,
 --     @pSignalSemaphoreDeviceIndices@ /must/ be a valid pointer to an
 --     array of @signalSemaphoreCount@ @uint32_t@ values
 --
@@ -940,15 +1008,17 @@ instance Zero DeviceGroupSubmitInfo where
 --
 -- == Valid Usage
 --
--- -   @resourceDeviceIndex@ and @memoryDeviceIndex@ /must/ both be valid
+-- -   #VUID-VkDeviceGroupBindSparseInfo-resourceDeviceIndex-01118#
+--     @resourceDeviceIndex@ and @memoryDeviceIndex@ /must/ both be valid
 --     device indices
 --
--- -   Each memory allocation bound in this batch /must/ have allocated an
+-- -   #VUID-VkDeviceGroupBindSparseInfo-memoryDeviceIndex-01119# Each
+--     memory allocation bound in this batch /must/ have allocated an
 --     instance for @memoryDeviceIndex@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDeviceGroupBindSparseInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO'
 --
 -- = See Also

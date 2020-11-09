@@ -37,6 +37,15 @@ import Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandl
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkExternalMemoryImageCreateInfoNV-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV'
+--
+-- -   #VUID-VkExternalMemoryImageCreateInfoNV-handleTypes-parameter#
+--     @handleTypes@ /must/ be a valid combination of
+--     'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
+--     values
+--
 -- = See Also
 --
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',
@@ -45,10 +54,6 @@ data ExternalMemoryImageCreateInfoNV = ExternalMemoryImageCreateInfoNV
   { -- | @handleTypes@ is a bitmask of
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
     -- specifying one or more external memory handle types.
-    --
-    -- @handleTypes@ /must/ be a valid combination of
-    -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
-    -- values
     handleTypes :: ExternalMemoryHandleTypeFlagsNV }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -92,6 +97,14 @@ instance Zero ExternalMemoryImageCreateInfoNV where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkExportMemoryAllocateInfoNV-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV'
+--
+-- -   #VUID-VkExportMemoryAllocateInfoNV-handleTypes-parameter#
+--     @handleTypes@ /must/ be a valid combination of
+--     'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
+--     values
+--
 -- = See Also
 --
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',
@@ -103,10 +116,6 @@ data ExportMemoryAllocateInfoNV = ExportMemoryAllocateInfoNV
     -- Multiple handle types /may/ be requested for the same allocation as long
     -- as they are compatible, as reported by
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.getPhysicalDeviceExternalImageFormatPropertiesNV'.
-    --
-    -- @handleTypes@ /must/ be a valid combination of
-    -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
-    -- values
     handleTypes :: ExternalMemoryHandleTypeFlagsNV }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

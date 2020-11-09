@@ -109,16 +109,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateAndroidSurfaceKHR-instance-parameter# @instance@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'AndroidSurfaceCreateInfoKHR' structure
+-- -   #VUID-vkCreateAndroidSurfaceKHR-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'AndroidSurfaceCreateInfoKHR'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateAndroidSurfaceKHR-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateAndroidSurfaceKHR-pSurface-parameter# @pSurface@
+--     /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Return Codes
@@ -171,7 +175,21 @@ createAndroidSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
 -- | VkAndroidSurfaceCreateInfoKHR - Structure specifying parameters of a
 -- newly created Android surface object
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkAndroidSurfaceCreateInfoKHR-window-01248# @window@ /must/
+--     point to a valid Android 'ANativeWindow'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkAndroidSurfaceCreateInfoKHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR'
+--
+-- -   #VUID-VkAndroidSurfaceCreateInfoKHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
+--
+-- -   #VUID-VkAndroidSurfaceCreateInfoKHR-flags-zerobitmask# @flags@
+--     /must/ be @0@
 --
 -- = See Also
 --
@@ -180,13 +198,9 @@ createAndroidSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
 -- 'createAndroidSurfaceKHR'
 data AndroidSurfaceCreateInfoKHR = AndroidSurfaceCreateInfoKHR
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: AndroidSurfaceCreateFlagsKHR
   , -- | @window@ is a pointer to the 'ANativeWindow' to associate the surface
     -- with.
-    --
-    -- @window@ /must/ point to a valid Android 'ANativeWindow'
     window :: Ptr ANativeWindow
   }
   deriving (Typeable, Eq)

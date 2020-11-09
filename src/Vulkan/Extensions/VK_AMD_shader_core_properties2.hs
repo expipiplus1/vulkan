@@ -52,6 +52,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #features-shaderCoreFeatures# @shaderCoreFeatures@ is a bitmask of
+--     'ShaderCorePropertiesFlagBitsAMD' indicating the set of features
+--     supported by the shader core.
+--
+-- -   #limits-activeComputeUnitCount# @activeComputeUnitCount@ is an
+--     unsigned integer value indicating the number of compute units that
+--     have been enabled.
+--
 -- If the 'PhysicalDeviceShaderCoreProperties2AMD' structure is included in
 -- the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -59,16 +72,18 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceShaderCoreProperties2AMD-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD'
+--
 -- = See Also
 --
 -- 'ShaderCorePropertiesFlagsAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderCoreProperties2AMD = PhysicalDeviceShaderCoreProperties2AMD
-  { -- | @shaderCoreFeatures@ is a bitmask of 'ShaderCorePropertiesFlagBitsAMD'
-    -- indicating the set of features supported by the shader core.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderCoreProperties2AMD" "shaderCoreFeatures"
     shaderCoreFeatures :: ShaderCorePropertiesFlagsAMD
-  , -- | @activeComputeUnitCount@ is an unsigned integer value indicating the
-    -- number of compute units that have been enabled.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCoreProperties2AMD" "activeComputeUnitCount"
     activeComputeUnitCount :: Word32
   }
   deriving (Typeable, Eq)

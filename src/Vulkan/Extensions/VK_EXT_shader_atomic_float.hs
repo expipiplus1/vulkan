@@ -31,53 +31,94 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- | VkPhysicalDeviceShaderAtomicFloatFeaturesEXT - Structure describing
 -- features supported by VK_EXT_shader_atomic_float
 --
+-- = Description
+--
+-- -   #features-shaderBufferFloat32Atomics# @shaderBufferFloat32Atomics@
+--     indicates whether shaders /can/ perform 32-bit floating-point load,
+--     store and exchange atomic operations on storage buffers.
+--
+-- -   #features-shaderBufferFloat32AtomicAdd#
+--     @shaderBufferFloat32AtomicAdd@ indicates whether shaders /can/
+--     perform 32-bit floating-point add atomic operations on storage
+--     buffers.
+--
+-- -   #features-shaderBufferFloat64Atomics# @shaderBufferFloat64Atomics@
+--     indicates whether shaders /can/ perform 64-bit floating-point load,
+--     store and exchange atomic operations on storage buffers.
+--
+-- -   #features-shaderBufferFloat64AtomicAdd#
+--     @shaderBufferFloat64AtomicAdd@ indicates whether shaders /can/
+--     perform 64-bit floating-point add atomic operations on storage
+--     buffers.
+--
+-- -   #features-shaderSharedFloat32Atomics# @shaderSharedFloat32Atomics@
+--     indicates whether shaders /can/ perform 32-bit floating-point load,
+--     store and exchange atomic operations on shared memory.
+--
+-- -   #features-shaderSharedFloat32AtomicAdd#
+--     @shaderSharedFloat32AtomicAdd@ indicates whether shaders /can/
+--     perform 32-bit floating-point add atomic operations on shared
+--     memory.
+--
+-- -   #features-shaderSharedFloat64Atomics# @shaderSharedFloat64Atomics@
+--     indicates whether shaders /can/ perform 64-bit floating-point load,
+--     store and exchange atomic operations on shared memory.
+--
+-- -   #features-shaderSharedFloat64AtomicAdd#
+--     @shaderSharedFloat64AtomicAdd@ indicates whether shaders /can/
+--     perform 64-bit floating-point add atomic operations on shared
+--     memory.
+--
+-- -   #features-shaderImageFloat32Atomics# @shaderImageFloat32Atomics@
+--     indicates whether shaders /can/ perform 32-bit floating-point load,
+--     store and exchange atomic image operations.
+--
+-- -   #features-shaderImageFloat32AtomicAdd# @shaderImageFloat32AtomicAdd@
+--     indicates whether shaders /can/ perform 32-bit floating-point add
+--     atomic image operations.
+--
+-- -   #features-sparseImageFloat32Atomics# @sparseImageFloat32Atomics@
+--     indicates whether 32-bit floating-point load, store and exchange
+--     atomic operations /can/ be used on sparse images.
+--
+-- -   #features-sparseImageFloat32AtomicAdd# @sparseImageFloat32AtomicAdd@
+--     indicates whether 32-bit floating-point add atomic operations /can/
+--     be used on sparse images.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceShaderAtomicFloatFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderAtomicFloatFeaturesEXT = PhysicalDeviceShaderAtomicFloatFeaturesEXT
-  { -- | @shaderBufferFloat32Atomics@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point load, store and exchange atomic operations on
-    -- storage buffers.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "shaderBufferFloat32Atomics"
     shaderBufferFloat32Atomics :: Bool
-  , -- | @shaderBufferFloat32AtomicAdd@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point add atomic operations on storage buffers.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "shaderBufferFloat32AtomicAdd"
     shaderBufferFloat32AtomicAdd :: Bool
-  , -- | @shaderBufferFloat64Atomics@ indicates whether shaders /can/ perform
-    -- 64-bit floating-point load, store and exchange atomic operations on
-    -- storage buffers.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "shaderBufferFloat64Atomics"
     shaderBufferFloat64Atomics :: Bool
-  , -- | @shaderBufferFloat64AtomicAdd@ indicates whether shaders /can/ perform
-    -- 64-bit floating-point add atomic operations on storage buffers.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "shaderBufferFloat64AtomicAdd"
     shaderBufferFloat64AtomicAdd :: Bool
-  , -- | @shaderSharedFloat32Atomics@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point load, store and exchange atomic operations on
-    -- shared memory.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "shaderSharedFloat32Atomics"
     shaderSharedFloat32Atomics :: Bool
-  , -- | @shaderSharedFloat32AtomicAdd@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point add atomic operations on shared memory.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "shaderSharedFloat32AtomicAdd"
     shaderSharedFloat32AtomicAdd :: Bool
-  , -- | @shaderSharedFloat64Atomics@ indicates whether shaders /can/ perform
-    -- 64-bit floating-point load, store and exchange atomic operations on
-    -- shared memory.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "shaderSharedFloat64Atomics"
     shaderSharedFloat64Atomics :: Bool
-  , -- | @shaderSharedFloat64AtomicAdd@ indicates whether shaders /can/ perform
-    -- 64-bit floating-point add atomic operations on shared memory.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "shaderSharedFloat64AtomicAdd"
     shaderSharedFloat64AtomicAdd :: Bool
-  , -- | @shaderImageFloat32Atomics@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point load, store and exchange atomic image operations.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "shaderImageFloat32Atomics"
     shaderImageFloat32Atomics :: Bool
-  , -- | @shaderImageFloat32AtomicAdd@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point add atomic image operations.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "shaderImageFloat32AtomicAdd"
     shaderImageFloat32AtomicAdd :: Bool
-  , -- | @sparseImageFloat32Atomics@ indicates whether 32-bit floating-point
-    -- load, store and exchange atomic operations /can/ be used on sparse
-    -- images.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "sparseImageFloat32Atomics"
     sparseImageFloat32Atomics :: Bool
-  , -- | @sparseImageFloat32AtomicAdd@ indicates whether 32-bit floating-point
-    -- add atomic operations /can/ be used on sparse images.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT" "sparseImageFloat32AtomicAdd"
     sparseImageFloat32AtomicAdd :: Bool
   }
   deriving (Typeable, Eq)

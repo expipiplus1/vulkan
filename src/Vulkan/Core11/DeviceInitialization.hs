@@ -49,6 +49,11 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY' in the case of a
 -- failed memory allocation.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkEnumerateInstanceVersion-pApiVersion-parameter#
+--     @pApiVersion@ /must/ be a valid pointer to a @uint32_t@ value
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]

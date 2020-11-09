@@ -61,14 +61,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetSwapchainStatusKHR-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @swapchain@ /must/ be a valid
---     'Vulkan.Extensions.Handles.SwapchainKHR' handle
+-- -   #VUID-vkGetSwapchainStatusKHR-swapchain-parameter# @swapchain@
+--     /must/ be a valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   Both of @device@, and @swapchain@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetSwapchainStatusKHR-commonparent# Both of @device@, and
+--     @swapchain@ /must/ have been created, allocated, or retrieved from
+--     the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -120,6 +121,10 @@ getSwapchainStatusKHR device swapchain = liftIO $ do
 -- capabilities of a surface for shared presentation
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkSharedPresentSurfaceCapabilitiesKHR-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR'
 --
 -- = See Also
 --

@@ -52,20 +52,25 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage
 --
--- -   @binding@ /must/ be less than
+-- -   #VUID-VkVertexInputBindingDivisorDescriptionEXT-binding-01869#
+--     @binding@ /must/ be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
 --
--- -   If the @vertexAttributeInstanceRateZeroDivisor@ feature is not
+-- -   #VUID-VkVertexInputBindingDivisorDescriptionEXT-vertexAttributeInstanceRateZeroDivisor-02228#
+--     If the @vertexAttributeInstanceRateZeroDivisor@ feature is not
 --     enabled, @divisor@ /must/ not be @0@
 --
--- -   If the @vertexAttributeInstanceRateDivisor@ feature is not enabled,
+-- -   #VUID-VkVertexInputBindingDivisorDescriptionEXT-vertexAttributeInstanceRateDivisor-02229#
+--     If the @vertexAttributeInstanceRateDivisor@ feature is not enabled,
 --     @divisor@ /must/ be @1@
 --
--- -   @divisor@ /must/ be a value between @0@ and
+-- -   #VUID-VkVertexInputBindingDivisorDescriptionEXT-divisor-01870#
+--     @divisor@ /must/ be a value between @0@ and
 --     'PhysicalDeviceVertexAttributeDivisorPropertiesEXT'::@maxVertexAttribDivisor@,
 --     inclusive
 --
--- -   'Vulkan.Core10.Pipeline.VertexInputBindingDescription'::@inputRate@
+-- -   #VUID-VkVertexInputBindingDivisorDescriptionEXT-inputRate-01871#
+--     'Vulkan.Core10.Pipeline.VertexInputBindingDescription'::@inputRate@
 --     /must/ be of type
 --     'Vulkan.Core10.Enums.VertexInputRate.VERTEX_INPUT_RATE_INSTANCE' for
 --     this @binding@
@@ -132,6 +137,18 @@ instance Zero VertexInputBindingDivisorDescriptionEXT where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPipelineVertexInputDivisorStateCreateInfoEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT'
+--
+-- -   #VUID-VkPipelineVertexInputDivisorStateCreateInfoEXT-pVertexBindingDivisors-parameter#
+--     @pVertexBindingDivisors@ /must/ be a valid pointer to an array of
+--     @vertexBindingDivisorCount@
+--     'VertexInputBindingDivisorDescriptionEXT' structures
+--
+-- -   #VUID-VkPipelineVertexInputDivisorStateCreateInfoEXT-vertexBindingDivisorCount-arraylength#
+--     @vertexBindingDivisorCount@ /must/ be greater than @0@
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -140,10 +157,6 @@ data PipelineVertexInputDivisorStateCreateInfoEXT = PipelineVertexInputDivisorSt
   { -- | @pVertexBindingDivisors@ is a pointer to an array of
     -- 'VertexInputBindingDivisorDescriptionEXT' structures, which specifies
     -- the divisor value for each binding.
-    --
-    -- @pVertexBindingDivisors@ /must/ be a valid pointer to an array of
-    -- @vertexBindingDivisorCount@ 'VertexInputBindingDivisorDescriptionEXT'
-    -- structures
     vertexBindingDivisors :: Vector VertexInputBindingDivisorDescriptionEXT }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -195,6 +208,15 @@ instance Zero PipelineVertexInputDivisorStateCreateInfoEXT where
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #limits-maxVertexAttribDivisor# @maxVertexAttribDivisor@ is the
+--     maximum value of the number of instances that will repeat the value
+--     of vertex attribute data when instanced rendering is enabled.
+--
 -- If the 'PhysicalDeviceVertexAttributeDivisorPropertiesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -202,13 +224,15 @@ instance Zero PipelineVertexInputDivisorStateCreateInfoEXT where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVertexAttributeDivisorPropertiesEXT = PhysicalDeviceVertexAttributeDivisorPropertiesEXT
-  { -- | @maxVertexAttribDivisor@ is the maximum value of the number of instances
-    -- that will repeat the value of vertex attribute data when instanced
-    -- rendering is enabled.
+  { -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "maxVertexAttribDivisor"
     maxVertexAttribDivisor :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -251,6 +275,22 @@ instance Zero PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
 -- | VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT - Structure describing
 -- if fetching of vertex attribute may be repeated for instanced rendering
 --
+-- = Members
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #features-vertexAttributeInstanceRateDivisor#
+--     @vertexAttributeInstanceRateDivisor@ specifies whether vertex
+--     attribute fetching may be repeated in case of instanced rendering.
+--
+-- -   #features-vertexAttributeInstanceRateZeroDivisor#
+--     @vertexAttributeInstanceRateZeroDivisor@ specifies whether a zero
+--     value for 'VertexInputBindingDivisorDescriptionEXT'::@divisor@ is
+--     supported.
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceVertexAttributeDivisorFeaturesEXT' structure is
@@ -263,16 +303,18 @@ instance Zero PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVertexAttributeDivisorFeaturesEXT = PhysicalDeviceVertexAttributeDivisorFeaturesEXT
-  { -- | @vertexAttributeInstanceRateDivisor@ specifies whether vertex attribute
-    -- fetching may be repeated in case of instanced rendering.
+  { -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT" "vertexAttributeInstanceRateDivisor"
     vertexAttributeInstanceRateDivisor :: Bool
-  , -- | @vertexAttributeInstanceRateZeroDivisor@ specifies whether a zero value
-    -- for 'VertexInputBindingDivisorDescriptionEXT'::@divisor@ is supported.
+  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT" "vertexAttributeInstanceRateZeroDivisor"
     vertexAttributeInstanceRateZeroDivisor :: Bool
   }
   deriving (Typeable, Eq)

@@ -32,16 +32,17 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage
 --
--- -   The bits in @handleTypes@ /must/ be supported and compatible, as
---     reported by
+-- -   #VUID-VkExportFenceCreateInfo-handleTypes-01446# The bits in
+--     @handleTypes@ /must/ be supported and compatible, as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.ExternalFenceProperties'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkExportFenceCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO'
 --
--- -   @handleTypes@ /must/ be a valid combination of
+-- -   #VUID-VkExportFenceCreateInfo-handleTypes-parameter# @handleTypes@
+--     /must/ be a valid combination of
 --     'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
 --     values
 --

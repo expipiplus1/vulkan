@@ -179,16 +179,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pCounterCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR-pCounterCount-parameter#
+--     @pCounterCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pCounterCount@ is not @0@, and
+-- -   #VUID-vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR-pCounters-parameter#
+--     If the value referenced by @pCounterCount@ is not @0@, and
 --     @pCounters@ is not @NULL@, @pCounters@ /must/ be a valid pointer to
 --     an array of @pCounterCount@ 'PerformanceCounterKHR' structures
 --
--- -   If the value referenced by @pCounterCount@ is not @0@, and
+-- -   #VUID-vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR-pCounterDescriptions-parameter#
+--     If the value referenced by @pCounterCount@ is not @0@, and
 --     @pCounterDescriptions@ is not @NULL@, @pCounterDescriptions@ /must/
 --     be a valid pointer to an array of @pCounterCount@
 --     'PerformanceCounterDescriptionKHR' structures
@@ -266,6 +270,17 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PhysicalDevice' handle
+--
+-- -   #VUID-vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR-pPerformanceQueryCreateInfo-parameter#
+--     @pPerformanceQueryCreateInfo@ /must/ be a valid pointer to a valid
+--     'QueryPoolPerformanceCreateInfoKHR' structure
+--
+-- -   #VUID-vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR-pNumPasses-parameter#
+--     @pNumPasses@ /must/ be a valid pointer to a @uint32_t@ value
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
@@ -274,16 +289,10 @@ getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io
                                                        . (MonadIO io)
                                                       => -- | @physicalDevice@ is the handle to the physical device whose queue family
                                                          -- performance query counter properties will be queried.
-                                                         --
-                                                         -- @physicalDevice@ /must/ be a valid
-                                                         -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                                          PhysicalDevice
                                                       -> -- | @pPerformanceQueryCreateInfo@ is a pointer to a
                                                          -- 'QueryPoolPerformanceCreateInfoKHR' of the performance query that is to
                                                          -- be created.
-                                                         --
-                                                         -- @pPerformanceQueryCreateInfo@ /must/ be a valid pointer to a valid
-                                                         -- 'QueryPoolPerformanceCreateInfoKHR' structure
                                                          ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR)
                                                       -> io (("numPasses" ::: Word32))
 getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performanceQueryCreateInfo = liftIO . evalContT $ do
@@ -312,6 +321,14 @@ foreign import ccall
 -- Implementations /may/ allow multiple actors to hold the profiling lock
 -- concurrently.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkAcquireProfilingLockKHR-device-parameter# @device@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkAcquireProfilingLockKHR-pInfo-parameter# @pInfo@ /must/ be a
+--     valid pointer to a valid 'AcquireProfilingLockInfoKHR' structure
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -330,14 +347,9 @@ foreign import ccall
 acquireProfilingLockKHR :: forall io
                          . (MonadIO io)
                         => -- | @device@ is the logical device to profile.
-                           --
-                           -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                            Device
                         -> -- | @pInfo@ is a pointer to a 'AcquireProfilingLockInfoKHR' structure which
                            -- contains information about how the profiling is to be acquired.
-                           --
-                           -- @pInfo@ /must/ be a valid pointer to a valid
-                           -- 'AcquireProfilingLockInfoKHR' structure
                            AcquireProfilingLockInfoKHR
                         -> io ()
 acquireProfilingLockKHR device info = liftIO . evalContT $ do
@@ -361,12 +373,14 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The profiling lock of @device@ /must/ have been held via a previous
---     successful call to 'acquireProfilingLockKHR'
+-- -   #VUID-vkReleaseProfilingLockKHR-device-03235# The profiling lock of
+--     @device@ /must/ have been held via a previous successful call to
+--     'acquireProfilingLockKHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkReleaseProfilingLockKHR-device-parameter# @device@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Device' handle
 --
 -- = See Also
 --
@@ -408,19 +422,37 @@ pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR = PERFORMANCE_
 -- | VkPhysicalDevicePerformanceQueryFeaturesKHR - Structure describing
 -- performance query support for an implementation
 --
+-- = Members
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #features-performanceCounterQueryPools#
+--     @performanceCounterQueryPools@ indicates whether the implementation
+--     supports performance counter query pools.
+--
+-- -   #features-performanceCounterMultipleQueryPools#
+--     @performanceCounterMultipleQueryPools@ indicates whether the
+--     implementation supports using multiple performance query pools in a
+--     primary command buffer and secondary command buffers executed within
+--     it.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDevicePerformanceQueryFeaturesKHR-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_FEATURES_KHR'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePerformanceQueryFeaturesKHR = PhysicalDevicePerformanceQueryFeaturesKHR
-  { -- | @performanceCounterQueryPools@ indicates whether the implementation
-    -- supports performance counter query pools.
+  { -- No documentation found for Nested "VkPhysicalDevicePerformanceQueryFeaturesKHR" "performanceCounterQueryPools"
     performanceCounterQueryPools :: Bool
-  , -- | @performanceCounterMultipleQueryPools@ indicates whether the
-    -- implementation supports using multiple performance query pools in a
-    -- primary command buffer and secondary command buffers executed within it.
+  , -- No documentation found for Nested "VkPhysicalDevicePerformanceQueryFeaturesKHR" "performanceCounterMultipleQueryPools"
     performanceCounterMultipleQueryPools :: Bool
   }
   deriving (Typeable, Eq)
@@ -473,7 +505,23 @@ instance Zero PhysicalDevicePerformanceQueryFeaturesKHR where
 -- The members of the 'PhysicalDevicePerformanceQueryPropertiesKHR'
 -- structure describe the following implementation-dependent properties:
 --
+-- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   @allowCommandBufferQueryCopies@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' if the performance query pools
+--     are allowed to be used with
+--     'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults'.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDevicePerformanceQueryPropertiesKHR-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_PROPERTIES_KHR'
 --
 -- If the 'PhysicalDevicePerformanceQueryPropertiesKHR' structure is
 -- included in the @pNext@ chain of
@@ -485,9 +533,7 @@ instance Zero PhysicalDevicePerformanceQueryFeaturesKHR where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePerformanceQueryPropertiesKHR = PhysicalDevicePerformanceQueryPropertiesKHR
-  { -- | @allowCommandBufferQueryCopies@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
-    -- if the performance query pools are allowed to be used with
-    -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults'.
+  { -- No documentation found for Nested "VkPhysicalDevicePerformanceQueryPropertiesKHR" "allowCommandBufferQueryCopies"
     allowCommandBufferQueryCopies :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -531,6 +577,11 @@ instance Zero PhysicalDevicePerformanceQueryPropertiesKHR where
 -- counter
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPerformanceCounterKHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_COUNTER_KHR'
+--
+-- -   #VUID-VkPerformanceCounterKHR-pNext-pNext# @pNext@ /must/ be @NULL@
 --
 -- = See Also
 --
@@ -608,6 +659,13 @@ instance Zero PerformanceCounterKHR where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPerformanceCounterDescriptionKHR-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_KHR'
+--
+-- -   #VUID-VkPerformanceCounterDescriptionKHR-pNext-pNext# @pNext@ /must/
+--     be @NULL@
+--
 -- = See Also
 --
 -- 'PerformanceCounterDescriptionFlagsKHR',
@@ -684,27 +742,33 @@ instance Zero PerformanceCounterDescriptionKHR where
 --
 -- == Valid Usage
 --
--- -   @queueFamilyIndex@ /must/ be a valid queue family index of the
+-- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-queueFamilyIndex-03236#
+--     @queueFamilyIndex@ /must/ be a valid queue family index of the
 --     device
 --
--- -   The
+-- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-performanceCounterQueryPools-03237#
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-performanceCounterQueryPools performanceCounterQueryPools>
 --     feature /must/ be enabled
 --
--- -   Each element of @pCounterIndices@ /must/ be in the range of counters
+-- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-pCounterIndices-03321#
+--     Each element of @pCounterIndices@ /must/ be in the range of counters
 --     reported by
 --     'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' for
 --     the queue family specified in @queueFamilyIndex@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_CREATE_INFO_KHR'
 --
--- -   @pCounterIndices@ /must/ be a valid pointer to an array of
+-- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-pCounterIndices-parameter#
+--     @pCounterIndices@ /must/ be a valid pointer to an array of
 --     @counterIndexCount@ @uint32_t@ values
 --
--- -   @counterIndexCount@ /must/ be greater than @0@
+-- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-counterIndexCount-arraylength#
+--     @counterIndexCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -767,6 +831,15 @@ instance Zero QueryPoolPerformanceCreateInfoKHR where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkAcquireProfilingLockInfoKHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACQUIRE_PROFILING_LOCK_INFO_KHR'
+--
+-- -   #VUID-VkAcquireProfilingLockInfoKHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
+--
+-- -   #VUID-VkAcquireProfilingLockInfoKHR-flags-zerobitmask# @flags@
+--     /must/ be @0@
+--
 -- If @timeout@ is 0, 'acquireProfilingLockKHR' will not block while
 -- attempting to acquire the profling lock. If @timeout@ is @UINT64_MAX@,
 -- the function will not return until the profiling lock was acquired.
@@ -778,8 +851,6 @@ instance Zero QueryPoolPerformanceCreateInfoKHR where
 -- 'acquireProfilingLockKHR'
 data AcquireProfilingLockInfoKHR = AcquireProfilingLockInfoKHR
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: AcquireProfilingLockFlagsKHR
   , -- | @timeout@ indicates how long the function waits, in nanoseconds, if the
     -- profiling lock is not available.
@@ -834,18 +905,24 @@ instance Zero AcquireProfilingLockInfoKHR where
 -- If the 'Vulkan.Core10.Queue.SubmitInfo'::@pNext@ chain does not include
 -- this structure, the batch defaults to use counter pass index 0.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkPerformanceQuerySubmitInfoKHR-counterPassIndex-03221#
+--     @counterPassIndex@ /must/ be less than the number of counter passes
+--     required by any queries within the batch. The required number of
+--     counter passes for a performance query is obtained by calling
+--     'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPerformanceQuerySubmitInfoKHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PerformanceQuerySubmitInfoKHR = PerformanceQuerySubmitInfoKHR
   { -- | @counterPassIndex@ specifies which counter pass index is active.
-    --
-    -- @counterPassIndex@ /must/ be less than the number of counter passes
-    -- required by any queries within the batch. The required number of counter
-    -- passes for a performance query is obtained by calling
-    -- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
     counterPassIndex :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

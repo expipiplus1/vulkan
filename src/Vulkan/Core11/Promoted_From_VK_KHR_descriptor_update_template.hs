@@ -93,16 +93,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateDescriptorUpdateTemplate-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateDescriptorUpdateTemplate-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'DescriptorUpdateTemplateCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateDescriptorUpdateTemplate-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pDescriptorUpdateTemplate@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateDescriptorUpdateTemplate-pDescriptorUpdateTemplate-parameter#
+--     @pDescriptorUpdateTemplate@ /must/ be a valid pointer to a
 --     'Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle
 --
 -- == Return Codes
@@ -179,28 +183,34 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDescriptorUpdateTemplate-descriptorSetLayout-00356#
+--     If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @descriptorSetLayout@ was created, a compatible set of
 --     callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDescriptorUpdateTemplate-descriptorSetLayout-00357#
+--     If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @descriptorSetLayout@ was created, @pAllocator@ /must/
 --     be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyDescriptorUpdateTemplate-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @descriptorUpdateTemplate@ is not
+-- -   #VUID-vkDestroyDescriptorUpdateTemplate-descriptorUpdateTemplate-parameter#
+--     If @descriptorUpdateTemplate@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @descriptorUpdateTemplate@
 --     /must/ be a valid 'Vulkan.Core11.Handles.DescriptorUpdateTemplate'
 --     handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkDestroyDescriptorUpdateTemplate-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @descriptorUpdateTemplate@ is a valid handle, it /must/ have been
+-- -   #VUID-vkDestroyDescriptorUpdateTemplate-descriptorUpdateTemplate-parent#
+--     If @descriptorUpdateTemplate@ is a valid handle, it /must/ have been
 --     created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
@@ -249,9 +259,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @pData@ /must/ be a valid pointer to a memory containing one or more
---     valid instances of
---     'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
+-- -   #VUID-vkUpdateDescriptorSetWithTemplate-pData-01685# @pData@ /must/
+--     be a valid pointer to a memory containing one or more valid
+--     instances of 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
 --     'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
 --     'Vulkan.Core10.Handles.BufferView' in a layout defined by
 --     @descriptorUpdateTemplate@ when it was created with
@@ -259,15 +269,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkUpdateDescriptorSetWithTemplate-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @descriptorSet@ /must/ be a valid
+-- -   #VUID-vkUpdateDescriptorSetWithTemplate-descriptorSet-parameter#
+--     @descriptorSet@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DescriptorSet' handle
 --
--- -   @descriptorUpdateTemplate@ /must/ be a valid
+-- -   #VUID-vkUpdateDescriptorSetWithTemplate-descriptorUpdateTemplate-parameter#
+--     @descriptorUpdateTemplate@ /must/ be a valid
 --     'Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle
 --
--- -   @descriptorUpdateTemplate@ /must/ have been created, allocated, or
+-- -   #VUID-vkUpdateDescriptorSetWithTemplate-descriptorUpdateTemplate-parent#
+--     @descriptorUpdateTemplate@ /must/ have been created, allocated, or
 --     retrieved from @device@
 --
 -- == Host Synchronization
@@ -390,28 +404,33 @@ updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate da
 --
 -- == Valid Usage
 --
--- -   @dstBinding@ /must/ be a valid binding in the descriptor set layout
---     implicitly specified when using a descriptor update template to
---     update descriptors
+-- -   #VUID-VkDescriptorUpdateTemplateEntry-dstBinding-00354# @dstBinding@
+--     /must/ be a valid binding in the descriptor set layout implicitly
+--     specified when using a descriptor update template to update
+--     descriptors
 --
--- -   @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
+-- -   #VUID-VkDescriptorUpdateTemplateEntry-dstArrayElement-00355#
+--     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding
 --     implicitly specified when using a descriptor update template to
 --     update descriptors, and all applicable consecutive bindings, as
 --     described by
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
 --
--- -   If @descriptor@ type is
+-- -   #VUID-VkDescriptorUpdateTemplateEntry-descriptor-02226# If
+--     @descriptor@ type is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     @dstArrayElement@ /must/ be an integer multiple of @4@
 --
--- -   If @descriptor@ type is
+-- -   #VUID-VkDescriptorUpdateTemplateEntry-descriptor-02227# If
+--     @descriptor@ type is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     @descriptorCount@ /must/ be an integer multiple of @4@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @descriptorType@ /must/ be a valid
+-- -   #VUID-VkDescriptorUpdateTemplateEntry-descriptorType-parameter#
+--     @descriptorType@ /must/ be a valid
 --     'Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
 --
 -- = See Also
@@ -520,22 +539,26 @@ instance Zero DescriptorUpdateTemplateEntry where
 --
 -- == Valid Usage
 --
--- -   If @templateType@ is
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-templateType-00350# If
+--     @templateType@ is
 --     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET',
 --     @descriptorSetLayout@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' handle
 --
--- -   If @templateType@ is
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-templateType-00351# If
+--     @templateType@ is
 --     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR',
 --     @pipelineBindPoint@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
 --
--- -   If @templateType@ is
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-templateType-00352# If
+--     @templateType@ is
 --     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR',
 --     @pipelineLayout@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PipelineLayout' handle
 --
--- -   If @templateType@ is
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-templateType-00353# If
+--     @templateType@ is
 --     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR',
 --     @set@ /must/ be the unique set number in the pipeline layout that
 --     uses a descriptor set layout that was created with
@@ -543,26 +566,33 @@ instance Zero DescriptorUpdateTemplateEntry where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-pNext-pNext# @pNext@
+--     /must/ be @NULL@
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-flags-zerobitmask#
+--     @flags@ /must/ be @0@
 --
--- -   @pDescriptorUpdateEntries@ /must/ be a valid pointer to an array of
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-pDescriptorUpdateEntries-parameter#
+--     @pDescriptorUpdateEntries@ /must/ be a valid pointer to an array of
 --     @descriptorUpdateEntryCount@ valid 'DescriptorUpdateTemplateEntry'
 --     structures
 --
--- -   @templateType@ /must/ be a valid
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-templateType-parameter#
+--     @templateType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DescriptorUpdateTemplateType'
 --     value
 --
--- -   @descriptorUpdateEntryCount@ /must/ be greater than @0@
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-descriptorUpdateEntryCount-arraylength#
+--     @descriptorUpdateEntryCount@ /must/ be greater than @0@
 --
--- -   Both of @descriptorSetLayout@, and @pipelineLayout@ that are valid
---     handles of non-ignored parameters /must/ have been created,
---     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-commonparent# Both of
+--     @descriptorSetLayout@, and @pipelineLayout@ that are valid handles
+--     of non-ignored parameters /must/ have been created, allocated, or
+--     retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --

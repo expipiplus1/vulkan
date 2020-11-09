@@ -94,17 +94,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateXcbSurfaceKHR-instance-parameter# @instance@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'XcbSurfaceCreateInfoKHR' structure
+-- -   #VUID-vkCreateXcbSurfaceKHR-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'XcbSurfaceCreateInfoKHR'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateXcbSurfaceKHR-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+-- -   #VUID-vkCreateXcbSurfaceKHR-pSurface-parameter# @pSurface@ /must/ be
+--     a valid pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Return Codes
 --
@@ -166,7 +168,23 @@ foreign import ccall
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetPhysicalDeviceXcbPresentationSupportKHR-queueFamilyIndex-01312#
+--     @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+--     returned by
+--     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
+--     for the given @physicalDevice@
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetPhysicalDeviceXcbPresentationSupportKHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PhysicalDevice' handle
+--
+-- -   #VUID-vkGetPhysicalDeviceXcbPresentationSupportKHR-connection-parameter#
+--     @connection@ /must/ be a valid pointer to an @xcb_connection_t@
+--     value
 --
 -- = See Also
 --
@@ -174,20 +192,10 @@ foreign import ccall
 getPhysicalDeviceXcbPresentationSupportKHR :: forall io
                                             . (MonadIO io)
                                            => -- | @physicalDevice@ is the physical device.
-                                              --
-                                              -- @physicalDevice@ /must/ be a valid
-                                              -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                               PhysicalDevice
                                            -> -- | @queueFamilyIndex@ is the queue family index.
-                                              --
-                                              -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
-                                              -- returned by
-                                              -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
-                                              -- for the given @physicalDevice@
                                               ("queueFamilyIndex" ::: Word32)
                                            -> -- | @connection@ is a pointer to an @xcb_connection_t@ to the X server.
-                                              --
-                                              -- @connection@ /must/ be a valid pointer to an @xcb_connection_t@ value
                                               (Ptr Xcb_connection_t)
                                            -> -- | @visual_id@ is an X11 visual (@xcb_visualid_t@).
                                               ("visual_id" ::: Xcb_visualid_t)
@@ -204,7 +212,24 @@ getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex conne
 -- | VkXcbSurfaceCreateInfoKHR - Structure specifying parameters of a newly
 -- created Xcb surface object
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkXcbSurfaceCreateInfoKHR-connection-01310# @connection@
+--     /must/ point to a valid X11 @xcb_connection_t@
+--
+-- -   #VUID-VkXcbSurfaceCreateInfoKHR-window-01311# @window@ /must/ be a
+--     valid X11 @xcb_window_t@
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkXcbSurfaceCreateInfoKHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR'
+--
+-- -   #VUID-VkXcbSurfaceCreateInfoKHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
+--
+-- -   #VUID-VkXcbSurfaceCreateInfoKHR-flags-zerobitmask# @flags@ /must/ be
+--     @0@
 --
 -- = See Also
 --
@@ -212,17 +237,11 @@ getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex conne
 -- 'XcbSurfaceCreateFlagsKHR', 'createXcbSurfaceKHR'
 data XcbSurfaceCreateInfoKHR = XcbSurfaceCreateInfoKHR
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: XcbSurfaceCreateFlagsKHR
   , -- | @connection@ is a pointer to an @xcb_connection_t@ to the X server.
-    --
-    -- @connection@ /must/ point to a valid X11 @xcb_connection_t@
     connection :: Ptr Xcb_connection_t
   , -- | @window@ is the @xcb_window_t@ for the X11 window to associate the
     -- surface with.
-    --
-    -- @window@ /must/ be a valid X11 @xcb_window_t@
     window :: Xcb_window_t
   }
   deriving (Typeable, Eq)

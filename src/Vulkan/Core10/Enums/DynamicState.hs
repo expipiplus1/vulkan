@@ -224,8 +224,12 @@ pattern DYNAMIC_STATE_CULL_MODE_EXT = DynamicState 1000267000
 pattern DYNAMIC_STATE_LINE_STIPPLE_EXT = DynamicState 1000259000
 -- | 'DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR' specifies that state in
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'
+-- and
+-- 'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV'
 -- will be ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.cmdSetFragmentShadingRateKHR'
+-- or
+-- 'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.cmdSetFragmentShadingRateEnumNV'
 -- before any draw commands.
 pattern DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR = DynamicState 1000226000
 -- | 'DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV' specifies that the

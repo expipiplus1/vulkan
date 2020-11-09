@@ -84,6 +84,17 @@ foreign import ccall
 -- operating system, the implementation /must/ set the file descriptor to
 -- be closed automatically when an @execve@ system call is made.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetMemoryFdKHR-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetMemoryFdKHR-pGetFdInfo-parameter# @pGetFdInfo@ /must/ be
+--     a valid pointer to a valid 'MemoryGetFdInfoKHR' structure
+--
+-- -   #VUID-vkGetMemoryFdKHR-pFd-parameter# @pFd@ /must/ be a valid
+--     pointer to an @int@ value
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -103,14 +114,9 @@ getMemoryFdKHR :: forall io
                 . (MonadIO io)
                => -- | @device@ is the logical device that created the device memory being
                   -- exported.
-                  --
-                  -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                   Device
                -> -- | @pGetFdInfo@ is a pointer to a 'MemoryGetFdInfoKHR' structure containing
                   -- parameters of the export operation.
-                  --
-                  -- @pGetFdInfo@ /must/ be a valid pointer to a valid 'MemoryGetFdInfoKHR'
-                  -- structure
                   MemoryGetFdInfoKHR
                -> io (("fd" ::: Int32))
 getMemoryFdKHR device getFdInfo = liftIO . evalContT $ do
@@ -136,6 +142,29 @@ foreign import ccall
 -- | vkGetMemoryFdPropertiesKHR - Get Properties of External Memory File
 -- Descriptors
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetMemoryFdPropertiesKHR-fd-00673# @fd@ /must/ be an
+--     external memory handle created outside of the Vulkan API
+--
+-- -   #VUID-vkGetMemoryFdPropertiesKHR-handleType-00674# @handleType@
+--     /must/ not be
+--     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR'
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetMemoryFdPropertiesKHR-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetMemoryFdPropertiesKHR-handleType-parameter# @handleType@
+--     /must/ be a valid
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+--     value
+--
+-- -   #VUID-vkGetMemoryFdPropertiesKHR-pMemoryFdProperties-parameter#
+--     @pMemoryFdProperties@ /must/ be a valid pointer to a
+--     'MemoryFdPropertiesKHR' structure
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -156,22 +185,10 @@ foreign import ccall
 getMemoryFdPropertiesKHR :: forall io
                           . (MonadIO io)
                          => -- | @device@ is the logical device that will be importing @fd@.
-                            --
-                            -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                             Device
                          -> -- | @handleType@ is the type of the handle @fd@.
-                            --
-                            -- @handleType@ /must/ not be
-                            -- 'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR'
-                            --
-                            -- @handleType@ /must/ be a valid
-                            -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-                            -- value
                             ExternalMemoryHandleTypeFlagBits
                          -> -- | @fd@ is the handle which will be imported.
-                            --
-                            -- @fd@ /must/ be an external memory handle created outside of the Vulkan
-                            -- API
                             ("fd" ::: Int32)
                          -> io (MemoryFdPropertiesKHR)
 getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
@@ -204,35 +221,39 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   If @handleType@ is not @0@, it /must/ be supported for import, as
---     reported by
+-- -   #VUID-VkImportMemoryFdInfoKHR-handleType-00667# If @handleType@ is
+--     not @0@, it /must/ be supported for import, as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
--- -   The memory from which @fd@ was exported /must/ have been created on
---     the same underlying physical device as @device@
+-- -   #VUID-VkImportMemoryFdInfoKHR-fd-00668# The memory from which @fd@
+--     was exported /must/ have been created on the same underlying
+--     physical device as @device@
 --
--- -   If @handleType@ is not @0@, it /must/ be defined as a POSIX file
---     descriptor handle
+-- -   #VUID-VkImportMemoryFdInfoKHR-handleType-00669# If @handleType@ is
+--     not @0@, it /must/ be defined as a POSIX file descriptor handle
 --
--- -   If @handleType@ is not @0@, @fd@ /must/ be a valid handle of the
---     type specified by @handleType@
+-- -   #VUID-VkImportMemoryFdInfoKHR-handleType-00670# If @handleType@ is
+--     not @0@, @fd@ /must/ be a valid handle of the type specified by
+--     @handleType@
 --
--- -   The memory represented by @fd@ /must/ have been created from a
---     physical device and driver that is compatible with @device@ and
---     @handleType@, as described in
+-- -   #VUID-VkImportMemoryFdInfoKHR-fd-01746# The memory represented by
+--     @fd@ /must/ have been created from a physical device and driver that
+--     is compatible with @device@ and @handleType@, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility>
 --
--- -   @fd@ /must/ obey any requirements listed for @handleType@ in
+-- -   #VUID-VkImportMemoryFdInfoKHR-fd-01520# @fd@ /must/ obey any
+--     requirements listed for @handleType@ in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImportMemoryFdInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR'
 --
--- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
+-- -   #VUID-VkImportMemoryFdInfoKHR-handleType-parameter# If @handleType@
+--     is not @0@, @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     value
 --
@@ -290,6 +311,11 @@ instance Zero ImportMemoryFdInfoKHR where
 -- | VkMemoryFdPropertiesKHR - Properties of External Memory File Descriptors
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkMemoryFdPropertiesKHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR'
+--
+-- -   #VUID-VkMemoryFdPropertiesKHR-pNext-pNext# @pNext@ /must/ be @NULL@
 --
 -- = See Also
 --
@@ -357,7 +383,30 @@ instance Zero MemoryFdPropertiesKHR where
 -- then the application /can/ query the file’s actual size with
 -- <man:lseek(2) lseek(2)>.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkMemoryGetFdInfoKHR-handleType-00671# @handleType@ /must/
+--     have been included in
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
+--     when @memory@ was created
+--
+-- -   #VUID-VkMemoryGetFdInfoKHR-handleType-00672# @handleType@ /must/ be
+--     defined as a POSIX file descriptor handle
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkMemoryGetFdInfoKHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR'
+--
+-- -   #VUID-VkMemoryGetFdInfoKHR-pNext-pNext# @pNext@ /must/ be @NULL@
+--
+-- -   #VUID-VkMemoryGetFdInfoKHR-memory-parameter# @memory@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.DeviceMemory' handle
+--
+-- -   #VUID-VkMemoryGetFdInfoKHR-handleType-parameter# @handleType@ /must/
+--     be a valid
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+--     value
 --
 -- = See Also
 --
@@ -366,20 +415,8 @@ instance Zero MemoryFdPropertiesKHR where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getMemoryFdKHR'
 data MemoryGetFdInfoKHR = MemoryGetFdInfoKHR
   { -- | @memory@ is the memory object from which the handle will be exported.
-    --
-    -- @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
     memory :: DeviceMemory
   , -- | @handleType@ is the type of handle requested.
-    --
-    -- @handleType@ /must/ have been included in
-    -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
-    -- when @memory@ was created
-    --
-    -- @handleType@ /must/ be defined as a POSIX file descriptor handle
-    --
-    -- @handleType@ /must/ be a valid
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- value
     handleType :: ExternalMemoryHandleTypeFlagBits
   }
   deriving (Typeable, Eq)

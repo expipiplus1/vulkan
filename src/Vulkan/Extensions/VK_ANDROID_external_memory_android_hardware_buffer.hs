@@ -95,6 +95,26 @@ foreign import ccall
 -- | vkGetAndroidHardwareBufferPropertiesANDROID - Get Properties of External
 -- Memory Android Hardware Buffers
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetAndroidHardwareBufferPropertiesANDROID-buffer-01884#
+--     @buffer@ /must/ be a valid Android hardware buffer object with at
+--     least one of the @AHARDWAREBUFFER_USAGE_GPU_@* flags in its
+--     @AHardwareBuffer_Desc@::@usage@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetAndroidHardwareBufferPropertiesANDROID-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetAndroidHardwareBufferPropertiesANDROID-buffer-parameter#
+--     @buffer@ /must/ be a valid pointer to a valid 'AHardwareBuffer'
+--     value
+--
+-- -   #VUID-vkGetAndroidHardwareBufferPropertiesANDROID-pProperties-parameter#
+--     @pProperties@ /must/ be a valid pointer to a
+--     'AndroidHardwareBufferPropertiesANDROID' structure
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -113,16 +133,8 @@ foreign import ccall
 getAndroidHardwareBufferPropertiesANDROID :: forall a io
                                            . (Extendss AndroidHardwareBufferPropertiesANDROID a, PokeChain a, PeekChain a, MonadIO io)
                                           => -- | @device@ is the logical device that will be importing @buffer@.
-                                             --
-                                             -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                              Device
                                           -> -- | @buffer@ is the Android hardware buffer which will be imported.
-                                             --
-                                             -- @buffer@ /must/ be a valid Android hardware buffer object with at least
-                                             -- one of the @AHARDWAREBUFFER_USAGE_GPU_@* flags in its
-                                             -- @AHardwareBuffer_Desc@::@usage@
-                                             --
-                                             -- @buffer@ /must/ be a valid pointer to a valid 'AHardwareBuffer' value
                                              (Ptr AHardwareBuffer)
                                           -> io (AndroidHardwareBufferPropertiesANDROID a)
 getAndroidHardwareBufferPropertiesANDROID device buffer = liftIO . evalContT $ do
@@ -161,6 +173,19 @@ foreign import ccall
 -- Android hardware buffer, 'getMemoryAndroidHardwareBufferANDROID' /must/
 -- return that same Android hardware buffer object.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetMemoryAndroidHardwareBufferANDROID-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetMemoryAndroidHardwareBufferANDROID-pInfo-parameter#
+--     @pInfo@ /must/ be a valid pointer to a valid
+--     'MemoryGetAndroidHardwareBufferInfoANDROID' structure
+--
+-- -   #VUID-vkGetMemoryAndroidHardwareBufferANDROID-pBuffer-parameter#
+--     @pBuffer@ /must/ be a valid pointer to a valid pointer to an
+--     'AHardwareBuffer' value
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -181,14 +206,9 @@ getMemoryAndroidHardwareBufferANDROID :: forall io
                                        . (MonadIO io)
                                       => -- | @device@ is the logical device that created the device memory being
                                          -- exported.
-                                         --
-                                         -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                          Device
                                       -> -- | @pInfo@ is a pointer to a 'MemoryGetAndroidHardwareBufferInfoANDROID'
                                          -- structure containing parameters of the export operation.
-                                         --
-                                         -- @pInfo@ /must/ be a valid pointer to a valid
-                                         -- 'MemoryGetAndroidHardwareBufferInfoANDROID' structure
                                          MemoryGetAndroidHardwareBufferInfoANDROID
                                       -> io (Ptr AHardwareBuffer)
 getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
@@ -216,23 +236,27 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   If @buffer@ is not @NULL@, Android hardware buffers /must/ be
---     supported for import, as reported by
+-- -   #VUID-VkImportAndroidHardwareBufferInfoANDROID-buffer-01880# If
+--     @buffer@ is not @NULL@, Android hardware buffers /must/ be supported
+--     for import, as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
--- -   If @buffer@ is not @NULL@, it /must/ be a valid Android hardware
---     buffer object with @AHardwareBuffer_Desc@::@usage@ compatible with
---     Vulkan as described in
+-- -   #VUID-VkImportAndroidHardwareBufferInfoANDROID-buffer-01881# If
+--     @buffer@ is not @NULL@, it /must/ be a valid Android hardware buffer
+--     object with @AHardwareBuffer_Desc@::@usage@ compatible with Vulkan
+--     as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImportAndroidHardwareBufferInfoANDROID-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID'
 --
--- -   @buffer@ /must/ be a valid pointer to an 'AHardwareBuffer' value
+-- -   #VUID-VkImportAndroidHardwareBufferInfoANDROID-buffer-parameter#
+--     @buffer@ /must/ be a valid pointer to an 'AHardwareBuffer' value
 --
 -- = See Also
 --
@@ -307,6 +331,10 @@ instance Zero ImportAndroidHardwareBufferInfoANDROID where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkAndroidHardwareBufferUsageANDROID-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_USAGE_ANDROID'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -357,14 +385,16 @@ instance Zero AndroidHardwareBufferUsageANDROID where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkAndroidHardwareBufferPropertiesANDROID-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkAndroidHardwareBufferPropertiesANDROID-pNext-pNext# @pNext@
+--     /must/ be @NULL@ or a pointer to a valid instance of
 --     'AndroidHardwareBufferFormatPropertiesANDROID'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkAndroidHardwareBufferPropertiesANDROID-sType-unique# The
+--     @sType@ value of each struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -435,26 +465,30 @@ instance es ~ '[] => Zero (AndroidHardwareBufferPropertiesANDROID es) where
 --
 -- == Valid Usage
 --
--- -   'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+-- -   #VUID-VkMemoryGetAndroidHardwareBufferInfoANDROID-handleTypes-01882#
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
 --     /must/ have been included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
 --     when @memory@ was created
 --
--- -   If the @pNext@ chain of the
---     'Vulkan.Core10.Memory.MemoryAllocateInfo' used to allocate @memory@
---     included a
+-- -   #VUID-VkMemoryGetAndroidHardwareBufferInfoANDROID-pNext-01883# If
+--     the @pNext@ chain of the 'Vulkan.Core10.Memory.MemoryAllocateInfo'
+--     used to allocate @memory@ included a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     with non-@NULL@ @image@ member, then that @image@ /must/ already be
 --     bound to @memory@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkMemoryGetAndroidHardwareBufferInfoANDROID-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkMemoryGetAndroidHardwareBufferInfoANDROID-pNext-pNext#
+--     @pNext@ /must/ be @NULL@
 --
--- -   @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
+-- -   #VUID-VkMemoryGetAndroidHardwareBufferInfoANDROID-memory-parameter#
+--     @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
 --     handle
 --
 -- = See Also
@@ -593,6 +627,10 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkAndroidHardwareBufferFormatPropertiesANDROID-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID'
+--
 -- = See Also
 --
 -- 'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation',
@@ -699,7 +737,17 @@ instance Zero AndroidHardwareBufferFormatPropertiesANDROID where
 -- 'ExternalFormatANDROID' structure was not present. Otherwise, the
 -- @image@ will have the specified external format.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkExternalFormatANDROID-externalFormat-01894# @externalFormat@
+--     /must/ be @0@ or a value returned in the @externalFormat@ member of
+--     'AndroidHardwareBufferFormatPropertiesANDROID' by an earlier call to
+--     'getAndroidHardwareBufferPropertiesANDROID'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkExternalFormatANDROID-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID'
 --
 -- = See Also
 --
@@ -707,11 +755,6 @@ instance Zero AndroidHardwareBufferFormatPropertiesANDROID where
 data ExternalFormatANDROID = ExternalFormatANDROID
   { -- | @externalFormat@ is an implementation-defined identifier for the
     -- external format
-    --
-    -- @externalFormat@ /must/ be @0@ or a value returned in the
-    -- @externalFormat@ member of
-    -- 'AndroidHardwareBufferFormatPropertiesANDROID' by an earlier call to
-    -- 'getAndroidHardwareBufferPropertiesANDROID'
     externalFormat :: Word64 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

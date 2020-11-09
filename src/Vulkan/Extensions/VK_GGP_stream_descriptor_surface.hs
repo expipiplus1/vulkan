@@ -85,16 +85,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateStreamDescriptorSurfaceGGP-instance-parameter#
+--     @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateStreamDescriptorSurfaceGGP-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'StreamDescriptorSurfaceCreateInfoGGP' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateStreamDescriptorSurfaceGGP-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateStreamDescriptorSurfaceGGP-pSurface-parameter#
+--     @pSurface@ /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Return Codes
@@ -149,7 +153,22 @@ createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalC
 -- | VkStreamDescriptorSurfaceCreateInfoGGP - Structure specifying parameters
 -- of a newly created Google Games Platform stream surface object
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkStreamDescriptorSurfaceCreateInfoGGP-streamDescriptor-02681#
+--     @streamDescriptor@ /must/ be a valid 'GgpStreamDescriptor'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkStreamDescriptorSurfaceCreateInfoGGP-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP'
+--
+-- -   #VUID-VkStreamDescriptorSurfaceCreateInfoGGP-pNext-pNext# @pNext@
+--     /must/ be @NULL@
+--
+-- -   #VUID-VkStreamDescriptorSurfaceCreateInfoGGP-flags-zerobitmask#
+--     @flags@ /must/ be @0@
 --
 -- = See Also
 --
@@ -158,13 +177,9 @@ createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalC
 -- 'createStreamDescriptorSurfaceGGP'
 data StreamDescriptorSurfaceCreateInfoGGP = StreamDescriptorSurfaceCreateInfoGGP
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: StreamDescriptorSurfaceCreateFlagsGGP
   , -- | @streamDescriptor@ is a 'GgpStreamDescriptor' referring to the GGP
     -- stream descriptor to associate with the surface.
-    --
-    -- @streamDescriptor@ /must/ be a valid 'GgpStreamDescriptor'
     streamDescriptor :: GgpStreamDescriptor
   }
   deriving (Typeable, Eq)

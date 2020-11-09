@@ -39,6 +39,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-ycbcrImageArrays# @ycbcrImageArrays@ indicates that the
+--     implementation supports creating images with a format that requires
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion Y′CBCR conversion>
+--     and has multiple array layers.
+--
 -- If the 'PhysicalDeviceYcbcrImageArraysFeaturesEXT' structure is included
 -- in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -49,15 +54,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceYcbcrImageArraysFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_IMAGE_ARRAYS_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceYcbcrImageArraysFeaturesEXT = PhysicalDeviceYcbcrImageArraysFeaturesEXT
-  { -- | @ycbcrImageArrays@ indicates that the implementation supports creating
-    -- images with a format that requires
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion Y′CBCR conversion>
-    -- and has multiple array layers.
+  { -- No documentation found for Nested "VkPhysicalDeviceYcbcrImageArraysFeaturesEXT" "ycbcrImageArrays"
     ycbcrImageArrays :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

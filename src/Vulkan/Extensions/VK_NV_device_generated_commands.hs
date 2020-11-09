@@ -170,7 +170,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a 'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-magFilter-04553# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
 --     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
 --     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
 --     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
@@ -179,20 +180,23 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using atomic
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02691# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02692# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-filterCubic-02694# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command /must/ have a
 --     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' and format that
@@ -201,7 +205,8 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-filterCubicMinmax-02695# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' with a
 --     reduction mode of either
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
@@ -215,23 +220,25 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.Image' created with a
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-flags-02696# Any
+--     'Vulkan.Core10.Handles.Image' created with a
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
--- -   For each set /n/ that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a descriptor set /must/ have been bound to /n/
---     at the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
---     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
---     the current 'Vulkan.Core10.Handles.Pipeline', as described in
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02697# For each set /n/
+--     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command, a descriptor
+--     set /must/ have been bound to /n/ at the same pipeline bind point,
+--     with a 'Vulkan.Core10.Handles.PipelineLayout' that is compatible for
+--     set /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   For each push constant that is statically used by the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02698# For each push
+--     constant that is statically used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     used by this command, a push constant value /must/ have been set for
 --     the same pipeline bind point, with a
@@ -240,28 +247,32 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   Descriptors in each bound descriptor set, specified via
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02699# Descriptors in
+--     each bound descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
 --     be valid if they are statically used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     used by this command
 --
--- -   A valid pipeline /must/ be bound to the pipeline bind point used by
---     this command
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02700# A valid pipeline
+--     /must/ be bound to the pipeline bind point used by this command
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command requires any dynamic state, that
---     state /must/ have been set for @commandBuffer@, and done so after
---     any previously bound pipeline with the corresponding state not
---     specified as dynamic
---
--- -   There /must/ not have been any calls to dynamic state setting
---     commands for any state not specified as dynamic in the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command, since that pipeline was bound
+--     point used by this command requires any dynamic state, that state
+--     /must/ have been set for @commandBuffer@, and done so after any
+--     previously bound pipeline with the corresponding state not specified
+--     as dynamic
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02859# There /must/ not
+--     have been any calls to dynamic state setting commands for any state
+--     not specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline'
+--     object bound to the pipeline bind point used by this command, since
+--     that pipeline was bound
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02702# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -273,21 +284,23 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02703# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02704# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02705# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -295,7 +308,7 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02706# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -303,46 +316,54 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If @commandBuffer@ is an unprotected command buffer, any resource
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-02707# If
+--     @commandBuffer@ is an unprotected command buffer, any resource
 --     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04115# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpImageWrite-04469# If a
+--     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-SampledType-04470# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-SampledType-04471# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-SampledType-04472# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-SampledType-04473# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-sparseImageInt64Atomics-04474#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
 --     created with the
@@ -351,7 +372,8 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-sparseImageInt64Atomics-04475#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
 --     created with the
@@ -360,7 +382,8 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   The current render pass /must/ be
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-renderPass-02684# The current
+--     render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the @renderPass@ member of the
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure
@@ -368,25 +391,32 @@ foreign import ccall
 --     to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure
---     specified when creating the 'Vulkan.Core10.Handles.Pipeline' bound
---     to
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-subpass-02685# The subpass
+--     index of the current render pass /must/ be equal to the @subpass@
+--     member of the 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
+--     structure specified when creating the
+--     'Vulkan.Core10.Handles.Pipeline' bound to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02686# Every input
+--     attachment used by the current subpass /must/ be bound to the
+--     pipeline via a descriptor set
 --
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04584# Image subresources
+--     used as attachments in the current render pass /must/ not be
+--     accessed in any way other than as an attachment by this command,
+--     except for cases involving read-only access to depth\/stencil
+--     attachments as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
+--     chapter
 --
--- -   If the draw is recorded in a render pass instance with multiview
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-maxMultiviewInstanceIndex-02688#
+--     If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
 --     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
--- -   If the bound graphics pipeline was created with
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-sampleLocationsEnable-02689#
+--     If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
 --     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
 --     has a depth\/stencil attachment, then that attachment /must/ have
@@ -394,7 +424,8 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-03417# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
@@ -407,7 +438,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
 --     of the pipeline
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-scissorCount-03418# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
@@ -420,7 +452,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
 --     of the pipeline
 --
--- -   If the bound graphics pipeline state was created with both the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-03419# If the
+--     bound graphics pipeline state was created with both the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
@@ -434,7 +467,8 @@ foreign import ccall
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-04137# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
@@ -445,7 +479,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-04138# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
@@ -456,7 +491,8 @@ foreign import ccall
 --     the last call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-04139# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
@@ -467,7 +503,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-04140# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
@@ -478,7 +515,8 @@ foreign import ccall
 --     the last call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-VkPipelineVieportCreateInfo-04141#
+--     If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled and an instance of
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
@@ -489,7 +527,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-VkPipelineVieportCreateInfo-04142#
+--     If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled and an instance of
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
@@ -500,7 +539,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-primitiveTopology-03420# If
+--     the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
@@ -513,7 +553,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
 --
--- -   If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-primitiveFragmentShadingRateWithMultipleViewports-04552#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
 --     limit is not supported, the bound graphics pipeline was created with
 --     the
@@ -527,25 +568,28 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
--- -   All vertex input bindings accessed via vertex input variables
---     declared in the vertex shader entry point’s interface /must/ have
---     either valid or 'Vulkan.Core10.APIConstants.NULL_HANDLE' buffers
---     bound
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04007# All vertex input
+--     bindings accessed via vertex input variables declared in the vertex
+--     shader entry point’s interface /must/ have either valid or
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' buffers bound
 --
--- -   If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04008# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, all vertex input bindings accessed via
 --     vertex input variables declared in the vertex shader entry point’s
 --     interface /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   For a given vertex buffer binding, any attribute data fetched /must/
---     be entirely contained within the corresponding vertex buffer
---     binding, as described in
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02721# For a given vertex
+--     buffer binding, any attribute data fetched /must/ be entirely
+--     contained within the corresponding vertex buffer binding, as
+--     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
 --
--- -   @commandBuffer@ /must/ not be a protected command buffer
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-02970#
+--     @commandBuffer@ /must/ not be a protected command buffer
 --
--- -   If @isPreprocessed@ is 'Vulkan.Core10.FundamentalTypes.TRUE' then
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-isPreprocessed-02908# If
+--     @isPreprocessed@ is 'Vulkan.Core10.FundamentalTypes.TRUE' then
 --     'cmdPreprocessGeneratedCommandsNV' /must/ have already been executed
 --     on the device, using the same @pGeneratedCommandsInfo@ content as
 --     well as the content of the input buffers it references (all except
@@ -554,30 +598,38 @@ foreign import ccall
 --     been created with the
 --     'INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV' bit set
 --
--- -   'GeneratedCommandsInfoNV'::@pipeline@ /must/ match the current bound
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pipeline-02909#
+--     'GeneratedCommandsInfoNV'::@pipeline@ /must/ match the current bound
 --     pipeline at 'GeneratedCommandsInfoNV'::@pipelineBindPoint@
 --
--- -   Transform feedback /must/ not be active
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02910# Transform feedback
+--     /must/ not be active
 --
--- -   The
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-deviceGeneratedCommands-02911#
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pGeneratedCommandsInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pGeneratedCommandsInfo-parameter#
+--     @pGeneratedCommandsInfo@ /must/ be a valid pointer to a valid
 --     'GeneratedCommandsInfoNV' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
--- -   This command /must/ only be called inside of a render pass instance
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-renderpass# This command
+--     /must/ only be called inside of a render pass instance
 --
 -- == Host Synchronization
 --
@@ -638,31 +690,39 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @commandBuffer@ /must/ not be a protected command buffer
+-- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-commandBuffer-02974#
+--     @commandBuffer@ /must/ not be a protected command buffer
 --
--- -   @pGeneratedCommandsInfo@\`s @indirectCommandsLayout@ /must/ have
+-- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-pGeneratedCommandsInfo-02927#
+--     @pGeneratedCommandsInfo@\`s @indirectCommandsLayout@ /must/ have
 --     been created with the
 --     'INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV' bit set
 --
--- -   The
+-- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-deviceGeneratedCommands-02928#
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pGeneratedCommandsInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-pGeneratedCommandsInfo-parameter#
+--     @pGeneratedCommandsInfo@ /must/ be a valid pointer to a valid
 --     'GeneratedCommandsInfoNV' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
--- -   This command /must/ only be called outside of a render pass instance
+-- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-renderpass# This command
+--     /must/ only be called outside of a render pass instance
 --
 -- == Host Synchronization
 --
@@ -715,40 +775,50 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @groupIndex@ /must/ be @0@ or less than the effective
+-- -   #VUID-vkCmdBindPipelineShaderGroupNV-groupIndex-02893# @groupIndex@
+--     /must/ be @0@ or less than the effective
 --     'GraphicsPipelineShaderGroupsCreateInfoNV'::@groupCount@ including
 --     the referenced pipelines
 --
--- -   The @pipelineBindPoint@ /must/ be
+-- -   #VUID-vkCmdBindPipelineShaderGroupNV-pipelineBindPoint-02894# The
+--     @pipelineBindPoint@ /must/ be
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   The same restrictions as
+-- -   #VUID-vkCmdBindPipelineShaderGroupNV-groupIndex-02895# The same
+--     restrictions as
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindPipeline' apply as if
 --     the bound pipeline was created only with the Shader Group from the
 --     @groupIndex@ information
 --
--- -   The
+-- -   #VUID-vkCmdBindPipelineShaderGroupNV-deviceGeneratedCommands-02896#
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdBindPipelineShaderGroupNV-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pipelineBindPoint@ /must/ be a valid
+-- -   #VUID-vkCmdBindPipelineShaderGroupNV-pipelineBindPoint-parameter#
+--     @pipelineBindPoint@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
 --
--- -   @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+-- -   #VUID-vkCmdBindPipelineShaderGroupNV-pipeline-parameter# @pipeline@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdBindPipelineShaderGroupNV-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdBindPipelineShaderGroupNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
--- -   Both of @commandBuffer@, and @pipeline@ /must/ have been created,
---     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-vkCmdBindPipelineShaderGroupNV-commonparent# Both of
+--     @commandBuffer@, and @pipeline@ /must/ have been created, allocated,
+--     or retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -807,18 +877,22 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkGetGeneratedCommandsMemoryRequirementsNV-deviceGeneratedCommands-02906#
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetGeneratedCommandsMemoryRequirementsNV-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetGeneratedCommandsMemoryRequirementsNV-pInfo-parameter#
+--     @pInfo@ /must/ be a valid pointer to a valid
 --     'GeneratedCommandsMemoryRequirementsInfoNV' structure
 --
--- -   @pMemoryRequirements@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetGeneratedCommandsMemoryRequirementsNV-pMemoryRequirements-parameter#
+--     @pMemoryRequirements@ /must/ be a valid pointer to a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
 --     structure
 --
@@ -860,22 +934,27 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCreateIndirectCommandsLayoutNV-deviceGeneratedCommands-02929#
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateIndirectCommandsLayoutNV-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateIndirectCommandsLayoutNV-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'IndirectCommandsLayoutCreateInfoNV' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateIndirectCommandsLayoutNV-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pIndirectCommandsLayout@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateIndirectCommandsLayoutNV-pIndirectCommandsLayout-parameter#
+--     @pIndirectCommandsLayout@ /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV' handle
 --
 -- == Return Codes
@@ -948,35 +1027,43 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @indirectCommandsLayout@ /must/
+-- -   #VUID-vkDestroyIndirectCommandsLayoutNV-indirectCommandsLayout-02938#
+--     All submitted commands that refer to @indirectCommandsLayout@ /must/
 --     have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyIndirectCommandsLayoutNV-indirectCommandsLayout-02939#
+--     If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @indirectCommandsLayout@ was created, a compatible set
 --     of callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyIndirectCommandsLayoutNV-indirectCommandsLayout-02940#
+--     If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @indirectCommandsLayout@ was created, @pAllocator@
 --     /must/ be @NULL@
 --
--- -   The
+-- -   #VUID-vkDestroyIndirectCommandsLayoutNV-deviceGeneratedCommands-02941#
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyIndirectCommandsLayoutNV-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @indirectCommandsLayout@ is not
+-- -   #VUID-vkDestroyIndirectCommandsLayoutNV-indirectCommandsLayout-parameter#
+--     If @indirectCommandsLayout@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @indirectCommandsLayout@
 --     /must/ be a valid
 --     'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkDestroyIndirectCommandsLayoutNV-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @indirectCommandsLayout@ is a valid handle, it /must/ have been
+-- -   #VUID-vkDestroyIndirectCommandsLayoutNV-indirectCommandsLayout-parent#
+--     If @indirectCommandsLayout@ is a valid handle, it /must/ have been
 --     created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
@@ -1023,6 +1110,11 @@ destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO
 --
 -- = Description
 --
+-- -   #features-deviceGeneratedCommands# @deviceGeneratedCommands@
+--     indicates whether the implementation supports functionality to
+--     generate commands on the device. See
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#device-generated-commands Device-Generated Commands>.
+--
 -- If the 'PhysicalDeviceDeviceGeneratedCommandsFeaturesNV' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -1033,14 +1125,16 @@ destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = PhysicalDeviceDeviceGeneratedCommandsFeaturesNV
-  { -- | @deviceGeneratedCommands@ indicates whether the implementation supports
-    -- functionality to generate commands on the device. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#device-generated-commands Device-Generated Commands>.
+  { -- No documentation found for Nested "VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV" "deviceGeneratedCommands"
     deviceGeneratedCommands :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1085,6 +1179,10 @@ instance Zero PhysicalDeviceDeviceGeneratedCommandsFeaturesNV where
 -- implementation
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV'
 --
 -- = See Also
 --
@@ -1192,33 +1290,40 @@ instance Zero PhysicalDeviceDeviceGeneratedCommandsPropertiesNV where
 --
 -- == Valid Usage
 --
--- -   For @stageCount@, the same restrictions as in
+-- -   #VUID-VkGraphicsShaderGroupCreateInfoNV-stageCount-02888# For
+--     @stageCount@, the same restrictions as in
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@stageCount@
 --     apply
 --
--- -   For @pStages@, the same restrictions as in
+-- -   #VUID-VkGraphicsShaderGroupCreateInfoNV-pStages-02889# For
+--     @pStages@, the same restrictions as in
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ apply
 --
--- -   For @pVertexInputState@, the same restrictions as in
+-- -   #VUID-VkGraphicsShaderGroupCreateInfoNV-pVertexInputState-02890# For
+--     @pVertexInputState@, the same restrictions as in
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@
 --     apply
 --
--- -   For @pTessellationState@, the same restrictions as in
+-- -   #VUID-VkGraphicsShaderGroupCreateInfoNV-pTessellationState-02891#
+--     For @pTessellationState@, the same restrictions as in
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pTessellationState@
 --     apply
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkGraphicsShaderGroupCreateInfoNV-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkGraphicsShaderGroupCreateInfoNV-pNext-pNext# @pNext@ /must/
+--     be @NULL@
 --
--- -   @pStages@ /must/ be a valid pointer to an array of @stageCount@
---     valid 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'
---     structures
+-- -   #VUID-VkGraphicsShaderGroupCreateInfoNV-pStages-parameter# @pStages@
+--     /must/ be a valid pointer to an array of @stageCount@ valid
+--     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' structures
 --
--- -   @stageCount@ /must/ be greater than @0@
+-- -   #VUID-VkGraphicsShaderGroupCreateInfoNV-stageCount-arraylength#
+--     @stageCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -1310,49 +1415,61 @@ instance Zero GraphicsShaderGroupCreateInfoNV where
 --
 -- == Valid Usage
 --
--- -   @groupCount@ /must/ be at least @1@ and as maximum
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-groupCount-02879#
+--     @groupCount@ /must/ be at least @1@ and as maximum
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxGraphicsShaderGroupCount@
 --
--- -   The sum of @groupCount@ including those groups added from referenced
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-groupCount-02880#
+--     The sum of @groupCount@ including those groups added from referenced
 --     @pPipelines@ /must/ also be as maximum
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxGraphicsShaderGroupCount@
 --
--- -   The state of the first element of @pGroups@ /must/ match its
---     equivalent within the parent’s
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-pGroups-02881# The
+--     state of the first element of @pGroups@ /must/ match its equivalent
+--     within the parent’s
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --
--- -   Each element of @pGroups@ /must/ in combination with the rest of the
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-pGroups-02882# Each
+--     element of @pGroups@ /must/ in combination with the rest of the
 --     pipeline state yield a valid state configuration
 --
--- -   All elements of @pGroups@ /must/ use the same shader stage
---     combinations unless any mesh shader stage is used, then either
---     combination of task and mesh or just mesh shader is valid
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-pGroups-02884# All
+--     elements of @pGroups@ /must/ use the same shader stage combinations
+--     unless any mesh shader stage is used, then either combination of
+--     task and mesh or just mesh shader is valid
 --
--- -   Mesh and regular primitive shading stages cannot be mixed across
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-pGroups-02885# Mesh
+--     and regular primitive shading stages cannot be mixed across
 --     @pGroups@
 --
--- -   Each element of the @pPipelines@ member of @libraries@ /must/ have
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-pPipelines-02886#
+--     Each element of the @pPipelines@ member of @libraries@ /must/ have
 --     been created with identical state to the pipeline currently created
 --     except the state that can be overriden by
 --     'GraphicsShaderGroupCreateInfoNV'
 --
--- -   The
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-deviceGeneratedCommands-02887#
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV'
 --
--- -   @pGroups@ /must/ be a valid pointer to an array of @groupCount@
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-pGroups-parameter#
+--     @pGroups@ /must/ be a valid pointer to an array of @groupCount@
 --     valid 'GraphicsShaderGroupCreateInfoNV' structures
 --
--- -   If @pipelineCount@ is not @0@, @pPipelines@ /must/ be a valid
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-pPipelines-parameter#
+--     If @pipelineCount@ is not @0@, @pPipelines@ /must/ be a valid
 --     pointer to an array of @pipelineCount@ valid
 --     'Vulkan.Core10.Handles.Pipeline' handles
 --
--- -   @groupCount@ /must/ be greater than @0@
+-- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-groupCount-arraylength#
+--     @groupCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -1424,13 +1541,15 @@ instance Zero GraphicsPipelineShaderGroupsCreateInfoNV where
 --
 -- == Valid Usage
 --
--- -   The current bound graphics pipeline, as well as the pipelines it may
---     reference, /must/ have been created with
+-- -   #VUID-VkBindShaderGroupIndirectCommandNV-None-02944# The current
+--     bound graphics pipeline, as well as the pipelines it may reference,
+--     /must/ have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
 --
--- -   The @index@ /must/ be within range of the accessible shader groups
---     of the current bound graphics pipeline. See
---     'cmdBindPipelineShaderGroupNV' for further details
+-- -   #VUID-VkBindShaderGroupIndirectCommandNV-index-02945# The @index@
+--     /must/ be within range of the accessible shader groups of the
+--     current bound graphics pipeline. See 'cmdBindPipelineShaderGroupNV'
+--     for further details
 --
 -- = See Also
 --
@@ -1477,20 +1596,23 @@ instance Zero BindShaderGroupIndirectCommandNV where
 --
 -- == Valid Usage
 --
--- -   The buffer’s usage flag from which the address was acquired /must/
---     have the
+-- -   #VUID-VkBindIndexBufferIndirectCommandNV-None-02946# The buffer’s
+--     usage flag from which the address was acquired /must/ have the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDEX_BUFFER_BIT'
 --     bit set
 --
--- -   The @bufferAddress@ /must/ be aligned to the @indexType@ used
+-- -   #VUID-VkBindIndexBufferIndirectCommandNV-bufferAddress-02947# The
+--     @bufferAddress@ /must/ be aligned to the @indexType@ used
 --
--- -   Each element of the buffer from which the address was acquired and
---     that is non-sparse /must/ be bound completely and contiguously to a
---     single 'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-VkBindIndexBufferIndirectCommandNV-None-02948# Each element of
+--     the buffer from which the address was acquired and that is
+--     non-sparse /must/ be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- == Valid Usage (Implicit)
 --
--- -   @indexType@ /must/ be a valid
+-- -   #VUID-VkBindIndexBufferIndirectCommandNV-indexType-parameter#
+--     @indexType@ /must/ be a valid
 --     'Vulkan.Core10.Enums.IndexType.IndexType' value
 --
 -- = See Also
@@ -1559,14 +1681,15 @@ instance Zero BindIndexBufferIndirectCommandNV where
 --
 -- == Valid Usage
 --
--- -   The buffer’s usage flag from which the address was acquired /must/
---     have the
+-- -   #VUID-VkBindVertexBufferIndirectCommandNV-None-02949# The buffer’s
+--     usage flag from which the address was acquired /must/ have the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_VERTEX_BUFFER_BIT'
 --     bit set
 --
--- -   Each element of the buffer from which the address was acquired and
---     that is non-sparse /must/ be bound completely and contiguously to a
---     single 'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-VkBindVertexBufferIndirectCommandNV-None-02950# Each element
+--     of the buffer from which the address was acquired and that is
+--     non-sparse /must/ be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- = See Also
 --
@@ -1679,19 +1802,23 @@ instance Zero SetStateFlagsIndirectCommandNV where
 --
 -- == Valid Usage
 --
--- -   The @buffer@’s usage flag /must/ have the
+-- -   #VUID-VkIndirectCommandsStreamNV-buffer-02942# The @buffer@’s usage
+--     flag /must/ have the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
 --     bit set
 --
--- -   The @offset@ /must/ be aligned to
+-- -   #VUID-VkIndirectCommandsStreamNV-offset-02943# The @offset@ /must/
+--     be aligned to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@minIndirectCommandsBufferOffsetAlignment@
 --
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-VkIndirectCommandsStreamNV-buffer-02975# If @buffer@ is
+--     non-sparse then it /must/ be bound completely and contiguously to a
+--     single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- == Valid Usage (Implicit)
 --
--- -   @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-VkIndirectCommandsStreamNV-buffer-parameter# @buffer@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
 -- = See Also
 --
@@ -1748,76 +1875,93 @@ instance Zero IndirectCommandsStreamNV where
 --
 -- == Valid Usage
 --
--- -   @stream@ /must/ be smaller than
---     'IndirectCommandsLayoutCreateInfoNV'::@streamCount@
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-stream-02951# @stream@ /must/
+--     be smaller than 'IndirectCommandsLayoutCreateInfoNV'::@streamCount@
 --
--- -   @offset@ /must/ be less than or equal to
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-offset-02952# @offset@ /must/
+--     be less than or equal to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxIndirectCommandsTokenOffset@
 --
--- -   If @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV',
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02976# If
+--     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV',
 --     @vertexBindingUnit@ /must/ stay within device supported limits for
 --     the appropriate commands
 --
--- -   If @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02977# If
+--     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
 --     @pushconstantPipelineLayout@ /must/ be valid
 --
--- -   If @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02978# If
+--     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
 --     @pushconstantOffset@ /must/ be a multiple of @4@
 --
--- -   If @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02979# If
+--     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
 --     @pushconstantSize@ /must/ be a multiple of @4@
 --
--- -   If @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02980# If
+--     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
 --     @pushconstantOffset@ /must/ be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPushConstantsSize@
 --
--- -   If @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02981# If
+--     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
 --     @pushconstantSize@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPushConstantsSize@
 --     minus @pushconstantOffset@
 --
--- -   If @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
---     for each byte in the range specified by @pushconstantOffset@ and
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02982# If
+--     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV', for
+--     each byte in the range specified by @pushconstantOffset@ and
 --     @pushconstantSize@ and for each shader stage in
 --     @pushconstantShaderStageFlags@, there /must/ be a push constant
 --     range in @pushconstantPipelineLayout@ that includes that byte and
 --     that stage
 --
--- -   If @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV',
---     for each byte in the range specified by @pushconstantOffset@ and
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02983# If
+--     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV', for
+--     each byte in the range specified by @pushconstantOffset@ and
 --     @pushconstantSize@ and for each push constant range that overlaps
 --     that byte, @pushconstantShaderStageFlags@ /must/ include all stages
 --     in that push constant range’s
 --     'Vulkan.Core10.PipelineLayout.PushConstantRange'::@pushconstantShaderStageFlags@
 --
--- -   If @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV',
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02984# If
+--     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV',
 --     @indirectStateFlags@ /must/ not be ´0´
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @tokenType@ /must/ be a valid 'IndirectCommandsTokenTypeNV' value
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-parameter#
+--     @tokenType@ /must/ be a valid 'IndirectCommandsTokenTypeNV' value
 --
--- -   If @pushconstantPipelineLayout@ is not
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-pushconstantPipelineLayout-parameter#
+--     If @pushconstantPipelineLayout@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @pushconstantPipelineLayout@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PipelineLayout' handle
 --
--- -   @pushconstantShaderStageFlags@ /must/ be a valid combination of
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-pushconstantShaderStageFlags-parameter#
+--     @pushconstantShaderStageFlags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' values
 --
--- -   @indirectStateFlags@ /must/ be a valid combination of
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-indirectStateFlags-parameter#
+--     @indirectStateFlags@ /must/ be a valid combination of
 --     'IndirectStateFlagBitsNV' values
 --
--- -   If @indexTypeCount@ is not @0@, @pIndexTypes@ /must/ be a valid
---     pointer to an array of @indexTypeCount@ valid
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-pIndexTypes-parameter# If
+--     @indexTypeCount@ is not @0@, @pIndexTypes@ /must/ be a valid pointer
+--     to an array of @indexTypeCount@ valid
 --     'Vulkan.Core10.Enums.IndexType.IndexType' values
 --
--- -   If @indexTypeCount@ is not @0@, @pIndexTypeValues@ /must/ be a valid
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-pIndexTypeValues-parameter# If
+--     @indexTypeCount@ is not @0@, @pIndexTypeValues@ /must/ be a valid
 --     pointer to an array of @indexTypeCount@ @uint32_t@ values
 --
 -- = See Also
@@ -1977,61 +2121,78 @@ instance Zero IndirectCommandsLayoutTokenNV where
 --
 -- == Valid Usage
 --
--- -   The @pipelineBindPoint@ /must/ be
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pipelineBindPoint-02930#
+--     The @pipelineBindPoint@ /must/ be
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   @tokenCount@ /must/ be greater than @0@ and less than or equal to
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-tokenCount-02931#
+--     @tokenCount@ /must/ be greater than @0@ and less than or equal to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxIndirectCommandsTokenCount@
 --
--- -   If @pTokens@ contains an entry of
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pTokens-02932# If
+--     @pTokens@ contains an entry of
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV' it /must/ be the
 --     first element of the array and there /must/ be only a single element
 --     of such token type
 --
--- -   If @pTokens@ contains an entry of
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pTokens-02933# If
+--     @pTokens@ contains an entry of
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV' there /must/ be only a
 --     single element of such token type
 --
--- -   All state tokens in @pTokens@ /must/ occur prior work provoking
---     tokens ('INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV',
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pTokens-02934# All state
+--     tokens in @pTokens@ /must/ occur prior work provoking tokens
+--     ('INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV',
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV',
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV')
 --
--- -   The content of @pTokens@ /must/ include one single work provoking
---     token that is compatible with the @pipelineBindPoint@
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pTokens-02935# The
+--     content of @pTokens@ /must/ include one single work provoking token
+--     that is compatible with the @pipelineBindPoint@
 --
--- -   @streamCount@ /must/ be greater than @0@ and less or equal to
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-streamCount-02936#
+--     @streamCount@ /must/ be greater than @0@ and less or equal to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxIndirectCommandsStreamCount@
 --
--- -   each element of @pStreamStrides@ /must/ be greater than \`0\`and
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pStreamStrides-02937#
+--     each element of @pStreamStrides@ /must/ be greater than \`0\`and
 --     less than or equal to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxIndirectCommandsStreamStride@.
 --     Furthermore the alignment of each token input /must/ be ensured
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pNext-pNext# @pNext@
+--     /must/ be @NULL@
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-flags-parameter# @flags@
+--     /must/ be a valid combination of
 --     'IndirectCommandsLayoutUsageFlagBitsNV' values
 --
--- -   @flags@ /must/ not be @0@
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-flags-requiredbitmask#
+--     @flags@ /must/ not be @0@
 --
--- -   @pipelineBindPoint@ /must/ be a valid
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pipelineBindPoint-parameter#
+--     @pipelineBindPoint@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
 --
--- -   @pTokens@ /must/ be a valid pointer to an array of @tokenCount@
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pTokens-parameter#
+--     @pTokens@ /must/ be a valid pointer to an array of @tokenCount@
 --     valid 'IndirectCommandsLayoutTokenNV' structures
 --
--- -   @pStreamStrides@ /must/ be a valid pointer to an array of
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pStreamStrides-parameter#
+--     @pStreamStrides@ /must/ be a valid pointer to an array of
 --     @streamCount@ @uint32_t@ values
 --
--- -   @tokenCount@ /must/ be greater than @0@
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-tokenCount-arraylength#
+--     @tokenCount@ /must/ be greater than @0@
 --
--- -   @streamCount@ /must/ be greater than @0@
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-streamCount-arraylength#
+--     @streamCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -2118,121 +2279,147 @@ instance Zero IndirectCommandsLayoutCreateInfoNV where
 --
 -- == Valid Usage
 --
--- -   The provided @pipeline@ /must/ match the pipeline bound at execution
---     time
+-- -   #VUID-VkGeneratedCommandsInfoNV-pipeline-02912# The provided
+--     @pipeline@ /must/ match the pipeline bound at execution time
 --
--- -   If the @indirectCommandsLayout@ uses a token of
+-- -   #VUID-VkGeneratedCommandsInfoNV-indirectCommandsLayout-02913# If the
+--     @indirectCommandsLayout@ uses a token of
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV', then the @pipeline@
 --     /must/ have been created with multiple shader groups
 --
--- -   If the @indirectCommandsLayout@ uses a token of
+-- -   #VUID-VkGeneratedCommandsInfoNV-indirectCommandsLayout-02914# If the
+--     @indirectCommandsLayout@ uses a token of
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV', then the @pipeline@
 --     /must/ have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
 --     set in 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@flags@
 --
--- -   If the @indirectCommandsLayout@ uses a token of
+-- -   #VUID-VkGeneratedCommandsInfoNV-indirectCommandsLayout-02915# If the
+--     @indirectCommandsLayout@ uses a token of
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV', then the
 --     @pipeline@\`s 'Vulkan.Core10.Handles.PipelineLayout' /must/ match
 --     the 'IndirectCommandsLayoutTokenNV'::@pushconstantPipelineLayout@
 --
--- -   @streamCount@ /must/ match the @indirectCommandsLayout@’s
---     @streamCount@
+-- -   #VUID-VkGeneratedCommandsInfoNV-streamCount-02916# @streamCount@
+--     /must/ match the @indirectCommandsLayout@’s @streamCount@
 --
--- -   @sequencesCount@ /must/ be less or equal to
+-- -   #VUID-VkGeneratedCommandsInfoNV-sequencesCount-02917#
+--     @sequencesCount@ /must/ be less or equal to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxIndirectSequenceCount@
 --     and 'GeneratedCommandsMemoryRequirementsInfoNV'::@maxSequencesCount@
 --     that was used to determine the @preprocessSize@
 --
--- -   @preprocessBuffer@ /must/ have the
+-- -   #VUID-VkGeneratedCommandsInfoNV-preprocessBuffer-02918#
+--     @preprocessBuffer@ /must/ have the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
 --     bit set in its usage flag
 --
--- -   @preprocessOffset@ /must/ be aligned to
+-- -   #VUID-VkGeneratedCommandsInfoNV-preprocessOffset-02919#
+--     @preprocessOffset@ /must/ be aligned to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@minIndirectCommandsBufferOffsetAlignment@
 --
--- -   If @preprocessBuffer@ is non-sparse then it /must/ be bound
---     completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-VkGeneratedCommandsInfoNV-preprocessBuffer-02971# If
+--     @preprocessBuffer@ is non-sparse then it /must/ be bound completely
+--     and contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory'
+--     object
 --
--- -   @preprocessSize@ /must/ be at least equal to the memory
+-- -   #VUID-VkGeneratedCommandsInfoNV-preprocessSize-02920#
+--     @preprocessSize@ /must/ be at least equal to the memory
 --     requirement\`s size returned by
 --     'getGeneratedCommandsMemoryRequirementsNV' using the matching inputs
 --     (@indirectCommandsLayout@, …​) as within this structure
 --
--- -   @sequencesCountBuffer@ /can/ be set if the actual used count of
+-- -   #VUID-VkGeneratedCommandsInfoNV-sequencesCountBuffer-02921#
+--     @sequencesCountBuffer@ /can/ be set if the actual used count of
 --     sequences is sourced from the provided buffer. In that case the
 --     @sequencesCount@ serves as upper bound
 --
--- -   If @sequencesCountBuffer@ is not
+-- -   #VUID-VkGeneratedCommandsInfoNV-sequencesCountBuffer-02922# If
+--     @sequencesCountBuffer@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', its usage flag /must/ have
 --     the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
 --     bit set
 --
--- -   If @sequencesCountBuffer@ is not
+-- -   #VUID-VkGeneratedCommandsInfoNV-sequencesCountBuffer-02923# If
+--     @sequencesCountBuffer@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @sequencesCountOffset@
 --     /must/ be aligned to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@minSequencesCountBufferOffsetAlignment@
 --
--- -   If @sequencesCountBuffer@ is not
+-- -   #VUID-VkGeneratedCommandsInfoNV-sequencesCountBuffer-02972# If
+--     @sequencesCountBuffer@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' and is non-sparse then it
 --     /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   If @indirectCommandsLayout@’s
+-- -   #VUID-VkGeneratedCommandsInfoNV-sequencesIndexBuffer-02924# If
+--     @indirectCommandsLayout@’s
 --     'INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV' is set,
 --     @sequencesIndexBuffer@ /must/ be set otherwise it /must/ be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @sequencesIndexBuffer@ is not
+-- -   #VUID-VkGeneratedCommandsInfoNV-sequencesIndexBuffer-02925# If
+--     @sequencesIndexBuffer@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', its usage flag /must/ have
 --     the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
 --     bit set
 --
--- -   If @sequencesIndexBuffer@ is not
+-- -   #VUID-VkGeneratedCommandsInfoNV-sequencesIndexBuffer-02926# If
+--     @sequencesIndexBuffer@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @sequencesIndexOffset@
 --     /must/ be aligned to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@minSequencesIndexBufferOffsetAlignment@
 --
--- -   If @sequencesIndexBuffer@ is not
+-- -   #VUID-VkGeneratedCommandsInfoNV-sequencesIndexBuffer-02973# If
+--     @sequencesIndexBuffer@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' and is non-sparse then it
 --     /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkGeneratedCommandsInfoNV-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkGeneratedCommandsInfoNV-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @pipelineBindPoint@ /must/ be a valid
+-- -   #VUID-VkGeneratedCommandsInfoNV-pipelineBindPoint-parameter#
+--     @pipelineBindPoint@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
 --
--- -   @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+-- -   #VUID-VkGeneratedCommandsInfoNV-pipeline-parameter# @pipeline@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
 --
--- -   @indirectCommandsLayout@ /must/ be a valid
+-- -   #VUID-VkGeneratedCommandsInfoNV-indirectCommandsLayout-parameter#
+--     @indirectCommandsLayout@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV' handle
 --
--- -   @pStreams@ /must/ be a valid pointer to an array of @streamCount@
---     valid 'IndirectCommandsStreamNV' structures
+-- -   #VUID-VkGeneratedCommandsInfoNV-pStreams-parameter# @pStreams@
+--     /must/ be a valid pointer to an array of @streamCount@ valid
+--     'IndirectCommandsStreamNV' structures
 --
--- -   @preprocessBuffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer'
+-- -   #VUID-VkGeneratedCommandsInfoNV-preprocessBuffer-parameter#
+--     @preprocessBuffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer'
 --     handle
 --
--- -   If @sequencesCountBuffer@ is not
+-- -   #VUID-VkGeneratedCommandsInfoNV-sequencesCountBuffer-parameter# If
+--     @sequencesCountBuffer@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @sequencesCountBuffer@
 --     /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
--- -   If @sequencesIndexBuffer@ is not
+-- -   #VUID-VkGeneratedCommandsInfoNV-sequencesIndexBuffer-parameter# If
+--     @sequencesIndexBuffer@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @sequencesIndexBuffer@
 --     /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
--- -   @streamCount@ /must/ be greater than @0@
+-- -   #VUID-VkGeneratedCommandsInfoNV-streamCount-arraylength#
+--     @streamCount@ /must/ be greater than @0@
 --
--- -   Each of @indirectCommandsLayout@, @pipeline@, @preprocessBuffer@,
+-- -   #VUID-VkGeneratedCommandsInfoNV-commonparent# Each of
+--     @indirectCommandsLayout@, @pipeline@, @preprocessBuffer@,
 --     @sequencesCountBuffer@, and @sequencesIndexBuffer@ that are valid
 --     handles of non-ignored parameters /must/ have been created,
 --     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
@@ -2374,25 +2561,32 @@ instance Zero GeneratedCommandsInfoNV where
 --
 -- == Valid Usage
 --
--- -   @maxSequencesCount@ /must/ be less or equal to
+-- -   #VUID-VkGeneratedCommandsMemoryRequirementsInfoNV-maxSequencesCount-02907#
+--     @maxSequencesCount@ /must/ be less or equal to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxIndirectSequenceCount@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkGeneratedCommandsMemoryRequirementsInfoNV-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkGeneratedCommandsMemoryRequirementsInfoNV-pNext-pNext#
+--     @pNext@ /must/ be @NULL@
 --
--- -   @pipelineBindPoint@ /must/ be a valid
+-- -   #VUID-VkGeneratedCommandsMemoryRequirementsInfoNV-pipelineBindPoint-parameter#
+--     @pipelineBindPoint@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
 --
--- -   @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+-- -   #VUID-VkGeneratedCommandsMemoryRequirementsInfoNV-pipeline-parameter#
+--     @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
 --
--- -   @indirectCommandsLayout@ /must/ be a valid
+-- -   #VUID-VkGeneratedCommandsMemoryRequirementsInfoNV-indirectCommandsLayout-parameter#
+--     @indirectCommandsLayout@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV' handle
 --
--- -   Both of @indirectCommandsLayout@, and @pipeline@ /must/ have been
+-- -   #VUID-VkGeneratedCommandsMemoryRequirementsInfoNV-commonparent# Both
+--     of @indirectCommandsLayout@, and @pipeline@ /must/ have been
 --     created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
 --

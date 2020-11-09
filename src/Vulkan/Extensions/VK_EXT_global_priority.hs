@@ -55,6 +55,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_QU
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkDeviceQueueGlobalPriorityCreateInfoEXT-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT'
+--
+-- -   #VUID-VkDeviceQueueGlobalPriorityCreateInfoEXT-globalPriority-parameter#
+--     @globalPriority@ /must/ be a valid 'QueueGlobalPriorityEXT' value
+--
 -- = See Also
 --
 -- 'QueueGlobalPriorityEXT',
@@ -62,8 +69,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_QU
 data DeviceQueueGlobalPriorityCreateInfoEXT = DeviceQueueGlobalPriorityCreateInfoEXT
   { -- | @globalPriority@ is the system-wide priority associated to this queue as
     -- specified by 'QueueGlobalPriorityEXT'
-    --
-    -- @globalPriority@ /must/ be a valid 'QueueGlobalPriorityEXT' value
     globalPriority :: QueueGlobalPriorityEXT }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

@@ -87,6 +87,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-vkGetPhysicalDeviceExternalBufferProperties-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PhysicalDevice' handle
+--
+-- -   #VUID-vkGetPhysicalDeviceExternalBufferProperties-pExternalBufferInfo-parameter#
+--     @pExternalBufferInfo@ /must/ be a valid pointer to a valid
+--     'PhysicalDeviceExternalBufferInfo' structure
+--
+-- -   #VUID-vkGetPhysicalDeviceExternalBufferProperties-pExternalBufferProperties-parameter#
+--     @pExternalBufferProperties@ /must/ be a valid pointer to a
+--     'ExternalBufferProperties' structure
+--
 -- = See Also
 --
 -- 'ExternalBufferProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
@@ -95,16 +107,10 @@ getPhysicalDeviceExternalBufferProperties :: forall io
                                            . (MonadIO io)
                                           => -- | @physicalDevice@ is the physical device from which to query the buffer
                                              -- capabilities.
-                                             --
-                                             -- @physicalDevice@ /must/ be a valid
-                                             -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                              PhysicalDevice
                                           -> -- | @pExternalBufferInfo@ is a pointer to a
                                              -- 'PhysicalDeviceExternalBufferInfo' structure describing the parameters
                                              -- that would be consumed by 'Vulkan.Core10.Buffer.createBuffer'.
-                                             --
-                                             -- @pExternalBufferInfo@ /must/ be a valid pointer to a valid
-                                             -- 'PhysicalDeviceExternalBufferInfo' structure
                                              PhysicalDeviceExternalBufferInfo
                                           -> io (ExternalBufferProperties)
 getPhysicalDeviceExternalBufferProperties physicalDevice externalBufferInfo = liftIO . evalContT $ do
@@ -215,10 +221,12 @@ instance Zero ExternalMemoryProperties where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceExternalImageFormatInfo-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO'
 --
--- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
+-- -   #VUID-VkPhysicalDeviceExternalImageFormatInfo-handleType-parameter#
+--     If @handleType@ is not @0@, @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     value
 --
@@ -274,6 +282,9 @@ instance Zero PhysicalDeviceExternalImageFormatInfo where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkExternalImageFormatProperties-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES'
+--
 -- = See Also
 --
 -- 'ExternalMemoryProperties',
@@ -320,6 +331,30 @@ instance Zero ExternalImageFormatProperties where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO'
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-pNext-pNext# @pNext@ /must/
+--     be @NULL@
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-flags-parameter# @flags@
+--     /must/ be a valid combination of
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
+--     values
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-usage-parameter# @usage@
+--     /must/ be a valid combination of
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-usage-requiredbitmask#
+--     @usage@ /must/ not be @0@
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-handleType-parameter#
+--     @handleType@ /must/ be a valid
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+--     value
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlags',
@@ -333,28 +368,16 @@ data PhysicalDeviceExternalBufferInfo = PhysicalDeviceExternalBufferInfo
     -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
     -- describing additional parameters of the buffer, corresponding to
     -- 'Vulkan.Core10.Buffer.BufferCreateInfo'::@flags@.
-    --
-    -- @flags@ /must/ be a valid combination of
-    -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits' values
     flags :: BufferCreateFlags
   , -- | @usage@ is a bitmask of
     -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' describing
     -- the intended usage of the buffer, corresponding to
     -- 'Vulkan.Core10.Buffer.BufferCreateInfo'::@usage@.
-    --
-    -- @usage@ /must/ be a valid combination of
-    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
-    --
-    -- @usage@ /must/ not be @0@
     usage :: BufferUsageFlags
   , -- | @handleType@ is a
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- value specifying the memory handle type that will be used with the
     -- memory associated with the buffer.
-    --
-    -- @handleType@ /must/ be a valid
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- value
     handleType :: ExternalMemoryHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
@@ -406,6 +429,12 @@ instance Zero PhysicalDeviceExternalBufferInfo where
 -- handle capabilities
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkExternalBufferProperties-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES'
+--
+-- -   #VUID-VkExternalBufferProperties-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
 -- = See Also
 --
@@ -559,7 +588,7 @@ instance Zero ExternalBufferProperties where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceIDProperties-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES'
 --
 -- = See Also

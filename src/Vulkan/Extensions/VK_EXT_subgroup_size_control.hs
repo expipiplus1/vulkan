@@ -45,6 +45,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = Description
 --
+-- -   #features-subgroupSizeControl# @subgroupSizeControl@ indicates
+--     whether the implementation supports controlling shader subgroup
+--     sizes via the
+--     'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
+--     flag and the 'PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
+--     structure.
+--
+-- -   #features-computeFullSubgroups# @computeFullSubgroups@ indicates
+--     whether the implementation supports requiring full subgroups in
+--     compute shaders via the
+--     'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT'
+--     flag.
+--
 -- If the 'PhysicalDeviceSubgroupSizeControlFeaturesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -72,21 +85,18 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceSubgroupSizeControlFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSubgroupSizeControlFeaturesEXT = PhysicalDeviceSubgroupSizeControlFeaturesEXT
-  { -- | @subgroupSizeControl@ indicates whether the implementation supports
-    -- controlling shader subgroup sizes via the
-    -- 'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
-    -- flag and the 'PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
-    -- structure.
+  { -- No documentation found for Nested "VkPhysicalDeviceSubgroupSizeControlFeaturesEXT" "subgroupSizeControl"
     subgroupSizeControl :: Bool
-  , -- | @computeFullSubgroups@ indicates whether the implementation supports
-    -- requiring full subgroups in compute shaders via the
-    -- 'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT'
-    -- flag.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupSizeControlFeaturesEXT" "computeFullSubgroups"
     computeFullSubgroups :: Bool
   }
   deriving (Typeable, Eq)
@@ -141,6 +151,39 @@ instance Zero PhysicalDeviceSubgroupSizeControlFeaturesEXT where
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #limits-min-subgroup-size# @minSubgroupSize@ is the minimum subgroup
+--     size supported by this device. @minSubgroupSize@ is at least one if
+--     any of the physical device’s queues support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+--     @minSubgroupSize@ is a power-of-two. @minSubgroupSize@ is less than
+--     or equal to @maxSubgroupSize@. @minSubgroupSize@ is less than or
+--     equal to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
+--
+-- -   #limits-max-subgroup-size# @maxSubgroupSize@ is the maximum subgroup
+--     size supported by this device. @maxSubgroupSize@ is at least one if
+--     any of the physical device’s queues support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+--     @maxSubgroupSize@ is a power-of-two. @maxSubgroupSize@ is greater
+--     than or equal to @minSubgroupSize@. @maxSubgroupSize@ is greater
+--     than or equal to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
+--
+-- -   #limits-max-subgroups-per-workgroup# @maxComputeWorkgroupSubgroups@
+--     is the maximum number of subgroups supported by the implementation
+--     within a workgroup.
+--
+-- -   #limits-required-subgroup-size-stages# @requiredSubgroupSizeStages@
+--     is a bitfield of what shader stages support having a required
+--     subgroup size specified.
+--
 -- If the 'PhysicalDeviceSubgroupSizeControlPropertiesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -154,32 +197,22 @@ instance Zero PhysicalDeviceSubgroupSizeControlFeaturesEXT where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceSubgroupSizeControlPropertiesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSubgroupSizeControlPropertiesEXT = PhysicalDeviceSubgroupSizeControlPropertiesEXT
-  { -- | @minSubgroupSize@ is the minimum subgroup size supported by this device.
-    -- @minSubgroupSize@ is at least one if any of the physical device’s queues
-    -- support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @minSubgroupSize@
-    -- is a power-of-two. @minSubgroupSize@ is less than or equal to
-    -- @maxSubgroupSize@. @minSubgroupSize@ is less than or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
+  { -- No documentation found for Nested "VkPhysicalDeviceSubgroupSizeControlPropertiesEXT" "minSubgroupSize"
     minSubgroupSize :: Word32
-  , -- | @maxSubgroupSize@ is the maximum subgroup size supported by this device.
-    -- @maxSubgroupSize@ is at least one if any of the physical device’s queues
-    -- support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @maxSubgroupSize@
-    -- is a power-of-two. @maxSubgroupSize@ is greater than or equal to
-    -- @minSubgroupSize@. @maxSubgroupSize@ is greater than or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupSizeControlPropertiesEXT" "maxSubgroupSize"
     maxSubgroupSize :: Word32
-  , -- | @maxComputeWorkgroupSubgroups@ is the maximum number of subgroups
-    -- supported by the implementation within a workgroup.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupSizeControlPropertiesEXT" "maxComputeWorkgroupSubgroups"
     maxComputeWorkgroupSubgroups :: Word32
-  , -- | @requiredSubgroupSizeStages@ is a bitfield of what shader stages support
-    -- having a required subgroup size specified.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupSizeControlPropertiesEXT" "requiredSubgroupSizeStages"
     requiredSubgroupSizeStages :: ShaderStageFlags
   }
   deriving (Typeable, Eq)
@@ -238,6 +271,17 @@ instance Zero PhysicalDeviceSubgroupSizeControlPropertiesEXT where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-requiredSubgroupSize-02760#
+--     @requiredSubgroupSize@ /must/ be a power-of-two integer
+--
+-- -   #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-requiredSubgroupSize-02761#
+--     @requiredSubgroupSize@ /must/ be greater or equal to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-min-subgroup-size minSubgroupSize>
+--
+-- -   #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-requiredSubgroupSize-02762#
+--     @requiredSubgroupSize@ /must/ be less than or equal to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>
+--
 -- = Description
 --
 -- If a 'PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT' structure is
@@ -248,17 +292,15 @@ instance Zero PhysicalDeviceSubgroupSizeControlPropertiesEXT where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
-  { -- | @requiredSubgroupSize@ /must/ be a power-of-two integer
-    --
-    -- @requiredSubgroupSize@ /must/ be greater or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-min-subgroup-size minSubgroupSize>
-    --
-    -- @requiredSubgroupSize@ /must/ be less than or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>
+  { -- No documentation found for Nested "VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT" "requiredSubgroupSize"
     requiredSubgroupSize :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

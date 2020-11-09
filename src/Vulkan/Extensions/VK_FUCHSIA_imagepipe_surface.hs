@@ -84,16 +84,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateImagePipeSurfaceFUCHSIA-instance-parameter# @instance@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateImagePipeSurfaceFUCHSIA-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'ImagePipeSurfaceCreateInfoFUCHSIA' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateImagePipeSurfaceFUCHSIA-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateImagePipeSurfaceFUCHSIA-pSurface-parameter# @pSurface@
+--     /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Return Codes
@@ -145,7 +149,22 @@ createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalCont
 -- | VkImagePipeSurfaceCreateInfoFUCHSIA - Structure specifying parameters of
 -- a newly created ImagePipe surface object
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkImagePipeSurfaceCreateInfoFUCHSIA-imagePipeHandle-00000#
+--     @imagePipeHandle@ /must/ be a valid @zx_handle_t@
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkImagePipeSurfaceCreateInfoFUCHSIA-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA'
+--
+-- -   #VUID-VkImagePipeSurfaceCreateInfoFUCHSIA-pNext-pNext# @pNext@
+--     /must/ be @NULL@
+--
+-- -   #VUID-VkImagePipeSurfaceCreateInfoFUCHSIA-flags-zerobitmask# @flags@
+--     /must/ be @0@
 --
 -- = See Also
 --
@@ -154,13 +173,9 @@ createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalCont
 -- 'createImagePipeSurfaceFUCHSIA'
 data ImagePipeSurfaceCreateInfoFUCHSIA = ImagePipeSurfaceCreateInfoFUCHSIA
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: ImagePipeSurfaceCreateFlagsFUCHSIA
   , -- | @imagePipeHandle@ is a @zx_handle_t@ referring to the ImagePipe to
     -- associate with the surface.
-    --
-    -- @imagePipeHandle@ /must/ be a valid @zx_handle_t@
     imagePipeHandle :: Zx_handle_t
   }
   deriving (Typeable, Eq)

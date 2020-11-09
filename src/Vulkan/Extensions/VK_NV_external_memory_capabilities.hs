@@ -101,6 +101,42 @@ foreign import ccall
 -- Otherwise, they are filled in as described for
 -- 'ExternalImageFormatPropertiesNV'.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetPhysicalDeviceExternalImageFormatPropertiesNV-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PhysicalDevice' handle
+--
+-- -   #VUID-vkGetPhysicalDeviceExternalImageFormatPropertiesNV-format-parameter#
+--     @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+--
+-- -   #VUID-vkGetPhysicalDeviceExternalImageFormatPropertiesNV-type-parameter#
+--     @type@ /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType'
+--     value
+--
+-- -   #VUID-vkGetPhysicalDeviceExternalImageFormatPropertiesNV-tiling-parameter#
+--     @tiling@ /must/ be a valid
+--     'Vulkan.Core10.Enums.ImageTiling.ImageTiling' value
+--
+-- -   #VUID-vkGetPhysicalDeviceExternalImageFormatPropertiesNV-usage-parameter#
+--     @usage@ /must/ be a valid combination of
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
+--
+-- -   #VUID-vkGetPhysicalDeviceExternalImageFormatPropertiesNV-usage-requiredbitmask#
+--     @usage@ /must/ not be @0@
+--
+-- -   #VUID-vkGetPhysicalDeviceExternalImageFormatPropertiesNV-flags-parameter#
+--     @flags@ /must/ be a valid combination of
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits' values
+--
+-- -   #VUID-vkGetPhysicalDeviceExternalImageFormatPropertiesNV-externalHandleType-parameter#
+--     @externalHandleType@ /must/ be a valid combination of
+--     'ExternalMemoryHandleTypeFlagBitsNV' values
+--
+-- -   #VUID-vkGetPhysicalDeviceExternalImageFormatPropertiesNV-pExternalImageFormatProperties-parameter#
+--     @pExternalImageFormatProperties@ /must/ be a valid pointer to a
+--     'ExternalImageFormatPropertiesNV' structure
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -128,45 +164,24 @@ getPhysicalDeviceExternalImageFormatPropertiesNV :: forall io
                                                   . (MonadIO io)
                                                  => -- | @physicalDevice@ is the physical device from which to query the image
                                                     -- capabilities
-                                                    --
-                                                    -- @physicalDevice@ /must/ be a valid
-                                                    -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                                     PhysicalDevice
                                                  -> -- | @format@ is the image format, corresponding to
                                                     -- 'Vulkan.Core10.Image.ImageCreateInfo'::@format@.
-                                                    --
-                                                    -- @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
                                                     Format
                                                  -> -- | @type@ is the image type, corresponding to
                                                     -- 'Vulkan.Core10.Image.ImageCreateInfo'::@imageType@.
-                                                    --
-                                                    -- @type@ /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType' value
                                                     ImageType
                                                  -> -- | @tiling@ is the image tiling, corresponding to
                                                     -- 'Vulkan.Core10.Image.ImageCreateInfo'::@tiling@.
-                                                    --
-                                                    -- @tiling@ /must/ be a valid 'Vulkan.Core10.Enums.ImageTiling.ImageTiling'
-                                                    -- value
                                                     ImageTiling
                                                  -> -- | @usage@ is the intended usage of the image, corresponding to
                                                     -- 'Vulkan.Core10.Image.ImageCreateInfo'::@usage@.
-                                                    --
-                                                    -- @usage@ /must/ be a valid combination of
-                                                    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
-                                                    --
-                                                    -- @usage@ /must/ not be @0@
                                                     ImageUsageFlags
                                                  -> -- | @flags@ is a bitmask describing additional parameters of the image,
                                                     -- corresponding to 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@.
-                                                    --
-                                                    -- @flags@ /must/ be a valid combination of
-                                                    -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits' values
                                                     ImageCreateFlags
                                                  -> -- | @externalHandleType@ is either one of the bits from
                                                     -- 'ExternalMemoryHandleTypeFlagBitsNV', or 0.
-                                                    --
-                                                    -- @externalHandleType@ /must/ be a valid combination of
-                                                    -- 'ExternalMemoryHandleTypeFlagBitsNV' values
                                                     ("externalHandleType" ::: ExternalMemoryHandleTypeFlagsNV)
                                                  -> io (ExternalImageFormatPropertiesNV)
 getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' tiling usage flags externalHandleType = liftIO . evalContT $ do

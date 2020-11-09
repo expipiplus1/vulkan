@@ -33,7 +33,20 @@ import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 -- | VkCopyCommandTransformInfoQCOM - Structure describing transform
 -- parameters of rotated copy command
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkCopyCommandTransformInfoQCOM-transform-04560# @transform@
+--     /must/ be
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
+--     or
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkCopyCommandTransformInfoQCOM-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_COMMAND_TRANSFORM_INFO_QCOM'
 --
 -- = See Also
 --
@@ -43,13 +56,6 @@ data CopyCommandTransformInfoQCOM = CopyCommandTransformInfoQCOM
   { -- | @transform@ is a
     -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
     -- describing the transform to be applied.
-    --
-    -- @transform@ /must/ be
-    -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
-    -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
-    -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
-    -- or
-    -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'
     transform :: SurfaceTransformFlagBitsKHR }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

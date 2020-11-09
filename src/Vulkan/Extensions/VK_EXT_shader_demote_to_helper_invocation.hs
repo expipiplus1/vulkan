@@ -40,6 +40,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-shaderDemoteToHelperInvocation#
+--     @shaderDemoteToHelperInvocation@ indicates whether the
+--     implementation supports the SPIR-V @DemoteToHelperInvocationEXT@
+--     capability.
+--
 -- If the 'PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT'
 -- structure is included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -50,13 +55,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT = PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
-  { -- | @shaderDemoteToHelperInvocation@ indicates whether the implementation
-    -- supports the SPIR-V @DemoteToHelperInvocationEXT@ capability.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT" "shaderDemoteToHelperInvocation"
     shaderDemoteToHelperInvocation :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

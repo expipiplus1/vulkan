@@ -34,6 +34,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_TEXTURE_L
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkTextureLODGatherFormatPropertiesAMD-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',

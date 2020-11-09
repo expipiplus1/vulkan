@@ -89,6 +89,17 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-vkGetBufferMemoryRequirements2-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetBufferMemoryRequirements2-pInfo-parameter# @pInfo@ /must/
+--     be a valid pointer to a valid 'BufferMemoryRequirementsInfo2'
+--     structure
+--
+-- -   #VUID-vkGetBufferMemoryRequirements2-pMemoryRequirements-parameter#
+--     @pMemoryRequirements@ /must/ be a valid pointer to a
+--     'MemoryRequirements2' structure
+--
 -- = See Also
 --
 -- 'BufferMemoryRequirementsInfo2', 'Vulkan.Core10.Handles.Device',
@@ -96,14 +107,9 @@ foreign import ccall
 getBufferMemoryRequirements2 :: forall a io
                               . (Extendss MemoryRequirements2 a, PokeChain a, PeekChain a, MonadIO io)
                              => -- | @device@ is the logical device that owns the buffer.
-                                --
-                                -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                 Device
                              -> -- | @pInfo@ is a pointer to a 'BufferMemoryRequirementsInfo2' structure
                                 -- containing parameters required for the memory requirements query.
-                                --
-                                -- @pInfo@ /must/ be a valid pointer to a valid
-                                -- 'BufferMemoryRequirementsInfo2' structure
                                 BufferMemoryRequirementsInfo2
                              -> io (MemoryRequirements2 a)
 getBufferMemoryRequirements2 device info = liftIO . evalContT $ do
@@ -130,6 +136,17 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-vkGetImageMemoryRequirements2-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetImageMemoryRequirements2-pInfo-parameter# @pInfo@ /must/
+--     be a valid pointer to a valid 'ImageMemoryRequirementsInfo2'
+--     structure
+--
+-- -   #VUID-vkGetImageMemoryRequirements2-pMemoryRequirements-parameter#
+--     @pMemoryRequirements@ /must/ be a valid pointer to a
+--     'MemoryRequirements2' structure
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'ImageMemoryRequirementsInfo2',
@@ -137,14 +154,9 @@ foreign import ccall
 getImageMemoryRequirements2 :: forall a b io
                              . (Extendss ImageMemoryRequirementsInfo2 a, Extendss MemoryRequirements2 b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
                             => -- | @device@ is the logical device that owns the image.
-                               --
-                               -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                Device
                             -> -- | @pInfo@ is a pointer to a 'ImageMemoryRequirementsInfo2' structure
                                -- containing parameters required for the memory requirements query.
-                               --
-                               -- @pInfo@ /must/ be a valid pointer to a valid
-                               -- 'ImageMemoryRequirementsInfo2' structure
                                (ImageMemoryRequirementsInfo2 a)
                             -> io (MemoryRequirements2 b)
 getImageMemoryRequirements2 device info = liftIO . evalContT $ do
@@ -171,15 +183,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetImageSparseMemoryRequirements2-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetImageSparseMemoryRequirements2-pInfo-parameter# @pInfo@
+--     /must/ be a valid pointer to a valid
 --     'ImageSparseMemoryRequirementsInfo2' structure
 --
--- -   @pSparseMemoryRequirementCount@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetImageSparseMemoryRequirements2-pSparseMemoryRequirementCount-parameter#
+--     @pSparseMemoryRequirementCount@ /must/ be a valid pointer to a
 --     @uint32_t@ value
 --
--- -   If the value referenced by @pSparseMemoryRequirementCount@ is not
+-- -   #VUID-vkGetImageSparseMemoryRequirements2-pSparseMemoryRequirements-parameter#
+--     If the value referenced by @pSparseMemoryRequirementCount@ is not
 --     @0@, and @pSparseMemoryRequirements@ is not @NULL@,
 --     @pSparseMemoryRequirements@ /must/ be a valid pointer to an array of
 --     @pSparseMemoryRequirementCount@ 'SparseImageMemoryRequirements2'
@@ -219,6 +235,15 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkBufferMemoryRequirementsInfo2-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2'
+--
+-- -   #VUID-VkBufferMemoryRequirementsInfo2-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
+--
+-- -   #VUID-VkBufferMemoryRequirementsInfo2-buffer-parameter# @buffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer',
@@ -227,8 +252,6 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR'
 data BufferMemoryRequirementsInfo2 = BufferMemoryRequirementsInfo2
   { -- | @buffer@ is the buffer to query.
-    --
-    -- @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
     buffer :: Buffer }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -272,14 +295,16 @@ instance Zero BufferMemoryRequirementsInfo2 where
 --
 -- == Valid Usage
 --
--- -   If @image@ was created with a /multi-planar/ format and the
+-- -   #VUID-VkImageMemoryRequirementsInfo2-image-01589# If @image@ was
+--     created with a /multi-planar/ format and the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     flag, there /must/ be a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'
 --     included in the @pNext@ chain of the 'ImageMemoryRequirementsInfo2'
 --     structure
 --
--- -   If @image@ was created with
+-- -   #VUID-VkImageMemoryRequirementsInfo2-image-02279# If @image@ was
+--     created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     and with
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
@@ -288,37 +313,41 @@ instance Zero BufferMemoryRequirementsInfo2 where
 --     included in the @pNext@ chain of the 'ImageMemoryRequirementsInfo2'
 --     structure
 --
--- -   If @image@ was not created with the
+-- -   #VUID-VkImageMemoryRequirementsInfo2-image-01590# If @image@ was not
+--     created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     flag, there /must/ not be a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'
 --     included in the @pNext@ chain of the 'ImageMemoryRequirementsInfo2'
 --     structure
 --
--- -   If @image@ was created with a single-plane format and with any
---     @tiling@ other than
+-- -   #VUID-VkImageMemoryRequirementsInfo2-image-02280# If @image@ was
+--     created with a single-plane format and with any @tiling@ other than
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then there /must/ not be a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'
 --     included in the @pNext@ chain of the 'ImageMemoryRequirementsInfo2'
 --     structure
 --
--- -   If @image@ was created with the
+-- -   #VUID-VkImageMemoryRequirementsInfo2-image-01897# If @image@ was
+--     created with the
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
 --     external memory handle type, then @image@ /must/ be bound to memory
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImageMemoryRequirementsInfo2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkImageMemoryRequirementsInfo2-pNext-pNext# @pNext@ /must/ be
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkImageMemoryRequirementsInfo2-sType-unique# The @sType@ value
+--     of each struct in the @pNext@ chain /must/ be unique
 --
--- -   @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+-- -   #VUID-VkImageMemoryRequirementsInfo2-image-parameter# @image@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Image' handle
 --
 -- = See Also
 --
@@ -382,6 +411,16 @@ instance es ~ '[] => Zero (ImageMemoryRequirementsInfo2 es) where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkImageSparseMemoryRequirementsInfo2-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2'
+--
+-- -   #VUID-VkImageSparseMemoryRequirementsInfo2-pNext-pNext# @pNext@
+--     /must/ be @NULL@
+--
+-- -   #VUID-VkImageSparseMemoryRequirementsInfo2-image-parameter# @image@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Image',
@@ -390,8 +429,6 @@ instance es ~ '[] => Zero (ImageMemoryRequirementsInfo2 es) where
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2KHR'
 data ImageSparseMemoryRequirementsInfo2 = ImageSparseMemoryRequirementsInfo2
   { -- | @image@ is the image to query.
-    --
-    -- @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
     image :: Image }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -435,14 +472,15 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkMemoryRequirements2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkMemoryRequirements2-pNext-pNext# @pNext@ /must/ be @NULL@ or
+--     a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkMemoryRequirements2-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -511,6 +549,13 @@ instance es ~ '[] => Zero (MemoryRequirements2 es) where
 -- | VkSparseImageMemoryRequirements2 - (None)
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkSparseImageMemoryRequirements2-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2'
+--
+-- -   #VUID-VkSparseImageMemoryRequirements2-pNext-pNext# @pNext@ /must/
+--     be @NULL@
 --
 -- = See Also
 --

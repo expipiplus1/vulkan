@@ -45,6 +45,20 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WRITE_DES
 --
 -- = Description
 --
+-- -   #features-inlineUniformBlock# @inlineUniformBlock@ indicates whether
+--     the implementation supports inline uniform block descriptors. If
+--     this feature is not enabled,
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     /must/ not be used.
+--
+-- -   #features-descriptorBindingInlineUniformBlockUpdateAfterBind#
+--     @descriptorBindingInlineUniformBlockUpdateAfterBind@ indicates
+--     whether the implementation supports updating inline uniform block
+--     descriptors after a set is bound. If this feature is not enabled,
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
+--     /must/ not be used with
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'.
+--
 -- If the 'PhysicalDeviceInlineUniformBlockFeaturesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -55,22 +69,18 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WRITE_DES
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceInlineUniformBlockFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceInlineUniformBlockFeaturesEXT = PhysicalDeviceInlineUniformBlockFeaturesEXT
-  { -- | @inlineUniformBlock@ indicates whether the implementation supports
-    -- inline uniform block descriptors. If this feature is not enabled,
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
-    -- /must/ not be used.
+  { -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockFeaturesEXT" "inlineUniformBlock"
     inlineUniformBlock :: Bool
-  , -- | @descriptorBindingInlineUniformBlockUpdateAfterBind@ indicates whether
-    -- the implementation supports updating inline uniform block descriptors
-    -- after a set is bound. If this feature is not enabled,
-    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
-    -- /must/ not be used with
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockFeaturesEXT" "descriptorBindingInlineUniformBlockUpdateAfterBind"
     descriptorBindingInlineUniformBlockUpdateAfterBind :: Bool
   }
   deriving (Typeable, Eq)
@@ -126,6 +136,53 @@ instance Zero PhysicalDeviceInlineUniformBlockFeaturesEXT where
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #limits-maxInlineUniformBlockSize# @maxInlineUniformBlockSize@ is
+--     the maximum size in bytes of an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
+--     binding.
+--
+-- -   #limits-maxPerStageDescriptorInlineUniformBlocks#
+--     @maxPerStageDescriptorInlineUniformBlock@ is the maximum number of
+--     inline uniform block bindings that /can/ be accessible to a single
+--     shader stage in a pipeline layout. Descriptor bindings with a
+--     descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     count against this limit. Only descriptor bindings in descriptor set
+--     layouts created without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set count against this limit.
+--
+-- -   #limits-maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks#
+--     @maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks@ is similar
+--     to @maxPerStageDescriptorInlineUniformBlocks@ but counts descriptor
+--     bindings from descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
+-- -   #limits-maxDescriptorSetInlineUniformBlocks#
+--     @maxDescriptorSetInlineUniformBlocks@ is the maximum number of
+--     inline uniform block bindings that /can/ be included in descriptor
+--     bindings in a pipeline layout across all pipeline shader stages and
+--     descriptor set numbers. Descriptor bindings with a descriptor type
+--     of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     count against this limit. Only descriptor bindings in descriptor set
+--     layouts created without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set count against this limit.
+--
+-- -   #limits-maxDescriptorSetUpdateAfterBindInlineUniformBlocks#
+--     @maxDescriptorSetUpdateAfterBindInlineUniformBlocks@ is similar to
+--     @maxDescriptorSetInlineUniformBlocks@ but counts descriptor bindings
+--     from descriptor sets created with or without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set.
+--
 -- If the 'PhysicalDeviceInlineUniformBlockPropertiesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -133,37 +190,23 @@ instance Zero PhysicalDeviceInlineUniformBlockFeaturesEXT where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceInlineUniformBlockPropertiesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniformBlockPropertiesEXT
-  { -- | @maxInlineUniformBlockSize@ is the maximum size in bytes of an
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
-    -- binding.
+  { -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxInlineUniformBlockSize"
     maxInlineUniformBlockSize :: Word32
   , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxPerStageDescriptorInlineUniformBlocks"
     maxPerStageDescriptorInlineUniformBlocks :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks@ is similar to
-    -- @maxPerStageDescriptorInlineUniformBlocks@ but counts descriptor
-    -- bindings from descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks"
     maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks :: Word32
-  , -- | @maxDescriptorSetInlineUniformBlocks@ is the maximum number of inline
-    -- uniform block bindings that /can/ be included in descriptor bindings in
-    -- a pipeline layout across all pipeline shader stages and descriptor set
-    -- numbers. Descriptor bindings with a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
-    -- count against this limit. Only descriptor bindings in descriptor set
-    -- layouts created without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set count against this limit.
+  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxDescriptorSetInlineUniformBlocks"
     maxDescriptorSetInlineUniformBlocks :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindInlineUniformBlocks@ is similar to
-    -- @maxDescriptorSetInlineUniformBlocks@ but counts descriptor bindings
-    -- from descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxDescriptorSetUpdateAfterBindInlineUniformBlocks"
     maxDescriptorSetUpdateAfterBindInlineUniformBlocks :: Word32
   }
   deriving (Typeable, Eq)
@@ -223,7 +266,22 @@ instance Zero PhysicalDeviceInlineUniformBlockPropertiesEXT where
 -- | VkWriteDescriptorSetInlineUniformBlockEXT - Structure specifying inline
 -- uniform block data
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkWriteDescriptorSetInlineUniformBlockEXT-dataSize-02222#
+--     @dataSize@ /must/ be an integer multiple of @4@
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkWriteDescriptorSetInlineUniformBlockEXT-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT'
+--
+-- -   #VUID-VkWriteDescriptorSetInlineUniformBlockEXT-pData-parameter#
+--     @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
+--
+-- -   #VUID-VkWriteDescriptorSetInlineUniformBlockEXT-dataSize-arraylength#
+--     @dataSize@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -231,15 +289,9 @@ instance Zero PhysicalDeviceInlineUniformBlockPropertiesEXT where
 data WriteDescriptorSetInlineUniformBlockEXT = WriteDescriptorSetInlineUniformBlockEXT
   { -- | @dataSize@ is the number of bytes of inline uniform block data pointed
     -- to by @pData@.
-    --
-    -- @dataSize@ /must/ be an integer multiple of @4@
-    --
-    -- @dataSize@ /must/ be greater than @0@
     dataSize :: Word32
   , -- | @pData@ is a pointer to @dataSize@ number of bytes of data to write to
     -- the inline uniform block.
-    --
-    -- @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
     data' :: Ptr ()
   }
   deriving (Typeable)
@@ -289,6 +341,10 @@ instance Zero WriteDescriptorSetInlineUniformBlockEXT where
 -- descriptor pool
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkDescriptorPoolInlineUniformBlockCreateInfoEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT'
 --
 -- = See Also
 --

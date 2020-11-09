@@ -38,6 +38,52 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-textureCompressionASTC_HDR# @textureCompressionASTC_HDR@
+--     indicates whether all of the ASTC HDR compressed texture formats are
+--     supported. If this feature is enabled, then the
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT',
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
+--     and
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--     features /must/ be supported in @optimalTilingFeatures@ for the
+--     following formats:
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT'
+--
+--     To query for additional properties, or if the feature is not
+--     enabled,
+--     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
+--     and
+--     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
+--     /can/ be used to check for supported properties of individual
+--     formats as normal.
+--
 -- If the 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -48,55 +94,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT = PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
-  { -- | @textureCompressionASTC_HDR@ indicates whether all of the ASTC HDR
-    -- compressed texture formats are supported. If this feature is enabled,
-    -- then the
-    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT',
-    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
-    -- and
-    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
-    -- features /must/ be supported in @optimalTilingFeatures@ for the
-    -- following formats:
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT'
-    --
-    -- To query for additional properties, or if the feature is not enabled,
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
-    -- and
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
-    -- /can/ be used to check for supported properties of individual formats as
-    -- normal.
+  { -- No documentation found for Nested "VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT" "textureCompressionASTC_HDR"
     textureCompressionASTC_HDR :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

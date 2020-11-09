@@ -112,12 +112,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceToolPropertiesEXT-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pToolCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDeviceToolPropertiesEXT-pToolCount-parameter#
+--     @pToolCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pToolCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceToolPropertiesEXT-pToolProperties-parameter#
+--     If the value referenced by @pToolCount@ is not @0@, and
 --     @pToolProperties@ is not @NULL@, @pToolProperties@ /must/ be a valid
 --     pointer to an array of @pToolCount@
 --     'PhysicalDeviceToolPropertiesEXT' structures
@@ -167,6 +170,13 @@ getPhysicalDeviceToolPropertiesEXT physicalDevice = liftIO . evalContT $ do
 -- about an active tool
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceToolPropertiesEXT-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT'
+--
+-- -   #VUID-VkPhysicalDeviceToolPropertiesEXT-pNext-pNext# @pNext@ /must/
+--     be @NULL@
 --
 -- = See Also
 --

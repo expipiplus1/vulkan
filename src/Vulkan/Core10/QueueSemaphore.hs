@@ -81,17 +81,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateSemaphore-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'SemaphoreCreateInfo' structure
+-- -   #VUID-vkCreateSemaphore-pCreateInfo-parameter# @pCreateInfo@ /must/
+--     be a valid pointer to a valid 'SemaphoreCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateSemaphore-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pSemaphore@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.Semaphore' handle
+-- -   #VUID-vkCreateSemaphore-pSemaphore-parameter# @pSemaphore@ /must/ be
+--     a valid pointer to a 'Vulkan.Core10.Handles.Semaphore' handle
 --
 -- == Return Codes
 --
@@ -162,30 +163,34 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted batches that refer to @semaphore@ /must/ have
---     completed execution
+-- -   #VUID-vkDestroySemaphore-semaphore-01137# All submitted batches that
+--     refer to @semaphore@ /must/ have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroySemaphore-semaphore-01138# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @semaphore@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroySemaphore-semaphore-01139# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @semaphore@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroySemaphore-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @semaphore@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @semaphore@ /must/ be a valid 'Vulkan.Core10.Handles.Semaphore'
---     handle
+-- -   #VUID-vkDestroySemaphore-semaphore-parameter# If @semaphore@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @semaphore@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Semaphore' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroySemaphore-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @semaphore@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroySemaphore-semaphore-parent# If @semaphore@ is a valid
+--     handle, it /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Host Synchronization
 --
@@ -223,21 +228,21 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkSemaphoreCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkSemaphoreCreateInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo',
 --     'Vulkan.Extensions.VK_KHR_external_semaphore_win32.ExportSemaphoreWin32HandleInfoKHR',
 --     or
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkSemaphoreCreateInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkSemaphoreCreateInfo-flags-zerobitmask# @flags@ /must/ be @0@
 --
 -- = See Also
 --

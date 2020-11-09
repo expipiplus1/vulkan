@@ -39,6 +39,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
+-- -   #features-computeDerivativeGroupQuads# @computeDerivativeGroupQuads@
+--     indicates that the implementation supports the
+--     @ComputeDerivativeGroupQuadsNV@ SPIR-V capability.
+--
+-- -   #features-computeDerivativeGroupLinear#
+--     @computeDerivativeGroupLinear@ indicates that the implementation
+--     supports the @ComputeDerivativeGroupLinearNV@ SPIR-V capability.
+--
 -- See
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-quad>
 -- chapter for more information.
@@ -53,16 +61,18 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceComputeShaderDerivativesFeaturesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceComputeShaderDerivativesFeaturesNV = PhysicalDeviceComputeShaderDerivativesFeaturesNV
-  { -- | @computeDerivativeGroupQuads@ indicates that the implementation supports
-    -- the @ComputeDerivativeGroupQuadsNV@ SPIR-V capability.
+  { -- No documentation found for Nested "VkPhysicalDeviceComputeShaderDerivativesFeaturesNV" "computeDerivativeGroupQuads"
     computeDerivativeGroupQuads :: Bool
-  , -- | @computeDerivativeGroupLinear@ indicates that the implementation
-    -- supports the @ComputeDerivativeGroupLinearNV@ SPIR-V capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceComputeShaderDerivativesFeaturesNV" "computeDerivativeGroupLinear"
     computeDerivativeGroupLinear :: Bool
   }
   deriving (Typeable, Eq)

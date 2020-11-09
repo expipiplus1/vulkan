@@ -31,18 +31,35 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- | VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT - Structure describing
 -- features supported by VK_EXT_shader_image_atomic_int64
 --
+-- = Members
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #features-shaderImageInt64Atomics# @shaderImageInt64Atomics@
+--     indicates whether shaders /can/ support 64-bit unsigned and signed
+--     integer atomic operations on images.
+--
+-- -   #features-sparseImageInt64Atomics# @sparseImageInt64Atomics@
+--     indicates whether 64-bit integer atomics /can/ be used on sparse
+--     images.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = PhysicalDeviceShaderImageAtomicInt64FeaturesEXT
-  { -- | @shaderImageInt64Atomics@ indicates whether shaders /can/ support 64-bit
-    -- unsigned and signed integer atomic operations on images.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT" "shaderImageInt64Atomics"
     shaderImageInt64Atomics :: Bool
-  , -- | @sparseImageInt64Atomics@ indicates whether 64-bit integer atomics /can/
-    -- be used on sparse images.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT" "sparseImageInt64Atomics"
     sparseImageInt64Atomics :: Bool
   }
   deriving (Typeable, Eq)

@@ -148,16 +148,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateDescriptorSetLayout-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateDescriptorSetLayout-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'DescriptorSetLayoutCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateDescriptorSetLayout-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pSetLayout@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateDescriptorSetLayout-pSetLayout-parameter# @pSetLayout@
+--     /must/ be a valid pointer to a
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' handle
 --
 -- == Return Codes
@@ -229,27 +233,33 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDescriptorSetLayout-descriptorSetLayout-00284# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @descriptorSetLayout@ was created, a compatible set of
 --     callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDescriptorSetLayout-descriptorSetLayout-00285# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @descriptorSetLayout@ was created, @pAllocator@ /must/
 --     be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyDescriptorSetLayout-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @descriptorSetLayout@ is not
+-- -   #VUID-vkDestroyDescriptorSetLayout-descriptorSetLayout-parameter# If
+--     @descriptorSetLayout@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @descriptorSetLayout@
 --     /must/ be a valid 'Vulkan.Core10.Handles.DescriptorSetLayout' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkDestroyDescriptorSetLayout-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @descriptorSetLayout@ is a valid handle, it /must/ have been
+-- -   #VUID-vkDestroyDescriptorSetLayout-descriptorSetLayout-parent# If
+--     @descriptorSetLayout@ is a valid handle, it /must/ have been
 --     created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
@@ -304,16 +314,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateDescriptorPool-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'DescriptorPoolCreateInfo' structure
+-- -   #VUID-vkCreateDescriptorPool-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'DescriptorPoolCreateInfo'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateDescriptorPool-pAllocator-parameter# If @pAllocator@
+--     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pDescriptorPool@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateDescriptorPool-pDescriptorPool-parameter#
+--     @pDescriptorPool@ /must/ be a valid pointer to a
 --     'Vulkan.Core10.Handles.DescriptorPool' handle
 --
 -- == Return Codes
@@ -394,30 +407,36 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @descriptorPool@ (via any
---     allocated descriptor sets) /must/ have completed execution
+-- -   #VUID-vkDestroyDescriptorPool-descriptorPool-00303# All submitted
+--     commands that refer to @descriptorPool@ (via any allocated
+--     descriptor sets) /must/ have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDescriptorPool-descriptorPool-00304# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @descriptorPool@ was created, a compatible set of
 --     callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDescriptorPool-descriptorPool-00305# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @descriptorPool@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyDescriptorPool-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @descriptorPool@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-vkDestroyDescriptorPool-descriptorPool-parameter# If
+--     @descriptorPool@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @descriptorPool@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DescriptorPool' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyDescriptorPool-pAllocator-parameter# If @pAllocator@
+--     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @descriptorPool@ is a valid handle, it /must/ have been created,
+-- -   #VUID-vkDestroyDescriptorPool-descriptorPool-parent# If
+--     @descriptorPool@ is a valid handle, it /must/ have been created,
 --     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
@@ -468,20 +487,23 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All uses of @descriptorPool@ (via any allocated descriptor sets)
---     /must/ have completed execution
+-- -   #VUID-vkResetDescriptorPool-descriptorPool-00313# All uses of
+--     @descriptorPool@ (via any allocated descriptor sets) /must/ have
+--     completed execution
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkResetDescriptorPool-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @descriptorPool@ /must/ be a valid
+-- -   #VUID-vkResetDescriptorPool-descriptorPool-parameter#
+--     @descriptorPool@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DescriptorPool' handle
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-vkResetDescriptorPool-flags-zerobitmask# @flags@ /must/ be @0@
 --
--- -   @descriptorPool@ /must/ have been created, allocated, or retrieved
---     from @device@
+-- -   #VUID-vkResetDescriptorPool-descriptorPool-parent# @descriptorPool@
+--     /must/ have been created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -589,16 +611,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkAllocateDescriptorSets-device-parameter# @device@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pAllocateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkAllocateDescriptorSets-pAllocateInfo-parameter#
+--     @pAllocateInfo@ /must/ be a valid pointer to a valid
 --     'DescriptorSetAllocateInfo' structure
 --
--- -   @pDescriptorSets@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkAllocateDescriptorSets-pDescriptorSets-parameter#
+--     @pDescriptorSets@ /must/ be a valid pointer to an array of
 --     @pAllocateInfo->descriptorSetCount@
 --     'Vulkan.Core10.Handles.DescriptorSet' handles
 --
--- -   @pAllocateInfo->descriptorSetCount@ /must/ be greater than @0@
+-- -   #VUID-vkAllocateDescriptorSets-pAllocateInfo::descriptorSetCount-arraylength#
+--     @pAllocateInfo->descriptorSetCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
@@ -675,35 +701,39 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to any element of
---     @pDescriptorSets@ /must/ have completed execution
+-- -   #VUID-vkFreeDescriptorSets-pDescriptorSets-00309# All submitted
+--     commands that refer to any element of @pDescriptorSets@ /must/ have
+--     completed execution
 --
--- -   @pDescriptorSets@ /must/ be a valid pointer to an array of
---     @descriptorSetCount@ 'Vulkan.Core10.Handles.DescriptorSet' handles,
---     each element of which /must/ either be a valid handle or
+-- -   #VUID-vkFreeDescriptorSets-pDescriptorSets-00310# @pDescriptorSets@
+--     /must/ be a valid pointer to an array of @descriptorSetCount@
+--     'Vulkan.Core10.Handles.DescriptorSet' handles, each element of which
+--     /must/ either be a valid handle or
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   Each valid handle in @pDescriptorSets@ /must/ have been allocated
---     from @descriptorPool@
---
--- -   @descriptorPool@ /must/ have been created with the
+-- -   #VUID-vkFreeDescriptorSets-descriptorPool-00312# @descriptorPool@
+--     /must/ have been created with the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT'
 --     flag
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkFreeDescriptorSets-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @descriptorPool@ /must/ be a valid
+-- -   #VUID-vkFreeDescriptorSets-descriptorPool-parameter#
+--     @descriptorPool@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DescriptorPool' handle
 --
--- -   @descriptorSetCount@ /must/ be greater than @0@
+-- -   #VUID-vkFreeDescriptorSets-descriptorSetCount-arraylength#
+--     @descriptorSetCount@ /must/ be greater than @0@
 --
--- -   @descriptorPool@ /must/ have been created, allocated, or retrieved
---     from @device@
+-- -   #VUID-vkFreeDescriptorSets-descriptorPool-parent# @descriptorPool@
+--     /must/ have been created, allocated, or retrieved from @device@
 --
--- -   Each element of @pDescriptorSets@ that is a valid handle /must/ have
---     been created, allocated, or retrieved from @descriptorPool@
+-- -   #VUID-vkFreeDescriptorSets-pDescriptorSets-parent# Each element of
+--     @pDescriptorSets@ that is a valid handle /must/ have been created,
+--     allocated, or retrieved from @descriptorPool@
 --
 -- == Host Synchronization
 --
@@ -781,8 +811,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   Descriptor bindings updated by this command which were created
---     without the
+-- -   #VUID-vkUpdateDescriptorSets-None-03047# Descriptor bindings updated
+--     by this command which were created without the
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --     or
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
@@ -792,13 +822,16 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkUpdateDescriptorSets-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @descriptorWriteCount@ is not @0@, @pDescriptorWrites@ /must/ be
---     a valid pointer to an array of @descriptorWriteCount@ valid
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-parameter# If
+--     @descriptorWriteCount@ is not @0@, @pDescriptorWrites@ /must/ be a
+--     valid pointer to an array of @descriptorWriteCount@ valid
 --     'WriteDescriptorSet' structures
 --
--- -   If @descriptorCopyCount@ is not @0@, @pDescriptorCopies@ /must/ be a
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorCopies-parameter# If
+--     @descriptorCopyCount@ is not @0@, @pDescriptorCopies@ /must/ be a
 --     valid pointer to an array of @descriptorCopyCount@ valid
 --     'CopyDescriptorSet' structures
 --
@@ -865,28 +898,31 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
 --
 -- == Valid Usage
 --
--- -   @offset@ /must/ be less than the size of @buffer@
+-- -   #VUID-VkDescriptorBufferInfo-offset-00340# @offset@ /must/ be less
+--     than the size of @buffer@
 --
--- -   If @range@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     @range@ /must/ be greater than @0@
+-- -   #VUID-VkDescriptorBufferInfo-range-00341# If @range@ is not equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be greater
+--     than @0@
 --
--- -   If @range@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     @range@ /must/ be less than or equal to the size of @buffer@ minus
---     @offset@
+-- -   #VUID-VkDescriptorBufferInfo-range-00342# If @range@ is not equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be less than
+--     or equal to the size of @buffer@ minus @offset@
 --
--- -   If the
+-- -   #VUID-VkDescriptorBufferInfo-buffer-02998# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, @buffer@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @buffer@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', @offset@
---     /must/ be zero and @range@ /must/ be
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE'
+-- -   #VUID-VkDescriptorBufferInfo-buffer-02999# If @buffer@ is
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @offset@ /must/ be zero
+--     and @range@ /must/ be 'Vulkan.Core10.APIConstants.WHOLE_SIZE'
 --
 -- == Valid Usage (Implicit)
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-VkDescriptorBufferInfo-buffer-parameter# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Buffer' handle
 --
 -- = See Also
 --
@@ -955,23 +991,24 @@ instance Zero DescriptorBufferInfo where
 --
 -- == Valid Usage
 --
--- -   @imageView@ /must/ not be 2D or 2D array image view created from a
---     3D image
+-- -   #VUID-VkDescriptorImageInfo-imageView-00343# @imageView@ /must/ not
+--     be 2D or 2D array image view created from a 3D image
 --
--- -   If @imageView@ is created from a depth\/stencil image, the
---     @aspectMask@ used to create the @imageView@ /must/ include either
+-- -   #VUID-VkDescriptorImageInfo-imageView-01976# If @imageView@ is
+--     created from a depth\/stencil image, the @aspectMask@ used to create
+--     the @imageView@ /must/ include either
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --     but not both
 --
--- -   @imageLayout@ /must/ match the actual
---     'Vulkan.Core10.Enums.ImageLayout.ImageLayout' of each subresource
---     accessible from @imageView@ at the time this descriptor is accessed
---     as defined by the
+-- -   #VUID-VkDescriptorImageInfo-imageLayout-00344# @imageLayout@ /must/
+--     match the actual 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' of
+--     each subresource accessible from @imageView@ at the time this
+--     descriptor is accessed as defined by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-layouts-matching-rule image layout matching rules>
 --
--- -   If @sampler@ is used and the 'Vulkan.Core10.Enums.Format.Format' of
---     the image is a
+-- -   #VUID-VkDescriptorImageInfo-sampler-01564# If @sampler@ is used and
+--     the 'Vulkan.Core10.Enums.Format.Format' of the image is a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     the image /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
@@ -981,7 +1018,8 @@ instance Zero DescriptorBufferInfo where
 --     or (for three-plane formats only)
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
--- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+-- -   #VUID-VkDescriptorImageInfo-mutableComparisonSamplers-04450# If the
+--     @VK_KHR_portability_subset@ extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@mutableComparisonSamplers@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @sampler@ /must/
 --     have been created with
@@ -990,9 +1028,10 @@ instance Zero DescriptorBufferInfo where
 --
 -- == Valid Usage (Implicit)
 --
--- -   Both of @imageView@, and @sampler@ that are valid handles of
---     non-ignored parameters /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-VkDescriptorImageInfo-commonparent# Both of @imageView@, and
+--     @sampler@ that are valid handles of non-ignored parameters /must/
+--     have been created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
@@ -1115,43 +1154,49 @@ instance Zero DescriptorImageInfo where
 --
 -- == Valid Usage
 --
--- -   @dstBinding@ /must/ be less than or equal to the maximum value of
---     @binding@ of all 'DescriptorSetLayoutBinding' structures specified
---     when @dstSet@’s descriptor set layout was created
+-- -   #VUID-VkWriteDescriptorSet-dstBinding-00315# @dstBinding@ /must/ be
+--     less than or equal to the maximum value of @binding@ of all
+--     'DescriptorSetLayoutBinding' structures specified when @dstSet@’s
+--     descriptor set layout was created
 --
--- -   @dstBinding@ /must/ be a binding with a non-zero @descriptorCount@
+-- -   #VUID-VkWriteDescriptorSet-dstBinding-00316# @dstBinding@ /must/ be
+--     a binding with a non-zero @descriptorCount@
 --
--- -   All consecutive bindings updated via a single 'WriteDescriptorSet'
---     structure, except those with a @descriptorCount@ of zero, /must/
---     have identical @descriptorType@ and @stageFlags@
+-- -   #VUID-VkWriteDescriptorSet-descriptorCount-00317# All consecutive
+--     bindings updated via a single 'WriteDescriptorSet' structure, except
+--     those with a @descriptorCount@ of zero, /must/ have identical
+--     @descriptorType@ and @stageFlags@
 --
--- -   All consecutive bindings updated via a single 'WriteDescriptorSet'
---     structure, except those with a @descriptorCount@ of zero, /must/ all
---     either use immutable samplers or /must/ all not use immutable
---     samplers
+-- -   #VUID-VkWriteDescriptorSet-descriptorCount-00318# All consecutive
+--     bindings updated via a single 'WriteDescriptorSet' structure, except
+--     those with a @descriptorCount@ of zero, /must/ all either use
+--     immutable samplers or /must/ all not use immutable samplers
 --
--- -   @descriptorType@ /must/ match the type of @dstBinding@ within
---     @dstSet@
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00319# @descriptorType@
+--     /must/ match the type of @dstBinding@ within @dstSet@
 --
--- -   @dstSet@ /must/ be a valid 'Vulkan.Core10.Handles.DescriptorSet'
---     handle
+-- -   #VUID-VkWriteDescriptorSet-dstSet-00320# @dstSet@ /must/ be a valid
+--     'Vulkan.Core10.Handles.DescriptorSet' handle
 --
--- -   The sum of @dstArrayElement@ and @descriptorCount@ /must/ be less
---     than or equal to the number of array elements in the descriptor set
---     binding specified by @dstBinding@, and all applicable consecutive
---     bindings, as described by
+-- -   #VUID-VkWriteDescriptorSet-dstArrayElement-00321# The sum of
+--     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
+--     to the number of array elements in the descriptor set binding
+--     specified by @dstBinding@, and all applicable consecutive bindings,
+--     as described by
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-02219# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     @dstArrayElement@ /must/ be an integer multiple of @4@
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-02220# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     @descriptorCount@ /must/ be an integer multiple of @4@
 --
--- -   If @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00322# If @descriptorType@
+--     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
@@ -1160,7 +1205,8 @@ instance Zero DescriptorImageInfo where
 --     @pImageInfo@ /must/ be a valid pointer to an array of
 --     @descriptorCount@ valid 'DescriptorImageInfo' structures
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-02994# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
@@ -1168,7 +1214,8 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core10.Handles.BufferView' handle or
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-02995# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
@@ -1177,7 +1224,8 @@ instance Zero DescriptorImageInfo where
 --     feature is not enabled, each element of @pTexelBufferView@ /must/
 --     not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00324# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
@@ -1186,15 +1234,16 @@ instance Zero DescriptorImageInfo where
 --     @pBufferInfo@ /must/ be a valid pointer to an array of
 --     @descriptorCount@ valid 'DescriptorBufferInfo' structures
 --
--- -   If @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00325# If @descriptorType@
+--     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     and @dstSet@ was not allocated with a layout that included immutable
 --     samplers for @dstBinding@ with @descriptorType@, the @sampler@
 --     member of each element of @pImageInfo@ /must/ be a valid
 --     'Vulkan.Core10.Handles.Sampler' object
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-02996# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
@@ -1204,7 +1253,8 @@ instance Zero DescriptorImageInfo where
 --     either a valid 'Vulkan.Core10.Handles.ImageView' handle or
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-02997# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
@@ -1215,27 +1265,31 @@ instance Zero DescriptorImageInfo where
 --     feature is not enabled, the @imageView@ member of each element of
 --     @pImageInfo@ /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-02221# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     the @pNext@ chain /must/ include a
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
 --     structure whose @dataSize@ member equals @descriptorCount@
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-02382# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
 --     the @pNext@ chain /must/ include a
 --     'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
 --     structure whose @accelerationStructureCount@ member equals
 --     @descriptorCount@
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-01946# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     then the @imageView@ member of each @pImageInfo@ element /must/ have
 --     been created without a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure in its @pNext@ chain
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-02738# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     and if any element of @pImageInfo@ has a @imageView@ member that was
 --     created with a
@@ -1247,7 +1301,8 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     object
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-01948# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     and @dstSet@ was allocated with a layout that included immutable
 --     samplers for @dstBinding@, then the @imageView@ member of each
@@ -1260,7 +1315,8 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     to the corresponding immutable sampler
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00327# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
@@ -1268,7 +1324,8 @@ instance Zero DescriptorImageInfo where
 --     multiple of
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minUniformBufferOffsetAlignment@
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00328# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
@@ -1276,7 +1333,8 @@ instance Zero DescriptorImageInfo where
 --     multiple of
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minStorageBufferOffsetAlignment@
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00329# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
@@ -1287,7 +1345,8 @@ instance Zero DescriptorImageInfo where
 --     completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00330# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
@@ -1296,7 +1355,8 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_BUFFER_BIT'
 --     set
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00331# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
@@ -1305,7 +1365,8 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
 --     set
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00332# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
@@ -1315,7 +1376,8 @@ instance Zero DescriptorImageInfo where
 --     equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxUniformBufferRange@
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00333# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
@@ -1325,28 +1387,32 @@ instance Zero DescriptorImageInfo where
 --     equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxStorageBufferRange@
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00334# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
 --     the 'Vulkan.Core10.Handles.Buffer' that each element of
 --     @pTexelBufferView@ was created from /must/ have been created with
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
 --     set
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00335# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
 --     the 'Vulkan.Core10.Handles.Buffer' that each element of
 --     @pTexelBufferView@ was created from /must/ have been created with
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
 --     set
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00336# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
 --     been created with the identity swizzle
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00337# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
@@ -1354,82 +1420,85 @@ instance Zero DescriptorImageInfo where
 --     been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT' set
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-04149# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage Sampled Image>
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-04150# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-combinedimagesampler Combined Image Sampler>
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-04151# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inputattachment Input Attachment>
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-04152# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage Storage Image>
 --
--- -   If @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
---     member of the list given in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage Storage Image>
---
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00338# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
 --     been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
 --     set
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-00339# If @descriptorType@
+--     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
 --     been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT' set
 --
--- -   All consecutive bindings updated via a single 'WriteDescriptorSet'
---     structure, except those with a @descriptorCount@ of zero, /must/
---     have identical
+-- -   #VUID-VkWriteDescriptorSet-descriptorCount-03048# All consecutive
+--     bindings updated via a single 'WriteDescriptorSet' structure, except
+--     those with a @descriptorCount@ of zero, /must/ have identical
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'
 --
--- -   If @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER', then
---     @dstSet@ /must/ not have been allocated with a layout that included
---     immutable samplers for @dstBinding@
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-02752# If @descriptorType@
+--     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
+--     then @dstSet@ /must/ not have been allocated with a layout that
+--     included immutable samplers for @dstBinding@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkWriteDescriptorSet-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkWriteDescriptorSet-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
 --     or
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkWriteDescriptorSet-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
--- -   @descriptorType@ /must/ be a valid
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-parameter#
+--     @descriptorType@ /must/ be a valid
 --     'Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
 --
--- -   @descriptorCount@ /must/ be greater than @0@
+-- -   #VUID-VkWriteDescriptorSet-descriptorCount-arraylength#
+--     @descriptorCount@ /must/ be greater than @0@
 --
--- -   Both of @dstSet@, and the elements of @pTexelBufferView@ that are
---     valid handles of non-ignored parameters /must/ have been created,
---     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-VkWriteDescriptorSet-commonparent# Both of @dstSet@, and the
+--     elements of @pTexelBufferView@ that are valid handles of non-ignored
+--     parameters /must/ have been created, allocated, or retrieved from
+--     the same 'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
@@ -1594,96 +1663,106 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --
 -- == Valid Usage
 --
--- -   @srcBinding@ /must/ be a valid binding within @srcSet@
+-- -   #VUID-VkCopyDescriptorSet-srcBinding-00345# @srcBinding@ /must/ be a
+--     valid binding within @srcSet@
 --
--- -   The sum of @srcArrayElement@ and @descriptorCount@ /must/ be less
---     than or equal to the number of array elements in the descriptor set
---     binding specified by @srcBinding@, and all applicable consecutive
---     bindings, as described by
+-- -   #VUID-VkCopyDescriptorSet-srcArrayElement-00346# The sum of
+--     @srcArrayElement@ and @descriptorCount@ /must/ be less than or equal
+--     to the number of array elements in the descriptor set binding
+--     specified by @srcBinding@, and all applicable consecutive bindings,
+--     as described by
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
 --
--- -   @dstBinding@ /must/ be a valid binding within @dstSet@
+-- -   #VUID-VkCopyDescriptorSet-dstBinding-00347# @dstBinding@ /must/ be a
+--     valid binding within @dstSet@
 --
--- -   The sum of @dstArrayElement@ and @descriptorCount@ /must/ be less
---     than or equal to the number of array elements in the descriptor set
---     binding specified by @dstBinding@, and all applicable consecutive
---     bindings, as described by
+-- -   #VUID-VkCopyDescriptorSet-dstArrayElement-00348# The sum of
+--     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
+--     to the number of array elements in the descriptor set binding
+--     specified by @dstBinding@, and all applicable consecutive bindings,
+--     as described by
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
 --
--- -   The type of @dstBinding@ within @dstSet@ /must/ be equal to the type
---     of @srcBinding@ within @srcSet@
+-- -   #VUID-VkCopyDescriptorSet-dstBinding-02632# The type of @dstBinding@
+--     within @dstSet@ /must/ be equal to the type of @srcBinding@ within
+--     @srcSet@
 --
--- -   If @srcSet@ is equal to @dstSet@, then the source and destination
---     ranges of descriptors /must/ not overlap, where the ranges /may/
---     include array elements from consecutive bindings as described by
+-- -   #VUID-VkCopyDescriptorSet-srcSet-00349# If @srcSet@ is equal to
+--     @dstSet@, then the source and destination ranges of descriptors
+--     /must/ not overlap, where the ranges /may/ include array elements
+--     from consecutive bindings as described by
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
 --
--- -   If the descriptor type of the descriptor set binding specified by
---     @srcBinding@ is
+-- -   #VUID-VkCopyDescriptorSet-srcBinding-02223# If the descriptor type
+--     of the descriptor set binding specified by @srcBinding@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     @srcArrayElement@ /must/ be an integer multiple of @4@
 --
--- -   If the descriptor type of the descriptor set binding specified by
---     @dstBinding@ is
+-- -   #VUID-VkCopyDescriptorSet-dstBinding-02224# If the descriptor type
+--     of the descriptor set binding specified by @dstBinding@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     @dstArrayElement@ /must/ be an integer multiple of @4@
 --
--- -   If the descriptor type of the descriptor set binding specified by
---     either @srcBinding@ or @dstBinding@ is
+-- -   #VUID-VkCopyDescriptorSet-srcBinding-02225# If the descriptor type
+--     of the descriptor set binding specified by either @srcBinding@ or
+--     @dstBinding@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     @descriptorCount@ /must/ be an integer multiple of @4@
 --
--- -   If @srcSet@’s layout was created with the
+-- -   #VUID-VkCopyDescriptorSet-srcSet-01918# If @srcSet@’s layout was
+--     created with the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     flag set, then @dstSet@’s layout /must/ also have been created with
 --     the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     flag set
 --
--- -   If @srcSet@’s layout was created without the
+-- -   #VUID-VkCopyDescriptorSet-srcSet-01919# If @srcSet@’s layout was
+--     created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     flag set, then @dstSet@’s layout /must/ also have been created
 --     without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     flag set
 --
--- -   If the descriptor pool from which @srcSet@ was allocated was created
---     with the
+-- -   #VUID-VkCopyDescriptorSet-srcSet-01920# If the descriptor pool from
+--     which @srcSet@ was allocated was created with the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     flag set, then the descriptor pool from which @dstSet@ was allocated
 --     /must/ also have been created with the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     flag set
 --
--- -   If the descriptor pool from which @srcSet@ was allocated was created
---     without the
+-- -   #VUID-VkCopyDescriptorSet-srcSet-01921# If the descriptor pool from
+--     which @srcSet@ was allocated was created without the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     flag set, then the descriptor pool from which @dstSet@ was allocated
 --     /must/ also have been created without the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     flag set
 --
--- -   If the descriptor type of the descriptor set binding specified by
---     @dstBinding@ is
+-- -   #VUID-VkCopyDescriptorSet-dstBinding-02753# If the descriptor type
+--     of the descriptor set binding specified by @dstBinding@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER', then
 --     @dstSet@ /must/ not have been allocated with a layout that included
 --     immutable samplers for @dstBinding@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkCopyDescriptorSet-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_DESCRIPTOR_SET'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkCopyDescriptorSet-pNext-pNext# @pNext@ /must/ be @NULL@
 --
--- -   @srcSet@ /must/ be a valid 'Vulkan.Core10.Handles.DescriptorSet'
---     handle
+-- -   #VUID-VkCopyDescriptorSet-srcSet-parameter# @srcSet@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.DescriptorSet' handle
 --
--- -   @dstSet@ /must/ be a valid 'Vulkan.Core10.Handles.DescriptorSet'
---     handle
+-- -   #VUID-VkCopyDescriptorSet-dstSet-parameter# @dstSet@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.DescriptorSet' handle
 --
--- -   Both of @dstSet@, and @srcSet@ /must/ have been created, allocated,
---     or retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-VkCopyDescriptorSet-commonparent# Both of @dstSet@, and
+--     @srcSet@ /must/ have been created, allocated, or retrieved from the
+--     same 'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
@@ -1833,39 +1912,46 @@ instance Zero CopyDescriptorSet where
 --
 -- == Valid Usage
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-00282# If
+--     @descriptorType@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     and @descriptorCount@ is not @0@ and @pImmutableSamplers@ is not
 --     @NULL@, @pImmutableSamplers@ /must/ be a valid pointer to an array
 --     of @descriptorCount@ valid 'Vulkan.Core10.Handles.Sampler' handles
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-02209# If
+--     @descriptorType@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     then @descriptorCount@ /must/ be a multiple of @4@
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-02210# If
+--     @descriptorType@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     then @descriptorCount@ /must/ be less than or equal to
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxInlineUniformBlockSize@
 --
--- -   If @descriptorCount@ is not @0@, @stageFlags@ /must/ be a valid
+-- -   #VUID-VkDescriptorSetLayoutBinding-descriptorCount-00283# If
+--     @descriptorCount@ is not @0@, @stageFlags@ /must/ be a valid
 --     combination of
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' values
 --
--- -   If @descriptorType@ is
+-- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-01510# If
+--     @descriptorType@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     and @descriptorCount@ is not @0@, then @stageFlags@ /must/ be @0@ or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
 --
--- -   The sampler objects indicated by @pImmutableSamplers@ /must/ not
---     have a @borderColor@ with one of the values
+-- -   #VUID-VkDescriptorSetLayoutBinding-pImmutableSamplers-04009# The
+--     sampler objects indicated by @pImmutableSamplers@ /must/ not have a
+--     @borderColor@ with one of the values
 --     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
 --     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @descriptorType@ /must/ be a valid
+-- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-parameter#
+--     @descriptorType@ /must/ be a valid
 --     'Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
 --
 -- = See Also
@@ -1969,10 +2055,12 @@ instance Zero DescriptorSetLayoutBinding where
 --
 -- == Valid Usage
 --
--- -   The 'DescriptorSetLayoutBinding'::@binding@ members of the elements
---     of the @pBindings@ array /must/ each have different values
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-binding-00279# The
+--     'DescriptorSetLayoutBinding'::@binding@ members of the elements of
+--     the @pBindings@ array /must/ each have different values
 --
--- -   If @flags@ contains
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-00280# If @flags@
+--     contains
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
 --     then all elements of @pBindings@ /must/ not have a @descriptorType@
 --     of
@@ -1980,24 +2068,28 @@ instance Zero DescriptorSetLayoutBinding where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-02208# If @flags@
+--     contains
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
 --     then all elements of @pBindings@ /must/ not have a @descriptorType@
 --     of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-00281# If @flags@
+--     contains
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
 --     then the total number of elements of all bindings /must/ be less
 --     than or equal to
 --     'Vulkan.Extensions.VK_KHR_push_descriptor.PhysicalDevicePushDescriptorPropertiesKHR'::@maxPushDescriptors@
 --
--- -   If any binding has the
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-03000# If any binding
+--     has the
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --     bit set, @flags@ /must/ include
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --
--- -   If any binding has the
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-descriptorType-03001# If any
+--     binding has the
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --     bit set, then all bindings /must/ not have @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
@@ -2006,21 +2098,24 @@ instance Zero DescriptorSetLayoutBinding where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-pNext-pNext# @pNext@ /must/ be
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetLayoutBindingFlagsCreateInfo'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-sType-unique# The @sType@
+--     value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-parameter# @flags@
+--     /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DescriptorSetLayoutCreateFlagBits'
 --     values
 --
--- -   If @bindingCount@ is not @0@, @pBindings@ /must/ be a valid pointer
---     to an array of @bindingCount@ valid 'DescriptorSetLayoutBinding'
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-pBindings-parameter# If
+--     @bindingCount@ is not @0@, @pBindings@ /must/ be a valid pointer to
+--     an array of @bindingCount@ valid 'DescriptorSetLayoutBinding'
 --     structures
 --
 -- = See Also
@@ -2112,15 +2207,16 @@ instance es ~ '[] => Zero (DescriptorSetLayoutCreateInfo es) where
 --
 -- == Valid Usage
 --
--- -   @descriptorCount@ /must/ be greater than @0@
+-- -   #VUID-VkDescriptorPoolSize-descriptorCount-00302# @descriptorCount@
+--     /must/ be greater than @0@
 --
--- -   If @type@ is
+-- -   #VUID-VkDescriptorPoolSize-type-02218# If @type@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     then @descriptorCount@ /must/ be a multiple of @4@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @type@ /must/ be a valid
+-- -   #VUID-VkDescriptorPoolSize-type-parameter# @type@ /must/ be a valid
 --     'Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
 --
 -- = See Also
@@ -2218,27 +2314,32 @@ instance Zero DescriptorPoolSize where
 --
 -- == Valid Usage
 --
--- -   @maxSets@ /must/ be greater than @0@
+-- -   #VUID-VkDescriptorPoolCreateInfo-maxSets-00301# @maxSets@ /must/ be
+--     greater than @0@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDescriptorPoolCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkDescriptorPoolCreateInfo-pNext-pNext# @pNext@ /must/ be
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfoEXT'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkDescriptorPoolCreateInfo-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkDescriptorPoolCreateInfo-flags-parameter# @flags@ /must/ be
+--     a valid combination of
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DescriptorPoolCreateFlagBits'
 --     values
 --
--- -   @pPoolSizes@ /must/ be a valid pointer to an array of
---     @poolSizeCount@ valid 'DescriptorPoolSize' structures
+-- -   #VUID-VkDescriptorPoolCreateInfo-pPoolSizes-parameter# @pPoolSizes@
+--     /must/ be a valid pointer to an array of @poolSizeCount@ valid
+--     'DescriptorPoolSize' structures
 --
--- -   @poolSizeCount@ /must/ be greater than @0@
+-- -   #VUID-VkDescriptorPoolCreateInfo-poolSizeCount-arraylength#
+--     @poolSizeCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -2325,11 +2426,13 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --
 -- == Valid Usage
 --
--- -   Each element of @pSetLayouts@ /must/ not have been created with
+-- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-00308# Each element of
+--     @pSetLayouts@ /must/ not have been created with
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
 --     set
 --
--- -   If any element of @pSetLayouts@ was created with the
+-- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-03044# If any element
+--     of @pSetLayouts@ was created with the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set, @descriptorPool@ /must/ have been created with the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
@@ -2337,26 +2440,31 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDescriptorSetAllocateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkDescriptorSetAllocateInfo-pNext-pNext# @pNext@ /must/ be
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountAllocateInfo'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkDescriptorSetAllocateInfo-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
--- -   @descriptorPool@ /must/ be a valid
+-- -   #VUID-VkDescriptorSetAllocateInfo-descriptorPool-parameter#
+--     @descriptorPool@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DescriptorPool' handle
 --
--- -   @pSetLayouts@ /must/ be a valid pointer to an array of
+-- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-parameter#
+--     @pSetLayouts@ /must/ be a valid pointer to an array of
 --     @descriptorSetCount@ valid
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' handles
 --
--- -   @descriptorSetCount@ /must/ be greater than @0@
+-- -   #VUID-VkDescriptorSetAllocateInfo-descriptorSetCount-arraylength#
+--     @descriptorSetCount@ /must/ be greater than @0@
 --
--- -   Both of @descriptorPool@, and the elements of @pSetLayouts@ /must/
---     have been created, allocated, or retrieved from the same
+-- -   #VUID-VkDescriptorSetAllocateInfo-commonparent# Both of
+--     @descriptorPool@, and the elements of @pSetLayouts@ /must/ have been
+--     created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
 --
 -- = See Also

@@ -81,17 +81,21 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage
 --
--- -   @deviceIndexCount@ /must/ either be zero or equal to the number of
+-- -   #VUID-VkBindBufferMemoryDeviceGroupInfo-deviceIndexCount-01606#
+--     @deviceIndexCount@ /must/ either be zero or equal to the number of
 --     physical devices in the logical device
 --
--- -   All elements of @pDeviceIndices@ /must/ be valid device indices
+-- -   #VUID-VkBindBufferMemoryDeviceGroupInfo-pDeviceIndices-01607# All
+--     elements of @pDeviceIndices@ /must/ be valid device indices
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkBindBufferMemoryDeviceGroupInfo-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO'
 --
--- -   If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
+-- -   #VUID-VkBindBufferMemoryDeviceGroupInfo-pDeviceIndices-parameter# If
+--     @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
 --     pointer to an array of @deviceIndexCount@ @uint32_t@ values
 --
 -- = See Also
@@ -204,51 +208,61 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 --
 -- == Valid Usage
 --
--- -   At least one of @deviceIndexCount@ and
---     @splitInstanceBindRegionCount@ /must/ be zero
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-deviceIndexCount-01633# At
+--     least one of @deviceIndexCount@ and @splitInstanceBindRegionCount@
+--     /must/ be zero
 --
--- -   @deviceIndexCount@ /must/ either be zero or equal to the number of
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-deviceIndexCount-01634#
+--     @deviceIndexCount@ /must/ either be zero or equal to the number of
 --     physical devices in the logical device
 --
--- -   All elements of @pDeviceIndices@ /must/ be valid device indices
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-pDeviceIndices-01635# All
+--     elements of @pDeviceIndices@ /must/ be valid device indices
 --
--- -   @splitInstanceBindRegionCount@ /must/ either be zero or equal to the
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-splitInstanceBindRegionCount-01636#
+--     @splitInstanceBindRegionCount@ /must/ either be zero or equal to the
 --     number of physical devices in the logical device squared
 --
--- -   Elements of @pSplitInstanceBindRegions@ that correspond to the same
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-pSplitInstanceBindRegions-01637#
+--     Elements of @pSplitInstanceBindRegions@ that correspond to the same
 --     instance of an image /must/ not overlap
 --
--- -   The @offset.x@ member of any element of @pSplitInstanceBindRegions@
---     /must/ be a multiple of the sparse image block width
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-offset-01638# The @offset.x@
+--     member of any element of @pSplitInstanceBindRegions@ /must/ be a
+--     multiple of the sparse image block width
 --     ('Vulkan.Core10.SparseResourceMemoryManagement.SparseImageFormatProperties'::@imageGranularity.width@)
 --     of all non-metadata aspects of the image
 --
--- -   The @offset.y@ member of any element of @pSplitInstanceBindRegions@
---     /must/ be a multiple of the sparse image block height
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-offset-01639# The @offset.y@
+--     member of any element of @pSplitInstanceBindRegions@ /must/ be a
+--     multiple of the sparse image block height
 --     ('Vulkan.Core10.SparseResourceMemoryManagement.SparseImageFormatProperties'::@imageGranularity.height@)
 --     of all non-metadata aspects of the image
 --
--- -   The @extent.width@ member of any element of
---     @pSplitInstanceBindRegions@ /must/ either be a multiple of the
---     sparse image block width of all non-metadata aspects of the image,
---     or else @extent.width@ + @offset.x@ /must/ equal the width of the
---     image subresource
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-extent-01640# The
+--     @extent.width@ member of any element of @pSplitInstanceBindRegions@
+--     /must/ either be a multiple of the sparse image block width of all
+--     non-metadata aspects of the image, or else @extent.width@ +
+--     @offset.x@ /must/ equal the width of the image subresource
 --
--- -   The @extent.height@ member of any element of
---     @pSplitInstanceBindRegions@ /must/ either be a multiple of the
---     sparse image block height of all non-metadata aspects of the image,
---     or else @extent.height@ + @offset.y@ /must/ equal the width of the
---     image subresource
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-extent-01641# The
+--     @extent.height@ member of any element of @pSplitInstanceBindRegions@
+--     /must/ either be a multiple of the sparse image block height of all
+--     non-metadata aspects of the image, or else @extent.height@ +
+--     @offset.y@ /must/ equal the width of the image subresource
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO'
 --
--- -   If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-pDeviceIndices-parameter# If
+--     @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
 --     pointer to an array of @deviceIndexCount@ @uint32_t@ values
 --
--- -   If @splitInstanceBindRegionCount@ is not @0@,
+-- -   #VUID-VkBindImageMemoryDeviceGroupInfo-pSplitInstanceBindRegions-parameter#
+--     If @splitInstanceBindRegionCount@ is not @0@,
 --     @pSplitInstanceBindRegions@ /must/ be a valid pointer to an array of
 --     @splitInstanceBindRegionCount@
 --     'Vulkan.Core10.FundamentalTypes.Rect2D' structures

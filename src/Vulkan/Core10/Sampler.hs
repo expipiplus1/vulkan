@@ -101,23 +101,25 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   There /must/ be less than
+-- -   #VUID-vkCreateSampler-maxSamplerAllocationCount-04110# There /must/
+--     be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxSamplerAllocationCount@
 --     VkSampler objects currently created on the device.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateSampler-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'SamplerCreateInfo' structure
+-- -   #VUID-vkCreateSampler-pCreateInfo-parameter# @pCreateInfo@ /must/ be
+--     a valid pointer to a valid 'SamplerCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateSampler-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pSampler@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.Sampler' handle
+-- -   #VUID-vkCreateSampler-pSampler-parameter# @pSampler@ /must/ be a
+--     valid pointer to a 'Vulkan.Core10.Handles.Sampler' handle
 --
 -- == Return Codes
 --
@@ -188,29 +190,34 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @sampler@ /must/ have completed
---     execution
+-- -   #VUID-vkDestroySampler-sampler-01082# All submitted commands that
+--     refer to @sampler@ /must/ have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroySampler-sampler-01083# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @sampler@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroySampler-sampler-01084# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @sampler@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroySampler-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @sampler@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @sampler@ /must/ be a valid 'Vulkan.Core10.Handles.Sampler' handle
+-- -   #VUID-vkDestroySampler-sampler-parameter# If @sampler@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @sampler@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Sampler' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroySampler-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @sampler@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroySampler-sampler-parent# If @sampler@ is a valid
+--     handle, it /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Host Synchronization
 --
@@ -245,6 +252,108 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 
 -- | VkSamplerCreateInfo - Structure specifying parameters of a newly created
 -- sampler
+--
+-- = Members
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   @flags@ is a bitmask of
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SamplerCreateFlagBits'
+--     describing additional parameters of the sampler.
+--
+-- -   @magFilter@ is a 'Vulkan.Core10.Enums.Filter.Filter' value
+--     specifying the magnification filter to apply to lookups.
+--
+-- -   @minFilter@ is a 'Vulkan.Core10.Enums.Filter.Filter' value
+--     specifying the minification filter to apply to lookups.
+--
+-- -   @mipmapMode@ is a
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SamplerMipmapMode' value
+--     specifying the mipmap filter to apply to lookups.
+--
+-- -   @addressModeU@ is a
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
+--     specifying the addressing mode for outside [0..1] range for U
+--     coordinate.
+--
+-- -   @addressModeV@ is a
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
+--     specifying the addressing mode for outside [0..1] range for V
+--     coordinate.
+--
+-- -   @addressModeW@ is a
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
+--     specifying the addressing mode for outside [0..1] range for W
+--     coordinate.
+--
+-- -   #samplers-mipLodBias# @mipLodBias@ is the bias to be added to mipmap
+--     LOD (level-of-detail) calculation and bias provided by image
+--     sampling functions in SPIR-V, as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-level-of-detail-operation Level-of-Detail Operation>
+--     section.
+--
+-- -   #samplers-maxAnisotropy# @anisotropyEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' to enable anisotropic
+--     filtering, as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-texel-anisotropic-filtering Texel Anisotropic Filtering>
+--     section, or 'Vulkan.Core10.FundamentalTypes.FALSE' otherwise.
+--
+-- -   @maxAnisotropy@ is the anisotropy value clamp used by the sampler
+--     when @anisotropyEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE'. If
+--     @anisotropyEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
+--     @maxAnisotropy@ is ignored.
+--
+-- -   @compareEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' to enable
+--     comparison against a reference value during lookups, or
+--     'Vulkan.Core10.FundamentalTypes.FALSE' otherwise.
+--
+--     -   Note: Some implementations will default to shader state if this
+--         member does not match.
+--
+-- -   @compareOp@ is a 'Vulkan.Core10.Enums.CompareOp.CompareOp' value
+--     specifying the comparison function to apply to fetched data before
+--     filtering as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation Depth Compare Operation>
+--     section.
+--
+-- -   @minLod@ and @maxLod@ are the values used to clamp the computed LOD
+--     value, as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-level-of-detail-operation Level-of-Detail Operation>
+--     section.
+--
+-- -   @borderColor@ is a 'Vulkan.Core10.Enums.BorderColor.BorderColor'
+--     value specifying the predefined border color to use.
+--
+-- -   #samplers-unnormalizedCoordinates# @unnormalizedCoordinates@
+--     controls whether to use unnormalized or normalized texel coordinates
+--     to address texels of the image. When set to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', the range of the image
+--     coordinates used to lookup the texel is in the range of zero to the
+--     image dimensions for x, y and z. When set to
+--     'Vulkan.Core10.FundamentalTypes.FALSE' the range of image
+--     coordinates is zero to one.
+--
+--     When @unnormalizedCoordinates@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', images the sampler is used
+--     with in the shader have the following requirements:
+--
+--     -   The @viewType@ /must/ be either
+--         'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
+--         'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'.
+--
+--     -   The image view /must/ have a single layer and a single mip
+--         level.
+--
+--     When @unnormalizedCoordinates@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', image built-in functions in
+--     the shader that use the sampler have the following requirements:
+--
+--     -   The functions /must/ not use projection.
+--
+--     -   The functions /must/ not use offsets.
 --
 -- = Description
 --
@@ -299,27 +408,31 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   The absolute value of @mipLodBias@ /must/ be less than or equal to
+-- -   #VUID-VkSamplerCreateInfo-mipLodBias-01069# The absolute value of
+--     @mipLodBias@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxSamplerLodBias@
 --
--- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+-- -   #VUID-VkSamplerCreateInfo-samplerMipLodBias-04467# If the
+--     @VK_KHR_portability_subset@ extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@samplerMipLodBias@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', @mipLodBias@ /must/ be
 --     zero.
 --
--- -   @maxLod@ /must/ be greater than or equal to @minLod@
+-- -   #VUID-VkSamplerCreateInfo-maxLod-01973# @maxLod@ /must/ be greater
+--     than or equal to @minLod@
 --
--- -   If the
+-- -   #VUID-VkSamplerCreateInfo-anisotropyEnable-01070# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-samplerAnisotropy anisotropic sampling>
 --     feature is not enabled, @anisotropyEnable@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If @anisotropyEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+-- -   #VUID-VkSamplerCreateInfo-anisotropyEnable-01071# If
+--     @anisotropyEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @maxAnisotropy@ /must/ be between @1.0@ and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxSamplerAnisotropy@,
 --     inclusive
 --
--- -   If
+-- -   #VUID-VkSamplerCreateInfo-minFilter-01645# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     is enabled and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
@@ -328,39 +441,41 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     @minFilter@ and @magFilter@ /must/ be equal to the sampler Y′CBCR
 --     conversion’s @chromaFilter@
 --
--- -   If @unnormalizedCoordinates@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', @minFilter@ and @magFilter@
---     /must/ be equal
+-- -   #VUID-VkSamplerCreateInfo-unnormalizedCoordinates-01072# If
+--     @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     @minFilter@ and @magFilter@ /must/ be equal
 --
--- -   If @unnormalizedCoordinates@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', @mipmapMode@ /must/ be
+-- -   #VUID-VkSamplerCreateInfo-unnormalizedCoordinates-01073# If
+--     @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     @mipmapMode@ /must/ be
 --     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_NEAREST'
 --
--- -   If @unnormalizedCoordinates@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', @minLod@ and @maxLod@ /must/
---     be zero
+-- -   #VUID-VkSamplerCreateInfo-unnormalizedCoordinates-01074# If
+--     @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     @minLod@ and @maxLod@ /must/ be zero
 --
--- -   If @unnormalizedCoordinates@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', @addressModeU@ and
---     @addressModeV@ /must/ each be either
+-- -   #VUID-VkSamplerCreateInfo-unnormalizedCoordinates-01075# If
+--     @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     @addressModeU@ and @addressModeV@ /must/ each be either
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --     or
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER'
 --
--- -   If @unnormalizedCoordinates@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', @anisotropyEnable@ /must/ be
---     'Vulkan.Core10.FundamentalTypes.FALSE'
+-- -   #VUID-VkSamplerCreateInfo-unnormalizedCoordinates-01076# If
+--     @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     @anisotropyEnable@ /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If @unnormalizedCoordinates@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', @compareEnable@ /must/ be
---     'Vulkan.Core10.FundamentalTypes.FALSE'
+-- -   #VUID-VkSamplerCreateInfo-unnormalizedCoordinates-01077# If
+--     @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     @compareEnable@ /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If any of @addressModeU@, @addressModeV@ or @addressModeW@ are
+-- -   #VUID-VkSamplerCreateInfo-addressModeU-01078# If any of
+--     @addressModeU@, @addressModeV@ or @addressModeW@ are
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER',
 --     @borderColor@ /must/ be a valid
 --     'Vulkan.Core10.Enums.BorderColor.BorderColor' value
 --
--- -   If
+-- -   #VUID-VkSamplerCreateInfo-addressModeU-01646# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     is enabled, @addressModeU@, @addressModeV@, and @addressModeW@
 --     /must/ be
@@ -369,92 +484,95 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     and @unnormalizedCoordinates@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   The sampler reduction mode /must/ be set to
+-- -   #VUID-VkSamplerCreateInfo-None-01647# The sampler reduction mode
+--     /must/ be set to
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
 --     if
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     is enabled
 --
--- -   If
+-- -   #VUID-VkSamplerCreateInfo-addressModeU-01079# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-samplerMirrorClampToEdge samplerMirrorClampToEdge>
 --     is not enabled, and if the @VK_KHR_sampler_mirror_clamp_to_edge@
 --     extension is not enabled, @addressModeU@, @addressModeV@ and
 --     @addressModeW@ /must/ not be
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE'
 --
--- -   If @compareEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
---     @compareOp@ /must/ be a valid
+-- -   #VUID-VkSamplerCreateInfo-compareEnable-01080# If @compareEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', @compareOp@ /must/ be a valid
 --     'Vulkan.Core10.Enums.CompareOp.CompareOp' value
 --
--- -   If either @magFilter@ or @minFilter@ is
+-- -   #VUID-VkSamplerCreateInfo-magFilter-01081# If either @magFilter@ or
+--     @minFilter@ is
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT',
 --     @anisotropyEnable@ /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If @compareEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the
---     @reductionMode@ member of
+-- -   #VUID-VkSamplerCreateInfo-compareEnable-01423# If @compareEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', the @reductionMode@ member of
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
 --     /must/ be
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
 --
--- -   If @flags@ includes
+-- -   #VUID-VkSamplerCreateInfo-flags-02574# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @minFilter@ and @magFilter@ /must/ be equal
 --
--- -   If @flags@ includes
+-- -   #VUID-VkSamplerCreateInfo-flags-02575# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @mipmapMode@ /must/ be
 --     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_NEAREST'
 --
--- -   If @flags@ includes
+-- -   #VUID-VkSamplerCreateInfo-flags-02576# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @minLod@ and @maxLod@ /must/ be zero
 --
--- -   If @flags@ includes
+-- -   #VUID-VkSamplerCreateInfo-flags-02577# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @addressModeU@ and @addressModeV@ /must/ each be either
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --     or
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER'
 --
--- -   If @flags@ includes
+-- -   #VUID-VkSamplerCreateInfo-flags-02578# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @anisotropyEnable@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If @flags@ includes
+-- -   #VUID-VkSamplerCreateInfo-flags-02579# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @compareEnable@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If @flags@ includes
+-- -   #VUID-VkSamplerCreateInfo-flags-02580# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @unnormalizedCoordinates@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If @borderColor@ is one of
---     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
---     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT', then
---     a
+-- -   #VUID-VkSamplerCreateInfo-borderColor-04011# If @borderColor@ is one
+--     of 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT'
+--     or 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT',
+--     then a
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'
 --     /must/ be present in the @pNext@ chain
 --
--- -   If the
+-- -   #VUID-VkSamplerCreateInfo-customBorderColors-04085# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-customBorderColors customBorderColors>
 --     feature is not enabled, @borderColor@ /must/ not be
 --     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
 --     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT'
 --
--- -   If @borderColor@ is one of
---     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
---     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT', and
+-- -   #VUID-VkSamplerCreateInfo-borderColor-04442# If @borderColor@ is one
+--     of 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT'
+--     or 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT',
+--     and
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'::@format@
 --     is not 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED',
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'::@customBorderColor@
 --     /must/ be within the range of values representable in @format@.
 --
--- -   The maximum number of samplers with custom border colors which /can/
---     be simultaneously created on a device is implementation-dependent
---     and specified by the
+-- -   #VUID-VkSamplerCreateInfo-None-04012# The maximum number of samplers
+--     with custom border colors which /can/ be simultaneously created on a
+--     device is implementation-dependent and specified by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxCustomBorderColorSamplers maxCustomBorderColorSamplers>
 --     member of the
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorPropertiesEXT'
@@ -462,40 +580,45 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkSamplerCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SAMPLER_CREATE_INFO'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkSamplerCreateInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo',
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkSamplerCreateInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkSamplerCreateInfo-flags-parameter# @flags@ /must/ be a valid
+--     combination of
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SamplerCreateFlagBits'
 --     values
 --
--- -   @magFilter@ /must/ be a valid 'Vulkan.Core10.Enums.Filter.Filter'
+-- -   #VUID-VkSamplerCreateInfo-magFilter-parameter# @magFilter@ /must/ be
+--     a valid 'Vulkan.Core10.Enums.Filter.Filter' value
+--
+-- -   #VUID-VkSamplerCreateInfo-minFilter-parameter# @minFilter@ /must/ be
+--     a valid 'Vulkan.Core10.Enums.Filter.Filter' value
+--
+-- -   #VUID-VkSamplerCreateInfo-mipmapMode-parameter# @mipmapMode@ /must/
+--     be a valid 'Vulkan.Core10.Enums.SamplerMipmapMode.SamplerMipmapMode'
 --     value
 --
--- -   @minFilter@ /must/ be a valid 'Vulkan.Core10.Enums.Filter.Filter'
---     value
---
--- -   @mipmapMode@ /must/ be a valid
---     'Vulkan.Core10.Enums.SamplerMipmapMode.SamplerMipmapMode' value
---
--- -   @addressModeU@ /must/ be a valid
+-- -   #VUID-VkSamplerCreateInfo-addressModeU-parameter# @addressModeU@
+--     /must/ be a valid
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
 --
--- -   @addressModeV@ /must/ be a valid
+-- -   #VUID-VkSamplerCreateInfo-addressModeV-parameter# @addressModeV@
+--     /must/ be a valid
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
 --
--- -   @addressModeW@ /must/ be a valid
+-- -   #VUID-VkSamplerCreateInfo-addressModeW-parameter# @addressModeW@
+--     /must/ be a valid
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
 --
 -- = See Also
@@ -509,101 +632,39 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.SamplerMipmapMode.SamplerMipmapMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createSampler'
 data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkSamplerCreateInfo" "pNext"
     next :: Chain es
-  , -- | @flags@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.SamplerCreateFlagBits.SamplerCreateFlagBits'
-    -- describing additional parameters of the sampler.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "flags"
     flags :: SamplerCreateFlags
-  , -- | @magFilter@ is a 'Vulkan.Core10.Enums.Filter.Filter' value specifying
-    -- the magnification filter to apply to lookups.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "magFilter"
     magFilter :: Filter
-  , -- | @minFilter@ is a 'Vulkan.Core10.Enums.Filter.Filter' value specifying
-    -- the minification filter to apply to lookups.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "minFilter"
     minFilter :: Filter
-  , -- | @mipmapMode@ is a
-    -- 'Vulkan.Core10.Enums.SamplerMipmapMode.SamplerMipmapMode' value
-    -- specifying the mipmap filter to apply to lookups.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "mipmapMode"
     mipmapMode :: SamplerMipmapMode
-  , -- | @addressModeU@ is a
-    -- 'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
-    -- specifying the addressing mode for outside [0..1] range for U
-    -- coordinate.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "addressModeU"
     addressModeU :: SamplerAddressMode
-  , -- | @addressModeV@ is a
-    -- 'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
-    -- specifying the addressing mode for outside [0..1] range for V
-    -- coordinate.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "addressModeV"
     addressModeV :: SamplerAddressMode
-  , -- | @addressModeW@ is a
-    -- 'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
-    -- specifying the addressing mode for outside [0..1] range for W
-    -- coordinate.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "addressModeW"
     addressModeW :: SamplerAddressMode
-  , -- | @mipLodBias@ is the bias to be added to mipmap LOD (level-of-detail)
-    -- calculation and bias provided by image sampling functions in SPIR-V, as
-    -- described in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-level-of-detail-operation Level-of-Detail Operation>
-    -- section.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "mipLodBias"
     mipLodBias :: Float
-  , -- | @anisotropyEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' to enable
-    -- anisotropic filtering, as described in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-texel-anisotropic-filtering Texel Anisotropic Filtering>
-    -- section, or 'Vulkan.Core10.FundamentalTypes.FALSE' otherwise.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "anisotropyEnable"
     anisotropyEnable :: Bool
-  , -- | @maxAnisotropy@ is the anisotropy value clamp used by the sampler when
-    -- @anisotropyEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE'. If
-    -- @anisotropyEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- @maxAnisotropy@ is ignored.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "maxAnisotropy"
     maxAnisotropy :: Float
-  , -- | @compareEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' to enable
-    -- comparison against a reference value during lookups, or
-    -- 'Vulkan.Core10.FundamentalTypes.FALSE' otherwise.
-    --
-    -- -   Note: Some implementations will default to shader state if this
-    --     member does not match.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "compareEnable"
     compareEnable :: Bool
-  , -- | @compareOp@ is a 'Vulkan.Core10.Enums.CompareOp.CompareOp' value
-    -- specifying the comparison function to apply to fetched data before
-    -- filtering as described in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation Depth Compare Operation>
-    -- section.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "compareOp"
     compareOp :: CompareOp
-  , -- | @minLod@ and @maxLod@ are the values used to clamp the computed LOD
-    -- value, as described in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-level-of-detail-operation Level-of-Detail Operation>
-    -- section.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "minLod"
     minLod :: Float
   , -- No documentation found for Nested "VkSamplerCreateInfo" "maxLod"
     maxLod :: Float
-  , -- | @borderColor@ is a 'Vulkan.Core10.Enums.BorderColor.BorderColor' value
-    -- specifying the predefined border color to use.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "borderColor"
     borderColor :: BorderColor
-  , -- | @unnormalizedCoordinates@ controls whether to use unnormalized or
-    -- normalized texel coordinates to address texels of the image. When set to
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE', the range of the image
-    -- coordinates used to lookup the texel is in the range of zero to the
-    -- image dimensions for x, y and z. When set to
-    -- 'Vulkan.Core10.FundamentalTypes.FALSE' the range of image coordinates is
-    -- zero to one.
-    --
-    -- When @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
-    -- images the sampler is used with in the shader have the following
-    -- requirements:
-    --
-    -- -   The @viewType@ /must/ be either
-    --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
-    --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'.
-    --
-    -- -   The image view /must/ have a single layer and a single mip level.
-    --
-    -- When @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
-    -- image built-in functions in the shader that use the sampler have the
-    -- following requirements:
-    --
-    -- -   The functions /must/ not use projection.
-    --
-    -- -   The functions /must/ not use offsets.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "unnormalizedCoordinates"
     unnormalizedCoordinates :: Bool
   }
   deriving (Typeable)

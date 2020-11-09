@@ -47,6 +47,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPipelineRasterizationStateRasterizationOrderAMD-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD'
+--
+-- -   #VUID-VkPipelineRasterizationStateRasterizationOrderAMD-rasterizationOrder-parameter#
+--     @rasterizationOrder@ /must/ be a valid 'RasterizationOrderAMD' value
+--
 -- If the @VK_AMD_rasterization_order@ device extension is not enabled or
 -- the application does not request a particular rasterization order
 -- through specifying a 'PipelineRasterizationStateRasterizationOrderAMD'
@@ -60,8 +67,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 data PipelineRasterizationStateRasterizationOrderAMD = PipelineRasterizationStateRasterizationOrderAMD
   { -- | @rasterizationOrder@ is a 'RasterizationOrderAMD' value specifying the
     -- primitive rasterization order to use.
-    --
-    -- @rasterizationOrder@ /must/ be a valid 'RasterizationOrderAMD' value
     rasterizationOrder :: RasterizationOrderAMD }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

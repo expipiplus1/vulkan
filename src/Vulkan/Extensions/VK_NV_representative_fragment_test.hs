@@ -41,6 +41,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = Description
 --
+-- -   #features-representativeFragmentTest# @representativeFragmentTest@
+--     indicates whether the implementation supports the representative
+--     fragment test. See
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-rep-frag-test Representative Fragment Test>.
+--
 -- If the 'PhysicalDeviceRepresentativeFragmentTestFeaturesNV' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -51,14 +56,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRepresentativeFragmentTestFeaturesNV = PhysicalDeviceRepresentativeFragmentTestFeaturesNV
-  { -- | @representativeFragmentTest@ indicates whether the implementation
-    -- supports the representative fragment test. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-rep-frag-test Representative Fragment Test>.
+  { -- No documentation found for Nested "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV" "representativeFragmentTest"
     representativeFragmentTest :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -113,6 +120,10 @@ instance Zero PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
 -- fragment shader test has no effect, even if enabled.
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPipelineRepresentativeFragmentTestStateCreateInfoNV-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV'
 --
 -- = See Also
 --

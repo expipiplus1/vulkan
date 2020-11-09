@@ -41,16 +41,17 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = STRUCTURE_TYP
 --
 -- = Description
 --
--- -   @variablePointersStorageBuffer@ specifies whether the implementation
+-- -   #extension-features-variablePointersStorageBuffer#
+--     @variablePointersStorageBuffer@ specifies whether the implementation
 --     supports the SPIR-V @VariablePointersStorageBuffer@ capability. When
 --     this feature is not enabled, shader modules /must/ not declare the
 --     @SPV_KHR_variable_pointers@ extension or the
 --     @VariablePointersStorageBuffer@ capability.
 --
--- -   @variablePointers@ specifies whether the implementation supports the
---     SPIR-V @VariablePointers@ capability. When this feature is not
---     enabled, shader modules /must/ not declare the @VariablePointers@
---     capability.
+-- -   #extension-features-variablePointers# @variablePointers@ specifies
+--     whether the implementation supports the SPIR-V @VariablePointers@
+--     capability. When this feature is not enabled, shader modules /must/
+--     not declare the @VariablePointers@ capability.
 --
 -- If the 'PhysicalDeviceVariablePointersFeatures' structure is included in
 -- the @pNext@ chain of
@@ -62,12 +63,14 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = STRUCTURE_TYP
 --
 -- == Valid Usage
 --
--- -   If @variablePointers@ is enabled then
+-- -   #VUID-VkPhysicalDeviceVariablePointersFeatures-variablePointers-01431#
+--     If @variablePointers@ is enabled then
 --     @variablePointersStorageBuffer@ /must/ also be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceVariablePointersFeatures-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES'
 --
 -- = See Also

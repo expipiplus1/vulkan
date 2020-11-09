@@ -72,6 +72,21 @@ foreign import ccall
 -- One example of when an X11 server loses access to a display is when it
 -- loses ownership of its virtual terminal.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkAcquireXlibDisplayEXT-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PhysicalDevice' handle
+--
+-- -   #VUID-vkAcquireXlibDisplayEXT-dpy-parameter# @dpy@ /must/ be a valid
+--     pointer to a 'Vulkan.Extensions.VK_KHR_xlib_surface.Display' value
+--
+-- -   #VUID-vkAcquireXlibDisplayEXT-display-parameter# @display@ /must/ be
+--     a valid 'Vulkan.Extensions.Handles.DisplayKHR' handle
+--
+-- -   #VUID-vkAcquireXlibDisplayEXT-display-parent# @display@ /must/ have
+--     been created, allocated, or retrieved from @physicalDevice@
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -91,22 +106,10 @@ foreign import ccall
 acquireXlibDisplayEXT :: forall io
                        . (MonadIO io)
                       => -- | @physicalDevice@ The physical device the display is on.
-                         --
-                         -- @physicalDevice@ /must/ be a valid
-                         -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                          PhysicalDevice
                       -> -- | @dpy@ A connection to the X11 server that currently owns @display@.
-                         --
-                         -- @dpy@ /must/ be a valid pointer to a
-                         -- 'Vulkan.Extensions.VK_KHR_xlib_surface.Display' value
                          ("dpy" ::: Ptr Display)
                       -> -- | @display@ The display the caller wishes to control in Vulkan.
-                         --
-                         -- @display@ /must/ be a valid 'Vulkan.Extensions.Handles.DisplayKHR'
-                         -- handle
-                         --
-                         -- @display@ /must/ have been created, allocated, or retrieved from
-                         -- @physicalDevice@
                          DisplayKHR
                       -> io ()
 acquireXlibDisplayEXT physicalDevice dpy display = liftIO $ do
@@ -134,6 +137,20 @@ foreign import ccall
 -- @rrOutput@ on @physicalDevice@, 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 -- /must/ be returned in @pDisplay@.
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetRandROutputDisplayEXT-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PhysicalDevice' handle
+--
+-- -   #VUID-vkGetRandROutputDisplayEXT-dpy-parameter# @dpy@ /must/ be a
+--     valid pointer to a 'Vulkan.Extensions.VK_KHR_xlib_surface.Display'
+--     value
+--
+-- -   #VUID-vkGetRandROutputDisplayEXT-pDisplay-parameter# @pDisplay@
+--     /must/ be a valid pointer to a
+--     'Vulkan.Extensions.Handles.DisplayKHR' handle
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -151,14 +168,8 @@ foreign import ccall
 getRandROutputDisplayEXT :: forall io
                           . (MonadIO io)
                          => -- | @physicalDevice@ The physical device to query the display handle on.
-                            --
-                            -- @physicalDevice@ /must/ be a valid
-                            -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                             PhysicalDevice
                          -> -- | @dpy@ A connection to the X11 server from which @rrOutput@ was queried.
-                            --
-                            -- @dpy@ /must/ be a valid pointer to a
-                            -- 'Vulkan.Extensions.VK_KHR_xlib_surface.Display' value
                             ("dpy" ::: Ptr Display)
                          -> -- | @rrOutput@ An X11 RandR output ID.
                             RROutput

@@ -36,15 +36,24 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- The members of the 'PhysicalDeviceCoherentMemoryFeaturesAMD' structure
 -- describe the following features:
 --
+-- = Description
+--
+-- -   #features-deviceCoherentMemory# @deviceCoherentMemory@ indicates
+--     that the implementation supports
+--     <VkMemoryPropertyFlagBits.html device coherent memory>.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceCoherentMemoryFeaturesAMD-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD'
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCoherentMemoryFeaturesAMD = PhysicalDeviceCoherentMemoryFeaturesAMD
-  { -- | @deviceCoherentMemory@ indicates that the implementation supports
-    -- <VkMemoryPropertyFlagBits.html device coherent memory>.
+  { -- No documentation found for Nested "VkPhysicalDeviceCoherentMemoryFeaturesAMD" "deviceCoherentMemory"
     deviceCoherentMemory :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

@@ -114,29 +114,42 @@ instance Zero ConformanceVersion where
 --
 -- = Description
 --
+-- -   @driverID@ is a unique identifier for the driver of the physical
+--     device.
+--
+-- -   @driverName@ is an array of
+--     'Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE' @char@ containing
+--     a null-terminated UTF-8 string which is the name of the driver.
+--
+-- -   @driverInfo@ is an array of
+--     'Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE' @char@ containing
+--     a null-terminated UTF-8 string with additional information about the
+--     driver.
+--
+-- -   @conformanceVersion@ is the version of the Vulkan conformance test
+--     this driver is conformant against (see 'ConformanceVersion').
+--
 -- @driverID@ /must/ be immutable for a given driver across instances,
 -- processes, driver versions, and system reboots.
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceDriverProperties-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES'
 --
 -- = See Also
 --
 -- 'ConformanceVersion', 'Vulkan.Core12.Enums.DriverId.DriverId',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDriverProperties = PhysicalDeviceDriverProperties
-  { -- | @driverID@ is a unique identifier for the driver of the physical device.
+  { -- No documentation found for Nested "VkPhysicalDeviceDriverProperties" "driverID"
     driverID :: DriverId
-  , -- | @driverName@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string which is the name of the driver.
+  , -- No documentation found for Nested "VkPhysicalDeviceDriverProperties" "driverName"
     driverName :: ByteString
-  , -- | @driverInfo@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string with additional information about the
-    -- driver.
+  , -- No documentation found for Nested "VkPhysicalDeviceDriverProperties" "driverInfo"
     driverInfo :: ByteString
-  , -- | @conformanceVersion@ is the version of the Vulkan conformance test this
-    -- driver is conformant against (see 'ConformanceVersion').
+  , -- No documentation found for Nested "VkPhysicalDeviceDriverProperties" "conformanceVersion"
     conformanceVersion :: ConformanceVersion
   }
   deriving (Typeable)

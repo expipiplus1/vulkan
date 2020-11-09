@@ -227,17 +227,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateSwapchainKHR-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'SwapchainCreateInfoKHR' structure
+-- -   #VUID-vkCreateSwapchainKHR-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'SwapchainCreateInfoKHR'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateSwapchainKHR-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pSwapchain@ /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SwapchainKHR' handle
+-- -   #VUID-vkCreateSwapchainKHR-pSwapchain-parameter# @pSwapchain@ /must/
+--     be a valid pointer to a 'Vulkan.Extensions.Handles.SwapchainKHR'
+--     handle
 --
 -- == Host Synchronization
 --
@@ -350,31 +353,35 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All uses of presentable images acquired from @swapchain@ /must/ have
---     completed execution
+-- -   #VUID-vkDestroySwapchainKHR-swapchain-01282# All uses of presentable
+--     images acquired from @swapchain@ /must/ have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroySwapchainKHR-swapchain-01283# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @swapchain@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroySwapchainKHR-swapchain-01284# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @swapchain@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroySwapchainKHR-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @swapchain@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @swapchain@ /must/ be a valid
---     'Vulkan.Extensions.Handles.SwapchainKHR' handle
+-- -   #VUID-vkDestroySwapchainKHR-swapchain-parameter# If @swapchain@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @swapchain@ /must/ be
+--     a valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroySwapchainKHR-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   Both of @device@, and @swapchain@ that are valid handles of
---     non-ignored parameters /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkDestroySwapchainKHR-commonparent# Both of @device@, and
+--     @swapchain@ that are valid handles of non-ignored parameters /must/
+--     have been created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -435,22 +442,25 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetSwapchainImagesKHR-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @swapchain@ /must/ be a valid
---     'Vulkan.Extensions.Handles.SwapchainKHR' handle
+-- -   #VUID-vkGetSwapchainImagesKHR-swapchain-parameter# @swapchain@
+--     /must/ be a valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   @pSwapchainImageCount@ /must/ be a valid pointer to a @uint32_t@
+-- -   #VUID-vkGetSwapchainImagesKHR-pSwapchainImageCount-parameter#
+--     @pSwapchainImageCount@ /must/ be a valid pointer to a @uint32_t@
 --     value
 --
--- -   If the value referenced by @pSwapchainImageCount@ is not @0@, and
+-- -   #VUID-vkGetSwapchainImagesKHR-pSwapchainImages-parameter# If the
+--     value referenced by @pSwapchainImageCount@ is not @0@, and
 --     @pSwapchainImages@ is not @NULL@, @pSwapchainImages@ /must/ be a
 --     valid pointer to an array of @pSwapchainImageCount@
 --     'Vulkan.Core10.Handles.Image' handles
 --
--- -   Both of @device@, and @swapchain@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetSwapchainImagesKHR-commonparent# Both of @device@, and
+--     @swapchain@ /must/ have been created, allocated, or retrieved from
+--     the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -542,59 +552,68 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device swapchain timeout
 --
 -- == Valid Usage
 --
--- -   @swapchain@ /must/ not be in the retired state
+-- -   #VUID-vkAcquireNextImageKHR-swapchain-01285# @swapchain@ /must/ not
+--     be in the retired state
 --
--- -   If @semaphore@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' it
---     /must/ be unsignaled
+-- -   #VUID-vkAcquireNextImageKHR-semaphore-01286# If @semaphore@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be unsignaled
 --
--- -   If @semaphore@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' it
---     /must/ not have any uncompleted signal or wait operations pending
+-- -   #VUID-vkAcquireNextImageKHR-semaphore-01779# If @semaphore@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ not have any
+--     uncompleted signal or wait operations pending
 --
--- -   If @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/
---     be unsignaled and /must/ not be associated with any other queue
---     command that has not yet completed execution on that queue
+-- -   #VUID-vkAcquireNextImageKHR-fence-01287# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be unsignaled and
+--     /must/ not be associated with any other queue command that has not
+--     yet completed execution on that queue
 --
--- -   @semaphore@ and @fence@ /must/ not both be equal to
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+-- -   #VUID-vkAcquireNextImageKHR-semaphore-01780# @semaphore@ and @fence@
+--     /must/ not both be equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If the number of currently acquired images is greater than the
---     difference between the number of images in @swapchain@ and the value
---     of
+-- -   #VUID-vkAcquireNextImageKHR-swapchain-01802# If the number of
+--     currently acquired images is greater than the difference between the
+--     number of images in @swapchain@ and the value of
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR'::@minImageCount@
 --     as returned by a call to
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
 --     with the @surface@ used to create @swapchain@, @timeout@ /must/ not
 --     be @UINT64_MAX@
 --
--- -   @semaphore@ /must/ have a
---     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
+-- -   #VUID-vkAcquireNextImageKHR-semaphore-03265# @semaphore@ /must/ have
+--     a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkAcquireNextImageKHR-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @swapchain@ /must/ be a valid
---     'Vulkan.Extensions.Handles.SwapchainKHR' handle
+-- -   #VUID-vkAcquireNextImageKHR-swapchain-parameter# @swapchain@ /must/
+--     be a valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   If @semaphore@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @semaphore@ /must/ be a valid 'Vulkan.Core10.Handles.Semaphore'
---     handle
+-- -   #VUID-vkAcquireNextImageKHR-semaphore-parameter# If @semaphore@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @semaphore@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Semaphore' handle
 --
--- -   If @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@
---     /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-vkAcquireNextImageKHR-fence-parameter# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Fence' handle
 --
--- -   @pImageIndex@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkAcquireNextImageKHR-pImageIndex-parameter# @pImageIndex@
+--     /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If @semaphore@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkAcquireNextImageKHR-semaphore-parent# If @semaphore@ is a
+--     valid handle, it /must/ have been created, allocated, or retrieved
+--     from @device@
 --
--- -   If @fence@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkAcquireNextImageKHR-fence-parent# If @fence@ is a valid
+--     handle, it /must/ have been created, allocated, or retrieved from
+--     @device@
 --
--- -   Both of @device@, and @swapchain@ that are valid handles of
---     non-ignored parameters /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkAcquireNextImageKHR-commonparent# Both of @device@, and
+--     @swapchain@ that are valid handles of non-ignored parameters /must/
+--     have been created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -694,34 +713,38 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   Each element of @pSwapchains@ member of @pPresentInfo@ /must/ be a
---     swapchain that is created for a surface for which presentation is
---     supported from @queue@ as determined using a call to
+-- -   #VUID-vkQueuePresentKHR-pSwapchains-01292# Each element of
+--     @pSwapchains@ member of @pPresentInfo@ /must/ be a swapchain that is
+--     created for a surface for which presentation is supported from
+--     @queue@ as determined using a call to
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --
--- -   If more than one member of @pSwapchains@ was created from a display
---     surface, all display surfaces referenced that refer to the same
---     display /must/ use the same display mode
+-- -   #VUID-vkQueuePresentKHR-pSwapchains-01293# If more than one member
+--     of @pSwapchains@ was created from a display surface, all display
+--     surfaces referenced that refer to the same display /must/ use the
+--     same display mode
 --
--- -   When a semaphore wait operation referring to a binary semaphore
---     defined by the elements of the @pWaitSemaphores@ member of
---     @pPresentInfo@ executes on @queue@, there /must/ be no other queues
---     waiting on the same semaphore
+-- -   #VUID-vkQueuePresentKHR-pWaitSemaphores-01294# When a semaphore wait
+--     operation referring to a binary semaphore defined by the elements of
+--     the @pWaitSemaphores@ member of @pPresentInfo@ executes on @queue@,
+--     there /must/ be no other queues waiting on the same semaphore
 --
--- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
---     /must/ be semaphores that are signaled, or have
+-- -   #VUID-vkQueuePresentKHR-pWaitSemaphores-01295# All elements of the
+--     @pWaitSemaphores@ member of @pPresentInfo@ /must/ be semaphores that
+--     are signaled, or have
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
 --     previously submitted for execution
 --
--- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
---     /must/ be created with a
+-- -   #VUID-vkQueuePresentKHR-pWaitSemaphores-03267# All elements of the
+--     @pWaitSemaphores@ member of @pPresentInfo@ /must/ be created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'
 --
--- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
---     /must/ reference a semaphore signal operation that has been
---     submitted for execution and any semaphore signal operations on which
---     it depends (if any) /must/ have also been submitted for execution
+-- -   #VUID-vkQueuePresentKHR-pWaitSemaphores-03268# All elements of the
+--     @pWaitSemaphores@ member of @pPresentInfo@ /must/ reference a
+--     semaphore signal operation that has been submitted for execution and
+--     any semaphore signal operations on which it depends (if any) /must/
+--     have also been submitted for execution
 --
 -- Any writes to memory backing the images referenced by the
 -- @pImageIndices@ and @pSwapchains@ members of @pPresentInfo@, that are
@@ -777,10 +800,11 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
+-- -   #VUID-vkQueuePresentKHR-queue-parameter# @queue@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Queue' handle
 --
--- -   @pPresentInfo@ /must/ be a valid pointer to a valid 'PresentInfoKHR'
---     structure
+-- -   #VUID-vkQueuePresentKHR-pPresentInfo-parameter# @pPresentInfo@
+--     /must/ be a valid pointer to a valid 'PresentInfoKHR' structure
 --
 -- == Host Synchronization
 --
@@ -857,6 +881,15 @@ foreign import ccall
 -- | vkGetDeviceGroupPresentCapabilitiesKHR - Query present capabilities from
 -- other physical devices
 --
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetDeviceGroupPresentCapabilitiesKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetDeviceGroupPresentCapabilitiesKHR-pDeviceGroupPresentCapabilities-parameter#
+--     @pDeviceGroupPresentCapabilities@ /must/ be a valid pointer to a
+--     'DeviceGroupPresentCapabilitiesKHR' structure
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -875,8 +908,6 @@ foreign import ccall
 getDeviceGroupPresentCapabilitiesKHR :: forall io
                                       . (MonadIO io)
                                      => -- | @device@ is the logical device.
-                                        --
-                                        -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                         Device
                                      -> io (DeviceGroupPresentCapabilitiesKHR)
 getDeviceGroupPresentCapabilitiesKHR device = liftIO . evalContT $ do
@@ -910,16 +941,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetDeviceGroupSurfacePresentModesKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- -   #VUID-vkGetDeviceGroupSurfacePresentModesKHR-surface-parameter#
+--     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
 --     handle
 --
--- -   @pModes@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetDeviceGroupSurfacePresentModesKHR-pModes-parameter#
+--     @pModes@ /must/ be a valid pointer to a
 --     'DeviceGroupPresentModeFlagsKHR' value
 --
--- -   Both of @device@, and @surface@ /must/ have been created, allocated,
---     or retrieved from the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetDeviceGroupSurfacePresentModesKHR-commonparent# Both of
+--     @device@, and @surface@ /must/ have been created, allocated, or
+--     retrieved from the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -1001,9 +1036,10 @@ acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device acquireInfo = l
 --
 -- == Valid Usage
 --
--- -   If the number of currently acquired images is greater than the
---     difference between the number of images in the @swapchain@ member of
---     @pAcquireInfo@ and the value of
+-- -   #VUID-vkAcquireNextImage2KHR-swapchain-01803# If the number of
+--     currently acquired images is greater than the difference between the
+--     number of images in the @swapchain@ member of @pAcquireInfo@ and the
+--     value of
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR'::@minImageCount@
 --     as returned by a call to
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
@@ -1012,12 +1048,15 @@ acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device acquireInfo = l
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkAcquireNextImage2KHR-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pAcquireInfo@ /must/ be a valid pointer to a valid
---     'AcquireNextImageInfoKHR' structure
+-- -   #VUID-vkAcquireNextImage2KHR-pAcquireInfo-parameter# @pAcquireInfo@
+--     /must/ be a valid pointer to a valid 'AcquireNextImageInfoKHR'
+--     structure
 --
--- -   @pImageIndex@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkAcquireNextImage2KHR-pImageIndex-parameter# @pImageIndex@
+--     /must/ be a valid pointer to a @uint32_t@ value
 --
 -- == Return Codes
 --
@@ -1101,21 +1140,25 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDevicePresentRectanglesKHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- -   #VUID-vkGetPhysicalDevicePresentRectanglesKHR-surface-parameter#
+--     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
 --     handle
 --
--- -   @pRectCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDevicePresentRectanglesKHR-pRectCount-parameter#
+--     @pRectCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pRectCount@ is not @0@, and @pRects@ is
---     not @NULL@, @pRects@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkGetPhysicalDevicePresentRectanglesKHR-pRects-parameter# If
+--     the value referenced by @pRectCount@ is not @0@, and @pRects@ is not
+--     @NULL@, @pRects@ /must/ be a valid pointer to an array of
 --     @pRectCount@ 'Vulkan.Core10.FundamentalTypes.Rect2D' structures
 --
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetPhysicalDevicePresentRectanglesKHR-commonparent# Both of
+--     @physicalDevice@, and @surface@ /must/ have been created, allocated,
+--     or retrieved from the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -1283,18 +1326,20 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --
 -- == Valid Usage
 --
--- -   @surface@ /must/ be a surface that is supported by the device as
---     determined using
+-- -   #VUID-VkSwapchainCreateInfoKHR-surface-01270# @surface@ /must/ be a
+--     surface that is supported by the device as determined using
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --
--- -   @minImageCount@ /must/ be less than or equal to the value returned
---     in the @maxImageCount@ member of the
+-- -   #VUID-VkSwapchainCreateInfoKHR-minImageCount-01272# @minImageCount@
+--     /must/ be less than or equal to the value returned in the
+--     @maxImageCount@ member of the
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' structure
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'
 --     for the surface if the returned @maxImageCount@ is not zero
 --
--- -   If @presentMode@ is not
+-- -   #VUID-VkSwapchainCreateInfoKHR-presentMode-02839# If @presentMode@
+--     is not
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'
 --     nor
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR',
@@ -1305,37 +1350,41 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'
 --     for the surface
 --
--- -   @minImageCount@ /must/ be @1@ if @presentMode@ is either
+-- -   #VUID-VkSwapchainCreateInfoKHR-minImageCount-01383# @minImageCount@
+--     /must/ be @1@ if @presentMode@ is either
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'
 --     or
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR'
 --
--- -   @imageFormat@ and @imageColorSpace@ /must/ match the @format@ and
---     @colorSpace@ members, respectively, of one of the
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageFormat-01273# @imageFormat@ and
+--     @imageColorSpace@ /must/ match the @format@ and @colorSpace@
+--     members, respectively, of one of the
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceFormatKHR' structures
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceFormatsKHR'
 --     for the surface
 --
--- -   @imageExtent@ /must/ be between @minImageExtent@ and
---     @maxImageExtent@, inclusive, where @minImageExtent@ and
---     @maxImageExtent@ are members of the
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageExtent-01274# @imageExtent@
+--     /must/ be between @minImageExtent@ and @maxImageExtent@, inclusive,
+--     where @minImageExtent@ and @maxImageExtent@ are members of the
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' structure
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'
 --     for the surface
 --
--- -   @imageExtent@ members @width@ and @height@ /must/ both be non-zero
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageExtent-01689# @imageExtent@
+--     members @width@ and @height@ /must/ both be non-zero
 --
--- -   @imageArrayLayers@ /must/ be greater than @0@ and less than or equal
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageArrayLayers-01275#
+--     @imageArrayLayers@ /must/ be greater than @0@ and less than or equal
 --     to the @maxImageArrayLayers@ member of the
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' structure
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'
 --     for the surface
 --
--- -   If @presentMode@ is
---     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR',
+-- -   #VUID-VkSwapchainCreateInfoKHR-presentMode-01427# If @presentMode@
+--     is 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR',
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR',
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR',
@@ -1346,7 +1395,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'
 --     for @surface@
 --
--- -   If @presentMode@ is
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageUsage-01384# If @presentMode@ is
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'
 --     or
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR',
@@ -1357,16 +1406,19 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
 --     for @surface@
 --
--- -   If @imageSharingMode@ is
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageSharingMode-01277# If
+--     @imageSharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
 --     @queueFamilyIndexCount@ @uint32_t@ values
 --
--- -   If @imageSharingMode@ is
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageSharingMode-01278# If
+--     @imageSharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @queueFamilyIndexCount@ /must/ be greater than @1@
 --
--- -   If @imageSharingMode@ is
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageSharingMode-01428# If
+--     @imageSharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', each
 --     element of @pQueueFamilyIndices@ /must/ be unique and /must/ be less
 --     than @pQueueFamilyPropertyCount@ returned by either
@@ -1375,46 +1427,52 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'
 --     for the @physicalDevice@ that was used to create @device@
 --
--- -   @preTransform@ /must/ be one of the bits present in the
---     @supportedTransforms@ member of the
+-- -   #VUID-VkSwapchainCreateInfoKHR-preTransform-01279# @preTransform@
+--     /must/ be one of the bits present in the @supportedTransforms@
+--     member of the
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' structure
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'
 --     for the surface
 --
--- -   @compositeAlpha@ /must/ be one of the bits present in the
+-- -   #VUID-VkSwapchainCreateInfoKHR-compositeAlpha-01280#
+--     @compositeAlpha@ /must/ be one of the bits present in the
 --     @supportedCompositeAlpha@ member of the
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' structure
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'
 --     for the surface
 --
--- -   @presentMode@ /must/ be one of the
+-- -   #VUID-VkSwapchainCreateInfoKHR-presentMode-01281# @presentMode@
+--     /must/ be one of the
 --     'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' values returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfacePresentModesKHR'
 --     for the surface
 --
--- -   If the logical device was created with
+-- -   #VUID-VkSwapchainCreateInfoKHR-physicalDeviceCount-01429# If the
+--     logical device was created with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo'::@physicalDeviceCount@
 --     equal to 1, @flags@ /must/ not contain
 --     'SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR'
 --
--- -   If @oldSwapchain@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @oldSwapchain@ /must/ be a non-retired swapchain associated with
---     native window referred to by @surface@
+-- -   #VUID-VkSwapchainCreateInfoKHR-oldSwapchain-01933# If @oldSwapchain@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @oldSwapchain@
+--     /must/ be a non-retired swapchain associated with native window
+--     referred to by @surface@
 --
--- -   The
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageFormat-01778# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#swapchain-wsi-image-create-info implied image creation parameters>
 --     of the swapchain /must/ be supported as reported by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
 --
--- -   If @flags@ contains 'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' then
---     the @pNext@ chain /must/ include a
+-- -   #VUID-VkSwapchainCreateInfoKHR-flags-03168# If @flags@ contains
+--     'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' then the @pNext@ chain
+--     /must/ include a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure with a @viewFormatCount@ greater than zero and
 --     @pViewFormats@ /must/ have an element equal to @imageFormat@
 --
--- -   If a
+-- -   #VUID-VkSwapchainCreateInfoKHR-pNext-04099# If a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure was included in the @pNext@ chain and
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
@@ -1423,15 +1481,16 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     /must/ be compatible with the @format@ as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility compatibility table>
 --
--- -   If @flags@ does not contain
---     'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' and the @pNext@ chain
---     include a
+-- -   #VUID-VkSwapchainCreateInfoKHR-flags-04100# If @flags@ does not
+--     contain 'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' and the @pNext@
+--     chain include a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure then
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
 --     /must/ be @0@ or @1@
 --
--- -   If @flags@ contains 'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR', then
+-- -   #VUID-VkSwapchainCreateInfoKHR-flags-03187# If @flags@ contains
+--     'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR', then
 --     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'::@supportsProtected@
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE' in the
 --     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'
@@ -1439,7 +1498,8 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
 --     for @surface@
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkSwapchainCreateInfoKHR-pNext-02679# If the @pNext@ chain
+--     includes a
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT'
 --     structure with its @fullScreenExclusive@ member set to
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT',
@@ -1450,12 +1510,13 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkSwapchainCreateInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of 'DeviceGroupSwapchainCreateInfoKHR',
+-- -   #VUID-VkSwapchainCreateInfoKHR-pNext-pNext# Each @pNext@ member of
+--     any structure (including this one) in the @pNext@ chain /must/ be
+--     either @NULL@ or a pointer to a valid instance of
+--     'DeviceGroupSwapchainCreateInfoKHR',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT',
@@ -1463,48 +1524,58 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     or
 --     'Vulkan.Extensions.VK_AMD_display_native_hdr.SwapchainDisplayNativeHdrCreateInfoAMD'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkSwapchainCreateInfoKHR-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be a valid combination of
---     'SwapchainCreateFlagBitsKHR' values
+-- -   #VUID-VkSwapchainCreateInfoKHR-flags-parameter# @flags@ /must/ be a
+--     valid combination of 'SwapchainCreateFlagBitsKHR' values
 --
--- -   @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle
+-- -   #VUID-VkSwapchainCreateInfoKHR-surface-parameter# @surface@ /must/
+--     be a valid 'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
--- -   @imageFormat@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format'
---     value
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageFormat-parameter# @imageFormat@
+--     /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
 --
--- -   @imageColorSpace@ /must/ be a valid
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageColorSpace-parameter#
+--     @imageColorSpace@ /must/ be a valid
 --     'Vulkan.Extensions.VK_KHR_surface.ColorSpaceKHR' value
 --
--- -   @imageUsage@ /must/ be a valid combination of
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageUsage-parameter# @imageUsage@
+--     /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
 --
--- -   @imageUsage@ /must/ not be @0@
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageUsage-requiredbitmask#
+--     @imageUsage@ /must/ not be @0@
 --
--- -   @imageSharingMode@ /must/ be a valid
+-- -   #VUID-VkSwapchainCreateInfoKHR-imageSharingMode-parameter#
+--     @imageSharingMode@ /must/ be a valid
 --     'Vulkan.Core10.Enums.SharingMode.SharingMode' value
 --
--- -   @preTransform@ /must/ be a valid
+-- -   #VUID-VkSwapchainCreateInfoKHR-preTransform-parameter#
+--     @preTransform@ /must/ be a valid
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
 --
--- -   @compositeAlpha@ /must/ be a valid
+-- -   #VUID-VkSwapchainCreateInfoKHR-compositeAlpha-parameter#
+--     @compositeAlpha@ /must/ be a valid
 --     'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR' value
 --
--- -   @presentMode@ /must/ be a valid
---     'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' value
+-- -   #VUID-VkSwapchainCreateInfoKHR-presentMode-parameter# @presentMode@
+--     /must/ be a valid 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR'
+--     value
 --
--- -   If @oldSwapchain@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-VkSwapchainCreateInfoKHR-oldSwapchain-parameter# If
+--     @oldSwapchain@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @oldSwapchain@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   If @oldSwapchain@ is a valid handle, it /must/ have been created,
+-- -   #VUID-VkSwapchainCreateInfoKHR-oldSwapchain-parent# If
+--     @oldSwapchain@ is a valid handle, it /must/ have been created,
 --     allocated, or retrieved from @surface@
 --
--- -   Both of @oldSwapchain@, and @surface@ that are valid handles of
---     non-ignored parameters /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-VkSwapchainCreateInfoKHR-commonparent# Both of @oldSwapchain@,
+--     and @surface@ that are valid handles of non-ignored parameters
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Instance'
 --
 -- = See Also
 --
@@ -1704,10 +1775,11 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --
 -- == Valid Usage
 --
--- -   Each element of @pImageIndices@ /must/ be the index of a presentable
---     image acquired from the swapchain specified by the corresponding
---     element of the @pSwapchains@ array, and the presented image
---     subresource /must/ be in the
+-- -   #VUID-VkPresentInfoKHR-pImageIndices-01430# Each element of
+--     @pImageIndices@ /must/ be the index of a presentable image acquired
+--     from the swapchain specified by the corresponding element of the
+--     @pSwapchains@ array, and the presented image subresource /must/ be
+--     in the
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR' or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 --     layout at the time the operation is executed on a
@@ -1715,40 +1787,45 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPresentInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PRESENT_INFO_KHR'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of 'DeviceGroupPresentInfoKHR',
+-- -   #VUID-VkPresentInfoKHR-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
+--     'DeviceGroupPresentInfoKHR',
 --     'Vulkan.Extensions.VK_KHR_display_swapchain.DisplayPresentInfoKHR',
 --     'Vulkan.Extensions.VK_GGP_frame_token.PresentFrameTokenGGP',
 --     'Vulkan.Extensions.VK_KHR_incremental_present.PresentRegionsKHR', or
 --     'Vulkan.Extensions.VK_GOOGLE_display_timing.PresentTimesInfoGOOGLE'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkPresentInfoKHR-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
--- -   If @waitSemaphoreCount@ is not @0@, @pWaitSemaphores@ /must/ be a
---     valid pointer to an array of @waitSemaphoreCount@ valid
+-- -   #VUID-VkPresentInfoKHR-pWaitSemaphores-parameter# If
+--     @waitSemaphoreCount@ is not @0@, @pWaitSemaphores@ /must/ be a valid
+--     pointer to an array of @waitSemaphoreCount@ valid
 --     'Vulkan.Core10.Handles.Semaphore' handles
 --
--- -   @pSwapchains@ /must/ be a valid pointer to an array of
---     @swapchainCount@ valid 'Vulkan.Extensions.Handles.SwapchainKHR'
---     handles
+-- -   #VUID-VkPresentInfoKHR-pSwapchains-parameter# @pSwapchains@ /must/
+--     be a valid pointer to an array of @swapchainCount@ valid
+--     'Vulkan.Extensions.Handles.SwapchainKHR' handles
 --
--- -   @pImageIndices@ /must/ be a valid pointer to an array of
---     @swapchainCount@ @uint32_t@ values
---
--- -   If @pResults@ is not @NULL@, @pResults@ /must/ be a valid pointer to
---     an array of @swapchainCount@ 'Vulkan.Core10.Enums.Result.Result'
+-- -   #VUID-VkPresentInfoKHR-pImageIndices-parameter# @pImageIndices@
+--     /must/ be a valid pointer to an array of @swapchainCount@ @uint32_t@
 --     values
 --
--- -   @swapchainCount@ /must/ be greater than @0@
+-- -   #VUID-VkPresentInfoKHR-pResults-parameter# If @pResults@ is not
+--     @NULL@, @pResults@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ 'Vulkan.Core10.Enums.Result.Result' values
 --
--- -   Both of the elements of @pSwapchains@, and the elements of
---     @pWaitSemaphores@ that are valid handles of non-ignored parameters
---     /must/ have been created, allocated, or retrieved from the same
+-- -   #VUID-VkPresentInfoKHR-swapchainCount-arraylength# @swapchainCount@
+--     /must/ be greater than @0@
+--
+-- -   #VUID-VkPresentInfoKHR-commonparent# Both of the elements of
+--     @pSwapchains@, and the elements of @pWaitSemaphores@ that are valid
+--     handles of non-ignored parameters /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Instance'
 --
 -- = See Also
@@ -1880,6 +1957,13 @@ instance es ~ '[] => Zero (PresentInfoKHR es) where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkDeviceGroupPresentCapabilitiesKHR-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR'
+--
+-- -   #VUID-VkDeviceGroupPresentCapabilitiesKHR-pNext-pNext# @pNext@
+--     /must/ be @NULL@
+--
 -- = See Also
 --
 -- 'DeviceGroupPresentModeFlagsKHR',
@@ -1948,17 +2032,19 @@ instance Zero DeviceGroupPresentCapabilitiesKHR where
 --
 -- == Valid Usage
 --
--- -   If @swapchain@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
---     fields of 'Vulkan.Core10.Image.ImageCreateInfo' /must/ match the
+-- -   #VUID-VkImageSwapchainCreateInfoKHR-swapchain-00995# If @swapchain@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the fields of
+--     'Vulkan.Core10.Image.ImageCreateInfo' /must/ match the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#swapchain-wsi-image-create-info implied image creation parameters>
 --     of the swapchain
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImageSwapchainCreateInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR'
 --
--- -   If @swapchain@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-VkImageSwapchainCreateInfoKHR-swapchain-parameter# If
+--     @swapchain@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @swapchain@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
@@ -2022,14 +2108,17 @@ instance Zero ImageSwapchainCreateInfoKHR where
 --
 -- == Valid Usage
 --
--- -   @imageIndex@ /must/ be less than the number of images in @swapchain@
+-- -   #VUID-VkBindImageMemorySwapchainInfoKHR-imageIndex-01644#
+--     @imageIndex@ /must/ be less than the number of images in @swapchain@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkBindImageMemorySwapchainInfoKHR-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR'
 --
--- -   @swapchain@ /must/ be a valid
+-- -   #VUID-VkBindImageMemorySwapchainInfoKHR-swapchain-parameter#
+--     @swapchain@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
 -- == Host Synchronization
@@ -2111,49 +2200,58 @@ instance Zero BindImageMemorySwapchainInfoKHR where
 --
 -- == Valid Usage
 --
--- -   @swapchain@ /must/ not be in the retired state
+-- -   #VUID-VkAcquireNextImageInfoKHR-swapchain-01675# @swapchain@ /must/
+--     not be in the retired state
 --
--- -   If @semaphore@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' it
---     /must/ be unsignaled
+-- -   #VUID-VkAcquireNextImageInfoKHR-semaphore-01288# If @semaphore@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be unsignaled
 --
--- -   If @semaphore@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' it
---     /must/ not have any uncompleted signal or wait operations pending
+-- -   #VUID-VkAcquireNextImageInfoKHR-semaphore-01781# If @semaphore@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ not have any
+--     uncompleted signal or wait operations pending
 --
--- -   If @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/
---     be unsignaled and /must/ not be associated with any other queue
---     command that has not yet completed execution on that queue
+-- -   #VUID-VkAcquireNextImageInfoKHR-fence-01289# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be unsignaled and
+--     /must/ not be associated with any other queue command that has not
+--     yet completed execution on that queue
 --
--- -   @semaphore@ and @fence@ /must/ not both be equal to
+-- -   #VUID-VkAcquireNextImageInfoKHR-semaphore-01782# @semaphore@ and
+--     @fence@ /must/ not both be equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   @deviceMask@ /must/ be a valid device mask
+-- -   #VUID-VkAcquireNextImageInfoKHR-deviceMask-01290# @deviceMask@
+--     /must/ be a valid device mask
 --
--- -   @deviceMask@ /must/ not be zero
+-- -   #VUID-VkAcquireNextImageInfoKHR-deviceMask-01291# @deviceMask@
+--     /must/ not be zero
 --
--- -   @semaphore@ /must/ have a
---     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
+-- -   #VUID-VkAcquireNextImageInfoKHR-semaphore-03266# @semaphore@ /must/
+--     have a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkAcquireNextImageInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkAcquireNextImageInfoKHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @swapchain@ /must/ be a valid
---     'Vulkan.Extensions.Handles.SwapchainKHR' handle
+-- -   #VUID-VkAcquireNextImageInfoKHR-swapchain-parameter# @swapchain@
+--     /must/ be a valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   If @semaphore@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @semaphore@ /must/ be a valid 'Vulkan.Core10.Handles.Semaphore'
---     handle
+-- -   #VUID-VkAcquireNextImageInfoKHR-semaphore-parameter# If @semaphore@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @semaphore@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Semaphore' handle
 --
--- -   If @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@
---     /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-VkAcquireNextImageInfoKHR-fence-parameter# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Fence' handle
 --
--- -   Each of @fence@, @semaphore@, and @swapchain@ that are valid handles
---     of non-ignored parameters /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-VkAcquireNextImageInfoKHR-commonparent# Each of @fence@,
+--     @semaphore@, and @swapchain@ that are valid handles of non-ignored
+--     parameters /must/ have been created, allocated, or retrieved from
+--     the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -2274,47 +2372,55 @@ instance Zero AcquireNextImageInfoKHR where
 --
 -- == Valid Usage
 --
--- -   @swapchainCount@ /must/ equal @0@ or
+-- -   #VUID-VkDeviceGroupPresentInfoKHR-swapchainCount-01297#
+--     @swapchainCount@ /must/ equal @0@ or
 --     'PresentInfoKHR'::@swapchainCount@
 --
--- -   If @mode@ is 'DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR', then each
---     element of @pDeviceMasks@ /must/ have exactly one bit set, and the
+-- -   #VUID-VkDeviceGroupPresentInfoKHR-mode-01298# If @mode@ is
+--     'DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR', then each element of
+--     @pDeviceMasks@ /must/ have exactly one bit set, and the
 --     corresponding element of
 --     'DeviceGroupPresentCapabilitiesKHR'::@presentMask@ /must/ be
 --     non-zero
 --
--- -   If @mode@ is 'DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR', then each
---     element of @pDeviceMasks@ /must/ have exactly one bit set, and some
---     physical device in the logical device /must/ include that bit in its
+-- -   #VUID-VkDeviceGroupPresentInfoKHR-mode-01299# If @mode@ is
+--     'DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR', then each element of
+--     @pDeviceMasks@ /must/ have exactly one bit set, and some physical
+--     device in the logical device /must/ include that bit in its
 --     'DeviceGroupPresentCapabilitiesKHR'::@presentMask@
 --
--- -   If @mode@ is 'DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR', then each
---     element of @pDeviceMasks@ /must/ have a value for which all set bits
---     are set in one of the elements of
+-- -   #VUID-VkDeviceGroupPresentInfoKHR-mode-01300# If @mode@ is
+--     'DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR', then each element of
+--     @pDeviceMasks@ /must/ have a value for which all set bits are set in
+--     one of the elements of
 --     'DeviceGroupPresentCapabilitiesKHR'::@presentMask@
 --
--- -   If @mode@ is 'DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR',
---     then for each bit set in each element of @pDeviceMasks@, the
---     corresponding element of
---     'DeviceGroupPresentCapabilitiesKHR'::@presentMask@ /must/ be
---     non-zero
+-- -   #VUID-VkDeviceGroupPresentInfoKHR-mode-01301# If @mode@ is
+--     'DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR', then for
+--     each bit set in each element of @pDeviceMasks@, the corresponding
+--     element of 'DeviceGroupPresentCapabilitiesKHR'::@presentMask@ /must/
+--     be non-zero
 --
--- -   The value of each element of @pDeviceMasks@ /must/ be equal to the
---     device mask passed in 'AcquireNextImageInfoKHR'::@deviceMask@ when
---     the image index was last acquired
+-- -   #VUID-VkDeviceGroupPresentInfoKHR-pDeviceMasks-01302# The value of
+--     each element of @pDeviceMasks@ /must/ be equal to the device mask
+--     passed in 'AcquireNextImageInfoKHR'::@deviceMask@ when the image
+--     index was last acquired
 --
--- -   @mode@ /must/ have exactly one bit set, and that bit /must/ have
---     been included in 'DeviceGroupSwapchainCreateInfoKHR'::@modes@
+-- -   #VUID-VkDeviceGroupPresentInfoKHR-mode-01303# @mode@ /must/ have
+--     exactly one bit set, and that bit /must/ have been included in
+--     'DeviceGroupSwapchainCreateInfoKHR'::@modes@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDeviceGroupPresentInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR'
 --
--- -   If @swapchainCount@ is not @0@, @pDeviceMasks@ /must/ be a valid
+-- -   #VUID-VkDeviceGroupPresentInfoKHR-pDeviceMasks-parameter# If
+--     @swapchainCount@ is not @0@, @pDeviceMasks@ /must/ be a valid
 --     pointer to an array of @swapchainCount@ @uint32_t@ values
 --
--- -   @mode@ /must/ be a valid 'DeviceGroupPresentModeFlagBitsKHR' value
+-- -   #VUID-VkDeviceGroupPresentInfoKHR-mode-parameter# @mode@ /must/ be a
+--     valid 'DeviceGroupPresentModeFlagBitsKHR' value
 --
 -- = See Also
 --
@@ -2381,17 +2487,23 @@ instance Zero DeviceGroupPresentInfoKHR where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkDeviceGroupSwapchainCreateInfoKHR-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR'
+--
+-- -   #VUID-VkDeviceGroupSwapchainCreateInfoKHR-modes-parameter# @modes@
+--     /must/ be a valid combination of 'DeviceGroupPresentModeFlagBitsKHR'
+--     values
+--
+-- -   #VUID-VkDeviceGroupSwapchainCreateInfoKHR-modes-requiredbitmask#
+--     @modes@ /must/ not be @0@
+--
 -- = See Also
 --
 -- 'DeviceGroupPresentModeFlagsKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupSwapchainCreateInfoKHR = DeviceGroupSwapchainCreateInfoKHR
   { -- | @modes@ is a bitfield of modes that the swapchain /can/ be used with.
-    --
-    -- @modes@ /must/ be a valid combination of
-    -- 'DeviceGroupPresentModeFlagBitsKHR' values
-    --
-    -- @modes@ /must/ not be @0@
     modes :: DeviceGroupPresentModeFlagsKHR }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

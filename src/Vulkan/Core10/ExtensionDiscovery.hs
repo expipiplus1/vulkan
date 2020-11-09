@@ -102,12 +102,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   If @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a
+-- -   #VUID-vkEnumerateInstanceExtensionProperties-pLayerName-parameter#
+--     If @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a
 --     null-terminated UTF-8 string
 --
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkEnumerateInstanceExtensionProperties-pPropertyCount-parameter#
+--     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
+-- -   #VUID-vkEnumerateInstanceExtensionProperties-pProperties-parameter#
+--     If the value referenced by @pPropertyCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
 --     to an array of @pPropertyCount@ 'ExtensionProperties' structures
 --
@@ -180,15 +183,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkEnumerateDeviceExtensionProperties-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   If @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a
---     null-terminated UTF-8 string
+-- -   #VUID-vkEnumerateDeviceExtensionProperties-pLayerName-parameter# If
+--     @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a null-terminated
+--     UTF-8 string
 --
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkEnumerateDeviceExtensionProperties-pPropertyCount-parameter#
+--     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
+-- -   #VUID-vkEnumerateDeviceExtensionProperties-pProperties-parameter# If
+--     the value referenced by @pPropertyCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
 --     to an array of @pPropertyCount@ 'ExtensionProperties' structures
 --

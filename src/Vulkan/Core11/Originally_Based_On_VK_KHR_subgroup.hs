@@ -42,6 +42,48 @@ import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 --
 -- = Description
 --
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   #extension-limits-subgroup-size# @subgroupSize@ is the default
+--     number of invocations in each subgroup. @subgroupSize@ is at least 1
+--     if any of the physical device’s queues support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+--     @subgroupSize@ is a power-of-two.
+--
+-- -   #limits-subgroup-supportedStages# @supportedStages@ is a bitfield of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
+--     describing the shader stages that
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
+--     with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+--     are supported in. @supportedStages@ will have the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT'
+--     bit set if any of the physical device’s queues support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+--
+-- -   #limits-subgroupSupportedOperations# @supportedOperations@ is a
+--     bitmask of
+--     'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits'
+--     specifying the sets of
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
+--     with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+--     supported on this device. @supportedOperations@ will have the
+--     'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_BASIC_BIT'
+--     bit set if any of the physical device’s queues support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+--
+-- -   #limits-subgroup-quadOperationsInAllStages#
+--     @quadOperationsInAllStages@ is a boolean specifying whether
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-quad-operations quad group operations>
+--     are available in all stages, or are restricted to fragment and
+--     compute stages.
+--
 -- If the 'PhysicalDeviceSubgroupProperties' structure is included in the
 -- @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
@@ -53,6 +95,10 @@ import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceSubgroupProperties-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
@@ -60,39 +106,13 @@ import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlags'
 data PhysicalDeviceSubgroupProperties = PhysicalDeviceSubgroupProperties
-  { -- | @subgroupSize@ is the default number of invocations in each subgroup.
-    -- @subgroupSize@ is at least 1 if any of the physical device’s queues
-    -- support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @subgroupSize@ is
-    -- a power-of-two.
+  { -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "subgroupSize"
     subgroupSize :: Word32
-  , -- | @supportedStages@ is a bitfield of
-    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' describing
-    -- the shader stages that
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
-    -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
-    -- are supported in. @supportedStages@ will have the
-    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT' bit
-    -- set if any of the physical device’s queues support
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "supportedStages"
     supportedStages :: ShaderStageFlags
-  , -- | @supportedOperations@ is a bitmask of
-    -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits'
-    -- specifying the sets of
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
-    -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
-    -- supported on this device. @supportedOperations@ will have the
-    -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_BASIC_BIT'
-    -- bit set if any of the physical device’s queues support
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "supportedOperations"
     supportedOperations :: SubgroupFeatureFlags
-  , -- | @quadOperationsInAllStages@ is a boolean specifying whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-quad-operations quad group operations>
-    -- are available in all stages, or are restricted to fragment and compute
-    -- stages.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "quadOperationsInAllStages"
     quadOperationsInAllStages :: Bool
   }
   deriving (Typeable, Eq)

@@ -98,17 +98,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateViSurfaceNN-instance-parameter# @instance@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'ViSurfaceCreateInfoNN' structure
+-- -   #VUID-vkCreateViSurfaceNN-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'ViSurfaceCreateInfoNN'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateViSurfaceNN-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+-- -   #VUID-vkCreateViSurfaceNN-pSurface-parameter# @pSurface@ /must/ be a
+--     valid pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Return Codes
 --
@@ -160,7 +162,20 @@ createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
 -- | VkViSurfaceCreateInfoNN - Structure specifying parameters of a newly
 -- created VI surface object
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkViSurfaceCreateInfoNN-window-01318# @window@ /must/ be a
+--     valid @nn@::@vi@::@NativeWindowHandle@
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkViSurfaceCreateInfoNN-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN'
+--
+-- -   #VUID-VkViSurfaceCreateInfoNN-pNext-pNext# @pNext@ /must/ be @NULL@
+--
+-- -   #VUID-VkViSurfaceCreateInfoNN-flags-zerobitmask# @flags@ /must/ be
+--     @0@
 --
 -- = See Also
 --
@@ -168,13 +183,9 @@ createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
 -- 'ViSurfaceCreateFlagsNN', 'createViSurfaceNN'
 data ViSurfaceCreateInfoNN = ViSurfaceCreateInfoNN
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: ViSurfaceCreateFlagsNN
   , -- | @window@ is the @nn@::@vi@::@NativeWindowHandle@ for the
     -- @nn@::@vi@::@Layer@ with which to associate the surface.
-    --
-    -- @window@ /must/ be a valid @nn@::@vi@::@NativeWindowHandle@
     window :: Ptr ()
   }
   deriving (Typeable)

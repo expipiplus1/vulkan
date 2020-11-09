@@ -35,6 +35,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Description
 --
+-- -   #extension-features-uniformBufferStandardLayout#
+--     @uniformBufferStandardLayout@ indicates that the implementation
+--     supports the same layouts for uniform buffers as for storage and
+--     other kinds of buffers. See
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
+--
 -- If the 'PhysicalDeviceUniformBufferStandardLayoutFeatures' structure is
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -45,15 +51,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceUniformBufferStandardLayoutFeatures-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceUniformBufferStandardLayoutFeatures = PhysicalDeviceUniformBufferStandardLayoutFeatures
-  { -- | @uniformBufferStandardLayout@ indicates that the implementation supports
-    -- the same layouts for uniform buffers as for storage and other kinds of
-    -- buffers. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
+  { -- No documentation found for Nested "VkPhysicalDeviceUniformBufferStandardLayoutFeatures" "uniformBufferStandardLayout"
     uniformBufferStandardLayout :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
