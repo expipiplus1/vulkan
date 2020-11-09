@@ -15,10 +15,26 @@ jobs:
           name: vulkan-haskell
           signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
 
+      - id: creds
+        run: |
+          if [ "$owner" == "ThreeOfTwelve" ]; then
+            printf "%s\n" "::set-output name=token::$TUVOK_TOKEN"
+          elif [ "$owner" == "expipiplus1" ]; then
+            printf "%s\n" "::set-output name=ssh_key::$DEPLOY_KEY"
+          else
+            # Will not trigger CI job
+            printf "%s\n" "::set-output name=token::$GITHUB_TOKEN"
+          fi
+        env:
+          owner: ${{ github.event.client_payload.pull_request.head.repo.owner.login }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          TUVOK_TOKEN: ${{ secrets.TUVOK_TOKEN }}
+
       # Checkout the pull request branch
       - uses: actions/checkout@v2
         with:
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
+          ssh-key: ${{ steps.creds.outputs.ssh_key }}
+          token: ${{ steps.creds.outputs.token }}
           repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
           ref: ${{ github.event.client_payload.pull_request.head.ref }}
           submodules: recursive
