@@ -34,7 +34,7 @@ data Documentation = Documentation
   , dDocumentation :: Pandoc
     -- ^ The documentation itself
   }
-  deriving (Show)
+  deriving Show
 
 data Documentee
   = TopLevel CName
@@ -73,7 +73,7 @@ guessDocumentee :: (Documentee -> Bool) -> Pandoc -> Either Text CName
 guessDocumentee isValid (Pandoc _ bs) = do
   firstWord <- case bs of
     Para (Str n : _) : _ -> pure n
-    _ -> Left "Unable to find first word in documentation"
+    _                    -> Left "Unable to find first word in documentation"
   if isValid (TopLevel (CName firstWord))
     then pure (CName firstWord)
     -- TODO: Fix error message here.
@@ -101,7 +101,8 @@ splitDocumentation parent (Pandoc meta bs) = do
     -- If the description section is a list of documentation for enumeration
     -- values or members, split them into separate documentation elements
     xs@(Section sectionTag bs'' rem)
-      | h : _ <- xs, sectionTag `elem` ["_parameters", "_description", "_members"]
+      | h : _ <- xs, sectionTag
+        `elem` ["_parameters", "_description", "_members"]
       -> case memberDocs parent m bs'' of
         Left  _                    -> pure (Nothing, xs)
         Right (ds, []            ) -> pure (Just ds, rem)
@@ -125,9 +126,8 @@ splitDocumentation parent (Pandoc meta bs) = do
     xs -> pure (Nothing, xs)
 
 pattern Section :: Text -> [Block] -> [Block] -> [Block]
-pattern Section ref blocks remainder
-  <- Header headerLevel (ref, _, _) _
-   : (break (isHeaderLE headerLevel) -> (blocks, remainder))
+pattern Section ref blocks remainder <-
+  Header headerLevel (ref, _, _) _ : (break (isHeaderLE headerLevel) -> (blocks, remainder))
 
 isHeaderLE :: Int -> Block -> Bool
 isHeaderLE n = \case
@@ -143,18 +143,30 @@ memberDocs
   -> Either Text ([Documentation], [Block])
   -- ^ The documentation and the leftover blocks
 memberDocs parent m blocks =
-  let extractBulletList = \case
-        BulletList bullets ->
-          let enumDoc :: [Block] -> Either Text Documentation
-              enumDoc = \case
-                p@(Para (Code ("", [], []) memberName : _)) : ps -> pure
-                  Documentation { dDocumentee = Nested parent (CName memberName)
-                                , dDocumentation = Pandoc m (p : ps)
-                                }
-                _ -> Left "Unhandled member documentation declaration"
-          in  (, []) <$> traverse enumDoc bullets
-        d -> Right ([], [d])
+  let
+    extractBulletList = \case
+      BulletList bullets ->
+        let
+          enumDoc :: [Block] -> Either Text Documentation
+          enumDoc = \case
+            p@(Para (dropBeginningSpan -> Code ("", [], []) memberName : _)) : ps
+              -> pure Documentation
+                { dDocumentee    = Nested parent (CName memberName)
+                , dDocumentation = Pandoc m (p : ps)
+                }
+            _ -> Left "Unhandled member documentation declaration"
+        in
+          (, []) <$> traverse enumDoc bullets
+      d -> Right ([], [d])
   in  mconcat <$> traverse extractBulletList blocks
+
+-- | Since 1.2.160, sections start with this span listing the valid usage rule,
+-- remove this before identifying member docs.
+dropBeginningSpan :: [Inline] -> [Inline]
+dropBeginningSpan = \case
+  Span _ _ : SoftBreak : xs -> xs
+  Span _ _ : Space     : xs -> xs
+  xs                        -> xs
 
 main :: IO ()
 main = do

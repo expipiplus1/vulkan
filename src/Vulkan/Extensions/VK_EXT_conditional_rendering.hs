@@ -83,21 +83,26 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   Conditional rendering /must/ not already be
+-- -   #VUID-vkCmdBeginConditionalRenderingEXT-None-01980# Conditional
+--     rendering /must/ not already be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdBeginConditionalRenderingEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pConditionalRenderingBegin@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdBeginConditionalRenderingEXT-pConditionalRenderingBegin-parameter#
+--     @pConditionalRenderingBegin@ /must/ be a valid pointer to a valid
 --     'ConditionalRenderingBeginInfoEXT' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdBeginConditionalRenderingEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdBeginConditionalRenderingEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
 -- == Host Synchronization
@@ -167,27 +172,33 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   Conditional rendering /must/ be
+-- -   #VUID-vkCmdEndConditionalRenderingEXT-None-01985# Conditional
+--     rendering /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
 --
--- -   If conditional rendering was made
+-- -   #VUID-vkCmdEndConditionalRenderingEXT-None-01986# If conditional
+--     rendering was made
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
 --     outside of a render pass instance, it /must/ not be ended inside a
 --     render pass instance
 --
--- -   If conditional rendering was made
+-- -   #VUID-vkCmdEndConditionalRenderingEXT-None-01987# If conditional
+--     rendering was made
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
 --     within a subpass it /must/ be ended in the same subpass
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdEndConditionalRenderingEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdEndConditionalRenderingEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdEndConditionalRenderingEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
 -- == Host Synchronization
@@ -241,29 +252,36 @@ cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
 --
 -- == Valid Usage
 --
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-VkConditionalRenderingBeginInfoEXT-buffer-01981# If @buffer@
+--     is non-sparse then it /must/ be bound completely and contiguously to
+--     a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   @buffer@ /must/ have been created with the
+-- -   #VUID-VkConditionalRenderingBeginInfoEXT-buffer-01982# @buffer@
+--     /must/ have been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT'
 --     bit set
 --
--- -   @offset@ /must/ be less than the size of @buffer@ by at least 32
---     bits
+-- -   #VUID-VkConditionalRenderingBeginInfoEXT-offset-01983# @offset@
+--     /must/ be less than the size of @buffer@ by at least 32 bits
 --
--- -   @offset@ /must/ be a multiple of 4
+-- -   #VUID-VkConditionalRenderingBeginInfoEXT-offset-01984# @offset@
+--     /must/ be a multiple of 4
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkConditionalRenderingBeginInfoEXT-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkConditionalRenderingBeginInfoEXT-pNext-pNext# @pNext@ /must/
+--     be @NULL@
 --
--- -   @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-VkConditionalRenderingBeginInfoEXT-buffer-parameter# @buffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
--- -   @flags@ /must/ be a valid combination of
---     'ConditionalRenderingFlagBitsEXT' values
+-- -   #VUID-VkConditionalRenderingBeginInfoEXT-flags-parameter# @flags@
+--     /must/ be a valid combination of 'ConditionalRenderingFlagBitsEXT'
+--     values
 --
 -- = See Also
 --
@@ -336,14 +354,16 @@ instance Zero ConditionalRenderingBeginInfoEXT where
 --
 -- == Valid Usage
 --
--- -   If the
+-- -   #VUID-VkCommandBufferInheritanceConditionalRenderingInfoEXT-conditionalRenderingEnable-01977#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedConditionalRendering inherited conditional rendering>
 --     feature is not enabled, @conditionalRenderingEnable@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkCommandBufferInheritanceConditionalRenderingInfoEXT-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT'
 --
 -- = See Also
@@ -418,12 +438,12 @@ instance Zero CommandBufferInheritanceConditionalRenderingInfoEXT where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceConditionalRenderingFeaturesEXT = PhysicalDeviceConditionalRenderingFeaturesEXT
-  { -- | @conditionalRendering@ specifies whether conditional rendering is
-    -- supported.
+  { -- | #features-conditionalRendering# @conditionalRendering@ specifies whether
+    -- conditional rendering is supported.
     conditionalRendering :: Bool
-  , -- | @inheritedConditionalRendering@ specifies whether a secondary command
-    -- buffer /can/ be executed while conditional rendering is active in the
-    -- primary command buffer.
+  , -- | #features-inheritedConditionalRendering# @inheritedConditionalRendering@
+    -- specifies whether a secondary command buffer /can/ be executed while
+    -- conditional rendering is active in the primary command buffer.
     inheritedConditionalRendering :: Bool
   }
   deriving (Typeable, Eq)

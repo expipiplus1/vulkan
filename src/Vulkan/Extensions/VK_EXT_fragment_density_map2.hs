@@ -57,9 +57,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentDensityMap2FeaturesEXT = PhysicalDeviceFragmentDensityMap2FeaturesEXT
-  { -- | @fragmentDensityMapDeferred@ specifies whether the implementation
-    -- supports deferred reads of fragment density map image views. If this
-    -- feature is not enabled,
+  { -- | #features-fragmentDensityMapDeferred# @fragmentDensityMapDeferred@
+    -- specifies whether the implementation supports deferred reads of fragment
+    -- density map image views. If this feature is not enabled,
     -- 'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT'
     -- /must/ not be included in
     -- 'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@flags@.
@@ -123,21 +123,23 @@ instance Zero PhysicalDeviceFragmentDensityMap2FeaturesEXT where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentDensityMap2PropertiesEXT = PhysicalDeviceFragmentDensityMap2PropertiesEXT
-  { -- | @subsampledLoads@ specifies if performing image data read with load
-    -- operations on subsampled attachments will be resampled to the fragment
-    -- density of the render pass
+  { -- | #limits-subsampledLoads# @subsampledLoads@ specifies if performing image
+    -- data read with load operations on subsampled attachments will be
+    -- resampled to the fragment density of the render pass
     subsampledLoads :: Bool
-  , -- | @subsampledCoarseReconstructionEarlyAccess@ specifies if performing
+  , -- | #limits-subsampledCoarseReconstructionEarlyAccess#
+    -- @subsampledCoarseReconstructionEarlyAccess@ specifies if performing
     -- image data read with samplers created with @flags@ containing
     -- 'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'
     -- in fragment shader will trigger additional reads during
     -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT'
     subsampledCoarseReconstructionEarlyAccess :: Bool
-  , -- | @maxSubsampledArrayLayers@ is the maximum number of
-    -- 'Vulkan.Core10.Handles.ImageView' array layers for usages supporting
-    -- subsampled samplers
+  , -- | #limits-maxSubsampledArrayLayers# @maxSubsampledArrayLayers@ is the
+    -- maximum number of 'Vulkan.Core10.Handles.ImageView' array layers for
+    -- usages supporting subsampled samplers
     maxSubsampledArrayLayers :: Word32
-  , -- | @maxDescriptorSetSubsampledSamplers@ is the maximum number of subsampled
+  , -- | #limits-maxDescriptorSetSubsampledSamplers#
+    -- @maxDescriptorSetSubsampledSamplers@ is the maximum number of subsampled
     -- samplers that /can/ be included in a
     -- 'Vulkan.Core10.Handles.PipelineLayout'
     maxDescriptorSetSubsampledSamplers :: Word32

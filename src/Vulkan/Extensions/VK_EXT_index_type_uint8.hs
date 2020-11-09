@@ -53,7 +53,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceIndexTypeUint8FeaturesEXT = PhysicalDeviceIndexTypeUint8FeaturesEXT
-  { -- | @indexTypeUint8@ indicates that
+  { -- | #features-indexTypeUint8# @indexTypeUint8@ indicates that
     -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT' can be used with
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.
     indexTypeUint8 :: Bool }

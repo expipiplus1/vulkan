@@ -54,13 +54,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentShaderInterlockFeaturesEXT = PhysicalDeviceFragmentShaderInterlockFeaturesEXT
-  { -- | @fragmentShaderSampleInterlock@ indicates that the implementation
-    -- supports the @FragmentShaderSampleInterlockEXT@ SPIR-V capability.
+  { -- | #features-fragmentShaderSampleInterlock# @fragmentShaderSampleInterlock@
+    -- indicates that the implementation supports the
+    -- @FragmentShaderSampleInterlockEXT@ SPIR-V capability.
     fragmentShaderSampleInterlock :: Bool
-  , -- | @fragmentShaderPixelInterlock@ indicates that the implementation
-    -- supports the @FragmentShaderPixelInterlockEXT@ SPIR-V capability.
+  , -- | #features-fragmentShaderPixelInterlock# @fragmentShaderPixelInterlock@
+    -- indicates that the implementation supports the
+    -- @FragmentShaderPixelInterlockEXT@ SPIR-V capability.
     fragmentShaderPixelInterlock :: Bool
-  , -- | @fragmentShaderShadingRateInterlock@ indicates that the implementation
+  , -- | #features-fragmentShaderShadingRateInterlock#
+    -- @fragmentShaderShadingRateInterlock@ indicates that the implementation
     -- supports the @FragmentShaderShadingRateInterlockEXT@ SPIR-V capability.
     fragmentShaderShadingRateInterlock :: Bool
   }

@@ -114,51 +114,62 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdBindShadingRateImageNV-None-02058# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature /must/ be enabled
 --
--- -   If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it
---     /must/ be a valid 'Vulkan.Core10.Handles.ImageView' handle of type
+-- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02059# If @imageView@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ be a valid
+--     'Vulkan.Core10.Handles.ImageView' handle of type
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
--- -   If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it
---     /must/ have a format of 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'
+-- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02060# If @imageView@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have a
+--     format of 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'
 --
--- -   If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it
---     /must/ have been created with a @usage@ value including
+-- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02061# If @imageView@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have been
+--     created with a @usage@ value including
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @imageLayout@ /must/ match the actual
---     'Vulkan.Core10.Enums.ImageLayout.ImageLayout' of each subresource
---     accessible from @imageView@ at the time the subresource is accessed
+-- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02062# If @imageView@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageLayout@ /must/
+--     match the actual 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' of
+--     each subresource accessible from @imageView@ at the time the
+--     subresource is accessed
 --
--- -   If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @imageLayout@ /must/ be
+-- -   #VUID-vkCmdBindShadingRateImageNV-imageLayout-02063# If @imageView@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageLayout@
+--     /must/ be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdBindShadingRateImageNV-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-vkCmdBindShadingRateImageNV-imageView-parameter# If
+--     @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @imageView@ /must/ be a valid 'Vulkan.Core10.Handles.ImageView'
 --     handle
 --
--- -   @imageLayout@ /must/ be a valid
+-- -   #VUID-vkCmdBindShadingRateImageNV-imageLayout-parameter#
+--     @imageLayout@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdBindShadingRateImageNV-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdBindShadingRateImageNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   Both of @commandBuffer@, and @imageView@ that are valid handles of
+-- -   #VUID-vkCmdBindShadingRateImageNV-commonparent# Both of
+--     @commandBuffer@, and @imageView@ that are valid handles of
 --     non-ignored parameters /must/ have been created, allocated, or
 --     retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
@@ -220,41 +231,45 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-None-02064# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature /must/ be enabled
 --
--- -   @firstViewport@ /must/ be less than
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
---
--- -   The sum of @firstViewport@ and @viewportCount@ /must/ be between @1@
---     and
+-- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-firstViewport-02067# The
+--     sum of @firstViewport@ and @viewportCount@ /must/ be between @1@ and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@,
 --     inclusive
 --
--- -   If the
+-- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-firstViewport-02068# If
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @firstViewport@ /must/ be @0@
 --
--- -   If the
+-- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-viewportCount-02069# If
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @viewportCount@ /must/ be @1@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pShadingRatePalettes@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-pShadingRatePalettes-parameter#
+--     @pShadingRatePalettes@ /must/ be a valid pointer to an array of
 --     @viewportCount@ valid 'ShadingRatePaletteNV' structures
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-commandBuffer-cmdpool#
+--     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   @viewportCount@ /must/ be greater than @0@
+-- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-viewportCount-arraylength#
+--     @viewportCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
@@ -320,28 +335,34 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If @sampleOrderType@ is not 'COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV',
+-- -   #VUID-vkCmdSetCoarseSampleOrderNV-sampleOrderType-02081# If
+--     @sampleOrderType@ is not 'COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV',
 --     @customSamplerOrderCount@ /must/ be @0@
 --
--- -   The array @pCustomSampleOrders@ /must/ not contain two structures
---     with matching values for both the @shadingRate@ and @sampleCount@
---     members
+-- -   #VUID-vkCmdSetCoarseSampleOrderNV-pCustomSampleOrders-02235# The
+--     array @pCustomSampleOrders@ /must/ not contain two structures with
+--     matching values for both the @shadingRate@ and @sampleCount@ members
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetCoarseSampleOrderNV-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @sampleOrderType@ /must/ be a valid 'CoarseSampleOrderTypeNV' value
+-- -   #VUID-vkCmdSetCoarseSampleOrderNV-sampleOrderType-parameter#
+--     @sampleOrderType@ /must/ be a valid 'CoarseSampleOrderTypeNV' value
 --
--- -   If @customSampleOrderCount@ is not @0@, @pCustomSampleOrders@ /must/
---     be a valid pointer to an array of @customSampleOrderCount@ valid
+-- -   #VUID-vkCmdSetCoarseSampleOrderNV-pCustomSampleOrders-parameter# If
+--     @customSampleOrderCount@ is not @0@, @pCustomSampleOrders@ /must/ be
+--     a valid pointer to an array of @customSampleOrderCount@ valid
 --     'CoarseSampleOrderCustomNV' structures
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetCoarseSampleOrderNV-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetCoarseSampleOrderNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
 -- == Host Synchronization
@@ -405,6 +426,7 @@ data ShadingRatePaletteNV = ShadingRatePaletteNV
     -- 'ShadingRatePaletteEntryNV' enums defining the shading rate for each
     -- palette entry.
     --
+    -- #VUID-VkShadingRatePaletteNV-pShadingRatePaletteEntries-parameter#
     -- @pShadingRatePaletteEntries@ /must/ be a valid pointer to an array of
     -- @shadingRatePaletteEntryCount@ valid 'ShadingRatePaletteEntryNV' values
     shadingRatePaletteEntries :: Vector ShadingRatePaletteEntryNV }
@@ -454,24 +476,29 @@ instance Zero ShadingRatePaletteNV where
 --
 -- == Valid Usage
 --
--- -   If the
+-- -   #VUID-VkPipelineViewportShadingRateImageStateCreateInfoNV-viewportCount-02054#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @viewportCount@ /must/ be @0@ or @1@
 --
--- -   @viewportCount@ /must/ be less than or equal to
+-- -   #VUID-VkPipelineViewportShadingRateImageStateCreateInfoNV-viewportCount-02055#
+--     @viewportCount@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
 --
--- -   If @shadingRateImageEnable@ is
+-- -   #VUID-VkPipelineViewportShadingRateImageStateCreateInfoNV-shadingRateImageEnable-02056#
+--     If @shadingRateImageEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', @viewportCount@ /must/ be
 --     greater or equal to the @viewportCount@ member of
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineViewportShadingRateImageStateCreateInfoNV-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV'
 --
--- -   @viewportCount@ /must/ be greater than @0@
+-- -   #VUID-VkPipelineViewportShadingRateImageStateCreateInfoNV-viewportCount-arraylength#
+--     @viewportCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -559,14 +586,14 @@ instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShadingRateImageFeaturesNV = PhysicalDeviceShadingRateImageFeaturesNV
-  { -- | @shadingRateImage@ indicates that the implementation supports the use of
-    -- a shading rate image to derive an effective shading rate for fragment
-    -- processing. It also indicates that the implementation supports the
-    -- @ShadingRateNV@ SPIR-V execution mode.
+  { -- | #features-shadingRateImage# @shadingRateImage@ indicates that the
+    -- implementation supports the use of a shading rate image to derive an
+    -- effective shading rate for fragment processing. It also indicates that
+    -- the implementation supports the @ShadingRateNV@ SPIR-V execution mode.
     shadingRateImage :: Bool
-  , -- | @shadingRateCoarseSampleOrder@ indicates that the implementation
-    -- supports a user-configurable ordering of coverage samples in fragments
-    -- larger than one pixel.
+  , -- | #features-shadingRateCoarseSampleOrder# @shadingRateCoarseSampleOrder@
+    -- indicates that the implementation supports a user-configurable ordering
+    -- of coverage samples in fragments larger than one pixel.
     shadingRateCoarseSampleOrder :: Bool
   }
   deriving (Typeable, Eq)
@@ -636,17 +663,20 @@ instance Zero PhysicalDeviceShadingRateImageFeaturesNV where
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShadingRateImagePropertiesNV = PhysicalDeviceShadingRateImagePropertiesNV
-  { -- | @shadingRateTexelSize@ indicates the width and height of the portion of
-    -- the framebuffer corresponding to each texel in the shading rate image.
+  { -- | #limits-shading-rate-texel-size# @shadingRateTexelSize@ indicates the
+    -- width and height of the portion of the framebuffer corresponding to each
+    -- texel in the shading rate image.
     shadingRateTexelSize :: Extent2D
-  , -- | @shadingRatePaletteSize@ indicates the maximum number of palette entries
-    -- supported for the shading rate image.
+  , -- | #limits-shading-rate-palette-size# @shadingRatePaletteSize@ indicates
+    -- the maximum number of palette entries supported for the shading rate
+    -- image.
     shadingRatePaletteSize :: Word32
-  , -- | @shadingRateMaxCoarseSamples@ specifies the maximum number of coverage
-    -- samples supported in a single fragment. If the product of the fragment
-    -- size derived from the base shading rate and the number of coverage
-    -- samples per pixel exceeds this limit, the final shading rate will be
-    -- adjusted so that its product does not exceed the limit.
+  , -- | #limits-shading-rate-max-coarse-samples# @shadingRateMaxCoarseSamples@
+    -- specifies the maximum number of coverage samples supported in a single
+    -- fragment. If the product of the fragment size derived from the base
+    -- shading rate and the number of coverage samples per pixel exceeds this
+    -- limit, the final shading rate will be adjusted so that its product does
+    -- not exceed the limit.
     shadingRateMaxCoarseSamples :: Word32
   }
   deriving (Typeable)
@@ -701,18 +731,21 @@ data CoarseSampleLocationNV = CoarseSampleLocationNV
   { -- | @pixelX@ is added to the x coordinate of the upper-leftmost pixel of
     -- each fragment to identify the pixel containing the coverage sample.
     --
-    -- @pixelX@ /must/ be less than the width (in pixels) of the fragment
+    -- #VUID-VkCoarseSampleLocationNV-pixelX-02078# @pixelX@ /must/ be less
+    -- than the width (in pixels) of the fragment
     pixelX :: Word32
   , -- | @pixelY@ is added to the y coordinate of the upper-leftmost pixel of
     -- each fragment to identify the pixel containing the coverage sample.
     --
-    -- @pixelY@ /must/ be less than the height (in pixels) of the fragment
+    -- #VUID-VkCoarseSampleLocationNV-pixelY-02079# @pixelY@ /must/ be less
+    -- than the height (in pixels) of the fragment
     pixelY :: Word32
   , -- | @sample@ is the number of the coverage sample in the pixel identified by
     -- @pixelX@ and @pixelY@.
     --
-    -- @sample@ /must/ be less than the number of coverage samples in each
-    -- pixel belonging to the fragment
+    -- #VUID-VkCoarseSampleLocationNV-sample-02080# @sample@ /must/ be less
+    -- than the number of coverage samples in each pixel belonging to the
+    -- fragment
     sample :: Word32
   }
   deriving (Typeable, Eq)
@@ -771,33 +804,41 @@ instance Zero CoarseSampleLocationNV where
 --
 -- == Valid Usage
 --
--- -   @shadingRate@ /must/ be a shading rate that generates fragments with
---     more than one pixel
+-- -   #VUID-VkCoarseSampleOrderCustomNV-shadingRate-02073# @shadingRate@
+--     /must/ be a shading rate that generates fragments with more than one
+--     pixel
 --
--- -   @sampleCount@ /must/ correspond to a sample count enumerated in
+-- -   #VUID-VkCoarseSampleOrderCustomNV-sampleCount-02074# @sampleCount@
+--     /must/ correspond to a sample count enumerated in
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags' whose
 --     corresponding bit is set in
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@framebufferNoAttachmentsSampleCounts@
 --
--- -   @sampleLocationCount@ /must/ be equal to the product of
+-- -   #VUID-VkCoarseSampleOrderCustomNV-sampleLocationCount-02075#
+--     @sampleLocationCount@ /must/ be equal to the product of
 --     @sampleCount@, the fragment width for @shadingRate@, and the
 --     fragment height for @shadingRate@
 --
--- -   @sampleLocationCount@ /must/ be less than or equal to the value of
+-- -   #VUID-VkCoarseSampleOrderCustomNV-sampleLocationCount-02076#
+--     @sampleLocationCount@ /must/ be less than or equal to the value of
 --     'PhysicalDeviceShadingRateImagePropertiesNV'::@shadingRateMaxCoarseSamples@
 --
--- -   The array @pSampleLocations@ /must/ contain exactly one entry for
---     every combination of valid values for @pixelX@, @pixelY@, and
---     @sample@ in the structure 'CoarseSampleOrderCustomNV'
+-- -   #VUID-VkCoarseSampleOrderCustomNV-pSampleLocations-02077# The array
+--     @pSampleLocations@ /must/ contain exactly one entry for every
+--     combination of valid values for @pixelX@, @pixelY@, and @sample@ in
+--     the structure 'CoarseSampleOrderCustomNV'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @shadingRate@ /must/ be a valid 'ShadingRatePaletteEntryNV' value
+-- -   #VUID-VkCoarseSampleOrderCustomNV-shadingRate-parameter#
+--     @shadingRate@ /must/ be a valid 'ShadingRatePaletteEntryNV' value
 --
--- -   @pSampleLocations@ /must/ be a valid pointer to an array of
+-- -   #VUID-VkCoarseSampleOrderCustomNV-pSampleLocations-parameter#
+--     @pSampleLocations@ /must/ be a valid pointer to an array of
 --     @sampleLocationCount@ 'CoarseSampleLocationNV' structures
 --
--- -   @sampleLocationCount@ /must/ be greater than @0@
+-- -   #VUID-VkCoarseSampleOrderCustomNV-sampleLocationCount-arraylength#
+--     @sampleLocationCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -881,21 +922,26 @@ instance Zero CoarseSampleOrderCustomNV where
 --
 -- == Valid Usage
 --
--- -   If @sampleOrderType@ is not 'COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV',
+-- -   #VUID-VkPipelineViewportCoarseSampleOrderStateCreateInfoNV-sampleOrderType-02072#
+--     If @sampleOrderType@ is not 'COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV',
 --     @customSamplerOrderCount@ /must/ be @0@
 --
--- -   The array @pCustomSampleOrders@ /must/ not contain two structures
+-- -   #VUID-VkPipelineViewportCoarseSampleOrderStateCreateInfoNV-pCustomSampleOrders-02234#
+--     The array @pCustomSampleOrders@ /must/ not contain two structures
 --     with matching values for both the @shadingRate@ and @sampleCount@
 --     members
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineViewportCoarseSampleOrderStateCreateInfoNV-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV'
 --
--- -   @sampleOrderType@ /must/ be a valid 'CoarseSampleOrderTypeNV' value
+-- -   #VUID-VkPipelineViewportCoarseSampleOrderStateCreateInfoNV-sampleOrderType-parameter#
+--     @sampleOrderType@ /must/ be a valid 'CoarseSampleOrderTypeNV' value
 --
--- -   If @customSampleOrderCount@ is not @0@, @pCustomSampleOrders@ /must/
+-- -   #VUID-VkPipelineViewportCoarseSampleOrderStateCreateInfoNV-pCustomSampleOrders-parameter#
+--     If @customSampleOrderCount@ is not @0@, @pCustomSampleOrders@ /must/
 --     be a valid pointer to an array of @customSampleOrderCount@ valid
 --     'CoarseSampleOrderCustomNV' structures
 --

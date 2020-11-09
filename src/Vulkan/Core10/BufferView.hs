@@ -70,17 +70,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateBufferView-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'BufferViewCreateInfo' structure
+-- -   #VUID-vkCreateBufferView-pCreateInfo-parameter# @pCreateInfo@ /must/
+--     be a valid pointer to a valid 'BufferViewCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateBufferView-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pView@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.BufferView' handle
+-- -   #VUID-vkCreateBufferView-pView-parameter# @pView@ /must/ be a valid
+--     pointer to a 'Vulkan.Core10.Handles.BufferView' handle
 --
 -- == Return Codes
 --
@@ -151,31 +152,35 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @bufferView@ /must/ have
---     completed execution
+-- -   #VUID-vkDestroyBufferView-bufferView-00936# All submitted commands
+--     that refer to @bufferView@ /must/ have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyBufferView-bufferView-00937# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @bufferView@ was created, a compatible set of
 --     callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyBufferView-bufferView-00938# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @bufferView@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyBufferView-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @bufferView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @bufferView@ /must/ be a valid 'Vulkan.Core10.Handles.BufferView'
---     handle
+-- -   #VUID-vkDestroyBufferView-bufferView-parameter# If @bufferView@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @bufferView@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.BufferView' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyBufferView-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @bufferView@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroyBufferView-bufferView-parent# If @bufferView@ is a
+--     valid handle, it /must/ have been created, allocated, or retrieved
+--     from @device@
 --
 -- == Host Synchronization
 --
@@ -213,43 +218,47 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   @offset@ /must/ be less than the size of @buffer@
+-- -   #VUID-VkBufferViewCreateInfo-offset-00925# @offset@ /must/ be less
+--     than the size of @buffer@
 --
--- -   If @range@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     @range@ /must/ be greater than @0@
+-- -   #VUID-VkBufferViewCreateInfo-range-00928# If @range@ is not equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be greater
+--     than @0@
 --
--- -   If @range@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     @range@ /must/ be an integer multiple of the texel block size of
---     @format@
+-- -   #VUID-VkBufferViewCreateInfo-range-00929# If @range@ is not equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be an
+--     integer multiple of the texel block size of @format@
 --
--- -   If @range@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     the number of texel buffer elements given by (⌊@range@ \/ (texel
---     block size)⌋ × (texels per block)) where texel block size and texels
---     per block are as defined in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
---     table for @format@, /must/ be less than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
---
--- -   If @range@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     the sum of @offset@ and @range@ /must/ be less than or equal to the
---     size of @buffer@
---
--- -   If @range@ is equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE', the
---     number of texel buffer elements given by (⌊(size - @offset@) \/
---     (texel block size)⌋ × (texels per block)) where size is the size of
---     @buffer@, and texel block size and texels per block are as defined
+-- -   #VUID-VkBufferViewCreateInfo-range-00930# If @range@ is not equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', the number of texel buffer
+--     elements given by (⌊@range@ \/ (texel block size)⌋ × (texels per
+--     block)) where texel block size and texels per block are as defined
 --     in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
 --     table for @format@, /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
 --
--- -   @buffer@ /must/ have been created with a @usage@ value containing at
---     least one of
+-- -   #VUID-VkBufferViewCreateInfo-offset-00931# If @range@ is not equal
+--     to 'Vulkan.Core10.APIConstants.WHOLE_SIZE', the sum of @offset@ and
+--     @range@ /must/ be less than or equal to the size of @buffer@
+--
+-- -   #VUID-VkBufferViewCreateInfo-range-04059# If @range@ is equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', the number of texel buffer
+--     elements given by (⌊(size - @offset@) \/ (texel block size)⌋ ×
+--     (texels per block)) where size is the size of @buffer@, and texel
+--     block size and texels per block are as defined in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
+--     table for @format@, /must/ be less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
+--
+-- -   #VUID-VkBufferViewCreateInfo-buffer-00932# @buffer@ /must/ have been
+--     created with a @usage@ value containing at least one of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
 --     or
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
 --
--- -   If @buffer@ was created with @usage@ containing
+-- -   #VUID-VkBufferViewCreateInfo-buffer-00933# If @buffer@ was created
+--     with @usage@ containing
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT',
 --     @format@ /must/ be supported for uniform texel buffers, as specified
 --     by the
@@ -259,7 +268,8 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
 --
--- -   If @buffer@ was created with @usage@ containing
+-- -   #VUID-VkBufferViewCreateInfo-buffer-00934# If @buffer@ was created
+--     with @usage@ containing
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT',
 --     @format@ /must/ be supported for storage texel buffers, as specified
 --     by the
@@ -269,15 +279,16 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
 --
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-VkBufferViewCreateInfo-buffer-00935# If @buffer@ is non-sparse
+--     then it /must/ be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   If the
+-- -   #VUID-VkBufferViewCreateInfo-offset-02749# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
 --     feature is not enabled, @offset@ /must/ be a multiple of
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@
 --
--- -   If the
+-- -   #VUID-VkBufferViewCreateInfo-buffer-02750# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
 --     feature is enabled and if @buffer@ was created with @usage@
 --     containing
@@ -291,7 +302,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     bytes, then the size of a single component of @format@ is used
 --     instead
 --
--- -   If the
+-- -   #VUID-VkBufferViewCreateInfo-buffer-02751# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
 --     feature is enabled and if @buffer@ was created with @usage@
 --     containing
@@ -307,16 +318,19 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkBufferViewCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkBufferViewCreateInfo-pNext-pNext# @pNext@ /must/ be @NULL@
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkBufferViewCreateInfo-flags-zerobitmask# @flags@ /must/ be
+--     @0@
 --
--- -   @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-VkBufferViewCreateInfo-buffer-parameter# @buffer@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Buffer' handle
 --
--- -   @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+-- -   #VUID-VkBufferViewCreateInfo-format-parameter# @format@ /must/ be a
+--     valid 'Vulkan.Core10.Enums.Format.Format' value
 --
 -- = See Also
 --

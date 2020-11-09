@@ -49,8 +49,8 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = STRUCTUR
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderDrawParametersFeatures = PhysicalDeviceShaderDrawParametersFeatures
-  { -- | @shaderDrawParameters@ specifies whether shader draw parameters are
-    -- supported.
+  { -- | #extension-features-shaderDrawParameters# @shaderDrawParameters@
+    -- specifies whether shader draw parameters are supported.
     shaderDrawParameters :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

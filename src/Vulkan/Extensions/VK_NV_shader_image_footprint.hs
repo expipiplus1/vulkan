@@ -53,8 +53,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderImageFootprintFeaturesNV = PhysicalDeviceShaderImageFootprintFeaturesNV
-  { -- | @imageFootprint@ specifies whether the implementation supports the
-    -- @ImageFootprintNV@ SPIR-V capability.
+  { -- | #features-imageFootprint# @imageFootprint@ specifies whether the
+    -- implementation supports the @ImageFootprintNV@ SPIR-V capability.
     imageFootprint :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

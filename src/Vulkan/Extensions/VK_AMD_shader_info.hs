@@ -133,23 +133,28 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetShaderInfoAMD-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+-- -   #VUID-vkGetShaderInfoAMD-pipeline-parameter# @pipeline@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Pipeline' handle
 --
--- -   @shaderStage@ /must/ be a valid
+-- -   #VUID-vkGetShaderInfoAMD-shaderStage-parameter# @shaderStage@ /must/
+--     be a valid
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' value
 --
--- -   @infoType@ /must/ be a valid 'ShaderInfoTypeAMD' value
+-- -   #VUID-vkGetShaderInfoAMD-infoType-parameter# @infoType@ /must/ be a
+--     valid 'ShaderInfoTypeAMD' value
 --
--- -   @pInfoSize@ /must/ be a valid pointer to a @size_t@ value
+-- -   #VUID-vkGetShaderInfoAMD-pInfoSize-parameter# @pInfoSize@ /must/ be
+--     a valid pointer to a @size_t@ value
 --
--- -   If the value referenced by @pInfoSize@ is not @0@, and @pInfo@ is
---     not @NULL@, @pInfo@ /must/ be a valid pointer to an array of
---     @pInfoSize@ bytes
+-- -   #VUID-vkGetShaderInfoAMD-pInfo-parameter# If the value referenced by
+--     @pInfoSize@ is not @0@, and @pInfo@ is not @NULL@, @pInfo@ /must/ be
+--     a valid pointer to an array of @pInfoSize@ bytes
 --
--- -   @pipeline@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkGetShaderInfoAMD-pipeline-parent# @pipeline@ /must/ have
+--     been created, allocated, or retrieved from @device@
 --
 -- == Return Codes
 --

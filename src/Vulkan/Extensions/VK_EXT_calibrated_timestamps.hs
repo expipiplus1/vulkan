@@ -109,12 +109,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceCalibrateableTimeDomainsEXT-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pTimeDomainCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDeviceCalibrateableTimeDomainsEXT-pTimeDomainCount-parameter#
+--     @pTimeDomainCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pTimeDomainCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceCalibrateableTimeDomainsEXT-pTimeDomains-parameter#
+--     If the value referenced by @pTimeDomainCount@ is not @0@, and
 --     @pTimeDomains@ is not @NULL@, @pTimeDomains@ /must/ be a valid
 --     pointer to an array of @pTimeDomainCount@ 'TimeDomainEXT' values
 --
@@ -206,12 +209,14 @@ getCalibratedTimestampsEXT :: forall io
                             . (MonadIO io)
                            => -- | @device@ is the logical device used to perform the query.
                               --
-                              -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                              -- #VUID-vkGetCalibratedTimestampsEXT-device-parameter# @device@ /must/ be
+                              -- a valid 'Vulkan.Core10.Handles.Device' handle
                               Device
                            -> -- | @pTimestampInfos@ is a pointer to an array of @timestampCount@
                               -- 'CalibratedTimestampInfoEXT' structures, describing the time domains the
                               -- calibrated timestamps should be captured from.
                               --
+                              -- #VUID-vkGetCalibratedTimestampsEXT-pTimestampInfos-parameter#
                               -- @pTimestampInfos@ /must/ be a valid pointer to an array of
                               -- @timestampCount@ valid 'CalibratedTimestampInfoEXT' structures
                               ("timestampInfos" ::: Vector CalibratedTimestampInfoEXT)
@@ -245,10 +250,12 @@ data CalibratedTimestampInfoEXT = CalibratedTimestampInfoEXT
   { -- | @timeDomain@ is a 'TimeDomainEXT' value specifying the time domain from
     -- which the calibrated timestamp value should be returned.
     --
-    -- @timeDomain@ /must/ be one of the 'TimeDomainEXT' values returned by
+    -- #VUID-VkCalibratedTimestampInfoEXT-timeDomain-02354# @timeDomain@ /must/
+    -- be one of the 'TimeDomainEXT' values returned by
     -- 'getPhysicalDeviceCalibrateableTimeDomainsEXT'
     --
-    -- @timeDomain@ /must/ be a valid 'TimeDomainEXT' value
+    -- #VUID-VkCalibratedTimestampInfoEXT-timeDomain-parameter# @timeDomain@
+    -- /must/ be a valid 'TimeDomainEXT' value
     timeDomain :: TimeDomainEXT }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

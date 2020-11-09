@@ -43,8 +43,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevice4444FormatsFeaturesEXT = PhysicalDevice4444FormatsFeaturesEXT
-  { -- | @formatA4R4G4B4@ indicates that the implementation /must/ support using
-    -- a 'Vulkan.Core10.Enums.Format.Format' of
+  { -- | #features-formatA4R4G4B4# @formatA4R4G4B4@ indicates that the
+    -- implementation /must/ support using a
+    -- 'Vulkan.Core10.Enums.Format.Format' of
     -- 'Vulkan.Core10.Enums.Format.FORMAT_A4R4G4B4_UNORM_PACK16_EXT' with at
     -- least the following
     -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
@@ -55,8 +56,9 @@ data PhysicalDevice4444FormatsFeaturesEXT = PhysicalDevice4444FormatsFeaturesEXT
     --
     -- -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
     formatA4R4G4B4 :: Bool
-  , -- | @formatA4B4G4R4@ indicates that the implementation /must/ support using
-    -- a 'Vulkan.Core10.Enums.Format.Format' of
+  , -- | #features-formatA4B4G4R4# @formatA4B4G4R4@ indicates that the
+    -- implementation /must/ support using a
+    -- 'Vulkan.Core10.Enums.Format.Format' of
     -- 'Vulkan.Core10.Enums.Format.FORMAT_A4B4G4R4_UNORM_PACK16_EXT' with at
     -- least the following
     -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':

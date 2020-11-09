@@ -54,8 +54,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL = PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
-  { -- | @shaderIntegerFunctions2@ indicates that the implementation supports the
-    -- @IntegerFunctions2INTEL@ SPIR-V capability.
+  { -- | #features-shaderIntegerFunctions2# @shaderIntegerFunctions2@ indicates
+    -- that the implementation supports the @IntegerFunctions2INTEL@ SPIR-V
+    -- capability.
     shaderIntegerFunctions2 :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

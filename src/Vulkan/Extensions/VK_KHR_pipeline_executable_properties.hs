@@ -133,22 +133,28 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+-- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pipelineExecutableInfo-03270#
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     /must/ be enabled
 --
--- -   @pipeline@ member of @pPipelineInfo@ /must/ have been created with
+-- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pipeline-03271#
+--     @pipeline@ member of @pPipelineInfo@ /must/ have been created with
 --     @device@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetPipelineExecutablePropertiesKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pPipelineInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pPipelineInfo-parameter#
+--     @pPipelineInfo@ /must/ be a valid pointer to a valid
 --     'PipelineInfoKHR' structure
 --
--- -   @pExecutableCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pExecutableCount-parameter#
+--     @pExecutableCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pExecutableCount@ is not @0@, and
+-- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pProperties-parameter# If
+--     the value referenced by @pExecutableCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
 --     to an array of @pExecutableCount@ 'PipelineExecutablePropertiesKHR'
 --     structures
@@ -223,13 +229,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+-- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipelineExecutableInfo-03272#
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     /must/ be enabled
 --
--- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
+-- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipeline-03273#
+--     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     @device@
 --
--- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
+-- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipeline-03274#
+--     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR'
 --     set in the @flags@ field of
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
@@ -237,14 +246,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetPipelineExecutableStatisticsKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pExecutableInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pExecutableInfo-parameter#
+--     @pExecutableInfo@ /must/ be a valid pointer to a valid
 --     'PipelineExecutableInfoKHR' structure
 --
--- -   @pStatisticCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pStatisticCount-parameter#
+--     @pStatisticCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pStatisticCount@ is not @0@, and
+-- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pStatistics-parameter# If
+--     the value referenced by @pStatisticCount@ is not @0@, and
 --     @pStatistics@ is not @NULL@, @pStatistics@ /must/ be a valid pointer
 --     to an array of @pStatisticCount@ 'PipelineExecutableStatisticKHR'
 --     structures
@@ -326,13 +339,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+-- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipelineExecutableInfo-03276#
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     /must/ be enabled
 --
--- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
+-- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipeline-03277#
+--     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     @device@
 --
--- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
+-- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipeline-03278#
+--     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR'
 --     set in the @flags@ field of
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
@@ -340,15 +356,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pExecutableInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pExecutableInfo-parameter#
+--     @pExecutableInfo@ /must/ be a valid pointer to a valid
 --     'PipelineExecutableInfoKHR' structure
 --
--- -   @pInternalRepresentationCount@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pInternalRepresentationCount-parameter#
+--     @pInternalRepresentationCount@ /must/ be a valid pointer to a
 --     @uint32_t@ value
 --
--- -   If the value referenced by @pInternalRepresentationCount@ is not
+-- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pInternalRepresentations-parameter#
+--     If the value referenced by @pInternalRepresentationCount@ is not
 --     @0@, and @pInternalRepresentations@ is not @NULL@,
 --     @pInternalRepresentations@ /must/ be a valid pointer to an array of
 --     @pInternalRepresentationCount@
@@ -425,9 +445,9 @@ getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO .
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePipelineExecutablePropertiesFeaturesKHR = PhysicalDevicePipelineExecutablePropertiesFeaturesKHR
-  { -- | @pipelineExecutableInfo@ indicates that the implementation supports
-    -- reporting properties and statistics about the executables associated
-    -- with a compiled pipeline.
+  { -- | #features-pipelineExecutableInfo# @pipelineExecutableInfo@ indicates
+    -- that the implementation supports reporting properties and statistics
+    -- about the executables associated with a compiled pipeline.
     pipelineExecutableInfo :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -479,7 +499,8 @@ instance Zero PhysicalDevicePipelineExecutablePropertiesFeaturesKHR where
 data PipelineInfoKHR = PipelineInfoKHR
   { -- | @pipeline@ is a 'Vulkan.Core10.Handles.Pipeline' handle.
     --
-    -- @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+    -- #VUID-VkPipelineInfoKHR-pipeline-parameter# @pipeline@ /must/ be a valid
+    -- 'Vulkan.Core10.Handles.Pipeline' handle
     pipeline :: Pipeline }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -626,12 +647,14 @@ instance Zero PipelineExecutablePropertiesKHR where
 data PipelineExecutableInfoKHR = PipelineExecutableInfoKHR
   { -- | @pipeline@ is the pipeline to query.
     --
-    -- @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+    -- #VUID-VkPipelineExecutableInfoKHR-pipeline-parameter# @pipeline@ /must/
+    -- be a valid 'Vulkan.Core10.Handles.Pipeline' handle
     pipeline :: Pipeline
   , -- | @executableIndex@ is the index of the executable to query in the array
     -- of executable properties returned by
     -- 'getPipelineExecutablePropertiesKHR'.
     --
+    -- #VUID-VkPipelineExecutableInfoKHR-executableIndex-03275#
     -- @executableIndex@ /must/ be less than the number of executables
     -- associated with @pipeline@ as returned in the @pExecutableCount@
     -- parameter of 'getPipelineExecutablePropertiesKHR'

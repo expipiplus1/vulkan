@@ -48,11 +48,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderClockFeaturesKHR = PhysicalDeviceShaderClockFeaturesKHR
-  { -- | @shaderSubgroupClock@ indicates whether shaders /can/ perform @Subgroup@
-    -- scoped clock reads.
+  { -- | #features-shaderSubgroupClock# @shaderSubgroupClock@ indicates whether
+    -- shaders /can/ perform @Subgroup@ scoped clock reads.
     shaderSubgroupClock :: Bool
-  , -- | @shaderDeviceClock@ indicates whether shaders /can/ perform
-    -- 'Vulkan.Core10.Handles.Device' scoped clock reads.
+  , -- | #features-shaderDeviceClock# @shaderDeviceClock@ indicates whether
+    -- shaders /can/ perform 'Vulkan.Core10.Handles.Device' scoped clock reads.
     shaderDeviceClock :: Bool
   }
   deriving (Typeable, Eq)

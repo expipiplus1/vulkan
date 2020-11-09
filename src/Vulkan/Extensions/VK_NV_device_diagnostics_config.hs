@@ -76,8 +76,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDiagnosticsConfigFeaturesNV = PhysicalDeviceDiagnosticsConfigFeaturesNV
-  { -- | @diagnosticsConfig@ indicates whether the implementation supports the
-    -- ability to configure diagnostic tools.
+  { -- | #features-features-diagnosticsConfig# @diagnosticsConfig@ indicates
+    -- whether the implementation supports the ability to configure diagnostic
+    -- tools.
     diagnosticsConfig :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -130,8 +131,9 @@ data DeviceDiagnosticsConfigCreateInfoNV = DeviceDiagnosticsConfigCreateInfoNV
   { -- | @flags@ is a bitmask of 'DeviceDiagnosticsConfigFlagBitsNV' specifying
     -- addtional parameters for configuring diagnostic tools.
     --
-    -- @flags@ /must/ be a valid combination of
-    -- 'DeviceDiagnosticsConfigFlagBitsNV' values
+    -- #VUID-VkDeviceDiagnosticsConfigCreateInfoNV-flags-parameter# @flags@
+    -- /must/ be a valid combination of 'DeviceDiagnosticsConfigFlagBitsNV'
+    -- values
     flags :: DeviceDiagnosticsConfigFlagsNV }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

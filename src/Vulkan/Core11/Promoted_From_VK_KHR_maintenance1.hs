@@ -83,15 +83,16 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkTrimCommandPool-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @commandPool@ /must/ be a valid 'Vulkan.Core10.Handles.CommandPool'
---     handle
+-- -   #VUID-vkTrimCommandPool-commandPool-parameter# @commandPool@ /must/
+--     be a valid 'Vulkan.Core10.Handles.CommandPool' handle
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-vkTrimCommandPool-flags-zerobitmask# @flags@ /must/ be @0@
 --
--- -   @commandPool@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkTrimCommandPool-commandPool-parent# @commandPool@ /must/
+--     have been created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --

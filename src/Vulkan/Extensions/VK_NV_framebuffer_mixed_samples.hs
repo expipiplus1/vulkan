@@ -118,7 +118,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage
 --
--- -   If @coverageModulationTableEnable@ is
+-- -   #VUID-VkPipelineCoverageModulationStateCreateInfoNV-coverageModulationTableEnable-01405#
+--     If @coverageModulationTableEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @coverageModulationTableCount@ /must/ be equal to the number of
 --     rasterization samples divided by the number of color samples in the
@@ -126,12 +127,15 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineCoverageModulationStateCreateInfoNV-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV'
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkPipelineCoverageModulationStateCreateInfoNV-flags-zerobitmask#
+--     @flags@ /must/ be @0@
 --
--- -   @coverageModulationMode@ /must/ be a valid
+-- -   #VUID-VkPipelineCoverageModulationStateCreateInfoNV-coverageModulationMode-parameter#
+--     @coverageModulationMode@ /must/ be a valid
 --     'CoverageModulationModeNV' value
 --
 -- = See Also

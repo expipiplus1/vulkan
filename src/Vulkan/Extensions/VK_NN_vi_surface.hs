@@ -98,17 +98,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateViSurfaceNN-instance-parameter# @instance@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'ViSurfaceCreateInfoNN' structure
+-- -   #VUID-vkCreateViSurfaceNN-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'ViSurfaceCreateInfoNN'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateViSurfaceNN-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+-- -   #VUID-vkCreateViSurfaceNN-pSurface-parameter# @pSurface@ /must/ be a
+--     valid pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Return Codes
 --
@@ -169,12 +171,13 @@ createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
 data ViSurfaceCreateInfoNN = ViSurfaceCreateInfoNN
   { -- | @flags@ is reserved for future use.
     --
-    -- @flags@ /must/ be @0@
+    -- #VUID-VkViSurfaceCreateInfoNN-flags-zerobitmask# @flags@ /must/ be @0@
     flags :: ViSurfaceCreateFlagsNN
   , -- | @window@ is the @nn@::@vi@::@NativeWindowHandle@ for the
     -- @nn@::@vi@::@Layer@ with which to associate the surface.
     --
-    -- @window@ /must/ be a valid @nn@::@vi@::@NativeWindowHandle@
+    -- #VUID-VkViSurfaceCreateInfoNN-window-01318# @window@ /must/ be a valid
+    -- @nn@::@vi@::@NativeWindowHandle@
     window :: Ptr ()
   }
   deriving (Typeable)

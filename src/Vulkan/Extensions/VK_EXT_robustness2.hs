@@ -41,10 +41,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
--- -   @robustBufferAccess2@ indicates whether buffer accesses are tightly
---     bounds-checked against the range of the descriptor. Uniform buffers
---     /must/ be bounds-checked to the range of the descriptor, where the
---     range is rounded up to a multiple of
+-- -   #features-robustBufferAccess2# @robustBufferAccess2@ indicates
+--     whether buffer accesses are tightly bounds-checked against the range
+--     of the descriptor. Uniform buffers /must/ be bounds-checked to the
+--     range of the descriptor, where the range is rounded up to a multiple
+--     of
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>.
 --     Storage buffers /must/ be bounds-checked to the range of the
 --     descriptor, where the range is rounded up to a multiple of
@@ -53,16 +54,18 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --     loads will have (0,0,1) values inserted for missing G, B, or A
 --     components based on the format.
 --
--- -   @robustImageAccess2@ indicates whether image accesses are tightly
---     bounds-checked against the dimensions of the image view. Out of
---     bounds image loads will return zero values, with (0,0,1) values
+-- -   #features-robustImageAccess2# @robustImageAccess2@ indicates whether
+--     image accesses are tightly bounds-checked against the dimensions of
+--     the image view. Out of bounds image loads will return zero values,
+--     with (0,0,1) values
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba inserted for missing G, B, or A components>
 --     based on the format.
 --
--- -   @nullDescriptor@ indicates whether descriptors /can/ be written with
---     a 'Vulkan.Core10.APIConstants.NULL_HANDLE' resource or view, which
---     are considered valid to access and act as if the descriptor were
---     bound to nothing.
+-- -   #features-nullDescriptor# @nullDescriptor@ indicates whether
+--     descriptors /can/ be written with a
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' resource or view, which are
+--     considered valid to access and act as if the descriptor were bound
+--     to nothing.
 --
 -- If the 'PhysicalDeviceRobustness2FeaturesEXT' structure is included in
 -- the @pNext@ chain of
@@ -71,13 +74,15 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage
 --
--- -   If @robustBufferAccess2@ is enabled then
+-- -   #VUID-VkPhysicalDeviceRobustness2FeaturesEXT-robustBufferAccess2-04000#
+--     If @robustBufferAccess2@ is enabled then
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
 --     /must/ also be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceRobustness2FeaturesEXT-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT'
 --
 -- = See Also
@@ -160,13 +165,15 @@ instance Zero PhysicalDeviceRobustness2FeaturesEXT where
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRobustness2PropertiesEXT = PhysicalDeviceRobustness2PropertiesEXT
-  { -- | @robustStorageBufferAccessSizeAlignment@ is the number of bytes that the
+  { -- | #limits-robustStorageBufferAccessSizeAlignment#
+    -- @robustStorageBufferAccessSizeAlignment@ is the number of bytes that the
     -- range of a storage buffer descriptor is rounded up to when used for
     -- bounds-checking when
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     -- is enabled. This value is either 1 or 4.
     robustStorageBufferAccessSizeAlignment :: DeviceSize
-  , -- | @robustUniformBufferAccessSizeAlignment@ is the number of bytes that the
+  , -- | #limits-robustUniformBufferAccessSizeAlignment#
+    -- @robustUniformBufferAccessSizeAlignment@ is the number of bytes that the
     -- range of a uniform buffer descriptor is rounded up to when used for
     -- bounds-checking when
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>

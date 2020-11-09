@@ -92,21 +92,21 @@ acquireXlibDisplayEXT :: forall io
                        . (MonadIO io)
                       => -- | @physicalDevice@ The physical device the display is on.
                          --
-                         -- @physicalDevice@ /must/ be a valid
-                         -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                         -- #VUID-vkAcquireXlibDisplayEXT-physicalDevice-parameter# @physicalDevice@
+                         -- /must/ be a valid 'Vulkan.Core10.Handles.PhysicalDevice' handle
                          PhysicalDevice
                       -> -- | @dpy@ A connection to the X11 server that currently owns @display@.
                          --
-                         -- @dpy@ /must/ be a valid pointer to a
-                         -- 'Vulkan.Extensions.VK_KHR_xlib_surface.Display' value
+                         -- #VUID-vkAcquireXlibDisplayEXT-dpy-parameter# @dpy@ /must/ be a valid
+                         -- pointer to a 'Vulkan.Extensions.VK_KHR_xlib_surface.Display' value
                          ("dpy" ::: Ptr Display)
                       -> -- | @display@ The display the caller wishes to control in Vulkan.
                          --
-                         -- @display@ /must/ be a valid 'Vulkan.Extensions.Handles.DisplayKHR'
-                         -- handle
+                         -- #VUID-vkAcquireXlibDisplayEXT-display-parameter# @display@ /must/ be a
+                         -- valid 'Vulkan.Extensions.Handles.DisplayKHR' handle
                          --
-                         -- @display@ /must/ have been created, allocated, or retrieved from
-                         -- @physicalDevice@
+                         -- #VUID-vkAcquireXlibDisplayEXT-display-parent# @display@ /must/ have been
+                         -- created, allocated, or retrieved from @physicalDevice@
                          DisplayKHR
                       -> io ()
 acquireXlibDisplayEXT physicalDevice dpy display = liftIO $ do
@@ -152,13 +152,14 @@ getRandROutputDisplayEXT :: forall io
                           . (MonadIO io)
                          => -- | @physicalDevice@ The physical device to query the display handle on.
                             --
+                            -- #VUID-vkGetRandROutputDisplayEXT-physicalDevice-parameter#
                             -- @physicalDevice@ /must/ be a valid
                             -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                             PhysicalDevice
                          -> -- | @dpy@ A connection to the X11 server from which @rrOutput@ was queried.
                             --
-                            -- @dpy@ /must/ be a valid pointer to a
-                            -- 'Vulkan.Extensions.VK_KHR_xlib_surface.Display' value
+                            -- #VUID-vkGetRandROutputDisplayEXT-dpy-parameter# @dpy@ /must/ be a valid
+                            -- pointer to a 'Vulkan.Extensions.VK_KHR_xlib_surface.Display' value
                             ("dpy" ::: Ptr Display)
                          -> -- | @rrOutput@ An X11 RandR output ID.
                             RROutput

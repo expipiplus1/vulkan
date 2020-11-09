@@ -199,6 +199,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_NV_fill_rectangle
                           , module Vulkan.Extensions.VK_NV_fragment_coverage_to_color
                           , module Vulkan.Extensions.VK_NV_fragment_shader_barycentric
+                          , module Vulkan.Extensions.VK_NV_fragment_shading_rate_enums
                           , module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
                           , module Vulkan.Extensions.VK_NV_geometry_shader_passthrough
                           , module Vulkan.Extensions.VK_NV_glsl_shader
@@ -419,6 +420,7 @@ import Vulkan.Extensions.VK_NV_external_memory_win32
 import Vulkan.Extensions.VK_NV_fill_rectangle
 import Vulkan.Extensions.VK_NV_fragment_coverage_to_color
 import Vulkan.Extensions.VK_NV_fragment_shader_barycentric
+import Vulkan.Extensions.VK_NV_fragment_shading_rate_enums
 import Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
 import Vulkan.Extensions.VK_NV_geometry_shader_passthrough
 import Vulkan.Extensions.VK_NV_glsl_shader

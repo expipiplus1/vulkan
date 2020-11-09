@@ -101,16 +101,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-surface-parameter#
+--     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
 --     handle
 --
--- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-pSurfaceCapabilities-parameter#
+--     @pSurfaceCapabilities@ /must/ be a valid pointer to a
 --     'SurfaceCapabilities2EXT' structure
 --
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-commonparent# Both
+--     of @physicalDevice@, and @surface@ /must/ have been created,
 --     allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Instance'
 --
@@ -207,6 +211,7 @@ data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
   , -- | @supportedSurfaceCounters@ is a bitmask of 'SurfaceCounterFlagBitsEXT'
     -- indicating the supported surface counter types.
     --
+    -- #VUID-VkSurfaceCapabilities2EXT-supportedSurfaceCounters-01246#
     -- @supportedSurfaceCounters@ /must/ not include
     -- 'SURFACE_COUNTER_VBLANK_BIT_EXT' unless the surface queried is a
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#wsi-display-surfaces display surface>

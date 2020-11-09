@@ -108,7 +108,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If the @flags@ member of @pCreateInfo@ includes
+-- -   #VUID-vkCreateImage-flags-00939# If the @flags@ member of
+--     @pCreateInfo@ includes
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
 --     creating this 'Vulkan.Core10.Handles.Image' /must/ not cause the
 --     total required sparse memory for all currently valid sparse
@@ -117,17 +118,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateImage-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid 'ImageCreateInfo'
---     structure
+-- -   #VUID-vkCreateImage-pCreateInfo-parameter# @pCreateInfo@ /must/ be a
+--     valid pointer to a valid 'ImageCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateImage-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pImage@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.Image' handle
+-- -   #VUID-vkCreateImage-pImage-parameter# @pImage@ /must/ be a valid
+--     pointer to a 'Vulkan.Core10.Handles.Image' handle
 --
 -- == Return Codes
 --
@@ -198,29 +200,34 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @image@, either directly or via
---     a 'Vulkan.Core10.Handles.ImageView', /must/ have completed execution
+-- -   #VUID-vkDestroyImage-image-01000# All submitted commands that refer
+--     to @image@, either directly or via a
+--     'Vulkan.Core10.Handles.ImageView', /must/ have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyImage-image-01001# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @image@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyImage-image-01002# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @image@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyImage-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @image@
---     /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+-- -   #VUID-vkDestroyImage-image-parameter# If @image@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @image@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Image' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyImage-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @image@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroyImage-image-parent# If @image@ is a valid handle, it
+--     /must/ have been created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -296,49 +303,54 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @image@ /must/ have been created with @tiling@ equal to
+-- -   #VUID-vkGetImageSubresourceLayout-image-02270# @image@ /must/ have
+--     been created with @tiling@ equal to
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
 --
--- -   The @aspectMask@ member of @pSubresource@ /must/ only have a single
---     bit set
+-- -   #VUID-vkGetImageSubresourceLayout-aspectMask-00997# The @aspectMask@
+--     member of @pSubresource@ /must/ only have a single bit set
 --
--- -   The @mipLevel@ member of @pSubresource@ /must/ be less than the
---     @mipLevels@ specified in 'ImageCreateInfo' when @image@ was created
+-- -   #VUID-vkGetImageSubresourceLayout-mipLevel-01716# The @mipLevel@
+--     member of @pSubresource@ /must/ be less than the @mipLevels@
+--     specified in 'ImageCreateInfo' when @image@ was created
 --
--- -   The @arrayLayer@ member of @pSubresource@ /must/ be less than the
---     @arrayLayers@ specified in 'ImageCreateInfo' when @image@ was
---     created
+-- -   #VUID-vkGetImageSubresourceLayout-arrayLayer-01717# The @arrayLayer@
+--     member of @pSubresource@ /must/ be less than the @arrayLayers@
+--     specified in 'ImageCreateInfo' when @image@ was created
 --
--- -   If @format@ is a color format, the @aspectMask@ member of
---     @pSubresource@ /must/ be
+-- -   #VUID-vkGetImageSubresourceLayout-format-04461# If @format@ is a
+--     color format, the @aspectMask@ member of @pSubresource@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
--- -   If @format@ has a depth component, the @aspectMask@ member of
---     @pSubresource@ /must/ contain
+-- -   #VUID-vkGetImageSubresourceLayout-format-04462# If @format@ has a
+--     depth component, the @aspectMask@ member of @pSubresource@ /must/
+--     contain
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT'
 --
--- -   If @format@ has a stencil component, the @aspectMask@ member of
---     @pSubresource@ /must/ contain
+-- -   #VUID-vkGetImageSubresourceLayout-format-04463# If @format@ has a
+--     stencil component, the @aspectMask@ member of @pSubresource@ /must/
+--     contain
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   If @format@ does not contain a stencil or depth component, the
---     @aspectMask@ member of @pSubresource@ /must/ not contain
+-- -   #VUID-vkGetImageSubresourceLayout-format-04464# If @format@ does not
+--     contain a stencil or depth component, the @aspectMask@ member of
+--     @pSubresource@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   If the @tiling@ of the @image@ is
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and its
---     @format@ is a
+-- -   #VUID-vkGetImageSubresourceLayout-format-01581# If the @tiling@ of
+--     the @image@ is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR'
+--     and its @format@ is a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --     with two planes, the @aspectMask@ member of @pSubresource@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
 --
--- -   If the @tiling@ of the @image@ is
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and its
---     @format@ is a
+-- -   #VUID-vkGetImageSubresourceLayout-format-01582# If the @tiling@ of
+--     the @image@ is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR'
+--     and its @format@ is a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --     with three planes, the @aspectMask@ member of @pSubresource@ /must/
 --     be
@@ -347,11 +359,13 @@ foreign import ccall
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
--- -   If @image@ was created with the
+-- -   #VUID-vkGetImageSubresourceLayout-image-01895# If @image@ was
+--     created with the
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
 --     external memory handle type, then @image@ /must/ be bound to memory
 --
--- -   If the @tiling@ of the @image@ is
+-- -   #VUID-vkGetImageSubresourceLayout-tiling-02271# If the @tiling@ of
+--     the @image@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then the @aspectMask@ member of @pSubresource@ /must/ be
 --     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ and the index @i@ /must/ be
@@ -362,19 +376,22 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetImageSubresourceLayout-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+-- -   #VUID-vkGetImageSubresourceLayout-image-parameter# @image@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Image' handle
 --
--- -   @pSubresource@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetImageSubresourceLayout-pSubresource-parameter#
+--     @pSubresource@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource'
 --     structure
 --
--- -   @pLayout@ /must/ be a valid pointer to a 'SubresourceLayout'
---     structure
+-- -   #VUID-vkGetImageSubresourceLayout-pLayout-parameter# @pLayout@
+--     /must/ be a valid pointer to a 'SubresourceLayout' structure
 --
--- -   @image@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkGetImageSubresourceLayout-image-parent# @image@ /must/ have
+--     been created, allocated, or retrieved from @device@
 --
 -- = See Also
 --
@@ -705,22 +722,23 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- = Valid Usage
 --
--- -   Each of the following values (as described in
+-- -   #VUID-VkImageCreateInfo-imageCreateMaxMipLevels-02251# Each of the
+--     following values (as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     /must/ not be undefined @imageCreateMaxMipLevels@,
 --     @imageCreateMaxArrayLayers@, @imageCreateMaxExtent@, and
 --     @imageCreateSampleCounts@
 --
--- -   If @sharingMode@ is
+-- -   #VUID-VkImageCreateInfo-sharingMode-00941# If @sharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
 --     @queueFamilyIndexCount@ @uint32_t@ values
 --
--- -   If @sharingMode@ is
+-- -   #VUID-VkImageCreateInfo-sharingMode-00942# If @sharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @queueFamilyIndexCount@ /must/ be greater than @1@
 --
--- -   If @sharingMode@ is
+-- -   #VUID-VkImageCreateInfo-sharingMode-01420# If @sharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', each
 --     element of @pQueueFamilyIndices@ /must/ be unique and /must/ be less
 --     than @pQueueFamilyPropertyCount@ returned by either
@@ -729,78 +747,87 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'
 --     for the @physicalDevice@ that was used to create @device@
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageCreateInfo-pNext-01974# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --     structure, and its @externalFormat@ member is non-zero the @format@
 --     /must/ be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
--- -   If the @pNext@ chain does not include a
+-- -   #VUID-VkImageCreateInfo-pNext-01975# If the @pNext@ chain does not
+--     include a
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --     structure, or does and its @externalFormat@ member is @0@, the
 --     @format@ /must/ not be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
--- -   @extent.width@ /must/ be greater than @0@
+-- -   #VUID-VkImageCreateInfo-extent-00944# @extent.width@ /must/ be
+--     greater than @0@
 --
--- -   @extent.height@ /must/ be greater than @0@
+-- -   #VUID-VkImageCreateInfo-extent-00945# @extent.height@ /must/ be
+--     greater than @0@
 --
--- -   @extent.depth@ /must/ be greater than @0@
+-- -   #VUID-VkImageCreateInfo-extent-00946# @extent.depth@ /must/ be
+--     greater than @0@
 --
--- -   @mipLevels@ /must/ be greater than @0@
+-- -   #VUID-VkImageCreateInfo-mipLevels-00947# @mipLevels@ /must/ be
+--     greater than @0@
 --
--- -   @arrayLayers@ /must/ be greater than @0@
+-- -   #VUID-VkImageCreateInfo-arrayLayers-00948# @arrayLayers@ /must/ be
+--     greater than @0@
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-00949# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT',
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-02557# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-00950# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT',
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'
 --
--- -   @extent.width@ /must/ be less than or equal to
---     @imageCreateMaxExtent.width@ (as defined in
+-- -   #VUID-VkImageCreateInfo-extent-02252# @extent.width@ /must/ be less
+--     than or equal to @imageCreateMaxExtent.width@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
--- -   @extent.height@ /must/ be less than or equal to
---     @imageCreateMaxExtent.height@ (as defined in
+-- -   #VUID-VkImageCreateInfo-extent-02253# @extent.height@ /must/ be less
+--     than or equal to @imageCreateMaxExtent.height@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
--- -   @extent.depth@ /must/ be less than or equal to
---     @imageCreateMaxExtent.depth@ (as defined in
+-- -   #VUID-VkImageCreateInfo-extent-02254# @extent.depth@ /must/ be less
+--     than or equal to @imageCreateMaxExtent.depth@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
--- -   If @imageType@ is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and
---     @flags@ contains
+-- -   #VUID-VkImageCreateInfo-imageType-00954# If @imageType@ is
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT',
 --     @extent.width@ and @extent.height@ /must/ be equal and @arrayLayers@
 --     /must/ be greater than or equal to 6
 --
--- -   If @imageType@ is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D',
---     both @extent.height@ and @extent.depth@ /must/ be @1@
+-- -   #VUID-VkImageCreateInfo-imageType-00956# If @imageType@ is
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', both @extent.height@
+--     and @extent.depth@ /must/ be @1@
 --
--- -   If @imageType@ is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D',
---     @extent.depth@ /must/ be @1@
+-- -   #VUID-VkImageCreateInfo-imageType-00957# If @imageType@ is
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', @extent.depth@ /must/
+--     be @1@
 --
--- -   @mipLevels@ /must/ be less than or equal to the number of levels in
---     the complete mipmap chain based on @extent.width@, @extent.height@,
---     and @extent.depth@
+-- -   #VUID-VkImageCreateInfo-mipLevels-00958# @mipLevels@ /must/ be less
+--     than or equal to the number of levels in the complete mipmap chain
+--     based on @extent.width@, @extent.height@, and @extent.depth@
 --
--- -   @mipLevels@ /must/ be less than or equal to
---     @imageCreateMaxMipLevels@ (as defined in
+-- -   #VUID-VkImageCreateInfo-mipLevels-02255# @mipLevels@ /must/ be less
+--     than or equal to @imageCreateMaxMipLevels@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
--- -   @arrayLayers@ /must/ be less than or equal to
---     @imageCreateMaxArrayLayers@ (as defined in
+-- -   #VUID-VkImageCreateInfo-arrayLayers-02256# @arrayLayers@ /must/ be
+--     less than or equal to @imageCreateMaxArrayLayers@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
--- -   If @imageType@ is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D',
---     @arrayLayers@ /must/ be @1@
+-- -   #VUID-VkImageCreateInfo-imageType-00961# If @imageType@ is
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', @arrayLayers@ /must/
+--     be @1@
 --
--- -   If @samples@ is not
+-- -   #VUID-VkImageCreateInfo-samples-02257# If @samples@ is not
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT', then
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D',
 --     @flags@ /must/ not contain
@@ -810,12 +837,12 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     /must/ be @false@,
 --
--- -   If @samples@ is not
+-- -   #VUID-VkImageCreateInfo-samples-02558# If @samples@ is not
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT',
 --     @usage@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT'
 --
--- -   If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-usage-00963# If @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT',
 --     then bits other than
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
@@ -824,7 +851,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
 --     /must/ not be set
 --
--- -   If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-usage-00964# If @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT',
@@ -833,7 +860,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @extent.width@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferWidth@
 --
--- -   If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-usage-00965# If @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT',
@@ -842,17 +869,17 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @extent.height@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferHeight@
 --
--- -   If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-usage-02559# If @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.width@ /must/ be less than or equal to
 --     \(\left\lceil{\frac{maxFramebufferWidth}{minFragmentDensityTexelSize_{width}}}\right\rceil\)
 --
--- -   If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-usage-02560# If @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.height@ /must/ be less than or equal to
 --     \(\left\lceil{\frac{maxFramebufferHeight}{minFragmentDensityTexelSize_{height}}}\right\rceil\)
 --
--- -   If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-usage-00966# If @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT',
 --     @usage@ /must/ also contain at least one of
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
@@ -860,51 +887,52 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
 --
--- -   @samples@ /must/ be a bit value that is set in
---     @imageCreateSampleCounts@ (as defined in
+-- -   #VUID-VkImageCreateInfo-samples-02258# @samples@ /must/ be a bit
+--     value that is set in @imageCreateSampleCounts@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
--- -   If the
+-- -   #VUID-VkImageCreateInfo-usage-00968# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderStorageImageMultisample multisampled storage images>
 --     feature is not enabled, and @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT',
 --     @samples@ /must/ be
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
--- -   If the
+-- -   #VUID-VkImageCreateInfo-flags-00969# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseBinding sparse bindings>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'
 --
--- -   If the
+-- -   #VUID-VkImageCreateInfo-flags-01924# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyAliased sparse aliased residency>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT'
 --
--- -   If @tiling@ is
+-- -   #VUID-VkImageCreateInfo-tiling-04121# If @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', @flags@
 --     /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
--- -   If @imageType@ is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D',
---     @flags@ /must/ not contain
+-- -   #VUID-VkImageCreateInfo-imageType-00970# If @imageType@ is
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', @flags@ /must/ not
+--     contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
--- -   If the
+-- -   #VUID-VkImageCreateInfo-imageType-00971# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyImage2D sparse residency for 2D images>
 --     feature is not enabled, and @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', @flags@ /must/ not
 --     contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
--- -   If the
+-- -   #VUID-VkImageCreateInfo-imageType-00972# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyImage3D sparse residency for 3D images>
 --     feature is not enabled, and @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', @flags@ /must/ not
 --     contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
--- -   If the
+-- -   #VUID-VkImageCreateInfo-imageType-00973# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency2Samples sparse residency for images with 2 samples>
 --     feature is not enabled, @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and @samples@ is
@@ -912,7 +940,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
--- -   If the
+-- -   #VUID-VkImageCreateInfo-imageType-00974# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency4Samples sparse residency for images with 4 samples>
 --     feature is not enabled, @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and @samples@ is
@@ -920,7 +948,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
--- -   If the
+-- -   #VUID-VkImageCreateInfo-imageType-00975# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency8Samples sparse residency for images with 8 samples>
 --     feature is not enabled, @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and @samples@ is
@@ -928,7 +956,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
--- -   If the
+-- -   #VUID-VkImageCreateInfo-imageType-00976# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency16Samples sparse residency for images with 16 samples>
 --     feature is not enabled, @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and @samples@ is
@@ -936,14 +964,14 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-00987# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT',
 --     it /must/ also contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'
 --
--- -   If any of the bits
+-- -   #VUID-VkImageCreateInfo-None-01925# If any of the bits
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT',
 --     or
@@ -952,11 +980,11 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT'
 --     /must/ not also be set
 --
--- -   If the protected memory feature is not enabled, @flags@ /must/ not
---     contain
+-- -   #VUID-VkImageCreateInfo-flags-01890# If the protected memory feature
+--     is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
 --
--- -   If any of the bits
+-- -   #VUID-VkImageCreateInfo-None-01891# If any of the bits
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT',
 --     or
@@ -965,13 +993,13 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
 --     /must/ not also be set
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageCreateInfo-pNext-00988# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_NV_external_memory.ExternalMemoryImageCreateInfoNV'
 --     structure, it /must/ not contain a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
 --     structure
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageCreateInfo-pNext-00990# If the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
 --     structure, its @handleTypes@ member /must/ only contain bits that
 --     are also in
@@ -985,7 +1013,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     to any one of the handle types specified in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageCreateInfo-pNext-00991# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_NV_external_memory.ExternalMemoryImageCreateInfoNV'
 --     structure, its @handleTypes@ member /must/ only contain bits that
 --     are also in
@@ -997,12 +1025,13 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     one of the handle types specified in
 --     'Vulkan.Extensions.VK_NV_external_memory.ExternalMemoryImageCreateInfoNV'::@handleTypes@
 --
--- -   If the logical device was created with
+-- -   #VUID-VkImageCreateInfo-physicalDeviceCount-01421# If the logical
+--     device was created with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo'::@physicalDeviceCount@
 --     equal to 1, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-02259# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT',
 --     then @mipLevels@ /must/ be one, @arrayLayers@ /must/ be one,
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'.
@@ -1010,7 +1039,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     /must/ be @false@
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-01572# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT',
 --     then @format@ /must/ be a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#appendix-compressedtex-bc block-compressed image format>,
@@ -1019,55 +1048,60 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     or an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#appendix-compressedtex-astc ASTC compressed image format>
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-01573# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT',
 --     then @flags@ /must/ also contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --
--- -   @initialLayout@ /must/ be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
+-- -   #VUID-VkImageCreateInfo-initialLayout-00993# @initialLayout@ /must/
+--     be 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageCreateInfo-pNext-01443# If the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
 --     or
 --     'Vulkan.Extensions.VK_NV_external_memory.ExternalMemoryImageCreateInfoNV'
 --     structure whose @handleTypes@ member is not @0@, @initialLayout@
 --     /must/ be 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
 --
--- -   If the image @format@ is one of those listed in
+-- -   #VUID-VkImageCreateInfo-format-02561# If the image @format@ is one
+--     of those listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
 --     then @mipLevels@ /must/ be 1
 --
--- -   If the image @format@ is one of those listed in
+-- -   #VUID-VkImageCreateInfo-format-02562# If the image @format@ is one
+--     of those listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
 --     @samples@ /must/ be
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
--- -   If the image @format@ is one of those listed in
+-- -   #VUID-VkImageCreateInfo-format-02563# If the image @format@ is one
+--     of those listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   If the image @format@ is one of those listed in
+-- -   #VUID-VkImageCreateInfo-format-02653# If the image @format@ is one
+--     of those listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
 --     and the @ycbcrImageArrays@ feature is not enabled, @arrayLayers@
 --     /must/ be 1
 --
--- -   If @format@ is a /multi-planar/ format, and if
---     @imageCreateFormatFeatures@ (as defined in
+-- -   #VUID-VkImageCreateInfo-imageCreateFormatFeatures-02260# If @format@
+--     is a /multi-planar/ format, and if @imageCreateFormatFeatures@ (as
+--     defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     does not contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DISJOINT_BIT',
 --     then @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --
--- -   If @format@ is not a /multi-planar/ format, and @flags@ does not
---     include
+-- -   #VUID-VkImageCreateInfo-format-01577# If @format@ is not a
+--     /multi-planar/ format, and @flags@ does not include
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_ALIAS_BIT',
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --
--- -   If @tiling@ is
+-- -   #VUID-VkImageCreateInfo-tiling-02261# If @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then the @pNext@ chain /must/ include exactly one of
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierListCreateInfoEXT'
@@ -1075,14 +1109,14 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT'
 --     structures
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageCreateInfo-pNext-02262# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierListCreateInfoEXT'
 --     or
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT'
 --     structure, then @tiling@ /must/ be
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
 --
--- -   If @tiling@ is
+-- -   #VUID-VkImageCreateInfo-tiling-02353# If @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
 --     and @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
@@ -1090,17 +1124,17 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure with non-zero @viewFormatCount@
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-01533# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     @format@ /must/ be a depth or depth\/stencil format
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageCreateInfo-pNext-02393# If the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
 --     structure whose @handleTypes@ member includes
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageCreateInfo-pNext-02394# If the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
 --     structure whose @handleTypes@ member includes
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
@@ -1108,24 +1142,25 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     the complete mipmap chain based on @extent.width@, @extent.height@,
 --     and @extent.depth@
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageCreateInfo-pNext-02396# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --     structure whose @externalFormat@ member is not @0@, @flags@ /must/
 --     not include
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageCreateInfo-pNext-02397# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --     structure whose @externalFormat@ member is not @0@, @usage@ /must/
 --     not include any usages except
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkImageCreateInfo-pNext-02398# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --     structure whose @externalFormat@ member is not @0@, @tiling@ /must/
 --     be 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'
 --
--- -   If @format@ is a depth-stencil format, @usage@ includes
+-- -   #VUID-VkImageCreateInfo-format-02795# If @format@ is a depth-stencil
+--     format, @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
 --     and the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1134,7 +1169,8 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     member /must/ also include
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
--- -   If @format@ is a depth-stencil format, @usage@ does not include
+-- -   #VUID-VkImageCreateInfo-format-02796# If @format@ is a depth-stencil
+--     format, @usage@ does not include
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
 --     and the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1143,7 +1179,8 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     member /must/ also not include
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
--- -   If @format@ is a depth-stencil format, @usage@ includes
+-- -   #VUID-VkImageCreateInfo-format-02797# If @format@ is a depth-stencil
+--     format, @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT',
 --     and the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1152,7 +1189,8 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     member /must/ also include
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT'
 --
--- -   If @format@ is a depth-stencil format, @usage@ does not include
+-- -   #VUID-VkImageCreateInfo-format-02798# If @format@ is a depth-stencil
+--     format, @usage@ does not include
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT',
 --     and the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1161,7 +1199,8 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     member /must/ also not include
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT'
 --
--- -   If 'Vulkan.Core10.Enums.Format.Format' is a depth-stencil format and
+-- -   #VUID-VkImageCreateInfo-Format-02536# If
+--     'Vulkan.Core10.Enums.Format.Format' is a depth-stencil format and
 --     the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
 --     structure with its @stencilUsage@ member including
@@ -1169,15 +1208,15 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @extent.width@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferWidth@
 --
--- -   If @format@ is a depth-stencil format and the @pNext@ chain includes
---     a
+-- -   #VUID-VkImageCreateInfo-format-02537# If @format@ is a depth-stencil
+--     format and the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
 --     structure with its @stencilUsage@ member including
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
 --     @extent.height@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferHeight@
 --
--- -   If the
+-- -   #VUID-VkImageCreateInfo-format-02538# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderStorageImageMultisample multisampled storage images>
 --     feature is not enabled, @format@ is a depth-stencil format and the
 --     @pNext@ chain includes a
@@ -1187,67 +1226,69 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @samples@ /must/ be
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-02050# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV',
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --     or 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-02051# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV',
 --     it /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT'
 --     and the @format@ /must/ not be a depth\/stencil format
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-02052# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     and @imageType@ is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D',
 --     @extent.width@ and @extent.height@ /must/ be greater than @1@
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-02053# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     and @imageType@ is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D',
 --     @extent.width@, @extent.height@, and @extent.depth@ /must/ be
 --     greater than @1@
 --
--- -   If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-imageType-02082# If @usage@ includes
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-samples-02083# If @usage@ includes
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     @samples@ /must/ be
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
--- -   If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-tiling-02084# If @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
 --     @tiling@ /must/ be
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-02565# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT',
 --     @tiling@ /must/ be
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-02566# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT',
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-02567# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT',
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImageCreateInfo-flags-02568# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT',
 --     @mipLevels@ /must/ be @1@
 --
--- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+-- -   #VUID-VkImageCreateInfo-imageView2DOn3DImage-04459# If the
+--     @VK_KHR_portability_subset@ extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@imageView2DOn3DImage@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', @flags@ /must/ not
 --     contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'.
 --
--- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+-- -   #VUID-VkImageCreateInfo-multisampleArrayImage-04460# If the
+--     @VK_KHR_portability_subset@ extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@multisampleArrayImage@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', and @samples@ is not
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT', then
@@ -1255,12 +1296,12 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- = Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImageCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_CREATE_INFO'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkImageCreateInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV',
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo',
@@ -1271,33 +1312,39 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo',
 --     or 'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkImageCreateInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkImageCreateInfo-flags-parameter# @flags@ /must/ be a valid
+--     combination of
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits' values
 --
--- -   @imageType@ /must/ be a valid
---     'Vulkan.Core10.Enums.ImageType.ImageType' value
+-- -   #VUID-VkImageCreateInfo-imageType-parameter# @imageType@ /must/ be a
+--     valid 'Vulkan.Core10.Enums.ImageType.ImageType' value
 --
--- -   @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+-- -   #VUID-VkImageCreateInfo-format-parameter# @format@ /must/ be a valid
+--     'Vulkan.Core10.Enums.Format.Format' value
 --
--- -   @samples@ /must/ be a valid
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+-- -   #VUID-VkImageCreateInfo-samples-parameter# @samples@ /must/ be a
+--     valid 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
+--     value
 --
--- -   @tiling@ /must/ be a valid
+-- -   #VUID-VkImageCreateInfo-tiling-parameter# @tiling@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ImageTiling.ImageTiling' value
 --
--- -   @usage@ /must/ be a valid combination of
+-- -   #VUID-VkImageCreateInfo-usage-parameter# @usage@ /must/ be a valid
+--     combination of
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
 --
--- -   @usage@ /must/ not be @0@
+-- -   #VUID-VkImageCreateInfo-usage-requiredbitmask# @usage@ /must/ not be
+--     @0@
 --
--- -   @sharingMode@ /must/ be a valid
---     'Vulkan.Core10.Enums.SharingMode.SharingMode' value
+-- -   #VUID-VkImageCreateInfo-sharingMode-parameter# @sharingMode@ /must/
+--     be a valid 'Vulkan.Core10.Enums.SharingMode.SharingMode' value
 --
--- -   @initialLayout@ /must/ be a valid
---     'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
+-- -   #VUID-VkImageCreateInfo-initialLayout-parameter# @initialLayout@
+--     /must/ be a valid 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
+--     value
 --
 -- \<\/section>
 -- = See Also

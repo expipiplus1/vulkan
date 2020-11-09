@@ -110,11 +110,13 @@ getFenceWin32HandleKHR :: forall io
                         . (MonadIO io)
                        => -- | @device@ is the logical device that created the fence being exported.
                           --
-                          -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                          -- #VUID-vkGetFenceWin32HandleKHR-device-parameter# @device@ /must/ be a
+                          -- valid 'Vulkan.Core10.Handles.Device' handle
                           Device
                        -> -- | @pGetWin32HandleInfo@ is a pointer to a 'FenceGetWin32HandleInfoKHR'
                           -- structure containing parameters of the export operation.
                           --
+                          -- #VUID-vkGetFenceWin32HandleKHR-pGetWin32HandleInfo-parameter#
                           -- @pGetWin32HandleInfo@ /must/ be a valid pointer to a valid
                           -- 'FenceGetWin32HandleInfoKHR' structure
                           FenceGetWin32HandleInfoKHR
@@ -171,12 +173,14 @@ importFenceWin32HandleKHR :: forall io
                            . (MonadIO io)
                           => -- | @device@ is the logical device that created the fence.
                              --
-                             -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                             -- #VUID-vkImportFenceWin32HandleKHR-device-parameter# @device@ /must/ be a
+                             -- valid 'Vulkan.Core10.Handles.Device' handle
                              Device
                           -> -- | @pImportFenceWin32HandleInfo@ is a pointer to a
                              -- 'ImportFenceWin32HandleInfoKHR' structure specifying the fence and
                              -- import parameters.
                              --
+                             -- #VUID-vkImportFenceWin32HandleKHR-pImportFenceWin32HandleInfo-parameter#
                              -- @pImportFenceWin32HandleInfo@ /must/ be a valid pointer to a valid
                              -- 'ImportFenceWin32HandleInfoKHR' structure
                              ImportFenceWin32HandleInfoKHR
@@ -209,44 +213,54 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT
 --
 -- == Valid Usage
 --
--- -   @handleType@ /must/ be a value included in the
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-01457# @handleType@
+--     /must/ be a value included in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fence-handletypes-win32 Handle Types Supported by >
 --     table
 --
--- -   If @handleType@ is not
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-01459# If
+--     @handleType@ is not
 --     'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT',
 --     @name@ /must/ be @NULL@
 --
--- -   If @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/
---     name a valid synchronization primitive of the type specified by
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-01460# If
+--     @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/ name a
+--     valid synchronization primitive of the type specified by
 --     @handleType@
 --
--- -   If @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be
---     a valid handle of the type specified by @handleType@
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-01461# If
+--     @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be a
+--     valid handle of the type specified by @handleType@
 --
--- -   If @handle@ is not @NULL@, @name@ /must/ be @NULL@
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-handle-01462# If @handle@ is
+--     not @NULL@, @name@ /must/ be @NULL@
 --
--- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
---     for @handleType@ in
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-handle-01539# If @handle@ is
+--     not @NULL@, it /must/ obey any requirements listed for @handleType@
+--     in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
 --
--- -   If @name@ is not @NULL@, it /must/ obey any requirements listed for
---     @handleType@ in
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-name-01540# If @name@ is not
+--     @NULL@, it /must/ obey any requirements listed for @handleType@ in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @fence@ /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-fence-parameter# @fence@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-flags-parameter# @flags@
+--     /must/ be a valid combination of
 --     'Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlagBits' values
 --
--- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
+-- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-parameter# If
+--     @handleType@ is not @0@, @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
 --     value
 --
@@ -357,7 +371,7 @@ instance Zero ImportFenceWin32HandleInfoKHR where
 --
 -- == Valid Usage
 --
--- -   If
+-- -   #VUID-VkExportFenceWin32HandleInfoKHR-handleTypes-01447# If
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'::@handleTypes@
 --     does not include
 --     'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT',
@@ -366,11 +380,12 @@ instance Zero ImportFenceWin32HandleInfoKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkExportFenceWin32HandleInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR'
 --
--- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-VkExportFenceWin32HandleInfoKHR-pAttributes-parameter# If
+--     @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid pointer
+--     to a valid
 --     'Vulkan.Extensions.VK_NV_external_memory_win32.SECURITY_ATTRIBUTES'
 --     value
 --
@@ -448,40 +463,46 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 --
 -- == Valid Usage
 --
--- -   @handleType@ /must/ have been included in
+-- -   #VUID-VkFenceGetWin32HandleInfoKHR-handleType-01448# @handleType@
+--     /must/ have been included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'::@handleTypes@
 --     when the @fence@’s current payload was created
 --
--- -   If @handleType@ is defined as an NT handle, 'getFenceWin32HandleKHR'
---     /must/ be called no more than once for each valid unique combination
---     of @fence@ and @handleType@
+-- -   #VUID-VkFenceGetWin32HandleInfoKHR-handleType-01449# If @handleType@
+--     is defined as an NT handle, 'getFenceWin32HandleKHR' /must/ be
+--     called no more than once for each valid unique combination of
+--     @fence@ and @handleType@
 --
--- -   @fence@ /must/ not currently have its payload replaced by an
---     imported payload as described below in
+-- -   #VUID-VkFenceGetWin32HandleInfoKHR-fence-01450# @fence@ /must/ not
+--     currently have its payload replaced by an imported payload as
+--     described below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.ExternalFenceProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@
 --
--- -   If @handleType@ refers to a handle type with copy payload
---     transference semantics, @fence@ /must/ be signaled, or have an
---     associated
+-- -   #VUID-VkFenceGetWin32HandleInfoKHR-handleType-01451# If @handleType@
+--     refers to a handle type with copy payload transference semantics,
+--     @fence@ /must/ be signaled, or have an associated
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>
 --     pending execution
 --
--- -   @handleType@ /must/ be defined as an NT handle or a global share
---     handle
+-- -   #VUID-VkFenceGetWin32HandleInfoKHR-handleType-01452# @handleType@
+--     /must/ be defined as an NT handle or a global share handle
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkFenceGetWin32HandleInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkFenceGetWin32HandleInfoKHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @fence@ /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-VkFenceGetWin32HandleInfoKHR-fence-parameter# @fence@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Fence' handle
 --
--- -   @handleType@ /must/ be a valid
+-- -   #VUID-VkFenceGetWin32HandleInfoKHR-handleType-parameter#
+--     @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
 --     value
 --

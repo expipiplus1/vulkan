@@ -82,17 +82,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateMetalSurfaceEXT-instance-parameter# @instance@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'MetalSurfaceCreateInfoEXT' structure
+-- -   #VUID-vkCreateMetalSurfaceEXT-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'MetalSurfaceCreateInfoEXT'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateMetalSurfaceEXT-pAllocator-parameter# If @pAllocator@
+--     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+-- -   #VUID-vkCreateMetalSurfaceEXT-pSurface-parameter# @pSurface@ /must/
+--     be a valid pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
+--     handle
 --
 -- == Return Codes
 --
@@ -154,7 +157,8 @@ createMetalSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
 data MetalSurfaceCreateInfoEXT = MetalSurfaceCreateInfoEXT
   { -- | @flags@ is reserved for future use.
     --
-    -- @flags@ /must/ be @0@
+    -- #VUID-VkMetalSurfaceCreateInfoEXT-flags-zerobitmask# @flags@ /must/ be
+    -- @0@
     flags :: MetalSurfaceCreateFlagsEXT
   , -- | @pLayer@ is a reference to a 'CAMetalLayer' object representing a
     -- renderable surface.

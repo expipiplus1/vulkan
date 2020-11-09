@@ -55,10 +55,12 @@ data ExternalMemoryImageCreateInfo = ExternalMemoryImageCreateInfo
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- specifying one or more external memory handle types.
     --
+    -- #VUID-VkExternalMemoryImageCreateInfo-handleTypes-parameter#
     -- @handleTypes@ /must/ be a valid combination of
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- values
     --
+    -- #VUID-VkExternalMemoryImageCreateInfo-handleTypes-requiredbitmask#
     -- @handleTypes@ /must/ not be @0@
     handleTypes :: ExternalMemoryHandleTypeFlags }
   deriving (Typeable, Eq)
@@ -121,6 +123,7 @@ data ExternalMemoryBufferCreateInfo = ExternalMemoryBufferCreateInfo
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- specifying one or more external memory handle types.
     --
+    -- #VUID-VkExternalMemoryBufferCreateInfo-handleTypes-parameter#
     -- @handleTypes@ /must/ be a valid combination of
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- values
@@ -167,18 +170,19 @@ instance Zero ExternalMemoryBufferCreateInfo where
 --
 -- == Valid Usage
 --
--- -   The bits in @handleTypes@ /must/ be supported and compatible, as
---     reported by
+-- -   #VUID-VkExportMemoryAllocateInfo-handleTypes-00656# The bits in
+--     @handleTypes@ /must/ be supported and compatible, as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkExportMemoryAllocateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO'
 --
--- -   @handleTypes@ /must/ be a valid combination of
+-- -   #VUID-VkExportMemoryAllocateInfo-handleTypes-parameter#
+--     @handleTypes@ /must/ be a valid combination of
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     values
 --

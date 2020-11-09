@@ -67,31 +67,38 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @handleType@ /must/ be
+-- -   #VUID-vkGetMemoryHostPointerPropertiesEXT-handleType-01752#
+--     @handleType@ /must/ be
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT'
 --     or
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'
 --
--- -   @pHostPointer@ /must/ be a pointer aligned to an integer multiple of
+-- -   #VUID-vkGetMemoryHostPointerPropertiesEXT-pHostPointer-01753#
+--     @pHostPointer@ /must/ be a pointer aligned to an integer multiple of
 --     'PhysicalDeviceExternalMemoryHostPropertiesEXT'::@minImportedHostPointerAlignment@
 --
--- -   If @handleType@ is
+-- -   #VUID-vkGetMemoryHostPointerPropertiesEXT-handleType-01754# If
+--     @handleType@ is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT',
 --     @pHostPointer@ /must/ be a pointer to host memory
 --
--- -   If @handleType@ is
+-- -   #VUID-vkGetMemoryHostPointerPropertiesEXT-handleType-01755# If
+--     @handleType@ is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT',
 --     @pHostPointer@ /must/ be a pointer to host mapped foreign memory
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetMemoryHostPointerPropertiesEXT-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @handleType@ /must/ be a valid
+-- -   #VUID-vkGetMemoryHostPointerPropertiesEXT-handleType-parameter#
+--     @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     value
 --
--- -   @pMemoryHostPointerProperties@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetMemoryHostPointerPropertiesEXT-pMemoryHostPointerProperties-parameter#
+--     @pMemoryHostPointerProperties@ /must/ be a valid pointer to a
 --     'MemoryHostPointerPropertiesEXT' structure
 --
 -- == Return Codes
@@ -161,26 +168,31 @@ getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalC
 --
 -- == Valid Usage
 --
--- -   If @handleType@ is not @0@, it /must/ be supported for import, as
+-- -   #VUID-VkImportMemoryHostPointerInfoEXT-handleType-01747# If
+--     @handleType@ is not @0@, it /must/ be supported for import, as
 --     reported in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalMemoryProperties'
 --
--- -   If @handleType@ is not @0@, it /must/ be
+-- -   #VUID-VkImportMemoryHostPointerInfoEXT-handleType-01748# If
+--     @handleType@ is not @0@, it /must/ be
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT'
 --     or
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'
 --
--- -   @pHostPointer@ /must/ be a pointer aligned to an integer multiple of
+-- -   #VUID-VkImportMemoryHostPointerInfoEXT-pHostPointer-01749#
+--     @pHostPointer@ /must/ be a pointer aligned to an integer multiple of
 --     'PhysicalDeviceExternalMemoryHostPropertiesEXT'::@minImportedHostPointerAlignment@
 --
--- -   If @handleType@ is
+-- -   #VUID-VkImportMemoryHostPointerInfoEXT-handleType-01750# If
+--     @handleType@ is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT',
 --     @pHostPointer@ /must/ be a pointer to @allocationSize@ number of
 --     bytes of host memory, where @allocationSize@ is the member of the
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' structure this structure
 --     is chained to
 --
--- -   If @handleType@ is
+-- -   #VUID-VkImportMemoryHostPointerInfoEXT-handleType-01751# If
+--     @handleType@ is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT',
 --     @pHostPointer@ /must/ be a pointer to @allocationSize@ number of
 --     bytes of host mapped foreign memory, where @allocationSize@ is the
@@ -189,10 +201,12 @@ getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalC
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImportMemoryHostPointerInfoEXT-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT'
 --
--- -   @handleType@ /must/ be a valid
+-- -   #VUID-VkImportMemoryHostPointerInfoEXT-handleType-parameter#
+--     @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     value
 --
@@ -327,7 +341,8 @@ instance Zero MemoryHostPointerPropertiesEXT where
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceExternalMemoryHostPropertiesEXT = PhysicalDeviceExternalMemoryHostPropertiesEXT
-  { -- | @minImportedHostPointerAlignment@ is the minimum /required/ alignment,
+  { -- | #limits-minImportedHostPointerAlignment#
+    -- @minImportedHostPointerAlignment@ is the minimum /required/ alignment,
     -- in bytes, for the base address and size of host pointers that /can/ be
     -- imported to a Vulkan memory object.
     minImportedHostPointerAlignment :: DeviceSize }

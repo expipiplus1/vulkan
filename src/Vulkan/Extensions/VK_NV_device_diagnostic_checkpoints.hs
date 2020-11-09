@@ -69,13 +69,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
+-- -   #VUID-vkCmdSetCheckpointNV-commandBuffer-parameter# @commandBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetCheckpointNV-commandBuffer-recording# @commandBuffer@
+--     /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetCheckpointNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, compute, or transfer
 --     operations
 --
@@ -142,16 +144,20 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The device that @queue@ belongs to /must/ be in the lost state
+-- -   #VUID-vkGetQueueCheckpointDataNV-queue-02025# The device that
+--     @queue@ belongs to /must/ be in the lost state
 --
 -- == Valid Usage (Implicit)
 --
--- -   @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
+-- -   #VUID-vkGetQueueCheckpointDataNV-queue-parameter# @queue@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Queue' handle
 --
--- -   @pCheckpointDataCount@ /must/ be a valid pointer to a @uint32_t@
+-- -   #VUID-vkGetQueueCheckpointDataNV-pCheckpointDataCount-parameter#
+--     @pCheckpointDataCount@ /must/ be a valid pointer to a @uint32_t@
 --     value
 --
--- -   If the value referenced by @pCheckpointDataCount@ is not @0@, and
+-- -   #VUID-vkGetQueueCheckpointDataNV-pCheckpointData-parameter# If the
+--     value referenced by @pCheckpointDataCount@ is not @0@, and
 --     @pCheckpointData@ is not @NULL@, @pCheckpointData@ /must/ be a valid
 --     pointer to an array of @pCheckpointDataCount@ 'CheckpointDataNV'
 --     structures

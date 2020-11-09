@@ -72,7 +72,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a 'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+-- -   #VUID-vkCmdDrawMeshTasksNV-magFilter-04553# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
 --     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
 --     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
 --     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
@@ -81,20 +82,23 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using atomic
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02691# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02692# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdDrawMeshTasksNV-filterCubic-02694# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command /must/ have a
 --     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' and format that
@@ -103,7 +107,8 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdDrawMeshTasksNV-filterCubicMinmax-02695# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' with a
 --     reduction mode of either
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
@@ -117,53 +122,58 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.Image' created with a
+-- -   #VUID-vkCmdDrawMeshTasksNV-flags-02696# Any
+--     'Vulkan.Core10.Handles.Image' created with a
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
--- -   For each set /n/ that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a descriptor set /must/ have been bound to /n/
---     at the same pipeline bind point, with a
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02697# For each set /n/ that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a descriptor set /must/
+--     have been bound to /n/ at the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
 --     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   For each push constant that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a push constant value /must/ have been set for
---     the same pipeline bind point, with a
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02698# For each push constant that
+--     is statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to
+--     the pipeline bind point used by this command, a push constant value
+--     /must/ have been set for the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
 --     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   Descriptors in each bound descriptor set, specified via
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02699# Descriptors in each bound
+--     descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
 --     be valid if they are statically used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     used by this command
 --
--- -   A valid pipeline /must/ be bound to the pipeline bind point used by
---     this command
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02700# A valid pipeline /must/ be
+--     bound to the pipeline bind point used by this command
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command requires any dynamic state, that
---     state /must/ have been set for @commandBuffer@, and done so after
---     any previously bound pipeline with the corresponding state not
---     specified as dynamic
---
--- -   There /must/ not have been any calls to dynamic state setting
---     commands for any state not specified as dynamic in the
+-- -   #VUID-vkCmdDrawMeshTasksNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command, since that pipeline was bound
+--     point used by this command requires any dynamic state, that state
+--     /must/ have been set for @commandBuffer@, and done so after any
+--     previously bound pipeline with the corresponding state not specified
+--     as dynamic
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02859# There /must/ not have been
+--     any calls to dynamic state setting commands for any state not
+--     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command, since that
+--     pipeline was bound
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02702# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -175,21 +185,23 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02703# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02704# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02705# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -197,7 +209,7 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02706# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -205,46 +217,52 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+-- -   #VUID-vkCmdDrawMeshTasksNV-commandBuffer-02707# If @commandBuffer@
+--     is an unprotected command buffer, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-04115# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdDrawMeshTasksNV-OpImageWrite-04469# If a
+--     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdDrawMeshTasksNV-SampledType-04470# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdDrawMeshTasksNV-SampledType-04471# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdDrawMeshTasksNV-SampledType-04472# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdDrawMeshTasksNV-SampledType-04473# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksNV-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
 --     created with the
@@ -253,7 +271,7 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksNV-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
 --     created with the
@@ -262,7 +280,8 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   The current render pass /must/ be
+-- -   #VUID-vkCmdDrawMeshTasksNV-renderPass-02684# The current render pass
+--     /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the @renderPass@ member of the
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure
@@ -270,25 +289,32 @@ foreign import ccall
 --     to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the
+-- -   #VUID-vkCmdDrawMeshTasksNV-subpass-02685# The subpass index of the
+--     current render pass /must/ be equal to the @subpass@ member of the
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure
 --     specified when creating the 'Vulkan.Core10.Handles.Pipeline' bound
 --     to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-02686# Every input attachment used
+--     by the current subpass /must/ be bound to the pipeline via a
+--     descriptor set
 --
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-04584# Image subresources used as
+--     attachments in the current render pass /must/ not be accessed in any
+--     way other than as an attachment by this command, except for cases
+--     involving read-only access to depth\/stencil attachments as
+--     described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
+--     chapter
 --
--- -   If the draw is recorded in a render pass instance with multiview
---     enabled, the maximum instance index /must/ be less than or equal to
+-- -   #VUID-vkCmdDrawMeshTasksNV-maxMultiviewInstanceIndex-02688# If the
+--     draw is recorded in a render pass instance with multiview enabled,
+--     the maximum instance index /must/ be less than or equal to
 --     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
--- -   If the bound graphics pipeline was created with
+-- -   #VUID-vkCmdDrawMeshTasksNV-sampleLocationsEnable-02689# If the bound
+--     graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
 --     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
 --     has a depth\/stencil attachment, then that attachment /must/ have
@@ -296,7 +322,8 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksNV-viewportCount-03417# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
@@ -309,7 +336,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
 --     of the pipeline
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksNV-scissorCount-03418# If the bound graphics
+--     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
@@ -322,7 +350,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
 --     of the pipeline
 --
--- -   If the bound graphics pipeline state was created with both the
+-- -   #VUID-vkCmdDrawMeshTasksNV-viewportCount-03419# If the bound
+--     graphics pipeline state was created with both the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
@@ -336,7 +365,8 @@ foreign import ccall
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksNV-viewportCount-04137# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
@@ -347,7 +377,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksNV-viewportCount-04138# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
@@ -358,7 +389,8 @@ foreign import ccall
 --     the last call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksNV-viewportCount-04139# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
@@ -369,7 +401,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksNV-viewportCount-04140# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
@@ -380,7 +413,8 @@ foreign import ccall
 --     the last call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksNV-VkPipelineVieportCreateInfo-04141# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled and an instance of
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
@@ -391,7 +425,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksNV-VkPipelineVieportCreateInfo-04142# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled and an instance of
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
@@ -402,7 +437,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksNV-primitiveTopology-03420# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
@@ -415,7 +451,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksNV-primitiveFragmentShadingRateWithMultipleViewports-04552#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
 --     limit is not supported, the bound graphics pipeline was created with
 --     the
@@ -429,21 +466,25 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
--- -   @taskCount@ /must/ be less than or equal to
+-- -   #VUID-vkCmdDrawMeshTasksNV-taskCount-02119# @taskCount@ /must/ be
+--     less than or equal to
 --     'PhysicalDeviceMeshShaderPropertiesNV'::@maxDrawMeshTasksCount@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
+-- -   #VUID-vkCmdDrawMeshTasksNV-commandBuffer-parameter# @commandBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdDrawMeshTasksNV-commandBuffer-recording# @commandBuffer@
+--     /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdDrawMeshTasksNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   This command /must/ only be called inside of a render pass instance
+-- -   #VUID-vkCmdDrawMeshTasksNV-renderpass# This command /must/ only be
+--     called inside of a render pass instance
 --
 -- == Host Synchronization
 --
@@ -508,7 +549,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a 'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-magFilter-04553# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
 --     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
 --     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
 --     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
@@ -517,20 +559,23 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using atomic
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02691# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02692# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-filterCubic-02694# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command /must/ have a
 --     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' and format that
@@ -539,7 +584,8 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-filterCubicMinmax-02695# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' with a
 --     reduction mode of either
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
@@ -553,23 +599,25 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.Image' created with a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-flags-02696# Any
+--     'Vulkan.Core10.Handles.Image' created with a
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
--- -   For each set /n/ that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a descriptor set /must/ have been bound to /n/
---     at the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02697# For each set /n/ that
+--     is statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to
+--     the pipeline bind point used by this command, a descriptor set
+--     /must/ have been bound to /n/ at the same pipeline bind point, with
+--     a 'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
 --     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   For each push constant that is statically used by the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02698# For each push
+--     constant that is statically used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     used by this command, a push constant value /must/ have been set for
 --     the same pipeline bind point, with a
@@ -578,28 +626,32 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   Descriptors in each bound descriptor set, specified via
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02699# Descriptors in each
+--     bound descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
 --     be valid if they are statically used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     used by this command
 --
--- -   A valid pipeline /must/ be bound to the pipeline bind point used by
---     this command
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02700# A valid pipeline
+--     /must/ be bound to the pipeline bind point used by this command
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command requires any dynamic state, that
---     state /must/ have been set for @commandBuffer@, and done so after
---     any previously bound pipeline with the corresponding state not
---     specified as dynamic
---
--- -   There /must/ not have been any calls to dynamic state setting
---     commands for any state not specified as dynamic in the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command, since that pipeline was bound
+--     point used by this command requires any dynamic state, that state
+--     /must/ have been set for @commandBuffer@, and done so after any
+--     previously bound pipeline with the corresponding state not specified
+--     as dynamic
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02859# There /must/ not have
+--     been any calls to dynamic state setting commands for any state not
+--     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command, since that
+--     pipeline was bound
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02702# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -611,21 +663,23 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02703# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02704# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02705# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -633,7 +687,7 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02706# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -641,46 +695,54 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If @commandBuffer@ is an unprotected command buffer, any resource
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-commandBuffer-02707# If
+--     @commandBuffer@ is an unprotected command buffer, any resource
 --     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-04115# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-OpImageWrite-04469# If a
+--     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-SampledType-04470# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-SampledType-04471# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-SampledType-04472# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-SampledType-04473# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-sparseImageInt64Atomics-04474# If
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
 --     created with the
@@ -689,7 +751,8 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-sparseImageInt64Atomics-04475# If
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
 --     created with the
@@ -698,7 +761,8 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   The current render pass /must/ be
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-renderPass-02684# The current
+--     render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the @renderPass@ member of the
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure
@@ -706,25 +770,32 @@ foreign import ccall
 --     to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-subpass-02685# The subpass index
+--     of the current render pass /must/ be equal to the @subpass@ member
+--     of the 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure
 --     specified when creating the 'Vulkan.Core10.Handles.Pipeline' bound
 --     to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02686# Every input
+--     attachment used by the current subpass /must/ be bound to the
+--     pipeline via a descriptor set
 --
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-04584# Image subresources
+--     used as attachments in the current render pass /must/ not be
+--     accessed in any way other than as an attachment by this command,
+--     except for cases involving read-only access to depth\/stencil
+--     attachments as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
+--     chapter
 --
--- -   If the draw is recorded in a render pass instance with multiview
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-maxMultiviewInstanceIndex-02688#
+--     If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
 --     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
--- -   If the bound graphics pipeline was created with
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-sampleLocationsEnable-02689# If
+--     the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
 --     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
 --     has a depth\/stencil attachment, then that attachment /must/ have
@@ -732,7 +803,8 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-viewportCount-03417# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
@@ -745,7 +817,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
 --     of the pipeline
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-scissorCount-03418# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
@@ -758,7 +831,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
 --     of the pipeline
 --
--- -   If the bound graphics pipeline state was created with both the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-viewportCount-03419# If the bound
+--     graphics pipeline state was created with both the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
@@ -772,7 +846,8 @@ foreign import ccall
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-viewportCount-04137# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
@@ -783,7 +858,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-viewportCount-04138# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
@@ -794,7 +870,8 @@ foreign import ccall
 --     the last call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-viewportCount-04139# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
@@ -805,7 +882,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-viewportCount-04140# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
@@ -816,7 +894,8 @@ foreign import ccall
 --     the last call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-VkPipelineVieportCreateInfo-04141#
+--     If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled and an instance of
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
@@ -827,7 +906,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-VkPipelineVieportCreateInfo-04142#
+--     If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled and an instance of
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
@@ -838,7 +918,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-primitiveTopology-03420# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
@@ -851,7 +932,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-primitiveFragmentShadingRateWithMultipleViewports-04552#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
 --     limit is not supported, the bound graphics pipeline was created with
 --     the
@@ -865,53 +947,67 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-buffer-02708# If @buffer@ is
+--     non-sparse then it /must/ be bound completely and contiguously to a
+--     single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   @buffer@ /must/ have been created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-buffer-02709# @buffer@ /must/
+--     have been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
 --     bit set
 --
--- -   @offset@ /must/ be a multiple of @4@
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-offset-02710# @offset@ /must/ be
+--     a multiple of @4@
 --
--- -   @commandBuffer@ /must/ not be a protected command buffer
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-commandBuffer-02711#
+--     @commandBuffer@ /must/ not be a protected command buffer
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-drawCount-02718# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiDrawIndirect multi-draw indirect>
 --     feature is not enabled, @drawCount@ /must/ be @0@ or @1@
 --
--- -   @drawCount@ /must/ be less than or equal to
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-drawCount-02719# @drawCount@
+--     /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDrawIndirectCount@
 --
--- -   If @drawCount@ is greater than @1@, @stride@ /must/ be a multiple of
---     @4@ and /must/ be greater than or equal to
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-drawCount-02146# If @drawCount@
+--     is greater than @1@, @stride@ /must/ be a multiple of @4@ and /must/
+--     be greater than or equal to
 --     @sizeof@('DrawMeshTasksIndirectCommandNV')
 --
--- -   If @drawCount@ is equal to @1@, (@offset@ +
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-drawCount-02156# If @drawCount@
+--     is equal to @1@, (@offset@ +
 --     @sizeof@('DrawMeshTasksIndirectCommandNV')) /must/ be less than or
 --     equal to the size of @buffer@
 --
--- -   If @drawCount@ is greater than @1@, (@stride@ × (@drawCount@ - 1) +
---     @offset@ + @sizeof@('DrawMeshTasksIndirectCommandNV')) /must/ be
---     less than or equal to the size of @buffer@
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-drawCount-02157# If @drawCount@
+--     is greater than @1@, (@stride@ × (@drawCount@ - 1) + @offset@ +
+--     @sizeof@('DrawMeshTasksIndirectCommandNV')) /must/ be less than or
+--     equal to the size of @buffer@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-buffer-parameter# @buffer@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   This command /must/ only be called inside of a render pass instance
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-renderpass# This command /must/
+--     only be called inside of a render pass instance
 --
--- -   Both of @buffer@, and @commandBuffer@ /must/ have been created,
---     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-commonparent# Both of @buffer@,
+--     and @commandBuffer@ /must/ have been created, allocated, or
+--     retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -978,7 +1074,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a 'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-magFilter-04553# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
 --     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
 --     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
 --     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
@@ -987,20 +1084,23 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using atomic
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02691# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02692# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-filterCubic-02694# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command /must/ have a
 --     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' and format that
@@ -1009,7 +1109,8 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-filterCubicMinmax-02695# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' with a
 --     reduction mode of either
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
@@ -1023,23 +1124,25 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.Image' created with a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-flags-02696# Any
+--     'Vulkan.Core10.Handles.Image' created with a
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
--- -   For each set /n/ that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a descriptor set /must/ have been bound to /n/
---     at the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
---     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
---     the current 'Vulkan.Core10.Handles.Pipeline', as described in
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02697# For each set /n/
+--     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command, a descriptor
+--     set /must/ have been bound to /n/ at the same pipeline bind point,
+--     with a 'Vulkan.Core10.Handles.PipelineLayout' that is compatible for
+--     set /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   For each push constant that is statically used by the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02698# For each push
+--     constant that is statically used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     used by this command, a push constant value /must/ have been set for
 --     the same pipeline bind point, with a
@@ -1048,28 +1151,32 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   Descriptors in each bound descriptor set, specified via
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02699# Descriptors in
+--     each bound descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
 --     be valid if they are statically used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     used by this command
 --
--- -   A valid pipeline /must/ be bound to the pipeline bind point used by
---     this command
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02700# A valid pipeline
+--     /must/ be bound to the pipeline bind point used by this command
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command requires any dynamic state, that
---     state /must/ have been set for @commandBuffer@, and done so after
---     any previously bound pipeline with the corresponding state not
---     specified as dynamic
---
--- -   There /must/ not have been any calls to dynamic state setting
---     commands for any state not specified as dynamic in the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command, since that pipeline was bound
+--     point used by this command requires any dynamic state, that state
+--     /must/ have been set for @commandBuffer@, and done so after any
+--     previously bound pipeline with the corresponding state not specified
+--     as dynamic
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02859# There /must/ not
+--     have been any calls to dynamic state setting commands for any state
+--     not specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline'
+--     object bound to the pipeline bind point used by this command, since
+--     that pipeline was bound
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02702# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -1081,21 +1188,23 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02703# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02704# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02705# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -1103,7 +1212,7 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02706# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -1111,46 +1220,54 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If @commandBuffer@ is an unprotected command buffer, any resource
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-commandBuffer-02707# If
+--     @commandBuffer@ is an unprotected command buffer, any resource
 --     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-04115# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-OpImageWrite-04469# If a
+--     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-SampledType-04470# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-SampledType-04471# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-SampledType-04472# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-SampledType-04473# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-sparseImageInt64Atomics-04474#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
 --     created with the
@@ -1159,7 +1276,8 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-sparseImageInt64Atomics-04475#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
 --     created with the
@@ -1168,7 +1286,8 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   The current render pass /must/ be
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-renderPass-02684# The
+--     current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the @renderPass@ member of the
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure
@@ -1176,25 +1295,32 @@ foreign import ccall
 --     to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure
---     specified when creating the 'Vulkan.Core10.Handles.Pipeline' bound
---     to
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-subpass-02685# The subpass
+--     index of the current render pass /must/ be equal to the @subpass@
+--     member of the 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
+--     structure specified when creating the
+--     'Vulkan.Core10.Handles.Pipeline' bound to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02686# Every input
+--     attachment used by the current subpass /must/ be bound to the
+--     pipeline via a descriptor set
 --
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-04584# Image
+--     subresources used as attachments in the current render pass /must/
+--     not be accessed in any way other than as an attachment by this
+--     command, except for cases involving read-only access to
+--     depth\/stencil attachments as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
+--     chapter
 --
--- -   If the draw is recorded in a render pass instance with multiview
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-maxMultiviewInstanceIndex-02688#
+--     If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
 --     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
--- -   If the bound graphics pipeline was created with
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-sampleLocationsEnable-02689#
+--     If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
 --     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
 --     has a depth\/stencil attachment, then that attachment /must/ have
@@ -1202,7 +1328,8 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-viewportCount-03417# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
@@ -1215,7 +1342,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
 --     of the pipeline
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-scissorCount-03418# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
@@ -1228,7 +1356,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
 --     of the pipeline
 --
--- -   If the bound graphics pipeline state was created with both the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-viewportCount-03419# If the
+--     bound graphics pipeline state was created with both the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
@@ -1242,7 +1371,8 @@ foreign import ccall
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-viewportCount-04137# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
@@ -1253,7 +1383,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-viewportCount-04138# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
@@ -1264,7 +1395,8 @@ foreign import ccall
 --     the last call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-viewportCount-04139# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
@@ -1275,7 +1407,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-viewportCount-04140# If the
+--     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
@@ -1286,7 +1419,8 @@ foreign import ccall
 --     the last call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-VkPipelineVieportCreateInfo-04141#
+--     If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled and an instance of
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
@@ -1297,7 +1431,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-VkPipelineVieportCreateInfo-04142#
+--     If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled and an instance of
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
@@ -1308,7 +1443,8 @@ foreign import ccall
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   If the bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-primitiveTopology-03420# If
+--     the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
@@ -1321,7 +1457,8 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
 --
--- -   If the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-primitiveFragmentShadingRateWithMultipleViewports-04552#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
 --     limit is not supported, the bound graphics pipeline was created with
 --     the
@@ -1335,74 +1472,93 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-buffer-02708# If @buffer@ is
+--     non-sparse then it /must/ be bound completely and contiguously to a
+--     single 'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-buffer-02709# @buffer@
+--     /must/ have been created with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
+--     bit set
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-offset-02710# @offset@
+--     /must/ be a multiple of @4@
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-commandBuffer-02711#
+--     @commandBuffer@ /must/ not be a protected command buffer
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-countBuffer-02714# If
+--     @countBuffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   @buffer@ /must/ have been created with the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-countBuffer-02715#
+--     @countBuffer@ /must/ have been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
 --     bit set
 --
--- -   @offset@ /must/ be a multiple of @4@
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-countBufferOffset-02716#
+--     @countBufferOffset@ /must/ be a multiple of @4@
 --
--- -   @commandBuffer@ /must/ not be a protected command buffer
---
--- -   If @countBuffer@ is non-sparse then it /must/ be bound completely
---     and contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory'
---     object
---
--- -   @countBuffer@ /must/ have been created with the
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
---     bit set
---
--- -   @countBufferOffset@ /must/ be a multiple of @4@
---
--- -   The count stored in @countBuffer@ /must/ be less than or equal to
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-countBuffer-02717# The count
+--     stored in @countBuffer@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDrawIndirectCount@
 --
--- -   (@countBufferOffset@ + @sizeof@(uint32_t)) /must/ be less than or
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-countBufferOffset-04129#
+--     (@countBufferOffset@ + @sizeof@(uint32_t)) /must/ be less than or
 --     equal to the size of @countBuffer@
 --
--- -   If
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-04445# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-drawIndirectCount drawIndirectCount>
 --     is not enabled this function /must/ not be used
 --
--- -   @stride@ /must/ be a multiple of @4@ and /must/ be greater than or
---     equal to @sizeof@('DrawMeshTasksIndirectCommandNV')
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-stride-02182# @stride@
+--     /must/ be a multiple of @4@ and /must/ be greater than or equal to
+--     @sizeof@('DrawMeshTasksIndirectCommandNV')
 --
--- -   If @maxDrawCount@ is greater than or equal to @1@, (@stride@ ×
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-maxDrawCount-02183# If
+--     @maxDrawCount@ is greater than or equal to @1@, (@stride@ ×
 --     (@maxDrawCount@ - 1) + @offset@ +
 --     @sizeof@('DrawMeshTasksIndirectCommandNV')) /must/ be less than or
 --     equal to the size of @buffer@
 --
--- -   If the count stored in @countBuffer@ is equal to @1@, (@offset@ +
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-countBuffer-02191# If the
+--     count stored in @countBuffer@ is equal to @1@, (@offset@ +
 --     @sizeof@('DrawMeshTasksIndirectCommandNV')) /must/ be less than or
 --     equal to the size of @buffer@
 --
--- -   If the count stored in @countBuffer@ is greater than @1@, (@stride@
---     × (@drawCount@ - 1) + @offset@ +
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-countBuffer-02192# If the
+--     count stored in @countBuffer@ is greater than @1@, (@stride@ ×
+--     (@drawCount@ - 1) + @offset@ +
 --     @sizeof@('DrawMeshTasksIndirectCommandNV')) /must/ be less than or
 --     equal to the size of @buffer@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-buffer-parameter# @buffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
--- -   @countBuffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer'
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-countBuffer-parameter#
+--     @countBuffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer'
 --     handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   This command /must/ only be called inside of a render pass instance
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-renderpass# This command
+--     /must/ only be called inside of a render pass instance
 --
--- -   Each of @buffer@, @commandBuffer@, and @countBuffer@ /must/ have
---     been created, allocated, or retrieved from the same
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-commonparent# Each of
+--     @buffer@, @commandBuffer@, and @countBuffer@ /must/ have been
+--     created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
@@ -1476,9 +1632,11 @@ cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBuf
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMeshShaderFeaturesNV = PhysicalDeviceMeshShaderFeaturesNV
-  { -- | @taskShader@ indicates whether the task shader stage is supported.
+  { -- | #features-taskShader# @taskShader@ indicates whether the task shader
+    -- stage is supported.
     taskShader :: Bool
-  , -- | @meshShader@ indicates whether the mesh shader stage is supported.
+  , -- | #features-meshShader# @meshShader@ indicates whether the mesh shader
+    -- stage is supported.
     meshShader :: Bool
   }
   deriving (Typeable, Eq)
@@ -1732,7 +1890,8 @@ data DrawMeshTasksIndirectCommandNV = DrawMeshTasksIndirectCommandNV
   { -- | @taskCount@ is the number of local workgroups to dispatch in the X
     -- dimension. Y and Z dimension are implicitly set to one.
     --
-    -- @taskCount@ /must/ be less than or equal to
+    -- #VUID-VkDrawMeshTasksIndirectCommandNV-taskCount-02175# @taskCount@
+    -- /must/ be less than or equal to
     -- 'PhysicalDeviceMeshShaderPropertiesNV'::@maxDrawMeshTasksCount@
     taskCount :: Word32
   , -- | @firstTask@ is the X component of the first workgroup ID.

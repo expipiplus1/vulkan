@@ -38,46 +38,53 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderAtomicFloatFeaturesEXT = PhysicalDeviceShaderAtomicFloatFeaturesEXT
-  { -- | @shaderBufferFloat32Atomics@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point load, store and exchange atomic operations on
-    -- storage buffers.
+  { -- | #features-shaderBufferFloat32Atomics# @shaderBufferFloat32Atomics@
+    -- indicates whether shaders /can/ perform 32-bit floating-point load,
+    -- store and exchange atomic operations on storage buffers.
     shaderBufferFloat32Atomics :: Bool
-  , -- | @shaderBufferFloat32AtomicAdd@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point add atomic operations on storage buffers.
+  , -- | #features-shaderBufferFloat32AtomicAdd# @shaderBufferFloat32AtomicAdd@
+    -- indicates whether shaders /can/ perform 32-bit floating-point add atomic
+    -- operations on storage buffers.
     shaderBufferFloat32AtomicAdd :: Bool
-  , -- | @shaderBufferFloat64Atomics@ indicates whether shaders /can/ perform
-    -- 64-bit floating-point load, store and exchange atomic operations on
-    -- storage buffers.
+  , -- | #features-shaderBufferFloat64Atomics# @shaderBufferFloat64Atomics@
+    -- indicates whether shaders /can/ perform 64-bit floating-point load,
+    -- store and exchange atomic operations on storage buffers.
     shaderBufferFloat64Atomics :: Bool
-  , -- | @shaderBufferFloat64AtomicAdd@ indicates whether shaders /can/ perform
-    -- 64-bit floating-point add atomic operations on storage buffers.
+  , -- | #features-shaderBufferFloat64AtomicAdd# @shaderBufferFloat64AtomicAdd@
+    -- indicates whether shaders /can/ perform 64-bit floating-point add atomic
+    -- operations on storage buffers.
     shaderBufferFloat64AtomicAdd :: Bool
-  , -- | @shaderSharedFloat32Atomics@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point load, store and exchange atomic operations on
-    -- shared memory.
+  , -- | #features-shaderSharedFloat32Atomics# @shaderSharedFloat32Atomics@
+    -- indicates whether shaders /can/ perform 32-bit floating-point load,
+    -- store and exchange atomic operations on shared memory.
     shaderSharedFloat32Atomics :: Bool
-  , -- | @shaderSharedFloat32AtomicAdd@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point add atomic operations on shared memory.
+  , -- | #features-shaderSharedFloat32AtomicAdd# @shaderSharedFloat32AtomicAdd@
+    -- indicates whether shaders /can/ perform 32-bit floating-point add atomic
+    -- operations on shared memory.
     shaderSharedFloat32AtomicAdd :: Bool
-  , -- | @shaderSharedFloat64Atomics@ indicates whether shaders /can/ perform
-    -- 64-bit floating-point load, store and exchange atomic operations on
-    -- shared memory.
+  , -- | #features-shaderSharedFloat64Atomics# @shaderSharedFloat64Atomics@
+    -- indicates whether shaders /can/ perform 64-bit floating-point load,
+    -- store and exchange atomic operations on shared memory.
     shaderSharedFloat64Atomics :: Bool
-  , -- | @shaderSharedFloat64AtomicAdd@ indicates whether shaders /can/ perform
-    -- 64-bit floating-point add atomic operations on shared memory.
+  , -- | #features-shaderSharedFloat64AtomicAdd# @shaderSharedFloat64AtomicAdd@
+    -- indicates whether shaders /can/ perform 64-bit floating-point add atomic
+    -- operations on shared memory.
     shaderSharedFloat64AtomicAdd :: Bool
-  , -- | @shaderImageFloat32Atomics@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point load, store and exchange atomic image operations.
+  , -- | #features-shaderImageFloat32Atomics# @shaderImageFloat32Atomics@
+    -- indicates whether shaders /can/ perform 32-bit floating-point load,
+    -- store and exchange atomic image operations.
     shaderImageFloat32Atomics :: Bool
-  , -- | @shaderImageFloat32AtomicAdd@ indicates whether shaders /can/ perform
-    -- 32-bit floating-point add atomic image operations.
+  , -- | #features-shaderImageFloat32AtomicAdd# @shaderImageFloat32AtomicAdd@
+    -- indicates whether shaders /can/ perform 32-bit floating-point add atomic
+    -- image operations.
     shaderImageFloat32AtomicAdd :: Bool
-  , -- | @sparseImageFloat32Atomics@ indicates whether 32-bit floating-point
-    -- load, store and exchange atomic operations /can/ be used on sparse
-    -- images.
+  , -- | #features-sparseImageFloat32Atomics# @sparseImageFloat32Atomics@
+    -- indicates whether 32-bit floating-point load, store and exchange atomic
+    -- operations /can/ be used on sparse images.
     sparseImageFloat32Atomics :: Bool
-  , -- | @sparseImageFloat32AtomicAdd@ indicates whether 32-bit floating-point
-    -- add atomic operations /can/ be used on sparse images.
+  , -- | #features-sparseImageFloat32AtomicAdd# @sparseImageFloat32AtomicAdd@
+    -- indicates whether 32-bit floating-point add atomic operations /can/ be
+    -- used on sparse images.
     sparseImageFloat32AtomicAdd :: Bool
   }
   deriving (Typeable, Eq)

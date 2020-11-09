@@ -57,9 +57,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMemoryPriorityFeaturesEXT = PhysicalDeviceMemoryPriorityFeaturesEXT
-  { -- | @memoryPriority@ indicates that the implementation supports memory
-    -- priorities specified at memory allocation time via
-    -- 'MemoryPriorityAllocateInfoEXT'.
+  { -- | #features-memoryPriority# @memoryPriority@ indicates that the
+    -- implementation supports memory priorities specified at memory allocation
+    -- time via 'MemoryPriorityAllocateInfoEXT'.
     memoryPriority :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -120,7 +120,8 @@ data MemoryPriorityAllocateInfoEXT = MemoryPriorityAllocateInfoEXT
     -- values are higher priority. The granularity of the priorities is
     -- implementation-dependent.
     --
-    -- @priority@ /must/ be between @0@ and @1@, inclusive
+    -- #VUID-VkMemoryPriorityAllocateInfoEXT-priority-02602# @priority@ /must/
+    -- be between @0@ and @1@, inclusive
     priority :: Float }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

@@ -120,21 +120,26 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateSharedSwapchainsKHR-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfos@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkCreateSharedSwapchainsKHR-pCreateInfos-parameter#
+--     @pCreateInfos@ /must/ be a valid pointer to an array of
 --     @swapchainCount@ valid
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --     structures
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateSharedSwapchainsKHR-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pSwapchains@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkCreateSharedSwapchainsKHR-pSwapchains-parameter#
+--     @pSwapchains@ /must/ be a valid pointer to an array of
 --     @swapchainCount@ 'Vulkan.Extensions.Handles.SwapchainKHR' handles
 --
--- -   @swapchainCount@ /must/ be greater than @0@
+-- -   #VUID-vkCreateSharedSwapchainsKHR-swapchainCount-arraylength#
+--     @swapchainCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
@@ -209,14 +214,16 @@ createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   @srcRect@ /must/ specify a rectangular region that is a subset of
---     the image being presented
+-- -   #VUID-VkDisplayPresentInfoKHR-srcRect-01257# @srcRect@ /must/
+--     specify a rectangular region that is a subset of the image being
+--     presented
 --
--- -   @dstRect@ /must/ specify a rectangular region that is a subset of
---     the @visibleRegion@ parameter of the display mode the swapchain
---     being presented uses
+-- -   #VUID-VkDisplayPresentInfoKHR-dstRect-01258# @dstRect@ /must/
+--     specify a rectangular region that is a subset of the @visibleRegion@
+--     parameter of the display mode the swapchain being presented uses
 --
--- -   If the @persistentContent@ member of the
+-- -   #VUID-VkDisplayPresentInfoKHR-persistentContent-01259# If the
+--     @persistentContent@ member of the
 --     'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR' structure
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_display.getPhysicalDeviceDisplayPropertiesKHR'
@@ -225,7 +232,7 @@ createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDisplayPresentInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR'
 --
 -- = See Also

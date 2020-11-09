@@ -70,10 +70,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDepthClipEnableFeaturesEXT = PhysicalDeviceDepthClipEnableFeaturesEXT
-  { -- | @depthClipEnable@ indicates that the implementation supports setting the
-    -- depth clipping operation explicitly via the
-    -- 'PipelineRasterizationDepthClipStateCreateInfoEXT' pipeline state.
-    -- Otherwise depth clipping is only enabled when
+  { -- | #features-depthClipEnable# @depthClipEnable@ indicates that the
+    -- implementation supports setting the depth clipping operation explicitly
+    -- via the 'PipelineRasterizationDepthClipStateCreateInfoEXT' pipeline
+    -- state. Otherwise depth clipping is only enabled when
     -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@
     -- is set to 'Vulkan.Core10.FundamentalTypes.FALSE'.
     depthClipEnable :: Bool }
@@ -128,6 +128,7 @@ instance Zero PhysicalDeviceDepthClipEnableFeaturesEXT where
 data PipelineRasterizationDepthClipStateCreateInfoEXT = PipelineRasterizationDepthClipStateCreateInfoEXT
   { -- | @flags@ is reserved for future use.
     --
+    -- #VUID-VkPipelineRasterizationDepthClipStateCreateInfoEXT-flags-zerobitmask#
     -- @flags@ /must/ be @0@
     flags :: PipelineRasterizationDepthClipStateCreateFlagsEXT
   , -- | @depthClipEnable@ controls whether depth clipping is enabled as

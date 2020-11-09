@@ -95,17 +95,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateXlibSurfaceKHR-instance-parameter# @instance@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'XlibSurfaceCreateInfoKHR' structure
+-- -   #VUID-vkCreateXlibSurfaceKHR-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'XlibSurfaceCreateInfoKHR'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateXlibSurfaceKHR-pAllocator-parameter# If @pAllocator@
+--     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+-- -   #VUID-vkCreateXlibSurfaceKHR-pSurface-parameter# @pSurface@ /must/
+--     be a valid pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
+--     handle
 --
 -- == Return Codes
 --
@@ -176,11 +179,13 @@ getPhysicalDeviceXlibPresentationSupportKHR :: forall io
                                              . (MonadIO io)
                                             => -- | @physicalDevice@ is the physical device.
                                                --
+                                               -- #VUID-vkGetPhysicalDeviceXlibPresentationSupportKHR-physicalDevice-parameter#
                                                -- @physicalDevice@ /must/ be a valid
                                                -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                                PhysicalDevice
                                             -> -- | @queueFamilyIndex@ is the queue family index.
                                                --
+                                               -- #VUID-vkGetPhysicalDeviceXlibPresentationSupportKHR-queueFamilyIndex-01315#
                                                -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
                                                -- returned by
                                                -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
@@ -188,7 +193,8 @@ getPhysicalDeviceXlibPresentationSupportKHR :: forall io
                                                ("queueFamilyIndex" ::: Word32)
                                             -> -- | @dpy@ is a pointer to an Xlib 'Display' connection to the server.
                                                --
-                                               -- @dpy@ /must/ be a valid pointer to a 'Display' value
+                                               -- #VUID-vkGetPhysicalDeviceXlibPresentationSupportKHR-dpy-parameter# @dpy@
+                                               -- /must/ be a valid pointer to a 'Display' value
                                                ("dpy" ::: Ptr Display)
                                             -> -- No documentation found for Nested "vkGetPhysicalDeviceXlibPresentationSupportKHR" "visualID"
                                                VisualID
@@ -214,15 +220,18 @@ getPhysicalDeviceXlibPresentationSupportKHR physicalDevice queueFamilyIndex dpy 
 data XlibSurfaceCreateInfoKHR = XlibSurfaceCreateInfoKHR
   { -- | @flags@ is reserved for future use.
     --
-    -- @flags@ /must/ be @0@
+    -- #VUID-VkXlibSurfaceCreateInfoKHR-flags-zerobitmask# @flags@ /must/ be
+    -- @0@
     flags :: XlibSurfaceCreateFlagsKHR
   , -- | @dpy@ is a pointer to an Xlib 'Display' connection to the X server.
     --
-    -- @dpy@ /must/ point to a valid Xlib 'Display'
+    -- #VUID-VkXlibSurfaceCreateInfoKHR-dpy-01313# @dpy@ /must/ point to a
+    -- valid Xlib 'Display'
     dpy :: Ptr Display
   , -- | @window@ is an Xlib 'Window' to associate the surface with.
     --
-    -- @window@ /must/ be a valid Xlib 'Window'
+    -- #VUID-VkXlibSurfaceCreateInfoKHR-window-01314# @window@ /must/ be a
+    -- valid Xlib 'Window'
     window :: Window
   }
   deriving (Typeable, Eq)

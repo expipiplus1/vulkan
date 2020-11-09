@@ -49,16 +49,16 @@ releaseDisplayEXT :: forall io
                    . (MonadIO io)
                   => -- | @physicalDevice@ The physical device the display is on.
                      --
-                     -- @physicalDevice@ /must/ be a valid
-                     -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                     -- #VUID-vkReleaseDisplayEXT-physicalDevice-parameter# @physicalDevice@
+                     -- /must/ be a valid 'Vulkan.Core10.Handles.PhysicalDevice' handle
                      PhysicalDevice
                   -> -- | @display@ The display to release control of.
                      --
-                     -- @display@ /must/ be a valid 'Vulkan.Extensions.Handles.DisplayKHR'
-                     -- handle
+                     -- #VUID-vkReleaseDisplayEXT-display-parameter# @display@ /must/ be a valid
+                     -- 'Vulkan.Extensions.Handles.DisplayKHR' handle
                      --
-                     -- @display@ /must/ have been created, allocated, or retrieved from
-                     -- @physicalDevice@
+                     -- #VUID-vkReleaseDisplayEXT-display-parent# @display@ /must/ have been
+                     -- created, allocated, or retrieved from @physicalDevice@
                      DisplayKHR
                   -> io ()
 releaseDisplayEXT physicalDevice display = liftIO $ do

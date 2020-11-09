@@ -164,7 +164,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @pAllocateInfo->allocationSize@ /must/ be less than or equal to
+-- -   #VUID-vkAllocateMemory-pAllocateInfo-01713#
+--     @pAllocateInfo->allocationSize@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryHeaps@[memindex].size
 --     where @memindex@ =
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryTypes@[pAllocateInfo->memoryTypeIndex].heapIndex
@@ -173,36 +174,39 @@ foreign import ccall
 --     for the 'Vulkan.Core10.Handles.PhysicalDevice' that @device@ was
 --     created from
 --
--- -   @pAllocateInfo->memoryTypeIndex@ /must/ be less than
+-- -   #VUID-vkAllocateMemory-pAllocateInfo-01714#
+--     @pAllocateInfo->memoryTypeIndex@ /must/ be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryTypeCount@
 --     as returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
 --     for the 'Vulkan.Core10.Handles.PhysicalDevice' that @device@ was
 --     created from
 --
--- -   If the
+-- -   #VUID-vkAllocateMemory-deviceCoherentMemory-02790# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
 --     feature is not enabled, @pAllocateInfo->memoryTypeIndex@ /must/ not
 --     identify a memory type supporting
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD'
 --
--- -   There /must/ be less than
+-- -   #VUID-vkAllocateMemory-maxMemoryAllocationCount-04101# There /must/
+--     be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxMemoryAllocationCount@
 --     device memory allocations currently allocated on the device.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkAllocateMemory-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pAllocateInfo@ /must/ be a valid pointer to a valid
---     'MemoryAllocateInfo' structure
+-- -   #VUID-vkAllocateMemory-pAllocateInfo-parameter# @pAllocateInfo@
+--     /must/ be a valid pointer to a valid 'MemoryAllocateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkAllocateMemory-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pMemory@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.DeviceMemory' handle
+-- -   #VUID-vkAllocateMemory-pMemory-parameter# @pMemory@ /must/ be a
+--     valid pointer to a 'Vulkan.Core10.Handles.DeviceMemory' handle
 --
 -- == Return Codes
 --
@@ -308,23 +312,24 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @memory@ (via images or
---     buffers) /must/ have completed execution
+-- -   #VUID-vkFreeMemory-memory-00677# All submitted commands that refer
+--     to @memory@ (via images or buffers) /must/ have completed execution
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkFreeMemory-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @memory@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
---     handle
+-- -   #VUID-vkFreeMemory-memory-parameter# If @memory@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ /must/ be a valid
+--     'Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkFreeMemory-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @memory@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkFreeMemory-memory-parent# If @memory@ is a valid handle, it
+--     /must/ have been created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -416,35 +421,42 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @memory@ /must/ not be currently host mapped
+-- -   #VUID-vkMapMemory-memory-00678# @memory@ /must/ not be currently
+--     host mapped
 --
--- -   @offset@ /must/ be less than the size of @memory@
+-- -   #VUID-vkMapMemory-offset-00679# @offset@ /must/ be less than the
+--     size of @memory@
 --
--- -   If @size@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     @size@ /must/ be greater than @0@
+-- -   #VUID-vkMapMemory-size-00680# If @size@ is not equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/ be greater
+--     than @0@
 --
--- -   If @size@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     @size@ /must/ be less than or equal to the size of the @memory@
---     minus @offset@
+-- -   #VUID-vkMapMemory-size-00681# If @size@ is not equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/ be less than
+--     or equal to the size of the @memory@ minus @offset@
 --
--- -   @memory@ /must/ have been created with a memory type that reports
+-- -   #VUID-vkMapMemory-memory-00682# @memory@ /must/ have been created
+--     with a memory type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_HOST_VISIBLE_BIT'
 --
--- -   @memory@ /must/ not have been allocated with multiple instances
+-- -   #VUID-vkMapMemory-memory-00683# @memory@ /must/ not have been
+--     allocated with multiple instances
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkMapMemory-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
---     handle
+-- -   #VUID-vkMapMemory-memory-parameter# @memory@ /must/ be a valid
+--     'Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-vkMapMemory-flags-zerobitmask# @flags@ /must/ be @0@
 --
--- -   @ppData@ /must/ be a valid pointer to a pointer value
+-- -   #VUID-vkMapMemory-ppData-parameter# @ppData@ /must/ be a valid
+--     pointer to a pointer value
 --
--- -   @memory@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkMapMemory-memory-parent# @memory@ /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -522,17 +534,19 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @memory@ /must/ be currently host mapped
+-- -   #VUID-vkUnmapMemory-memory-00689# @memory@ /must/ be currently host
+--     mapped
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkUnmapMemory-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
---     handle
+-- -   #VUID-vkUnmapMemory-memory-parameter# @memory@ /must/ be a valid
+--     'Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   @memory@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkUnmapMemory-memory-parent# @memory@ /must/ have been
+--     created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -615,13 +629,15 @@ flushMappedMemoryRanges :: forall io
                          . (MonadIO io)
                         => -- | @device@ is the logical device that owns the memory ranges.
                            --
-                           -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                           -- #VUID-vkFlushMappedMemoryRanges-device-parameter# @device@ /must/ be a
+                           -- valid 'Vulkan.Core10.Handles.Device' handle
                            Device
                         -> -- | @pMemoryRanges@ is a pointer to an array of 'MappedMemoryRange'
                            -- structures describing the memory ranges to flush.
                            --
-                           -- @pMemoryRanges@ /must/ be a valid pointer to an array of
-                           -- @memoryRangeCount@ valid 'MappedMemoryRange' structures
+                           -- #VUID-vkFlushMappedMemoryRanges-pMemoryRanges-parameter# @pMemoryRanges@
+                           -- /must/ be a valid pointer to an array of @memoryRangeCount@ valid
+                           -- 'MappedMemoryRange' structures
                            ("memoryRanges" ::: Vector MappedMemoryRange)
                         -> io ()
 flushMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
@@ -685,11 +701,13 @@ invalidateMappedMemoryRanges :: forall io
                               . (MonadIO io)
                              => -- | @device@ is the logical device that owns the memory ranges.
                                 --
-                                -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                -- #VUID-vkInvalidateMappedMemoryRanges-device-parameter# @device@ /must/
+                                -- be a valid 'Vulkan.Core10.Handles.Device' handle
                                 Device
                              -> -- | @pMemoryRanges@ is a pointer to an array of 'MappedMemoryRange'
                                 -- structures describing the memory ranges to invalidate.
                                 --
+                                -- #VUID-vkInvalidateMappedMemoryRanges-pMemoryRanges-parameter#
                                 -- @pMemoryRanges@ /must/ be a valid pointer to an array of
                                 -- @memoryRangeCount@ valid 'MappedMemoryRange' structures
                                 ("memoryRanges" ::: Vector MappedMemoryRange)
@@ -734,16 +752,20 @@ getDeviceMemoryCommitment :: forall io
                            . (MonadIO io)
                           => -- | @device@ is the logical device that owns the memory.
                              --
-                             -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                             -- #VUID-vkGetDeviceMemoryCommitment-device-parameter# @device@ /must/ be a
+                             -- valid 'Vulkan.Core10.Handles.Device' handle
                              Device
                           -> -- | @memory@ is the memory object being queried.
                              --
-                             -- @memory@ /must/ have been created with a memory type that reports
+                             -- #VUID-vkGetDeviceMemoryCommitment-memory-00690# @memory@ /must/ have
+                             -- been created with a memory type that reports
                              -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT'
                              --
-                             -- @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
+                             -- #VUID-vkGetDeviceMemoryCommitment-memory-parameter# @memory@ /must/ be a
+                             -- valid 'Vulkan.Core10.Handles.DeviceMemory' handle
                              --
-                             -- @memory@ /must/ have been created, allocated, or retrieved from @device@
+                             -- #VUID-vkGetDeviceMemoryCommitment-memory-parent# @memory@ /must/ have
+                             -- been created, allocated, or retrieved from @device@
                              DeviceMemory
                           -> io (("committedMemoryInBytes" ::: DeviceSize))
 getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
@@ -832,7 +854,8 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-00639# If the @pNext@ chain
+--     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
 --     structure, and any of the handle types specified in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
@@ -849,7 +872,8 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     structure with either its @image@ or @buffer@ member set to a value
 --     other than 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-00640# If the @pNext@ chain
+--     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
 --     structure, it /must/ not include a
 --     'Vulkan.Extensions.VK_NV_external_memory.ExportMemoryAllocateInfoNV'
@@ -857,92 +881,101 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_NV_external_memory_win32.ExportMemoryWin32HandleInfoNV'
 --     structure
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-00641# If the @pNext@ chain
+--     includes a
 --     'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR'
 --     structure, it /must/ not include a
 --     'Vulkan.Extensions.VK_NV_external_memory_win32.ImportMemoryWin32HandleInfoNV'
 --     structure
 --
--- -   If the parameters define an import operation, the external handle
---     specified was created by the Vulkan API, and the external handle
---     type is
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-01742# If the parameters
+--     define an import operation, the external handle specified was
+--     created by the Vulkan API, and the external handle type is
 --     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
 --     match those specified when the payload being imported was created.
 --
--- -   If the parameters define an import operation and the external handle
---     specified was created by the Vulkan API, the device mask specified
---     by
+-- -   #VUID-VkMemoryAllocateInfo-None-00643# If the parameters define an
+--     import operation and the external handle specified was created by
+--     the Vulkan API, the device mask specified by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'
 --     /must/ match that specified when the payload being imported was
 --     allocated.
 --
--- -   If the parameters define an import operation and the external handle
---     specified was created by the Vulkan API, the list of physical
---     devices that comprise the logical device passed to 'allocateMemory'
---     /must/ match the list of physical devices that comprise the logical
---     device on which the payload was originally allocated.
+-- -   #VUID-VkMemoryAllocateInfo-None-00644# If the parameters define an
+--     import operation and the external handle specified was created by
+--     the Vulkan API, the list of physical devices that comprise the
+--     logical device passed to 'allocateMemory' /must/ match the list of
+--     physical devices that comprise the logical device on which the
+--     payload was originally allocated.
 --
--- -   If the parameters define an import operation and the external handle
---     is an NT handle or a global share handle created outside of the
---     Vulkan API, the value of @memoryTypeIndex@ /must/ be one of those
---     returned by
+-- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-00645# If the parameters
+--     define an import operation and the external handle is an NT handle
+--     or a global share handle created outside of the Vulkan API, the
+--     value of @memoryTypeIndex@ /must/ be one of those returned by
 --     'Vulkan.Extensions.VK_KHR_external_memory_win32.getMemoryWin32HandlePropertiesKHR'
 --
--- -   If the parameters define an import operation, the external handle
---     was created by the Vulkan API, and the external handle type is
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-01743# If the parameters
+--     define an import operation, the external handle was created by the
+--     Vulkan API, and the external handle type is
 --     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR'
 --     or
 --     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
 --     match those specified when the payload being imported was created.
 --
--- -   If the parameters define an import operation and the external handle
---     type is
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-00647# If the parameters
+--     define an import operation and the external handle type is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
 --     @allocationSize@ /must/ match the size specified when creating the
 --     Direct3D 12 heap from which the payload was extracted.
 --
--- -   If the parameters define an import operation and the external handle
---     is a POSIX file descriptor created outside of the Vulkan API, the
---     value of @memoryTypeIndex@ /must/ be one of those returned by
+-- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-00648# If the parameters
+--     define an import operation and the external handle is a POSIX file
+--     descriptor created outside of the Vulkan API, the value of
+--     @memoryTypeIndex@ /must/ be one of those returned by
 --     'Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdPropertiesKHR'
 --
--- -   If the protected memory feature is not enabled, the
+-- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-01872# If the protected
+--     memory feature is not enabled, the
 --     'MemoryAllocateInfo'::@memoryTypeIndex@ /must/ not indicate a memory
 --     type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
--- -   If the parameters define an import operation and the external handle
---     is a host pointer, the value of @memoryTypeIndex@ /must/ be one of
---     those returned by
+-- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-01744# If the parameters
+--     define an import operation and the external handle is a host
+--     pointer, the value of @memoryTypeIndex@ /must/ be one of those
+--     returned by
 --     'Vulkan.Extensions.VK_EXT_external_memory_host.getMemoryHostPointerPropertiesEXT'
 --
--- -   If the parameters define an import operation and the external handle
---     is a host pointer, @allocationSize@ /must/ be an integer multiple of
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-01745# If the parameters
+--     define an import operation and the external handle is a host
+--     pointer, @allocationSize@ /must/ be an integer multiple of
 --     'Vulkan.Extensions.VK_EXT_external_memory_host.PhysicalDeviceExternalMemoryHostPropertiesEXT'::@minImportedHostPointerAlignment@
 --
--- -   If the parameters define an import operation and the external handle
---     is a host pointer, the @pNext@ chain /must/ not include a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-02805# If the parameters define an
+--     import operation and the external handle is a host pointer, the
+--     @pNext@ chain /must/ not include a
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
 --     structure with either its @image@ or @buffer@ field set to a value
 --     other than 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If the parameters define an import operation and the external handle
---     is a host pointer, the @pNext@ chain /must/ not include a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-02806# If the parameters define an
+--     import operation and the external handle is a host pointer, the
+--     @pNext@ chain /must/ not include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with either its @image@ or @buffer@ field set to a value
 --     other than 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If the parameters define an import operation and the external handle
---     type is
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-02383# If the parameters
+--     define an import operation and the external handle type is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
 --     @allocationSize@ /must/ be the size returned by
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
 --     for the Android hardware buffer
 --
--- -   If the parameters define an import operation and the external handle
---     type is
+-- -   #VUID-VkMemoryAllocateInfo-pNext-02384# If the parameters define an
+--     import operation and the external handle type is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
 --     and the @pNext@ chain does not include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
@@ -953,15 +986,15 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     @AHARDWAREBUFFER_FORMAT_BLOB@ and a @AHardwareBuffer_Desc@::@usage@
 --     that includes @AHARDWAREBUFFER_USAGE_GPU_DATA_BUFFER@
 --
--- -   If the parameters define an import operation and the external handle
---     type is
+-- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-02385# If the parameters
+--     define an import operation and the external handle type is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
 --     @memoryTypeIndex@ /must/ be one of those returned by
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
 --     for the Android hardware buffer
 --
--- -   If the parameters do not define an import operation, and the @pNext@
---     chain includes a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-01874# If the parameters do not
+--     define an import operation, and the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
 --     structure with
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
@@ -972,8 +1005,9 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', then @allocationSize@
 --     /must/ be @0@, otherwise @allocationSize@ /must/ be greater than @0@
 --
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-02386# If the parameters define an
+--     import operation, the external handle is an Android hardware buffer,
+--     and the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     with @image@ that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     the Android hardware buffer’s
@@ -982,8 +1016,9 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     @AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER@ or
 --     @AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE@
 --
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-02387# If the parameters define an
+--     import operation, the external handle is an Android hardware buffer,
+--     and the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     with @image@ that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     the format of @image@ /must/ be
@@ -994,16 +1029,18 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID'::@format@
 --     for the Android hardware buffer
 --
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-02388# If the parameters define an
+--     import operation, the external handle is an Android hardware buffer,
+--     and the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with @image@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', the width, height, and
 --     array layer dimensions of @image@ and the Android hardware buffer’s
 --     @AHardwareBuffer_Desc@ /must/ be identical
 --
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-02389# If the parameters define an
+--     import operation, the external handle is an Android hardware buffer,
+--     and the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with @image@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the Android hardware
@@ -1012,8 +1049,9 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     includes @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the @image@
 --     /must/ have a complete mipmap chain
 --
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-02586# If the parameters define an
+--     import operation, the external handle is an Android hardware buffer,
+--     and the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with @image@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the Android hardware
@@ -1022,8 +1060,9 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     does not include @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the
 --     @image@ /must/ have exactly one mipmap level
 --
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-02390# If the parameters define an
+--     import operation, the external handle is an Android hardware buffer,
+--     and the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with @image@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', each bit set in the usage
@@ -1033,14 +1072,14 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     that bit /must/ be included in the Android hardware buffer’s
 --     @AHardwareBuffer_Desc@::@usage@
 --
--- -   If
+-- -   #VUID-VkMemoryAllocateInfo-opaqueCaptureAddress-03329# If
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
 --     is not zero,
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::@flags@
 --     /must/ include
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --
--- -   If
+-- -   #VUID-VkMemoryAllocateInfo-flags-03330# If
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::@flags@
 --     includes
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
@@ -1048,7 +1087,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
 --     feature /must/ be enabled
 --
--- -   If
+-- -   #VUID-VkMemoryAllocateInfo-flags-03331# If
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::@flags@
 --     includes
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT',
@@ -1056,24 +1095,26 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
 --     feature /must/ be enabled
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkMemoryAllocateInfo-pNext-03332# If the @pNext@ chain
+--     includes a
 --     'Vulkan.Extensions.VK_EXT_external_memory_host.ImportMemoryHostPointerInfoEXT'
 --     structure,
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
 --     /must/ be zero
 --
--- -   If the parameters define an import operation,
+-- -   #VUID-VkMemoryAllocateInfo-opaqueCaptureAddress-03333# If the
+--     parameters define an import operation,
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
 --     /must/ be zero
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkMemoryAllocateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkMemoryAllocateInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo',
 --     'Vulkan.Extensions.VK_NV_external_memory.ExportMemoryAllocateInfoNV',
@@ -1090,8 +1131,8 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Extensions.VK_EXT_memory_priority.MemoryPriorityAllocateInfoEXT'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkMemoryAllocateInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -1175,37 +1216,43 @@ instance es ~ '[] => Zero (MemoryAllocateInfo es) where
 --
 -- == Valid Usage
 --
--- -   @memory@ /must/ be currently host mapped
+-- -   #VUID-VkMappedMemoryRange-memory-00684# @memory@ /must/ be currently
+--     host mapped
 --
--- -   If @size@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     @offset@ and @size@ /must/ specify a range contained within the
---     currently mapped range of @memory@
+-- -   #VUID-VkMappedMemoryRange-size-00685# If @size@ is not equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @offset@ and @size@ /must/
+--     specify a range contained within the currently mapped range of
+--     @memory@
 --
--- -   If @size@ is equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     @offset@ /must/ be within the currently mapped range of @memory@
+-- -   #VUID-VkMappedMemoryRange-size-00686# If @size@ is equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @offset@ /must/ be within
+--     the currently mapped range of @memory@
 --
--- -   If @size@ is equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE', the
---     end of the current mapping of @memory@ /must/ be a multiple of
+-- -   #VUID-VkMappedMemoryRange-size-01389# If @size@ is equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', the end of the current
+--     mapping of @memory@ /must/ be a multiple of
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
 --     bytes from the beginning of the memory object
 --
--- -   @offset@ /must/ be a multiple of
+-- -   #VUID-VkMappedMemoryRange-offset-00687# @offset@ /must/ be a
+--     multiple of
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
 --
--- -   If @size@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     @size@ /must/ either be a multiple of
+-- -   #VUID-VkMappedMemoryRange-size-01390# If @size@ is not equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/ either be a
+--     multiple of
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@,
 --     or @offset@ plus @size@ /must/ equal the size of @memory@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkMappedMemoryRange-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MAPPED_MEMORY_RANGE'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkMappedMemoryRange-pNext-pNext# @pNext@ /must/ be @NULL@
 --
--- -   @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
---     handle
+-- -   #VUID-VkMappedMemoryRange-memory-parameter# @memory@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.DeviceMemory' handle
 --
 -- = See Also
 --

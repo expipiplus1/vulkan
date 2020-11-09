@@ -26,17 +26,21 @@ import Vulkan.Zero (Zero(..))
 --
 -- == Valid Usage
 --
--- -   @pfnAllocation@ /must/ be a valid pointer to a valid user-defined
+-- -   #VUID-VkAllocationCallbacks-pfnAllocation-00632# @pfnAllocation@
+--     /must/ be a valid pointer to a valid user-defined
 --     'Vulkan.Core10.FuncPointers.PFN_vkAllocationFunction'
 --
--- -   @pfnReallocation@ /must/ be a valid pointer to a valid user-defined
+-- -   #VUID-VkAllocationCallbacks-pfnReallocation-00633# @pfnReallocation@
+--     /must/ be a valid pointer to a valid user-defined
 --     'Vulkan.Core10.FuncPointers.PFN_vkReallocationFunction'
 --
--- -   @pfnFree@ /must/ be a valid pointer to a valid user-defined
+-- -   #VUID-VkAllocationCallbacks-pfnFree-00634# @pfnFree@ /must/ be a
+--     valid pointer to a valid user-defined
 --     'Vulkan.Core10.FuncPointers.PFN_vkFreeFunction'
 --
--- -   If either of @pfnInternalAllocation@ or @pfnInternalFree@ is not
---     @NULL@, both /must/ be valid callbacks
+-- -   #VUID-VkAllocationCallbacks-pfnInternalAllocation-00635# If either
+--     of @pfnInternalAllocation@ or @pfnInternalFree@ is not @NULL@, both
+--     /must/ be valid callbacks
 --
 -- = See Also
 --

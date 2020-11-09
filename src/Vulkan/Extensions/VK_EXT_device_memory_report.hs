@@ -90,8 +90,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDeviceMemoryReportFeaturesEXT = PhysicalDeviceDeviceMemoryReportFeaturesEXT
-  { -- | @deviceMemoryReport@ indicates whether the implementation supports the
-    -- ability to register device memory report callbacks.
+  { -- | #features-deviceMemoryReport# @deviceMemoryReport@ indicates whether the
+    -- implementation supports the ability to register device memory report
+    -- callbacks.
     deviceMemoryReport :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -155,15 +156,18 @@ instance Zero PhysicalDeviceDeviceMemoryReportFeaturesEXT where
 data DeviceDeviceMemoryReportCreateInfoEXT = DeviceDeviceMemoryReportCreateInfoEXT
   { -- | @flags@ is 0 and reserved for future use.
     --
-    -- @flags@ /must/ be @0@
+    -- #VUID-VkDeviceDeviceMemoryReportCreateInfoEXT-flags-zerobitmask# @flags@
+    -- /must/ be @0@
     flags :: DeviceMemoryReportFlagsEXT
   , -- | @pfnUserCallback@ is the application callback function to call.
     --
+    -- #VUID-VkDeviceDeviceMemoryReportCreateInfoEXT-pfnUserCallback-parameter#
     -- @pfnUserCallback@ /must/ be a valid
     -- 'PFN_vkDeviceMemoryReportCallbackEXT' value
     pfnUserCallback :: PFN_vkDeviceMemoryReportCallbackEXT
   , -- | @pUserData@ is user data to be passed to the callback.
     --
+    -- #VUID-VkDeviceDeviceMemoryReportCreateInfoEXT-pUserData-parameter#
     -- @pUserData@ /must/ be a pointer value
     userData :: Ptr ()
   }

@@ -51,9 +51,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX = PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
-  { -- | @perViewPositionAllComponents@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
-    -- if the implementation supports per-view position values that differ in
-    -- components other than the X component.
+  { -- | #limits-perViewPositionAllComponents# @perViewPositionAllComponents@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports
+    -- per-view position values that differ in components other than the X
+    -- component.
     perViewPositionAllComponents :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

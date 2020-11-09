@@ -73,29 +73,31 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @firstViewport@ /must/ be less than
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
---
--- -   The sum of @firstViewport@ and @viewportCount@ /must/ be between @1@
---     and
+-- -   #VUID-vkCmdSetViewportWScalingNV-firstViewport-01324# The sum of
+--     @firstViewport@ and @viewportCount@ /must/ be between @1@ and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@,
 --     inclusive
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetViewportWScalingNV-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pViewportWScalings@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkCmdSetViewportWScalingNV-pViewportWScalings-parameter#
+--     @pViewportWScalings@ /must/ be a valid pointer to an array of
 --     @viewportCount@ 'ViewportWScalingNV' structures
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetViewportWScalingNV-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetViewportWScalingNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   @viewportCount@ /must/ be greater than @0@
+-- -   #VUID-vkCmdSetViewportWScalingNV-viewportCount-arraylength#
+--     @viewportCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
@@ -208,6 +210,7 @@ data PipelineViewportWScalingStateCreateInfoNV = PipelineViewportWScalingStateCr
     -- /must/ match the number of viewports in the pipeline if viewport __W__
     -- scaling is enabled.
     --
+    -- #VUID-VkPipelineViewportWScalingStateCreateInfoNV-viewportCount-arraylength#
     -- @viewportCount@ /must/ be greater than @0@
     viewportCount :: Word32
   , -- | @pViewportWScalings@ is a pointer to an array of 'ViewportWScalingNV'

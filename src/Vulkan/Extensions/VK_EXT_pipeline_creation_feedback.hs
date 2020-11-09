@@ -141,22 +141,26 @@ instance Zero PipelineCreationFeedbackEXT where
 --
 -- == Valid Usage
 --
--- -   When chained to 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+-- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02668#
+--     When chained to 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
 --     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
 --     /must/ equal
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@stageCount@
 --
--- -   When chained to 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
+-- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02669#
+--     When chained to 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
 --     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
 --     /must/ equal 1
 --
--- -   When chained to
+-- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02670#
+--     When chained to
 --     'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
 --     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
 --     /must/ equal
 --     'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR'::@stageCount@
 --
--- -   When chained to
+-- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02969#
+--     When chained to
 --     'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
 --     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
 --     /must/ equal
@@ -164,17 +168,21 @@ instance Zero PipelineCreationFeedbackEXT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT'
 --
--- -   @pPipelineCreationFeedback@ /must/ be a valid pointer to a
+-- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pPipelineCreationFeedback-parameter#
+--     @pPipelineCreationFeedback@ /must/ be a valid pointer to a
 --     'PipelineCreationFeedbackEXT' structure
 --
--- -   @pPipelineStageCreationFeedbacks@ /must/ be a valid pointer to an
+-- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pPipelineStageCreationFeedbacks-parameter#
+--     @pPipelineStageCreationFeedbacks@ /must/ be a valid pointer to an
 --     array of @pipelineStageCreationFeedbackCount@
 --     'PipelineCreationFeedbackEXT' structures
 --
--- -   @pipelineStageCreationFeedbackCount@ /must/ be greater than @0@
+-- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-arraylength#
+--     @pipelineStageCreationFeedbackCount@ /must/ be greater than @0@
 --
 -- = See Also
 --

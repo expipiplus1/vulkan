@@ -93,16 +93,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateWaylandSurfaceKHR-instance-parameter# @instance@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'WaylandSurfaceCreateInfoKHR' structure
+-- -   #VUID-vkCreateWaylandSurfaceKHR-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'WaylandSurfaceCreateInfoKHR'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateWaylandSurfaceKHR-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateWaylandSurfaceKHR-pSurface-parameter# @pSurface@
+--     /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Return Codes
@@ -174,11 +178,13 @@ getPhysicalDeviceWaylandPresentationSupportKHR :: forall io
                                                 . (MonadIO io)
                                                => -- | @physicalDevice@ is the physical device.
                                                   --
+                                                  -- #VUID-vkGetPhysicalDeviceWaylandPresentationSupportKHR-physicalDevice-parameter#
                                                   -- @physicalDevice@ /must/ be a valid
                                                   -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                                   PhysicalDevice
                                                -> -- | @queueFamilyIndex@ is the queue family index.
                                                   --
+                                                  -- #VUID-vkGetPhysicalDeviceWaylandPresentationSupportKHR-queueFamilyIndex-01306#
                                                   -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
                                                   -- returned by
                                                   -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
@@ -187,6 +193,7 @@ getPhysicalDeviceWaylandPresentationSupportKHR :: forall io
                                                -> -- | @display@ is a pointer to the @wl_display@ associated with a Wayland
                                                   -- compositor.
                                                   --
+                                                  -- #VUID-vkGetPhysicalDeviceWaylandPresentationSupportKHR-display-parameter#
                                                   -- @display@ /must/ be a valid pointer to a @wl_display@ value
                                                   (Ptr Wl_display)
                                                -> io (Bool)
@@ -211,14 +218,17 @@ getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex d
 data WaylandSurfaceCreateInfoKHR = WaylandSurfaceCreateInfoKHR
   { -- | @flags@ is reserved for future use.
     --
-    -- @flags@ /must/ be @0@
+    -- #VUID-VkWaylandSurfaceCreateInfoKHR-flags-zerobitmask# @flags@ /must/ be
+    -- @0@
     flags :: WaylandSurfaceCreateFlagsKHR
   , -- | @display@ and @surface@ are pointers to the Wayland @wl_display@ and
     -- @wl_surface@ to associate the surface with.
     --
-    -- @display@ /must/ point to a valid Wayland @wl_display@
+    -- #VUID-VkWaylandSurfaceCreateInfoKHR-display-01304# @display@ /must/
+    -- point to a valid Wayland @wl_display@
     display :: Ptr Wl_display
-  , -- | @surface@ /must/ point to a valid Wayland @wl_surface@
+  , -- | #VUID-VkWaylandSurfaceCreateInfoKHR-surface-01305# @surface@ /must/
+    -- point to a valid Wayland @wl_surface@
     surface :: Ptr Wl_surface
   }
   deriving (Typeable, Eq)

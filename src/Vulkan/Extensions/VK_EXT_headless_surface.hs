@@ -82,16 +82,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateHeadlessSurfaceEXT-instance-parameter# @instance@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateHeadlessSurfaceEXT-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'HeadlessSurfaceCreateInfoEXT' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateHeadlessSurfaceEXT-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateHeadlessSurfaceEXT-pSurface-parameter# @pSurface@
+--     /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Return Codes
@@ -152,7 +156,8 @@ createHeadlessSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ d
 data HeadlessSurfaceCreateInfoEXT = HeadlessSurfaceCreateInfoEXT
   { -- | @flags@ is reserved for future use.
     --
-    -- @flags@ /must/ be @0@
+    -- #VUID-VkHeadlessSurfaceCreateInfoEXT-flags-zerobitmask# @flags@ /must/
+    -- be @0@
     flags :: HeadlessSurfaceCreateFlagsEXT }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

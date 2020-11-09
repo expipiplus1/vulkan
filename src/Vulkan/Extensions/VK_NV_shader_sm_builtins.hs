@@ -52,10 +52,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderSMBuiltinsPropertiesNV = PhysicalDeviceShaderSMBuiltinsPropertiesNV
-  { -- | @shaderSMCount@ is the number of SMs on the device.
+  { -- | #limits-shaderSMCount# @shaderSMCount@ is the number of SMs on the
+    -- device.
     shaderSMCount :: Word32
-  , -- | @shaderWarpsPerSM@ is the maximum number of simultaneously executing
-    -- warps on an SM.
+  , -- | #limits-shaderWarpsPerSM# @shaderWarpsPerSM@ is the maximum number of
+    -- simultaneously executing warps on an SM.
     shaderWarpsPerSM :: Word32
   }
   deriving (Typeable, Eq)
@@ -125,8 +126,8 @@ instance Zero PhysicalDeviceShaderSMBuiltinsPropertiesNV where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderSMBuiltinsFeaturesNV = PhysicalDeviceShaderSMBuiltinsFeaturesNV
-  { -- | @shaderSMBuiltins@ indicates whether the implementation supports the
-    -- SPIR-V @ShaderSMBuiltinsNV@ capability.
+  { -- | #features-shaderSMBuiltins# @shaderSMBuiltins@ indicates whether the
+    -- implementation supports the SPIR-V @ShaderSMBuiltinsNV@ capability.
     shaderSMBuiltins :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

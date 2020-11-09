@@ -97,17 +97,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateFence-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid 'FenceCreateInfo'
---     structure
+-- -   #VUID-vkCreateFence-pCreateInfo-parameter# @pCreateInfo@ /must/ be a
+--     valid pointer to a valid 'FenceCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateFence-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pFence@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-vkCreateFence-pFence-parameter# @pFence@ /must/ be a valid
+--     pointer to a 'Vulkan.Core10.Handles.Fence' handle
 --
 -- == Return Codes
 --
@@ -178,30 +179,34 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All
+-- -   #VUID-vkDestroyFence-fence-01120# All
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission>
 --     commands that refer to @fence@ /must/ have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyFence-fence-01121# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @fence@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyFence-fence-01122# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @fence@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyFence-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@
---     /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-vkDestroyFence-fence-parameter# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Fence' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyFence-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @fence@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroyFence-fence-parent# If @fence@ is a valid handle, it
+--     /must/ have been created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -261,20 +266,24 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   Each element of @pFences@ /must/ not be currently associated with
---     any queue command that has not yet completed execution on that queue
+-- -   #VUID-vkResetFences-pFences-01123# Each element of @pFences@ /must/
+--     not be currently associated with any queue command that has not yet
+--     completed execution on that queue
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkResetFences-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pFences@ /must/ be a valid pointer to an array of @fenceCount@
---     valid 'Vulkan.Core10.Handles.Fence' handles
+-- -   #VUID-vkResetFences-pFences-parameter# @pFences@ /must/ be a valid
+--     pointer to an array of @fenceCount@ valid
+--     'Vulkan.Core10.Handles.Fence' handles
 --
--- -   @fenceCount@ /must/ be greater than @0@
+-- -   #VUID-vkResetFences-fenceCount-arraylength# @fenceCount@ /must/ be
+--     greater than @0@
 --
--- -   Each element of @pFences@ /must/ have been created, allocated, or
---     retrieved from @device@
+-- -   #VUID-vkResetFences-pFences-parent# Each element of @pFences@ /must/
+--     have been created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -374,13 +383,16 @@ getFenceStatus :: forall io
                 . (MonadIO io)
                => -- | @device@ is the logical device that owns the fence.
                   --
-                  -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                  -- #VUID-vkGetFenceStatus-device-parameter# @device@ /must/ be a valid
+                  -- 'Vulkan.Core10.Handles.Device' handle
                   Device
                -> -- | @fence@ is the handle of the fence to query.
                   --
-                  -- @fence@ /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
+                  -- #VUID-vkGetFenceStatus-fence-parameter# @fence@ /must/ be a valid
+                  -- 'Vulkan.Core10.Handles.Fence' handle
                   --
-                  -- @fence@ /must/ have been created, allocated, or retrieved from @device@
+                  -- #VUID-vkGetFenceStatus-fence-parent# @fence@ /must/ have been created,
+                  -- allocated, or retrieved from @device@
                   Fence
                -> io (Result)
 getFenceStatus device fence = liftIO $ do
@@ -473,15 +485,18 @@ waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = lift
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkWaitForFences-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pFences@ /must/ be a valid pointer to an array of @fenceCount@
---     valid 'Vulkan.Core10.Handles.Fence' handles
+-- -   #VUID-vkWaitForFences-pFences-parameter# @pFences@ /must/ be a valid
+--     pointer to an array of @fenceCount@ valid
+--     'Vulkan.Core10.Handles.Fence' handles
 --
--- -   @fenceCount@ /must/ be greater than @0@
+-- -   #VUID-vkWaitForFences-fenceCount-arraylength# @fenceCount@ /must/ be
+--     greater than @0@
 --
--- -   Each element of @pFences@ /must/ have been created, allocated, or
---     retrieved from @device@
+-- -   #VUID-vkWaitForFences-pFences-parent# Each element of @pFences@
+--     /must/ have been created, allocated, or retrieved from @device@
 --
 -- == Return Codes
 --
@@ -550,20 +565,21 @@ waitForFencesSafe = waitForFencesSafeOrUnsafe mkVkWaitForFencesSafe
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkFenceCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FENCE_CREATE_INFO'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkFenceCreateInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'
 --     or
 --     'Vulkan.Extensions.VK_KHR_external_fence_win32.ExportFenceWin32HandleInfoKHR'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkFenceCreateInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkFenceCreateInfo-flags-parameter# @flags@ /must/ be a valid
+--     combination of
 --     'Vulkan.Core10.Enums.FenceCreateFlagBits.FenceCreateFlagBits' values
 --
 -- = See Also

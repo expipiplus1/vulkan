@@ -99,7 +99,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If the @flags@ member of @pCreateInfo@ includes
+-- -   #VUID-vkCreateBuffer-flags-00911# If the @flags@ member of
+--     @pCreateInfo@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
 --     creating this 'Vulkan.Core10.Handles.Buffer' /must/ not cause the
 --     total required sparse memory for all currently valid sparse
@@ -108,17 +109,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateBuffer-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'BufferCreateInfo' structure
+-- -   #VUID-vkCreateBuffer-pCreateInfo-parameter# @pCreateInfo@ /must/ be
+--     a valid pointer to a valid 'BufferCreateInfo' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateBuffer-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pBuffer@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-vkCreateBuffer-pBuffer-parameter# @pBuffer@ /must/ be a valid
+--     pointer to a 'Vulkan.Core10.Handles.Buffer' handle
 --
 -- == Return Codes
 --
@@ -191,30 +193,34 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @buffer@, either directly or
---     via a 'Vulkan.Core10.Handles.BufferView', /must/ have completed
---     execution
+-- -   #VUID-vkDestroyBuffer-buffer-00922# All submitted commands that
+--     refer to @buffer@, either directly or via a
+--     'Vulkan.Core10.Handles.BufferView', /must/ have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyBuffer-buffer-00923# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @buffer@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyBuffer-buffer-00924# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @buffer@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyBuffer-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-vkDestroyBuffer-buffer-parameter# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Buffer' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyBuffer-pAllocator-parameter# If @pAllocator@ is not
+--     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @buffer@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroyBuffer-buffer-parent# If @buffer@ is a valid handle,
+--     it /must/ have been created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -252,18 +258,19 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   @size@ /must/ be greater than @0@
+-- -   #VUID-VkBufferCreateInfo-size-00912# @size@ /must/ be greater than
+--     @0@
 --
--- -   If @sharingMode@ is
+-- -   #VUID-VkBufferCreateInfo-sharingMode-00913# If @sharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
 --     @queueFamilyIndexCount@ @uint32_t@ values
 --
--- -   If @sharingMode@ is
+-- -   #VUID-VkBufferCreateInfo-sharingMode-00914# If @sharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @queueFamilyIndexCount@ /must/ be greater than @1@
 --
--- -   If @sharingMode@ is
+-- -   #VUID-VkBufferCreateInfo-sharingMode-01419# If @sharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', each
 --     element of @pQueueFamilyIndices@ /must/ be unique and /must/ be less
 --     than @pQueueFamilyPropertyCount@ returned by either
@@ -272,29 +279,30 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'
 --     for the @physicalDevice@ that was used to create @device@
 --
--- -   If the
+-- -   #VUID-VkBufferCreateInfo-flags-00915# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseBinding sparse bindings>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
 --
--- -   If the
+-- -   #VUID-VkBufferCreateInfo-flags-00916# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyBuffer sparse buffer residency>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --
--- -   If the
+-- -   #VUID-VkBufferCreateInfo-flags-00917# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyAliased sparse aliased residency>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkBufferCreateInfo-flags-00918# If @flags@ contains
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     or
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT',
 --     it /must/ also contain
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkBufferCreateInfo-pNext-00920# If the @pNext@ chain includes
+--     a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'
 --     structure, its @handleTypes@ member /must/ only contain bits that
 --     are also in
@@ -305,11 +313,11 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     handle types specified in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --
--- -   If the protected memory feature is not enabled, @flags@ /must/ not
---     contain
+-- -   #VUID-VkBufferCreateInfo-flags-01887# If the protected memory
+--     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
 --
--- -   If any of the bits
+-- -   #VUID-VkBufferCreateInfo-None-01888# If any of the bits
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT',
 --     or
@@ -318,7 +326,8 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
 --     /must/ not also be set
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkBufferCreateInfo-pNext-01571# If the @pNext@ chain includes
+--     a
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'
 --     structure, and the @dedicatedAllocation@ member of the chained
 --     structure is 'Vulkan.Core10.FundamentalTypes.TRUE', then @flags@
@@ -328,17 +337,17 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
 --
--- -   If
+-- -   #VUID-VkBufferCreateInfo-deviceAddress-02604# If
 --     'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT'::@deviceAddress@
 --     is not zero, @flags@ /must/ include
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --
--- -   If
+-- -   #VUID-VkBufferCreateInfo-opaqueCaptureAddress-03337# If
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo'::@opaqueCaptureAddress@
 --     is not zero, @flags@ /must/ include
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --
--- -   If @flags@ includes
+-- -   #VUID-VkBufferCreateInfo-flags-03338# If @flags@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
 --     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
@@ -348,32 +357,35 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkBufferCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_CREATE_INFO'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkBufferCreateInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkBufferCreateInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkBufferCreateInfo-flags-parameter# @flags@ /must/ be a valid
+--     combination of
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
 --     values
 --
--- -   @usage@ /must/ be a valid combination of
+-- -   #VUID-VkBufferCreateInfo-usage-parameter# @usage@ /must/ be a valid
+--     combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
--- -   @usage@ /must/ not be @0@
+-- -   #VUID-VkBufferCreateInfo-usage-requiredbitmask# @usage@ /must/ not
+--     be @0@
 --
--- -   @sharingMode@ /must/ be a valid
---     'Vulkan.Core10.Enums.SharingMode.SharingMode' value
+-- -   #VUID-VkBufferCreateInfo-sharingMode-parameter# @sharingMode@ /must/
+--     be a valid 'Vulkan.Core10.Enums.SharingMode.SharingMode' value
 --
 -- = See Also
 --

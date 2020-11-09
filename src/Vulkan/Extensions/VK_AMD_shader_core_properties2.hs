@@ -64,11 +64,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'ShaderCorePropertiesFlagsAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderCoreProperties2AMD = PhysicalDeviceShaderCoreProperties2AMD
-  { -- | @shaderCoreFeatures@ is a bitmask of 'ShaderCorePropertiesFlagBitsAMD'
-    -- indicating the set of features supported by the shader core.
+  { -- | #features-shaderCoreFeatures# @shaderCoreFeatures@ is a bitmask of
+    -- 'ShaderCorePropertiesFlagBitsAMD' indicating the set of features
+    -- supported by the shader core.
     shaderCoreFeatures :: ShaderCorePropertiesFlagsAMD
-  , -- | @activeComputeUnitCount@ is an unsigned integer value indicating the
-    -- number of compute units that have been enabled.
+  , -- | #limits-activeComputeUnitCount# @activeComputeUnitCount@ is an unsigned
+    -- integer value indicating the number of compute units that have been
+    -- enabled.
     activeComputeUnitCount :: Word32
   }
   deriving (Typeable, Eq)

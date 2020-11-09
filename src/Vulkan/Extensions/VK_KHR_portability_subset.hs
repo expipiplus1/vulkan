@@ -57,57 +57,63 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePortabilitySubsetFeaturesKHR = PhysicalDevicePortabilitySubsetFeaturesKHR
-  { -- | @constantAlphaColorBlendFactors@ indicates whether this implementation
+  { -- | #features-constantAlphaColorBlendFactors#
+    -- @constantAlphaColorBlendFactors@ indicates whether this implementation
     -- supports constant /alpha/
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blendfactors>
     -- used as source or destination /color/
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blending>.
     constantAlphaColorBlendFactors :: Bool
-  , -- | @events@ indicates whether this implementation supports synchronization
-    -- using
+  , -- | #features-events# @events@ indicates whether this implementation
+    -- supports synchronization using
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-events>.
     events :: Bool
-  , -- | @imageViewFormatReinterpretation@ indicates whether this implementation
+  , -- | #features-imageViewFormatReinterpretation#
+    -- @imageViewFormatReinterpretation@ indicates whether this implementation
     -- supports a 'Vulkan.Core10.Handles.ImageView' being created with a texel
     -- format containing a different number of components, or a different
     -- number of bits in each component, than the texel format of the
     -- underlying 'Vulkan.Core10.Handles.Image'.
     imageViewFormatReinterpretation :: Bool
-  , -- | @imageViewFormatSwizzle@ indicates whether this implementation supports
-    -- remapping format components using
+  , -- | #features-imageViewFormatSwizzle# @imageViewFormatSwizzle@ indicates
+    -- whether this implementation supports remapping format components using
     -- 'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@components@.
     imageViewFormatSwizzle :: Bool
-  , -- | @imageView2DOn3DImage@ indicates whether this implementation supports a
-    -- 'Vulkan.Core10.Handles.Image' being created with the
+  , -- | #features-imageView2DOn3DImage# @imageView2DOn3DImage@ indicates whether
+    -- this implementation supports a 'Vulkan.Core10.Handles.Image' being
+    -- created with the
     -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
     -- flag set, permitting a 2D or 2D array image view to be created on a 3D
     -- 'Vulkan.Core10.Handles.Image'.
     imageView2DOn3DImage :: Bool
-  , -- | @multisampleArrayImage@ indicates whether this implementation supports a
-    -- 'Vulkan.Core10.Handles.Image' being created as a 2D array with multiple
-    -- samples per texel.
+  , -- | #features-multisampleArrayImage# @multisampleArrayImage@ indicates
+    -- whether this implementation supports a 'Vulkan.Core10.Handles.Image'
+    -- being created as a 2D array with multiple samples per texel.
     multisampleArrayImage :: Bool
-  , -- | @mutableComparisonSamplers@ indicates whether this implementation allows
-    -- descriptors with comparison samplers to be
+  , -- | #features-mutableComparisonSamplers# @mutableComparisonSamplers@
+    -- indicates whether this implementation allows descriptors with comparison
+    -- samplers to be
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates updated>.
     mutableComparisonSamplers :: Bool
-  , -- | @pointPolygons@ indicates whether this implementation supports
+  , -- | #features-pointPolygons# @pointPolygons@ indicates whether this
+    -- implementation supports
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast>
     -- using a /point/
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-polygonmode>.
     pointPolygons :: Bool
-  , -- | @samplerMipLodBias@ indicates whether this implementation supports
-    -- setting a
+  , -- | #features-samplerMipLodBias# @samplerMipLodBias@ indicates whether this
+    -- implementation supports setting a
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-mipLodBias mipmap LOD bias value>
     -- when
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers creating a sampler>.
     samplerMipLodBias :: Bool
-  , -- | @separateStencilMaskRef@ indicates whether this implementation supports
-    -- separate front and back
+  , -- | #features-separateStencilMaskRef# @separateStencilMaskRef@ indicates
+    -- whether this implementation supports separate front and back
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-stencil>
     -- reference values.
     separateStencilMaskRef :: Bool
-  , -- | @shaderSampleRateInterpolationFunctions@ indicates whether this
+  , -- | #features-shaderSampleRateInterpolationFunctions#
+    -- @shaderSampleRateInterpolationFunctions@ indicates whether this
     -- implementation supports fragment shaders which use the
     -- @InterpolationFunction@
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table capability>
@@ -117,7 +123,8 @@ data PhysicalDevicePortabilitySubsetFeaturesKHR = PhysicalDevicePortabilitySubse
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sampleRateShading sampleRateShading>
     -- feature is supported.
     shaderSampleRateInterpolationFunctions :: Bool
-  , -- | @tessellationIsolines@ indicates whether this implementation supports
+  , -- | #features-tessellationIsolines# @tessellationIsolines@ indicates whether
+    -- this implementation supports
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#tessellation-isoline-tessellation isoline output>
     -- from the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#tessellation>
@@ -125,7 +132,8 @@ data PhysicalDevicePortabilitySubsetFeaturesKHR = PhysicalDevicePortabilitySubse
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
     -- are supported.
     tessellationIsolines :: Bool
-  , -- | @tessellationPointMode@ indicates whether this implementation supports
+  , -- | #features-tessellationPointMode# @tessellationPointMode@ indicates
+    -- whether this implementation supports
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#tessellation-point-mode point output>
     -- from the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#tessellation>
@@ -133,11 +141,13 @@ data PhysicalDevicePortabilitySubsetFeaturesKHR = PhysicalDevicePortabilitySubse
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
     -- are supported.
     tessellationPointMode :: Bool
-  , -- | @triangleFans@ indicates whether this implementation supports
+  , -- | #features-triangleFans# @triangleFans@ indicates whether this
+    -- implementation supports
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-triangle-fans>
     -- primitive topology.
     triangleFans :: Bool
-  , -- | @vertexAttributeAccessBeyondStride@ indicates whether this
+  , -- | #features-vertexAttributeAccessBeyondStride#
+    -- @vertexAttributeAccessBeyondStride@ indicates whether this
     -- implementation supports accessing a vertex input attribute beyond the
     -- stride of the corresponding vertex input binding.
     vertexAttributeAccessBeyondStride :: Bool
@@ -257,7 +267,8 @@ instance Zero PhysicalDevicePortabilitySubsetFeaturesKHR where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePortabilitySubsetPropertiesKHR = PhysicalDevicePortabilitySubsetPropertiesKHR
-  { -- | @minVertexInputBindingStrideAlignment@ indicates the minimum alignment
+  { -- | #limits-minVertexInputBindingStrideAlignment#
+    -- @minVertexInputBindingStrideAlignment@ indicates the minimum alignment
     -- for vertex input strides.
     -- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription'::@stride@ /must/
     -- be a multiple of, and at least as large as, this value.

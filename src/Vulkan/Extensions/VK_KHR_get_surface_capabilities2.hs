@@ -116,7 +116,7 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-02671# If a
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceCapabilitiesFullScreenExclusiveEXT'
 --     structure is included in the @pNext@ chain of
 --     @pSurfaceCapabilities@, a
@@ -125,13 +125,16 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pSurfaceInfo-parameter#
+--     @pSurfaceInfo@ /must/ be a valid pointer to a valid
 --     'PhysicalDeviceSurfaceInfo2KHR' structure
 --
--- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pSurfaceCapabilities-parameter#
+--     @pSurfaceCapabilities@ /must/ be a valid pointer to a
 --     'SurfaceCapabilities2KHR' structure
 --
 -- == Return Codes
@@ -208,23 +211,28 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceInfo-02740#
+--     @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
 --     reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --     or an equivalent platform-specific mechanism
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceInfo-parameter#
+--     @pSurfaceInfo@ /must/ be a valid pointer to a valid
 --     'PhysicalDeviceSurfaceInfo2KHR' structure
 --
--- -   @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceFormatCount-parameter#
+--     @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
 --     value
 --
--- -   If the value referenced by @pSurfaceFormatCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceFormats-parameter#
+--     If the value referenced by @pSurfaceFormatCount@ is not @0@, and
 --     @pSurfaceFormats@ is not @NULL@, @pSurfaceFormats@ /must/ be a valid
 --     pointer to an array of @pSurfaceFormatCount@ 'SurfaceFormat2KHR'
 --     structures
@@ -307,7 +315,8 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalCo
 --
 -- == Valid Usage
 --
--- -   If the @pNext@ chain includes a
+-- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-pNext-02672# If the @pNext@
+--     chain includes a
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT'
 --     structure with its @fullScreenExclusive@ member set to
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT',
@@ -318,21 +327,21 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalCo
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-pNext-pNext# Each @pNext@
+--     member of any structure (including this one) in the @pNext@ chain
+--     /must/ be either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT'
 --     or
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-sType-unique# The @sType@
+--     value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle
+-- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-surface-parameter# @surface@
+--     /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- = See Also
 --
@@ -400,20 +409,20 @@ instance es ~ '[] => Zero (PhysicalDeviceSurfaceInfo2KHR es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkSurfaceCapabilities2KHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkSurfaceCapabilities2KHR-pNext-pNext# Each @pNext@ member of
+--     any structure (including this one) in the @pNext@ chain /must/ be
+--     either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_AMD_display_native_hdr.DisplayNativeHdrSurfaceCapabilitiesAMD',
 --     'Vulkan.Extensions.VK_KHR_shared_presentable_image.SharedPresentSurfaceCapabilitiesKHR',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceCapabilitiesFullScreenExclusiveEXT',
 --     or
 --     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkSurfaceCapabilities2KHR-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --

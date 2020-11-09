@@ -43,7 +43,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WIN32_KEY
 --
 -- == Valid Usage
 --
--- -   Each member of @pAcquireSyncs@ and @pReleaseSyncs@ /must/ be a
+-- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pAcquireSyncs-00081#
+--     Each member of @pAcquireSyncs@ and @pReleaseSyncs@ /must/ be a
 --     device memory object imported by setting
 --     'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR'::@handleType@
 --     to
@@ -53,29 +54,36 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WIN32_KEY
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR'
 --
--- -   If @acquireCount@ is not @0@, @pAcquireSyncs@ /must/ be a valid
+-- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pAcquireSyncs-parameter#
+--     If @acquireCount@ is not @0@, @pAcquireSyncs@ /must/ be a valid
 --     pointer to an array of @acquireCount@ valid
 --     'Vulkan.Core10.Handles.DeviceMemory' handles
 --
--- -   If @acquireCount@ is not @0@, @pAcquireKeys@ /must/ be a valid
+-- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pAcquireKeys-parameter#
+--     If @acquireCount@ is not @0@, @pAcquireKeys@ /must/ be a valid
 --     pointer to an array of @acquireCount@ @uint64_t@ values
 --
--- -   If @acquireCount@ is not @0@, @pAcquireTimeouts@ /must/ be a valid
+-- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pAcquireTimeouts-parameter#
+--     If @acquireCount@ is not @0@, @pAcquireTimeouts@ /must/ be a valid
 --     pointer to an array of @acquireCount@ @uint32_t@ values
 --
--- -   If @releaseCount@ is not @0@, @pReleaseSyncs@ /must/ be a valid
+-- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pReleaseSyncs-parameter#
+--     If @releaseCount@ is not @0@, @pReleaseSyncs@ /must/ be a valid
 --     pointer to an array of @releaseCount@ valid
 --     'Vulkan.Core10.Handles.DeviceMemory' handles
 --
--- -   If @releaseCount@ is not @0@, @pReleaseKeys@ /must/ be a valid
+-- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pReleaseKeys-parameter#
+--     If @releaseCount@ is not @0@, @pReleaseKeys@ /must/ be a valid
 --     pointer to an array of @releaseCount@ @uint64_t@ values
 --
--- -   Both of the elements of @pAcquireSyncs@, and the elements of
---     @pReleaseSyncs@ that are valid handles of non-ignored parameters
---     /must/ have been created, allocated, or retrieved from the same
+-- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-commonparent# Both of
+--     the elements of @pAcquireSyncs@, and the elements of @pReleaseSyncs@
+--     that are valid handles of non-ignored parameters /must/ have been
+--     created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
 --
 -- = See Also

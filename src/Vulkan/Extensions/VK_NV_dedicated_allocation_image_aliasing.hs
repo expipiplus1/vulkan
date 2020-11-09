@@ -55,7 +55,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
-  { -- | @dedicatedAllocationImageAliasing@ indicates that the implementation
+  { -- | #features-dedicatedAllocationImageAliasing#
+    -- @dedicatedAllocationImageAliasing@ indicates that the implementation
     -- supports aliasing of compatible image objects on a dedicated allocation.
     dedicatedAllocationImageAliasing :: Bool }
   deriving (Typeable, Eq)

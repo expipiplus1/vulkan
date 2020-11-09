@@ -157,18 +157,22 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @pNameInfo->objectType@ /must/ not be
+-- -   #VUID-vkSetDebugUtilsObjectNameEXT-pNameInfo-02587#
+--     @pNameInfo->objectType@ /must/ not be
 --     'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN'
 --
--- -   @pNameInfo->objectHandle@ /must/ not be
+-- -   #VUID-vkSetDebugUtilsObjectNameEXT-pNameInfo-02588#
+--     @pNameInfo->objectHandle@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkSetDebugUtilsObjectNameEXT-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pNameInfo@ /must/ be a valid pointer to a valid
---     'DebugUtilsObjectNameInfoEXT' structure
+-- -   #VUID-vkSetDebugUtilsObjectNameEXT-pNameInfo-parameter# @pNameInfo@
+--     /must/ be a valid pointer to a valid 'DebugUtilsObjectNameInfoEXT'
+--     structure
 --
 -- == Host Synchronization
 --
@@ -219,10 +223,12 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkSetDebugUtilsObjectTagEXT-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pTagInfo@ /must/ be a valid pointer to a valid
---     'DebugUtilsObjectTagInfoEXT' structure
+-- -   #VUID-vkSetDebugUtilsObjectTagEXT-pTagInfo-parameter# @pTagInfo@
+--     /must/ be a valid pointer to a valid 'DebugUtilsObjectTagInfoEXT'
+--     structure
 --
 -- == Host Synchronization
 --
@@ -288,13 +294,14 @@ queueBeginDebugUtilsLabelEXT :: forall io
                               . (MonadIO io)
                              => -- | @queue@ is the queue in which to start a debug label region.
                                 --
-                                -- @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
+                                -- #VUID-vkQueueBeginDebugUtilsLabelEXT-queue-parameter# @queue@ /must/ be
+                                -- a valid 'Vulkan.Core10.Handles.Queue' handle
                                 Queue
                              -> -- | @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure specifying
                                 -- parameters of the label region to open.
                                 --
-                                -- @pLabelInfo@ /must/ be a valid pointer to a valid 'DebugUtilsLabelEXT'
-                                -- structure
+                                -- #VUID-vkQueueBeginDebugUtilsLabelEXT-pLabelInfo-parameter# @pLabelInfo@
+                                -- /must/ be a valid pointer to a valid 'DebugUtilsLabelEXT' structure
                                 ("labelInfo" ::: DebugUtilsLabelEXT)
                              -> io ()
 queueBeginDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
@@ -323,12 +330,14 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   There /must/ be an outstanding 'queueBeginDebugUtilsLabelEXT'
---     command prior to the 'queueEndDebugUtilsLabelEXT' on the queue
+-- -   #VUID-vkQueueEndDebugUtilsLabelEXT-None-01911# There /must/ be an
+--     outstanding 'queueBeginDebugUtilsLabelEXT' command prior to the
+--     'queueEndDebugUtilsLabelEXT' on the queue
 --
 -- == Valid Usage (Implicit)
 --
--- -   @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
+-- -   #VUID-vkQueueEndDebugUtilsLabelEXT-queue-parameter# @queue@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Queue' handle
 --
 -- == Command Properties
 --
@@ -383,13 +392,14 @@ queueInsertDebugUtilsLabelEXT :: forall io
                                . (MonadIO io)
                               => -- | @queue@ is the queue into which a debug label will be inserted.
                                  --
-                                 -- @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
+                                 -- #VUID-vkQueueInsertDebugUtilsLabelEXT-queue-parameter# @queue@ /must/ be
+                                 -- a valid 'Vulkan.Core10.Handles.Queue' handle
                                  Queue
                               -> -- | @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure specifying
                                  -- parameters of the label to insert.
                                  --
-                                 -- @pLabelInfo@ /must/ be a valid pointer to a valid 'DebugUtilsLabelEXT'
-                                 -- structure
+                                 -- #VUID-vkQueueInsertDebugUtilsLabelEXT-pLabelInfo-parameter# @pLabelInfo@
+                                 -- /must/ be a valid pointer to a valid 'DebugUtilsLabelEXT' structure
                                  ("labelInfo" ::: DebugUtilsLabelEXT)
                               -> io ()
 queueInsertDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
@@ -413,16 +423,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdBeginDebugUtilsLabelEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pLabelInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdBeginDebugUtilsLabelEXT-pLabelInfo-parameter#
+--     @pLabelInfo@ /must/ be a valid pointer to a valid
 --     'DebugUtilsLabelEXT' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdBeginDebugUtilsLabelEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdBeginDebugUtilsLabelEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
 -- == Host Synchronization
@@ -494,24 +508,29 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   There /must/ be an outstanding 'cmdBeginDebugUtilsLabelEXT' command
---     prior to the 'cmdEndDebugUtilsLabelEXT' on the queue that
---     @commandBuffer@ is submitted to
+-- -   #VUID-vkCmdEndDebugUtilsLabelEXT-commandBuffer-01912# There /must/
+--     be an outstanding 'cmdBeginDebugUtilsLabelEXT' command prior to the
+--     'cmdEndDebugUtilsLabelEXT' on the queue that @commandBuffer@ is
+--     submitted to
 --
--- -   If @commandBuffer@ is a secondary command buffer, there /must/ be an
+-- -   #VUID-vkCmdEndDebugUtilsLabelEXT-commandBuffer-01913# If
+--     @commandBuffer@ is a secondary command buffer, there /must/ be an
 --     outstanding 'cmdBeginDebugUtilsLabelEXT' command recorded to
 --     @commandBuffer@ that has not previously been ended by a call to
 --     'cmdEndDebugUtilsLabelEXT'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdEndDebugUtilsLabelEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdEndDebugUtilsLabelEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdEndDebugUtilsLabelEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
 -- == Host Synchronization
@@ -561,16 +580,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdInsertDebugUtilsLabelEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pLabelInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdInsertDebugUtilsLabelEXT-pLabelInfo-parameter#
+--     @pLabelInfo@ /must/ be a valid pointer to a valid
 --     'DebugUtilsLabelEXT' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdInsertDebugUtilsLabelEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdInsertDebugUtilsLabelEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
 -- == Host Synchronization
@@ -623,16 +646,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateDebugUtilsMessengerEXT-instance-parameter# @instance@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateDebugUtilsMessengerEXT-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'DebugUtilsMessengerCreateInfoEXT' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateDebugUtilsMessengerEXT-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pMessenger@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateDebugUtilsMessengerEXT-pMessenger-parameter#
+--     @pMessenger@ /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT' handle
 --
 -- == Return Codes
@@ -708,26 +735,32 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDebugUtilsMessengerEXT-messenger-01915# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @messenger@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDebugUtilsMessengerEXT-messenger-01916# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @messenger@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkDestroyDebugUtilsMessengerEXT-instance-parameter# @instance@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   If @messenger@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-vkDestroyDebugUtilsMessengerEXT-messenger-parameter# If
+--     @messenger@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @messenger@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkDestroyDebugUtilsMessengerEXT-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @messenger@ is a valid handle, it /must/ have been created,
+-- -   #VUID-vkDestroyDebugUtilsMessengerEXT-messenger-parent# If
+--     @messenger@ is a valid handle, it /must/ have been created,
 --     allocated, or retrieved from @instance@
 --
 -- == Host Synchronization
@@ -788,22 +821,28 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The @objectType@ member of each element of @pCallbackData->pObjects@
+-- -   #VUID-vkSubmitDebugUtilsMessageEXT-objectType-02591# The
+--     @objectType@ member of each element of @pCallbackData->pObjects@
 --     /must/ not be 'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkSubmitDebugUtilsMessageEXT-instance-parameter# @instance@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @messageSeverity@ /must/ be a valid
+-- -   #VUID-vkSubmitDebugUtilsMessageEXT-messageSeverity-parameter#
+--     @messageSeverity@ /must/ be a valid
 --     'DebugUtilsMessageSeverityFlagBitsEXT' value
 --
--- -   @messageTypes@ /must/ be a valid combination of
+-- -   #VUID-vkSubmitDebugUtilsMessageEXT-messageTypes-parameter#
+--     @messageTypes@ /must/ be a valid combination of
 --     'DebugUtilsMessageTypeFlagBitsEXT' values
 --
--- -   @messageTypes@ /must/ not be @0@
+-- -   #VUID-vkSubmitDebugUtilsMessageEXT-messageTypes-requiredbitmask#
+--     @messageTypes@ /must/ not be @0@
 --
--- -   @pCallbackData@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkSubmitDebugUtilsMessageEXT-pCallbackData-parameter#
+--     @pCallbackData@ /must/ be a valid pointer to a valid
 --     'DebugUtilsMessengerCallbackDataEXT' structure
 --
 -- = See Also
@@ -846,11 +885,13 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 --
 -- == Valid Usage
 --
--- -   If @objectType@ is
+-- -   #VUID-VkDebugUtilsObjectNameInfoEXT-objectType-02589# If
+--     @objectType@ is
 --     'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN', @objectHandle@
 --     /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @objectType@ is not
+-- -   #VUID-VkDebugUtilsObjectNameInfoEXT-objectType-02590# If
+--     @objectType@ is not
 --     'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN', @objectHandle@
 --     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a valid Vulkan
 --     handle of the type associated with @objectType@ as defined in the
@@ -859,15 +900,18 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDebugUtilsObjectNameInfoEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkDebugUtilsObjectNameInfoEXT-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @objectType@ /must/ be a valid
+-- -   #VUID-VkDebugUtilsObjectNameInfoEXT-objectType-parameter#
+--     @objectType@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ObjectType.ObjectType' value
 --
--- -   If @pObjectName@ is not @NULL@, @pObjectName@ /must/ be a
+-- -   #VUID-VkDebugUtilsObjectNameInfoEXT-pObjectName-parameter# If
+--     @pObjectName@ is not @NULL@, @pObjectName@ /must/ be a
 --     null-terminated UTF-8 string
 --
 -- = See Also
@@ -949,16 +993,17 @@ data DebugUtilsObjectTagInfoEXT = DebugUtilsObjectTagInfoEXT
   { -- | @objectType@ is a 'Vulkan.Core10.Enums.ObjectType.ObjectType' specifying
     -- the type of the object to be named.
     --
-    -- @objectType@ /must/ not be
-    -- 'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN'
+    -- #VUID-VkDebugUtilsObjectTagInfoEXT-objectType-01908# @objectType@ /must/
+    -- not be 'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN'
     --
-    -- @objectType@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
+    -- #VUID-VkDebugUtilsObjectTagInfoEXT-objectType-parameter# @objectType@
+    -- /must/ be a valid 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
     objectType :: ObjectType
   , -- | @objectHandle@ is the object to be tagged.
     --
-    -- @objectHandle@ /must/ be a valid Vulkan handle of the type associated
-    -- with @objectType@ as defined in the
+    -- #VUID-VkDebugUtilsObjectTagInfoEXT-objectHandle-01910# @objectHandle@
+    -- /must/ be a valid Vulkan handle of the type associated with @objectType@
+    -- as defined in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
     -- table
     objectHandle :: Word64
@@ -966,12 +1011,14 @@ data DebugUtilsObjectTagInfoEXT = DebugUtilsObjectTagInfoEXT
     tagName :: Word64
   , -- | @tagSize@ is the number of bytes of data to attach to the object.
     --
-    -- @tagSize@ /must/ be greater than @0@
+    -- #VUID-VkDebugUtilsObjectTagInfoEXT-tagSize-arraylength# @tagSize@ /must/
+    -- be greater than @0@
     tagSize :: Word64
   , -- | @pTag@ is a pointer to an array of @tagSize@ bytes containing the data
     -- to be associated with the object.
     --
-    -- @pTag@ /must/ be a valid pointer to an array of @tagSize@ bytes
+    -- #VUID-VkDebugUtilsObjectTagInfoEXT-pTag-parameter# @pTag@ /must/ be a
+    -- valid pointer to an array of @tagSize@ bytes
     tag :: Ptr ()
   }
   deriving (Typeable)
@@ -1042,7 +1089,8 @@ data DebugUtilsLabelEXT = DebugUtilsLabelEXT
   { -- | @pLabelName@ is a pointer to a null-terminated UTF-8 string containing
     -- the name of the label.
     --
-    -- @pLabelName@ /must/ be a null-terminated UTF-8 string
+    -- #VUID-VkDebugUtilsLabelEXT-pLabelName-parameter# @pLabelName@ /must/ be
+    -- a null-terminated UTF-8 string
     labelName :: ByteString
   , -- | @color@ is an optional RGBA color value that can be associated with the
     -- label. A particular implementation /may/ choose to ignore this color
@@ -1149,30 +1197,37 @@ instance Zero DebugUtilsLabelEXT where
 data DebugUtilsMessengerCreateInfoEXT = DebugUtilsMessengerCreateInfoEXT
   { -- | @flags@ is @0@ and is reserved for future use.
     --
-    -- @flags@ /must/ be @0@
+    -- #VUID-VkDebugUtilsMessengerCreateInfoEXT-flags-zerobitmask# @flags@
+    -- /must/ be @0@
     flags :: DebugUtilsMessengerCreateFlagsEXT
   , -- | @messageSeverity@ is a bitmask of 'DebugUtilsMessageSeverityFlagBitsEXT'
     -- specifying which severity of event(s) will cause this callback to be
     -- called.
     --
+    -- #VUID-VkDebugUtilsMessengerCreateInfoEXT-messageSeverity-parameter#
     -- @messageSeverity@ /must/ be a valid combination of
     -- 'DebugUtilsMessageSeverityFlagBitsEXT' values
     --
+    -- #VUID-VkDebugUtilsMessengerCreateInfoEXT-messageSeverity-requiredbitmask#
     -- @messageSeverity@ /must/ not be @0@
     messageSeverity :: DebugUtilsMessageSeverityFlagsEXT
   , -- | @messageType@ is a bitmask of 'DebugUtilsMessageTypeFlagBitsEXT'
     -- specifying which type of event(s) will cause this callback to be called.
     --
+    -- #VUID-VkDebugUtilsMessengerCreateInfoEXT-messageType-parameter#
     -- @messageType@ /must/ be a valid combination of
     -- 'DebugUtilsMessageTypeFlagBitsEXT' values
     --
+    -- #VUID-VkDebugUtilsMessengerCreateInfoEXT-messageType-requiredbitmask#
     -- @messageType@ /must/ not be @0@
     messageType :: DebugUtilsMessageTypeFlagsEXT
   , -- | @pfnUserCallback@ is the application callback function to call.
     --
+    -- #VUID-VkDebugUtilsMessengerCreateInfoEXT-pfnUserCallback-01914#
     -- @pfnUserCallback@ /must/ be a valid
     -- 'PFN_vkDebugUtilsMessengerCallbackEXT'
     --
+    -- #VUID-VkDebugUtilsMessengerCreateInfoEXT-pfnUserCallback-parameter#
     -- @pfnUserCallback@ /must/ be a valid
     -- 'PFN_vkDebugUtilsMessengerCallbackEXT' value
     pfnUserCallback :: PFN_vkDebugUtilsMessengerCallbackEXT
@@ -1268,28 +1323,36 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-pNext-pNext# @pNext@
+--     /must/ be @NULL@
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-flags-zerobitmask#
+--     @flags@ /must/ be @0@
 --
--- -   If @pMessageIdName@ is not @NULL@, @pMessageIdName@ /must/ be a
+-- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-pMessageIdName-parameter#
+--     If @pMessageIdName@ is not @NULL@, @pMessageIdName@ /must/ be a
 --     null-terminated UTF-8 string
 --
--- -   @pMessage@ /must/ be a null-terminated UTF-8 string
+-- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-pMessage-parameter#
+--     @pMessage@ /must/ be a null-terminated UTF-8 string
 --
--- -   If @queueLabelCount@ is not @0@, @pQueueLabels@ /must/ be a valid
+-- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-pQueueLabels-parameter#
+--     If @queueLabelCount@ is not @0@, @pQueueLabels@ /must/ be a valid
 --     pointer to an array of @queueLabelCount@ valid 'DebugUtilsLabelEXT'
 --     structures
 --
--- -   If @cmdBufLabelCount@ is not @0@, @pCmdBufLabels@ /must/ be a valid
+-- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-pCmdBufLabels-parameter#
+--     If @cmdBufLabelCount@ is not @0@, @pCmdBufLabels@ /must/ be a valid
 --     pointer to an array of @cmdBufLabelCount@ valid 'DebugUtilsLabelEXT'
 --     structures
 --
--- -   If @objectCount@ is not @0@, @pObjects@ /must/ be a valid pointer to
---     an array of @objectCount@ valid 'DebugUtilsObjectNameInfoEXT'
+-- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-pObjects-parameter# If
+--     @objectCount@ is not @0@, @pObjects@ /must/ be a valid pointer to an
+--     array of @objectCount@ valid 'DebugUtilsObjectNameInfoEXT'
 --     structures
 --
 -- = See Also

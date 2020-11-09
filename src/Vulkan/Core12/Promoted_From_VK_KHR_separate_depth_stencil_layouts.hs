@@ -58,7 +58,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSeparateDepthStencilLayoutsFeatures = PhysicalDeviceSeparateDepthStencilLayoutsFeatures
-  { -- | @separateDepthStencilLayouts@ indicates whether the implementation
+  { -- | #extension-features-separateDepthStencilLayouts#
+    -- @separateDepthStencilLayouts@ indicates whether the implementation
     -- supports a 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' for a
     -- depth\/stencil image with only one of
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
@@ -123,6 +124,7 @@ data AttachmentReferenceStencilLayout = AttachmentReferenceStencilLayout
     -- specifying the layout the stencil aspect of the attachment uses during
     -- the subpass.
     --
+    -- #VUID-VkAttachmentReferenceStencilLayout-stencilLayout-03318#
     -- @stencilLayout@ /must/ not be
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED',
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED',
@@ -135,6 +137,7 @@ data AttachmentReferenceStencilLayout = AttachmentReferenceStencilLayout
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
     -- or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR'
     --
+    -- #VUID-VkAttachmentReferenceStencilLayout-stencilLayout-parameter#
     -- @stencilLayout@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
     stencilLayout :: ImageLayout }
@@ -190,6 +193,7 @@ data AttachmentDescriptionStencilLayout = AttachmentDescriptionStencilLayout
     -- attachment image subresource will be in when a render pass instance
     -- begins.
     --
+    -- #VUID-VkAttachmentDescriptionStencilLayout-stencilInitialLayout-03308#
     -- @stencilInitialLayout@ /must/ not be
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL',
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
@@ -200,6 +204,7 @@ data AttachmentDescriptionStencilLayout = AttachmentDescriptionStencilLayout
     -- or
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
     --
+    -- #VUID-VkAttachmentDescriptionStencilLayout-stencilInitialLayout-parameter#
     -- @stencilInitialLayout@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
     stencilInitialLayout :: ImageLayout
@@ -207,6 +212,7 @@ data AttachmentDescriptionStencilLayout = AttachmentDescriptionStencilLayout
     -- image subresource will be transitioned to when a render pass instance
     -- ends.
     --
+    -- #VUID-VkAttachmentDescriptionStencilLayout-stencilFinalLayout-03309#
     -- @stencilFinalLayout@ /must/ not be
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL',
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
@@ -217,10 +223,12 @@ data AttachmentDescriptionStencilLayout = AttachmentDescriptionStencilLayout
     -- or
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
     --
+    -- #VUID-VkAttachmentDescriptionStencilLayout-stencilFinalLayout-03310#
     -- @stencilFinalLayout@ /must/ not be
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
     --
+    -- #VUID-VkAttachmentDescriptionStencilLayout-stencilFinalLayout-parameter#
     -- @stencilFinalLayout@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
     stencilFinalLayout :: ImageLayout

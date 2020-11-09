@@ -74,22 +74,26 @@ data ViewportSwizzleNV = ViewportSwizzleNV
   { -- | @x@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
     -- operation to apply to the x component of the primitive
     --
-    -- @x@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+    -- #VUID-VkViewportSwizzleNV-x-parameter# @x@ /must/ be a valid
+    -- 'ViewportCoordinateSwizzleNV' value
     x :: ViewportCoordinateSwizzleNV
   , -- | @y@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
     -- operation to apply to the y component of the primitive
     --
-    -- @y@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+    -- #VUID-VkViewportSwizzleNV-y-parameter# @y@ /must/ be a valid
+    -- 'ViewportCoordinateSwizzleNV' value
     y :: ViewportCoordinateSwizzleNV
   , -- | @z@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
     -- operation to apply to the z component of the primitive
     --
-    -- @z@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+    -- #VUID-VkViewportSwizzleNV-z-parameter# @z@ /must/ be a valid
+    -- 'ViewportCoordinateSwizzleNV' value
     z :: ViewportCoordinateSwizzleNV
   , -- | @w@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
     -- operation to apply to the w component of the primitive
     --
-    -- @w@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+    -- #VUID-VkViewportSwizzleNV-w-parameter# @w@ /must/ be a valid
+    -- 'ViewportCoordinateSwizzleNV' value
     w :: ViewportCoordinateSwizzleNV
   }
   deriving (Typeable, Eq)
@@ -150,11 +154,13 @@ instance Zero ViewportSwizzleNV where
 data PipelineViewportSwizzleStateCreateInfoNV = PipelineViewportSwizzleStateCreateInfoNV
   { -- | @flags@ is reserved for future use.
     --
+    -- #VUID-VkPipelineViewportSwizzleStateCreateInfoNV-flags-zerobitmask#
     -- @flags@ /must/ be @0@
     flags :: PipelineViewportSwizzleStateCreateFlagsNV
   , -- | @pViewportSwizzles@ is a pointer to an array of 'ViewportSwizzleNV'
     -- structures, defining the viewport swizzles.
     --
+    -- #VUID-VkPipelineViewportSwizzleStateCreateInfoNV-pViewportSwizzles-parameter#
     -- @pViewportSwizzles@ /must/ be a valid pointer to an array of
     -- @viewportCount@ valid 'ViewportSwizzleNV' structures
     viewportSwizzles :: Vector ViewportSwizzleNV

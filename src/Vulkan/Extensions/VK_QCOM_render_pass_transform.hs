@@ -41,20 +41,23 @@ import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 --
 -- == Valid Usage
 --
--- -   @transform@ /must/ be
+-- -   #VUID-VkRenderPassTransformBeginInfoQCOM-transform-02871#
+--     @transform@ /must/ be
 --     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
 --     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
 --     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
 --     or
 --     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'
 --
--- -   The @renderpass@ /must/ have been created with
+-- -   #VUID-VkRenderPassTransformBeginInfoQCOM-flags-02872# The
+--     @renderpass@ /must/ have been created with
 --     'Vulkan.Core10.Pass.RenderPassCreateInfo'::@flags@ containing
 --     'Vulkan.Core10.Enums.RenderPassCreateFlagBits.RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkRenderPassTransformBeginInfoQCOM-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM'
 --
 -- = See Also
@@ -129,6 +132,7 @@ data CommandBufferInheritanceRenderPassTransformInfoQCOM = CommandBufferInherita
     -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
     -- describing the transform to be applied to the render pass.
     --
+    -- #VUID-VkCommandBufferInheritanceRenderPassTransformInfoQCOM-transform-02864#
     -- @transform@ /must/ be
     -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
     -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',

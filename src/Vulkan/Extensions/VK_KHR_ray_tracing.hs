@@ -304,31 +304,38 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @accelerationStructure@ /must/
+-- -   #VUID-vkDestroyAccelerationStructureKHR-accelerationStructure-02442#
+--     All submitted commands that refer to @accelerationStructure@ /must/
 --     have completed execution
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyAccelerationStructureKHR-accelerationStructure-02443#
+--     If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @accelerationStructure@ was created, a compatible set
 --     of callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyAccelerationStructureKHR-accelerationStructure-02444#
+--     If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @accelerationStructure@ was created, @pAllocator@
 --     /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyAccelerationStructureKHR-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @accelerationStructure@ is not
+-- -   #VUID-vkDestroyAccelerationStructureKHR-accelerationStructure-parameter#
+--     If @accelerationStructure@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @accelerationStructure@
 --     /must/ be a valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkDestroyAccelerationStructureKHR-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @accelerationStructure@ is a valid handle, it /must/ have been
+-- -   #VUID-vkDestroyAccelerationStructureKHR-accelerationStructure-parent#
+--     If @accelerationStructure@ is a valid handle, it /must/ have been
 --     created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
@@ -386,11 +393,13 @@ getAccelerationStructureMemoryRequirementsKHR :: forall a io
                                               => -- | @device@ is the logical device on which the acceleration structure was
                                                  -- created.
                                                  --
+                                                 -- #VUID-vkGetAccelerationStructureMemoryRequirementsKHR-device-parameter#
                                                  -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                                  Device
                                               -> -- | @pInfo@ specifies the acceleration structure to get memory requirements
                                                  -- for.
                                                  --
+                                                 -- #VUID-vkGetAccelerationStructureMemoryRequirementsKHR-pInfo-parameter#
                                                  -- @pInfo@ /must/ be a valid pointer to a valid
                                                  -- 'AccelerationStructureMemoryRequirementsInfoKHR' structure
                                                  AccelerationStructureMemoryRequirementsInfoKHR
@@ -437,12 +446,14 @@ bindAccelerationStructureMemoryKHR :: forall io
                                    => -- | @device@ is the logical device that owns the acceleration structures and
                                       -- memory.
                                       --
-                                      -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                      -- #VUID-vkBindAccelerationStructureMemoryKHR-device-parameter# @device@
+                                      -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                       Device
                                    -> -- | @pBindInfos@ is a pointer to an array of
                                       -- 'BindAccelerationStructureMemoryInfoKHR' structures describing
                                       -- acceleration structures and memory to bind.
                                       --
+                                      -- #VUID-vkBindAccelerationStructureMemoryKHR-pBindInfos-parameter#
                                       -- @pBindInfos@ /must/ be a valid pointer to an array of @bindInfoCount@
                                       -- valid 'BindAccelerationStructureMemoryInfoKHR' structures
                                       ("bindInfos" ::: Vector BindAccelerationStructureMemoryInfoKHR)
@@ -469,29 +480,35 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
+-- -   #VUID-vkCmdCopyAccelerationStructureKHR-None-03556# All
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to device memory
 --
--- -   The
+-- -   #VUID-vkCmdCopyAccelerationStructureKHR-pNext-03557# The
 --     'Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --     structure /must/ not be included in the @pNext@ chain of the
 --     'CopyAccelerationStructureInfoKHR' structure
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdCopyAccelerationStructureKHR-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdCopyAccelerationStructureKHR-pInfo-parameter# @pInfo@
+--     /must/ be a valid pointer to a valid
 --     'CopyAccelerationStructureInfoKHR' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdCopyAccelerationStructureKHR-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdCopyAccelerationStructureKHR-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support compute operations
 --
--- -   This command /must/ only be called outside of a render pass instance
+-- -   #VUID-vkCmdCopyAccelerationStructureKHR-renderpass# This command
+--     /must/ only be called outside of a render pass instance
 --
 -- == Host Synchronization
 --
@@ -566,19 +583,23 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
+-- -   #VUID-vkCopyAccelerationStructureKHR-None-03440# All
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to host-visible memory
 --
--- -   the
+-- -   #VUID-vkCopyAccelerationStructureKHR-rayTracingHostAccelerationStructureCommands-03441#
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCopyAccelerationStructureKHR-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
---     'CopyAccelerationStructureInfoKHR' structure
+-- -   #VUID-vkCopyAccelerationStructureKHR-pInfo-parameter# @pInfo@ /must/
+--     be a valid pointer to a valid 'CopyAccelerationStructureInfoKHR'
+--     structure
 --
 -- == Return Codes
 --
@@ -674,36 +695,44 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All 'DeviceOrHostAddressConstKHR' referenced by this command /must/
+-- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-None-04048# All
+--     'DeviceOrHostAddressConstKHR' referenced by this command /must/
 --     contain valid device addresses for a buffer bound to device memory.
 --     If the buffer is non-sparse then it /must/ be bound completely and
 --     contiguously to a single VkDeviceMemory object
 --
--- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
+-- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-None-03559# All
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to device memory
 --
--- -   The
+-- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-pNext-03560# The
 --     'Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --     structure /must/ not be included in the @pNext@ chain of the
 --     'CopyAccelerationStructureToMemoryInfoKHR' structure
 --
--- -   @mode@ /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR'
+-- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-mode-03412# @mode@
+--     /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-pInfo-parameter#
+--     @pInfo@ /must/ be a valid pointer to a valid
 --     'CopyAccelerationStructureToMemoryInfoKHR' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-commandBuffer-cmdpool#
+--     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support compute operations
 --
--- -   This command /must/ only be called outside of a render pass instance
+-- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-renderpass# This
+--     command /must/ only be called outside of a render pass instance
 --
 -- == Host Synchronization
 --
@@ -784,21 +813,26 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
+-- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-None-03445# All
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to host-visible memory
 --
--- -   All 'DeviceOrHostAddressKHR' referenced by this command /must/
---     contain valid host pointers
+-- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-None-03446# All
+--     'DeviceOrHostAddressKHR' referenced by this command /must/ contain
+--     valid host pointers
 --
--- -   the
+-- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-rayTracingHostAccelerationStructureCommands-03447#
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-pInfo-parameter#
+--     @pInfo@ /must/ be a valid pointer to a valid
 --     'CopyAccelerationStructureToMemoryInfoKHR' structure
 --
 -- == Return Codes
@@ -871,40 +905,49 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All 'DeviceOrHostAddressKHR' referenced by this command /must/
---     contain valid device addresses for a buffer bound to device memory.
---     If the buffer is non-sparse then it /must/ be bound completely and
+-- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-None-04049# All
+--     'DeviceOrHostAddressKHR' referenced by this command /must/ contain
+--     valid device addresses for a buffer bound to device memory. If the
+--     buffer is non-sparse then it /must/ be bound completely and
 --     contiguously to a single VkDeviceMemory object
 --
--- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
+-- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-None-03563# All
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to device memory
 --
--- -   The
+-- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-pNext-03564# The
 --     'Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --     structure /must/ not be included in the @pNext@ chain of the
 --     'CopyMemoryToAccelerationStructureInfoKHR' structure
 --
--- -   @mode@ /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
+-- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-mode-03413# @mode@
+--     /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
 --
--- -   The data in @pInfo->src@ /must/ have a format compatible with the
+-- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-pInfo-03414# The
+--     data in @pInfo->src@ /must/ have a format compatible with the
 --     destination physical device as returned by
 --     'getDeviceAccelerationStructureCompatibilityKHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-pInfo-parameter#
+--     @pInfo@ /must/ be a valid pointer to a valid
 --     'CopyMemoryToAccelerationStructureInfoKHR' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-commandBuffer-cmdpool#
+--     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support compute operations
 --
--- -   This command /must/ only be called outside of a render pass instance
+-- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-renderpass# This
+--     command /must/ only be called outside of a render pass instance
 --
 -- == Host Synchronization
 --
@@ -981,21 +1024,26 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
+-- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-None-03442# All
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to host-visible memory
 --
--- -   All 'DeviceOrHostAddressConstKHR' referenced by this command /must/
+-- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-None-03443# All
+--     'DeviceOrHostAddressConstKHR' referenced by this command /must/
 --     contain valid host pointers
 --
--- -   the
+-- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-rayTracingHostAccelerationStructureCommands-03444#
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-pInfo-parameter#
+--     @pInfo@ /must/ be a valid pointer to a valid
 --     'CopyMemoryToAccelerationStructureInfoKHR' structure
 --
 -- == Return Codes
@@ -1048,49 +1096,62 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @queryPool@ /must/ have been created with a @queryType@ matching
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-queryPool-02493#
+--     @queryPool@ /must/ have been created with a @queryType@ matching
 --     @queryType@
 --
--- -   The queries identified by @queryPool@ and @firstQuery@ /must/ be
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-queryPool-02494#
+--     The queries identified by @queryPool@ and @firstQuery@ /must/ be
 --     /unavailable/
 --
--- -   All acceleration structures in @accelerationStructures@ /must/ have
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-accelerationStructures-03431#
+--     All acceleration structures in @accelerationStructures@ /must/ have
 --     been built with
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' if
 --     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --
--- -   @queryType@ /must/ be
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-queryType-03432#
+--     @queryType@ /must/ be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --     or
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pAccelerationStructures@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-pAccelerationStructures-parameter#
+--     @pAccelerationStructures@ /must/ be a valid pointer to an array of
 --     @accelerationStructureCount@ valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handles
 --
--- -   @queryType@ /must/ be a valid
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-queryType-parameter#
+--     @queryType@ /must/ be a valid
 --     'Vulkan.Core10.Enums.QueryType.QueryType' value
 --
--- -   @queryPool@ /must/ be a valid 'Vulkan.Core10.Handles.QueryPool'
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-queryPool-parameter#
+--     @queryPool@ /must/ be a valid 'Vulkan.Core10.Handles.QueryPool'
 --     handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-commandBuffer-cmdpool#
+--     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support compute operations
 --
--- -   This command /must/ only be called outside of a render pass instance
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-renderpass# This
+--     command /must/ only be called outside of a render pass instance
 --
--- -   @accelerationStructureCount@ /must/ be greater than @0@
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-accelerationStructureCount-arraylength#
+--     @accelerationStructureCount@ /must/ be greater than @0@
 --
--- -   Each of @commandBuffer@, @queryPool@, and the elements of
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-commonparent#
+--     Each of @commandBuffer@, @queryPool@, and the elements of
 --     @pAccelerationStructures@ /must/ have been created, allocated, or
 --     retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
@@ -1185,65 +1246,81 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If @queryType@ is
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-03448# If
+--     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR',
 --     then @stride@ /must/ be a multiple of the size of
 --     'Vulkan.Core10.FundamentalTypes.DeviceSize'
 --
--- -   If @queryType@ is
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-03449# If
+--     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR',
 --     then @data@ /must/ point to a
 --     'Vulkan.Core10.FundamentalTypes.DeviceSize'
 --
--- -   If @queryType@ is
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-03450# If
+--     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR',
 --     then @stride@ /must/ be a multiple of the size of
 --     'Vulkan.Core10.FundamentalTypes.DeviceSize'
 --
--- -   If @queryType@ is
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-03451# If
+--     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR',
 --     then @data@ /must/ point to a
 --     'Vulkan.Core10.FundamentalTypes.DeviceSize'
 --
--- -   @dataSize@ /must/ be greater than or equal to
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-dataSize-03452#
+--     @dataSize@ /must/ be greater than or equal to
 --     @accelerationStructureCount@*@stride@
 --
--- -   The acceleration structures referenced by @pAccelerationStructures@
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-pAccelerationStructures-03453#
+--     The acceleration structures referenced by @pAccelerationStructures@
 --     /must/ be bound to host-visible memory
 --
--- -   All acceleration structures in @accelerationStructures@ /must/ have
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-accelerationStructures-03431#
+--     All acceleration structures in @accelerationStructures@ /must/ have
 --     been built with
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' if
 --     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --
--- -   @queryType@ /must/ be
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-03432#
+--     @queryType@ /must/ be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --     or
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
 --
--- -   the
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-rayTracingHostAccelerationStructureCommands-03454#
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pAccelerationStructures@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-pAccelerationStructures-parameter#
+--     @pAccelerationStructures@ /must/ be a valid pointer to an array of
 --     @accelerationStructureCount@ valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handles
 --
--- -   @queryType@ /must/ be a valid
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-parameter#
+--     @queryType@ /must/ be a valid
 --     'Vulkan.Core10.Enums.QueryType.QueryType' value
 --
--- -   @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-pData-parameter#
+--     @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
 --
--- -   @accelerationStructureCount@ /must/ be greater than @0@
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-accelerationStructureCount-arraylength#
+--     @accelerationStructureCount@ /must/ be greater than @0@
 --
--- -   @dataSize@ /must/ be greater than @0@
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-dataSize-arraylength#
+--     @dataSize@ /must/ be greater than @0@
 --
--- -   Each element of @pAccelerationStructures@ /must/ have been created,
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-pAccelerationStructures-parent#
+--     Each element of @pAccelerationStructures@ /must/ have been created,
 --     allocated, or retrieved from @device@
 --
 -- == Return Codes
@@ -1305,7 +1382,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a 'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+-- -   #VUID-vkCmdTraceRaysKHR-magFilter-04553# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
 --     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
 --     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
 --     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
@@ -1314,20 +1392,23 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using atomic
+-- -   #VUID-vkCmdTraceRaysKHR-None-02691# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
+-- -   #VUID-vkCmdTraceRaysKHR-None-02692# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdTraceRaysKHR-filterCubic-02694# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command /must/ have a
 --     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' and format that
@@ -1336,7 +1417,8 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdTraceRaysKHR-filterCubicMinmax-02695# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' with a
 --     reduction mode of either
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
@@ -1350,53 +1432,58 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.Image' created with a
+-- -   #VUID-vkCmdTraceRaysKHR-flags-02696# Any
+--     'Vulkan.Core10.Handles.Image' created with a
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
--- -   For each set /n/ that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a descriptor set /must/ have been bound to /n/
---     at the same pipeline bind point, with a
+-- -   #VUID-vkCmdTraceRaysKHR-None-02697# For each set /n/ that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a descriptor set /must/
+--     have been bound to /n/ at the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
 --     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   For each push constant that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a push constant value /must/ have been set for
---     the same pipeline bind point, with a
+-- -   #VUID-vkCmdTraceRaysKHR-None-02698# For each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a push constant value
+--     /must/ have been set for the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
 --     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   Descriptors in each bound descriptor set, specified via
+-- -   #VUID-vkCmdTraceRaysKHR-None-02699# Descriptors in each bound
+--     descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
 --     be valid if they are statically used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     used by this command
 --
--- -   A valid pipeline /must/ be bound to the pipeline bind point used by
---     this command
+-- -   #VUID-vkCmdTraceRaysKHR-None-02700# A valid pipeline /must/ be bound
+--     to the pipeline bind point used by this command
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command requires any dynamic state, that
---     state /must/ have been set for @commandBuffer@, and done so after
---     any previously bound pipeline with the corresponding state not
---     specified as dynamic
---
--- -   There /must/ not have been any calls to dynamic state setting
---     commands for any state not specified as dynamic in the
+-- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command, since that pipeline was bound
+--     point used by this command requires any dynamic state, that state
+--     /must/ have been set for @commandBuffer@, and done so after any
+--     previously bound pipeline with the corresponding state not specified
+--     as dynamic
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdTraceRaysKHR-None-02859# There /must/ not have been any
+--     calls to dynamic state setting commands for any state not specified
+--     as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object bound to
+--     the pipeline bind point used by this command, since that pipeline
+--     was bound
+--
+-- -   #VUID-vkCmdTraceRaysKHR-None-02702# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -1408,21 +1495,23 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdTraceRaysKHR-None-02703# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdTraceRaysKHR-None-02704# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   If the
+-- -   #VUID-vkCmdTraceRaysKHR-None-02705# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -1430,7 +1519,7 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If the
+-- -   #VUID-vkCmdTraceRaysKHR-None-02706# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -1438,46 +1527,52 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+-- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-02707# If @commandBuffer@ is
+--     an unprotected command buffer, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdTraceRaysKHR-None-04115# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdTraceRaysKHR-OpImageWrite-04469# If a
+--     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdTraceRaysKHR-SampledType-04470# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdTraceRaysKHR-SampledType-04471# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdTraceRaysKHR-SampledType-04472# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdTraceRaysKHR-SampledType-04473# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If the
+-- -   #VUID-vkCmdTraceRaysKHR-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
 --     created with the
@@ -1486,7 +1581,7 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   If the
+-- -   #VUID-vkCmdTraceRaysKHR-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
 --     created with the
@@ -1495,188 +1590,215 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   Any shader group handle referenced by this call /must/ have been
---     queried from the currently bound ray tracing shader pipeline
+-- -   #VUID-vkCmdTraceRaysKHR-None-03429# Any shader group handle
+--     referenced by this call /must/ have been queried from the currently
+--     bound ray tracing shader pipeline
 --
--- -   This command /must/ not cause a shader call instruction to be
---     executed from a shader invocation with a
+-- -   #VUID-vkCmdTraceRaysKHR-maxRecursionDepth-03430# This command /must/
+--     not cause a shader call instruction to be executed from a shader
+--     invocation with a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth recursion depth>
 --     greater than the value of @maxRecursionDepth@ used to create the
 --     bound ray tracing pipeline
 --
--- -   If @pRayGenShaderBindingTable->buffer@ is non-sparse then it /must/
---     be bound completely and contiguously to a single
+-- -   #VUID-vkCmdTraceRaysKHR-pRayGenShaderBindingTable-04019# If
+--     @pRayGenShaderBindingTable->buffer@ is non-sparse then it /must/ be
+--     bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   The @offset@ member of @pRayGenShaderBindingTable@ /must/ be less
---     than the size of the @pRayGenShaderBindingTable->buffer@
+-- -   #VUID-vkCmdTraceRaysKHR-offset-04020# The @offset@ member of
+--     @pRayGenShaderBindingTable@ /must/ be less than the size of the
+--     @pRayGenShaderBindingTable->buffer@
 --
--- -   @pRayGenShaderBindingTable->offset@ /must/ be a multiple of
+-- -   #VUID-vkCmdTraceRaysKHR-pRayGenShaderBindingTable-04021#
+--     @pRayGenShaderBindingTable->offset@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   @pRayGenShaderBindingTable->offset@ +
+-- -   #VUID-vkCmdTraceRaysKHR-pRayGenShaderBindingTable-04022#
+--     @pRayGenShaderBindingTable->offset@ +
 --     @pRayGenShaderBindingTable->size@ /must/ be less than or equal to
 --     the size of @pRayGenShaderBindingTable->buffer@
 --
--- -   The @size@ member of @pRayGenShaderBindingTable@ /must/ be equal to
---     its @stride@ member
+-- -   #VUID-vkCmdTraceRaysKHR-size-04023# The @size@ member of
+--     @pRayGenShaderBindingTable@ /must/ be equal to its @stride@ member
 --
--- -   If @pMissShaderBindingTable->buffer@ is non-sparse then it /must/ be
+-- -   #VUID-vkCmdTraceRaysKHR-pMissShaderBindingTable-04024# If
+--     @pMissShaderBindingTable->buffer@ is non-sparse then it /must/ be
 --     bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   The @offset@ member of @pMissShaderBindingTable@ /must/ be less than
---     the size of @pMissShaderBindingTable->buffer@
+-- -   #VUID-vkCmdTraceRaysKHR-offset-04025# The @offset@ member of
+--     @pMissShaderBindingTable@ /must/ be less than the size of
+--     @pMissShaderBindingTable->buffer@
 --
--- -   The @offset@ member of @pMissShaderBindingTable@ /must/ be a
---     multiple of
+-- -   #VUID-vkCmdTraceRaysKHR-offset-04026# The @offset@ member of
+--     @pMissShaderBindingTable@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   @pMissShaderBindingTable->offset@ + @pMissShaderBindingTable->size@
+-- -   #VUID-vkCmdTraceRaysKHR-pMissShaderBindingTable-04027#
+--     @pMissShaderBindingTable->offset@ + @pMissShaderBindingTable->size@
 --     /must/ be less than or equal to the size of
 --     @pMissShaderBindingTable->buffer@
 --
--- -   The @stride@ member of @pMissShaderBindingTable@ /must/ be a
---     multiple of
+-- -   #VUID-vkCmdTraceRaysKHR-stride-04028# The @stride@ member of
+--     @pMissShaderBindingTable@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
 --
--- -   The @stride@ member of @pMissShaderBindingTable@ /must/ be less than
---     or equal to
+-- -   #VUID-vkCmdTraceRaysKHR-stride-04029# The @stride@ member of
+--     @pMissShaderBindingTable@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
 --
--- -   If @pHitShaderBindingTable->buffer@ is non-sparse then it /must/ be
+-- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-04030# If
+--     @pHitShaderBindingTable->buffer@ is non-sparse then it /must/ be
 --     bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   The @offset@ member of @pHitShaderBindingTable@ /must/ be less than
---     the size of @pHitShaderBindingTable->buffer@
+-- -   #VUID-vkCmdTraceRaysKHR-offset-04031# The @offset@ member of
+--     @pHitShaderBindingTable@ /must/ be less than the size of
+--     @pHitShaderBindingTable->buffer@
 --
--- -   The @offset@ member of @pHitShaderBindingTable@ /must/ be a multiple
---     of
+-- -   #VUID-vkCmdTraceRaysKHR-offset-04032# The @offset@ member of
+--     @pHitShaderBindingTable@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   @pHitShaderBindingTable->offset@ + @pHitShaderBindingTable->size@
+-- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-04033#
+--     @pHitShaderBindingTable->offset@ + @pHitShaderBindingTable->size@
 --     /must/ be less than or equal to the size of
 --     @pHitShaderBindingTable->buffer@
 --
--- -   The @stride@ member of @pHitShaderBindingTable@ /must/ be a multiple
---     of 'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
+-- -   #VUID-vkCmdTraceRaysKHR-stride-04034# The @stride@ member of
+--     @pHitShaderBindingTable@ /must/ be a multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
 --
--- -   The @stride@ member of @pHitShaderBindingTable@ /must/ be less than
---     or equal to
+-- -   #VUID-vkCmdTraceRaysKHR-stride-04035# The @stride@ member of
+--     @pHitShaderBindingTable@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
 --
--- -   If @pCallableShaderBindingTable->buffer@ is non-sparse then it
---     /must/ be bound completely and contiguously to a single
+-- -   #VUID-vkCmdTraceRaysKHR-pCallableShaderBindingTable-04036# If
+--     @pCallableShaderBindingTable->buffer@ is non-sparse then it /must/
+--     be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   The @offset@ member of @pCallableShaderBindingTable@ /must/ be less
---     than the size of @pCallableShaderBindingTable->buffer@
+-- -   #VUID-vkCmdTraceRaysKHR-offset-04037# The @offset@ member of
+--     @pCallableShaderBindingTable@ /must/ be less than the size of
+--     @pCallableShaderBindingTable->buffer@
 --
--- -   The @offset@ member of @pCallableShaderBindingTable@ /must/ be a
---     multiple of
+-- -   #VUID-vkCmdTraceRaysKHR-offset-04038# The @offset@ member of
+--     @pCallableShaderBindingTable@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   @pCallableShaderBindingTable->offset@ +
+-- -   #VUID-vkCmdTraceRaysKHR-pCallableShaderBindingTable-04039#
+--     @pCallableShaderBindingTable->offset@ +
 --     @pCallableShaderBindingTable->size@ /must/ be less than or equal to
 --     the size of @pCallableShaderBindingTable->buffer@
 --
--- -   The @stride@ member of @pCallableShaderBindingTable@ /must/ be a
---     multiple of
+-- -   #VUID-vkCmdTraceRaysKHR-stride-04040# The @stride@ member of
+--     @pCallableShaderBindingTable@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
 --
--- -   The @stride@ member of @pCallableShaderBindingTable@ /must/ be less
---     than or equal to
+-- -   #VUID-vkCmdTraceRaysKHR-stride-04041# The @stride@ member of
+--     @pCallableShaderBindingTable@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysKHR-flags-03508# If the currently bound ray
+--     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
 --     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysKHR-flags-03509# If the currently bound ray
+--     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
 --     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysKHR-flags-03510# If the currently bound ray
+--     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
 --     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysKHR-flags-03511# If the currently bound ray
+--     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
 --     the shader group handle identified by @pMissShaderBindingTable@
 --     /must/ contain a valid miss shader
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysKHR-flags-03512# If the currently bound ray
+--     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
 --     entries in @pHitShaderBindingTable@ accessed as a result of this
 --     command in order to execute an any hit shader /must/ not be set to
 --     zero
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysKHR-flags-03513# If the currently bound ray
+--     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
 --     entries in @pHitShaderBindingTable@ accessed as a result of this
 --     command in order to execute a closest hit shader /must/ not be set
 --     to zero
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysKHR-flags-03514# If the currently bound ray
+--     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
 --     entries in @pHitShaderBindingTable@ accessed as a result of this
 --     command in order to execute an intersection shader /must/ not be set
 --     to zero
 --
--- -   If @commandBuffer@ is a protected command buffer, any resource
---     written to by the 'Vulkan.Core10.Handles.Pipeline' object bound to
---     the pipeline bind point used by this command /must/ not be an
---     unprotected resource
+-- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-02712# If @commandBuffer@ is a
+--     protected command buffer, any resource written to by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be an unprotected resource
 --
--- -   If @commandBuffer@ is a protected command buffer, pipeline stages
---     other than the framebuffer-space and compute stages in the
+-- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-02713# If @commandBuffer@ is a
+--     protected command buffer, pipeline stages other than the
+--     framebuffer-space and compute stages in the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point /must/ not write to any resource
 --
--- -   @width@ /must/ be less than or equal to
+-- -   #VUID-vkCmdTraceRaysKHR-width-03505# @width@ /must/ be less than or
+--     equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
 --
--- -   @height@ /must/ be less than or equal to
+-- -   #VUID-vkCmdTraceRaysKHR-height-03506# @height@ /must/ be less than
+--     or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
 --
--- -   @depth@ /must/ be less than or equal to
+-- -   #VUID-vkCmdTraceRaysKHR-depth-03507# @depth@ /must/ be less than or
+--     equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
+-- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-parameter# @commandBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pRaygenShaderBindingTable@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdTraceRaysKHR-pRaygenShaderBindingTable-parameter#
+--     @pRaygenShaderBindingTable@ /must/ be a valid pointer to a valid
 --     'StridedBufferRegionKHR' structure
 --
--- -   @pMissShaderBindingTable@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdTraceRaysKHR-pMissShaderBindingTable-parameter#
+--     @pMissShaderBindingTable@ /must/ be a valid pointer to a valid
 --     'StridedBufferRegionKHR' structure
 --
--- -   @pHitShaderBindingTable@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-parameter#
+--     @pHitShaderBindingTable@ /must/ be a valid pointer to a valid
 --     'StridedBufferRegionKHR' structure
 --
--- -   @pCallableShaderBindingTable@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdTraceRaysKHR-pCallableShaderBindingTable-parameter#
+--     @pCallableShaderBindingTable@ /must/ be a valid pointer to a valid
 --     'StridedBufferRegionKHR' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-recording# @commandBuffer@
+--     /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support compute operations
 --
--- -   This command /must/ only be called outside of a render pass instance
+-- -   #VUID-vkCmdTraceRaysKHR-renderpass# This command /must/ only be
+--     called outside of a render pass instance
 --
 -- == Host Synchronization
 --
@@ -1748,30 +1870,39 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @firstGroup@ /must/ be less than the number of shader groups in
+-- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-firstGroup-04050#
+--     @firstGroup@ /must/ be less than the number of shader groups in
 --     @pipeline@
 --
--- -   The sum of @firstGroup@ and @groupCount@ /must/ be less than or
---     equal to the number of shader groups in @pipeline@
+-- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-firstGroup-02419# The sum
+--     of @firstGroup@ and @groupCount@ /must/ be less than or equal to the
+--     number of shader groups in @pipeline@
 --
--- -   @dataSize@ /must/ be at least
+-- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-dataSize-02420#
+--     @dataSize@ /must/ be at least
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@ ×
 --     @groupCount@
 --
--- -   @pipeline@ /must/ have not been created with
+-- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-pipeline-03482#
+--     @pipeline@ /must/ have not been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+-- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-pipeline-parameter#
+--     @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
 --
--- -   @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
+-- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-pData-parameter# @pData@
+--     /must/ be a valid pointer to an array of @dataSize@ bytes
 --
--- -   @dataSize@ /must/ be greater than @0@
+-- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-dataSize-arraylength#
+--     @dataSize@ /must/ be greater than @0@
 --
--- -   @pipeline@ /must/ have been created, allocated, or retrieved from
+-- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-pipeline-parent#
+--     @pipeline@ /must/ have been created, allocated, or retrieved from
 --     @device@
 --
 -- == Return Codes
@@ -1829,30 +1960,39 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @firstGroup@ /must/ be less than the number of shader groups in
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-firstGroup-04051#
+--     @firstGroup@ /must/ be less than the number of shader groups in
 --     @pipeline@
 --
--- -   The sum of @firstGroup@ and @groupCount@ /must/ be less than or
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-firstGroup-03483#
+--     The sum of @firstGroup@ and @groupCount@ /must/ be less than or
 --     equal to the number of shader groups in @pipeline@
 --
--- -   @dataSize@ /must/ be at least
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-dataSize-03484#
+--     @dataSize@ /must/ be at least
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleCaptureReplaySize@
 --     × @groupCount@
 --
--- -   'PhysicalDeviceRayTracingFeaturesKHR'::@rayTracingShaderGroupHandleCaptureReplay@
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-rayTracingShaderGroupHandleCaptureReplay-03485#
+--     'PhysicalDeviceRayTracingFeaturesKHR'::@rayTracingShaderGroupHandleCaptureReplay@
 --     /must/ be enabled to call this function
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-pipeline-parameter#
+--     @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
 --
--- -   @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-pData-parameter#
+--     @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
 --
--- -   @dataSize@ /must/ be greater than @0@
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-dataSize-arraylength#
+--     @dataSize@ /must/ be greater than @0@
 --
--- -   @pipeline@ /must/ have been created, allocated, or retrieved from
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-pipeline-parent#
+--     @pipeline@ /must/ have been created, allocated, or retrieved from
 --     @device@
 --
 -- == Return Codes
@@ -1918,48 +2058,58 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If the @flags@ member of any element of @pCreateInfos@ contains the
+-- -   #VUID-vkCreateRayTracingPipelinesKHR-flags-03415# If the @flags@
+--     member of any element of @pCreateInfos@ contains the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and the @basePipelineIndex@ member of that same element is not
 --     @-1@, @basePipelineIndex@ /must/ be less than the index into
 --     @pCreateInfos@ that corresponds to that element
 --
--- -   If the @flags@ member of any element of @pCreateInfos@ contains the
+-- -   #VUID-vkCreateRayTracingPipelinesKHR-flags-03416# If the @flags@
+--     member of any element of @pCreateInfos@ contains the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, the base pipeline /must/ have been created with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT'
 --     flag set
 --
--- -   If @pipelineCache@ was created with
+-- -   #VUID-vkCreateRayTracingPipelinesKHR-pipelineCache-02903# If
+--     @pipelineCache@ was created with
 --     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
 --     host access to @pipelineCache@ /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
 --
--- -   The
+-- -   #VUID-vkCreateRayTracingPipelinesKHR-rayTracing-03455# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing rayTracing>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateRayTracingPipelinesKHR-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @pipelineCache@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-vkCreateRayTracingPipelinesKHR-pipelineCache-parameter# If
+--     @pipelineCache@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @pipelineCache@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PipelineCache' handle
 --
--- -   @pCreateInfos@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkCreateRayTracingPipelinesKHR-pCreateInfos-parameter#
+--     @pCreateInfos@ /must/ be a valid pointer to an array of
 --     @createInfoCount@ valid 'RayTracingPipelineCreateInfoKHR' structures
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateRayTracingPipelinesKHR-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pPipelines@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkCreateRayTracingPipelinesKHR-pPipelines-parameter#
+--     @pPipelines@ /must/ be a valid pointer to an array of
 --     @createInfoCount@ 'Vulkan.Core10.Handles.Pipeline' handles
 --
--- -   @createInfoCount@ /must/ be greater than @0@
+-- -   #VUID-vkCreateRayTracingPipelinesKHR-createInfoCount-arraylength#
+--     @createInfoCount@ /must/ be greater than @0@
 --
--- -   If @pipelineCache@ is a valid handle, it /must/ have been created,
+-- -   #VUID-vkCreateRayTracingPipelinesKHR-pipelineCache-parent# If
+--     @pipelineCache@ is a valid handle, it /must/ have been created,
 --     allocated, or retrieved from @device@
 --
 -- == Return Codes
@@ -2041,7 +2191,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a 'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-magFilter-04553# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
 --     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
 --     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
 --     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
@@ -2050,20 +2201,23 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using atomic
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02691# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02692# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-filterCubic-02694# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command /must/ have a
 --     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' and format that
@@ -2072,7 +2226,8 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-filterCubicMinmax-02695# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' with a
 --     reduction mode of either
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
@@ -2086,53 +2241,59 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   Any 'Vulkan.Core10.Handles.Image' created with a
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-02696# Any
+--     'Vulkan.Core10.Handles.Image' created with a
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
--- -   For each set /n/ that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a descriptor set /must/ have been bound to /n/
---     at the same pipeline bind point, with a
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02697# For each set /n/ that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a descriptor set /must/
+--     have been bound to /n/ at the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
 --     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   For each push constant that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a push constant value /must/ have been set for
---     the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
---     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
---     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02698# For each push constant
+--     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command, a push
+--     constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   Descriptors in each bound descriptor set, specified via
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02699# Descriptors in each
+--     bound descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
 --     be valid if they are statically used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     used by this command
 --
--- -   A valid pipeline /must/ be bound to the pipeline bind point used by
---     this command
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02700# A valid pipeline /must/
+--     be bound to the pipeline bind point used by this command
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command requires any dynamic state, that
---     state /must/ have been set for @commandBuffer@, and done so after
---     any previously bound pipeline with the corresponding state not
---     specified as dynamic
---
--- -   There /must/ not have been any calls to dynamic state setting
---     commands for any state not specified as dynamic in the
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command, since that pipeline was bound
+--     point used by this command requires any dynamic state, that state
+--     /must/ have been set for @commandBuffer@, and done so after any
+--     previously bound pipeline with the corresponding state not specified
+--     as dynamic
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02859# There /must/ not have
+--     been any calls to dynamic state setting commands for any state not
+--     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command, since that
+--     pipeline was bound
+--
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02702# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -2144,21 +2305,23 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02703# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
---     bind point used by this command accesses a
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02704# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   If the
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02705# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -2166,7 +2329,7 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If the
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02706# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -2174,46 +2337,54 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   If @commandBuffer@ is an unprotected command buffer, any resource
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-02707# If
+--     @commandBuffer@ is an unprotected command buffer, any resource
 --     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-04115# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
---     @OpImageWrite@ as a result of this command, then the @Type@ of the
---     @Texel@ operand of that instruction /must/ have at least as many
---     components as the image view’s format.
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-OpImageWrite-04469# If a
+--     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
+--     as a result of this command, then the @Type@ of the @Texel@ operand
+--     of that instruction /must/ have at least as many components as the
+--     image view’s format.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-SampledType-04470# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-SampledType-04471# If a
+--     'Vulkan.Core10.Handles.ImageView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-SampledType-04472# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
 --     is accessed as a result of this command, the @SampledType@ of the
 --     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
 --     64.
 --
--- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-SampledType-04473# If a
+--     'Vulkan.Core10.Handles.BufferView' with a
 --     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
 --     /must/ have a @Width@ of 32.
 --
--- -   If the
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-sparseImageInt64Atomics-04474# If
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
 --     created with the
@@ -2222,7 +2393,8 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   If the
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-sparseImageInt64Atomics-04475# If
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
 --     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
 --     created with the
@@ -2231,192 +2403,224 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command.
 --
--- -   Any shader group handle referenced by this call /must/ have been
---     queried from the currently bound ray tracing shader pipeline
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-03429# Any shader group handle
+--     referenced by this call /must/ have been queried from the currently
+--     bound ray tracing shader pipeline
 --
--- -   This command /must/ not cause a shader call instruction to be
---     executed from a shader invocation with a
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-maxRecursionDepth-03430# This
+--     command /must/ not cause a shader call instruction to be executed
+--     from a shader invocation with a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth recursion depth>
 --     greater than the value of @maxRecursionDepth@ used to create the
 --     bound ray tracing pipeline
 --
--- -   If @pRayGenShaderBindingTable->buffer@ is non-sparse then it /must/
---     be bound completely and contiguously to a single
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pRayGenShaderBindingTable-04019# If
+--     @pRayGenShaderBindingTable->buffer@ is non-sparse then it /must/ be
+--     bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   The @offset@ member of @pRayGenShaderBindingTable@ /must/ be less
---     than the size of the @pRayGenShaderBindingTable->buffer@
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-offset-04020# The @offset@ member of
+--     @pRayGenShaderBindingTable@ /must/ be less than the size of the
+--     @pRayGenShaderBindingTable->buffer@
 --
--- -   @pRayGenShaderBindingTable->offset@ /must/ be a multiple of
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pRayGenShaderBindingTable-04021#
+--     @pRayGenShaderBindingTable->offset@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   @pRayGenShaderBindingTable->offset@ +
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pRayGenShaderBindingTable-04022#
+--     @pRayGenShaderBindingTable->offset@ +
 --     @pRayGenShaderBindingTable->size@ /must/ be less than or equal to
 --     the size of @pRayGenShaderBindingTable->buffer@
 --
--- -   The @size@ member of @pRayGenShaderBindingTable@ /must/ be equal to
---     its @stride@ member
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-size-04023# The @size@ member of
+--     @pRayGenShaderBindingTable@ /must/ be equal to its @stride@ member
 --
--- -   If @pMissShaderBindingTable->buffer@ is non-sparse then it /must/ be
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pMissShaderBindingTable-04024# If
+--     @pMissShaderBindingTable->buffer@ is non-sparse then it /must/ be
 --     bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   The @offset@ member of @pMissShaderBindingTable@ /must/ be less than
---     the size of @pMissShaderBindingTable->buffer@
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-offset-04025# The @offset@ member of
+--     @pMissShaderBindingTable@ /must/ be less than the size of
+--     @pMissShaderBindingTable->buffer@
 --
--- -   The @offset@ member of @pMissShaderBindingTable@ /must/ be a
---     multiple of
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-offset-04026# The @offset@ member of
+--     @pMissShaderBindingTable@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   @pMissShaderBindingTable->offset@ + @pMissShaderBindingTable->size@
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pMissShaderBindingTable-04027#
+--     @pMissShaderBindingTable->offset@ + @pMissShaderBindingTable->size@
 --     /must/ be less than or equal to the size of
 --     @pMissShaderBindingTable->buffer@
 --
--- -   The @stride@ member of @pMissShaderBindingTable@ /must/ be a
---     multiple of
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04028# The @stride@ member of
+--     @pMissShaderBindingTable@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
 --
--- -   The @stride@ member of @pMissShaderBindingTable@ /must/ be less than
---     or equal to
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04029# The @stride@ member of
+--     @pMissShaderBindingTable@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
 --
--- -   If @pHitShaderBindingTable->buffer@ is non-sparse then it /must/ be
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-04030# If
+--     @pHitShaderBindingTable->buffer@ is non-sparse then it /must/ be
 --     bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   The @offset@ member of @pHitShaderBindingTable@ /must/ be less than
---     the size of @pHitShaderBindingTable->buffer@
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-offset-04031# The @offset@ member of
+--     @pHitShaderBindingTable@ /must/ be less than the size of
+--     @pHitShaderBindingTable->buffer@
 --
--- -   The @offset@ member of @pHitShaderBindingTable@ /must/ be a multiple
---     of
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-offset-04032# The @offset@ member of
+--     @pHitShaderBindingTable@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   @pHitShaderBindingTable->offset@ + @pHitShaderBindingTable->size@
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-04033#
+--     @pHitShaderBindingTable->offset@ + @pHitShaderBindingTable->size@
 --     /must/ be less than or equal to the size of
 --     @pHitShaderBindingTable->buffer@
 --
--- -   The @stride@ member of @pHitShaderBindingTable@ /must/ be a multiple
---     of 'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04034# The @stride@ member of
+--     @pHitShaderBindingTable@ /must/ be a multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
 --
--- -   The @stride@ member of @pHitShaderBindingTable@ /must/ be less than
---     or equal to
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04035# The @stride@ member of
+--     @pHitShaderBindingTable@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
 --
--- -   If @pCallableShaderBindingTable->buffer@ is non-sparse then it
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pCallableShaderBindingTable-04036#
+--     If @pCallableShaderBindingTable->buffer@ is non-sparse then it
 --     /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   The @offset@ member of @pCallableShaderBindingTable@ /must/ be less
---     than the size of @pCallableShaderBindingTable->buffer@
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-offset-04037# The @offset@ member of
+--     @pCallableShaderBindingTable@ /must/ be less than the size of
+--     @pCallableShaderBindingTable->buffer@
 --
--- -   The @offset@ member of @pCallableShaderBindingTable@ /must/ be a
---     multiple of
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-offset-04038# The @offset@ member of
+--     @pCallableShaderBindingTable@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   @pCallableShaderBindingTable->offset@ +
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pCallableShaderBindingTable-04039#
+--     @pCallableShaderBindingTable->offset@ +
 --     @pCallableShaderBindingTable->size@ /must/ be less than or equal to
 --     the size of @pCallableShaderBindingTable->buffer@
 --
--- -   The @stride@ member of @pCallableShaderBindingTable@ /must/ be a
---     multiple of
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04040# The @stride@ member of
+--     @pCallableShaderBindingTable@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
 --
--- -   The @stride@ member of @pCallableShaderBindingTable@ /must/ be less
---     than or equal to
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04041# The @stride@ member of
+--     @pCallableShaderBindingTable@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03508# If the currently bound
+--     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
 --     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03509# If the currently bound
+--     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
 --     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03510# If the currently bound
+--     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
 --     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03511# If the currently bound
+--     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
 --     the shader group handle identified by @pMissShaderBindingTable@
 --     /must/ contain a valid miss shader
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03512# If the currently bound
+--     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
 --     entries in @pHitShaderBindingTable@ accessed as a result of this
 --     command in order to execute an any hit shader /must/ not be set to
 --     zero
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03513# If the currently bound
+--     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
 --     entries in @pHitShaderBindingTable@ accessed as a result of this
 --     command in order to execute a closest hit shader /must/ not be set
 --     to zero
 --
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03514# If the currently bound
+--     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
 --     entries in @pHitShaderBindingTable@ accessed as a result of this
 --     command in order to execute an intersection shader /must/ not be set
 --     to zero
 --
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-buffer-02708# If @buffer@ is
+--     non-sparse then it /must/ be bound completely and contiguously to a
+--     single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   @buffer@ /must/ have been created with the
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-buffer-02709# @buffer@ /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
 --     bit set
 --
--- -   @offset@ /must/ be a multiple of @4@
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-offset-02710# @offset@ /must/ be a
+--     multiple of @4@
 --
--- -   @commandBuffer@ /must/ not be a protected command buffer
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-02711# @commandBuffer@
+--     /must/ not be a protected command buffer
 --
--- -   (@offset@ + @sizeof@('TraceRaysIndirectCommandKHR')) /must/ be less
---     than or equal to the size of @buffer@
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-offset-03517# (@offset@ +
+--     @sizeof@('TraceRaysIndirectCommandKHR')) /must/ be less than or
+--     equal to the size of @buffer@
 --
--- -   the
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-rayTracingIndirectTraceRays-03518#
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-indirecttraceray ::rayTracingIndirectTraceRays>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pRaygenShaderBindingTable@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pRaygenShaderBindingTable-parameter#
+--     @pRaygenShaderBindingTable@ /must/ be a valid pointer to a valid
 --     'StridedBufferRegionKHR' structure
 --
--- -   @pMissShaderBindingTable@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pMissShaderBindingTable-parameter#
+--     @pMissShaderBindingTable@ /must/ be a valid pointer to a valid
 --     'StridedBufferRegionKHR' structure
 --
--- -   @pHitShaderBindingTable@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-parameter#
+--     @pHitShaderBindingTable@ /must/ be a valid pointer to a valid
 --     'StridedBufferRegionKHR' structure
 --
--- -   @pCallableShaderBindingTable@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-pCallableShaderBindingTable-parameter#
+--     @pCallableShaderBindingTable@ /must/ be a valid pointer to a valid
 --     'StridedBufferRegionKHR' structure
 --
--- -   @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-buffer-parameter# @buffer@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support compute operations
 --
--- -   This command /must/ only be called outside of a render pass instance
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-renderpass# This command /must/ only
+--     be called outside of a render pass instance
 --
--- -   Both of @buffer@, and @commandBuffer@ /must/ have been created,
---     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-commonparent# Both of @buffer@, and
+--     @commandBuffer@ /must/ have been created, allocated, or retrieved
+--     from the same 'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -2500,7 +2704,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkGetDeviceAccelerationStructureCompatibilityKHR-rayTracing-03565#
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing rayTracing>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayQuery rayQuery>
@@ -2508,9 +2713,11 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetDeviceAccelerationStructureCompatibilityKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @version@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetDeviceAccelerationStructureCompatibilityKHR-version-parameter#
+--     @version@ /must/ be a valid pointer to a valid
 --     'AccelerationStructureVersionKHR' structure
 --
 -- == Return Codes
@@ -2577,33 +2784,39 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCreateAccelerationStructureKHR-rayTracing-03487# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing rayTracing>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayQuery rayQuery>
 --     feature /must/ be enabled
 --
--- -   If 'AccelerationStructureCreateInfoKHR'::@deviceAddress@ is not
---     zero, the
+-- -   #VUID-vkCreateAccelerationStructureKHR-deviceAddress-03488# If
+--     'AccelerationStructureCreateInfoKHR'::@deviceAddress@ is not zero,
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-ascapturereplay rayTracingAccelerationStructureCaptureReplay>
 --     feature /must/ be enabled
 --
--- -   If @device@ was created with multiple physical devices, then the
+-- -   #VUID-vkCreateAccelerationStructureKHR-device-03489# If @device@ was
+--     created with multiple physical devices, then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateAccelerationStructureKHR-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateAccelerationStructureKHR-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'AccelerationStructureCreateInfoKHR' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateAccelerationStructureKHR-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pAccelerationStructure@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateAccelerationStructureKHR-pAccelerationStructure-parameter#
+--     @pAccelerationStructure@ /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
 -- == Return Codes
@@ -2707,17 +2920,20 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   Each element of @ppOffsetInfos@[i] /must/ be a valid pointer to an
---     array of @pInfos@[i].@geometryCount@
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-pOffsetInfos-03402# Each
+--     element of @ppOffsetInfos@[i] /must/ be a valid pointer to an array
+--     of @pInfos@[i].@geometryCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures
 --
--- -   Each @pInfos@[i].@srcAccelerationStructure@ /must/ not refer to the
---     same acceleration structure as any
---     @pInfos@[i].@dstAccelerationStructure@ that is provided to the same
---     build command unless it is identical for an update
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-pInfos-03403# Each
+--     @pInfos@[i].@srcAccelerationStructure@ /must/ not refer to the same
+--     acceleration structure as any @pInfos@[i].@dstAccelerationStructure@
+--     that is provided to the same build command unless it is identical
+--     for an update
 --
--- -   For each @pInfos@[i], @dstAccelerationStructure@ /must/ have been
---     created with compatible 'AccelerationStructureCreateInfoKHR' where
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-pInfos-03404# For each
+--     @pInfos@[i], @dstAccelerationStructure@ /must/ have been created
+--     with compatible 'AccelerationStructureCreateInfoKHR' where
 --     'AccelerationStructureCreateInfoKHR'::@type@ and
 --     'AccelerationStructureCreateInfoKHR'::@flags@ are identical to
 --     'AccelerationStructureBuildGeometryInfoKHR'::@type@ and
@@ -2731,36 +2947,40 @@ foreign import ccall
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@ is
 --     both 0 or both non-zero, and all other parameters are the same
 --
--- -   For each @pInfos@[i], if @update@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', then objects that were
---     previously active for that acceleration structure /must/ not be made
---     inactive as per
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-pInfos-03405# For each
+--     @pInfos@[i], if @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then objects that were previously active for that acceleration
+--     structure /must/ not be made inactive as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
--- -   For each @pInfos@[i], if @update@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', then objects that were
---     previously inactive for that acceleration structure /must/ not be
---     made active as per
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-pInfos-03406# For each
+--     @pInfos@[i], if @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then objects that were previously inactive for that acceleration
+--     structure /must/ not be made active as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
--- -   Any acceleration structure instance in any top level build in this
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-None-03407# Any
+--     acceleration structure instance in any top level build in this
 --     command /must/ not reference any bottom level acceleration structure
 --     built by this command
 --
--- -   There /must/ not be any
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-pInfos-03408# There /must/
+--     not be any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --     between the scratch memories that are provided in all the
 --     @pInfos@[i].@scratchData@ memories for the acceleration structure
 --     builds
 --
--- -   There /must/ not be any
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-None-03409# There /must/
+--     not be any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --     between memory bound to any top level, bottom level, or instance
 --     acceleration structure accessed by this command
 --
--- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.FALSE', all addresses
---     between @pInfos@[i].@scratchData@ and @pInfos@[i].@scratchData@ + N
---     - 1 /must/ be in the buffer device address range of the same buffer,
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-update-03527# If @update@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', all addresses between
+--     @pInfos@[i].@scratchData@ and @pInfos@[i].@scratchData@ + N - 1
+--     /must/ be in the buffer device address range of the same buffer,
 --     where N is given by the @size@ member of the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
@@ -2770,9 +2990,10 @@ foreign import ccall
 --     'AccelerationStructureMemoryRequirementsInfoKHR'::@type@ set to
 --     'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_KHR'
 --
--- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE', all addresses
---     between @pInfos@[i].@scratchData@ and @pInfos@[i].@scratchData@ + N
---     - 1 /must/ be in the buffer device address range of the same buffer,
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-update-03528# If @update@
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE', all addresses between
+--     @pInfos@[i].@scratchData@ and @pInfos@[i].@scratchData@ + N - 1
+--     /must/ be in the buffer device address range of the same buffer,
 --     where N is given by the @size@ member of the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
@@ -2782,45 +3003,55 @@ foreign import ccall
 --     'AccelerationStructureMemoryRequirementsInfoKHR'::@type@ set to
 --     'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_KHR'
 --
--- -   The buffer from which the buffer device address
---     @pInfos@[i].@scratchData@ is queried /must/ have been created with
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-pInfos-03529# The buffer
+--     from which the buffer device address @pInfos@[i].@scratchData@ is
+--     queried /must/ have been created with
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RAY_TRACING_BIT_KHR'
 --     usage flag
 --
--- -   All 'DeviceOrHostAddressKHR' or 'DeviceOrHostAddressConstKHR'
---     referenced by this command /must/ contain valid device addresses for
---     a buffer bound to device memory. If the buffer is non-sparse then it
---     /must/ be bound completely and contiguously to a single
---     VkDeviceMemory object
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-None-04046# All
+--     'DeviceOrHostAddressKHR' or 'DeviceOrHostAddressConstKHR' referenced
+--     by this command /must/ contain valid device addresses for a buffer
+--     bound to device memory. If the buffer is non-sparse then it /must/
+--     be bound completely and contiguously to a single VkDeviceMemory
+--     object
 --
--- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-None-03531# All
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to device memory
 --
--- -   The
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-pNext-03532# The
 --     'Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --     structure /must/ not be included in the @pNext@ chain of any of the
 --     provided 'AccelerationStructureBuildGeometryInfoKHR' structures
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pInfos@ /must/ be a valid pointer to an array of @infoCount@ valid
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-pInfos-parameter# @pInfos@
+--     /must/ be a valid pointer to an array of @infoCount@ valid
 --     'AccelerationStructureBuildGeometryInfoKHR' structures
 --
--- -   @ppOffsetInfos@ /must/ be a valid pointer to an array of @infoCount@
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-ppOffsetInfos-parameter#
+--     @ppOffsetInfos@ /must/ be a valid pointer to an array of @infoCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support compute operations
 --
--- -   This command /must/ only be called outside of a render pass instance
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-renderpass# This command
+--     /must/ only be called outside of a render pass instance
 --
--- -   @infoCount@ /must/ be greater than @0@
+-- -   #VUID-vkCmdBuildAccelerationStructureKHR-infoCount-arraylength#
+--     @infoCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
@@ -2892,46 +3123,55 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All 'DeviceOrHostAddressKHR' or 'DeviceOrHostAddressConstKHR'
---     referenced by this command /must/ contain valid device addresses for
---     a buffer bound to device memory. If the buffer is non-sparse then it
---     /must/ be bound completely and contiguously to a single
---     VkDeviceMemory object
+-- -   #VUID-vkCmdBuildAccelerationStructureIndirectKHR-None-04047# All
+--     'DeviceOrHostAddressKHR' or 'DeviceOrHostAddressConstKHR' referenced
+--     by this command /must/ contain valid device addresses for a buffer
+--     bound to device memory. If the buffer is non-sparse then it /must/
+--     be bound completely and contiguously to a single VkDeviceMemory
+--     object
 --
--- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
+-- -   #VUID-vkCmdBuildAccelerationStructureIndirectKHR-None-03534# All
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to device memory
 --
--- -   The
+-- -   #VUID-vkCmdBuildAccelerationStructureIndirectKHR-rayTracingIndirectAccelerationStructureBuild-03535#
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-indirectasbuild ::rayTracingIndirectAccelerationStructureBuild>
 --     feature /must/ be enabled
 --
--- -   The
+-- -   #VUID-vkCmdBuildAccelerationStructureIndirectKHR-pNext-03536# The
 --     'Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --     structure /must/ not be included in the @pNext@ chain of any of the
 --     provided 'AccelerationStructureBuildGeometryInfoKHR' structures
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdBuildAccelerationStructureIndirectKHR-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdBuildAccelerationStructureIndirectKHR-pInfo-parameter#
+--     @pInfo@ /must/ be a valid pointer to a valid
 --     'AccelerationStructureBuildGeometryInfoKHR' structure
 --
--- -   @indirectBuffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer'
+-- -   #VUID-vkCmdBuildAccelerationStructureIndirectKHR-indirectBuffer-parameter#
+--     @indirectBuffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer'
 --     handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdBuildAccelerationStructureIndirectKHR-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdBuildAccelerationStructureIndirectKHR-commandBuffer-cmdpool#
+--     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support compute operations
 --
--- -   This command /must/ only be called outside of a render pass instance
+-- -   #VUID-vkCmdBuildAccelerationStructureIndirectKHR-renderpass# This
+--     command /must/ only be called outside of a render pass instance
 --
--- -   Both of @commandBuffer@, and @indirectBuffer@ /must/ have been
---     created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Device'
+-- -   #VUID-vkCmdBuildAccelerationStructureIndirectKHR-commonparent# Both
+--     of @commandBuffer@, and @indirectBuffer@ /must/ have been created,
+--     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -3045,17 +3285,20 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   Each element of @ppOffsetInfos@[i] /must/ be a valid pointer to an
---     array of @pInfos@[i].@geometryCount@
+-- -   #VUID-vkBuildAccelerationStructureKHR-pOffsetInfos-03402# Each
+--     element of @ppOffsetInfos@[i] /must/ be a valid pointer to an array
+--     of @pInfos@[i].@geometryCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures
 --
--- -   Each @pInfos@[i].@srcAccelerationStructure@ /must/ not refer to the
---     same acceleration structure as any
---     @pInfos@[i].@dstAccelerationStructure@ that is provided to the same
---     build command unless it is identical for an update
+-- -   #VUID-vkBuildAccelerationStructureKHR-pInfos-03403# Each
+--     @pInfos@[i].@srcAccelerationStructure@ /must/ not refer to the same
+--     acceleration structure as any @pInfos@[i].@dstAccelerationStructure@
+--     that is provided to the same build command unless it is identical
+--     for an update
 --
--- -   For each @pInfos@[i], @dstAccelerationStructure@ /must/ have been
---     created with compatible 'AccelerationStructureCreateInfoKHR' where
+-- -   #VUID-vkBuildAccelerationStructureKHR-pInfos-03404# For each
+--     @pInfos@[i], @dstAccelerationStructure@ /must/ have been created
+--     with compatible 'AccelerationStructureCreateInfoKHR' where
 --     'AccelerationStructureCreateInfoKHR'::@type@ and
 --     'AccelerationStructureCreateInfoKHR'::@flags@ are identical to
 --     'AccelerationStructureBuildGeometryInfoKHR'::@type@ and
@@ -3069,54 +3312,64 @@ foreign import ccall
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@ is
 --     both 0 or both non-zero, and all other parameters are the same
 --
--- -   For each @pInfos@[i], if @update@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', then objects that were
---     previously active for that acceleration structure /must/ not be made
---     inactive as per
+-- -   #VUID-vkBuildAccelerationStructureKHR-pInfos-03405# For each
+--     @pInfos@[i], if @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then objects that were previously active for that acceleration
+--     structure /must/ not be made inactive as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
--- -   For each @pInfos@[i], if @update@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', then objects that were
---     previously inactive for that acceleration structure /must/ not be
---     made active as per
+-- -   #VUID-vkBuildAccelerationStructureKHR-pInfos-03406# For each
+--     @pInfos@[i], if @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then objects that were previously inactive for that acceleration
+--     structure /must/ not be made active as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
--- -   Any acceleration structure instance in any top level build in this
---     command /must/ not reference any bottom level acceleration structure
---     built by this command
+-- -   #VUID-vkBuildAccelerationStructureKHR-None-03407# Any acceleration
+--     structure instance in any top level build in this command /must/ not
+--     reference any bottom level acceleration structure built by this
+--     command
 --
--- -   There /must/ not be any
+-- -   #VUID-vkBuildAccelerationStructureKHR-pInfos-03408# There /must/ not
+--     be any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --     between the scratch memories that are provided in all the
 --     @pInfos@[i].@scratchData@ memories for the acceleration structure
 --     builds
 --
--- -   There /must/ not be any
+-- -   #VUID-vkBuildAccelerationStructureKHR-None-03409# There /must/ not
+--     be any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --     between memory bound to any top level, bottom level, or instance
 --     acceleration structure accessed by this command
 --
--- -   All 'DeviceOrHostAddressKHR' or 'DeviceOrHostAddressConstKHR'
---     referenced by this command /must/ contain valid host addresses
+-- -   #VUID-vkBuildAccelerationStructureKHR-None-03437# All
+--     'DeviceOrHostAddressKHR' or 'DeviceOrHostAddressConstKHR' referenced
+--     by this command /must/ contain valid host addresses
 --
--- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
+-- -   #VUID-vkBuildAccelerationStructureKHR-None-03438# All
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to host-visible memory
 --
--- -   The
+-- -   #VUID-vkBuildAccelerationStructureKHR-rayTracingHostAccelerationStructureCommands-03439#
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkBuildAccelerationStructureKHR-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pInfos@ /must/ be a valid pointer to an array of @infoCount@ valid
+-- -   #VUID-vkBuildAccelerationStructureKHR-pInfos-parameter# @pInfos@
+--     /must/ be a valid pointer to an array of @infoCount@ valid
 --     'AccelerationStructureBuildGeometryInfoKHR' structures
 --
--- -   @ppOffsetInfos@ /must/ be a valid pointer to an array of @infoCount@
+-- -   #VUID-vkBuildAccelerationStructureKHR-ppOffsetInfos-parameter#
+--     @ppOffsetInfos@ /must/ be a valid pointer to an array of @infoCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures
 --
--- -   @infoCount@ /must/ be greater than @0@
+-- -   #VUID-vkBuildAccelerationStructureKHR-infoCount-arraylength#
+--     @infoCount@ /must/ be greater than @0@
 --
 -- == Return Codes
 --
@@ -3190,15 +3443,18 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If @device@ was created with multiple physical devices, then the
+-- -   #VUID-vkGetAccelerationStructureDeviceAddressKHR-device-03504# If
+--     @device@ was created with multiple physical devices, then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetAccelerationStructureDeviceAddressKHR-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetAccelerationStructureDeviceAddressKHR-pInfo-parameter#
+--     @pInfo@ /must/ be a valid pointer to a valid
 --     'AccelerationStructureDeviceAddressInfoKHR' structure
 --
 -- = See Also
@@ -3230,8 +3486,9 @@ getAccelerationStructureDeviceAddressKHR device info = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   If @type@ is 'RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR' then
---     @generalShader@ /must/ be a valid index into
+-- -   #VUID-VkRayTracingShaderGroupCreateInfoKHR-type-03474# If @type@ is
+--     'RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR' then @generalShader@
+--     /must/ be a valid index into
 --     'RayTracingPipelineCreateInfoKHR'::@pStages@ referring to a shader
 --     of
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_RAYGEN_BIT_KHR',
@@ -3239,41 +3496,47 @@ getAccelerationStructureDeviceAddressKHR device info = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_CALLABLE_BIT_KHR'
 --
--- -   If @type@ is 'RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR' then
---     @closestHitShader@, @anyHitShader@, and @intersectionShader@ /must/
---     be 'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR'
+-- -   #VUID-VkRayTracingShaderGroupCreateInfoKHR-type-03475# If @type@ is
+--     'RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR' then @closestHitShader@,
+--     @anyHitShader@, and @intersectionShader@ /must/ be
+--     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR'
 --
--- -   If @type@ is
+-- -   #VUID-VkRayTracingShaderGroupCreateInfoKHR-type-03476# If @type@ is
 --     'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR' then
 --     @intersectionShader@ /must/ be a valid index into
 --     'RayTracingPipelineCreateInfoKHR'::@pStages@ referring to a shader
 --     of
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_INTERSECTION_BIT_KHR'
 --
--- -   If @type@ is 'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR'
---     then @intersectionShader@ /must/ be
+-- -   #VUID-VkRayTracingShaderGroupCreateInfoKHR-type-03477# If @type@ is
+--     'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR' then
+--     @intersectionShader@ /must/ be
 --     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR'
 --
--- -   @closestHitShader@ /must/ be either
+-- -   #VUID-VkRayTracingShaderGroupCreateInfoKHR-closestHitShader-03478#
+--     @closestHitShader@ /must/ be either
 --     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR' or a valid index into
 --     'RayTracingPipelineCreateInfoKHR'::@pStages@ referring to a shader
 --     of
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_CLOSEST_HIT_BIT_KHR'
 --
--- -   @anyHitShader@ /must/ be either
+-- -   #VUID-VkRayTracingShaderGroupCreateInfoKHR-anyHitShader-03479#
+--     @anyHitShader@ /must/ be either
 --     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR' or a valid index into
 --     'RayTracingPipelineCreateInfoKHR'::@pStages@ referring to a shader
 --     of
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_ANY_HIT_BIT_KHR'
 --
--- -   If
+-- -   #VUID-VkRayTracingShaderGroupCreateInfoKHR-rayTracingShaderGroupHandleCaptureReplayMixed-03480#
+--     If
 --     'PhysicalDeviceRayTracingFeaturesKHR'::@rayTracingShaderGroupHandleCaptureReplayMixed@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE' then
 --     @pShaderGroupCaptureReplayHandle@ /must/ not be provided if it has
 --     not been provided on a previous call to ray tracing pipeline
 --     creation
 --
--- -   If
+-- -   #VUID-VkRayTracingShaderGroupCreateInfoKHR-rayTracingShaderGroupHandleCaptureReplayMixed-03481#
+--     If
 --     'PhysicalDeviceRayTracingFeaturesKHR'::@rayTracingShaderGroupHandleCaptureReplayMixed@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE' then the caller /must/
 --     guarantee that no ray tracing pipeline creation commands with
@@ -3283,12 +3546,15 @@ getAccelerationStructureDeviceAddressKHR device info = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkRayTracingShaderGroupCreateInfoKHR-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkRayTracingShaderGroupCreateInfoKHR-pNext-pNext# @pNext@
+--     /must/ be @NULL@
 --
--- -   @type@ /must/ be a valid 'RayTracingShaderGroupTypeKHR' value
+-- -   #VUID-VkRayTracingShaderGroupCreateInfoKHR-type-parameter# @type@
+--     /must/ be a valid 'RayTracingShaderGroupTypeKHR' value
 --
 -- = See Also
 --
@@ -3426,79 +3692,96 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --
 -- == Valid Usage
 --
--- -   If @flags@ contains the
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03421# If @flags@
+--     contains the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineIndex@ is @-1@, @basePipelineHandle@ /must/
 --     be a valid handle to a ray tracing 'Vulkan.Core10.Handles.Pipeline'
 --
--- -   If @flags@ contains the
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03422# If @flags@
+--     contains the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineHandle@ is
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @basePipelineIndex@ /must/
 --     be a valid index into the calling command’s @pCreateInfos@ parameter
 --
--- -   If @flags@ contains the
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03423# If @flags@
+--     contains the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineIndex@ is not @-1@, @basePipelineHandle@
 --     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @flags@ contains the
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03424# If @flags@
+--     contains the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineHandle@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @basePipelineIndex@ /must/
 --     be @-1@
 --
--- -   The @stage@ member of at least one element of @pStages@ /must/ be
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-stage-03425# The @stage@
+--     member of at least one element of @pStages@ /must/ be
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_RAYGEN_BIT_KHR'
 --
--- -   The shader code for the entry points identified by @pStages@, and
---     the rest of the state identified by this structure /must/ adhere to
---     the pipeline linking rules described in the
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pStages-03426# The shader
+--     code for the entry points identified by @pStages@, and the rest of
+--     the state identified by this structure /must/ adhere to the pipeline
+--     linking rules described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces Shader Interfaces>
 --     chapter
 --
--- -   @layout@ /must/ be
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-layout-03427# @layout@
+--     /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-pipelinelayout-consistency consistent>
 --     with all shaders specified in @pStages@
 --
--- -   The number of resources in @layout@ accessible to each shader stage
---     that is used by the pipeline /must/ be less than or equal to
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-layout-03428# The number of
+--     resources in @layout@ accessible to each shader stage that is used
+--     by the pipeline /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageResources@
 --
--- -   @flags@ /must/ not include
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-02904# @flags@ /must/
+--     not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
 --
--- -   If the
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pipelineCreationCacheControl-02905#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
 --     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
 --     or
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
 --
--- -   @maxRecursionDepth@ /must/ be less than or equal to
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-maxRecursionDepth-03464#
+--     @maxRecursionDepth@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxRecursionDepth@
 --
--- -   If @flags@ includes
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03465# If @flags@
+--     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR',
 --     @pLibraryInterface@ /must/ not be @NULL@
 --
--- -   If the @libraryCount@ member of @libraries@ is greater than @0@,
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-libraryCount-03466# If the
+--     @libraryCount@ member of @libraries@ is greater than @0@,
 --     @pLibraryInterface@ /must/ not be @NULL@
 --
--- -   Each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the value of @maxRecursionDepth@ equal to that in
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pLibraries-03467# Each
+--     element of the @pLibraries@ member of @libraries@ /must/ have been
+--     created with the value of @maxRecursionDepth@ equal to that in this
+--     pipeline
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pLibraries-03468# Each
+--     element of the @pLibraries@ member of @libraries@ /must/ have been
+--     created with a @layout@ that is compatible with the @layout@ in this
+--     pipeline
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pLibraries-03469# Each
+--     element of the @pLibraries@ member of @libraries@ /must/ have been
+--     created with values of the @maxPayloadSize@, @maxAttributeSize@, and
+--     @maxCallableSize@ members of @pLibraryInterface@ equal to those in
 --     this pipeline
 --
--- -   Each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with a @layout@ that is compatible with the @layout@ in
---     this pipeline
---
--- -   Each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with values of the @maxPayloadSize@,
---     @maxAttributeSize@, and @maxCallableSize@ members of
---     @pLibraryInterface@ equal to those in this pipeline
---
--- -   If @flags@ includes
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03470# If @flags@
+--     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
 --     for any element of @pGroups@ with a @type@ of
 --     'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR' or
@@ -3506,7 +3789,8 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --     @anyHitShader@ of that element /must/ not be
 --     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR'
 --
--- -   If @flags@ includes
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03471# If @flags@
+--     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
 --     for any element of @pGroups@ with a @type@ of
 --     'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR' or
@@ -3514,61 +3798,72 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --     @closestHitShader@ of that element /must/ not be
 --     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR'
 --
--- -   If the
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-rayTracingPrimitiveCulling-03472#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPrimitiveCulling rayTracingPrimitiveCulling>
 --     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
 --
--- -   If the
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-rayTracingPrimitiveCulling-03473#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPrimitiveCulling rayTracingPrimitiveCulling>
 --     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
 --
--- -   If @libraries.libraryCount@ is zero, then @stageCount@ /must/ not be
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-libraries-02958# If
+--     @libraries.libraryCount@ is zero, then @stageCount@ /must/ not be
 --     zero
 --
--- -   If @libraries.libraryCount@ is zero, then @groupCount@ /must/ not be
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-libraries-02959# If
+--     @libraries.libraryCount@ is zero, then @groupCount@ /must/ not be
 --     zero
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pNext-pNext# Each @pNext@
+--     member of any structure (including this one) in the @pNext@ chain
+--     /must/ be either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --     or
 --     'Vulkan.Extensions.VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfoEXT'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-sType-unique# The @sType@
+--     value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-parameter# @flags@
+--     /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
 --
--- -   If @stageCount@ is not @0@, @pStages@ /must/ be a valid pointer to
---     an array of @stageCount@ valid
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pStages-parameter# If
+--     @stageCount@ is not @0@, @pStages@ /must/ be a valid pointer to an
+--     array of @stageCount@ valid
 --     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' structures
 --
--- -   If @groupCount@ is not @0@, @pGroups@ /must/ be a valid pointer to
---     an array of @groupCount@ valid 'RayTracingShaderGroupCreateInfoKHR'
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pGroups-parameter# If
+--     @groupCount@ is not @0@, @pGroups@ /must/ be a valid pointer to an
+--     array of @groupCount@ valid 'RayTracingShaderGroupCreateInfoKHR'
 --     structures
 --
--- -   @libraries@ /must/ be a valid
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-libraries-parameter#
+--     @libraries@ /must/ be a valid
 --     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'
 --     structure
 --
--- -   If @pLibraryInterface@ is not @NULL@, @pLibraryInterface@ /must/ be
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pLibraryInterface-parameter#
+--     If @pLibraryInterface@ is not @NULL@, @pLibraryInterface@ /must/ be
 --     a valid pointer to a valid
 --     'RayTracingPipelineInterfaceCreateInfoKHR' structure
 --
--- -   @layout@ /must/ be a valid 'Vulkan.Core10.Handles.PipelineLayout'
---     handle
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-layout-parameter# @layout@
+--     /must/ be a valid 'Vulkan.Core10.Handles.PipelineLayout' handle
 --
--- -   Both of @basePipelineHandle@, and @layout@ that are valid handles of
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-commonparent# Both of
+--     @basePipelineHandle@, and @layout@ that are valid handles of
 --     non-ignored parameters /must/ have been created, allocated, or
 --     retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
@@ -3720,12 +4015,15 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 --
 -- == Valid Usage
 --
--- -   @accelerationStructure@ /must/ not already be backed by a memory
+-- -   #VUID-VkBindAccelerationStructureMemoryInfoKHR-accelerationStructure-02450#
+--     @accelerationStructure@ /must/ not already be backed by a memory
 --     object
 --
--- -   @memoryOffset@ /must/ be less than the size of @memory@
+-- -   #VUID-VkBindAccelerationStructureMemoryInfoKHR-memoryOffset-02451#
+--     @memoryOffset@ /must/ be less than the size of @memory@
 --
--- -   @memory@ /must/ have been allocated using one of the memory types
+-- -   #VUID-VkBindAccelerationStructureMemoryInfoKHR-memory-02593#
+--     @memory@ /must/ have been allocated using one of the memory types
 --     allowed in the @memoryTypeBits@ member of the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
@@ -3733,14 +4031,16 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 --     @accelerationStructure@ and @type@ of
 --     'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_KHR'
 --
--- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@
+-- -   #VUID-VkBindAccelerationStructureMemoryInfoKHR-memoryOffset-02594#
+--     @memoryOffset@ /must/ be an integer multiple of the @alignment@
 --     member of the 'Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
 --     'getAccelerationStructureMemoryRequirementsKHR' with
 --     @accelerationStructure@ and @type@ of
 --     'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_KHR'
 --
--- -   The @size@ member of the
+-- -   #VUID-VkBindAccelerationStructureMemoryInfoKHR-size-02595# The
+--     @size@ member of the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
 --     'getAccelerationStructureMemoryRequirementsKHR' with
@@ -3750,23 +4050,28 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkBindAccelerationStructureMemoryInfoKHR-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkBindAccelerationStructureMemoryInfoKHR-pNext-pNext# @pNext@
+--     /must/ be @NULL@
 --
--- -   @accelerationStructure@ /must/ be a valid
+-- -   #VUID-VkBindAccelerationStructureMemoryInfoKHR-accelerationStructure-parameter#
+--     @accelerationStructure@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
--- -   @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
+-- -   #VUID-VkBindAccelerationStructureMemoryInfoKHR-memory-parameter#
+--     @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
 --     handle
 --
--- -   If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
+-- -   #VUID-VkBindAccelerationStructureMemoryInfoKHR-pDeviceIndices-parameter#
+--     If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
 --     pointer to an array of @deviceIndexCount@ @uint32_t@ values
 --
--- -   Both of @accelerationStructure@, and @memory@ /must/ have been
---     created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Device'
+-- -   #VUID-VkBindAccelerationStructureMemoryInfoKHR-commonparent# Both of
+--     @accelerationStructure@, and @memory@ /must/ have been created,
+--     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
@@ -3848,22 +4153,27 @@ instance Zero BindAccelerationStructureMemoryInfoKHR where
 --
 -- == Valid Usage
 --
--- -   @accelerationStructureCount@ /must/ be equal to @descriptorCount@ in
+-- -   #VUID-VkWriteDescriptorSetAccelerationStructureKHR-accelerationStructureCount-02236#
+--     @accelerationStructureCount@ /must/ be equal to @descriptorCount@ in
 --     the extended structure
 --
--- -   Each acceleration structure in @pAccelerationStructures@ /must/ have
+-- -   #VUID-VkWriteDescriptorSetAccelerationStructureKHR-pAccelerationStructures-02764#
+--     Each acceleration structure in @pAccelerationStructures@ /must/ have
 --     been created with 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkWriteDescriptorSetAccelerationStructureKHR-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR'
 --
--- -   @pAccelerationStructures@ /must/ be a valid pointer to an array of
+-- -   #VUID-VkWriteDescriptorSetAccelerationStructureKHR-pAccelerationStructures-parameter#
+--     @pAccelerationStructures@ /must/ be a valid pointer to an array of
 --     @accelerationStructureCount@ valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handles
 --
--- -   @accelerationStructureCount@ /must/ be greater than @0@
+-- -   #VUID-VkWriteDescriptorSetAccelerationStructureKHR-accelerationStructureCount-arraylength#
+--     @accelerationStructureCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -3934,17 +4244,20 @@ data AccelerationStructureMemoryRequirementsInfoKHR = AccelerationStructureMemor
     -- returns the memory requirements for the scratch memory when doing an
     -- update.
     --
+    -- #VUID-VkAccelerationStructureMemoryRequirementsInfoKHR-type-parameter#
     -- @type@ /must/ be a valid
     -- 'AccelerationStructureMemoryRequirementsTypeKHR' value
     type' :: AccelerationStructureMemoryRequirementsTypeKHR
   , -- | @buildType@ selects the build types whose memory requirements are being
     -- queried.
     --
+    -- #VUID-VkAccelerationStructureMemoryRequirementsInfoKHR-buildType-parameter#
     -- @buildType@ /must/ be a valid 'AccelerationStructureBuildTypeKHR' value
     buildType :: AccelerationStructureBuildTypeKHR
   , -- | @accelerationStructure@ is the acceleration structure to be queried for
     -- memory requirements.
     --
+    -- #VUID-VkAccelerationStructureMemoryRequirementsInfoKHR-accelerationStructure-parameter#
     -- @accelerationStructure@ /must/ be a valid
     -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
     accelerationStructure :: AccelerationStructureKHR
@@ -4005,34 +4318,39 @@ instance Zero AccelerationStructureMemoryRequirementsInfoKHR where
 --
 -- = Description
 --
--- -   @rayTracing@ indicates whether the implementation supports ray
---     tracing functionality. See
+-- -   #features-raytracing# @rayTracing@ indicates whether the
+--     implementation supports ray tracing functionality. See
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing Ray Tracing>.
 --
--- -   @rayTracingShaderGroupHandleCaptureReplay@ indicates whether the
+-- -   #features-raytracing-sghcapturereplay#
+--     @rayTracingShaderGroupHandleCaptureReplay@ indicates whether the
 --     implementation supports saving and reusing shader group handles,
 --     e.g. for trace capture and replay.
 --
--- -   @rayTracingShaderGroupHandleCaptureReplayMixed@ indicates whether
+-- -   #features-raytracing-sghcapturereplaymixed#
+--     @rayTracingShaderGroupHandleCaptureReplayMixed@ indicates whether
 --     the implementation supports reuse of shader group handles being
 --     arbitrarily mixed with creation of non-reused shader group handles.
 --     If this is 'Vulkan.Core10.FundamentalTypes.FALSE', all reused shader
 --     group handles /must/ be specified before any non-reused handles
 --     /may/ be created.
 --
--- -   @rayTracingAccelerationStructureCaptureReplay@ indicates whether the
+-- -   #features-raytracing-ascapturereplay#
+--     @rayTracingAccelerationStructureCaptureReplay@ indicates whether the
 --     implementation supports saving and reusing acceleration structure
 --     device addresses, e.g. for trace capture and replay.
 --
--- -   @rayTracingIndirectTraceRays@ indicates whether the implementation
---     supports indirect trace ray commands, e.g.
---     'cmdTraceRaysIndirectKHR'.
+-- -   #features-raytracing-indirecttraceray# @rayTracingIndirectTraceRays@
+--     indicates whether the implementation supports indirect trace ray
+--     commands, e.g. 'cmdTraceRaysIndirectKHR'.
 --
--- -   @rayTracingIndirectAccelerationStructureBuild@ indicates whether the
+-- -   #features-raytracing-indirectasbuild#
+--     @rayTracingIndirectAccelerationStructureBuild@ indicates whether the
 --     implementation supports indirect acceleration structure build
 --     commands, e.g. 'cmdBuildAccelerationStructureIndirectKHR'.
 --
--- -   @rayTracingHostAccelerationStructureCommands@ indicates whether the
+-- -   #features-raytracing-hostascmds#
+--     @rayTracingHostAccelerationStructureCommands@ indicates whether the
 --     implementation supports host side acceleration structure commands,
 --     e.g. 'buildAccelerationStructureKHR',
 --     'copyAccelerationStructureKHR',
@@ -4040,11 +4358,11 @@ instance Zero AccelerationStructureMemoryRequirementsInfoKHR where
 --     'copyMemoryToAccelerationStructureKHR',
 --     'writeAccelerationStructuresPropertiesKHR'.
 --
--- -   @rayQuery@ indicates whether the implementation supports ray query
---     (@OpRayQueryProceedKHR@) functionality.
+-- -   #features-rayQuery# @rayQuery@ indicates whether the implementation
+--     supports ray query (@OpRayQueryProceedKHR@) functionality.
 --
--- -   @rayTracingPrimitiveCulling@ indicates whether the implementation
---     supports
+-- -   #features-rayTracingPrimitiveCulling# @rayTracingPrimitiveCulling@
+--     indicates whether the implementation supports
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-traversal-culling-primitive primitive culling during ray traversal>.
 --
 -- If the 'PhysicalDeviceRayTracingFeaturesKHR' structure is included in
@@ -4056,14 +4374,16 @@ instance Zero AccelerationStructureMemoryRequirementsInfoKHR where
 --
 -- == Valid Usage
 --
--- -   If @rayTracingShaderGroupHandleCaptureReplayMixed@ is
+-- -   #VUID-VkPhysicalDeviceRayTracingFeaturesKHR-rayTracingShaderGroupHandleCaptureReplayMixed-03348#
+--     If @rayTracingShaderGroupHandleCaptureReplayMixed@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @rayTracingShaderGroupHandleCaptureReplay@ /must/ also be
 --     'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceRayTracingFeaturesKHR-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_FEATURES_KHR'
 --
 -- = See Also
@@ -4182,8 +4502,8 @@ instance Zero PhysicalDeviceRayTracingFeaturesKHR where
 data PhysicalDeviceRayTracingPropertiesKHR = PhysicalDeviceRayTracingPropertiesKHR
   { -- | @shaderGroupHandleSize@ size in bytes of the shader header.
     shaderGroupHandleSize :: Word32
-  , -- | @maxRecursionDepth@ is the maximum number of levels of recursion allowed
-    -- in a trace command.
+  , -- | #limits-maxRecursionDepth# @maxRecursionDepth@ is the maximum number of
+    -- levels of recursion allowed in a trace command.
     maxRecursionDepth :: Word32
   , -- | @maxShaderGroupStride@ is the maximum stride in bytes allowed between
     -- shader groups in the SBT.
@@ -4282,16 +4602,19 @@ instance Zero PhysicalDeviceRayTracingPropertiesKHR where
 --
 -- == Valid Usage
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @size@
---     plus @offset@ /must/ be less than or equal to the size of @buffer@
+-- -   #VUID-VkStridedBufferRegionKHR-buffer-03515# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @size@ plus @offset@
+--     /must/ be less than or equal to the size of @buffer@
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @stride@ /must/ be less than the size of @buffer@
+-- -   #VUID-VkStridedBufferRegionKHR-buffer-03516# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @stride@ /must/ be less
+--     than the size of @buffer@
 --
 -- == Valid Usage (Implicit)
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-VkStridedBufferRegionKHR-buffer-parameter# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Buffer' handle
 --
 -- = See Also
 --
@@ -4369,17 +4692,20 @@ instance Zero StridedBufferRegionKHR where
 data TraceRaysIndirectCommandKHR = TraceRaysIndirectCommandKHR
   { -- | @width@ is the width of the ray trace query dimensions.
     --
-    -- @width@ /must/ be less than or equal to
+    -- #VUID-VkTraceRaysIndirectCommandKHR-width-03519# @width@ /must/ be less
+    -- than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
     width :: Word32
   , -- | @height@ is height of the ray trace query dimensions.
     --
-    -- @height@ /must/ be less than or equal to
+    -- #VUID-VkTraceRaysIndirectCommandKHR-height-03520# @height@ /must/ be
+    -- less than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
     height :: Word32
   , -- | @depth@ is depth of the ray trace query dimensions.
     --
-    -- @depth@ /must/ be less than or equal to
+    -- #VUID-VkTraceRaysIndirectCommandKHR-depth-03521# @depth@ /must/ be less
+    -- than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
     depth :: Word32
   }
@@ -4430,23 +4756,30 @@ instance Zero TraceRaysIndirectCommandKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-pNext-pNext#
+--     @pNext@ /must/ be @NULL@
 --
--- -   @vertexFormat@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format'
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexFormat-parameter#
+--     @vertexFormat@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format'
 --     value
 --
--- -   @vertexData@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexData-parameter#
+--     @vertexData@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
 --
--- -   @indexType@ /must/ be a valid
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexType-parameter#
+--     @indexType@ /must/ be a valid
 --     'Vulkan.Core10.Enums.IndexType.IndexType' value
 --
--- -   If @indexData@ is not @0@, @indexData@ /must/ be a valid
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexData-parameter#
+--     If @indexData@ is not @0@, @indexData@ /must/ be a valid
 --     'DeviceOrHostAddressConstKHR' union
 --
--- -   If @transformData@ is not @0@, @transformData@ /must/ be a valid
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-transformData-parameter#
+--     If @transformData@ is not @0@, @transformData@ /must/ be a valid
 --     'DeviceOrHostAddressConstKHR' union
 --
 -- = See Also
@@ -4531,13 +4864,16 @@ data AccelerationStructureGeometryAabbsDataKHR = AccelerationStructureGeometryAa
     -- 'AabbPositionsKHR' structures containing position data for each
     -- axis-aligned bounding box in the geometry.
     --
-    -- @data@ /must/ be aligned to @8@ bytes
+    -- #VUID-VkAccelerationStructureGeometryAabbsDataKHR-data-03544# @data@
+    -- /must/ be aligned to @8@ bytes
     --
-    -- @data@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
+    -- #VUID-VkAccelerationStructureGeometryAabbsDataKHR-data-parameter# @data@
+    -- /must/ be a valid 'DeviceOrHostAddressConstKHR' union
     data' :: DeviceOrHostAddressConstKHR
   , -- | @stride@ is the stride in bytes between each entry in @data@.
     --
-    -- @stride@ /must/ be a multiple of @8@
+    -- #VUID-VkAccelerationStructureGeometryAabbsDataKHR-stride-03545# @stride@
+    -- /must/ be a multiple of @8@
     stride :: DeviceSize
   }
   deriving (Typeable)
@@ -4574,19 +4910,24 @@ instance Zero AccelerationStructureGeometryAabbsDataKHR where
 --
 -- == Valid Usage
 --
--- -   @data@ /must/ be aligned to @16@ bytes
+-- -   #VUID-VkAccelerationStructureGeometryInstancesDataKHR-data-03549#
+--     @data@ /must/ be aligned to @16@ bytes
 --
--- -   If @arrayOfPointers@ is true, each pointer /must/ be aligned to @16@
+-- -   #VUID-VkAccelerationStructureGeometryInstancesDataKHR-arrayOfPointers-03550#
+--     If @arrayOfPointers@ is true, each pointer /must/ be aligned to @16@
 --     bytes
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkAccelerationStructureGeometryInstancesDataKHR-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkAccelerationStructureGeometryInstancesDataKHR-pNext-pNext#
+--     @pNext@ /must/ be @NULL@
 --
--- -   @data@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
+-- -   #VUID-VkAccelerationStructureGeometryInstancesDataKHR-data-parameter#
+--     @data@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
 --
 -- = See Also
 --
@@ -4637,41 +4978,50 @@ instance Zero AccelerationStructureGeometryInstancesDataKHR where
 --
 -- == Valid Usage
 --
--- -   If @geometryType@ is 'GEOMETRY_TYPE_AABBS_KHR', the @aabbs@ member
---     of @geometry@ /must/ be a valid
+-- -   #VUID-VkAccelerationStructureGeometryKHR-geometryType-03541# If
+--     @geometryType@ is 'GEOMETRY_TYPE_AABBS_KHR', the @aabbs@ member of
+--     @geometry@ /must/ be a valid
 --     'AccelerationStructureGeometryAabbsDataKHR' structure
 --
--- -   If @geometryType@ is 'GEOMETRY_TYPE_TRIANGLES_KHR', the @triangles@
+-- -   #VUID-VkAccelerationStructureGeometryKHR-geometryType-03542# If
+--     @geometryType@ is 'GEOMETRY_TYPE_TRIANGLES_KHR', the @triangles@
 --     member of @geometry@ /must/ be a valid
 --     'AccelerationStructureGeometryTrianglesDataKHR' structure
 --
--- -   If @geometryType@ is 'GEOMETRY_TYPE_INSTANCES_KHR', the @instances@
+-- -   #VUID-VkAccelerationStructureGeometryKHR-geometryType-03543# If
+--     @geometryType@ is 'GEOMETRY_TYPE_INSTANCES_KHR', the @instances@
 --     member of @geometry@ /must/ be a valid
 --     'AccelerationStructureGeometryInstancesDataKHR' structure
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkAccelerationStructureGeometryKHR-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkAccelerationStructureGeometryKHR-pNext-pNext# @pNext@ /must/
+--     be @NULL@
 --
--- -   @geometryType@ /must/ be a valid 'GeometryTypeKHR' value
+-- -   #VUID-VkAccelerationStructureGeometryKHR-geometryType-parameter#
+--     @geometryType@ /must/ be a valid 'GeometryTypeKHR' value
 --
--- -   If @geometryType@ is 'GEOMETRY_TYPE_TRIANGLES_KHR', the @triangles@
+-- -   #VUID-VkAccelerationStructureGeometryKHR-triangles-parameter# If
+--     @geometryType@ is 'GEOMETRY_TYPE_TRIANGLES_KHR', the @triangles@
 --     member of @geometry@ /must/ be a valid
 --     'AccelerationStructureGeometryTrianglesDataKHR' structure
 --
--- -   If @geometryType@ is 'GEOMETRY_TYPE_AABBS_KHR', the @aabbs@ member
---     of @geometry@ /must/ be a valid
+-- -   #VUID-VkAccelerationStructureGeometryKHR-aabbs-parameter# If
+--     @geometryType@ is 'GEOMETRY_TYPE_AABBS_KHR', the @aabbs@ member of
+--     @geometry@ /must/ be a valid
 --     'AccelerationStructureGeometryAabbsDataKHR' structure
 --
--- -   If @geometryType@ is 'GEOMETRY_TYPE_INSTANCES_KHR', the @instances@
+-- -   #VUID-VkAccelerationStructureGeometryKHR-instances-parameter# If
+--     @geometryType@ is 'GEOMETRY_TYPE_INSTANCES_KHR', the @instances@
 --     member of @geometry@ /must/ be a valid
 --     'AccelerationStructureGeometryInstancesDataKHR' structure
 --
--- -   @flags@ /must/ be a valid combination of 'GeometryFlagBitsKHR'
---     values
+-- -   #VUID-VkAccelerationStructureGeometryKHR-flags-parameter# @flags@
+--     /must/ be a valid combination of 'GeometryFlagBitsKHR' values
 --
 -- = See Also
 --
@@ -4738,52 +5088,64 @@ instance Zero AccelerationStructureGeometryKHR where
 --
 -- == Valid Usage
 --
--- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-update-03537# If
+--     @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @srcAccelerationStructure@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-update-03538# If
+--     @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @srcAccelerationStructure@ /must/ have been built before with
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' set in
 --     'AccelerationStructureBuildGeometryInfoKHR'::@flags@
 --
--- -   @scratchData@ /must/ have been created with
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-scratchData-03539#
+--     @scratchData@ /must/ have been created with
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RAY_TRACING_BIT_KHR'
 --     usage flag
 --
--- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-update-03540# If
+--     @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the
 --     @srcAccelerationStructure@ and @dstAccelerationStructure@ objects
 --     /must/ either be the same object or not have any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-pNext-pNext#
+--     @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-sType-unique# The
+--     @sType@ value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   @type@ /must/ be a valid 'AccelerationStructureTypeKHR' value
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-type-parameter#
+--     @type@ /must/ be a valid 'AccelerationStructureTypeKHR' value
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-flags-parameter#
+--     @flags@ /must/ be a valid combination of
 --     'BuildAccelerationStructureFlagBitsKHR' values
 --
--- -   If @srcAccelerationStructure@ is not
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-srcAccelerationStructure-parameter#
+--     If @srcAccelerationStructure@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @srcAccelerationStructure@
 --     /must/ be a valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
--- -   @dstAccelerationStructure@ /must/ be a valid
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-dstAccelerationStructure-parameter#
+--     @dstAccelerationStructure@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
--- -   @scratchData@ /must/ be a valid 'DeviceOrHostAddressKHR' union
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-scratchData-parameter#
+--     @scratchData@ /must/ be a valid 'DeviceOrHostAddressKHR' union
 --
--- -   Both of @dstAccelerationStructure@, and @srcAccelerationStructure@
---     that are valid handles of non-ignored parameters /must/ have been
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-commonparent# Both
+--     of @dstAccelerationStructure@, and @srcAccelerationStructure@ that
+--     are valid handles of non-ignored parameters /must/ have been
 --     created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
 --
@@ -4932,29 +5294,34 @@ instance es ~ '[] => Zero (AccelerationStructureBuildGeometryInfoKHR es) where
 --
 -- == Valid Usage
 --
--- -   For geometries of type 'GEOMETRY_TYPE_TRIANGLES_KHR', if the
+-- -   #VUID-VkAccelerationStructureBuildOffsetInfoKHR-primitiveOffset-03551#
+--     For geometries of type 'GEOMETRY_TYPE_TRIANGLES_KHR', if the
 --     geometry uses indices, the offset @primitiveOffset@ from
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@indexData@ /must/
 --     be a multiple of the element size of
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@indexType@
 --
--- -   For geometries of type 'GEOMETRY_TYPE_TRIANGLES_KHR', if the
+-- -   #VUID-VkAccelerationStructureBuildOffsetInfoKHR-primitiveOffset-03552#
+--     For geometries of type 'GEOMETRY_TYPE_TRIANGLES_KHR', if the
 --     geometry doesn’t use indices, the offset @primitiveOffset@ from
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@vertexData@ /must/
 --     be a multiple of the component size of
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@
 --
--- -   For geometries of type 'GEOMETRY_TYPE_TRIANGLES_KHR', the offset
+-- -   #VUID-VkAccelerationStructureBuildOffsetInfoKHR-transformOffset-03553#
+--     For geometries of type 'GEOMETRY_TYPE_TRIANGLES_KHR', the offset
 --     @transformOffset@ from
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@
 --     /must/ be a multiple of 16
 --
--- -   For geometries of type 'GEOMETRY_TYPE_AABBS_KHR', the offset
+-- -   #VUID-VkAccelerationStructureBuildOffsetInfoKHR-primitiveOffset-03554#
+--     For geometries of type 'GEOMETRY_TYPE_AABBS_KHR', the offset
 --     @primitiveOffset@ from
 --     'AccelerationStructureGeometryAabbsDataKHR'::@data@ /must/ be a
 --     multiple of 8
 --
--- -   For geometries of type 'GEOMETRY_TYPE_INSTANCES_KHR', the offset
+-- -   #VUID-VkAccelerationStructureBuildOffsetInfoKHR-primitiveOffset-03555#
+--     For geometries of type 'GEOMETRY_TYPE_INSTANCES_KHR', the offset
 --     @primitiveOffset@ from
 --     'AccelerationStructureGeometryInstancesDataKHR'::@data@ /must/ be a
 --     multiple of 16 \/\/ TODO - Almost certainly should be more here
@@ -5038,7 +5405,8 @@ instance Zero AccelerationStructureBuildOffsetInfoKHR where
 --
 -- == Valid Usage
 --
--- -   If @geometryType@ is 'GEOMETRY_TYPE_TRIANGLES_KHR', @vertexFormat@
+-- -   #VUID-VkAccelerationStructureCreateGeometryTypeInfoKHR-geometryType-03501#
+--     If @geometryType@ is 'GEOMETRY_TYPE_TRIANGLES_KHR', @vertexFormat@
 --     /must/ support the
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
 --     in
@@ -5046,24 +5414,30 @@ instance Zero AccelerationStructureBuildOffsetInfoKHR where
 --     as returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'
 --
--- -   If @geometryType@ is 'GEOMETRY_TYPE_TRIANGLES_KHR', @indexType@
+-- -   #VUID-VkAccelerationStructureCreateGeometryTypeInfoKHR-geometryType-03502#
+--     If @geometryType@ is 'GEOMETRY_TYPE_TRIANGLES_KHR', @indexType@
 --     /must/ be 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT16',
 --     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT32', or
 --     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkAccelerationStructureCreateGeometryTypeInfoKHR-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_GEOMETRY_TYPE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkAccelerationStructureCreateGeometryTypeInfoKHR-pNext-pNext#
+--     @pNext@ /must/ be @NULL@
 --
--- -   @geometryType@ /must/ be a valid 'GeometryTypeKHR' value
+-- -   #VUID-VkAccelerationStructureCreateGeometryTypeInfoKHR-geometryType-parameter#
+--     @geometryType@ /must/ be a valid 'GeometryTypeKHR' value
 --
--- -   @indexType@ /must/ be a valid
+-- -   #VUID-VkAccelerationStructureCreateGeometryTypeInfoKHR-indexType-parameter#
+--     @indexType@ /must/ be a valid
 --     'Vulkan.Core10.Enums.IndexType.IndexType' value
 --
--- -   If @vertexFormat@ is not @0@, @vertexFormat@ /must/ be a valid
+-- -   #VUID-VkAccelerationStructureCreateGeometryTypeInfoKHR-vertexFormat-parameter#
+--     If @vertexFormat@ is not @0@, @vertexFormat@ /must/ be a valid
 --     'Vulkan.Core10.Enums.Format.Format' value
 --
 -- = See Also
@@ -5172,64 +5546,80 @@ instance Zero AccelerationStructureCreateGeometryTypeInfoKHR where
 --
 -- == Valid Usage
 --
--- -   If @compactedSize@ is not @0@ then @maxGeometryCount@ /must/ be @0@
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-compactedSize-03490# If
+--     @compactedSize@ is not @0@ then @maxGeometryCount@ /must/ be @0@
 --
--- -   If @compactedSize@ is @0@ then @maxGeometryCount@ /must/ not be @0@
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-compactedSize-02993# If
+--     @compactedSize@ is @0@ then @maxGeometryCount@ /must/ not be @0@
 --
--- -   If @type@ is 'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR' then
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-type-03491# If @type@ is
+--     'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR' then
 --     @maxGeometryCount@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxGeometryCount@
 --
--- -   If @type@ is 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' then the
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-type-03492# If @type@ is
+--     'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' then the
 --     @maxPrimitiveCount@ member of each element of the @pGeometryInfos@
 --     array /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxInstanceCount@
 --
--- -   The total number of triangles in all geometries /must/ be less than
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-maxPrimitiveCount-03493#
+--     The total number of triangles in all geometries /must/ be less than
 --     or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxPrimitiveCount@
 --
--- -   The total number of AABBs in all geometries /must/ be less than or
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-maxPrimitiveCount-03494#
+--     The total number of AABBs in all geometries /must/ be less than or
 --     equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxPrimitiveCount@
 --
--- -   If @type@ is 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' and
---     @compactedSize@ is @0@, @maxGeometryCount@ /must/ be @1@
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-type-03495# If @type@ is
+--     'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' and @compactedSize@ is
+--     @0@, @maxGeometryCount@ /must/ be @1@
 --
--- -   If @type@ is 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' and
---     @compactedSize@ is @0@, the @geometryType@ member of elements of
---     @pGeometryInfos@ /must/ be 'GEOMETRY_TYPE_INSTANCES_KHR'
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-type-03496# If @type@ is
+--     'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' and @compactedSize@ is
+--     @0@, the @geometryType@ member of elements of @pGeometryInfos@
+--     /must/ be 'GEOMETRY_TYPE_INSTANCES_KHR'
 --
--- -   If @type@ is 'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR' and
---     @compactedSize@ is @0@, the @geometryType@ member of elements of
---     @pGeometryInfos@ /must/ not be 'GEOMETRY_TYPE_INSTANCES_KHR'
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-type-03497# If @type@ is
+--     'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR' and @compactedSize@
+--     is @0@, the @geometryType@ member of elements of @pGeometryInfos@
+--     /must/ not be 'GEOMETRY_TYPE_INSTANCES_KHR'
 --
--- -   If @type@ is 'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR' then the
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-type-03498# If @type@ is
+--     'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR' then the
 --     @geometryType@ member of each geometry in @pGeometryInfos@ /must/ be
 --     the same
 --
--- -   If @flags@ has the
---     'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR' bit set,
---     then it /must/ not have the
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-flags-03499# If @flags@
+--     has the 'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR' bit
+--     set, then it /must/ not have the
 --     'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR' bit set
 --
--- -   If @deviceAddress@ is not @0@,
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-deviceAddress-03500# If
+--     @deviceAddress@ is not @0@,
 --     'PhysicalDeviceRayTracingFeaturesKHR'::@rayTracingAccelerationStructureCaptureReplay@
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-pNext-pNext# @pNext@
+--     /must/ be @NULL@
 --
--- -   @type@ /must/ be a valid 'AccelerationStructureTypeKHR' value
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-type-parameter# @type@
+--     /must/ be a valid 'AccelerationStructureTypeKHR' value
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-flags-parameter# @flags@
+--     /must/ be a valid combination of
 --     'BuildAccelerationStructureFlagBitsKHR' values
 --
--- -   If @maxGeometryCount@ is not @0@, @pGeometryInfos@ /must/ be a valid
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-pGeometryInfos-parameter#
+--     If @maxGeometryCount@ is not @0@, @pGeometryInfos@ /must/ be a valid
 --     pointer to an array of @maxGeometryCount@ valid
 --     'AccelerationStructureCreateGeometryTypeInfoKHR' structures
 --
@@ -5327,15 +5717,18 @@ instance Zero AccelerationStructureCreateInfoKHR where
 data AabbPositionsKHR = AabbPositionsKHR
   { -- | @minX@ is the x position of one opposing corner of a bounding box.
     --
-    -- @minX@ /must/ be less than or equal to @maxX@
+    -- #VUID-VkAabbPositionsKHR-minX-03546# @minX@ /must/ be less than or equal
+    -- to @maxX@
     minX :: Float
   , -- | @minY@ is the y position of one opposing corner of a bounding box.
     --
-    -- @minY@ /must/ be less than or equal to @maxY@
+    -- #VUID-VkAabbPositionsKHR-minY-03547# @minY@ /must/ be less than or equal
+    -- to @maxY@
     minY :: Float
   , -- | @minZ@ is the z position of one opposing corner of a bounding box.
     --
-    -- @minZ@ /must/ be less than or equal to @maxZ@
+    -- #VUID-VkAabbPositionsKHR-minZ-03548# @minZ@ /must/ be less than or equal
+    -- to @maxZ@
     minZ :: Float
   , -- | @maxX@ is the x position of the other opposing corner of a bounding box.
     maxX :: Float
@@ -5555,8 +5948,8 @@ data AccelerationStructureInstanceKHR = AccelerationStructureInstanceKHR
   , -- | @flags@ is an 8-bit mask of 'GeometryInstanceFlagBitsKHR' values to
     -- apply to this instance.
     --
-    -- @flags@ /must/ be a valid combination of 'GeometryInstanceFlagBitsKHR'
-    -- values
+    -- #VUID-VkAccelerationStructureInstanceKHR-flags-parameter# @flags@ /must/
+    -- be a valid combination of 'GeometryInstanceFlagBitsKHR' values
     flags :: GeometryInstanceFlagsKHR
   , -- | @accelerationStructureReference@ is either:
     --
@@ -5630,6 +6023,7 @@ data AccelerationStructureDeviceAddressInfoKHR = AccelerationStructureDeviceAddr
   { -- | @accelerationStructure@ specifies the acceleration structure whose
     -- address is being queried.
     --
+    -- #VUID-VkAccelerationStructureDeviceAddressInfoKHR-accelerationStructure-parameter#
     -- @accelerationStructure@ /must/ be a valid
     -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
     accelerationStructure :: AccelerationStructureKHR }
@@ -5684,6 +6078,7 @@ data AccelerationStructureVersionKHR = AccelerationStructureVersionKHR
   { -- | @versionData@ is a pointer to the version header as defined in
     -- 'CopyAccelerationStructureModeKHR'
     --
+    -- #VUID-VkAccelerationStructureVersionKHR-versionData-parameter#
     -- @versionData@ /must/ be a valid pointer to an array of @2@*VK_UUID_SIZE
     -- @uint8_t@ values
     versionData :: ByteString }
@@ -5727,34 +6122,42 @@ instance Zero AccelerationStructureVersionKHR where
 --
 -- == Valid Usage
 --
--- -   @mode@ /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' or
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-mode-03410# @mode@ /must/
+--     be 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' or
 --     'COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR'
 --
--- -   @src@ /must/ have been built with
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-src-03411# @src@ /must/
+--     have been built with
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' if @mode@ is
 --     'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-pNext-pNext# @pNext@ /must/
+--     be @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-sType-unique# The @sType@
+--     value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   @src@ /must/ be a valid
---     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-src-parameter# @src@ /must/
+--     be a valid 'Vulkan.Extensions.Handles.AccelerationStructureKHR'
+--     handle
 --
--- -   @dst@ /must/ be a valid
---     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-dst-parameter# @dst@ /must/
+--     be a valid 'Vulkan.Extensions.Handles.AccelerationStructureKHR'
+--     handle
 --
--- -   @mode@ /must/ be a valid 'CopyAccelerationStructureModeKHR' value
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-mode-parameter# @mode@
+--     /must/ be a valid 'CopyAccelerationStructureModeKHR' value
 --
--- -   Both of @dst@, and @src@ /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-commonparent# Both of
+--     @dst@, and @src@ /must/ have been created, allocated, or retrieved
+--     from the same 'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
@@ -5832,29 +6235,36 @@ instance es ~ '[] => Zero (CopyAccelerationStructureInfoKHR es) where
 --
 -- == Valid Usage
 --
--- -   The memory pointed to by @dst@ /must/ be at least as large as the
+-- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-dst-03561# The
+--     memory pointed to by @dst@ /must/ be at least as large as the
 --     serialization size of @src@, as reported by
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
 --
--- -   @mode@ /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR'
+-- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-mode-03412# @mode@
+--     /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-pNext-pNext#
+--     @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-sType-unique# The
+--     @sType@ value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   @src@ /must/ be a valid
+-- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-src-parameter#
+--     @src@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
--- -   @dst@ /must/ be a valid 'DeviceOrHostAddressKHR' union
+-- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-dst-parameter#
+--     @dst@ /must/ be a valid 'DeviceOrHostAddressKHR' union
 --
--- -   @mode@ /must/ be a valid 'CopyAccelerationStructureModeKHR' value
+-- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-mode-parameter#
+--     @mode@ /must/ be a valid 'CopyAccelerationStructureModeKHR' value
 --
 -- = See Also
 --
@@ -5924,29 +6334,36 @@ instance es ~ '[] => Zero (CopyAccelerationStructureToMemoryInfoKHR es) where
 --
 -- == Valid Usage
 --
--- -   @mode@ /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
+-- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-mode-03413# @mode@
+--     /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
 --
--- -   The data in @pInfo->src@ /must/ have a format compatible with the
+-- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-pInfo-03414# The
+--     data in @pInfo->src@ /must/ have a format compatible with the
 --     destination physical device as returned by
 --     'getDeviceAccelerationStructureCompatibilityKHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-pNext-pNext#
+--     @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-sType-unique# The
+--     @sType@ value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   @src@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
+-- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-src-parameter#
+--     @src@ /must/ be a valid 'DeviceOrHostAddressConstKHR' union
 --
--- -   @dst@ /must/ be a valid
+-- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-dst-parameter#
+--     @dst@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
--- -   @mode@ /must/ be a valid 'CopyAccelerationStructureModeKHR' value
+-- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-mode-parameter#
+--     @mode@ /must/ be a valid 'CopyAccelerationStructureModeKHR' value
 --
 -- = See Also
 --

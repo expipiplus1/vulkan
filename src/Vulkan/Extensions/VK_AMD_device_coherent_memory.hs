@@ -43,7 +43,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCoherentMemoryFeaturesAMD = PhysicalDeviceCoherentMemoryFeaturesAMD
-  { -- | @deviceCoherentMemory@ indicates that the implementation supports
+  { -- | #features-deviceCoherentMemory# @deviceCoherentMemory@ indicates that
+    -- the implementation supports
     -- <VkMemoryPropertyFlagBits.html device coherent memory>.
     deviceCoherentMemory :: Bool }
   deriving (Typeable, Eq)

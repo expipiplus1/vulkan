@@ -108,15 +108,17 @@ getBufferDeviceAddressEXT = getBufferDeviceAddress
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceBufferDeviceAddressFeaturesEXT = PhysicalDeviceBufferDeviceAddressFeaturesEXT
-  { -- | @bufferDeviceAddress@ indicates that the implementation supports
-    -- accessing buffer memory in shaders as storage buffers via an address
-    -- queried from 'getBufferDeviceAddressEXT'.
+  { -- | #features-bufferDeviceAddressEXT# @bufferDeviceAddress@ indicates that
+    -- the implementation supports accessing buffer memory in shaders as
+    -- storage buffers via an address queried from 'getBufferDeviceAddressEXT'.
     bufferDeviceAddress :: Bool
-  , -- | @bufferDeviceAddressCaptureReplay@ indicates that the implementation
+  , -- | #features-bufferDeviceAddressCaptureReplayEXT#
+    -- @bufferDeviceAddressCaptureReplay@ indicates that the implementation
     -- supports saving and reusing buffer addresses, e.g. for trace capture and
     -- replay.
     bufferDeviceAddressCaptureReplay :: Bool
-  , -- | @bufferDeviceAddressMultiDevice@ indicates that the implementation
+  , -- | #features-bufferDeviceAddressMultiDeviceEXT#
+    -- @bufferDeviceAddressMultiDevice@ indicates that the implementation
     -- supports the @bufferDeviceAddress@ feature for logical devices created
     -- with multiple physical devices. If this feature is not supported, buffer
     -- addresses /must/ not be queried on a logical device created with more

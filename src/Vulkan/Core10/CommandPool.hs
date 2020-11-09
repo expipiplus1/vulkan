@@ -78,22 +78,26 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @pCreateInfo->queueFamilyIndex@ /must/ be the index of a queue
+-- -   #VUID-vkCreateCommandPool-queueFamilyIndex-01937#
+--     @pCreateInfo->queueFamilyIndex@ /must/ be the index of a queue
 --     family available in the logical device @device@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateCommandPool-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'CommandPoolCreateInfo' structure
+-- -   #VUID-vkCreateCommandPool-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'CommandPoolCreateInfo'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateCommandPool-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pCommandPool@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.CommandPool' handle
+-- -   #VUID-vkCreateCommandPool-pCommandPool-parameter# @pCommandPool@
+--     /must/ be a valid pointer to a 'Vulkan.Core10.Handles.CommandPool'
+--     handle
 --
 -- == Return Codes
 --
@@ -176,32 +180,37 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All 'Vulkan.Core10.Handles.CommandBuffer' objects allocated from
+-- -   #VUID-vkDestroyCommandPool-commandPool-00041# All
+--     'Vulkan.Core10.Handles.CommandBuffer' objects allocated from
 --     @commandPool@ /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyCommandPool-commandPool-00042# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @commandPool@ was created, a compatible set of
 --     callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyCommandPool-commandPool-00043# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @commandPool@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyCommandPool-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @commandPool@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @commandPool@ /must/ be a valid 'Vulkan.Core10.Handles.CommandPool'
---     handle
+-- -   #VUID-vkDestroyCommandPool-commandPool-parameter# If @commandPool@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @commandPool@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandPool' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyCommandPool-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @commandPool@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroyCommandPool-commandPool-parent# If @commandPool@ is a
+--     valid handle, it /must/ have been created, allocated, or retrieved
+--     from @device@
 --
 -- == Host Synchronization
 --
@@ -260,23 +269,26 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All 'Vulkan.Core10.Handles.CommandBuffer' objects allocated from
+-- -   #VUID-vkResetCommandPool-commandPool-00040# All
+--     'Vulkan.Core10.Handles.CommandBuffer' objects allocated from
 --     @commandPool@ /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkResetCommandPool-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @commandPool@ /must/ be a valid 'Vulkan.Core10.Handles.CommandPool'
---     handle
+-- -   #VUID-vkResetCommandPool-commandPool-parameter# @commandPool@ /must/
+--     be a valid 'Vulkan.Core10.Handles.CommandPool' handle
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-vkResetCommandPool-flags-parameter# @flags@ /must/ be a valid
+--     combination of
 --     'Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlagBits'
 --     values
 --
--- -   @commandPool@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkResetCommandPool-commandPool-parent# @commandPool@ /must/
+--     have been created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -322,18 +334,20 @@ resetCommandPool device commandPool flags = liftIO $ do
 --
 -- == Valid Usage
 --
--- -   If the protected memory feature is not enabled, the
+-- -   #VUID-VkCommandPoolCreateInfo-flags-02860# If the protected memory
+--     feature is not enabled, the
 --     'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_PROTECTED_BIT'
 --     bit of @flags@ /must/ not be set
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkCommandPoolCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkCommandPoolCreateInfo-pNext-pNext# @pNext@ /must/ be @NULL@
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkCommandPoolCreateInfo-flags-parameter# @flags@ /must/ be a
+--     valid combination of
 --     'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlagBits'
 --     values
 --

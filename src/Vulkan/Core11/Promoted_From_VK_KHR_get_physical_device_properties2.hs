@@ -125,6 +125,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDev
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (PhysicalDeviceFragmentShadingRateEnumsFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (PhysicalDeviceFragmentShadingRateEnumsPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRatePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset (PhysicalDeviceHostQueryResetFeatures)
@@ -262,6 +264,7 @@ getPhysicalDeviceFeatures2 :: forall a io
                            => -- | @physicalDevice@ is the physical device from which to query the
                               -- supported features.
                               --
+                              -- #VUID-vkGetPhysicalDeviceFeatures2-physicalDevice-parameter#
                               -- @physicalDevice@ /must/ be a valid
                               -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                               PhysicalDevice
@@ -303,6 +306,7 @@ getPhysicalDeviceProperties2 :: forall a io
                              => -- | @physicalDevice@ is the handle to the physical device whose properties
                                 -- will be queried.
                                 --
+                                -- #VUID-vkGetPhysicalDeviceProperties2-physicalDevice-parameter#
                                 -- @physicalDevice@ /must/ be a valid
                                 -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                 PhysicalDevice
@@ -346,12 +350,14 @@ getPhysicalDeviceFormatProperties2 :: forall a io
                                    => -- | @physicalDevice@ is the physical device from which to query the format
                                       -- properties.
                                       --
+                                      -- #VUID-vkGetPhysicalDeviceFormatProperties2-physicalDevice-parameter#
                                       -- @physicalDevice@ /must/ be a valid
                                       -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                       PhysicalDevice
                                    -> -- | @format@ is the format whose properties are queried.
                                       --
-                                      -- @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+                                      -- #VUID-vkGetPhysicalDeviceFormatProperties2-format-parameter# @format@
+                                      -- /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
                                       Format
                                    -> io (FormatProperties2 a)
 getPhysicalDeviceFormatProperties2 physicalDevice format = liftIO . evalContT $ do
@@ -384,7 +390,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If the @pNext@ chain of @pImageFormatProperties@ includes a
+-- -   #VUID-vkGetPhysicalDeviceImageFormatProperties2-pNext-01868# If the
+--     @pNext@ chain of @pImageFormatProperties@ includes a
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferUsageANDROID'
 --     structure, the @pNext@ chain of @pImageFormatInfo@ /must/ include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalImageFormatInfo'
@@ -393,13 +400,16 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceImageFormatProperties2-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pImageFormatInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetPhysicalDeviceImageFormatProperties2-pImageFormatInfo-parameter#
+--     @pImageFormatInfo@ /must/ be a valid pointer to a valid
 --     'PhysicalDeviceImageFormatInfo2' structure
 --
--- -   @pImageFormatProperties@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetPhysicalDeviceImageFormatProperties2-pImageFormatProperties-parameter#
+--     @pImageFormatProperties@ /must/ be a valid pointer to a
 --     'ImageFormatProperties2' structure
 --
 -- == Return Codes
@@ -462,13 +472,16 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceQueueFamilyProperties2-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pQueueFamilyPropertyCount@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetPhysicalDeviceQueueFamilyProperties2-pQueueFamilyPropertyCount-parameter#
+--     @pQueueFamilyPropertyCount@ /must/ be a valid pointer to a
 --     @uint32_t@ value
 --
--- -   If the value referenced by @pQueueFamilyPropertyCount@ is not @0@,
+-- -   #VUID-vkGetPhysicalDeviceQueueFamilyProperties2-pQueueFamilyProperties-parameter#
+--     If the value referenced by @pQueueFamilyPropertyCount@ is not @0@,
 --     and @pQueueFamilyProperties@ is not @NULL@, @pQueueFamilyProperties@
 --     /must/ be a valid pointer to an array of @pQueueFamilyPropertyCount@
 --     'QueueFamilyProperties2' structures
@@ -526,6 +539,7 @@ getPhysicalDeviceMemoryProperties2 :: forall a io
                                     . (Extendss PhysicalDeviceMemoryProperties2 a, PokeChain a, PeekChain a, MonadIO io)
                                    => -- | @physicalDevice@ is the handle to the device to query.
                                       --
+                                      -- #VUID-vkGetPhysicalDeviceMemoryProperties2-physicalDevice-parameter#
                                       -- @physicalDevice@ /must/ be a valid
                                       -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                       PhysicalDevice
@@ -560,15 +574,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties2-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pFormatInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties2-pFormatInfo-parameter#
+--     @pFormatInfo@ /must/ be a valid pointer to a valid
 --     'PhysicalDeviceSparseImageFormatInfo2' structure
 --
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties2-pPropertyCount-parameter#
+--     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties2-pProperties-parameter#
+--     If the value referenced by @pPropertyCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
 --     to an array of @pPropertyCount@ 'SparseImageFormatProperties2'
 --     structures
@@ -648,6 +666,7 @@ instance Extensible PhysicalDeviceFeatures2 where
   getNext PhysicalDeviceFeatures2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceFeatures2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderTerminateInvocationFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = Just f
@@ -764,12 +783,12 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceProperties2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkPhysicalDeviceProperties2-pNext-pNext# Each @pNext@ member
+--     of any structure (including this one) in the @pNext@ chain /must/ be
+--     either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT',
 --     'Vulkan.Extensions.VK_EXT_conservative_rasterization.PhysicalDeviceConservativeRasterizationPropertiesEXT',
 --     'Vulkan.Extensions.VK_NV_cooperative_matrix.PhysicalDeviceCooperativeMatrixPropertiesNV',
@@ -783,6 +802,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls.PhysicalDeviceFloatControlsProperties',
 --     'Vulkan.Extensions.VK_EXT_fragment_density_map2.PhysicalDeviceFragmentDensityMap2PropertiesEXT',
 --     'Vulkan.Extensions.VK_EXT_fragment_density_map.PhysicalDeviceFragmentDensityMapPropertiesEXT',
+--     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PhysicalDeviceFragmentShadingRateEnumsPropertiesNV',
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PhysicalDeviceFragmentShadingRatePropertiesKHR',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties',
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT',
@@ -815,8 +835,8 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Core12.PhysicalDeviceVulkan11Properties', or
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Properties'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkPhysicalDeviceProperties2-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -846,6 +866,7 @@ instance Extensible PhysicalDeviceProperties2 where
   getNext PhysicalDeviceProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceProperties2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateEnumsPropertiesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRatePropertiesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDevicePortabilitySubsetPropertiesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRobustness2PropertiesEXT = Just f
@@ -927,14 +948,15 @@ instance es ~ '[] => Zero (PhysicalDeviceProperties2 es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkFormatProperties2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FORMAT_PROPERTIES_2'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkFormatProperties2-pNext-pNext# @pNext@ /must/ be @NULL@ or a
+--     pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesListEXT'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkFormatProperties2-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -1017,12 +1039,12 @@ instance es ~ '[] => Zero (FormatProperties2 es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImageFormatProperties2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkImageFormatProperties2-pNext-pNext# Each @pNext@ member of
+--     any structure (including this one) in the @pNext@ chain /must/ be
+--     either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferUsageANDROID',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties',
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FilterCubicImageViewImageFormatPropertiesEXT',
@@ -1030,8 +1052,8 @@ instance es ~ '[] => Zero (FormatProperties2 es) where
 --     or
 --     'Vulkan.Extensions.VK_AMD_texture_gather_bias_lod.TextureLODGatherFormatPropertiesAMD'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkImageFormatProperties2-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -1112,12 +1134,13 @@ instance es ~ '[] => Zero (ImageFormatProperties2 es) where
 --
 -- == Valid Usage
 --
--- -   @tiling@ /must/ be
+-- -   #VUID-VkPhysicalDeviceImageFormatInfo2-tiling-02249# @tiling@ /must/
+--     be
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
 --     if and only if the @pNext@ chain includes
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT'
 --
--- -   If @tiling@ is
+-- -   #VUID-VkPhysicalDeviceImageFormatInfo2-tiling-02313# If @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
 --     and @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
@@ -1127,12 +1150,13 @@ instance es ~ '[] => Zero (ImageFormatProperties2 es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceImageFormatInfo2-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkPhysicalDeviceImageFormatInfo2-pNext-pNext# Each @pNext@
+--     member of any structure (including this one) in the @pNext@ chain
+--     /must/ be either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalImageFormatInfo',
@@ -1140,23 +1164,28 @@ instance es ~ '[] => Zero (ImageFormatProperties2 es) where
 --     or
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.PhysicalDeviceImageViewImageFormatInfoEXT'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkPhysicalDeviceImageFormatInfo2-sType-unique# The @sType@
+--     value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+-- -   #VUID-VkPhysicalDeviceImageFormatInfo2-format-parameter# @format@
+--     /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
 --
--- -   @type@ /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType'
+-- -   #VUID-VkPhysicalDeviceImageFormatInfo2-type-parameter# @type@ /must/
+--     be a valid 'Vulkan.Core10.Enums.ImageType.ImageType' value
+--
+-- -   #VUID-VkPhysicalDeviceImageFormatInfo2-tiling-parameter# @tiling@
+--     /must/ be a valid 'Vulkan.Core10.Enums.ImageTiling.ImageTiling'
 --     value
 --
--- -   @tiling@ /must/ be a valid
---     'Vulkan.Core10.Enums.ImageTiling.ImageTiling' value
---
--- -   @usage@ /must/ be a valid combination of
+-- -   #VUID-VkPhysicalDeviceImageFormatInfo2-usage-parameter# @usage@
+--     /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
 --
--- -   @usage@ /must/ not be @0@
+-- -   #VUID-VkPhysicalDeviceImageFormatInfo2-usage-requiredbitmask#
+--     @usage@ /must/ not be @0@
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkPhysicalDeviceImageFormatInfo2-flags-parameter# @flags@
+--     /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits' values
 --
 -- = See Also
@@ -1268,14 +1297,15 @@ instance es ~ '[] => Zero (PhysicalDeviceImageFormatInfo2 es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkQueueFamilyProperties2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkQueueFamilyProperties2-pNext-pNext# @pNext@ /must/ be @NULL@
+--     or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.QueueFamilyCheckpointPropertiesNV'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkQueueFamilyProperties2-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -1343,14 +1373,16 @@ instance es ~ '[] => Zero (QueueFamilyProperties2 es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceMemoryProperties2-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkPhysicalDeviceMemoryProperties2-pNext-pNext# @pNext@ /must/
+--     be @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_memory_budget.PhysicalDeviceMemoryBudgetPropertiesEXT'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkPhysicalDeviceMemoryProperties2-sType-unique# The @sType@
+--     value of each struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -1480,16 +1512,19 @@ instance Zero SparseImageFormatProperties2 where
 data PhysicalDeviceSparseImageFormatInfo2 = PhysicalDeviceSparseImageFormatInfo2
   { -- | @format@ is the image format.
     --
-    -- @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-format-parameter# @format@
+    -- /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
     format :: Format
   , -- | @type@ is the dimensionality of image.
     --
-    -- @type@ /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType' value
+    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-type-parameter# @type@
+    -- /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType' value
     type' :: ImageType
   , -- | @samples@ is the number of samples per texel as defined in
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
     --
-    -- @samples@ /must/ be a bit value that is set in
+    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-samples-01095# @samples@
+    -- /must/ be a bit value that is set in
     -- 'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@sampleCounts@
     -- returned by
     -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
@@ -1497,20 +1532,23 @@ data PhysicalDeviceSparseImageFormatInfo2 = PhysicalDeviceSparseImageFormatInfo2
     -- command and @flags@ equal to the value that is set in
     -- 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ when the image is created
     --
+    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-samples-parameter#
     -- @samples@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
     samples :: SampleCountFlagBits
   , -- | @usage@ is a bitmask describing the intended usage of the image.
     --
-    -- @usage@ /must/ be a valid combination of
+    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-usage-parameter# @usage@
+    -- /must/ be a valid combination of
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
     --
+    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-usage-requiredbitmask#
     -- @usage@ /must/ not be @0@
     usage :: ImageUsageFlags
   , -- | @tiling@ is the tiling arrangement of the texel blocks in memory.
     --
-    -- @tiling@ /must/ be a valid 'Vulkan.Core10.Enums.ImageTiling.ImageTiling'
-    -- value
+    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-tiling-parameter# @tiling@
+    -- /must/ be a valid 'Vulkan.Core10.Enums.ImageTiling.ImageTiling' value
     tiling :: ImageTiling
   }
   deriving (Typeable, Eq)

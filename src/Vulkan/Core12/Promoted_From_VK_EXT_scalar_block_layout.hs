@@ -50,8 +50,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceScalarBlockLayoutFeatures = PhysicalDeviceScalarBlockLayoutFeatures
-  { -- | @scalarBlockLayout@ indicates that the implementation supports the
-    -- layout of resource blocks in shaders using
+  { -- | #extension-features-scalarBlockLayout# @scalarBlockLayout@ indicates
+    -- that the implementation supports the layout of resource blocks in
+    -- shaders using
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-alignment-requirements scalar alignment>.
     scalarBlockLayout :: Bool }
   deriving (Typeable, Eq)

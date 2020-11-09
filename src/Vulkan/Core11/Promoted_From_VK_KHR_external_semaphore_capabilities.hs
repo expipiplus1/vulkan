@@ -86,6 +86,7 @@ getPhysicalDeviceExternalSemaphoreProperties :: forall a io
                                              => -- | @physicalDevice@ is the physical device from which to query the
                                                 -- semaphore capabilities.
                                                 --
+                                                -- #VUID-vkGetPhysicalDeviceExternalSemaphoreProperties-physicalDevice-parameter#
                                                 -- @physicalDevice@ /must/ be a valid
                                                 -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                                 PhysicalDevice
@@ -94,6 +95,7 @@ getPhysicalDeviceExternalSemaphoreProperties :: forall a io
                                                 -- parameters that would be consumed by
                                                 -- 'Vulkan.Core10.QueueSemaphore.createSemaphore'.
                                                 --
+                                                -- #VUID-vkGetPhysicalDeviceExternalSemaphoreProperties-pExternalSemaphoreInfo-parameter#
                                                 -- @pExternalSemaphoreInfo@ /must/ be a valid pointer to a valid
                                                 -- 'PhysicalDeviceExternalSemaphoreInfo' structure
                                                 (PhysicalDeviceExternalSemaphoreInfo a)
@@ -115,16 +117,19 @@ getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInf
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceExternalSemaphoreInfo-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkPhysicalDeviceExternalSemaphoreInfo-pNext-pNext# @pNext@
+--     /must/ be @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkPhysicalDeviceExternalSemaphoreInfo-sType-unique# The
+--     @sType@ value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   @handleType@ /must/ be a valid
+-- -   #VUID-VkPhysicalDeviceExternalSemaphoreInfo-handleType-parameter#
+--     @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
 --     value
 --
