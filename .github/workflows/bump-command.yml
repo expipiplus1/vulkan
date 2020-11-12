@@ -17,6 +17,10 @@ jobs:
 
       - id: creds
         run: |
+          # Escape newlines
+          DEPLOY_KEY="${DEPLOY_KEY//'%'/'%25'}"
+          DEPLOY_KEY="${DEPLOY_KEY//$'\n'/'%0A'}"
+          DEPLOY_KEY="${DEPLOY_KEY//$'\r'/'%0D'}"
           printf "%s\n" "::set-output name=ssh_key::"
           # Will not trigger CI job by default
           printf "%s\n" "::set-output name=token::$GITHUB_TOKEN"
