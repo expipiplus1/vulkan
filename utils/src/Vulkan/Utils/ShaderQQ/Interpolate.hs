@@ -10,7 +10,6 @@ module Vulkan.Utils.ShaderQQ.Interpolate
 
 import           Control.Applicative            ( liftA2 )
 import           Data.Char
-import           Data.String
 import           Language.Haskell.TH
 import           Text.ParserCombinators.ReadP
 
@@ -26,23 +25,15 @@ import           Text.ParserCombinators.ReadP
 -- - Interpolated variables are converted to strings with 'show'
 -- - To escape a @$@ use @\\$@
 --
--- Values are converted to the destination type with 'fromString' so this works
--- with any type with an 'IsString' instance.
---
 -- >>> let foo = 123 in $(interpExp "hello, $foo")
 -- "hello, 123"
 --
 -- >>> let foo = "world" in $(interpExp "hello, \\$foo")
 -- "hello, $foo"
---
--- >>> import Data.Functor.Identity -- Identity has an IsString instance
--- >>> :set -XOverloadedStrings
--- >>> let foo = 123 in $(interpExp "hello, $foo") :: Identity String
--- Identity "hello, 123"
 interpExp :: String -> Q Exp
 interpExp =
   foldEither (litE (stringL ""))
-             (appE (varE 'fromString) . appE (varE 'show) . varOrConE)
+             (appE (varE 'show) . varOrConE)
              (litE . stringL)
              (\e1 e2 -> [|$e1 <> $e2|])
     . parse
