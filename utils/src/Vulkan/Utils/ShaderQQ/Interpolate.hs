@@ -47,6 +47,8 @@ interpExp =
 
 type Var = String
 
+-- | Extract variables and literals from string to be interpolated
+--
 -- >>> parse ""
 -- []
 --

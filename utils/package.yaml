@@ -33,6 +33,7 @@ tests:
     dependencies:
       - base
       - doctest
+      - vulkan-utils
 
 custom-setup:
   dependencies:
