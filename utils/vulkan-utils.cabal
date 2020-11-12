@@ -1,13 +1,13 @@
-cabal-version: 1.12
+cabal-version: 1.24
 
 -- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 02cd419c730d93f7db6f291f1fac9c67d943c8c7a6d2be902231c4c693a58d51
+-- hash: 6d99c3af4fa07ab496a943502da39d9e6a6a8d08636c91bcee01195c4a2149d3
 
 name:           vulkan-utils
-version:        0.1.2.1
+version:        0.1.3
 synopsis:       Utils for the vulkan package
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -15,7 +15,7 @@ bug-reports:    https://github.com/expipiplus1/vulkan/issues
 maintainer:     Joe Hermaszewski <live.long.and.prosper@monoid.al>
 license:        BSD3
 license-file:   LICENSE
-build-type:     Simple
+build-type:     Custom
 extra-source-files:
     readme.md
     changelog.md
@@ -26,11 +26,18 @@ source-repository head
   type: git
   location: https://github.com/expipiplus1/vulkan
 
+custom-setup
+  setup-depends:
+      Cabal
+    , base
+    , cabal-doctest >=1 && <1.1
+
 library
   exposed-modules:
       Vulkan.Utils.Debug
       Vulkan.Utils.FromGL
       Vulkan.Utils.ShaderQQ
+      Vulkan.Utils.ShaderQQ.Interpolate
   other-modules:
       Paths_vulkan_utils
   hs-source-dirs:
@@ -48,4 +55,18 @@ library
     , temporary
     , typed-process
     , vulkan
+  default-language: Haskell2010
+
+test-suite doctests
+  type: exitcode-stdio-1.0
+  main-is: Doctests.hs
+  other-modules:
+      
+  hs-source-dirs:
+      test/doctest
+  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  build-depends:
+      base
+    , doctest
+    , vulkan-utils
   default-language: Haskell2010

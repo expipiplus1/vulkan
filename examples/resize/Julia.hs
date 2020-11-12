@@ -14,13 +14,13 @@ where
 import           Control.Monad.Trans.Resource
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
-import           Data.Word
 
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
 
+import           Julia.Constants
 import           MonadVulkan
 
 juliaPipeline
@@ -98,19 +98,14 @@ juliaDescriptorSet descriptorSetLayout imageViews = do
 
   pure descriptorSets
 
--- Keep these in sync with the shader code
-juliaWorkgroupX, juliaWorkgroupY :: Word32
-juliaWorkgroupX = 8
-juliaWorkgroupY = 8
-
 juliaShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
 juliaShader = do
-  let compCode = [comp|
+  let compCode = $(compileShaderQ "comp" [glsl|
         #version 450
         #extension GL_ARB_separate_shader_objects : enable
 
-        const int workgroup_x = 8;
-        const int workgroup_y = workgroup_x;
+        const int workgroup_x = $juliaWorkgroupX;
+        const int workgroup_y = $juliaWorkgroupY;
 
         layout (local_size_x = workgroup_x, local_size_y = workgroup_y, local_size_z = 1 ) in;
         layout(set = 0, binding = 0, rgba8) uniform writeonly image2D img;
@@ -196,7 +191,7 @@ juliaShader = do
           res /= float(num_samples);
           imageStore(img, ivec2(gl_GlobalInvocationID.xy), vec4(res, 1));
         }
-      |]
+      |])
   (releaseKey, compModule) <- withShaderModule' zero { code = compCode }
   let compShaderStageCreateInfo = zero { stage   = SHADER_STAGE_COMPUTE_BIT
                                        , module' = compModule

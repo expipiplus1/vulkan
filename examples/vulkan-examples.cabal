@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 362864fd4ef70e0e34ec960348791df3d020e21fd904338016949adb79b7e218
+-- hash: 39b4774ce1ad4265a0965e61b3377af313993208c63700a4ac932f8bb1389190
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -113,6 +113,7 @@ executable resize
       Framebuffer
       Init
       Julia
+      Julia.Constants
       MonadVulkan
       Pipeline
       Swapchain

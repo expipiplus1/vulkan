@@ -1,5 +1,6 @@
 module Vulkan.Utils.ShaderQQ
-  ( comp
+  ( glsl
+  , comp
   , frag
   , geom
   , tesc
@@ -25,41 +26,93 @@ import           System.Exit
 import           System.FilePath
 import           System.IO.Temp
 import           System.Process.Typed
+import           Vulkan.Utils.ShaderQQ.Interpolate
 
--- | QuasiQuoter for creating a compute shader
+-- $setup
+-- >>> :set -XQuasiQuotes
+
+-- | 'glsl' is a QuasiQuoter which produces GLSL source code with @#line@
+-- directives inserted so that error locations point to the correct location in
+-- the Haskell source file. It also permits basic string interpolation.
+--
+-- - Interpolated variables are prefixed with @$@
+-- - They can optionally be surrounded with braces like @${foo}@
+-- - Interpolated variables are converted to strings with 'show'
+-- - To escape a @$@ use @\\$@
+--
+-- It is intended to be used in concert with 'compileShaderQ' like so
+--
+-- @
+-- myConstant = 3.141 -- Note that this will have to be in a different module
+-- myFragmentShader = $(compileShaderQ "frag" [glsl|
+--   #version 450
+--   const float myConstant = ${myConstant};
+--   main (){
+--   }
+-- |])
+-- @
+--
+-- An explicit example (@<interactive>@ is from doctest):
+--
+-- >>> let version = 450 :: Int in [glsl|#version $version|]
+-- "#version 450\n#extension GL_GOOGLE_cpp_style_line_directive : enable\n#line 32 \"<interactive>\"\n"
+--
+-- Note that line number will be thrown off if any of the interpolated
+-- variables contain newlines.
+glsl :: QuasiQuoter
+glsl = (badQQ "glsl")
+  { quoteExp = \s -> do
+                 loc <- location
+                 -- Insert the directive here, `compileShaderQ` will insert
+                 -- another one, but it's before this one, so who cares.
+                 let codeWithLineDirective = insertLineDirective s loc
+                 interpExp codeWithLineDirective
+  }
+
+-- | QuasiQuoter for creating a compute shader.
+--
+-- Equivalent to calling @$(compileShaderQ "comp" [glsl|...|])@ without
+-- interpolation support.
 comp :: QuasiQuoter
 comp = shaderQQ "comp"
 
--- | QuasiQuoter for creating a fragment shader
+-- | QuasiQuoter for creating a fragment shader.
+--
+-- Equivalent to calling @$(compileShaderQ "frag" [glsl|...|])@ without
+-- interpolation support.
 frag :: QuasiQuoter
 frag = shaderQQ "frag"
 
--- | QuasiQuoter for creating a geometry shader
+-- | QuasiQuoter for creating a geometry shader.
+--
+-- Equivalent to calling @$(compileShaderQ "geom" [glsl|...|])@ without
+-- interpolation support.
 geom :: QuasiQuoter
 geom = shaderQQ "geom"
 
--- | QuasiQuoter for creating a tessellation control shader
+-- | QuasiQuoter for creating a tessellation control shader.
+--
+-- Equivalent to calling @$(compileShaderQ "tesc" [glsl|...|])@ without
+-- interpolation support.
 tesc :: QuasiQuoter
 tesc = shaderQQ "tesc"
 
--- | QuasiQuoter for creating a tessellation evaluation shader
+-- | QuasiQuoter for creating a tessellation evaluation shader.
+--
+-- Equivalent to calling @$(compileShaderQ "tese" [glsl|...|])@ without
+-- interpolation support.
 tese :: QuasiQuoter
 tese = shaderQQ "tese"
 
--- | QuasiQuoter for creating a vertex shader
+-- | QuasiQuoter for creating a vertex shader.
+--
+-- Equivalent to calling @$(compileShaderQ "vert" [glsl|...|])@ without
+-- interpolation support.
 vert :: QuasiQuoter
 vert = shaderQQ "vert"
 
 shaderQQ :: String -> QuasiQuoter
-shaderQQ stage = QuasiQuoter
-  { quoteExp  = compileShaderQ stage
-  , quotePat  = bad "pattern"
-  , quoteType = bad "type"
-  , quoteDec  = bad "declaration"
-  }
- where
-  bad :: String -> a
-  bad s = error $ "Can't use " <> stage <> " quote in a " <> s <> " context"
+shaderQQ stage = (badQQ stage) { quoteExp = compileShaderQ stage }
 
 -- | Compile a glsl shader to spir-v using glslangValidator.
 --
@@ -152,3 +205,17 @@ insertLineDirective code Loc {..} =
   in  case afterVersion of
         []     -> code
         v : xs -> unlines $ beforeVersion <> [v] <> lineDirective <> xs
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+badQQ :: String -> QuasiQuoter
+badQQ name = QuasiQuoter (bad "expression")
+                         (bad "pattern")
+                         (bad "type")
+                         (bad "declaration")
+ where
+  bad :: String -> a
+  bad context =
+    error $ "Can't use " <> name <> " quote in a " <> context <> " context"
