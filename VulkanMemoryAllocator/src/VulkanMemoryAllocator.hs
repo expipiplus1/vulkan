@@ -2236,14 +2236,21 @@ foreign import ccall
 -- 'destroyBuffer' or separately, using @vkDestroyBuffer()@ and
 -- 'freeMemory'.
 --
--- If VMA_ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT flag was used,
+-- If 'ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT' flag was used,
 -- VK_KHR_dedicated_allocation extension is used internally to query driver
 -- whether it requires or prefers the new buffer to have dedicated
 -- allocation. If yes, and if dedicated allocation is possible
 -- (/VmaAllocationCreateInfo::pool/ is null and
--- VMA_ALLOCATION_CREATE_NEVER_ALLOCATE_BIT is not used), it creates
+-- 'ALLOCATION_CREATE_NEVER_ALLOCATE_BIT' is not used), it creates
 -- dedicated allocation for this buffer, just like when using
--- VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT.
+-- 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT'.
+--
+-- Note
+--
+-- This function creates a new @VkBuffer@. Sub-allocation of parts of one
+-- large buffer, although recommended as a good practice, is out of scope
+-- of this library and could be implemented by the user as a higher-level
+-- logic on top of VMA.
 createBuffer :: forall a io
               . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io)
              => -- No documentation found for Nested "vmaCreateBuffer" "allocator"
@@ -2291,9 +2298,8 @@ foreign import ccall
 --
 -- This is just a convenience function equivalent to:
 --
--- @vkDestroyBuffer(device, buffer, allocationCallbacks);
--- vmaFreeMemory(allocator, allocation);
--- @
+-- > vkDestroyBuffer(device, buffer, allocationCallbacks);
+-- > vmaFreeMemory(allocator, allocation);
 --
 -- It it safe to pass null as buffer and\/or allocation.
 destroyBuffer :: forall io
@@ -2365,9 +2371,8 @@ foreign import ccall
 --
 -- This is just a convenience function equivalent to:
 --
--- @vkDestroyImage(device, image, allocationCallbacks);
--- vmaFreeMemory(allocator, allocation);
--- @
+-- > vkDestroyImage(device, image, allocationCallbacks);
+-- > vmaFreeMemory(allocator, allocation);
 --
 -- It it safe to pass null as image and\/or allocation.
 destroyImage :: forall io
@@ -3036,9 +3041,9 @@ data AllocatorCreateInfo = AllocatorCreateInfo
     -- patch version number specified is ignored. Only the major and minor
     -- versions are considered. It must be less or equal (preferably equal) to
     -- value as passed to @vkCreateInstance@ as
-    -- @VkApplicationInfo::apiVersion@. Only versions 1.0 and 1.1 are supported
-    -- by the current implementation. Leaving it initialized to zero is
-    -- equivalent to @VK_API_VERSION_1_0@.
+    -- @VkApplicationInfo::apiVersion@. Only versions 1.0, 1.1, 1.2 are
+    -- supported by the current implementation. Leaving it initialized to zero
+    -- is equivalent to @VK_API_VERSION_1_0@.
     vulkanApiVersion :: Word32
   }
   deriving (Typeable)
@@ -3732,26 +3737,39 @@ data AllocationCreateInfo = AllocationCreateInfo
   , -- | Intended usage of memory.
     --
     -- You can leave 'MEMORY_USAGE_UNKNOWN' if you specify memory requirements
-    -- in other way.   If @pool@ is not null, this member is ignored.
+    -- in other way.
+    --
+    -- >  
+    --
+    -- If @pool@ is not null, this member is ignored.
     usage :: MemoryUsage
   , -- | Flags that must be set in a Memory Type chosen for an allocation.
     --
-    -- Leave 0 if you specify memory requirements in other way.   If @pool@ is
-    -- not null, this member is ignored.
+    -- Leave 0 if you specify memory requirements in other way.
+    --
+    -- >  
+    --
+    -- If @pool@ is not null, this member is ignored.
     requiredFlags :: MemoryPropertyFlags
   , -- | Flags that preferably should be set in a memory type chosen for an
     -- allocation.
     --
-    -- Set to 0 if no additional flags are preferred.   If @pool@ is not null,
-    -- this member is ignored.
+    -- Set to 0 if no additional flags are preferred.
+    --
+    -- >  
+    --
+    -- If @pool@ is not null, this member is ignored.
     preferredFlags :: MemoryPropertyFlags
   , -- | Bitmask containing one bit set for every memory type acceptable for this
     -- allocation.
     --
     -- Value 0 is equivalent to @UINT32_MAX@ - it means any memory type is
     -- accepted if it meets other requirements specified by this structure,
-    -- with no further restrictions on memory type index.   If @pool@ is not
-    -- null, this member is ignored.
+    -- with no further restrictions on memory type index.
+    --
+    -- >  
+    --
+    -- If @pool@ is not null, this member is ignored.
     memoryTypeBits :: Word32
   , -- | Pool that this allocation should be created in.
     --
@@ -4130,8 +4148,15 @@ data AllocationInfo = AllocationInfo
     --
     -- If the allocation is lost, it is equal to @VK_NULL_HANDLE@.
     deviceMemory :: DeviceMemory
-  , -- | Offset into deviceMemory object to the beginning of this allocation, in
-    -- bytes. (deviceMemory, offset) pair is unique to this allocation.
+  , -- | Offset in @VkDeviceMemory@ object to the beginning of this allocation,
+    -- in bytes. @(deviceMemory, offset)@ pair is unique to this allocation.
+    --
+    -- You usually don\'t need to use this offset. If you create a buffer or an
+    -- image together with the allocation using e.g. function 'createBuffer',
+    -- 'createImage', functions that operate on these resources refer to the
+    -- beginning of the buffer or image, not entire device memory block.
+    -- Functions like 'mapMemory', 'bindBufferMemory' also refer to the
+    -- beginning of the allocation and apply this offset automatically.
     --
     -- It can change after call to 'defragment' if this allocation is passed to
     -- the function, or if allocation is lost.

@@ -2,6 +2,10 @@
 
 ## WIP
 
+- Bump VMA
+  - Documentation chages
+  - Potential overflow fix https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/issues/153
+
 ## [0.3.7.1] - 2020-11-01
 
 - Bump VMA, just documentation changes
