@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [0.1.3] - 2020-11-12
+
+- Add `glsl` interpolating quasiquoter
+
 ## [0.1.2.1] - 2020-11-01
 
 - Raise bound on base

@@ -1,5 +1,5 @@
 name: vulkan-utils
-version: "0.1.2.1"
+version: "0.1.3"
 synopsis: Utils for the vulkan package
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
