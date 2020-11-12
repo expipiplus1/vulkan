@@ -12,7 +12,6 @@ self: super:
   th-desugar = self.th-desugar_1_11;
   pretty-simple = self.pretty-simple_4_0_0_0;
   prettyprinter = self.prettyprinter_1_7_0;
-  autoapply = markUnbroken (dontCheck super.autoapply);
 
   #
   # Generate
