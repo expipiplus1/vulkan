@@ -17,18 +17,19 @@ jobs:
 
       - id: creds
         run: |
+          printf "%s\n" "::set-output name=ssh_key::"
+          # Will not trigger CI job by default
+          printf "%s\n" "::set-output name=token::$GITHUB_TOKEN"
           if [ "$owner" == "ThreeOfTwelve" ]; then
             printf "%s\n" "::set-output name=token::$TUVOK_TOKEN"
           elif [ "$owner" == "expipiplus1" ]; then
             printf "%s\n" "::set-output name=ssh_key::$DEPLOY_KEY"
-          else
-            # Will not trigger CI job
-            printf "%s\n" "::set-output name=token::$GITHUB_TOKEN"
           fi
         env:
           owner: ${{ github.event.client_payload.pull_request.head.repo.owner.login }}
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
           TUVOK_TOKEN: ${{ secrets.TUVOK_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Checkout the pull request branch
       - uses: actions/checkout@v2
