@@ -24,6 +24,22 @@ library:
     - typed-process
     - vulkan
 
+tests:
+  doctests:
+    main: Doctests.hs
+    other-modules: ""
+    source-dirs:
+      - test/doctest
+    dependencies:
+      - base
+      - doctest
+
+custom-setup:
+  dependencies:
+    - base
+    - Cabal
+    - cabal-doctest >= 1 && <1.1
+
 default-extensions:
   - AllowAmbiguousTypes
   - CPP
