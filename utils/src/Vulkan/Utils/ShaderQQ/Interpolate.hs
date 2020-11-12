@@ -105,27 +105,32 @@ type Var = String
 --
 -- >>> parse "\\\\$"
 -- [Right "\\$"]
+--
+-- >>> parse "$"
+-- [Right "$"]
 parse :: String -> [Either Var String]
 parse s =
   let -- A haskell var or con
-      ident = (:) <$> satisfy (isLower <||> isUpper <||> (== '_')) <*> munch
-        (isAlphaNum <||> (== '\'') <||> (== '_'))
-      braces = between (char '{') (char '}')
-      -- parse a var, a '$' followed by an ident
-      var    = char '$' *> (Left <$> (ident +++ braces ident))
-      -- Everything up to a '$' or '\'
-      normal = Right <$> munch1 ((/= '$') <&&> (/= '\\'))
-      -- escape a $
-      escape = char '\\' *> (Right <$> (string "$" +++ pure "\\"))
-      -- One normal or var
-      -- - Check escaped '$' first
-      -- - variables, starting with $
-      -- - normal string
-      one    = normal +++ var +++ escape
-      parser = many one <* eof
-  in  case readP_to_S parser s of
-        [(r, "")] -> foldr mergeRights [] r
-        _         -> error "Failed to parse string"
+    ident = (:) <$> satisfy (isLower <||> isUpper <||> (== '_')) <*> munch
+      (isAlphaNum <||> (== '\'') <||> (== '_'))
+    braces = between (char '{') (char '}')
+    -- parse a var, a '$' followed by an ident
+    var =
+      char '$' *> ((Left <$> (ident +++ braces ident)) <++ pure (Right "$"))
+    -- Everything up to a '$' or '\'
+    normal = Right <$> munch1 ((/= '$') <&&> (/= '\\'))
+    -- escape a $
+    escape = char '\\' *> (Right <$> (string "$" <++ pure "\\"))
+    -- One normal or var
+    -- - Check escaped '$' first
+    -- - variables, starting with $
+    -- - normal string
+    one    = normal +++ var +++ escape
+    parser = many one <* eof
+  in
+    case readP_to_S parser s of
+      [(r, "")] -> foldr mergeRights [] r
+      _         -> error "Failed to parse string"
 
 mergeRights :: Either Var String -> [Either Var String] -> [Either Var String]
 mergeRights = \case
