@@ -95,7 +95,7 @@ type Var = String
 -- [Left "hi",Right "$foo"]
 --
 -- >>> parse "hello, \\$foo"
--- [Right "hello, \\$foo"]
+-- [Right "hello, $foo"]
 --
 -- >>> parse "${fo'o}bar"
 -- [Left "fo'o",Right "bar"]
