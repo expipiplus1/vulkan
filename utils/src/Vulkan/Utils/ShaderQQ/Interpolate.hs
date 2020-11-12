@@ -30,6 +30,9 @@ import           Text.ParserCombinators.ReadP
 --
 -- >>> let foo = "world" in $(interpExp "hello, \\$foo")
 -- "hello, $foo"
+--
+-- >>> let foo = "world" in $(interpExp "hello\r\n\rworld")
+-- "hello\r\n\rworld"
 interpExp :: String -> Q Exp
 interpExp =
   foldEither (litE (stringL ""))
@@ -94,6 +97,12 @@ type Var = String
 --
 -- >>> parse "${fo'o}bar"
 -- [Left "fo'o",Right "bar"]
+--
+-- >>> parse "\\"
+-- [Right "\\"]
+--
+-- >>> parse "\\\\$"
+-- [Right "\\$"]
 parse :: String -> [Either Var String]
 parse s =
   let -- A haskell var or con
@@ -105,7 +114,7 @@ parse s =
       -- Everything up to a '$' or '\'
       normal = Right <$> munch1 ((/= '$') <&&> (/= '\\'))
       -- escape a $
-      escape = char '\\' *> (Right <$> string "$")
+      escape = char '\\' *> (Right <$> (string "$" +++ pure "\\"))
       -- One normal or var
       -- - Check escaped '$' first
       -- - variables, starting with $
