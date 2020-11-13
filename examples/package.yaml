@@ -104,6 +104,24 @@ executables:
       - vulkan
       - vulkan-utils
 
+  semaphore-test:
+    main: Main.hs
+    source-dirs: semaphore-test
+    dependencies:
+      - VulkanMemoryAllocator
+      - autoapply >= 0.4
+      - base <5
+      - bytestring
+      - extra
+      - resourcet
+      - safe-exceptions
+      - say
+      - text
+      - transformers
+      - vector
+      - vulkan
+      - vulkan-utils
+
 when:
   - condition: os(windows)
     ghc-options: -optl-mconsole

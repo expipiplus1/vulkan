@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 39b4774ce1ad4265a0965e61b3377af313993208c63700a4ac932f8bb1389190
+-- hash: cc2967dc7dec4fafb138758e4367c51619a5c37f9f49e48c1f5d6e99ac196826
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -162,6 +162,32 @@ executable sdl-triangle
     , pretty-show
     , say
     , sdl2 >=2.5.2.0
+    , text
+    , transformers
+    , vector
+    , vulkan
+    , vulkan-utils
+  if os(windows)
+    ghc-options: -optl-mconsole
+  default-language: Haskell2010
+
+executable semaphore-test
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      semaphore-test
+  default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  build-depends:
+      VulkanMemoryAllocator
+    , autoapply >=0.4
+    , base <5
+    , bytestring
+    , extra
+    , resourcet
+    , safe-exceptions
+    , say
     , text
     , transformers
     , vector
