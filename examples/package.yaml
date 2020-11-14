@@ -104,9 +104,9 @@ executables:
       - vulkan
       - vulkan-utils
 
-  semaphore-test:
+  timeline-semaphore:
     main: Main.hs
-    source-dirs: semaphore-test
+    source-dirs: timeline-semaphore
     dependencies:
       - VulkanMemoryAllocator
       - autoapply >= 0.4
@@ -118,6 +118,7 @@ executables:
       - say
       - text
       - transformers
+      - unliftio
       - vector
       - vulkan
       - vulkan-utils

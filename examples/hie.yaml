@@ -15,5 +15,5 @@ cradle:
     - path: "./resize/"
       component: "exe:resize"
 
-    - path: "./semaphore-test/"
-      component: "exe:semaphore-test"
+    - path: "./timeline-semaphore/"
+      component: "exe:timeline-semaphore"
