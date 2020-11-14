@@ -114,6 +114,8 @@ vert = shaderQQ "vert"
 shaderQQ :: String -> QuasiQuoter
 shaderQQ stage = (badQQ stage) { quoteExp = compileShaderQ stage }
 
+-- * Utilities
+
 -- | Compile a glsl shader to spir-v using glslangValidator.
 --
 -- Messages are converted to GHC warnings or errors depending on compilation success.

@@ -19,9 +19,12 @@ library:
     - extra
     - file-embed
     - filepath
+    - resourcet >= 1.2.4
     - template-haskell
     - temporary
+    - text
     - typed-process
+    - vector
     - vulkan
 
 tests:
@@ -42,8 +45,6 @@ custom-setup:
     - cabal-doctest >= 1 && <1.1
 
 default-extensions:
-  - AllowAmbiguousTypes
-  - CPP
   - DataKinds
   - DefaultSignatures
   - DeriveAnyClass
@@ -68,9 +69,9 @@ default-extensions:
   - ScopedTypeVariables
   - StandaloneDeriving
   - Strict
+  - TupleSections
   - TypeApplications
   - TypeFamilyDependencies
   - TypeOperators
   - TypeSynonymInstances
-  - UndecidableInstances
   - ViewPatterns

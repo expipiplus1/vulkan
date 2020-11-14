@@ -4,7 +4,7 @@ cabal-version: 1.24
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6d99c3af4fa07ab496a943502da39d9e6a6a8d08636c91bcee01195c4a2149d3
+-- hash: b21a0cdd66700d7cb4a2ac12cce74ee389004164381c4f8e45e9cef59e6b1ca7
 
 name:           vulkan-utils
 version:        0.1.3
@@ -36,13 +36,15 @@ library
   exposed-modules:
       Vulkan.Utils.Debug
       Vulkan.Utils.FromGL
+      Vulkan.Utils.Initialization
+      Vulkan.Utils.Misc
       Vulkan.Utils.ShaderQQ
       Vulkan.Utils.ShaderQQ.Interpolate
   other-modules:
       Paths_vulkan_utils
   hs-source-dirs:
       src
-  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  default-extensions: DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
   c-sources:
       cbits/DebugCallback.c
   build-depends:
@@ -51,9 +53,12 @@ library
     , extra
     , file-embed
     , filepath
+    , resourcet >=1.2.4
     , template-haskell
     , temporary
+    , text
     , typed-process
+    , vector
     , vulkan
   default-language: Haskell2010
 
@@ -64,7 +69,7 @@ test-suite doctests
       
   hs-source-dirs:
       test/doctest
-  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  default-extensions: DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
   build-depends:
       base
     , doctest

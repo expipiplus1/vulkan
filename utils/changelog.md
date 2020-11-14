@@ -2,6 +2,10 @@
 
 ## WIP
 
+- Add `Vulkan.Utils.Misc` for handy functions used in Vulkan programs, but not
+  Vulkan specific.
+- Add `Vulkan.Utils.Initializaion` for functions to ease creating a Vulkan device.
+
 ## [0.1.3] - 2020-11-12
 
 - Add `glsl` interpolating quasiquoter
