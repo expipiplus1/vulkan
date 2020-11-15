@@ -147,28 +147,29 @@ createInstanceWithExtensions requiredLayers optionalLayers requiredExtensions op
 
 -- | Get a single 'PhysicalDevice' deciding with a scoring function
 --
--- Pass a function which will score a device. It may also be useful to include
--- any necessary attributes in the score (for example queue indices) in the
--- spirit of parse-don't-validate.
+-- Pass a function which will extract any required values from a device in the
+-- spirit of parse-don't validate. Also provide a function to compare these
+-- results for sorting multiple devices.
 --
--- For example the scoring function could return a tuple of device memory and
--- the compute queue family index, using the lexicographic ordering of tuples
--- to make sure to get the device with the most memory by placing the memory
--- value as the first element of the tuple.
+-- For example the result function could return a tuple of device memory and
+-- the compute queue family index, and the scoring function could be 'fst' to
+-- select devices based on their memory capacity.
 --
 -- If no devices are deemed suitable then an 'IOError' is thrown.
 pickPhysicalDevice
-  :: (MonadIO m, Ord a)
+  :: (MonadIO m, Ord b)
   => Instance
   -> (PhysicalDevice -> m (Maybe a))
-  -- ^ Some "score" for a PhysicalDevice, Nothing if it is not to be chosen.
+  -- ^ Some result for a PhysicalDevice, Nothing if it is not to be chosen.
+  -> (a -> b)
+  -- ^ Scoring function to rate this result
   -> m (a, PhysicalDevice)
   -- ^ The score and the device
-pickPhysicalDevice inst devScore = do
+pickPhysicalDevice inst devInfo score = do
   (_, devs) <- enumeratePhysicalDevices inst
-  scores    <- catMaybes
-    <$> sequence [ fmap (, d) <$> devScore d | d <- toList devs ]
-  case maximumByMay (comparing fst) scores of
+  infos    <- catMaybes
+    <$> sequence [ fmap (, d) <$> devInfo d | d <- toList devs ]
+  case maximumByMay (comparing (score.fst)) infos of
     Nothing -> liftIO $ noSuchThing "Unable to find appropriate PhysicalDevice"
     Just d  -> pure d
 
