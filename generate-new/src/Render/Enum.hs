@@ -57,7 +57,8 @@ renderEnum e@Enum {..} = do
         AnEnum     -> pure []
         ABitmask _ -> do
           tellImport ''Bits
-          pure ["Bits"]
+          tellImport ''FiniteBits
+          pure ["Bits", "FiniteBits"]
       pure (always <> special)
     let
 
