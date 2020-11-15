@@ -136,10 +136,11 @@ flags:
     manual: yes
 
 default-extensions:
-  - AllowAmbiguousTypes
   - DataKinds
   - DefaultSignatures
-  - DeriveAnyClass
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveTraversable
   - DerivingStrategies
   - DuplicateRecordFields
   - FlexibleContexts
@@ -152,7 +153,6 @@ default-extensions:
   - NoMonomorphismRestriction
   - NumDecimals
   - OverloadedStrings
-  - PartialTypeSignatures
   - PatternSynonyms
   - PolyKinds
   - QuantifiedConstraints
@@ -167,7 +167,6 @@ default-extensions:
   - TypeFamilyDependencies
   - TypeOperators
   - TypeSynonymInstances
-  - UndecidableInstances
   - ViewPatterns
 
 ghc-options:

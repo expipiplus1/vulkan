@@ -3,7 +3,9 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
-module Main where
+module Main
+  ( main
+  ) where
 
 
 import           AutoApply
@@ -11,7 +13,7 @@ import           Control.Exception              ( throwIO )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe
 import           Control.Monad.Trans.Resource
-import qualified Data.Vector                   as V
+import           Data.Vector                    ( Vector )
 import           Data.Word
 import           Say
 import           Vulkan.CStruct.Extends
@@ -21,7 +23,7 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                as Timeline
 import           Vulkan.Exception
 import           Vulkan.Utils.Initialization
-import           Vulkan.Utils.Misc
+import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
 
 noAllocationCallbacks :: Maybe AllocationCallbacks
@@ -41,30 +43,26 @@ autoapplyDecs
   -- put it in the unifying group.
   [ 'allocate ]
   [ 'deviceWaitIdle
-  , 'withFence
-  , 'withInstance
   , 'withSemaphore
   , 'Timeline.waitSemaphores
   ]
 
 main :: IO ()
 main = runResourceT $ do
-  inst             <- Main.createInstance
-  (_phys, pdi, dev) <- Main.createDevice inst
-  timelineTest dev pdi
+  inst <- Main.createInstance
+  (_phys, dev, MyQueues computeQueue) <- Main.createDevice inst
+  timelineTest dev computeQueue
 
-timelineTest :: (MonadResource m) => Device -> PhysicalDeviceInfo -> m ()
-timelineTest dev pdi = do
-  -- first, test timeline semaphores
+timelineTest :: (MonadResource m) => Device -> Queue -> m ()
+timelineTest dev computeQueue = do
   (_, sem) <- withSemaphore'
     dev
     (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_TIMELINE 1 :& ())
 
   -- Create some GPU work which waits for the semaphore to be '2' and then
   -- bumps it to '3'
-  queue <- getDeviceQueue dev (pdiComputeQueueFamilyIndex pdi) 0
   queueSubmit
-    queue
+    computeQueue
     [ SomeStruct
         (   zero { Vulkan.Core10.waitSemaphores = [sem]
                  , signalSemaphores             = [sem]
@@ -77,9 +75,10 @@ timelineTest dev pdi = do
     ]
     zero
 
-  -- Go
+  -- Bump the semaphore to '2' to start the GPU work
   signalSemaphore dev zero { semaphore = sem, value = 2 }
 
+  -- Wait for the GPU to set it to '3'
   waitSemaphores' dev zero { semaphores = [sem], values = [3] } 1e9 >>= \case
     TIMEOUT -> sayErr "Timed out waiting for semaphore"
     SUCCESS -> sayErr "Waited for semaphore"
@@ -104,25 +103,17 @@ createInstance =
   in  createDebugInstanceWithExtensions [] [] [] [] createInfo
 
 createDevice
-  :: (MonadResource m)
-  => Instance
-  -> m (PhysicalDevice, PhysicalDeviceInfo, Device)
+  :: (MonadResource m) => Instance -> m (PhysicalDevice, Device, MyQueues Queue)
 createDevice inst = do
-  (pdi, phys) <- pickPhysicalDevice inst physicalDeviceInfo
+  (pdi, phys) <- pickPhysicalDevice inst physicalDeviceInfo pdiScore
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
   let deviceCreateInfo =
-        zero
-            { queueCreateInfos      =
-              [ SomeStruct zero
-                  { queueFamilyIndex = pdiComputeQueueFamilyIndex pdi
-                  , queuePriorities  = [1]
-                  }
-              ]
-            }
+        zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
           ::& PhysicalDeviceTimelineSemaphoreFeatures True
           :&  ()
-  dev <- createDeviceWithExtensions phys [] [] deviceCreateInfo
-  pure (phys, pdi, dev)
+  dev    <- createDeviceWithExtensions phys [] [] deviceCreateInfo
+  queues <- liftIO $ pdiGetQueues pdi dev
+  pure (phys, dev, queues)
 
 ----------------------------------------------------------------
 -- Physical device tools
@@ -130,11 +121,16 @@ createDevice inst = do
 
 -- | The Ord instance prioritises devices with more memory
 data PhysicalDeviceInfo = PhysicalDeviceInfo
-  { pdiTotalMemory             :: Word64
-  , pdiComputeQueueFamilyIndex :: Word32
-    -- ^ The queue family index of the first compute queue
+  { pdiTotalMemory      :: Word64
+  , pdiQueueCreateInfos :: Vector (DeviceQueueCreateInfo '[])
+  , pdiGetQueues        :: Device -> IO (MyQueues Queue)
   }
-  deriving (Eq, Ord)
+
+pdiScore :: PhysicalDeviceInfo -> Word64
+pdiScore = pdiTotalMemory
+
+newtype MyQueues a = MyQueues { _myComputeQueue :: a }
+  deriving (Functor, Foldable, Traversable)
 
 physicalDeviceInfo
   :: MonadIO m => PhysicalDevice -> m (Maybe PhysicalDeviceInfo)
@@ -142,12 +138,7 @@ physicalDeviceInfo phys = runMaybeT $ do
   pdiTotalMemory <- do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
     pure $ sum ((size :: MemoryHeap -> DeviceSize) <$> heaps)
-  pdiComputeQueueFamilyIndex <- do
-    queueFamilyProperties <- getPhysicalDeviceQueueFamilyProperties phys
-    let isComputeQueue q =
-          (QUEUE_COMPUTE_BIT .&&. queueFlags q) && (queueCount q > 0)
-        computeQueueIndices = fromIntegral . fst <$> V.filter
-          (isComputeQueue . snd)
-          (V.indexed queueFamilyProperties)
-    MaybeT (pure $ computeQueueIndices V.!? 0)
+  (pdiQueueCreateInfos, pdiGetQueues) <- MaybeT $ assignQueues
+    phys
+    (MyQueues (QueueSpec 1 (const (pure . isComputeQueueFamily))))
   pure PhysicalDeviceInfo { .. }
