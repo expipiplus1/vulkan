@@ -27,6 +27,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
@@ -317,7 +318,7 @@ instance Zero PipelineRasterizationConservativeStateCreateInfoEXT where
 --
 -- 'PipelineRasterizationConservativeStateCreateInfoEXT'
 newtype PipelineRasterizationConservativeStateCreateFlagsEXT = PipelineRasterizationConservativeStateCreateFlagsEXT Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 

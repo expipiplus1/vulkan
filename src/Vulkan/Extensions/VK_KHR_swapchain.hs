@@ -76,6 +76,7 @@ import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -2533,7 +2534,7 @@ instance Zero DeviceGroupSwapchainCreateInfoKHR where
 --
 -- 'DeviceGroupPresentInfoKHR', 'DeviceGroupPresentModeFlagsKHR'
 newtype DeviceGroupPresentModeFlagBitsKHR = DeviceGroupPresentModeFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR' specifies that any physical
 -- device with a presentation engine /can/ present its own swapchain
@@ -2580,7 +2581,7 @@ instance Read DeviceGroupPresentModeFlagBitsKHR where
 --
 -- 'SwapchainCreateFlagsKHR'
 newtype SwapchainCreateFlagBitsKHR = SwapchainCreateFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' specifies that the images of
 -- the swapchain /can/ be used to create a

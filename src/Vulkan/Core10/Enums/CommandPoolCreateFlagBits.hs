@@ -17,6 +17,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -29,7 +30,7 @@ import Vulkan.Zero (Zero)
 --
 -- 'CommandPoolCreateFlags'
 newtype CommandPoolCreateFlagBits = CommandPoolCreateFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'COMMAND_POOL_CREATE_TRANSIENT_BIT' specifies that command buffers
 -- allocated from the pool will be short-lived, meaning that they will be

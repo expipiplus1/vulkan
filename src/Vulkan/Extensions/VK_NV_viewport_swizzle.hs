@@ -37,6 +37,7 @@ import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -218,7 +219,7 @@ instance Zero PipelineViewportSwizzleStateCreateInfoNV where
 --
 -- 'PipelineViewportSwizzleStateCreateInfoNV'
 newtype PipelineViewportSwizzleStateCreateFlagsNV = PipelineViewportSwizzleStateCreateFlagsNV Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 

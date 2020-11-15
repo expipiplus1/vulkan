@@ -155,6 +155,7 @@ import qualified Data.Vector (length)
 import Foreign.C.Types (CSize(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -6582,7 +6583,7 @@ instance Zero AccelerationStructureGeometryDataKHR where
 --
 -- 'GeometryInstanceFlagsKHR'
 newtype GeometryInstanceFlagBitsKHR = GeometryInstanceFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR' disables face
 -- culling for this instance.
@@ -6633,7 +6634,7 @@ instance Read GeometryInstanceFlagBitsKHR where
 --
 -- 'GeometryFlagsKHR'
 newtype GeometryFlagBitsKHR = GeometryFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'GEOMETRY_OPAQUE_BIT_KHR' indicates that this geometry does not invoke
 -- the any-hit shaders even if present in a hit group.
@@ -6678,7 +6679,7 @@ instance Read GeometryFlagBitsKHR where
 --
 -- 'BuildAccelerationStructureFlagsKHR'
 newtype BuildAccelerationStructureFlagBitsKHR = BuildAccelerationStructureFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' indicates that the
 -- specified acceleration structure /can/ be updated with @update@ of

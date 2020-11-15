@@ -40,6 +40,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -54,7 +55,7 @@ import Vulkan.Zero (Zero)
 -- 'Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarkerAMD',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp'
 newtype PipelineStageFlagBits = PipelineStageFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'PIPELINE_STAGE_TOP_OF_PIPE_BIT' is equivalent to
 -- 'PIPELINE_STAGE_ALL_COMMANDS_BIT' with

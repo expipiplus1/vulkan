@@ -32,6 +32,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -359,7 +360,7 @@ instance Zero DeviceMemoryReportCallbackDataEXT where
 
 -- No documentation found for TopLevel "VkDeviceMemoryReportFlagsEXT"
 newtype DeviceMemoryReportFlagsEXT = DeviceMemoryReportFlagsEXT Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 

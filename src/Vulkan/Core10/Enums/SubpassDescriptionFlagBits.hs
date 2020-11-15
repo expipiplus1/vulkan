@@ -18,6 +18,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -40,7 +41,7 @@ import Vulkan.Zero (Zero)
 --
 -- 'SubpassDescriptionFlags'
 newtype SubpassDescriptionFlagBits = SubpassDescriptionFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM' specifies that the subpass
 -- performs shader resolve operations.

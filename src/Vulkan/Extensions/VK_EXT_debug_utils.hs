@@ -72,6 +72,7 @@ import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -1487,7 +1488,7 @@ instance Zero DebugUtilsMessengerCallbackDataEXT where
 --
 -- 'DebugUtilsMessengerCreateInfoEXT'
 newtype DebugUtilsMessengerCreateFlagsEXT = DebugUtilsMessengerCreateFlagsEXT Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 
@@ -1515,7 +1516,7 @@ instance Read DebugUtilsMessengerCreateFlagsEXT where
 --
 -- 'DebugUtilsMessengerCallbackDataEXT'
 newtype DebugUtilsMessengerCallbackDataFlagsEXT = DebugUtilsMessengerCallbackDataFlagsEXT Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 
@@ -1539,7 +1540,7 @@ instance Read DebugUtilsMessengerCallbackDataFlagsEXT where
 --
 -- 'DebugUtilsMessageSeverityFlagsEXT', 'submitDebugUtilsMessageEXT'
 newtype DebugUtilsMessageSeverityFlagBitsEXT = DebugUtilsMessageSeverityFlagBitsEXT Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT' specifies the most
 -- verbose output indicating all diagnostic messages from the Vulkan
@@ -1590,7 +1591,7 @@ instance Read DebugUtilsMessageSeverityFlagBitsEXT where
 --
 -- 'DebugUtilsMessageTypeFlagsEXT'
 newtype DebugUtilsMessageTypeFlagBitsEXT = DebugUtilsMessageTypeFlagBitsEXT Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT' specifies that some general
 -- event has occurred. This is typically a non-specification,

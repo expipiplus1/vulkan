@@ -18,6 +18,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -35,7 +36,7 @@ import Vulkan.Zero (Zero)
 --
 -- 'ColorComponentFlags'
 newtype ColorComponentFlagBits = ColorComponentFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'COLOR_COMPONENT_R_BIT' specifies that the R value is written to the
 -- color attachment for the appropriate sample. Otherwise, the value in

@@ -89,6 +89,7 @@ import Foreign.C.Types (CChar(..))
 import Foreign.C.Types (CSize(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -491,7 +492,7 @@ instance Zero DebugReportCallbackCreateInfoEXT where
 --
 -- 'DebugReportFlagsEXT'
 newtype DebugReportFlagBitsEXT = DebugReportFlagBitsEXT Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'DEBUG_REPORT_INFORMATION_BIT_EXT' specifies an informational message
 -- such as resource details that may be handy when debugging an

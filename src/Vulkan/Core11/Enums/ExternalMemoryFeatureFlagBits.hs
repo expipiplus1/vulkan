@@ -17,6 +17,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -47,7 +48,7 @@ import Vulkan.Zero (Zero)
 --
 -- 'ExternalMemoryFeatureFlags'
 newtype ExternalMemoryFeatureFlagBits = ExternalMemoryFeatureFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT' specifies that images or
 -- buffers created with the specified parameters and handle type /must/ use

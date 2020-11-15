@@ -85,6 +85,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -1141,7 +1142,7 @@ instance Read ColorSpaceKHR where
 -- 'CompositeAlphaFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 newtype CompositeAlphaFlagBitsKHR = CompositeAlphaFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'COMPOSITE_ALPHA_OPAQUE_BIT_KHR': The alpha channel, if it exists, of
 -- the images is ignored in the compositing process. Instead, the image is
@@ -1202,7 +1203,7 @@ instance Read CompositeAlphaFlagBitsKHR where
 -- 'SurfaceCapabilitiesKHR', 'SurfaceTransformFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 newtype SurfaceTransformFlagBitsKHR = SurfaceTransformFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'SURFACE_TRANSFORM_IDENTITY_BIT_KHR' specifies that image content is
 -- presented without being transformed.
