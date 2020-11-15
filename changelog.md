@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [3.6.14] - 2020-11-15
+
+- Add `FiniteBits` instance for Flags
+
 ## [3.6.13] - 2020-11-09
   - Bump API version to v1.2.160
 
