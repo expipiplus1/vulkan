@@ -24,6 +24,7 @@ library:
     - template-haskell
     - temporary
     - text
+    - transformers
     - typed-process
     - vector
     - vulkan >= 3.6.14
@@ -49,6 +50,9 @@ default-extensions:
   - DataKinds
   - DefaultSignatures
   - DeriveAnyClass
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveTraversable
   - DerivingStrategies
   - DuplicateRecordFields
   - FlexibleContexts
