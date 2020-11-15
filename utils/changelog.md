@@ -2,6 +2,8 @@
 
 ## WIP
 
+## [0.2] - 2020-11-15
+
 - Add `Vulkan.Utils.Misc` for handy functions used in Vulkan programs, but not
   Vulkan specific.
 - Add `Vulkan.Utils.Initializaion` for functions to ease creating a Vulkan device.
