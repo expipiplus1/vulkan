@@ -272,6 +272,14 @@ hasTimelineSemaphores phys = do
   _ ::& PhysicalDeviceTimelineSemaphoreFeatures hasTimelineSemaphores :& () <-
     getPhysicalDeviceFeatures2 phys
   pure hasTimelineSemaphores
+
+-- If you don't have a MonadFail instance you'll have to avoid pattern matching
+-- using do notation because of https://gitlab.haskell.org/ghc/ghc/-/issues/15681
+hasTimelineSemaphores phys = do
+  feats <- getPhysicalDeviceFeatures2 phys
+  let _ ::& PhysicalDeviceTimelineSemaphoreFeatures hasTimelineSemaphores :& ()
+       = feats
+  pure hasTimelineSemaphores
 ```
 
 ## Building
