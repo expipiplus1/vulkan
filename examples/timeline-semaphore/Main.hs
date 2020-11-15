@@ -7,14 +7,12 @@ module Main
   ( main
   ) where
 
-
 import           AutoApply
 import           Control.Exception              ( throwIO )
 import           Control.Monad                  ( guard )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe
 import           Control.Monad.Trans.Resource
-import           Data.Coerce                    ( coerce )
 import           Data.Vector                    ( Vector )
 import           Data.Word
 import           GHC.Exception                  ( SomeException )
@@ -24,12 +22,9 @@ import           UnliftIO                       ( Exception(displayException)
                                                 )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
-import           Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2
-                                                ( PhysicalDeviceFeatures2 )
 import           Vulkan.Core12
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                as Timeline
-import           Vulkan.Dynamic
 import           Vulkan.Exception
 import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import           Vulkan.Extensions.VK_KHR_timeline_semaphore
@@ -137,19 +132,10 @@ createDevice inst = do
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
           ::& PhysicalDeviceTimelineSemaphoreFeatures True
           :&  ()
-  dev' <- createDeviceWithExtensions phys
-                                     []
-                                     [KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME]
-                                     deviceCreateInfo
-  wait <- getDeviceProcAddr dev' "vkWaitSemaphoresKHR"
-  sig  <- getDeviceProcAddr dev' "vkSignalSemaphoreKHR"
-  let dev :: Device
-      dev = dev'
-        { deviceCmds = (deviceCmds (dev' :: Device))
-                         { pVkWaitSemaphores  = coerce wait
-                         , pVkSignalSemaphore = coerce sig
-                         }
-        }
+  dev <- createDeviceWithExtensions phys
+                                    []
+                                    [KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME]
+                                    deviceCreateInfo
   queues <- liftIO $ pdiGetQueues pdi dev
   pure (phys, dev, queues)
 
