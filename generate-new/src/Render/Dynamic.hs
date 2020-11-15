@@ -138,12 +138,23 @@ writeInitInstanceCmds instanceCommands = do
     ~> (ConT ''IO :@ ConT (typeName (mkTyName "InstanceCmds")))
     )
   tellImport 'castFunPtr
-  let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'"
-  (binds, apps) <- initCmdsStmts (pretty getInstanceProcAddr') instanceCommands
+  tellImport 'nullFunPtr
+  let getInstanceProcAddr'     = mkFunName "vkGetInstanceProcAddr'"
+      getFirstInstanceProcAddr = "getFirstInstanceProcAddr" :: Text
+  (binds, apps) <- initCmdsStmts (pretty getFirstInstanceProcAddr)
+                                 (pretty getInstanceProcAddr')
+                                 instanceCommands
   tellExport (ETerm n)
   tellDoc [qqi|
     {n} :: {tDoc}
     {n} handle = do
+      let {getFirstInstanceProcAddr} = \\case
+            []   -> pure nullFunPtr
+            x:xs -> do
+              p <- {getInstanceProcAddr'} handle x
+              if p /= nullFunPtr
+                then pure p
+                else {getFirstInstanceProcAddr} xs
     {indent 2 $ vsep binds}
       pure $ InstanceCmds handle
     {indent 4 $ vsep apps}
@@ -173,7 +184,10 @@ writeInitDeviceCmds deviceCommands = do
       maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
         =<< getCommand "vkGetDeviceProcAddr"
     renderTypeHighPrecSource =<< cToHsTypeWrapped DoLower (commandType c)
-  (binds, apps) <- initCmdsStmts "getDeviceProcAddr'" deviceCommands
+  let getFirstDeviceProcAddr = "getFirstDeviceProcAddr" :: Text
+  (binds, apps) <- initCmdsStmts (pretty getFirstDeviceProcAddr)
+                                 "getDeviceProcAddr'"
+                                 deviceCommands
   tellExport (ETerm n)
   let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'"
   tellDoc [qqi|
@@ -182,6 +196,13 @@ writeInitDeviceCmds deviceCommands = do
       pGetDeviceProcAddr <- castFunPtr @_ @{getDeviceProcAddrTDoc}
           <$> {getInstanceProcAddr'} (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr"#)
       let getDeviceProcAddr' = mkVkGetDeviceProcAddr pGetDeviceProcAddr
+          {getFirstDeviceProcAddr} = \\case
+            []   -> pure nullFunPtr
+            x:xs -> do
+              p <- getDeviceProcAddr' handle x
+              if p /= nullFunPtr
+                then pure p
+                else {getFirstDeviceProcAddr} xs
     {indent 2 $ vsep binds}
       pure $ DeviceCmds handle
     {indent 4 $ vsep apps}
@@ -195,18 +216,29 @@ initCmdsStmts
      , HasRenderParams r
      )
   => Doc ()
+  -> Doc ()
   -> Vector MarshaledCommand
   -> Sem r ([Doc ()], [Doc ()])
   -- ^ binds and cast pointers
-initCmdsStmts getProcAddr commands = do
+initCmdsStmts getFirstProcAddr getProcAddr commands = do
+  SpecInfo {..} <- input
   tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
   let binds = commands <&> \MarshaledCommand { mcCommand = Command {..} } ->
-        pretty (unCName cName)
-          <+> "<-"
-          <+> getProcAddr
-          <+> "handle (Ptr \""
-          <>  pretty (unCName cName)
-          <>  "\"#)"
+        let otherNames = siGetAliases cName
+            nameString name = parens $ "Ptr \"" <> pretty (unCName name) <> "\"#"
+            nameStrings names = list (nameString <$> names)
+        in  case otherNames of
+              [] ->
+                pretty (unCName cName)
+                  <+> "<-"
+                  <+> getProcAddr
+                  <+> "handle"
+                  <+> nameString cName
+              ns ->
+                pretty (unCName cName)
+                  <+> "<-"
+                  <+> getFirstProcAddr
+                  <+> nameStrings (ns <> [cName])
   apps <- forV commands $ \MarshaledCommand { mcCommand = c@Command {..} } -> do
     fTyDoc <- renderTypeHighPrecSource
       =<< cToHsTypeWrapped DoLower (commandType c)

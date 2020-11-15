@@ -30,6 +30,7 @@ data SpecInfo = SpecInfo
   , siTypeSize                  :: SizeMap
   , siAppearsInPositivePosition :: CName -> Bool
   , siAppearsInNegativePosition :: CName -> Bool
+  , siGetAliases                :: CName -> [CName]
   }
 
 instance Semigroup SpecInfo where
@@ -46,6 +47,7 @@ instance Semigroup SpecInfo where
                                               (liftA2 (||))
     , siAppearsInNegativePosition = applyBoth siAppearsInNegativePosition
                                               (liftA2 (||))
+    , siGetAliases                = applyBoth siGetAliases (liftA2 (<>))
     }
    where
     first :: (SpecInfo -> (a -> Maybe b)) -> a -> Maybe b
@@ -64,6 +66,7 @@ instance Monoid SpecInfo where
                     (const Nothing)
                     (const False)
                     (const False)
+                    (const [])
 
 specSpecInfo
   :: HasRenderParams r => Spec -> (CType -> Maybe (Int, Int)) -> Sem r SpecInfo
@@ -125,6 +128,15 @@ specSpecInfo Spec {..} siTypeSize = do
       ]
     siAppearsInNegativePosition = (`Set.member` negativeTypes)
     siAppearsInPositivePosition = (`Set.member` positiveTypes)
+    siGetAliases :: CName -> [CName]
+    siGetAliases =
+      let reverseAliasMap = Map.fromListWith
+            (<>)
+            [ (aTarget, [aName]) | Alias {..} <- toList specAliases ]
+          go n = do
+            a <- Map.lookupDefault [] n reverseAliasMap
+            a : go a
+      in  go
   pure SpecInfo { .. }
 
 withSpecInfo
@@ -164,6 +176,9 @@ appearsInPositivePosition s = ($ s) <$> inputs siAppearsInPositivePosition
 
 appearsInNegativePosition :: HasSpecInfo r => CName -> Sem r Bool
 appearsInNegativePosition s = ($ s) <$> inputs siAppearsInNegativePosition
+
+getAliases :: HasSpecInfo r => CName -> Sem r [CName]
+getAliases s = ($ s) <$> inputs siGetAliases
 
 inputs :: Member (Input a) r => (a -> b) -> Sem r b
 inputs f = f <$> input
