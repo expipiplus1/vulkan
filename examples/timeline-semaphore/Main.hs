@@ -10,18 +10,29 @@ module Main
 
 import           AutoApply
 import           Control.Exception              ( throwIO )
+import           Control.Monad                  ( guard )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe
 import           Control.Monad.Trans.Resource
+import           Data.Coerce                    ( coerce )
 import           Data.Vector                    ( Vector )
 import           Data.Word
+import           GHC.Exception                  ( SomeException )
 import           Say
+import           UnliftIO                       ( Exception(displayException)
+                                                , catch
+                                                )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
+import           Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2
+                                                ( PhysicalDeviceFeatures2 )
 import           Vulkan.Core12
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                as Timeline
+import           Vulkan.Dynamic
 import           Vulkan.Exception
+import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
+import           Vulkan.Extensions.VK_KHR_timeline_semaphore
 import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
@@ -48,10 +59,17 @@ autoapplyDecs
   ]
 
 main :: IO ()
-main = runResourceT $ do
+main = runResourceT . traceException $ do
   inst <- Main.createInstance
   (_phys, dev, MyQueues computeQueue) <- Main.createDevice inst
   timelineTest dev computeQueue
+
+traceException :: MonadUnliftIO m => m a -> m a
+traceException m =
+  m
+    `catch` (\(e :: SomeException) ->
+              sayErrString (displayException e) >> liftIO (throwIO e)
+            )
 
 timelineTest :: (MonadResource m) => Device -> Queue -> m ()
 timelineTest dev computeQueue = do
@@ -97,13 +115,21 @@ createInstance :: MonadResource m => m Instance
 createInstance =
   let createInfo = zero
         { applicationInfo = Just zero { applicationName = Nothing
-                                      , apiVersion      = API_VERSION_1_2
+                                      , apiVersion      = API_VERSION_1_0
                                       }
         }
-  in  createDebugInstanceWithExtensions [] [] [] [] createInfo
+  in  createDebugInstanceWithExtensions
+        []
+        []
+        [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
+        []
+        createInfo
 
 createDevice
-  :: (MonadResource m) => Instance -> m (PhysicalDevice, Device, MyQueues Queue)
+  :: forall m
+   . (MonadResource m)
+  => Instance
+  -> m (PhysicalDevice, Device, MyQueues Queue)
 createDevice inst = do
   (pdi, phys) <- pickPhysicalDevice inst physicalDeviceInfo pdiScore
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
@@ -111,9 +137,22 @@ createDevice inst = do
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
           ::& PhysicalDeviceTimelineSemaphoreFeatures True
           :&  ()
-  dev    <- createDeviceWithExtensions phys [] [] deviceCreateInfo
+  dev' <- createDeviceWithExtensions phys
+                                     []
+                                     [KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME]
+                                     deviceCreateInfo
+  wait <- getDeviceProcAddr dev' "vkWaitSemaphoresKHR"
+  sig  <- getDeviceProcAddr dev' "vkSignalSemaphoreKHR"
+  let dev :: Device
+      dev = dev'
+        { deviceCmds = (deviceCmds (dev' :: Device))
+                         { pVkWaitSemaphores  = coerce wait
+                         , pVkSignalSemaphore = coerce sig
+                         }
+        }
   queues <- liftIO $ pdiGetQueues pdi dev
   pure (phys, dev, queues)
+
 
 ----------------------------------------------------------------
 -- Physical device tools
@@ -135,6 +174,11 @@ newtype MyQueues a = MyQueues { _myComputeQueue :: a }
 physicalDeviceInfo
   :: MonadIO m => PhysicalDevice -> m (Maybe PhysicalDeviceInfo)
 physicalDeviceInfo phys = runMaybeT $ do
+  feats <- getPhysicalDeviceFeatures2KHR phys
+  let
+    _ ::& (PhysicalDeviceTimelineSemaphoreFeatures hasTimelineSemaphores :& ())
+      = feats
+  guard hasTimelineSemaphores
   pdiTotalMemory <- do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
     pure $ sum ((size :: MemoryHeap -> DeviceSize) <$> heaps)
