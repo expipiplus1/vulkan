@@ -5,6 +5,8 @@
 ## [3.6.14] - 2020-11-15
 
 - Add `FiniteBits` instance for Flags
+- Fix getting function pointers for functions which have aliases (those which
+  have been promoted to core versions mostly)
 
 ## [3.6.13] - 2020-11-09
   - Bump API version to v1.2.160
