@@ -1,13 +1,18 @@
 module Vulkan.Utils.Misc
-  ( partitionOptReq
+  ( -- * Sorting things
+    partitionOptReq
   , partitionOptReqIO
+    -- * Bit Utils
+  , showBits
   , (.&&.)
   ) where
 
 import           Control.Monad.IO.Class
 import           Data.Bits
 import           Data.Foldable
-import           Data.List                      ( partition )
+import           Data.List                      ( intercalate
+                                                , partition
+                                                )
 import           GHC.IO                         ( throwIO )
 import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
                                                 , IOException(..)
@@ -70,6 +75,31 @@ partitionOptReqIO type' available optional required = liftIO $ do
 ----------------------------------------------------------------
 -- * Bit utils
 ----------------------------------------------------------------
+
+-- | Show valies as a union of their individual bits
+--
+-- >>> showBits @Int 5
+-- "1 .|. 4"
+--
+-- >>> showBits @Int 0
+-- "zeroBits"
+--
+-- >>> import Vulkan.Core10.Enums.QueueFlagBits
+-- >>> showBits (QUEUE_COMPUTE_BIT .|. QUEUE_GRAPHICS_BIT)
+-- "QUEUE_GRAPHICS_BIT .|. QUEUE_COMPUTE_BIT"
+showBits :: forall a . (Show a, FiniteBits a) => a -> String
+showBits a = if a == zeroBits
+  then "zeroBits"
+  else intercalate " .|. " $ fmap show (setBits a)
+ where
+  setBits :: a -> [a]
+  setBits a =
+    [ b
+    | -- lol, is this really necessary
+      p <- [countTrailingZeros a .. finiteBitSize a - countLeadingZeros a - 1]
+    , let b = bit p
+    , a .&&. b
+    ]
 
 -- | Check if the intersection of bits is non-zero
 (.&&.) :: Bits a => a -> a -> Bool

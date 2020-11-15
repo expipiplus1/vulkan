@@ -59,7 +59,7 @@ library
     , text
     , typed-process
     , vector
-    , vulkan
+    , vulkan >=3.6.14
   default-language: Haskell2010
 
 test-suite doctests
