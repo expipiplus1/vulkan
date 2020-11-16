@@ -19,6 +19,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -32,7 +33,7 @@ import Vulkan.Zero (Zero)
 -- 'ResolveModeFlags',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'
 newtype ResolveModeFlagBits = ResolveModeFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'RESOLVE_MODE_NONE' indicates that no resolve operation is done.
 pattern RESOLVE_MODE_NONE = ResolveModeFlagBits 0x00000000

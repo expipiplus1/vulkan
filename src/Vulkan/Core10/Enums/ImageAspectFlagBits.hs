@@ -25,6 +25,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -39,7 +40,7 @@ import Vulkan.Zero (Zero)
 -- 'ImageAspectFlags',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'
 newtype ImageAspectFlagBits = ImageAspectFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'IMAGE_ASPECT_COLOR_BIT' specifies the color aspect.
 pattern IMAGE_ASPECT_COLOR_BIT = ImageAspectFlagBits 0x00000001

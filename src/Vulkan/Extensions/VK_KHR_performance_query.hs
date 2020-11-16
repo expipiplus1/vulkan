@@ -87,6 +87,7 @@ import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -1124,7 +1125,7 @@ instance Read PerformanceCounterStorageKHR where
 --
 -- 'PerformanceCounterDescriptionFlagsKHR'
 newtype PerformanceCounterDescriptionFlagBitsKHR = PerformanceCounterDescriptionFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR'
 -- specifies that recording the counter /may/ have a noticeable performance
@@ -1159,7 +1160,7 @@ instance Read PerformanceCounterDescriptionFlagBitsKHR where
 --
 -- 'AcquireProfilingLockFlagsKHR'
 newtype AcquireProfilingLockFlagBitsKHR = AcquireProfilingLockFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 

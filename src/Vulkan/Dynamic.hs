@@ -455,6 +455,13 @@ foreign import ccall
 
 initInstanceCmds :: Ptr Instance_T -> IO InstanceCmds
 initInstanceCmds handle = do
+  let getFirstInstanceProcAddr = \case
+        []   -> pure nullFunPtr
+        x:xs -> do
+          p <- getInstanceProcAddr' handle x
+          if p /= nullFunPtr
+            then pure p
+            else getFirstInstanceProcAddr xs
   vkDestroyInstance <- getInstanceProcAddr' handle (Ptr "vkDestroyInstance"#)
   vkEnumeratePhysicalDevices <- getInstanceProcAddr' handle (Ptr "vkEnumeratePhysicalDevices"#)
   vkGetInstanceProcAddr <- getInstanceProcAddr' handle (Ptr "vkGetInstanceProcAddr"#)
@@ -498,21 +505,21 @@ initInstanceCmds handle = do
   vkDestroyDebugReportCallbackEXT <- getInstanceProcAddr' handle (Ptr "vkDestroyDebugReportCallbackEXT"#)
   vkDebugReportMessageEXT <- getInstanceProcAddr' handle (Ptr "vkDebugReportMessageEXT"#)
   vkGetPhysicalDeviceExternalImageFormatPropertiesNV <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceExternalImageFormatPropertiesNV"#)
-  vkGetPhysicalDeviceFeatures2 <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceFeatures2"#)
-  vkGetPhysicalDeviceProperties2 <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceProperties2"#)
-  vkGetPhysicalDeviceFormatProperties2 <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceFormatProperties2"#)
-  vkGetPhysicalDeviceImageFormatProperties2 <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceImageFormatProperties2"#)
-  vkGetPhysicalDeviceQueueFamilyProperties2 <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceQueueFamilyProperties2"#)
-  vkGetPhysicalDeviceMemoryProperties2 <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceMemoryProperties2"#)
-  vkGetPhysicalDeviceSparseImageFormatProperties2 <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceSparseImageFormatProperties2"#)
-  vkGetPhysicalDeviceExternalBufferProperties <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceExternalBufferProperties"#)
-  vkGetPhysicalDeviceExternalSemaphoreProperties <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceExternalSemaphoreProperties"#)
-  vkGetPhysicalDeviceExternalFenceProperties <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceExternalFenceProperties"#)
+  vkGetPhysicalDeviceFeatures2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceFeatures2KHR"#), (Ptr "vkGetPhysicalDeviceFeatures2"#)]
+  vkGetPhysicalDeviceProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceProperties2KHR"#), (Ptr "vkGetPhysicalDeviceProperties2"#)]
+  vkGetPhysicalDeviceFormatProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceFormatProperties2KHR"#), (Ptr "vkGetPhysicalDeviceFormatProperties2"#)]
+  vkGetPhysicalDeviceImageFormatProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceImageFormatProperties2KHR"#), (Ptr "vkGetPhysicalDeviceImageFormatProperties2"#)]
+  vkGetPhysicalDeviceQueueFamilyProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceQueueFamilyProperties2KHR"#), (Ptr "vkGetPhysicalDeviceQueueFamilyProperties2"#)]
+  vkGetPhysicalDeviceMemoryProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceMemoryProperties2KHR"#), (Ptr "vkGetPhysicalDeviceMemoryProperties2"#)]
+  vkGetPhysicalDeviceSparseImageFormatProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceSparseImageFormatProperties2KHR"#), (Ptr "vkGetPhysicalDeviceSparseImageFormatProperties2"#)]
+  vkGetPhysicalDeviceExternalBufferProperties <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceExternalBufferPropertiesKHR"#), (Ptr "vkGetPhysicalDeviceExternalBufferProperties"#)]
+  vkGetPhysicalDeviceExternalSemaphoreProperties <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceExternalSemaphorePropertiesKHR"#), (Ptr "vkGetPhysicalDeviceExternalSemaphoreProperties"#)]
+  vkGetPhysicalDeviceExternalFenceProperties <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceExternalFencePropertiesKHR"#), (Ptr "vkGetPhysicalDeviceExternalFenceProperties"#)]
   vkReleaseDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkReleaseDisplayEXT"#)
   vkAcquireXlibDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkAcquireXlibDisplayEXT"#)
   vkGetRandROutputDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkGetRandROutputDisplayEXT"#)
   vkGetPhysicalDeviceSurfaceCapabilities2EXT <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceSurfaceCapabilities2EXT"#)
-  vkEnumeratePhysicalDeviceGroups <- getInstanceProcAddr' handle (Ptr "vkEnumeratePhysicalDeviceGroups"#)
+  vkEnumeratePhysicalDeviceGroups <- getFirstInstanceProcAddr [(Ptr "vkEnumeratePhysicalDeviceGroupsKHR"#), (Ptr "vkEnumeratePhysicalDeviceGroups"#)]
   vkGetPhysicalDevicePresentRectanglesKHR <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDevicePresentRectanglesKHR"#)
   vkCreateIOSSurfaceMVK <- getInstanceProcAddr' handle (Ptr "vkCreateIOSSurfaceMVK"#)
   vkCreateMacOSSurfaceMVK <- getInstanceProcAddr' handle (Ptr "vkCreateMacOSSurfaceMVK"#)
@@ -992,6 +999,13 @@ initDeviceCmds instanceCmds handle = do
   pGetDeviceProcAddr <- castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction)
       <$> getInstanceProcAddr' (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr"#)
   let getDeviceProcAddr' = mkVkGetDeviceProcAddr pGetDeviceProcAddr
+      getFirstDeviceProcAddr = \case
+        []   -> pure nullFunPtr
+        x:xs -> do
+          p <- getDeviceProcAddr' handle x
+          if p /= nullFunPtr
+            then pure p
+            else getFirstDeviceProcAddr xs
   vkGetDeviceProcAddr <- getDeviceProcAddr' handle (Ptr "vkGetDeviceProcAddr"#)
   vkDestroyDevice <- getDeviceProcAddr' handle (Ptr "vkDestroyDevice"#)
   vkGetDeviceQueue <- getDeviceProcAddr' handle (Ptr "vkGetDeviceQueue"#)
@@ -1026,7 +1040,7 @@ initDeviceCmds instanceCmds handle = do
   vkCreateQueryPool <- getDeviceProcAddr' handle (Ptr "vkCreateQueryPool"#)
   vkDestroyQueryPool <- getDeviceProcAddr' handle (Ptr "vkDestroyQueryPool"#)
   vkGetQueryPoolResults <- getDeviceProcAddr' handle (Ptr "vkGetQueryPoolResults"#)
-  vkResetQueryPool <- getDeviceProcAddr' handle (Ptr "vkResetQueryPool"#)
+  vkResetQueryPool <- getFirstDeviceProcAddr [(Ptr "vkResetQueryPoolEXT"#), (Ptr "vkResetQueryPool"#)]
   vkCreateBuffer <- getDeviceProcAddr' handle (Ptr "vkCreateBuffer"#)
   vkDestroyBuffer <- getDeviceProcAddr' handle (Ptr "vkDestroyBuffer"#)
   vkCreateBufferView <- getDeviceProcAddr' handle (Ptr "vkCreateBufferView"#)
@@ -1135,7 +1149,7 @@ initDeviceCmds instanceCmds handle = do
   vkCreateIndirectCommandsLayoutNV <- getDeviceProcAddr' handle (Ptr "vkCreateIndirectCommandsLayoutNV"#)
   vkDestroyIndirectCommandsLayoutNV <- getDeviceProcAddr' handle (Ptr "vkDestroyIndirectCommandsLayoutNV"#)
   vkCmdPushDescriptorSetKHR <- getDeviceProcAddr' handle (Ptr "vkCmdPushDescriptorSetKHR"#)
-  vkTrimCommandPool <- getDeviceProcAddr' handle (Ptr "vkTrimCommandPool"#)
+  vkTrimCommandPool <- getFirstDeviceProcAddr [(Ptr "vkTrimCommandPoolKHR"#), (Ptr "vkTrimCommandPool"#)]
   vkGetMemoryWin32HandleKHR <- getDeviceProcAddr' handle (Ptr "vkGetMemoryWin32HandleKHR"#)
   vkGetMemoryWin32HandlePropertiesKHR <- getDeviceProcAddr' handle (Ptr "vkGetMemoryWin32HandlePropertiesKHR"#)
   vkGetMemoryFdKHR <- getDeviceProcAddr' handle (Ptr "vkGetMemoryFdKHR"#)
@@ -1152,17 +1166,17 @@ initDeviceCmds instanceCmds handle = do
   vkRegisterDeviceEventEXT <- getDeviceProcAddr' handle (Ptr "vkRegisterDeviceEventEXT"#)
   vkRegisterDisplayEventEXT <- getDeviceProcAddr' handle (Ptr "vkRegisterDisplayEventEXT"#)
   vkGetSwapchainCounterEXT <- getDeviceProcAddr' handle (Ptr "vkGetSwapchainCounterEXT"#)
-  vkGetDeviceGroupPeerMemoryFeatures <- getDeviceProcAddr' handle (Ptr "vkGetDeviceGroupPeerMemoryFeatures"#)
-  vkBindBufferMemory2 <- getDeviceProcAddr' handle (Ptr "vkBindBufferMemory2"#)
-  vkBindImageMemory2 <- getDeviceProcAddr' handle (Ptr "vkBindImageMemory2"#)
-  vkCmdSetDeviceMask <- getDeviceProcAddr' handle (Ptr "vkCmdSetDeviceMask"#)
+  vkGetDeviceGroupPeerMemoryFeatures <- getFirstDeviceProcAddr [(Ptr "vkGetDeviceGroupPeerMemoryFeaturesKHR"#), (Ptr "vkGetDeviceGroupPeerMemoryFeatures"#)]
+  vkBindBufferMemory2 <- getFirstDeviceProcAddr [(Ptr "vkBindBufferMemory2KHR"#), (Ptr "vkBindBufferMemory2"#)]
+  vkBindImageMemory2 <- getFirstDeviceProcAddr [(Ptr "vkBindImageMemory2KHR"#), (Ptr "vkBindImageMemory2"#)]
+  vkCmdSetDeviceMask <- getFirstDeviceProcAddr [(Ptr "vkCmdSetDeviceMaskKHR"#), (Ptr "vkCmdSetDeviceMask"#)]
   vkGetDeviceGroupPresentCapabilitiesKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeviceGroupPresentCapabilitiesKHR"#)
   vkGetDeviceGroupSurfacePresentModesKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeviceGroupSurfacePresentModesKHR"#)
   vkAcquireNextImage2KHR <- getDeviceProcAddr' handle (Ptr "vkAcquireNextImage2KHR"#)
-  vkCmdDispatchBase <- getDeviceProcAddr' handle (Ptr "vkCmdDispatchBase"#)
-  vkCreateDescriptorUpdateTemplate <- getDeviceProcAddr' handle (Ptr "vkCreateDescriptorUpdateTemplate"#)
-  vkDestroyDescriptorUpdateTemplate <- getDeviceProcAddr' handle (Ptr "vkDestroyDescriptorUpdateTemplate"#)
-  vkUpdateDescriptorSetWithTemplate <- getDeviceProcAddr' handle (Ptr "vkUpdateDescriptorSetWithTemplate"#)
+  vkCmdDispatchBase <- getFirstDeviceProcAddr [(Ptr "vkCmdDispatchBaseKHR"#), (Ptr "vkCmdDispatchBase"#)]
+  vkCreateDescriptorUpdateTemplate <- getFirstDeviceProcAddr [(Ptr "vkCreateDescriptorUpdateTemplateKHR"#), (Ptr "vkCreateDescriptorUpdateTemplate"#)]
+  vkDestroyDescriptorUpdateTemplate <- getFirstDeviceProcAddr [(Ptr "vkDestroyDescriptorUpdateTemplateKHR"#), (Ptr "vkDestroyDescriptorUpdateTemplate"#)]
+  vkUpdateDescriptorSetWithTemplate <- getFirstDeviceProcAddr [(Ptr "vkUpdateDescriptorSetWithTemplateKHR"#), (Ptr "vkUpdateDescriptorSetWithTemplate"#)]
   vkCmdPushDescriptorSetWithTemplateKHR <- getDeviceProcAddr' handle (Ptr "vkCmdPushDescriptorSetWithTemplateKHR"#)
   vkSetHdrMetadataEXT <- getDeviceProcAddr' handle (Ptr "vkSetHdrMetadataEXT"#)
   vkGetSwapchainStatusKHR <- getDeviceProcAddr' handle (Ptr "vkGetSwapchainStatusKHR"#)
@@ -1171,17 +1185,17 @@ initDeviceCmds instanceCmds handle = do
   vkCmdSetViewportWScalingNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetViewportWScalingNV"#)
   vkCmdSetDiscardRectangleEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetDiscardRectangleEXT"#)
   vkCmdSetSampleLocationsEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetSampleLocationsEXT"#)
-  vkGetBufferMemoryRequirements2 <- getDeviceProcAddr' handle (Ptr "vkGetBufferMemoryRequirements2"#)
-  vkGetImageMemoryRequirements2 <- getDeviceProcAddr' handle (Ptr "vkGetImageMemoryRequirements2"#)
-  vkGetImageSparseMemoryRequirements2 <- getDeviceProcAddr' handle (Ptr "vkGetImageSparseMemoryRequirements2"#)
-  vkCreateSamplerYcbcrConversion <- getDeviceProcAddr' handle (Ptr "vkCreateSamplerYcbcrConversion"#)
-  vkDestroySamplerYcbcrConversion <- getDeviceProcAddr' handle (Ptr "vkDestroySamplerYcbcrConversion"#)
+  vkGetBufferMemoryRequirements2 <- getFirstDeviceProcAddr [(Ptr "vkGetBufferMemoryRequirements2KHR"#), (Ptr "vkGetBufferMemoryRequirements2"#)]
+  vkGetImageMemoryRequirements2 <- getFirstDeviceProcAddr [(Ptr "vkGetImageMemoryRequirements2KHR"#), (Ptr "vkGetImageMemoryRequirements2"#)]
+  vkGetImageSparseMemoryRequirements2 <- getFirstDeviceProcAddr [(Ptr "vkGetImageSparseMemoryRequirements2KHR"#), (Ptr "vkGetImageSparseMemoryRequirements2"#)]
+  vkCreateSamplerYcbcrConversion <- getFirstDeviceProcAddr [(Ptr "vkCreateSamplerYcbcrConversionKHR"#), (Ptr "vkCreateSamplerYcbcrConversion"#)]
+  vkDestroySamplerYcbcrConversion <- getFirstDeviceProcAddr [(Ptr "vkDestroySamplerYcbcrConversionKHR"#), (Ptr "vkDestroySamplerYcbcrConversion"#)]
   vkGetDeviceQueue2 <- getDeviceProcAddr' handle (Ptr "vkGetDeviceQueue2"#)
   vkCreateValidationCacheEXT <- getDeviceProcAddr' handle (Ptr "vkCreateValidationCacheEXT"#)
   vkDestroyValidationCacheEXT <- getDeviceProcAddr' handle (Ptr "vkDestroyValidationCacheEXT"#)
   vkGetValidationCacheDataEXT <- getDeviceProcAddr' handle (Ptr "vkGetValidationCacheDataEXT"#)
   vkMergeValidationCachesEXT <- getDeviceProcAddr' handle (Ptr "vkMergeValidationCachesEXT"#)
-  vkGetDescriptorSetLayoutSupport <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetLayoutSupport"#)
+  vkGetDescriptorSetLayoutSupport <- getFirstDeviceProcAddr [(Ptr "vkGetDescriptorSetLayoutSupportKHR"#), (Ptr "vkGetDescriptorSetLayoutSupport"#)]
   vkGetShaderInfoAMD <- getDeviceProcAddr' handle (Ptr "vkGetShaderInfoAMD"#)
   vkSetLocalDimmingAMD <- getDeviceProcAddr' handle (Ptr "vkSetLocalDimmingAMD"#)
   vkGetCalibratedTimestampsEXT <- getDeviceProcAddr' handle (Ptr "vkGetCalibratedTimestampsEXT"#)
@@ -1195,17 +1209,17 @@ initDeviceCmds instanceCmds handle = do
   vkCmdInsertDebugUtilsLabelEXT <- getDeviceProcAddr' handle (Ptr "vkCmdInsertDebugUtilsLabelEXT"#)
   vkGetMemoryHostPointerPropertiesEXT <- getDeviceProcAddr' handle (Ptr "vkGetMemoryHostPointerPropertiesEXT"#)
   vkCmdWriteBufferMarkerAMD <- getDeviceProcAddr' handle (Ptr "vkCmdWriteBufferMarkerAMD"#)
-  vkCreateRenderPass2 <- getDeviceProcAddr' handle (Ptr "vkCreateRenderPass2"#)
-  vkCmdBeginRenderPass2 <- getDeviceProcAddr' handle (Ptr "vkCmdBeginRenderPass2"#)
-  vkCmdNextSubpass2 <- getDeviceProcAddr' handle (Ptr "vkCmdNextSubpass2"#)
-  vkCmdEndRenderPass2 <- getDeviceProcAddr' handle (Ptr "vkCmdEndRenderPass2"#)
-  vkGetSemaphoreCounterValue <- getDeviceProcAddr' handle (Ptr "vkGetSemaphoreCounterValue"#)
-  vkWaitSemaphores <- getDeviceProcAddr' handle (Ptr "vkWaitSemaphores"#)
-  vkSignalSemaphore <- getDeviceProcAddr' handle (Ptr "vkSignalSemaphore"#)
+  vkCreateRenderPass2 <- getFirstDeviceProcAddr [(Ptr "vkCreateRenderPass2KHR"#), (Ptr "vkCreateRenderPass2"#)]
+  vkCmdBeginRenderPass2 <- getFirstDeviceProcAddr [(Ptr "vkCmdBeginRenderPass2KHR"#), (Ptr "vkCmdBeginRenderPass2"#)]
+  vkCmdNextSubpass2 <- getFirstDeviceProcAddr [(Ptr "vkCmdNextSubpass2KHR"#), (Ptr "vkCmdNextSubpass2"#)]
+  vkCmdEndRenderPass2 <- getFirstDeviceProcAddr [(Ptr "vkCmdEndRenderPass2KHR"#), (Ptr "vkCmdEndRenderPass2"#)]
+  vkGetSemaphoreCounterValue <- getFirstDeviceProcAddr [(Ptr "vkGetSemaphoreCounterValueKHR"#), (Ptr "vkGetSemaphoreCounterValue"#)]
+  vkWaitSemaphores <- getFirstDeviceProcAddr [(Ptr "vkWaitSemaphoresKHR"#), (Ptr "vkWaitSemaphores"#)]
+  vkSignalSemaphore <- getFirstDeviceProcAddr [(Ptr "vkSignalSemaphoreKHR"#), (Ptr "vkSignalSemaphore"#)]
   vkGetAndroidHardwareBufferPropertiesANDROID <- getDeviceProcAddr' handle (Ptr "vkGetAndroidHardwareBufferPropertiesANDROID"#)
   vkGetMemoryAndroidHardwareBufferANDROID <- getDeviceProcAddr' handle (Ptr "vkGetMemoryAndroidHardwareBufferANDROID"#)
-  vkCmdDrawIndirectCount <- getDeviceProcAddr' handle (Ptr "vkCmdDrawIndirectCount"#)
-  vkCmdDrawIndexedIndirectCount <- getDeviceProcAddr' handle (Ptr "vkCmdDrawIndexedIndirectCount"#)
+  vkCmdDrawIndirectCount <- getFirstDeviceProcAddr [(Ptr "vkCmdDrawIndirectCountAMD"#), (Ptr "vkCmdDrawIndirectCountKHR"#), (Ptr "vkCmdDrawIndirectCount"#)]
+  vkCmdDrawIndexedIndirectCount <- getFirstDeviceProcAddr [(Ptr "vkCmdDrawIndexedIndirectCountAMD"#), (Ptr "vkCmdDrawIndexedIndirectCountKHR"#), (Ptr "vkCmdDrawIndexedIndirectCount"#)]
   vkCmdSetCheckpointNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetCheckpointNV"#)
   vkGetQueueCheckpointDataNV <- getDeviceProcAddr' handle (Ptr "vkGetQueueCheckpointDataNV"#)
   vkCmdBindTransformFeedbackBuffersEXT <- getDeviceProcAddr' handle (Ptr "vkCmdBindTransformFeedbackBuffersEXT"#)
@@ -1223,10 +1237,10 @@ initDeviceCmds instanceCmds handle = do
   vkCmdDrawMeshTasksIndirectCountNV <- getDeviceProcAddr' handle (Ptr "vkCmdDrawMeshTasksIndirectCountNV"#)
   vkCompileDeferredNV <- getDeviceProcAddr' handle (Ptr "vkCompileDeferredNV"#)
   vkCreateAccelerationStructureNV <- getDeviceProcAddr' handle (Ptr "vkCreateAccelerationStructureNV"#)
-  vkDestroyAccelerationStructureKHR <- getDeviceProcAddr' handle (Ptr "vkDestroyAccelerationStructureKHR"#)
+  vkDestroyAccelerationStructureKHR <- getFirstDeviceProcAddr [(Ptr "vkDestroyAccelerationStructureNV"#), (Ptr "vkDestroyAccelerationStructureKHR"#)]
   vkGetAccelerationStructureMemoryRequirementsKHR <- getDeviceProcAddr' handle (Ptr "vkGetAccelerationStructureMemoryRequirementsKHR"#)
   vkGetAccelerationStructureMemoryRequirementsNV <- getDeviceProcAddr' handle (Ptr "vkGetAccelerationStructureMemoryRequirementsNV"#)
-  vkBindAccelerationStructureMemoryKHR <- getDeviceProcAddr' handle (Ptr "vkBindAccelerationStructureMemoryKHR"#)
+  vkBindAccelerationStructureMemoryKHR <- getFirstDeviceProcAddr [(Ptr "vkBindAccelerationStructureMemoryNV"#), (Ptr "vkBindAccelerationStructureMemoryKHR"#)]
   vkCmdCopyAccelerationStructureNV <- getDeviceProcAddr' handle (Ptr "vkCmdCopyAccelerationStructureNV"#)
   vkCmdCopyAccelerationStructureKHR <- getDeviceProcAddr' handle (Ptr "vkCmdCopyAccelerationStructureKHR"#)
   vkCopyAccelerationStructureKHR <- getDeviceProcAddr' handle (Ptr "vkCopyAccelerationStructureKHR"#)
@@ -1234,12 +1248,12 @@ initDeviceCmds instanceCmds handle = do
   vkCopyAccelerationStructureToMemoryKHR <- getDeviceProcAddr' handle (Ptr "vkCopyAccelerationStructureToMemoryKHR"#)
   vkCmdCopyMemoryToAccelerationStructureKHR <- getDeviceProcAddr' handle (Ptr "vkCmdCopyMemoryToAccelerationStructureKHR"#)
   vkCopyMemoryToAccelerationStructureKHR <- getDeviceProcAddr' handle (Ptr "vkCopyMemoryToAccelerationStructureKHR"#)
-  vkCmdWriteAccelerationStructuresPropertiesKHR <- getDeviceProcAddr' handle (Ptr "vkCmdWriteAccelerationStructuresPropertiesKHR"#)
+  vkCmdWriteAccelerationStructuresPropertiesKHR <- getFirstDeviceProcAddr [(Ptr "vkCmdWriteAccelerationStructuresPropertiesNV"#), (Ptr "vkCmdWriteAccelerationStructuresPropertiesKHR"#)]
   vkCmdBuildAccelerationStructureNV <- getDeviceProcAddr' handle (Ptr "vkCmdBuildAccelerationStructureNV"#)
   vkWriteAccelerationStructuresPropertiesKHR <- getDeviceProcAddr' handle (Ptr "vkWriteAccelerationStructuresPropertiesKHR"#)
   vkCmdTraceRaysKHR <- getDeviceProcAddr' handle (Ptr "vkCmdTraceRaysKHR"#)
   vkCmdTraceRaysNV <- getDeviceProcAddr' handle (Ptr "vkCmdTraceRaysNV"#)
-  vkGetRayTracingShaderGroupHandlesKHR <- getDeviceProcAddr' handle (Ptr "vkGetRayTracingShaderGroupHandlesKHR"#)
+  vkGetRayTracingShaderGroupHandlesKHR <- getFirstDeviceProcAddr [(Ptr "vkGetRayTracingShaderGroupHandlesNV"#), (Ptr "vkGetRayTracingShaderGroupHandlesKHR"#)]
   vkGetRayTracingCaptureReplayShaderGroupHandlesKHR <- getDeviceProcAddr' handle (Ptr "vkGetRayTracingCaptureReplayShaderGroupHandlesKHR"#)
   vkGetAccelerationStructureHandleNV <- getDeviceProcAddr' handle (Ptr "vkGetAccelerationStructureHandleNV"#)
   vkCreateRayTracingPipelinesNV <- getDeviceProcAddr' handle (Ptr "vkCreateRayTracingPipelinesNV"#)
@@ -1254,8 +1268,8 @@ initDeviceCmds instanceCmds handle = do
   vkAcquireProfilingLockKHR <- getDeviceProcAddr' handle (Ptr "vkAcquireProfilingLockKHR"#)
   vkReleaseProfilingLockKHR <- getDeviceProcAddr' handle (Ptr "vkReleaseProfilingLockKHR"#)
   vkGetImageDrmFormatModifierPropertiesEXT <- getDeviceProcAddr' handle (Ptr "vkGetImageDrmFormatModifierPropertiesEXT"#)
-  vkGetBufferOpaqueCaptureAddress <- getDeviceProcAddr' handle (Ptr "vkGetBufferOpaqueCaptureAddress"#)
-  vkGetBufferDeviceAddress <- getDeviceProcAddr' handle (Ptr "vkGetBufferDeviceAddress"#)
+  vkGetBufferOpaqueCaptureAddress <- getFirstDeviceProcAddr [(Ptr "vkGetBufferOpaqueCaptureAddressKHR"#), (Ptr "vkGetBufferOpaqueCaptureAddress"#)]
+  vkGetBufferDeviceAddress <- getFirstDeviceProcAddr [(Ptr "vkGetBufferDeviceAddressEXT"#), (Ptr "vkGetBufferDeviceAddressKHR"#), (Ptr "vkGetBufferDeviceAddress"#)]
   vkInitializePerformanceApiINTEL <- getDeviceProcAddr' handle (Ptr "vkInitializePerformanceApiINTEL"#)
   vkUninitializePerformanceApiINTEL <- getDeviceProcAddr' handle (Ptr "vkUninitializePerformanceApiINTEL"#)
   vkCmdSetPerformanceMarkerINTEL <- getDeviceProcAddr' handle (Ptr "vkCmdSetPerformanceMarkerINTEL"#)
@@ -1265,7 +1279,7 @@ initDeviceCmds instanceCmds handle = do
   vkReleasePerformanceConfigurationINTEL <- getDeviceProcAddr' handle (Ptr "vkReleasePerformanceConfigurationINTEL"#)
   vkQueueSetPerformanceConfigurationINTEL <- getDeviceProcAddr' handle (Ptr "vkQueueSetPerformanceConfigurationINTEL"#)
   vkGetPerformanceParameterINTEL <- getDeviceProcAddr' handle (Ptr "vkGetPerformanceParameterINTEL"#)
-  vkGetDeviceMemoryOpaqueCaptureAddress <- getDeviceProcAddr' handle (Ptr "vkGetDeviceMemoryOpaqueCaptureAddress"#)
+  vkGetDeviceMemoryOpaqueCaptureAddress <- getFirstDeviceProcAddr [(Ptr "vkGetDeviceMemoryOpaqueCaptureAddressKHR"#), (Ptr "vkGetDeviceMemoryOpaqueCaptureAddress"#)]
   vkGetPipelineExecutablePropertiesKHR <- getDeviceProcAddr' handle (Ptr "vkGetPipelineExecutablePropertiesKHR"#)
   vkGetPipelineExecutableStatisticsKHR <- getDeviceProcAddr' handle (Ptr "vkGetPipelineExecutableStatisticsKHR"#)
   vkGetPipelineExecutableInternalRepresentationsKHR <- getDeviceProcAddr' handle (Ptr "vkGetPipelineExecutableInternalRepresentationsKHR"#)

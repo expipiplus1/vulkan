@@ -13,6 +13,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -20,7 +21,7 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 -- No documentation found for TopLevel "VkShaderModuleCreateFlagBits"
 newtype ShaderModuleCreateFlagBits = ShaderModuleCreateFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 

@@ -39,7 +39,7 @@ if git diff --cached --no-ext-diff --quiet --exit-code; then
   echo "no changes"
 else
   echo "Adding version bump to changelog"
-  sed -i.bak "s/^## WIP$/\0\n  - Bump API version to $version/" changelog.md
+  sed -i.bak "s/^## WIP$/\0\n- Bump API version to $version/" changelog.md
   git add changelog.md
 
   git commit -m "Bump vulkan version to $version"

@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [0.3.9] - 2020-11-15
+
+- Derive `FiniteBits` for bitmasks
+
 ## [0.3.8] - 2020-11-12
 
 - Bump VMA

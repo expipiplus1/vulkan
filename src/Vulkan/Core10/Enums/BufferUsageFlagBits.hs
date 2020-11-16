@@ -28,6 +28,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -39,7 +40,7 @@ import Vulkan.Zero (Zero)
 --
 -- 'BufferUsageFlags'
 newtype BufferUsageFlagBits = BufferUsageFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'BUFFER_USAGE_TRANSFER_SRC_BIT' specifies that the buffer /can/ be used
 -- as the source of a /transfer command/ (see the definition of

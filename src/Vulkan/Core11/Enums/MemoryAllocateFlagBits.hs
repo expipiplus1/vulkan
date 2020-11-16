@@ -17,6 +17,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -29,7 +30,7 @@ import Vulkan.Zero (Zero)
 --
 -- 'MemoryAllocateFlags'
 newtype MemoryAllocateFlagBits = MemoryAllocateFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'MEMORY_ALLOCATE_DEVICE_MASK_BIT' specifies that memory will be
 -- allocated for the devices in

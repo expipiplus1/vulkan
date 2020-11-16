@@ -47,6 +47,7 @@ import qualified Data.Vector (length)
 import Foreign.C.Types (CSize(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -662,7 +663,7 @@ instance Zero ShaderModuleValidationCacheCreateInfoEXT where
 --
 -- 'ValidationCacheCreateInfoEXT'
 newtype ValidationCacheCreateFlagsEXT = ValidationCacheCreateFlagsEXT Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 

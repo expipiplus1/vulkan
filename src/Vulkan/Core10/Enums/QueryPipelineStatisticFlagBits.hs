@@ -25,6 +25,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -61,7 +62,7 @@ import Vulkan.Zero (Zero)
 --
 -- 'QueryPipelineStatisticFlags'
 newtype QueryPipelineStatisticFlagBits = QueryPipelineStatisticFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT' specifies that
 -- queries managed by the pool will count the number of vertices processed

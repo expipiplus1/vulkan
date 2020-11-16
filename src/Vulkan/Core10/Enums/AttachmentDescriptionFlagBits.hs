@@ -15,6 +15,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -27,7 +28,7 @@ import Vulkan.Zero (Zero)
 --
 -- 'AttachmentDescriptionFlags'
 newtype AttachmentDescriptionFlagBits = AttachmentDescriptionFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT' specifies that the attachment
 -- aliases the same device memory as other attachments.

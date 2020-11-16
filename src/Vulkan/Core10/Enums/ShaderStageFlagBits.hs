@@ -30,6 +30,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -51,7 +52,7 @@ import Vulkan.Zero (Zero)
 -- 'ShaderStageFlags',
 -- 'Vulkan.Extensions.VK_AMD_shader_info.getShaderInfoAMD'
 newtype ShaderStageFlagBits = ShaderStageFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'SHADER_STAGE_VERTEX_BIT' specifies the vertex stage.
 pattern SHADER_STAGE_VERTEX_BIT = ShaderStageFlagBits 0x00000001

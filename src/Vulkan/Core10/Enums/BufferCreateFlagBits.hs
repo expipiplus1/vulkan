@@ -19,6 +19,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -39,7 +40,7 @@ import Vulkan.Zero (Zero)
 --
 -- 'BufferCreateFlags'
 newtype BufferCreateFlagBits = BufferCreateFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'BUFFER_CREATE_SPARSE_BINDING_BIT' specifies that the buffer will be
 -- backed using sparse memory binding.

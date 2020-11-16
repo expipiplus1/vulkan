@@ -104,6 +104,25 @@ executables:
       - vulkan
       - vulkan-utils
 
+  timeline-semaphore:
+    main: Main.hs
+    source-dirs: timeline-semaphore
+    dependencies:
+      - VulkanMemoryAllocator
+      - autoapply >= 0.4
+      - base <5
+      - bytestring
+      - extra
+      - resourcet
+      - safe-exceptions
+      - say
+      - text
+      - transformers
+      - unliftio
+      - vector
+      - vulkan
+      - vulkan-utils
+
 when:
   - condition: os(windows)
     ghc-options: -optl-mconsole
@@ -117,10 +136,11 @@ flags:
     manual: yes
 
 default-extensions:
-  - AllowAmbiguousTypes
   - DataKinds
   - DefaultSignatures
-  - DeriveAnyClass
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveTraversable
   - DerivingStrategies
   - DuplicateRecordFields
   - FlexibleContexts
@@ -133,7 +153,6 @@ default-extensions:
   - NoMonomorphismRestriction
   - NumDecimals
   - OverloadedStrings
-  - PartialTypeSignatures
   - PatternSynonyms
   - PolyKinds
   - QuantifiedConstraints
@@ -148,7 +167,6 @@ default-extensions:
   - TypeFamilyDependencies
   - TypeOperators
   - TypeSynonymInstances
-  - UndecidableInstances
   - ViewPatterns
 
 ghc-options:

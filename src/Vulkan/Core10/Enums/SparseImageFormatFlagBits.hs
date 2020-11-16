@@ -17,6 +17,7 @@ import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -29,7 +30,7 @@ import Vulkan.Zero (Zero)
 --
 -- 'SparseImageFormatFlags'
 newtype SparseImageFormatFlagBits = SparseImageFormatFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT' specifies that the image uses a
 -- single mip tail region for all array layers.

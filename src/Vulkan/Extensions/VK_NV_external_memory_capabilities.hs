@@ -40,6 +40,7 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -270,7 +271,7 @@ instance Zero ExternalImageFormatPropertiesNV where
 --
 -- 'ExternalMemoryHandleTypeFlagsNV'
 newtype ExternalMemoryHandleTypeFlagBitsNV = ExternalMemoryHandleTypeFlagBitsNV Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV' specifies a handle to
 -- memory returned by
@@ -319,7 +320,7 @@ instance Read ExternalMemoryHandleTypeFlagBitsNV where
 -- 'ExternalImageFormatPropertiesNV', 'ExternalMemoryFeatureFlagsNV',
 -- 'getPhysicalDeviceExternalImageFormatPropertiesNV'
 newtype ExternalMemoryFeatureFlagBitsNV = ExternalMemoryFeatureFlagBitsNV Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV' specifies that external
 -- memory of the specified type /must/ be created as a dedicated allocation

@@ -36,6 +36,7 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -282,7 +283,7 @@ instance Zero Win32SurfaceCreateInfoKHR where
 --
 -- 'Win32SurfaceCreateInfoKHR'
 newtype Win32SurfaceCreateFlagsKHR = Win32SurfaceCreateFlagsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 

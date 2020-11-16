@@ -37,6 +37,7 @@ import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -344,7 +345,7 @@ instance Zero PipelineDiscardRectangleStateCreateInfoEXT where
 --
 -- 'PipelineDiscardRectangleStateCreateInfoEXT'
 newtype PipelineDiscardRectangleStateCreateFlagsEXT = PipelineDiscardRectangleStateCreateFlagsEXT Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 

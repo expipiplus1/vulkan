@@ -35,6 +35,7 @@ import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import qualified Data.Vector (null)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
@@ -232,7 +233,7 @@ instance Zero PipelineCoverageModulationStateCreateInfoNV where
 --
 -- 'PipelineCoverageModulationStateCreateInfoNV'
 newtype PipelineCoverageModulationStateCreateFlagsNV = PipelineCoverageModulationStateCreateFlagsNV Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 

@@ -76,6 +76,7 @@ import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -2661,7 +2662,7 @@ instance Zero GeneratedCommandsMemoryRequirementsInfoNV where
 --
 -- 'IndirectCommandsLayoutUsageFlagsNV'
 newtype IndirectCommandsLayoutUsageFlagBitsNV = IndirectCommandsLayoutUsageFlagBitsNV Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV' specifies
 -- that the layout is always used with the manual preprocessing step
@@ -2707,7 +2708,7 @@ instance Read IndirectCommandsLayoutUsageFlagBitsNV where
 --
 -- 'IndirectStateFlagsNV'
 newtype IndirectStateFlagBitsNV = IndirectStateFlagBitsNV Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV' allows to toggle the
 -- 'Vulkan.Core10.Enums.FrontFace.FrontFace' rasterization state for

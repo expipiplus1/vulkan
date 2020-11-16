@@ -231,6 +231,7 @@ import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
@@ -2583,7 +2584,7 @@ instance Zero DeviceMemoryCallbacks where
 
 -- | Flags for created 'Allocator'.
 newtype AllocatorCreateFlagBits = AllocatorCreateFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | Allocator and all objects created from it will not be synchronized
 -- internally, so you must guarantee they are used from only one thread at
@@ -2870,7 +2871,7 @@ instance Zero VulkanFunctions where
 
 -- | Flags to be used in /VmaRecordSettings::flags/.
 newtype RecordFlagBits = RecordFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | Enables flush after recording every function call.
 --
@@ -3584,7 +3585,7 @@ instance Read MemoryUsage where
 
 -- | Flags to be passed as /VmaAllocationCreateInfo::flags/.
 newtype AllocationCreateFlagBits = AllocationCreateFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | Set this flag if the allocation should have its own memory block.
 --
@@ -3845,7 +3846,7 @@ instance Zero AllocationCreateInfo where
 
 -- | Flags to be passed as /VmaPoolCreateInfo::flags/.
 newtype PoolCreateFlagBits = PoolCreateFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | Use this flag if you always allocate only buffers and linear images or
 -- only optimal images out of this pool and so Buffer-Image Granularity can
@@ -4259,7 +4260,7 @@ instance Show DefragmentationContext where
 -- | Flags to be used in 'defragmentationBegin'. None at the moment. Reserved
 -- for future use.
 newtype DefragmentationFlagBits = DefragmentationFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 pattern DEFRAGMENTATION_FLAG_INCREMENTAL = DefragmentationFlagBits 0x00000001

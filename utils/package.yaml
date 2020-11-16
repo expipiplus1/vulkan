@@ -1,5 +1,5 @@
 name: vulkan-utils
-version: "0.1.3"
+version: "0.2"
 synopsis: Utils for the vulkan package
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
@@ -13,16 +13,21 @@ extra-source-files:
 library:
   source-dirs: src
   c-sources: cbits/DebugCallback.c
+  other-modules: ""
   dependencies:
     - base <5
     - bytestring
     - extra
     - file-embed
     - filepath
+    - resourcet >= 1.2.4
     - template-haskell
     - temporary
+    - text
+    - transformers
     - typed-process
-    - vulkan
+    - vector
+    - vulkan >= 3.6.14
 
 tests:
   doctests:
@@ -42,11 +47,12 @@ custom-setup:
     - cabal-doctest >= 1 && <1.1
 
 default-extensions:
-  - AllowAmbiguousTypes
-  - CPP
   - DataKinds
   - DefaultSignatures
   - DeriveAnyClass
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveTraversable
   - DerivingStrategies
   - DuplicateRecordFields
   - FlexibleContexts
@@ -68,9 +74,9 @@ default-extensions:
   - ScopedTypeVariables
   - StandaloneDeriving
   - Strict
+  - TupleSections
   - TypeApplications
   - TypeFamilyDependencies
   - TypeOperators
   - TypeSynonymInstances
-  - UndecidableInstances
   - ViewPatterns

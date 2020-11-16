@@ -60,6 +60,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -1335,7 +1336,7 @@ instance Zero DisplaySurfaceCreateInfoKHR where
 --
 -- 'DisplayModeCreateInfoKHR'
 newtype DisplayModeCreateFlagsKHR = DisplayModeCreateFlagsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 
@@ -1363,7 +1364,7 @@ instance Read DisplayModeCreateFlagsKHR where
 --
 -- 'DisplaySurfaceCreateInfoKHR'
 newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 
@@ -1386,7 +1387,7 @@ instance Read DisplaySurfaceCreateFlagsKHR where
 --
 -- 'DisplayPlaneAlphaFlagsKHR', 'DisplaySurfaceCreateInfoKHR'
 newtype DisplayPlaneAlphaFlagBitsKHR = DisplayPlaneAlphaFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR' specifies that the source image
 -- will be treated as opaque.
