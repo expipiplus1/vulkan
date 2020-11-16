@@ -996,22 +996,25 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
--- -   #VUID-VkImageViewCreateInfo-image-02087# If @image@ was created with
---     @usage@ containing
+-- -   #VUID-VkImageViewCreateInfo-image-02087# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage feature>
+--     is enabled, and If @image@ was created with @usage@ containing
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
 --     @format@ /must/ be 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'
 --
--- -   #VUID-VkImageViewCreateInfo-usage-04550# If the @usage@ for the
---     image view includes
+-- -   #VUID-VkImageViewCreateInfo-usage-04550# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
+--     is enabled, and the @usage@ for the image view includes
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
--- -   #VUID-VkImageViewCreateInfo-usage-04551# If the @usage@ for the
---     image view includes
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+-- -   #VUID-VkImageViewCreateInfo-usage-04551# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
+--     is enabled, the @usage@ for the image view includes
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-layeredShadingRateAttachments layeredShadingRateAttachments>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE',

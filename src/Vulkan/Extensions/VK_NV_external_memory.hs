@@ -42,7 +42,7 @@ import Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandl
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryImageCreateInfoNV = ExternalMemoryImageCreateInfoNV
-  { -- | @handleTypes@ is a bitmask of
+  { -- | @handleTypes@ is zero, or a bitmask of
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
     -- specifying one or more external memory handle types.
     --
