@@ -160,10 +160,8 @@ newtype MyQueues a = MyQueues { _myComputeQueue :: a }
 physicalDeviceInfo
   :: MonadIO m => PhysicalDevice -> m (Maybe PhysicalDeviceInfo)
 physicalDeviceInfo phys = runMaybeT $ do
-  feats <- getPhysicalDeviceFeatures2KHR phys
-  let
-    _ ::& (PhysicalDeviceTimelineSemaphoreFeatures hasTimelineSemaphores :& ())
-      = feats
+  _ ::& (PhysicalDeviceTimelineSemaphoreFeatures hasTimelineSemaphores :& ()) <-
+    getPhysicalDeviceFeatures2KHR phys
   guard hasTimelineSemaphores
   pdiTotalMemory <- do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
