@@ -40,9 +40,9 @@ import Vulkan.Core10.APIConstants (pattern QUEUE_FAMILY_EXTERNAL)
 --
 -- Note
 --
--- A 'ExternalMemoryImageCreateInfo' structure must be included in the
--- creation parameters for an image that will be bound to memory that is
--- either exported or imported.
+-- A 'ExternalMemoryImageCreateInfo' structure with a non-zero @handleType@
+-- field must be included in the creation parameters for an image that will
+-- be bound to memory that is either exported or imported.
 --
 -- == Valid Usage (Implicit)
 --
@@ -51,7 +51,7 @@ import Vulkan.Core10.APIConstants (pattern QUEUE_FAMILY_EXTERNAL)
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryImageCreateInfo = ExternalMemoryImageCreateInfo
-  { -- | @handleTypes@ is a bitmask of
+  { -- | @handleTypes@ is zero, or a bitmask of
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- specifying one or more external memory handle types.
     --
@@ -59,9 +59,6 @@ data ExternalMemoryImageCreateInfo = ExternalMemoryImageCreateInfo
     -- @handleTypes@ /must/ be a valid combination of
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- values
-    --
-    -- #VUID-VkExternalMemoryImageCreateInfo-handleTypes-requiredbitmask#
-    -- @handleTypes@ /must/ not be @0@
     handleTypes :: ExternalMemoryHandleTypeFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -81,7 +78,6 @@ instance ToCStruct ExternalMemoryImageCreateInfo where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr ExternalMemoryHandleTypeFlags)) (zero)
     f
 
 instance FromCStruct ExternalMemoryImageCreateInfo where
@@ -108,9 +104,9 @@ instance Zero ExternalMemoryImageCreateInfo where
 --
 -- Note
 --
--- A 'ExternalMemoryBufferCreateInfo' structure must be included in the
--- creation parameters for a buffer that will be bound to memory that is
--- either exported or imported.
+-- A 'ExternalMemoryBufferCreateInfo' structure with a non-zero
+-- @handleTypes@ field must be included in the creation parameters for a
+-- buffer that will be bound to memory that is either exported or imported.
 --
 -- == Valid Usage (Implicit)
 --
@@ -119,7 +115,7 @@ instance Zero ExternalMemoryImageCreateInfo where
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryBufferCreateInfo = ExternalMemoryBufferCreateInfo
-  { -- | @handleTypes@ is a bitmask of
+  { -- | @handleTypes@ is zero, or a bitmask of
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- specifying one or more external memory handle types.
     --

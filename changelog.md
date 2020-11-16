@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Bump API version to v1.2.161
 
 ## [3.6.14] - 2020-11-15
 

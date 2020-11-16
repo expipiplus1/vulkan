@@ -1256,14 +1256,6 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     attachment /must/ not be used in both @pDepthStencilAttachment@ and
 --     @pColorAttachments@
 --
--- -   #VUID-VkSubpassDescription2-pFragmentShadingRateAttachment-04522# If
---     the @pFragmentShadingRateAttachment@ member of a
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
---     structure included in the @pNext@ chain is not @NULL@, and its
---     @attachment@ member is not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', that attachment
---     /must/ not be used as any other attachment in this subpass
---
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSubpassDescription2-sType-sType# @sType@ /must/ be
@@ -1826,10 +1818,6 @@ instance Zero SubpassDependency2 where
 --     @dependencyFlags@ member /must/ include
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
 --
--- -   #VUID-VkRenderPassCreateInfo2-viewMask-02524# The @viewMask@ member
---     /must/ not have a bit set at an index greater than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferLayers@
---
 -- -   #VUID-VkRenderPassCreateInfo2-attachment-02525# If the @attachment@
 --     member of any element of the @pInputAttachments@ member of any
 --     element of @pSubpasses@ is not
@@ -1846,10 +1834,10 @@ instance Zero SubpassDependency2 where
 --     member of each element of @pDependencies@ /must/ be less than
 --     @subpassCount@
 --
--- -   #VUID-VkRenderPassCreateInfo2-pAttachmentImageInfos-04520# If any
---     element of @pAttachmentImageInfos@ is used as a fragment shading
---     rate attachment in any subpass, it /must/ not be used as any other
---     attachment in the render pass
+-- -   #VUID-VkRenderPassCreateInfo2-pAttachments-04585# If any element of
+--     @pAttachments@ is used as a fragment shading rate attachment in any
+--     subpass, it /must/ not be used as any other attachment in the render
+--     pass
 --
 -- -   #VUID-VkRenderPassCreateInfo2-flags-04521# If @flags@ includes
 --     'Vulkan.Core10.Enums.RenderPassCreateFlagBits.RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM',
@@ -1859,6 +1847,13 @@ instance Zero SubpassDependency2 where
 --     member of that structure is not equal to @NULL@, the @attachment@
 --     member of @pFragmentShadingRateAttachment@ /must/ be
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   #VUID-VkRenderPassCreateInfo2-pAttachments-04586# If any element of
+--     @pAttachments@ is used as a fragment shading rate attachment in any
+--     subpass, it /must/ have an image format whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --

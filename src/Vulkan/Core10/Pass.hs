@@ -1845,13 +1845,6 @@ instance Zero SubpassDependency where
 --     structure, and each element of its @pViewMasks@ member is @0@,
 --     @correlatedViewMaskCount@ /must/ be @0@
 --
--- -   #VUID-VkRenderPassCreateInfo-pNext-02516# If the @pNext@ chain
---     includes a
---     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'
---     structure, each element of its @pViewMask@ member /must/ not have a
---     bit set at an index greater than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferLayers@
---
 -- -   #VUID-VkRenderPassCreateInfo-pDependencies-00837# For any element of
 --     @pDependencies@, if the @srcSubpass@ is not
 --     'Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', all stage flags
@@ -2378,6 +2371,15 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     in the @pNext@ chain that is used as a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
 --     /must/ be either @1@, or greater than or equal to @layers@
+--
+-- -   #VUID-VkFramebufferCreateInfo-flags-04587# If @flags@ includes
+--     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
+--     and @renderPass@ was specified with non-zero view masks, each
+--     element of @pAttachments@ that is used as a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
+--     by @renderPass@ /must/ have a @layerCount@ that is either @1@, or
+--     greater than the index of the most significant bit set in any of
+--     those view masks
 --
 -- -   #VUID-VkFramebufferCreateInfo-renderPass-03198# If multiview is
 --     enabled for @renderPass@, and @flags@ includes

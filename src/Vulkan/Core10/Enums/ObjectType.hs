@@ -141,6 +141,10 @@ import Vulkan.Zero (Zero)
 -- +-----------------------------------------------+-----------------------------------------------------------+
 -- | 'OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL' | 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' |
 -- +-----------------------------------------------+-----------------------------------------------------------+
+-- | 'OBJECT_TYPE_DEFERRED_OPERATION_KHR'          | 'Vulkan.Extensions.Handles.DeferredOperationKHR'          |
+-- +-----------------------------------------------+-----------------------------------------------------------+
+-- | 'OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT'           | 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'            |
+-- +-----------------------------------------------+-----------------------------------------------------------+
 --
 -- 'ObjectType' and Vulkan Handle Relationship
 --
