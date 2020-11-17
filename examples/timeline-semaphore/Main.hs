@@ -1,21 +1,23 @@
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
 module Main
   ( main
   ) where
 
-import           AutoApply
+import           Control.Applicative
 import           Control.Exception              ( throwIO )
-import           Control.Monad                  ( guard )
+import           Control.Monad                  ( unless )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe
 import           Control.Monad.Trans.Resource
 import           Data.Vector                    ( Vector )
 import           Data.Word
 import           GHC.Exception                  ( SomeException )
+import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
+                                                , IOException(..)
+                                                )
 import           Say
 import           UnliftIO                       ( Exception(displayException)
                                                 , catch
@@ -32,45 +34,15 @@ import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
 
-noAllocationCallbacks :: Maybe AllocationCallbacks
-noAllocationCallbacks = Nothing
-
---
--- Wrap a bunch of Vulkan commands so that they automatically pull global
--- handles from 'V'
---
--- Wrapped functions are suffixed with "'"
---
-autoapplyDecs
-  (<> "'")
-  [ 'noAllocationCallbacks
-  ]
-  -- Allocate doesn't subsume the continuation type on the "with" commands, so
-  -- put it in the unifying group.
-  [ 'allocate ]
-  [ 'deviceWaitIdle
-  , 'withSemaphore
-  , 'Timeline.waitSemaphores
-  ]
-
 main :: IO ()
 main = runResourceT . traceException $ do
   inst <- Main.createInstance
   (_phys, dev, MyQueues computeQueue) <- Main.createDevice inst
   timelineTest dev computeQueue
 
-traceException :: MonadUnliftIO m => m a -> m a
-traceException m =
-  m
-    `catch` (\(e :: SomeException) ->
-              sayErrString (displayException e) >> liftIO (throwIO e)
-            )
-
 timelineTest :: (MonadResource m) => Device -> Queue -> m ()
 timelineTest dev computeQueue = do
-  (_, sem) <- withSemaphore'
-    dev
-    (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_TIMELINE 1 :& ())
+  sem <- withTimelineSemaphore dev 1
 
   -- Create some GPU work which waits for the semaphore to be '2' and then
   -- bumps it to '3'
@@ -92,14 +64,15 @@ timelineTest dev computeQueue = do
   signalSemaphore dev zero { semaphore = sem, value = 2 }
 
   -- Wait for the GPU to set it to '3'
-  waitSemaphores' dev zero { semaphores = [sem], values = [3] } 1e9 >>= \case
-    TIMEOUT -> sayErr "Timed out waiting for semaphore"
-    SUCCESS -> sayErr "Waited for semaphore"
-    e       -> do
-      sayErrShow e
-      liftIO $ throwIO (VulkanException e)
+  Timeline.waitSemaphores dev zero { semaphores = [sem], values = [3] } 1e9
+    >>= \case
+          TIMEOUT -> sayErr "Timed out waiting for semaphore"
+          SUCCESS -> sayErr "Waited for semaphore"
+          e       -> do
+            sayErrShow e
+            liftIO $ throwIO (VulkanException e)
 
-  deviceWaitIdle' dev
+  deviceWaitIdle dev
 
 ----------------------------------------------------------------
 -- Vulkan utils
@@ -113,12 +86,8 @@ createInstance =
                                       , apiVersion      = API_VERSION_1_0
                                       }
         }
-  in  createDebugInstanceWithExtensions
-        []
-        []
-        [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
-        []
-        createInfo
+      extensions = [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
+  in  createDebugInstanceWithExtensions [] [] extensions [] createInfo
 
 createDevice
   :: forall m
@@ -126,19 +95,29 @@ createDevice
   => Instance
   -> m (PhysicalDevice, Device, MyQueues Queue)
 createDevice inst = do
-  (pdi, phys) <- pickPhysicalDevice inst physicalDeviceInfo pdiScore
+  (pdi, phys) <-
+    maybe (noSuchThing "Unable to find appropriate PhysicalDevice") pure
+      =<< pickPhysicalDevice inst physicalDeviceInfo pdiScore
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
   let deviceCreateInfo =
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
           ::& PhysicalDeviceTimelineSemaphoreFeatures True
           :&  ()
-  dev <- createDeviceWithExtensions phys
-                                    []
-                                    [KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME]
-                                    deviceCreateInfo
+      extensions = [KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME]
+  dev    <- createDeviceWithExtensions phys [] extensions deviceCreateInfo
   queues <- liftIO $ pdiGetQueues pdi dev
   pure (phys, dev, queues)
 
+withTimelineSemaphore
+  :: MonadResource m
+  => Device
+  -> Word64
+  -- ^ Initial value
+  -> m Semaphore
+withTimelineSemaphore dev i = do
+  let ci = zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_TIMELINE i :& ()
+  (_, sem) <- withSemaphore dev ci Nothing allocate
+  pure sem
 
 ----------------------------------------------------------------
 -- Physical device tools
@@ -162,7 +141,13 @@ physicalDeviceInfo
 physicalDeviceInfo phys = runMaybeT $ do
   _ ::& (PhysicalDeviceTimelineSemaphoreFeatures hasTimelineSemaphores :& ()) <-
     getPhysicalDeviceFeatures2KHR phys
-  guard hasTimelineSemaphores
+  unless hasTimelineSemaphores $ do
+    deviceName <- physicalDeviceName phys
+    sayErr
+      $  "Not using physical device "
+      <> deviceName
+      <> " because it doesn't support timeline semaphores"
+    empty
   pdiTotalMemory <- do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
     pure $ sum ((size :: MemoryHeap -> DeviceSize) <$> heaps)
@@ -170,3 +155,18 @@ physicalDeviceInfo phys = runMaybeT $ do
     phys
     (MyQueues (QueueSpec 1 (const (pure . isComputeQueueFamily))))
   pure PhysicalDeviceInfo { .. }
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+noSuchThing :: MonadIO m => String -> m a
+noSuchThing message =
+  liftIO . throwIO $ IOError Nothing NoSuchThing "" message Nothing Nothing
+
+traceException :: MonadUnliftIO m => m a -> m a
+traceException m =
+  m
+    `catch` (\(e :: SomeException) ->
+              sayErrString (displayException e) >> liftIO (throwIO e)
+            )
