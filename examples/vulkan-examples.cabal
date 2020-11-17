@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 23c7ea4ffca31228353122bb5ffe022d8cc57faaeb0a383a065cf8a86efe3bd2
+-- hash: 200af37c5ade0a735a3349b2d1c73961b73ff03f345a3fcf7c1c9c0dd02fef23
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -47,6 +47,36 @@ executable compute
     , say
     , text
     , transformers
+    , vector
+    , vulkan
+    , vulkan-utils
+  if os(windows)
+    ghc-options: -optl-mconsole
+  default-language: Haskell2010
+
+executable hlsl
+  main-is: Main.hs
+  other-modules:
+      Init
+      MonadVulkan
+      Window
+      Paths_vulkan_examples
+  hs-source-dirs:
+      hlsl
+  default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
+  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  build-depends:
+      VulkanMemoryAllocator
+    , autoapply >=0.4
+    , base <5
+    , bytestring
+    , resourcet >=1.2.4
+    , say
+    , sdl2 >=2.5.2.0
+    , template-haskell
+    , text
+    , transformers
+    , unliftio
     , vector
     , vulkan
     , vulkan-utils

@@ -111,6 +111,25 @@ executables:
       - vulkan
       - vulkan-utils
 
+  hlsl:
+    main: Main.hs
+    source-dirs: hlsl
+    dependencies:
+      - VulkanMemoryAllocator
+      - autoapply >= 0.4
+      - base <5
+      - bytestring
+      - resourcet >= 1.2.4
+      - say
+      - sdl2 >= 2.5.2.0
+      - template-haskell
+      - text
+      - transformers
+      - unliftio
+      - vector
+      - vulkan
+      - vulkan-utils
+
 when:
   - condition: os(windows)
     ghc-options: -optl-mconsole
