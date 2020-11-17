@@ -78,10 +78,10 @@ newtype QueueIndex = QueueIndex { unQueueIndex :: Word32 }
 -- your queues like:
 --
 -- @
--- data MyQueues a = MyQueues
---   { computeQueue            :: a
---   , graphicsAndPresentQueue :: a
---   , transferQueue           :: a
+-- data MyQueues q = MyQueues
+--   { computeQueue            :: q
+--   , graphicsAndPresentQueue :: q
+--   , transferQueue           :: q
 --   }
 --
 -- myQueueSpecs :: MyQueues QueueSpec
