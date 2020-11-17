@@ -8,7 +8,7 @@ module Vulkan.Utils.QueueAssignment
   , isGraphicsQueueFamily
   , isTransferQueueFamily
   , isTransferOnlyQueueFamily
-  , isPresentQueue
+  , isPresentQueueFamily
   ) where
 
 import           Control.Applicative
@@ -208,9 +208,9 @@ isTransferOnlyQueueFamily q =
     == QUEUE_TRANSFER_BIT
 
 -- | Can this queue family present to this surface on this device
-isPresentQueue
+isPresentQueueFamily
   :: MonadIO m => PhysicalDevice -> SurfaceKHR -> QueueFamilyIndex -> m Bool
-isPresentQueue phys surf (QueueFamilyIndex i) =
+isPresentQueueFamily phys surf (QueueFamilyIndex i) =
   getPhysicalDeviceSurfaceSupportKHR phys i surf
 
 ----------------------------------------------------------------
