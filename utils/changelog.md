@@ -2,6 +2,8 @@
 
 ## WIP
 
+- Change type of pickPhysicalDevice to return Nothing instead of throwing
+
 ## [0.2] - 2020-11-15
 
 - Add `Vulkan.Utils.Misc` for handy functions used in Vulkan programs, but not

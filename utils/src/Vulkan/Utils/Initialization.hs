@@ -8,7 +8,6 @@ module Vulkan.Utils.Initialization
   , createDeviceWithExtensions
   ) where
 
-import           Control.Exception              ( throwIO )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.Bits
@@ -19,9 +18,6 @@ import           Data.Ord
 import           Data.Text                      ( Text )
 import           Data.Text.Encoding             ( decodeUtf8 )
 import qualified Data.Vector                   as V
-import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
-                                                , IOException(..)
-                                                )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Extensions.VK_EXT_debug_utils
@@ -148,30 +144,31 @@ createInstanceWithExtensions requiredLayers optionalLayers requiredExtensions op
 -- | Get a single 'PhysicalDevice' deciding with a scoring function
 --
 -- Pass a function which will extract any required values from a device in the
--- spirit of parse-don't validate. Also provide a function to compare these
--- results for sorting multiple devices.
+-- spirit of parse-don't-validate. Also provide a function to compare these
+-- results for sorting multiple suitable devices.
 --
--- For example the result function could return a tuple of device memory and
--- the compute queue family index, and the scoring function could be 'fst' to
--- select devices based on their memory capacity.
+-- As an example, the suitability function could return a tuple of device
+-- memory and the compute queue family index, and the scoring function could be
+-- 'fst' to select devices based on their memory capacity. Consider using
+-- 'Vulkan.Utils.QueueAssignment.assignQueues' to find your desired queues in
+-- the suitability function.
 --
--- If no devices are deemed suitable then an 'IOError' is thrown.
+-- If no devices are deemed suitable then a 'NoSuchThing' 'IOError' is thrown.
 pickPhysicalDevice
   :: (MonadIO m, Ord b)
   => Instance
   -> (PhysicalDevice -> m (Maybe a))
-  -- ^ Some result for a PhysicalDevice, Nothing if it is not to be chosen.
+  -- ^ A suitability funcion for a 'PhysicalDevice', 'Nothing' if it is not to
+  -- be chosen.
   -> (a -> b)
   -- ^ Scoring function to rate this result
-  -> m (a, PhysicalDevice)
+  -> m (Maybe (a, PhysicalDevice))
   -- ^ The score and the device
 pickPhysicalDevice inst devInfo score = do
   (_, devs) <- enumeratePhysicalDevices inst
   infos     <- catMaybes
     <$> sequence [ fmap (, d) <$> devInfo d | d <- toList devs ]
-  case maximumByMay (comparing (score . fst)) infos of
-    Nothing -> liftIO $ noSuchThing "Unable to find appropriate PhysicalDevice"
-    Just d  -> pure d
+  pure $ maximumByMay (comparing (score . fst)) infos
 
 -- | Extract the name of a 'PhysicalDevice' with 'getPhysicalDeviceProperties'
 physicalDeviceName :: MonadIO m => PhysicalDevice -> m Text
@@ -222,10 +219,6 @@ createDeviceWithExtensions phys requiredExtensions optionalExtensions deviceCrea
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
-
-noSuchThing :: String -> IO a
-noSuchThing message =
-  throwIO $ IOError Nothing NoSuchThing "" message Nothing Nothing
 
 maximumByMay :: Foldable t => (a -> a -> Ordering) -> t a -> Maybe a
 maximumByMay f xs = if null xs then Nothing else Just (maximumBy f xs)
