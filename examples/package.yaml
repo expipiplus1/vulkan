@@ -17,18 +17,15 @@ executables:
       - base <5
       - vulkan
       - pretty-simple >= 3.3
-      - bytestring
 
   sdl-triangle:
     main: Main.hs
     source-dirs: sdl-triangle
     dependencies:
-      - async
       - base <5
       - bytestring
       - extra
       - managed
-      - pretty-show
       - say
       - sdl2 >= 2.5.2.0
       - text
@@ -46,7 +43,6 @@ executables:
       - autoapply >= 0.4
       - base <5
       - bytestring
-      - extra
       - resourcet
       - safe-exceptions
       - say
@@ -72,7 +68,6 @@ executables:
       - autoapply >= 0.4
       - base <5
       - bytestring
-      - extra
       - resourcet
       - safe-exceptions
       - say
@@ -94,7 +89,6 @@ executables:
       - lens
       - linear
       - resourcet >= 1.2.4
-      - safe-exceptions
       - say
       - sdl2 >= 2.5.2.0
       - text
@@ -108,15 +102,9 @@ executables:
     main: Main.hs
     source-dirs: timeline-semaphore
     dependencies:
-      - VulkanMemoryAllocator
-      - autoapply >= 0.4
       - base <5
-      - bytestring
-      - extra
       - resourcet
-      - safe-exceptions
       - say
-      - text
       - transformers
       - unliftio
       - vector

@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c24016f0d3efa76b3b6cfeacf8f62ce3d8c13dbb71467500690957d19270e2e6
+-- hash: 23c7ea4ffca31228353122bb5ffe022d8cc57faaeb0a383a065cf8a86efe3bd2
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -42,7 +42,6 @@ executable compute
     , autoapply >=0.4
     , base <5
     , bytestring
-    , extra
     , resourcet
     , safe-exceptions
     , say
@@ -65,7 +64,6 @@ executable info
   ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
   build-depends:
       base <5
-    , bytestring
     , pretty-simple >=3.3
     , vulkan
   if os(windows)
@@ -86,7 +84,6 @@ executable offscreen
     , autoapply >=0.4
     , base <5
     , bytestring
-    , extra
     , resourcet
     , safe-exceptions
     , say
@@ -132,7 +129,6 @@ executable resize
     , lens
     , linear
     , resourcet >=1.2.4
-    , safe-exceptions
     , say
     , sdl2 >=2.5.2.0
     , text
@@ -154,12 +150,10 @@ executable sdl-triangle
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
   ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
   build-depends:
-      async
-    , base <5
+      base <5
     , bytestring
     , extra
     , managed
-    , pretty-show
     , say
     , sdl2 >=2.5.2.0
     , text
@@ -180,15 +174,9 @@ executable timeline-semaphore
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
   ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
   build-depends:
-      VulkanMemoryAllocator
-    , autoapply >=0.4
-    , base <5
-    , bytestring
-    , extra
+      base <5
     , resourcet
-    , safe-exceptions
     , say
-    , text
     , transformers
     , unliftio
     , vector
