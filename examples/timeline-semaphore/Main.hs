@@ -151,9 +151,10 @@ physicalDeviceInfo phys = runMaybeT $ do
   pdiTotalMemory <- do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
     pure $ sum ((size :: MemoryHeap -> DeviceSize) <$> heaps)
-  (pdiQueueCreateInfos, pdiGetQueues) <- MaybeT $ assignQueues
+  (pdiQueueCreateInfos, getQueues) <- MaybeT $ assignQueues
     phys
     (MyQueues (QueueSpec 1 (const (pure . isComputeQueueFamily))))
+  let pdiGetQueues = fmap (fmap snd) <$> getQueues
   pure PhysicalDeviceInfo { .. }
 
 ----------------------------------------------------------------
