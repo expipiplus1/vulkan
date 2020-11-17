@@ -3,6 +3,8 @@
 ## WIP
 
 - Change type of pickPhysicalDevice to return Nothing instead of throwing
+- Add `checkCommandsExp` function to generate an expression checking specified
+  commands for non-nullness
 
 ## [0.2] - 2020-11-15
 
