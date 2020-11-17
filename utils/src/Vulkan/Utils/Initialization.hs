@@ -167,9 +167,9 @@ pickPhysicalDevice
   -- ^ The score and the device
 pickPhysicalDevice inst devInfo score = do
   (_, devs) <- enumeratePhysicalDevices inst
-  infos    <- catMaybes
+  infos     <- catMaybes
     <$> sequence [ fmap (, d) <$> devInfo d | d <- toList devs ]
-  case maximumByMay (comparing (score.fst)) infos of
+  case maximumByMay (comparing (score . fst)) infos of
     Nothing -> liftIO $ noSuchThing "Unable to find appropriate PhysicalDevice"
     Just d  -> pure d
 
