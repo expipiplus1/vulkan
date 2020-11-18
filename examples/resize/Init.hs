@@ -199,7 +199,7 @@ physicalDeviceInfo
   :: MonadIO m => SurfaceKHR -> PhysicalDevice -> m (Maybe PhysicalDeviceInfo)
 physicalDeviceInfo surf phys = runMaybeT $ do
   -- We must be able to use the swapchain extension
-  guard =<< deviceHasSwapChain phys
+  guard =<< deviceHasSwapchain phys
 
   -- It must have a graphics and present queue
   pdiGraphicsQueueFamilyIndex <- do
@@ -220,8 +220,8 @@ physicalDeviceInfo surf phys = runMaybeT $ do
 
   pure PhysicalDeviceInfo { .. }
 
-deviceHasSwapChain :: MonadIO m => PhysicalDevice -> m Bool
-deviceHasSwapChain dev = do
+deviceHasSwapchain :: MonadIO m => PhysicalDevice -> m Bool
+deviceHasSwapchain dev = do
   (_, extensions) <- enumerateDeviceExtensionProperties dev Nothing
   pure $ V.any ((KHR_SWAPCHAIN_EXTENSION_NAME ==) . extensionName) extensions
 

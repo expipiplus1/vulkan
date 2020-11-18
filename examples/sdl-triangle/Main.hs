@@ -542,7 +542,7 @@ pickGraphicalPhysicalDevice inst surface _requiredExtensions desiredFormat = do
   graphicsDevs <- fmap (V.mapMaybe id) . for devs $ \dev -> runMaybeT $ do
     graphicsQueue <- MaybeT $ headMay <$> getGraphicsQueueIndices dev
     presentQueue  <- MaybeT $ headMay <$> getPresentQueueIndices dev
-    guard =<< deviceHasSwapChain dev
+    guard =<< deviceHasSwapchain dev
     bestFormat  <- getFormat dev
     presentMode <- getPresentMode dev
     surfaceCaps <- getPhysicalDeviceSurfaceCapabilitiesKHR dev surface
@@ -568,8 +568,8 @@ pickGraphicalPhysicalDevice inst surface _requiredExtensions desiredFormat = do
     let totalSize = sum $ (size :: MemoryHeap -> DeviceSize) <$> heaps
     pure totalSize
 
-  deviceHasSwapChain :: MonadIO m => PhysicalDevice -> m Bool
-  deviceHasSwapChain dev = do
+  deviceHasSwapchain :: MonadIO m => PhysicalDevice -> m Bool
+  deviceHasSwapchain dev = do
     (_, extensions) <- enumerateDeviceExtensionProperties dev Nothing
     pure $ V.any ((KHR_SWAPCHAIN_EXTENSION_NAME ==) . extensionName) extensions
 
