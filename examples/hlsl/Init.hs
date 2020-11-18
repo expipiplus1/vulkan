@@ -18,6 +18,16 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                 )
 import           Vulkan.Extensions.VK_KHR_timeline_semaphore
 
+import           Control.Applicative
+import qualified Data.ByteString               as BS
+import           Data.Foldable                  ( for_ )
+import           Data.Vector                    ( Vector )
+import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
+                                                , IOException(IOError)
+                                                )
+import           MonadVulkan                    ( checkCommands )
+import qualified SDL.Video                     as SDL
+import qualified SDL.Video.Vulkan              as SDL
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -27,21 +37,12 @@ import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Initialization
+import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
                                                 , AllocatorCreateInfo(..)
                                                 , withAllocator
                                                 )
-
-import           Control.Applicative
-import qualified Data.ByteString               as BS
-import           Data.Vector                    ( Vector )
-import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
-                                                , IOException(IOError)
-                                                )
-import qualified SDL.Video                     as SDL
-import qualified SDL.Video.Vulkan              as SDL
-import           Vulkan.Utils.QueueAssignment
 import           Window
 
 myApiVersion :: Word32
@@ -88,7 +89,8 @@ createDevice inst win = do
           :&  ()
       extensions =
         [KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME, KHR_SWAPCHAIN_EXTENSION_NAME]
-  dev    <- createDeviceWithExtensions phys [] extensions deviceCreateInfo
+  dev <- createDeviceWithExtensions phys [] extensions deviceCreateInfo
+  requireCommands inst dev
   queues <- liftIO $ pdiGetQueues pdi dev
   pure (phys, dev, queues)
 
@@ -199,6 +201,13 @@ createVMA inst phys dev =
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
+
+requireCommands :: MonadIO f => Instance -> Device -> f ()
+requireCommands inst dev = case checkCommands inst dev of
+  [] -> pure ()
+  xs -> do
+    for_ xs $ \n -> sayErr ("Failed to load function pointer for: " <> n)
+    noSuchThing "Missing commands"
 
 noSuchThing :: MonadIO m => String -> m a
 noSuchThing message =
