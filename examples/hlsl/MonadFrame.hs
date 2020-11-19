@@ -1,8 +1,8 @@
 module MonadFrame
   ( F
   , runFrame
+  , liftV
   , queueSubmitFrame
-  , frameCommandPool
   , allocateGlobal
   , allocateGlobal_
   , frameRefCount
@@ -11,6 +11,7 @@ module MonadFrame
   ) where
 
 
+import           Control.Monad
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader     ( ReaderT
@@ -34,7 +35,6 @@ import           Vulkan.CStruct.Extends         ( SomeStruct )
 import           Vulkan.Core10
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Zero                    ( Zero(zero) )
-import Control.Monad
 
 newtype F a = F {unF :: ReaderT Frame V a }
   deriving newtype ( Functor
@@ -69,11 +69,10 @@ runFrame f@Frame {..} (F r) = runReaderT r f `finally` do
           timeoutError "Timed out (1s) waiting for frame to finish on Device"
         _ -> pure ()
 
-    -- Free resources wanted elsewhere now
-    commandPool <- frameCommandPool' f
-    resetCommandPool' commandPool zero
+    -- Free resources wanted elsewhere now, all those in RecycledResources
+    resetCommandPool' (fCommandPool fRecycledResources) zero
 
-    -- Signal we're done
+    -- Signal we're done by making the recycled resources available
     putMVar fRenderFinishedMVar fRecycledResources
 
     -- Destroy frame-specific resources at our leisure
@@ -89,16 +88,6 @@ queueSubmitFrame q ss sem value = do
   mask $ \_ -> do
     queueSubmit q ss NULL_HANDLE
     liftIO $ atomicModifyIORef' gpuWork ((, ()) . ((sem, value) :))
-
-frameCommandPool :: F CommandPool
-frameCommandPool = do
-  f <- askFrame
-  liftV $ frameCommandPool' f
-
-frameCommandPool' :: Frame -> V CommandPool
-frameCommandPool' Frame {..} = do
-  let commandPoolIndex = fromIntegral fIndex `mod` numConcurrentFrames
-  getCommandPool commandPoolIndex
 
 liftV :: V a -> F a
 liftV = F . lift

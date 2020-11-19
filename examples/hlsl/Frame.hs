@@ -4,9 +4,10 @@ module Frame where
 
 import           Control.Concurrent             ( MVar
                                                 , newEmptyMVar
+                                                , newMVar
+                                                , takeMVar
+                                                , tryTakeMVar
                                                 )
-import           Control.Concurrent             ( newMVar )
-import           Control.Concurrent.MVar        ( takeMVar )
 import           Control.Monad.IO.Class         ( MonadIO(liftIO) )
 import           Control.Monad.Trans.Resource   ( InternalState
                                                 , ReleaseKey
@@ -23,11 +24,13 @@ import qualified Pipeline
 import qualified SDL
 import           SDL                            ( Window )
 import qualified SDL.Video.Vulkan              as SDL
+import           Say
 import           Swapchain
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Extensions.VK_KHR_surface
+import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
 
 numConcurrentFrames :: Int
@@ -46,8 +49,8 @@ data Frame = Frame
     -- ^ A timeline semaphore which increments to fIndex when this frame is
     -- done, the host can wait on this semaphore
   , fPriorResources              :: Seq (MVar RecycledResources)
-    -- ^ The resources of prior frames, waiting to be taken, TODO, would a
-    -- queue be better here...
+    -- ^ The resources of prior frames (including this one at the front),
+    -- waiting to be taken, TODO, would a queue be better here...
   , fRecycledResources           :: RecycledResources
     -- ^ Resources which aren't destroyed during this frame, but instead are
     -- used by another frame which executes after this one is retired, (passed
@@ -75,14 +78,24 @@ data RecycledResources = RecycledResources
     -- ^ A binary semaphore passed to 'acquireNextImageKHR'
   , fRenderFinishedSemaphore :: Semaphore
     -- ^ A binary semaphore to synchronize rendering and presenting
+  , fCommandPool             :: CommandPool
+    -- ^ Pool for this frame's commands (might want more than one of these for
+    -- multithreaded recording)
   }
 
 initialRecycledResources :: V RecycledResources
 initialRecycledResources = do
   (_, fImageAvailableSemaphore) <- withSemaphore'
     (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
+
   (_, fRenderFinishedSemaphore) <- withSemaphore'
     (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
+
+  graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
+  (_, fCommandPool)        <- withCommandPool' zero
+    { queueFamilyIndex = unQueueFamilyIndex graphicsQueueFamilyIndex
+    }
+
   pure RecycledResources { .. }
 
 initialFrame :: Window -> SurfaceKHR -> V Frame
@@ -104,16 +117,17 @@ initialFrame fWindow fSurface = do
   (_, fRenderFinishedHostSemaphore) <- withSemaphore'
     (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_TIMELINE 0 :& ())
 
-  fPriorResources <- Seq.replicateM
+  fRenderFinishedMVar <- liftIO newEmptyMVar
+
+  fPriorResources     <- (fRenderFinishedMVar :<|) <$> Seq.replicateM
     (numConcurrentFrames - 1)
     (liftIO . newMVar =<< initialRecycledResources)
-  fRecycledResources  <- initialRecycledResources
+  fRecycledResources <- initialRecycledResources
 
-  fRenderFinishedMVar <- liftIO newEmptyMVar
-  fGPUWork            <- liftIO $ newIORef mempty
+  fGPUWork           <- liftIO $ newIORef mempty
   -- Create this resource object at the global level so it's closed correctly
   -- on exception
-  fResources          <- allocate createInternalState closeInternalState
+  fResources         <- allocate createInternalState closeInternalState
 
   pure Frame { .. }
 
@@ -122,7 +136,11 @@ advanceFrame :: Frame -> V Frame
 advanceFrame f = do
   -- Wait for a prior frame to finish, then we can steal it's resources!
   let rs :|> r = fPriorResources f
-  fRecycledResources <- liftIO $ takeMVar r
+  fRecycledResources <- liftIO $ tryTakeMVar r >>= \case
+    Nothing -> do
+      sayErr "CPU is running ahead"
+      takeMVar r
+    Just re -> pure re
 
   let fPriorResources     = r :<| rs
       fRenderFinishedMVar = r

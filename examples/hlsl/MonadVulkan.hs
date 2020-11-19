@@ -9,8 +9,6 @@ import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
-import           Data.Vector                    ( Vector )
-import qualified Data.Vector                   as V
 import           UnliftIO
 
 import           Language.Haskell.TH.Syntax     ( addTopDecls )
@@ -86,9 +84,6 @@ getGraphicsQueueFamilyIndex = V (asks (fst . graphicsQueue . ghQueues))
 getCommandBuffer :: Monad m => CmdT m CommandBuffer
 getCommandBuffer = CmdT ask
 
-getCommandPool :: Int -> V CommandPool
-getCommandPool i = V (asks ((V.! i) . ghCommandPools))
-
 useCommandBuffer'
   :: forall a m r
    . (Extendss CommandBufferBeginInfo a, PokeChain a, MonadIO m)
@@ -104,11 +99,10 @@ runV
   -> PhysicalDevice
   -> Device
   -> Queues (QueueFamilyIndex, Queue)
-  -> Vector CommandPool
   -> Allocator
   -> V a
   -> ResourceT IO a
-runV ghInstance ghPhysicalDevice ghDevice ghQueues ghCommandPools ghAllocator =
+runV ghInstance ghPhysicalDevice ghDevice ghQueues ghAllocator =
   flip runReaderT GlobalHandles { .. } . unV
 
 -- | A bunch of global, unchanging state we cart around
@@ -118,8 +112,6 @@ data GlobalHandles = GlobalHandles
   , ghDevice         :: Device
   , ghAllocator      :: Allocator
   , ghQueues         :: Queues (QueueFamilyIndex, Queue)
-  , ghCommandPools   :: Vector CommandPool
-    -- ^ Has length numConcurrentFrames, one command pool per frame
   }
 
 -- | The shape of all the queues we use for our program, parameterized over the

@@ -23,9 +23,6 @@ main = runResourceT $ do
   inst                  <- Init.createInstance win
   (phys, dev, qs, surf) <- Init.createDevice inst win
   vma                   <- createVMA inst phys dev
-  commandPools          <- Init.createCommandPools dev
-                                                   numConcurrentFrames
-                                                   (fst . graphicsQueue $ qs)
 
   --
   -- Go
@@ -43,7 +40,7 @@ main = runResourceT $ do
             runFrame f renderFrame
             advanceFrame f
 
-  runV inst phys dev qs commandPools vma $ do
+  runV inst phys dev qs vma $ do
     initial <- initialFrame win surf
     showWindow win
     loopJust frame initial

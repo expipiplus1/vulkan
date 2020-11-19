@@ -22,7 +22,7 @@ import           Vulkan.Zero
 renderFrame :: F ()
 renderFrame = do
   f@Frame {..} <- askFrame
-  let RecycledResources{..} = fRecycledResources
+  let RecycledResources {..} = fRecycledResources
   let oneSecond               = 1e9
       SwapchainResources {..} = fSwapchainResources
       SwapchainInfo {..}      = srInfo
@@ -34,8 +34,7 @@ renderFrame = do
                                                 NULL_HANDLE
 
   -- Allocate a command buffer and populate it
-  commandPool <- frameCommandPool
-  let commandBufferAllocateInfo = zero { commandPool = commandPool
+  let commandBufferAllocateInfo = zero { commandPool = fCommandPool
                                        , level = COMMAND_BUFFER_LEVEL_PRIMARY
                                        , commandBufferCount = 1
                                        }
@@ -71,12 +70,7 @@ renderFrame = do
          , swapchains          = [siSwapchain]
          , imageIndices        = [imageIndex]
          }
-  say "submitted"
-  SUCCESS <- waitSemaphores'
-    zero { semaphores = [fRenderFinishedHostSemaphore], values = [fIndex] }
-    oneSecond
-  say "rendered"
-  pure ()
+  sayErrString ("submitted " <> show fIndex)
 
 -- | Clear and render a triangle
 myRecordCommandBuffer :: MonadIO m => Frame -> Word32 -> CmdT m ()
