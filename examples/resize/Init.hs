@@ -15,18 +15,12 @@ import           Control.Monad.Trans.Resource
 import           Data.Bits
 import           Data.ByteString                ( ByteString )
 import           Data.Foldable
-import           Data.List                      ( partition )
 import           Data.Maybe                     ( catMaybes )
-import           Data.Monoid                    ( Endo(..)
-                                                , appEndo
-                                                )
 import           Data.Ord                       ( comparing )
-import qualified Data.Text                     as T
 import           Data.Text                      ( Text )
 import           Data.Text.Encoding             ( decodeUtf8 )
 import qualified Data.Vector                   as V
 import           Data.Word
-import           Say
 import           UnliftIO.Exception
 
 import           Vulkan.CStruct.Extends
@@ -34,18 +28,16 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
-import           Vulkan.Extensions.VK_EXT_debug_utils
-import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
-import           Vulkan.Utils.Debug
 import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
                                                 , AllocatorCreateInfo(..)
                                                 , withAllocator
                                                 )
 
-import           MonadVulkan
+import           Vulkan.Utils.Initialization    ( createDebugInstanceWithExtensions
+                                                )
 
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_0
@@ -57,70 +49,16 @@ myApiVersion = API_VERSION_1_0
 -- | Create an instance with a debug messenger and validation
 createInstance :: forall m . MonadResource m => [ByteString] -> m Instance
 createInstance extraExtensions = do
-  let partitionOptReq :: (Show a, Eq a) => Text -> [a] -> [a] -> [a] -> m [a]
-      partitionOptReq type' available optional required = do
-        let (optHave, optMissing) = partition (`elem` available) optional
-            (reqHave, reqMissing) = partition (`elem` available) required
-            tShow                 = T.pack . show
-        for_ optMissing
-          $ \n -> sayErr $ "Missing optional " <> type' <> ": " <> tShow n
-        case reqMissing of
-          []  -> pure ()
-          [x] -> sayErr $ "Missing required " <> type' <> ": " <> tShow x
-          xs  -> sayErr $ "Missing required " <> type' <> "s: " <> tShow xs
-        pure (reqHave <> optHave)
-
-  availableExtensions <-
-    toList
-    .   fmap extensionName
-    .   snd
-    <$> enumerateInstanceExtensionProperties Nothing
-  availableLayers <-
-    toList . fmap layerName . snd <$> enumerateInstanceLayerProperties
-
-  extensions <- partitionOptReq
-    "extension"
-    availableExtensions
-    [EXT_VALIDATION_FEATURES_EXTENSION_NAME]
-    (EXT_DEBUG_UTILS_EXTENSION_NAME : extraExtensions)
-  layers <- partitionOptReq "layer"
-                            availableLayers
-                            ["VK_LAYER_KHRONOS_validation"]
-                            []
-
-  let instanceCreateInfo =
-        let extend =
-              [ extendSomeStruct debugMessengerCreateInfo
-                | EXT_DEBUG_UTILS_EXTENSION_NAME `elem` extensions
-                ]
-                <> [ extendSomeStruct validationFeatures
-                   | EXT_VALIDATION_FEATURES_EXTENSION_NAME `elem` extensions
-                   ]
-            base = zero
-              { applicationInfo       = Just zero { applicationName = Nothing
-                                                  , apiVersion = myApiVersion
-                                                  }
-              , enabledLayerNames     = V.fromList layers
-              , enabledExtensionNames = V.fromList extensions
-              }
-        in  appEndo (foldMap @[] Endo extend) (SomeStruct base)
-  inst <- withSomeStruct instanceCreateInfo (fmap snd . withInstance')
-  _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
-  pure inst
-
-validationFeatures :: ValidationFeaturesEXT
-validationFeatures =
-  ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
-
-debugMessengerCreateInfo :: DebugUtilsMessengerCreateInfoEXT
-debugMessengerCreateInfo = zero
-  { messageSeverity = DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
-                        .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
-  , messageType     = DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
-                      .|. DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
-                      .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
-  , pfnUserCallback = debugCallbackPtr
-  }
+  createDebugInstanceWithExtensions
+    []
+    []
+    extraExtensions
+    []
+    zero
+      { applicationInfo = Just zero { applicationName = Nothing
+                                    , apiVersion      = myApiVersion
+                                    }
+      }
 
 ----------------------------------------------------------------
 -- Device Creation
