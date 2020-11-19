@@ -10,6 +10,7 @@ import           Render
 import           SDL                            ( showWindow
                                                 , time
                                                 )
+import           Swapchain                      ( threwSwapchainError )
 import           Utils
 import           Window
 
@@ -27,18 +28,21 @@ main = runResourceT $ do
   --
   -- Go
   --
-  start <- SDL.time @Double
+  start                 <- SDL.time @Double
+  let reportFPS f = do
+        end <- SDL.time
+        let frames = fIndex f
+            mean   = realToFrac frames / (end - start)
+        liftIO $ putStrLn $ "Average: " <> show mean
+
   let frame f = do
         shouldQuit >>= \case
           True -> do
-            end <- SDL.time
-            let frames = fIndex f
-                mean   = realToFrac frames / (end - start)
-            liftIO $ putStrLn $ "Average: " <> show mean
+            reportFPS f
             pure Nothing
           False -> Just <$> do
-            runFrame f renderFrame
-            advanceFrame f
+            needsNewSwapchain <- threwSwapchainError (runFrame f renderFrame)
+            advanceFrame needsNewSwapchain f
 
   runV inst phys dev qs vma $ do
     initial <- initialFrame win surf

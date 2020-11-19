@@ -44,6 +44,8 @@ data Frame = Frame
     -- ^ A timeline semaphore which increments to fIndex when this frame is
     -- done, the host can wait on this semaphore
   , fRecycledResources           :: RecycledResources
+    -- ^ Resources which can be used for this frame and are then passed on to a
+    -- later frame.
   , fGPUWork                     :: IORef [(Semaphore, Word64)]
     -- ^ Timeline semaphores and corresponding wait values, updates as the
     -- frame progresses.
@@ -79,6 +81,7 @@ initialFrame fWindow fSurface = do
                                                  fSurface
 
   -- TODO: Cache this
+  -- TODO: Recreate this if the swapchain format changes
   (_releasePipeline, fPipeline) <- Pipeline.createPipeline
     (srRenderPass fSwapchainResources)
 
@@ -102,15 +105,19 @@ initialFrame fWindow fSurface = do
   pure Frame { .. }
 
 -- | Create the next frame
-advanceFrame :: Frame -> V Frame
-advanceFrame f = do
+advanceFrame :: Bool -> Frame -> V Frame
+advanceFrame needsNewSwapchain f = do
   -- Wait for a prior frame to finish, then we can steal it's resources!
-  nib <- V $ asks ghRecycleNib
+  nib                <- V $ asks ghRecycleNib
   fRecycledResources <- liftIO $ nib >>= \case
     Left block -> do
       sayErr "CPU is running ahead"
       block
     Right rs -> pure rs
+
+  fSwapchainResources <- if needsNewSwapchain
+    then recreateSwapchainResources (fWindow f) (fSwapchainResources f)
+    else pure $ fSwapchainResources f
 
   -- The per-frame resource helpers need to be created fresh
   fGPUWork   <- liftIO $ newIORef mempty
@@ -119,7 +126,7 @@ advanceFrame f = do
   pure Frame { fIndex                       = succ (fIndex f)
              , fWindow                      = fWindow f
              , fSurface                     = fSurface f
-             , fSwapchainResources          = fSwapchainResources f
+             , fSwapchainResources
              , fPipeline                    = fPipeline f
              , fRenderFinishedHostSemaphore = fRenderFinishedHostSemaphore f
              , fGPUWork

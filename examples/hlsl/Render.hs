@@ -32,6 +32,9 @@ renderFrame = do
       SwapchainResources {..} = fSwapchainResources
       SwapchainInfo {..}      = srInfo
 
+  -- Ensure that the swapchain survives for the duration of this frame
+  frameRefCount srRelease
+
   -- Make sure we'll have an image to render to
   imageIndex <-
     acquireNextImageKHR' siSwapchain

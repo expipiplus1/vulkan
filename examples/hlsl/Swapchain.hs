@@ -2,11 +2,14 @@ module Swapchain
   ( SwapchainInfo(..)
   , SwapchainResources(..)
   , allocSwapchainResources
+  , recreateSwapchainResources
+  , threwSwapchainError
   ) where
 
 import           Control.Monad
 import           Control.Monad.Trans.Resource
 import           Data.Bits
+import           Data.Either
 import           Data.Foldable                  ( for_
                                                 , traverse_
                                                 )
@@ -17,8 +20,13 @@ import           Framebuffer
 import           MonadVulkan
 import           RefCounted
 import           RenderPass
-import           UnliftIO.Exception             ( throwString )
+import qualified SDL
+import qualified SDL.Video.Vulkan              as SDL
+import           UnliftIO.Exception             ( throwString
+                                                , tryJust
+                                                )
 import           Vulkan.Core10
+import           Vulkan.Exception
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Misc
@@ -30,6 +38,7 @@ data SwapchainInfo = SwapchainInfo
   , siPresentMode         :: PresentModeKHR
   , siSurfaceFormat       :: SurfaceFormatKHR
   , siImageExtent         :: Extent2D
+  , siSurface             :: SurfaceKHR
   }
 
 data SwapchainResources = SwapchainResources
@@ -73,6 +82,7 @@ allocSwapchainResources oldSwapchain windowSize surface = do
     fmap V.unzip . V.forM imageViews $ \imageView ->
       Framebuffer.createFramebuffer srRenderPass imageView siImageExtent
 
+  -- This refcount is released in 'recreateSwapchainResources'
   releaseResources <- newRefCounted $ do
     traverse_ release framebufferKeys
     traverse_ release imageViewKeys
@@ -86,6 +96,21 @@ allocSwapchainResources oldSwapchain windowSize surface = do
                             srRenderPass
                             releaseResources
 
+recreateSwapchainResources
+  :: SDL.Window
+  -> SwapchainResources
+  -- ^ The reference to these resources will be dropped
+  -> V SwapchainResources
+recreateSwapchainResources win oldResources = do
+  SDL.V2 width height <- SDL.vkGetDrawableSize win
+  let oldSwapchain = siSwapchain . srInfo $ oldResources
+      oldSurface   = siSurface . srInfo $ oldResources
+  r <- allocSwapchainResources
+    oldSwapchain
+    (Extent2D (fromIntegral width) (fromIntegral height))
+    oldSurface
+  releaseRefCounted (srRelease oldResources)
+  pure r
 
 ----------------------------------------------------------------
 -- Creating the actual swapchain
@@ -166,7 +191,21 @@ createSwapchain oldSwapchain explicitSize surf = do
 
   (key, swapchain) <- withSwapchainKHR' swapchainCreateInfo
 
-  pure $ SwapchainInfo swapchain key presentMode surfaceFormat imageExtent
+  pure $ SwapchainInfo swapchain key presentMode surfaceFormat imageExtent surf
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+-- | Catch an ERROR_OUT_OF_DATE_KHR exception and return 'True' if that happened
+threwSwapchainError :: V a -> V Bool
+threwSwapchainError = fmap isLeft . tryJust swapchainError
+ where
+  swapchainError = \case
+    VulkanException e@ERROR_OUT_OF_DATE_KHR -> Just e
+    -- TODO handle this case
+    -- VulkanException e@ERROR_SURFACE_LOST_KHR -> Just e
+    VulkanException _                       -> Nothing
 
 ----------------------------------------------------------------
 -- Specifications
