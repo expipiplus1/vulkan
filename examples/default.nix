@@ -1,4 +1,4 @@
-{ pkgs ? import ../nix/nixpkgs.nix, compiler ? "ghc884"
+{ pkgs ? import ../nix/nixpkgs.nix, compiler ? null
 , forShell ? pkgs.lib.inNixShell, hoogle ? forShell }:
 
 let
