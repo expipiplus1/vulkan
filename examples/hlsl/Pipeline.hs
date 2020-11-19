@@ -74,7 +74,7 @@ createPipeline renderPass = do
       , subpass            = 0
       , basePipelineHandle = zero
       }
-  (key, (_, [graphicsPipeline])) <- withGraphicsPipelines'
+  (key, (_, ~[graphicsPipeline])) <- withGraphicsPipelines'
     zero
     [SomeStruct pipelineCreateInfo]
   release layoutKey

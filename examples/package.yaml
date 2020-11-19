@@ -127,6 +127,7 @@ executables:
       - template-haskell
       - text
       - transformers
+      - unagi-chan
       - unliftio
       - vector
       - vulkan

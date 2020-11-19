@@ -40,7 +40,6 @@ newtype F a = F {unF :: ReaderT Frame V a }
   deriving newtype ( Functor
                    , Applicative
                    , Monad
-                   , MonadFail
                    , MonadIO
                    , HasVulkan
                    )
@@ -73,7 +72,8 @@ runFrame f@Frame {..} (F r) = runReaderT r f `finally` do
     resetCommandPool' (fCommandPool fRecycledResources) zero
 
     -- Signal we're done by making the recycled resources available
-    putMVar fRenderFinishedMVar fRecycledResources
+    bin <- V $ asks ghRecycleBin
+    liftIO $ bin fRecycledResources
 
     -- Destroy frame-specific resources at our leisure
     retireFrame f

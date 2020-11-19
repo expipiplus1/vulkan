@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: be8c2786b84cc49cdd7a2fadd10f6b5e4a537e28a2963ac322d5641a5c2ddc12
+-- hash: 87715b133726297c8dea41663280075d5fa783ce76f05050bd27bd40c9e19a76
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -88,6 +88,7 @@ executable hlsl
     , template-haskell
     , text
     , transformers
+    , unagi-chan
     , unliftio
     , vector
     , vulkan

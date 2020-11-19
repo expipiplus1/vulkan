@@ -9,8 +9,14 @@ import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
-import           UnliftIO
+import           UnliftIO                       ( Async
+                                                , MonadUnliftIO(withRunInIO)
+                                                , async
+                                                , toIO
+                                                , uninterruptibleCancel
+                                                )
 
+import           Control.Concurrent.Chan.Unagi
 import           Language.Haskell.TH.Syntax     ( addTopDecls )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
@@ -36,7 +42,6 @@ newtype V a = V { unV :: ReaderT GlobalHandles (ResourceT IO) a }
   deriving newtype ( Functor
                    , Applicative
                    , Monad
-                   , MonadFail
                    , MonadIO
                    , MonadResource
                    )
@@ -48,7 +53,6 @@ newtype CmdT m a = CmdT { unCmdT :: ReaderT CommandBuffer m a }
   deriving newtype ( Functor
                    , Applicative
                    , Monad
-                   , MonadFail
                    , MonadIO
                    , MonadResource
                    , HasVulkan
@@ -102,8 +106,14 @@ runV
   -> Allocator
   -> V a
   -> ResourceT IO a
-runV ghInstance ghPhysicalDevice ghDevice ghQueues ghAllocator =
-  flip runReaderT GlobalHandles { .. } . unV
+runV ghInstance ghPhysicalDevice ghDevice ghQueues ghAllocator v = do
+  (bin, nib) <- liftIO newChan
+  let ghRecycleBin = writeChan bin
+      ghRecycleNib = do
+        (try, block) <- tryReadChan nib
+        maybe (Left block) Right <$> tryRead try
+
+  flip runReaderT GlobalHandles { .. } . unV $ v
 
 -- | A bunch of global, unchanging state we cart around
 data GlobalHandles = GlobalHandles
@@ -112,6 +122,27 @@ data GlobalHandles = GlobalHandles
   , ghDevice         :: Device
   , ghAllocator      :: Allocator
   , ghQueues         :: Queues (QueueFamilyIndex, Queue)
+  , ghRecycleBin     :: RecycledResources -> IO ()
+    -- ^ Filled with resources which aren't destroyed after finishing a frame,
+    -- but instead are used by another frame which executes after that one is
+    -- retired, (taken from ghRecycleNib)
+    --
+    -- Make sure not to pass any resources which were created with a frame-only
+    -- scope however!
+  , ghRecycleNib     :: IO (Either (IO RecycledResources) RecycledResources)
+    -- ^ The resources of prior frames waiting to be taken
+  }
+
+-- | These are resources which are reused by a later frame when the current
+-- frame is retired
+data RecycledResources = RecycledResources
+  { fImageAvailableSemaphore :: Semaphore
+    -- ^ A binary semaphore passed to 'acquireNextImageKHR'
+  , fRenderFinishedSemaphore :: Semaphore
+    -- ^ A binary semaphore to synchronize rendering and presenting
+  , fCommandPool             :: CommandPool
+    -- ^ Pool for this frame's commands (might want more than one of these for
+    -- multithreaded recording)
   }
 
 -- | The shape of all the queues we use for our program, parameterized over the

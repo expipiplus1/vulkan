@@ -4,14 +4,19 @@ module Render
   ( renderFrame
   ) where
 
+import           Control.Exception              ( throwIO )
 import           Control.Monad.IO.Class
 import           Data.Vector                    ( (!) )
 import           Data.Word
 import           Frame
+import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
+                                                , IOException(IOError)
+                                                )
 import           MonadFrame
 import           MonadVulkan
 import           Say
 import           Swapchain
+import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Core10
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
@@ -28,17 +33,23 @@ renderFrame = do
       SwapchainInfo {..}      = srInfo
 
   -- Make sure we'll have an image to render to
-  (SUCCESS, imageIndex) <- acquireNextImageKHR' siSwapchain
-                                                oneSecond
-                                                fImageAvailableSemaphore
-                                                NULL_HANDLE
+  imageIndex <-
+    acquireNextImageKHR' siSwapchain
+                         oneSecond
+                         fImageAvailableSemaphore
+                         NULL_HANDLE
+      >>= \case
+            (SUCCESS, imageIndex) -> pure imageIndex
+            (TIMEOUT, _) ->
+              timeoutError "Timed out (1s) trying to acquire next image"
+            _ -> throwString "Unexpected Result from acquireNextImageKHR"
 
   -- Allocate a command buffer and populate it
   let commandBufferAllocateInfo = zero { commandPool = fCommandPool
                                        , level = COMMAND_BUFFER_LEVEL_PRIMARY
                                        , commandBufferCount = 1
                                        }
-  [commandBuffer] <- allocateCommandBuffers' commandBufferAllocateInfo
+  ~[commandBuffer] <- allocateCommandBuffers' commandBufferAllocateInfo
   useCommandBuffer' commandBuffer zero $ myRecordCommandBuffer f imageIndex
 
   -- Submit the work
@@ -64,7 +75,9 @@ renderFrame = do
                    fIndex
 
   -- Present the frame when the render is finished
-  SUCCESS <- queuePresentKHR
+  -- The return code here could be SUBOPTIMAL_KHR
+  -- TODO, check for that
+  _ <- queuePresentKHR
     graphicsQueue
     zero { Swap.waitSemaphores = [fRenderFinishedSemaphore]
          , swapchains          = [siSwapchain]
@@ -97,3 +110,11 @@ myRecordCommandBuffer Frame {..} imageIndex = do
     cmdSetScissor' 0 [Rect2D { offset = Offset2D 0 0, extent = siImageExtent }]
     cmdBindPipeline' PIPELINE_BIND_POINT_GRAPHICS fPipeline
     cmdDraw' 3 1 0 0
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+timeoutError :: MonadIO m => String -> m a
+timeoutError message =
+  liftIO . throwIO $ IOError Nothing TimeExpired "" message Nothing Nothing
