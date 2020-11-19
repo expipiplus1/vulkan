@@ -1,5 +1,6 @@
 { pkgs ? import ../nix/nixpkgs.nix, compiler ? null
-, forShell ? pkgs.lib.inNixShell, hoogle ? forShell, withSwiftshader ? false }:
+, forShell ? pkgs.lib.inNixShell, hoogle ? forShell, withSwiftshader ? false
+, buildProfiling ? false }:
 
 let
   haskellPackages = let
@@ -8,7 +9,9 @@ let
     else
       pkgs.haskell.packages.${compiler};
   in hp.override {
-    overrides = import ../nix/haskell-packages.nix { inherit pkgs hoogle; };
+    overrides = import ../nix/haskell-packages.nix {
+      inherit pkgs hoogle buildProfiling;
+    };
   };
 
 in if forShell then

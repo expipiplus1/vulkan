@@ -1,6 +1,6 @@
 # Haskell package overrides
 
-{ pkgs, hoogle }:
+{ pkgs, hoogle, buildProfiling ? false }:
 
 with pkgs.haskell.lib;
 
@@ -14,7 +14,10 @@ let
     ]) || pkgs.lib.hasInfix "/src" path || pkgs.lib.hasInfix "/vk" path
     || pkgs.lib.hasInfix "/vma" path);
 
-  mod = drv: doHaddock (disableLibraryProfiling drv);
+  mod = if buildProfiling then
+    drv: doHaddock (enableLibraryProfiling drv)
+  else
+    drv: doHaddock (disableLibraryProfiling drv);
 
 in self: super:
 {
