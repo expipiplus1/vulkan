@@ -1,16 +1,22 @@
 module Swapchain
   ( SwapchainInfo(..)
-  , createSwapchain
+  , SwapchainResources(..)
+  , allocSwapchainResources
   ) where
 
 import           Control.Monad
 import           Control.Monad.Trans.Resource
 import           Data.Bits
-import           Data.Foldable                  ( for_ )
+import           Data.Foldable                  ( for_
+                                                , traverse_
+                                                )
 import           Data.Ord                       ( comparing )
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
+import           Framebuffer
 import           MonadVulkan
+import           RefCounted
+import           RenderPass
 import           UnliftIO.Exception             ( throwString )
 import           Vulkan.Core10
 import           Vulkan.Extensions.VK_KHR_surface
@@ -31,7 +37,8 @@ data SwapchainResources = SwapchainResources
   , srFramebuffers :: Vector Framebuffer
   , srImageViews   :: Vector ImageView
   , srImages       :: Vector Image
-  , srRelease      :: forall m . m ()
+  , srRenderPass   :: RenderPass
+  , srRelease      :: RefCounted
   }
 
 ----------------------------------------------------------------
@@ -46,29 +53,38 @@ allocSwapchainResources
   -- ^ If the swapchain size determines the surface size, use this size
   -> SurfaceKHR
   -> V SwapchainResources
-allocSwapchainResources windowSize oldSwapchain surface = do
-  SwapchainInfo {..}          <- createSwapchain oldSwapchain windowSize surface
+allocSwapchainResources oldSwapchain windowSize surface = do
+  info@SwapchainInfo {..} <- createSwapchain oldSwapchain windowSize surface
 
   -- TODO: cache this, it's probably not going to change
-  (renderPassKey, renderPass) <- Pipeline.createRenderPass
-    (format (surfaceFormat :: SurfaceFormatKHR))
+  (renderPassKey, srRenderPass) <- RenderPass.createRenderPass
+    (format (siSurfaceFormat :: SurfaceFormatKHR))
 
-  (_            , swapchainImages) <- getSwapchainImagesKHR' swapchain
+  -- Get all the swapchain images, and create views for them
+  (_            , swapchainImages) <- getSwapchainImagesKHR' siSwapchain
   (imageViewKeys, imageViews     ) <-
     fmap V.unzip . V.forM swapchainImages $ \image ->
-      createImageView (format (surfaceFormat :: SurfaceFormatKHR)) image
+      Framebuffer.createImageView
+        (format (siSurfaceFormat :: SurfaceFormatKHR))
+        image
 
+  -- Also create a framebuffer for each one
   (framebufferKeys, framebuffers) <-
     fmap V.unzip . V.forM imageViews $ \imageView ->
-      createFramebuffer renderPass imageView imageExtent
+      Framebuffer.createFramebuffer srRenderPass imageView siImageExtent
 
-  releaseSwapchain <- newRefCounted $ do
+  releaseResources <- newRefCounted $ do
     traverse_ release framebufferKeys
     traverse_ release imageViewKeys
     release renderPassKey
-    release swapchainKey
+    release siSwapchainReleaseKey
 
-  pure $ SwapchainResources info framebuffers imageViews images releaseResources
+  pure $ SwapchainResources info
+                            framebuffers
+                            imageViews
+                            swapchainImages
+                            srRenderPass
+                            releaseResources
 
 
 ----------------------------------------------------------------

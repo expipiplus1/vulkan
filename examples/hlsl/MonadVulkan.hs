@@ -13,18 +13,20 @@ import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import           UnliftIO
 
+import           Language.Haskell.TH.Syntax     ( addTopDecls )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
+import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
+                                               as Timeline
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
-import           VulkanMemoryAllocator         as VMA
-                                         hiding ( getPhysicalDeviceProperties )
-import           Language.Haskell.TH.Syntax     ( addTopDecls )
 import           Vulkan.Utils.CommandCheck
 import           Vulkan.Utils.QueueAssignment
+import           VulkanMemoryAllocator         as VMA
+                                         hiding ( getPhysicalDeviceProperties )
 
 ----------------------------------------------------------------
 -- Define the monad in which most of the program will run
@@ -66,7 +68,7 @@ class HasVulkan m where
 
 instance HasVulkan V where
   getInstance       = V (asks ghInstance)
-  getGraphicsQueue  = V (asks ghGraphicsQueue)
+  getGraphicsQueue  = V (asks (snd . graphicsQueue . ghQueues))
   getPhysicalDevice = V (asks ghPhysicalDevice)
   getDevice         = V (asks ghDevice)
   getAllocator      = V (asks ghAllocator)
@@ -79,10 +81,7 @@ instance (Monad m, HasVulkan m) => HasVulkan (ReaderT r m) where
   getAllocator      = lift getAllocator
 
 getGraphicsQueueFamilyIndex :: V QueueFamilyIndex
-getGraphicsQueueFamilyIndex = V (asks ghGraphicsQueueFamilyIndex)
-
-noAllocationCallbacks :: Maybe AllocationCallbacks
-noAllocationCallbacks = Nothing
+getGraphicsQueueFamilyIndex = V (asks (fst . graphicsQueue . ghQueues))
 
 getCommandBuffer :: Monad m => CmdT m CommandBuffer
 getCommandBuffer = CmdT ask
@@ -104,14 +103,33 @@ runV
   :: Instance
   -> PhysicalDevice
   -> Device
-  -> Queue
-  -> QueueFamilyIndex
+  -> Queues (QueueFamilyIndex, Queue)
   -> Vector CommandPool
   -> Allocator
   -> V a
   -> ResourceT IO a
-runV ghInstance ghPhysicalDevice ghDevice ghGraphicsQueue ghGraphicsQueueFamilyIndex ghCommandPools ghAllocator
-  = flip runReaderT GlobalHandles { .. } . unV
+runV ghInstance ghPhysicalDevice ghDevice ghQueues ghCommandPools ghAllocator =
+  flip runReaderT GlobalHandles { .. } . unV
+
+-- | A bunch of global, unchanging state we cart around
+data GlobalHandles = GlobalHandles
+  { ghInstance       :: Instance
+  , ghPhysicalDevice :: PhysicalDevice
+  , ghDevice         :: Device
+  , ghAllocator      :: Allocator
+  , ghQueues         :: Queues (QueueFamilyIndex, Queue)
+  , ghCommandPools   :: Vector CommandPool
+    -- ^ Has length numConcurrentFrames, one command pool per frame
+  }
+
+-- | The shape of all the queues we use for our program, parameterized over the
+-- queue type so we can use it with 'Vulkan.Utils.QueueAssignment.assignQueues'
+newtype Queues q = Queues { graphicsQueue :: q }
+  deriving (Functor, Foldable, Traversable)
+
+----------------------------------------------------------------
+-- Helpers
+----------------------------------------------------------------
 
 -- Start an async thread which will be cancelled at the end of the ResourceT
 -- block
@@ -123,15 +141,12 @@ spawn a = do
 spawn_ :: V () -> V ()
 spawn_ = void . spawn
 
-data GlobalHandles = GlobalHandles
-  { ghInstance                 :: Instance
-  , ghPhysicalDevice           :: PhysicalDevice
-  , ghDevice                   :: Device
-  , ghAllocator                :: Allocator
-  , ghGraphicsQueue            :: Queue
-  , ghGraphicsQueueFamilyIndex :: QueueFamilyIndex
-  , ghCommandPools             :: Vector CommandPool
-  }
+----------------------------------------------------------------
+-- Commands
+----------------------------------------------------------------
+
+noAllocationCallbacks :: Maybe AllocationCallbacks
+noAllocationCallbacks = Nothing
 
 --
 -- Wrap a bunch of Vulkan commands so that they automatically pull global
@@ -145,43 +160,45 @@ do
         , 'invalidateAllocation
         ]
       commands =
-        [ 'deviceWaitIdle
-        , 'getDeviceQueue
-        , 'waitForFences
-        , 'waitForFencesSafe
-        , 'withCommandBuffers
-        , 'withCommandPool
-        , 'withFence
-        , 'withComputePipelines
-        , 'withInstance
-        , 'withPipelineLayout
-        , 'withShaderModule
-        , 'withDescriptorPool
-        , 'allocateDescriptorSets
-        , 'withDescriptorSetLayout
-        , 'updateDescriptorSets
-        , 'cmdBindPipeline
-        , 'cmdBindDescriptorSets
-        , 'cmdDispatch
-        , 'withSwapchainKHR
-        , 'getPhysicalDeviceSurfaceCapabilitiesKHR
-        , 'getPhysicalDeviceSurfacePresentModesKHR
-        , 'getPhysicalDeviceSurfaceFormatsKHR
-        , 'withGraphicsPipelines
-        , 'withRenderPass
-        , 'getSwapchainImagesKHR
-        , 'withImageView
-        , 'withFramebuffer
-        , 'acquireNextImageKHR
-        , 'withSemaphore
-        , 'deviceWaitIdleSafe
-        , 'resetCommandPool
+        [ 'acquireNextImageKHR
         , 'allocateCommandBuffers
-        , 'cmdSetViewport
-        , 'cmdSetScissor
-        , 'cmdUseRenderPass
+        , 'allocateDescriptorSets
+        , 'cmdBindDescriptorSets
+        , 'cmdBindPipeline
+        , 'cmdDispatch
         , 'cmdDraw
         , 'cmdPushConstants
+        , 'cmdSetScissor
+        , 'cmdSetViewport
+        , 'cmdUseRenderPass
+        , 'deviceWaitIdle
+        , 'deviceWaitIdleSafe
+        , 'getDeviceQueue
+        , 'getPhysicalDeviceSurfaceCapabilitiesKHR
+        , 'getPhysicalDeviceSurfaceFormatsKHR
+        , 'getPhysicalDeviceSurfacePresentModesKHR
+        , 'getSwapchainImagesKHR
+        , 'resetCommandPool
+        , 'updateDescriptorSets
+        , 'waitForFences
+        , 'waitForFencesSafe
+        , 'Timeline.waitSemaphores
+        , 'Timeline.waitSemaphoresSafe
+        , 'withCommandBuffers
+        , 'withCommandPool
+        , 'withComputePipelines
+        , 'withDescriptorPool
+        , 'withDescriptorSetLayout
+        , 'withFence
+        , 'withFramebuffer
+        , 'withGraphicsPipelines
+        , 'withImageView
+        , 'withInstance
+        , 'withPipelineLayout
+        , 'withRenderPass
+        , 'withSemaphore
+        , 'withShaderModule
+        , 'withSwapchainKHR
         ]
   addTopDecls =<< [d|checkCommands = $(checkCommandsExp commands)|]
   autoapplyDecs

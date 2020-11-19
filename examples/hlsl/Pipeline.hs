@@ -9,9 +9,9 @@ module Pipeline
 
 import           Control.Monad.Trans.Resource
 import           Data.Bits
-import qualified Data.Vector                   as V
 import           Data.Foldable                  ( traverse_ )
-
+import qualified Data.Vector                   as V
+import           MonadVulkan
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -19,8 +19,6 @@ import           Vulkan.Core10                 as Vk
                                                 )
 import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
-
-import           MonadVulkan
 
 -- Create the most vanilla rendering pipeline
 createPipeline :: RenderPass -> V (ReleaseKey, Pipeline)

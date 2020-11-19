@@ -38,7 +38,7 @@ createWindow title width height = do
         { SDL.windowInitialSize     = SDL.V2 (fromIntegral width)
                                              (fromIntegral height)
         , SDL.windowGraphicsContext = SDL.VulkanContext
-        , SDL.windowResizable       = True
+        , SDL.windowResizable       = False
         , SDL.windowHighDPI         = True
         , SDL.windowVisible         = False
         }

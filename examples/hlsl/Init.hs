@@ -1,8 +1,8 @@
 module Init
   ( Init.createInstance
   , Init.createDevice
-  , Queues(..)
   , createVMA
+  , createCommandPools
   ) where
 
 import           Control.Monad                  ( unless )
@@ -25,7 +25,10 @@ import           Data.Vector                    ( Vector )
 import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
                                                 , IOException(IOError)
                                                 )
-import           MonadVulkan                    ( checkCommands )
+import           MonadVulkan                    ( Queues(..)
+                                                , checkCommands
+                                                , noAllocationCallbacks
+                                                )
 import qualified SDL.Video                     as SDL
 import qualified SDL.Video.Vulkan              as SDL
 import           Vulkan.CStruct.Extends
@@ -76,7 +79,12 @@ createDevice
    . (MonadResource m)
   => Instance
   -> SDL.Window
-  -> m (PhysicalDevice, Device, Queues (QueueFamilyIndex, Queue))
+  -> m
+       ( PhysicalDevice
+       , Device
+       , Queues (QueueFamilyIndex, Queue)
+       , SurfaceKHR
+       )
 createDevice inst win = do
   (_  , surf) <- createSurface inst win
   (pdi, phys) <-
@@ -92,7 +100,7 @@ createDevice inst win = do
   dev <- createDeviceWithExtensions phys [] extensions deviceCreateInfo
   requireCommands inst dev
   queues <- liftIO $ pdiGetQueues pdi dev
-  pure (phys, dev, queues)
+  pure (phys, dev, queues, surf)
 
 ----------------------------------------------------------------
 -- Physical device tools
@@ -108,9 +116,6 @@ data PhysicalDeviceInfo = PhysicalDeviceInfo
 pdiScore :: PhysicalDeviceInfo -> Word64
 pdiScore = pdiTotalMemory
 
-newtype Queues a = Queues { graphicsQueue :: a }
-  deriving (Functor, Foldable, Traversable)
-
 physicalDeviceInfo
   :: MonadIO m => SurfaceKHR -> PhysicalDevice -> m (Maybe PhysicalDeviceInfo)
 physicalDeviceInfo surf phys = runMaybeT $ do
@@ -124,8 +129,8 @@ physicalDeviceInfo surf phys = runMaybeT $ do
       <> " because it doesn't support timeline semaphores"
     empty
 
-  hasSwapChainSupport <- deviceHasSwapChain phys
-  unless hasSwapChainSupport $ do
+  hasSwapchainSupport <- deviceHasSwapchain phys
+  unless hasSwapchainSupport $ do
     sayErr
       $  "Not using physical device "
       <> deviceName
@@ -158,8 +163,8 @@ queueRequirements phys surf = Queues (QueueSpec 1 isGraphicsPresentQueue)
 -- Physical device tools
 ----------------------------------------------------------------
 
-deviceHasSwapChain :: MonadIO m => PhysicalDevice -> m Bool
-deviceHasSwapChain dev = do
+deviceHasSwapchain :: MonadIO m => PhysicalDevice -> m Bool
+deviceHasSwapchain dev = do
   (_, extensions) <- enumerateDeviceExtensionProperties dev Nothing
   pure $ V.any ((KHR_SWAPCHAIN_EXTENSION_NAME ==) . extensionName) extensions
 
@@ -197,6 +202,31 @@ createVMA inst phys dev =
                , vulkanApiVersion = myApiVersion
                }
           allocate
+
+----------------------------------------------------------------
+-- Command pools
+----------------------------------------------------------------
+
+-- | Create several command pools for a queue family
+createCommandPools
+  :: MonadResource m
+  => Device
+  -> Int
+  -- ^ Number of pools to create
+  -> QueueFamilyIndex
+  -- ^ Queue family for the pools
+  -> m (Vector CommandPool)
+createCommandPools dev n (QueueFamilyIndex queueFamilyIndex) = do
+  let commandPoolCreateInfo :: CommandPoolCreateInfo
+      commandPoolCreateInfo = zero { queueFamilyIndex = queueFamilyIndex }
+  V.replicateM
+    n
+    (   snd
+    <$> withCommandPool dev
+                        commandPoolCreateInfo
+                        noAllocationCallbacks
+                        allocate
+    )
 
 ----------------------------------------------------------------
 -- Utils

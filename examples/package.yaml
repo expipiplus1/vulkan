@@ -119,6 +119,8 @@ executables:
       - autoapply >= 0.4
       - base <5
       - bytestring
+      - containers
+      - primitive-unlifted
       - resourcet >= 1.2.4
       - say
       - sdl2 >= 2.5.2.0
@@ -157,6 +159,7 @@ default-extensions:
   - InstanceSigs
   - LambdaCase
   - MagicHash
+  - NamedFieldPuns
   - NoMonomorphismRestriction
   - NumDecimals
   - OverloadedStrings

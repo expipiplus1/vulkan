@@ -7,6 +7,7 @@ module Cache
   , newCache
   , newCacheR
   , cachedCreate
+  , cachedCreateR
   )
 where
 
@@ -21,15 +22,15 @@ import           Control.Monad                  ( join )
 import           UnliftIO.Exception             ( mask )
 import           UnliftIO                       ( MonadUnliftIO )
 import           Data.Functor                   ( void )
-import           Control.Monad.Trans.Resource   (register, MonadResource,  ReleaseKey )
+import           Control.Monad.Trans.Resource   ( ReleaseKey )
 import qualified Control.Monad.Trans.Resource  as R
 import           Data.Bifunctor                 ( Bifunctor(first) )
 
 data Cache m k v = Cache
   { cacheCreate :: k -> m (IO (), v)
-    -- ^ Action to create new cache elements along with their release action
-  , cacheMap    :: MVar (Map k (UnliftedWeak (MVar (Token v, v))))
-    -- ^ A map containing weak pointers to (touch token, value)
+    -- ^ Action to create new cache elements
+  , cacheMap    :: MVar (Map k (UnliftedWeak (MVar (IO (), Token v, v))))
+    -- ^ A map containing weak pointers to (release action, touch token, value)
   }
 
 -- | Create a cache
@@ -52,6 +53,21 @@ newtype Token a = Token { unToken :: IORef () }
 touchToken :: MonadIO m => Token v -> m ()
 touchToken = liftIO . touchUnlifted . unToken
 
+-- | The same as cachedCreate but doesn't return the destroy action.
+--
+-- This is intended to be used when using a monad, m, which performs its own
+-- resource tracking where the destroy action would be unnecessary.
+--
+-- Keep in mind that the cache has no visibility into when the user generated
+-- destroy action is called, so it's possible to destroy objects from under the
+-- nose of the cache. To avoid this, make sure not to use the cache after one
+-- of these destructors has been called, i.e. don't return the 'Cache' out of
+-- 'runResourceT'
+cachedCreateR :: (MonadUnliftIO m, Ord k) => Cache m k b -> k -> m (Token b, b)
+cachedCreateR c k = do
+  (_, t, r) <- cachedCreate c k
+  pure (t, r)
+
 -- | Fetch an element from a cache, or create a new one and insert it.
 --
 -- If the element is already in the cache it's returned immediately, otherwise
@@ -68,13 +84,15 @@ touchToken = liftIO . touchUnlifted . unToken
 -- use a monad, @m@, which supports that, such as the 'ResourceT' monad.
 cachedCreate
   :: forall m k v
-   . (MonadUnliftIO m, MonadResource m, Ord k)
+   . (MonadUnliftIO m, Ord k)
   => Cache m k v
   -> k
   -- ^ The key to lookup
-  -> m (Token v, v)
+  -> m (IO (), Token v, v)
   -- ^
-  -- ( A token to pass to 'touchToken' to indicate that the value must be alive
+  -- ( An action which can be called to release this resource immediately (this
+  --   may be called more than once)
+  -- , A token to pass to 'touchToken' to indicate that the value must be alive
   --   until at least this point (can be called with no effect after the
   --   release action)
   -- , the created value
@@ -105,13 +123,11 @@ cachedCreate Cache {..} k = do
           a <- mask $ \_ -> do
             (release, a) <- cacheCreate k
             void . liftIO $ swapMVar releaseRef release
-            _ <- register (finalizeUnlifted w)
             -- Make sure the Weak stays alive until at least it's been given
-            -- the correct release action and been put into the resource
-            -- tracker
+            -- the correct release action.
             touchToken i
             pure a
-          let r = (i, a)
+          let r = (finalizeUnlifted w, i, a)
           liftIO $ putMVar v r
           pure r
 
