@@ -43,8 +43,7 @@ assignModules
   => Spec
   -> RenderedSpec RenderElement
   -> Sem r [(ModName, Vector RenderElement)]
-assignModules spec@Spec {..} rs@RenderedSpec {..} = do
-  RenderParams {..} <- input
+assignModules spec rs = do
   let indexed = run . evalState (0 :: Int) $ traverse
         (\r -> do
           i <- get @Int

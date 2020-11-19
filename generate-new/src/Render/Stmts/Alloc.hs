@@ -7,7 +7,6 @@ module Render.Stmts.Alloc
 import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
-import           Polysemy.Input
 import           Relude                  hiding ( Const
                                                 , Type
                                                 , head
@@ -128,7 +127,6 @@ allocateVector
   => a
   -> Stmt s r (Ref s AddrDoc)
 allocateVector vec = do
-  RenderParams {..} <- input
   let name' = name vec
       toTy  = type' vec
   toElem <- unPtr toTy

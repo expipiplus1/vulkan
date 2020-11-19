@@ -68,10 +68,8 @@ instance Monoid SpecInfo where
                     (const False)
                     (const [])
 
-specSpecInfo
-  :: HasRenderParams r => Spec -> (CType -> Maybe (Int, Int)) -> Sem r SpecInfo
-specSpecInfo Spec {..} siTypeSize = do
-  RenderParams {..} <- input
+specSpecInfo :: Spec -> (CType -> Maybe (Int, Int)) -> SpecInfo
+specSpecInfo Spec {..} siTypeSize =
   let
     mkLookup n f =
       let m = Map.fromList [ (n s, s) | s <- toList f ]
@@ -137,7 +135,8 @@ specSpecInfo Spec {..} siTypeSize = do
             a <- Map.lookupDefault [] n reverseAliasMap
             a : go a
       in  go
-  pure SpecInfo { .. }
+  in
+    SpecInfo { .. }
 
 withSpecInfo
   :: HasRenderParams r
@@ -145,9 +144,8 @@ withSpecInfo
   -> (CType -> Maybe (Int, Int))
   -> Sem (Input SpecInfo ': r) a
   -> Sem r a
-withSpecInfo spec typeSize r = do
-  si <- specSpecInfo spec typeSize
-  runInputConst si r
+withSpecInfo spec typeSize r =
+  let si = specSpecInfo spec typeSize in runInputConst si r
 
 getStruct :: HasSpecInfo r => CName -> Sem r (Maybe Struct)
 getStruct t = ($ t) <$> inputs siIsStruct
@@ -179,6 +177,3 @@ appearsInNegativePosition s = ($ s) <$> inputs siAppearsInNegativePosition
 
 getAliases :: HasSpecInfo r => CName -> Sem r [CName]
 getAliases s = ($ s) <$> inputs siGetAliases
-
-inputs :: Member (Input a) r => (a -> b) -> Sem r b
-inputs f = f <$> input

@@ -414,7 +414,6 @@ optionalScheme wes wdh p = do
 -- | A struct to be wrapped in "SomeStruct"
 extensibleStruct :: Marshalable a => a -> ND r (MarshalScheme a)
 extensibleStruct p = do
-  MarshalParams {..} <- input
   TypeName n         <- dropPtrToStruct (type' p)
   Just     s         <- getStruct n
   guard (not (V.null (sExtendedBy s)))
@@ -422,7 +421,6 @@ extensibleStruct p = do
 
 rawDispatchableHandles :: Marshalable a => a -> ND r (MarshalScheme a)
 rawDispatchableHandles p = do
-  MarshalParams {..} <- input
   t@(TypeName n)     <- dropPtrToStruct (type' p)
   Just h             <- getHandle n
   guard (Dispatchable == hDispatchable h)

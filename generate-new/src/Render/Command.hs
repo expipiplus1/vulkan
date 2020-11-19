@@ -68,7 +68,6 @@ renderCommand
   -> Sem r RenderElement
 renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
   RenderParams {..} <- input
-  let Command {..} = mcCommand
   genRe ("command " <> unCName mcName) $ do
     renderForeignDecls mcCommand
 
@@ -91,7 +90,7 @@ makeReturnType
   => Bool
   -> MarshaledCommand
   -> Sem r H.Type
-makeReturnType includeInOutCountTypes mc@MarshaledCommand {..}
+makeReturnType includeInOutCountTypes mc
   = do
     ts <- marshaledCommandReturnTypes includeInOutCountTypes mc
     pure $ VarT ioVar :@ foldl' (:@) (TupleT (length ts)) ts
@@ -884,7 +883,6 @@ getPoke
   -> Stmt s r (Ref s ValueDoc, Maybe (Ref s ValueDoc))
   -- ^ (poke, peek if it's a returned value)
 getPoke valueRef MarshaledParam {..} = do
-  RenderParams {..} <- input
   (poke, peek)      <- case mpScheme of
     Returned s -> do
       (addrRef, peek) <- allocateAndPeek (lowerParamType mpParam) s
@@ -985,7 +983,6 @@ importConstructors
   => Type
   -> Sem r ()
 importConstructors t = do
-  RenderParams {..} <- input
   let names = nubOrd $ allTypeNames t
       isNewtype' :: Name -> Sem r Bool
       isNewtype' n = pure (n `elem` builtinNewtypes)

@@ -83,9 +83,8 @@ main =
     funcPointers <- unitFuncPointers ds
 
     runInputConst (renderParams (specHandles spec)) $ do
-      headerInfo <- liftA2
-        (<>)
-        (specSpecInfo spec specTypeSize)
+      headerInfo <- fmap
+        (specSpecInfo spec specTypeSize <>)
         (vmaSpecInfo (snd <$> enums)
                      (snd <$> structs)
                      (snd <$> handles)
@@ -184,6 +183,8 @@ vmaSpecInfo enums structs handles commands = do
               _          -> Nothing
       siAppearsInPositivePosition = const False
       siAppearsInNegativePosition = const False
+      -- TODO: is there anything sensible to put in here
+      siGetAliases                = const []
   pure SpecInfo { .. }
 
 ----------------------------------------------------------------

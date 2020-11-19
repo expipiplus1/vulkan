@@ -200,7 +200,6 @@ normal name to from valueRef =
       pure . Pure InlineOnce . ValueDoc $ fromDoc <+> value
 
   same = failToNonDet $ do
-    RenderParams {..} <- input
     guard (from == to)
     pure valueRef
 
@@ -708,7 +707,6 @@ byteStringFixedArrayIndirect
   -> Stmt s r (Ref s ValueDoc)
 byteStringFixedArrayIndirect _name size toElem valueRef addrRef = case size of
   SymbolicArraySize _ -> unitStmt $ do
-    RenderParams {..} <- input
     fn                <- case toElem of
       Char -> do
         let fn = "pokeFixedLengthNullTerminatedByteString"

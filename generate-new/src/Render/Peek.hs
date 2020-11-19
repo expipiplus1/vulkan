@@ -43,7 +43,6 @@ import           Render.SpecInfo
 import           Render.Stmts
 import           Render.Stmts.Poke
 import           Render.Type
-import           Spec.Types
 
 peekStmt
   :: ( HasErr r
@@ -97,7 +96,6 @@ peekIdiomatic
   -> MarshalScheme a
   -> Sem (NonDet ': StmtE s r ': r) (Ref s ValueDoc)
 peekIdiomatic name lengths fromType addr scheme = do
-  RenderParams {..} <- input
   r                 <- peekWrapped name lengths fromType addr scheme
   t                 <- raise $ refType r
   toTy              <- schemeTypeNegative scheme
@@ -259,9 +257,9 @@ normalPeek name addrRef to fromPtr =
   union = failToNonDet $ do
     Ptr _ from <- pure fromPtr
     TypeName n <- pure from
-    Just     u <- getUnion n
+    Just     _ <- getUnion n
     guard (from == to)
-    raise2 $ unionPeek name addrRef u to fromPtr
+    raise2 $ unionPeek name addrRef to fromPtr
 
 wrappedStructPeek
   :: forall r s
@@ -299,11 +297,10 @@ unionPeek
    . (HasErr r, HasRenderElem r, HasSpecInfo r, HasRenderParams r)
   => CName
   -> Ref s AddrDoc
-  -> Union
   -> CType
   -> CType
   -> Stmt s r (Ref s ValueDoc)
-unionPeek name addrRef Struct {..} _to fromPtr =
+unionPeek name addrRef _to fromPtr =
   failToError (V.singleton . T.pack) $ do
     RenderParams {..} <- input
     Ptr _ from        <- pure fromPtr
