@@ -1,5 +1,5 @@
 { pkgs ? import ../nix/nixpkgs.nix, compiler ? null
-, forShell ? pkgs.lib.inNixShell, hoogle ? forShell }:
+, forShell ? pkgs.lib.inNixShell, hoogle ? forShell, withSwiftshader ? false }:
 
 let
   haskellPackages = let
@@ -12,10 +12,13 @@ let
   };
 
 in if forShell then
-  haskellPackages.shellFor {
+  haskellPackages.shellFor ({
     packages = p: [ p.vulkan-examples ];
     buildInputs = with pkgs; [ vulkan-validation-layers ];
     withHoogle = hoogle;
-  }
+  } // pkgs.lib.optionalAttrs withSwiftshader {
+    VK_ICD_FILENAMES =
+      "${pkgs.swiftshader}/share/vulkan/icd.d/vk_swiftshader_icd.json";
+  })
 else
   haskellPackages.vulkan-examples
