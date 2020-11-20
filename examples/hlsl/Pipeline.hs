@@ -125,37 +125,36 @@ createShaders
   :: V (V.Vector (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo))
 createShaders = do
   let fragCode = [frag|
-        #version 450
-        #extension GL_ARB_separate_shader_objects : enable
-
-        layout(location = 0) in vec3 fragColor;
-
-        layout(location = 0) out vec4 outColor;
-
-        void main() {
-            outColor = vec4(fragColor, 1.0);
+        float4 main([[vk::location(0)]] const float3 col) : SV_TARGET
+        {
+            return float4(col, 1);
         }
       |]
       vertCode = [vert|
-        #version 450
-        #extension GL_ARB_separate_shader_objects : enable
+        const float2 positions[3] = {
+          {0.0, -0.5},
+          {0.5, 0.5},
+          {-0.5, 0.5}
+        };
 
-        layout(location = 0) out vec3 fragColor;
+        const float3 colors[3] = {
+          {1.0, 1.0, 0.0},
+          {0.0, 1.0, 1.0},
+          {1.0, 0.0, 1.0}
+        };
 
-        vec2 positions[3] = vec2[](
-          vec2(0.0, -0.5),
-          vec2(0.5, 0.5),
-          vec2(-0.5, 0.5)
-        );
-        vec3 colors[3] = vec3[](
-          vec3(1.0, 1.0, 0.0),
-          vec3(0.0, 1.0, 1.0),
-          vec3(1.0, 0.0, 1.0)
-        );
+        struct VSOutput
+        {
+          float4 pos : SV_POSITION;
+          [[vk::location(0)]] float3 col;
+        };
 
-        void main() {
-          gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
-          fragColor = colors[gl_VertexIndex];
+        VSOutput main(const uint i : SV_VertexID)
+        {
+          VSOutput output;
+          output.pos = float4(positions[i], 0, 1.0);
+          output.col = colors[i];
+          return output;
         }
       |]
   (fragKey, fragModule) <- withShaderModule' zero { code = fragCode }

@@ -170,7 +170,7 @@ compileShader loc stage code =
 
     (rc, out, err) <- readProcess $ proc
       "glslc"
-      ["-fshader-stage=" <> stage, "-x", "glsl", shader, "-o", spirv]
+      ["-fshader-stage=" <> stage, "-x", "hlsl", shader, "-o", spirv]
     let (warnings, errors) = processValidatorMessages (out <> err)
     case rc of
       ExitSuccess -> do
