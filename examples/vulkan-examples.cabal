@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 87715b133726297c8dea41663280075d5fa783ce76f05050bd27bd40c9e19a76
+-- hash: 4845867a6ca75bc0192f8630e248db1549dc519c3f35a975e4e62874f83a78ad
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -67,6 +67,7 @@ executable hlsl
       RefCounted
       Render
       RenderPass
+      Shaderc
       Swapchain
       Utils
       Window
@@ -81,13 +82,18 @@ executable hlsl
     , base <5
     , bytestring
     , containers
+    , extra
+    , file-embed
+    , filepath
     , primitive-unlifted
     , resourcet >=1.2.4
     , say
     , sdl2 >=2.5.2.0
     , template-haskell
+    , temporary
     , text
     , transformers
+    , typed-process
     , unagi-chan
     , unliftio
     , vector

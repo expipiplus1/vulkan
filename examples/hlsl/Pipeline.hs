@@ -17,7 +17,7 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
-import           Vulkan.Utils.ShaderQQ
+import           Shaderc
 import           Vulkan.Zero
 
 -- Create the most vanilla rendering pipeline

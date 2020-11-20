@@ -132,6 +132,11 @@ executables:
       - vector
       - vulkan
       - vulkan-utils
+      - file-embed
+      - extra
+      - filepath
+      - temporary
+      - typed-process
 
 when:
   - condition: os(windows)
