@@ -24,6 +24,7 @@ in if forShell then
   } // pkgs.lib.optionalAttrs withSwiftshader {
     VK_ICD_FILENAMES =
       "${pkgs.swiftshader}/share/vulkan/icd.d/vk_swiftshader_icd.json";
+    VK_INSTANCE_LAYERS = "VK_LAYER_KHRONOS_timeline_semaphore";
   })
 else
   haskellPackages.vulkan-examples
