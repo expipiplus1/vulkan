@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2f267c13a54f935e65df89edba6036e8fd0c672a0013543c3b99ae6963f353ab
+-- hash: 96e5b08747109836907895fd1e3a86027f810c6978047105043dbb6a76b0e390
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -100,6 +100,8 @@ executable hlsl
     , vulkan-utils
   if os(windows)
     ghc-options: -optl-mconsole
+  if impl(ghc < 8.10.0)
+    buildable: False
   default-language: Haskell2010
 
 executable info

@@ -137,6 +137,10 @@ executables:
       - filepath
       - temporary
       - typed-process
+    when:
+      condition: impl(ghc < 8.10.0)
+      buildable: false
+
 
 when:
   - condition: os(windows)
