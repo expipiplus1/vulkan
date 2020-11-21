@@ -12,6 +12,7 @@ module Pipeline
   , Pipeline.createRenderPass
   ) where
 
+import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.Bits
 import           Data.Foldable                  ( traverse_ )
@@ -19,6 +20,10 @@ import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
 import           Data.Word
 import           Foreign                        ( nullPtr )
+import           Foreign.Marshal.Utils          ( moveBytes )
+import           Foreign.Ptr                    ( Ptr
+                                                , plusPtr
+                                                )
 import           MonadVulkan
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
@@ -120,24 +125,50 @@ createRayGenerationShader = do
 createShaderBindingTable :: Pipeline -> V (ReleaseKey, Buffer)
 createShaderBindingTable pipeline = do
   RTInfo {..} <- getRTInfo
-  let groupCount      = 1 -- Just a generation shader
-      groupHandleSize = rtiShaderGroupHandleSize
-      baseAlignment   = rtiShaderGroupBaseAlignment
-      sbtSize         = fromIntegral (baseAlignment * groupCount)
+  let groupCount    = 1 -- Just a generation shader
+      handleSize    = rtiShaderGroupHandleSize
+      baseAlignment = rtiShaderGroupBaseAlignment
+      handleStride  = max handleSize baseAlignment
+      -- Make the buffer big enough for all the groups, with spacing between
+      -- them equal to their alignment
+      sbtSize = fromIntegral $ handleStride * (groupCount - 1) + handleSize
 
-  (bufferReleaseKey, (sbtBuffer, sbtAllocation, _sbtAllocationInfo)) <- withBuffer'
-    zero { usage = BUFFER_USAGE_TRANSFER_SRC_BIT, size = sbtSize }
-    zero
-      { requiredFlags = MEMORY_PROPERTY_HOST_VISIBLE_BIT
-                          .|. MEMORY_PROPERTY_HOST_COHERENT_BIT
-      }
+  (bufferReleaseKey, (sbtBuffer, sbtAllocation, _sbtAllocationInfo)) <-
+    withBuffer'
+      zero { usage = BUFFER_USAGE_TRANSFER_SRC_BIT, size = sbtSize }
+      zero
+        { requiredFlags = MEMORY_PROPERTY_HOST_VISIBLE_BIT
+                            .|. MEMORY_PROPERTY_HOST_COHERENT_BIT
+        }
   nameObject' sbtBuffer "SBT"
 
   (memKey, mem) <- withMappedMemory' sbtAllocation
-  -- TODO: Fix alignment here
   getRayTracingShaderGroupHandlesKHR' pipeline 0 groupCount sbtSize mem
+  unpackObjects groupCount handleSize handleStride mem
   release memKey
   pure (bufferReleaseKey, sbtBuffer)
+
+-- | Move densely packed objects so that they have a desired stride
+unpackObjects
+  :: MonadIO m
+  => Word32
+  -- ^ Num objects
+  -> Word32
+  -- ^ Object size, the initial stride
+  -> Word32
+  -- ^ Desired stride
+  -> Ptr ()
+  -- ^ Initial, packed data, in a buffer big enough for the unpacked data
+  -> m ()
+unpackObjects numObjs size desiredStride buf = do
+  let
+    objectInitalPosition n = buf `plusPtr` fromIntegral (size * n)
+    objectFinalPosition n = buf `plusPtr` fromIntegral (desiredStride * n)
+    moveObject n = moveBytes (objectFinalPosition n)
+                             (objectInitalPosition n)
+                             (fromIntegral size)
+  -- Move the object last to first
+  liftIO $ traverse_ @[] moveObject [(numObjs - 1) .. 0]
 
 ----------------------------------------------------------------
 -- Render pass creation
@@ -181,4 +212,3 @@ createRenderPass imageFormat = do
                        , subpasses    = [subpass]
                        , dependencies = [subpassDependency]
                        }
-
