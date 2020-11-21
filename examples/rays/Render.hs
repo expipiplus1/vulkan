@@ -6,6 +6,7 @@ module Render
 
 import           Control.Exception              ( throwIO )
 import           Control.Monad.IO.Class
+import           Control.Monad.Trans.Class      ( MonadTrans(lift) )
 import           Data.Vector                    ( (!) )
 import           Data.Word
 import           Frame
@@ -24,7 +25,6 @@ import           Vulkan.Extensions.VK_KHR_ray_tracing
 import           Vulkan.Extensions.VK_KHR_swapchain
                                                as Swap
 import           Vulkan.Zero
-import Control.Monad.Trans.Class (MonadTrans(lift))
 
 renderFrame :: F ()
 renderFrame = do
@@ -52,7 +52,7 @@ renderFrame = do
   -- Update the necessary descriptor sets
   updateDescriptorSets'
     [ SomeStruct zero
-        { dstSet          = fDescriptorSets ! fromIntegral imageIndex
+        { dstSet          = fDescriptorSet
         , dstBinding      = 1
         , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
         , descriptorCount = 1
@@ -116,7 +116,8 @@ myRecordCommandBuffer :: Frame -> Word32 -> CmdT F ()
 myRecordCommandBuffer Frame {..} imageIndex = do
   -- TODO: neaten
   RTInfo {..} <- CmdT . lift . liftV $ getRTInfo
-  let SwapchainResources {..} = fSwapchainResources
+  let RecycledResources {..}  = fRecycledResources
+      SwapchainResources {..} = fSwapchainResources
       SwapchainInfo {..}      = srInfo
       image                   = srImages ! fromIntegral imageIndex
       imageWidth              = width (siImageExtent :: Extent2D)
@@ -156,7 +157,7 @@ myRecordCommandBuffer Frame {..} imageIndex = do
     cmdBindDescriptorSets' PIPELINE_BIND_POINT_RAY_TRACING_KHR
                            fPipelineLayout
                            0
-                           [fDescriptorSets ! fromIntegral imageIndex]
+                           [fDescriptorSet]
                            []
 
     --

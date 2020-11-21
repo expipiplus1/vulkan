@@ -16,6 +16,8 @@ import           Control.Monad.Trans.Resource
 import           Data.Bits
 import           Data.Foldable                  ( traverse_ )
 import qualified Data.Vector                   as V
+import           Data.Vector                    ( Vector )
+import           Data.Word
 import           Foreign                        ( nullPtr )
 import           MonadVulkan
 import           Vulkan.CStruct.Extends
@@ -27,7 +29,6 @@ import           Vulkan.Extensions.VK_KHR_ray_tracing
 import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
 import           VulkanMemoryAllocator
-import Data.Vector (Vector)
 
 -- Create the most vanilla ray tracing pipeline
 createPipeline :: PipelineLayout -> V (ReleaseKey, Pipeline)
@@ -73,13 +74,13 @@ createRTDescriptorSetLayout = withDescriptorSetLayout' zero
   }
 
 createRTDescriptorSets
-  :: DescriptorSetLayout -> Vector ImageView -> V (Vector DescriptorSet)
-createRTDescriptorSets descriptorSetLayout imageViews = do
+  :: DescriptorSetLayout -> Word32 -> V (Vector DescriptorSet)
+createRTDescriptorSets descriptorSetLayout numDescriptorSets = do
   -- Create a descriptor pool
   (_, descriptorPool) <- withDescriptorPool' zero
-    { maxSets   = fromIntegral (V.length imageViews)
+    { maxSets   = numDescriptorSets
     , poolSizes = [ DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_IMAGE
-                                       (fromIntegral (V.length imageViews))
+                                       numDescriptorSets
                   ]
     }
 
@@ -88,7 +89,8 @@ createRTDescriptorSets descriptorSetLayout imageViews = do
   -- the pool is destroyed.
   allocateDescriptorSets' zero
     { descriptorPool = descriptorPool
-    , setLayouts     = V.replicate (V.length imageViews) descriptorSetLayout
+    , setLayouts     = V.replicate (fromIntegral numDescriptorSets)
+                                   descriptorSetLayout
     }
 
 createRayGenerationShader

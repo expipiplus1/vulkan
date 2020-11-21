@@ -157,6 +157,8 @@ data RecycledResources = RecycledResources
   , fCommandPool             :: CommandPool
     -- ^ Pool for this frame's commands (might want more than one of these for
     -- multithreaded recording)
+  , fDescriptorSet           :: DescriptorSet
+    -- ^ A descriptor set for ray tracing
   }
 
 -- | The shape of all the queues we use for our program, parameterized over the
