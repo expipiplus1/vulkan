@@ -17,11 +17,9 @@ let
 in if forShell then
   haskellPackages.shellFor ({
     packages = p: [ p.vulkan-examples ];
-    buildInputs = with pkgs; [
-      vulkan-tools-lunarg
-      vulkan-validation-layers
-      shaderc
-    ];
+    buildInputs = with pkgs;
+      [ vulkan-tools-lunarg vulkan-validation-layers shaderc ]
+      ++ pkgs.lib.optional withSwiftshader vulkan-extension-layer;
     withHoogle = hoogle;
   } // pkgs.lib.optionalAttrs withSwiftshader {
     VK_ICD_FILENAMES =
