@@ -162,7 +162,7 @@ createFence device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withFence :: forall a io r . (Extendss FenceCreateInfo a, PokeChain a, MonadIO io) => Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> (io (Fence) -> ((Fence) -> io ()) -> r) -> r
+withFence :: forall a io r . (Extendss FenceCreateInfo a, PokeChain a, MonadIO io) => Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> (io Fence -> (Fence -> io ()) -> r) -> r
 withFence device pCreateInfo pAllocator b =
   b (createFence device pCreateInfo pAllocator)
     (\(o0) -> destroyFence device o0 pAllocator)

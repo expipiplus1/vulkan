@@ -176,7 +176,7 @@ createBuffer device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withBuffer :: forall a io r . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io) => Device -> BufferCreateInfo a -> Maybe AllocationCallbacks -> (io (Buffer) -> ((Buffer) -> io ()) -> r) -> r
+withBuffer :: forall a io r . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io) => Device -> BufferCreateInfo a -> Maybe AllocationCallbacks -> (io Buffer -> (Buffer -> io ()) -> r) -> r
 withBuffer device pCreateInfo pAllocator b =
   b (createBuffer device pCreateInfo pAllocator)
     (\(o0) -> destroyBuffer device o0 pAllocator)

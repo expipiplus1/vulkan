@@ -719,7 +719,7 @@ createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDebugUtilsMessengerEXT :: forall io r . MonadIO io => Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> (io (DebugUtilsMessengerEXT) -> ((DebugUtilsMessengerEXT) -> io ()) -> r) -> r
+withDebugUtilsMessengerEXT :: forall io r . MonadIO io => Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> (io DebugUtilsMessengerEXT -> (DebugUtilsMessengerEXT -> io ()) -> r) -> r
 withDebugUtilsMessengerEXT instance' pCreateInfo pAllocator b =
   b (createDebugUtilsMessengerEXT instance' pCreateInfo pAllocator)
     (\(o0) -> destroyDebugUtilsMessengerEXT instance' o0 pAllocator)
