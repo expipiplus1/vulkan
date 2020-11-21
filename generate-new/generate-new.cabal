@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2c02c85a7b0e01052a8084288e0a6ed2e270c4775a5281cffc087edc30a4f394
+-- hash: e2a11964ef69f9b15c87c21ed9d7c6e1c67210aa674065a1a734e31c694f87b5
 
 name:           generate-new
 version:        0.0.0
@@ -106,7 +106,7 @@ library
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.3
+    , polysemy >=1.4
     , polysemy-plugin
     , pretty-show
     , prettyprinter
@@ -166,7 +166,7 @@ executable vk
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.3
+    , polysemy >=1.4
     , polysemy-plugin
     , pretty-show
     , prettyprinter
@@ -228,7 +228,7 @@ executable vma
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.3
+    , polysemy >=1.4
     , polysemy-plugin
     , pretty-show
     , prettyprinter
