@@ -1,3 +1,2 @@
 cradle:
-  bios:
-    program: /home/j/projects/vulkan/generate-new/flags.sh
+  cabal:
