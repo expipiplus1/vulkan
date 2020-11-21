@@ -140,9 +140,11 @@ stack --system-ghc --nix --no-nix-pure run sdl-triangle
 Note that not all of the examples run under SwiftShader.
 
 ```bash
-swiftshader=$(nix-build --no-out-link --expr '(import ../nix/nixpkgs.nix).swiftshader')
-export VK_ICD_FILENAMES=$swiftshader/share/vulkan/icd.d/vk_swiftshader_icd.json
-cabal run sdl-triangle
+# This will set VK_ICD_FILENAMES to the swiftshader ICD
+# It will also enable the timeline-semaphore emulation layer as swiftshader
+# lacks support
+nix-shell --arg withSwiftshader true
+cabal run hlsl
 ```
 
 ### Troubleshooting
