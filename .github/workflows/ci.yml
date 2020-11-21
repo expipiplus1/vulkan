@@ -154,6 +154,7 @@ jobs:
           # https://github.com/actions/setup-haskell/issues/49
           - os: windows-latest
             ghc: '8.10.2.2'
+            stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances --flag vulkan-examples:-have-shaderc --system-ghc']
       fail-fast: false
 
     steps:
