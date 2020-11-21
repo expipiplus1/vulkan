@@ -228,4 +228,5 @@ desiredPresentModes =
 
 -- | The images in the swapchain must support these flags.
 requiredUsageFlags :: [ImageUsageFlagBits]
-requiredUsageFlags = [IMAGE_USAGE_COLOR_ATTACHMENT_BIT]
+requiredUsageFlags =
+  [IMAGE_USAGE_COLOR_ATTACHMENT_BIT, IMAGE_USAGE_STORAGE_BIT]

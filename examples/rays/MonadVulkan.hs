@@ -17,6 +17,7 @@ import           UnliftIO                       ( Async
                                                 )
 
 import           Control.Concurrent.Chan.Unagi
+import           Data.Word
 import           Language.Haskell.TH.Syntax     ( addTopDecls )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
@@ -25,12 +26,14 @@ import           Vulkan.Core10                 as Vk
                                                 )
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                as Timeline
+import           Vulkan.Extensions.VK_KHR_ray_tracing
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.CommandCheck
 import           Vulkan.Utils.QueueAssignment
 import           VulkanMemoryAllocator         as VMA
                                          hiding ( getPhysicalDeviceProperties )
+import Vulkan.Utils.Debug (nameObject)
 
 ----------------------------------------------------------------
 -- Define the monad in which most of the program will run
@@ -85,6 +88,9 @@ instance (Monad m, HasVulkan m) => HasVulkan (ReaderT r m) where
 getGraphicsQueueFamilyIndex :: V QueueFamilyIndex
 getGraphicsQueueFamilyIndex = V (asks (fst . graphicsQueue . ghQueues))
 
+getRTInfo :: V RTInfo
+getRTInfo = V (asks ghRTInfo)
+
 getCommandBuffer :: Monad m => CmdT m CommandBuffer
 getCommandBuffer = CmdT ask
 
@@ -101,12 +107,13 @@ useCommandBuffer' commandBuffer beginInfo (CmdT a) =
 runV
   :: Instance
   -> PhysicalDevice
+  -> RTInfo
   -> Device
   -> Queues (QueueFamilyIndex, Queue)
   -> Allocator
   -> V a
   -> ResourceT IO a
-runV ghInstance ghPhysicalDevice ghDevice ghQueues ghAllocator v = do
+runV ghInstance ghPhysicalDevice ghRTInfo ghDevice ghQueues ghAllocator v = do
   (bin, nib) <- liftIO newChan
   let ghRecycleBin = writeChan bin
       ghRecycleNib = do
@@ -131,6 +138,13 @@ data GlobalHandles = GlobalHandles
     -- scope however!
   , ghRecycleNib     :: IO (Either (IO RecycledResources) RecycledResources)
     -- ^ The resources of prior frames waiting to be taken
+  , ghRTInfo         :: RTInfo
+  }
+
+-- | Information for ray tracing
+data RTInfo = RTInfo
+  { rtiShaderGroupHandleSize    :: Word32
+  , rtiShaderGroupBaseAlignment :: Word32
   }
 
 -- | These are resources which are reused by a later frame when the current
@@ -180,6 +194,7 @@ noAllocationCallbacks = Nothing
 do
   let vmaCommands =
         [ 'withBuffer
+        , 'VMA.withMappedMemory
         , 'invalidateAllocation
         ]
       commands =
@@ -190,9 +205,11 @@ do
         , 'cmdBindPipeline
         , 'cmdDispatch
         , 'cmdDraw
+        , 'cmdPipelineBarrier
         , 'cmdPushConstants
         , 'cmdSetScissor
         , 'cmdSetViewport
+        , 'cmdTraceRaysKHR
         , 'cmdUseRenderPass
         , 'deviceWaitIdle
         , 'deviceWaitIdleSafe
@@ -200,7 +217,9 @@ do
         , 'getPhysicalDeviceSurfaceCapabilitiesKHR
         , 'getPhysicalDeviceSurfaceFormatsKHR
         , 'getPhysicalDeviceSurfacePresentModesKHR
+        , 'getRayTracingShaderGroupHandlesKHR
         , 'getSwapchainImagesKHR
+        , 'nameObject
         , 'resetCommandPool
         , 'updateDescriptorSets
         , 'waitForFences
@@ -218,6 +237,7 @@ do
         , 'withImageView
         , 'withInstance
         , 'withPipelineLayout
+        , 'withRayTracingPipelinesKHR
         , 'withRenderPass
         , 'withSemaphore
         , 'withShaderModule
