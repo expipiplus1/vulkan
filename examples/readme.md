@@ -23,6 +23,26 @@ The [`autoapply` package](https://hackage.haskell.org/package/autoapply) is
 used to write the boilerplate of passing some global handles to vulkan
 functions.
 
+### `hlsl`
+
+A nicer example of rendering into a window which can be resized, the shaders
+are written in HLSL and compiled with the `glslc` tool from
+[Shaderc](https://github.com/google/shaderc).
+
+If you don't have this tool installed then you might want to turn off the Cabal
+flag `have-shaderc` to stop this example from building.
+
+It's very similar to *resize* but has been tidied up in a few places.
+
+It renders a triangle.
+
+The [`resourcet` package](https://hackage.haskell.org/package/resourcet) is
+used to ensure resources are deallocated.
+
+The [`autoapply` package](https://hackage.haskell.org/package/autoapply) is
+used to write the boilerplate of passing some global handles to vulkan
+functions.
+
 ### `offscreen`
 
 This example:
