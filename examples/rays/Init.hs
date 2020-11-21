@@ -36,7 +36,17 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
+import           Vulkan.Extensions.VK_KHR_buffer_device_address
+                                                ( pattern KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+                                                )
+import           Vulkan.Extensions.VK_KHR_deferred_host_operations
+                                                ( pattern KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+                                                )
 import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
+import           Vulkan.Extensions.VK_KHR_pipeline_library
+                                                ( pattern KHR_PIPELINE_LIBRARY_EXTENSION_NAME
+                                                )
+import           Vulkan.Extensions.VK_KHR_ray_tracing
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Initialization
@@ -95,8 +105,15 @@ createDevice inst win = do
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
           ::& PhysicalDeviceTimelineSemaphoreFeatures True
           :&  ()
+      rayTracingExtensions =
+        [ KHR_RAY_TRACING_EXTENSION_NAME
+        , KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+        , KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+        , KHR_PIPELINE_LIBRARY_EXTENSION_NAME
+        ]
       extensions =
         [KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME, KHR_SWAPCHAIN_EXTENSION_NAME]
+          <> rayTracingExtensions
   dev <- createDeviceWithExtensions phys [] extensions deviceCreateInfo
   requireCommands inst dev
   queues <- liftIO $ pdiGetQueues pdi dev
@@ -127,6 +144,14 @@ physicalDeviceInfo surf phys = runMaybeT $ do
       $  "Not using physical device "
       <> deviceName
       <> " because it doesn't support timeline semaphores"
+    empty
+
+  hasRayTracing <- deviceHasRayTracing phys
+  unless hasRayTracing $ do
+    sayErr
+      $  "Not using physical device "
+      <> deviceName
+      <> " because it doesn't support ray tracing"
     empty
 
   hasSwapchainSupport <- deviceHasSwapchain phys
@@ -180,11 +205,30 @@ deviceHasTimelineSemaphores phys = do
     hasFeat = do
       feats <- getPhysicalDeviceFeatures2KHR phys
       let
-        _ ::& (PhysicalDeviceTimelineSemaphoreFeatures hasTimelineSemaphores :& ())
+        _ ::& PhysicalDeviceTimelineSemaphoreFeatures hasTimelineSemaphores :& ()
           = feats
       pure hasTimelineSemaphores
 
   hasExt <&&> hasFeat
+
+deviceHasRayTracing :: MonadIO m => PhysicalDevice -> m Bool
+deviceHasRayTracing phys = do
+  let hasExt = do
+        (_, extensions) <- enumerateDeviceExtensionProperties phys Nothing
+        pure $ V.any ((KHR_RAY_TRACING_EXTENSION_NAME ==) . extensionName)
+                     extensions
+
+      hasFeat = do
+        feats <- getPhysicalDeviceFeatures2KHR phys
+        let _ ::& PhysicalDeviceRayTracingFeaturesKHR {..} :& () = feats
+        pure rayTracing
+
+      hasProps = do
+        props <- getPhysicalDeviceProperties2KHR phys
+        let _ ::& PhysicalDeviceRayTracingPropertiesKHR {..} :& () = props
+        pure True
+
+  hasExt <&&> hasFeat <&&> hasProps
 
 ----------------------------------------------------------------
 -- VulkanMemoryAllocator
