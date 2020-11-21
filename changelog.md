@@ -2,6 +2,9 @@
 
 ## WIP
 
+- Add bracketing functions for `withRayTracingPipelinesKHR` and
+  `withRayTracingPipelinesNV`
+
 ## [3.6.15] - 2020-11-16
 - Bump API version to v1.2.161
 

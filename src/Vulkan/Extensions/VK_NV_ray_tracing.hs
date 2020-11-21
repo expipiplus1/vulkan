@@ -7,6 +7,7 @@ module Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
                                             , cmdTraceRaysNV
                                             , getAccelerationStructureHandleNV
                                             , createRayTracingPipelinesNV
+                                            , withRayTracingPipelinesNV
                                             , pattern STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV
                                             , pattern STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV
                                             , pattern SHADER_STAGE_RAYGEN_BIT_NV
@@ -115,6 +116,7 @@ module Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (traverse_)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -157,6 +159,7 @@ import Vulkan.Extensions.VK_KHR_ray_tracing (bindAccelerationStructureMemoryKHR)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Extensions.VK_KHR_ray_tracing (cmdWriteAccelerationStructuresPropertiesKHR)
 import Vulkan.Extensions.VK_KHR_ray_tracing (destroyAccelerationStructureKHR)
+import Vulkan.Core10.Pipeline (destroyPipeline)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.Extensions.VK_KHR_ray_tracing (getRayTracingShaderGroupHandlesKHR)
 import Vulkan.CStruct.Extends (peekSomeCStruct)
@@ -1472,6 +1475,19 @@ createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO 
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
   pure $ (r, pPipelines)
+
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createRayTracingPipelinesNV' and 'destroyPipeline'
+--
+-- To ensure that 'destroyPipeline' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withRayTracingPipelinesNV :: forall io r . MonadIO io => Device -> PipelineCache -> Vector (SomeStruct RayTracingPipelineCreateInfoNV) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
+withRayTracingPipelinesNV device pipelineCache pCreateInfos pAllocator b =
+  b (createRayTracingPipelinesNV device pipelineCache pCreateInfos pAllocator)
+    (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device o1Elem pAllocator) o1)
 
 
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV"

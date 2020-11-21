@@ -14,6 +14,7 @@ module Vulkan.Extensions.VK_KHR_ray_tracing  ( destroyAccelerationStructureKHR
                                              , getRayTracingShaderGroupHandlesKHR
                                              , getRayTracingCaptureReplayShaderGroupHandlesKHR
                                              , createRayTracingPipelinesKHR
+                                             , withRayTracingPipelinesKHR
                                              , cmdTraceRaysIndirectKHR
                                              , getDeviceAccelerationStructureCompatibilityKHR
                                              , createAccelerationStructureKHR
@@ -120,6 +121,7 @@ import Data.Bits ((.&.))
 import Data.Bits ((.|.))
 import Data.Bits (shiftL)
 import Data.Bits (shiftR)
+import Data.Foldable (traverse_)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -186,6 +188,7 @@ import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.Pipeline (destroyPipeline)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.CStruct.Extends (peekSomeCStruct)
@@ -2171,6 +2174,19 @@ createRayTracingPipelinesKHR device pipelineCache createInfos allocator = liftIO
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
   pure $ (r, pPipelines)
+
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createRayTracingPipelinesKHR' and 'destroyPipeline'
+--
+-- To ensure that 'destroyPipeline' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withRayTracingPipelinesKHR :: forall io r . MonadIO io => Device -> PipelineCache -> Vector (SomeStruct RayTracingPipelineCreateInfoKHR) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
+withRayTracingPipelinesKHR device pipelineCache pCreateInfos pAllocator b =
+  b (createRayTracingPipelinesKHR device pipelineCache pCreateInfos pAllocator)
+    (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device o1Elem pAllocator) o1)
 
 
 foreign import ccall
