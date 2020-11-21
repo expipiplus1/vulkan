@@ -4,7 +4,7 @@ cabal-version: 1.24
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a79a3ce3d85bf6bb07d06937e8d0a14943803dd3ddca876e73bfc2b4bbf3777c
+-- hash: 40b19474caf8c568a72b8b684b364c91cb685df2a5029e18abc717cb7cf58581
 
 name:           vulkan-utils
 version:        0.2
@@ -42,6 +42,7 @@ library
       Vulkan.Utils.QueueAssignment
       Vulkan.Utils.ShaderQQ
       Vulkan.Utils.ShaderQQ.Interpolate
+      Vulkan.Utils.ShaderQQ.Shaderc
   other-modules:
       
   hs-source-dirs:

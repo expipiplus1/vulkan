@@ -17,7 +17,7 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
-import           Shaderc
+import           Vulkan.Utils.ShaderQQ.Shaderc
 import           Vulkan.Zero
 
 -- Create the most vanilla rendering pipeline
@@ -131,13 +131,13 @@ createShaders = do
         }
       |]
       vertCode = [vert|
-        const float2 positions[3] = {
+        const static float2 positions[3] = {
           {0.0, -0.5},
           {0.5, 0.5},
           {-0.5, 0.5}
         };
 
-        const float3 colors[3] = {
+        const static float3 colors[3] = {
           {1.0, 1.0, 0.0},
           {0.0, 1.0, 1.0},
           {1.0, 0.0, 1.0}
