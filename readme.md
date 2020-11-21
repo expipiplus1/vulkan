@@ -139,6 +139,10 @@ specification detailing the validity of structures and arguments.
   length. These are currently exposed as several `Vector` arguments which must
   be the same length. If they are not the same length an exception is thrown.
 
+- Vulkan structs with bitfields have them split into their component parts in
+  the Haskell record. Then marshalling to and from C the masking *and shifting*
+  takes place automatically.
+
 If anything is unclear please raise an issue. The marshaling to and from
 Haskell and C is automatically generated and I've not checked every single
 function. It's possible that there are some commands or structs which could be
