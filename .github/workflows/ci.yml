@@ -94,10 +94,10 @@ jobs:
         sed -ibak '/examples/d' cabal.project
       if: matrix.ghc == '8.6.5'
 
-    - name: Remove generator for all but 8.8.4
+    - name: Remove generator for all but 8.10.1
       run: |
         sed -ibak '/generate-new/d' cabal.project
-      if: matrix.ghc != '8.8.4'
+      if: matrix.ghc != '8.10.1'
 
     - run: cabal update
 
