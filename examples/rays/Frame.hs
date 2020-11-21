@@ -2,7 +2,8 @@
 -- can be found in 'MonadFrame'
 module Frame where
 
-import           Control.Monad                  ( replicateM_ )
+import           Control.Arrow                  ( Arrow((&&&)) )
+import           Control.Monad                  ((<=<) )
 import           Control.Monad.IO.Class         ( MonadIO(liftIO) )
 import           Control.Monad.Trans.Reader     ( asks )
 import           Control.Monad.Trans.Resource   ( InternalState
@@ -10,10 +11,10 @@ import           Control.Monad.Trans.Resource   ( InternalState
                                                 , allocate
                                                 , closeInternalState
                                                 , createInternalState
-                                                
                                                 )
+import           Data.Foldable
 import           Data.IORef
-import           Data.Vector                    ( Vector )
+import qualified Data.Vector                   as V
 import           Data.Word
 import           MonadVulkan
 import qualified Pipeline
@@ -43,7 +44,6 @@ data Frame = Frame
   , fSwapchainResources          :: SwapchainResources
   , fPipeline                    :: Pipeline
   , fPipelineLayout              :: PipelineLayout
-  , fDescriptorSets              :: Vector DescriptorSet
   , fShaderBindingTable          :: Buffer
   , fRenderFinishedHostSemaphore :: Semaphore
     -- ^ A timeline semaphore which increments to fIndex when this frame is
@@ -60,8 +60,8 @@ data Frame = Frame
     -- frame is done with GPU work.
   }
 
-initialRecycledResources :: V RecycledResources
-initialRecycledResources = do
+initialRecycledResources :: DescriptorSet -> V RecycledResources
+initialRecycledResources fDescriptorSet = do
   (_, fImageAvailableSemaphore) <- withSemaphore'
     (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
 
@@ -90,14 +90,13 @@ initialFrame fWindow fSurface = do
                                                  fSurface
 
   -- Create the RT pipeline
-  (_, descriptorSetLayout) <-
-    Pipeline.createRTDescriptorSetLayout
+  (_, descriptorSetLayout) <- Pipeline.createRTDescriptorSetLayout
   (_, fPipelineLayout) <- Pipeline.createRTPipelineLayout descriptorSetLayout
   (_, fPipeline          ) <- Pipeline.createPipeline fPipelineLayout
   (_, fShaderBindingTable) <- Pipeline.createShaderBindingTable fPipeline
-  fDescriptorSets          <- Pipeline.createRTDescriptorSets
+  descriptorSets           <- Pipeline.createRTDescriptorSets
     descriptorSetLayout
-    (srImageViews fSwapchainResources)
+    (fromIntegral numConcurrentFrames)
 
   -- Don't keep the release key, this semaphore lives for the lifetime of the
   -- application
@@ -106,17 +105,16 @@ initialFrame fWindow fSurface = do
 
   -- Create the 'RecycledResources' necessary to kick off the rest of the
   -- concurrent frames and push them into the chan.
-  bin <- V $ asks ghRecycleBin
-  replicateM_ (numConcurrentFrames - 1)
-    $   liftIO
-    .   bin
-    =<< initialRecycledResources
-  fRecycledResources <- initialRecycledResources
+  let (ourDescriptorSet, otherDescriptorSets) =
+        (V.head &&& V.tail) descriptorSets
+  fRecycledResources <- initialRecycledResources ourDescriptorSet
+  bin                <- V $ asks ghRecycleBin
+  for_ otherDescriptorSets ((liftIO . bin) <=< initialRecycledResources)
 
-  fGPUWork           <- liftIO $ newIORef mempty
+  fGPUWork   <- liftIO $ newIORef mempty
   -- Create the frame resource tracker at the global level so it's closed
   -- correctly on exception
-  fResources         <- allocate createInternalState closeInternalState
+  fResources <- allocate createInternalState closeInternalState
 
   pure Frame { .. }
 
@@ -145,7 +143,6 @@ advanceFrame needsNewSwapchain f = do
              , fSwapchainResources
              , fPipeline                    = fPipeline f
              , fPipelineLayout              = fPipelineLayout f
-             , fDescriptorSets              = fDescriptorSets f
              , fShaderBindingTable          = fShaderBindingTable f
              , fRenderFinishedHostSemaphore = fRenderFinishedHostSemaphore f
              , fGPUWork
