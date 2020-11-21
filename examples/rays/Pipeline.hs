@@ -35,8 +35,9 @@ import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
 import           VulkanMemoryAllocator
 
--- Create the most vanilla ray tracing pipeline
-createPipeline :: PipelineLayout -> V (ReleaseKey, Pipeline)
+-- Create the most vanilla ray tracing pipeline, returns the number of shader
+-- groups
+createPipeline :: PipelineLayout -> V (ReleaseKey, Pipeline, Word32)
 createPipeline pipelineLayout = do
   (shaderKeys, shaderStages) <- V.unzip <$> sequence [createRayGenerationShader]
 
@@ -62,7 +63,7 @@ createPipeline pipelineLayout = do
 
   traverse_ release shaderKeys
 
-  pure (key, rtPipeline)
+  pure (key, rtPipeline, fromIntegral (length shaderStages))
 
 createRTPipelineLayout :: DescriptorSetLayout -> V (ReleaseKey, PipelineLayout)
 createRTPipelineLayout descriptorSetLayout =
@@ -122,16 +123,15 @@ createRayGenerationShader = do
 -- Shader binding table
 ----------------------------------------------------------------
 
-createShaderBindingTable :: Pipeline -> V (ReleaseKey, Buffer)
-createShaderBindingTable pipeline = do
+createShaderBindingTable :: Pipeline -> Word32 -> V (ReleaseKey, Buffer)
+createShaderBindingTable pipeline numGroups = do
   RTInfo {..} <- getRTInfo
-  let groupCount    = 1 -- Just a generation shader
-      handleSize    = rtiShaderGroupHandleSize
+  let handleSize    = rtiShaderGroupHandleSize
       baseAlignment = rtiShaderGroupBaseAlignment
       handleStride  = max handleSize baseAlignment
       -- Make the buffer big enough for all the groups, with spacing between
       -- them equal to their alignment
-      sbtSize = fromIntegral $ handleStride * (groupCount - 1) + handleSize
+      sbtSize       = fromIntegral $ handleStride * (numGroups - 1) + handleSize
 
   (bufferReleaseKey, (sbtBuffer, sbtAllocation, _sbtAllocationInfo)) <-
     withBuffer'
@@ -143,8 +143,8 @@ createShaderBindingTable pipeline = do
   nameObject' sbtBuffer "SBT"
 
   (memKey, mem) <- withMappedMemory' sbtAllocation
-  getRayTracingShaderGroupHandlesKHR' pipeline 0 groupCount sbtSize mem
-  unpackObjects groupCount handleSize handleStride mem
+  getRayTracingShaderGroupHandlesKHR' pipeline 0 numGroups sbtSize mem
+  unpackObjects numGroups handleSize handleStride mem
   release memKey
   pure (bufferReleaseKey, sbtBuffer)
 
