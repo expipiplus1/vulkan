@@ -139,10 +139,10 @@ createDevice inst win = do
 -- Physical device tools
 ----------------------------------------------------------------
 
--- | The Ord instance prioritises devices with more memory
 data PhysicalDeviceInfo = PhysicalDeviceInfo
   { pdiTotalMemory      :: Word64
   , pdiRTInfo           :: RTInfo
+    -- ^ The relevant information from PhysicalDeviceProperties2KHR
   , pdiQueueCreateInfos :: Vector (DeviceQueueCreateInfo '[])
   , pdiGetQueues        :: Device -> IO (Queues (QueueFamilyIndex, Queue))
   }
@@ -163,7 +163,7 @@ physicalDeviceInfo surf phys = runMaybeT $ do
       <> " because it doesn't support timeline semaphores"
     empty
 
-  pdiRTInfo <- deviceHasRayTracing phys
+  pdiRTInfo           <- deviceHasRayTracing phys
 
   hasSwapchainSupport <- deviceHasSwapchain phys
   unless hasSwapchainSupport $ do

@@ -86,32 +86,10 @@ createRTDescriptorSets descriptorSetLayout imageViews = do
   -- Allocate a descriptor set from the pool with that layout
   -- Don't use `withDescriptorSets` here as the set will be cleaned up when
   -- the pool is destroyed.
-  descriptorSets <- allocateDescriptorSets' zero
+  allocateDescriptorSets' zero
     { descriptorPool = descriptorPool
     , setLayouts     = V.replicate (V.length imageViews) descriptorSetLayout
     }
-
-  -- Assign the buffer in this descriptor set
-  updateDescriptorSets'
-    (V.zipWith
-      (\set view -> SomeStruct zero
-        { dstSet          = set
-        , dstBinding      = 1
-        , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
-        , descriptorCount = 1
-        , imageInfo = [ DescriptorImageInfo { sampler     = NULL_HANDLE
-                                            , imageView   = view
-                                            , imageLayout = IMAGE_LAYOUT_GENERAL
-                                            }
-                      ]
-        }
-      )
-      descriptorSets
-      imageViews
-    )
-    []
-
-  pure descriptorSets
 
 createRayGenerationShader
   :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)

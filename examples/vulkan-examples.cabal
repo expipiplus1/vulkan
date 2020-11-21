@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a843da210d6f8f5df19d3c5f19576cf06d02a5f36665a5e8e78d0e877e4c7a04
+-- hash: df7c91cabff895392135364841ad4ee792099d899627bda5044375bc27a7d301
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -173,7 +173,6 @@ executable rays
       Pipeline
       RefCounted
       Render
-      RenderPass
       Swapchain
       Utils
       Window

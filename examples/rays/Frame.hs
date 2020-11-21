@@ -10,8 +10,10 @@ import           Control.Monad.Trans.Resource   ( InternalState
                                                 , allocate
                                                 , closeInternalState
                                                 , createInternalState
+                                                
                                                 )
 import           Data.IORef
+import           Data.Vector                    ( Vector )
 import           Data.Word
 import           MonadVulkan
 import qualified Pipeline
@@ -26,7 +28,6 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
-import Data.Vector (Vector)
 
 -- | Must be positive, duh
 numConcurrentFrames :: Int
@@ -74,9 +75,13 @@ initialRecycledResources = do
 
   pure RecycledResources { .. }
 
+-- | Create a 'Frame' from scratch
 initialFrame :: Window -> SurfaceKHR -> V Frame
 initialFrame fWindow fSurface = do
   let fIndex = 1
+
+  -- Create our swapchain for this 'Window'
+  -- These resources will last for longer than this frame
   SDL.V2 width height <- SDL.vkGetDrawableSize fWindow
   let windowSize   = Extent2D (fromIntegral width) (fromIntegral height)
       oldSwapchain = NULL_HANDLE
@@ -84,17 +89,13 @@ initialFrame fWindow fSurface = do
                                                  windowSize
                                                  fSurface
 
-  -- TODO: Cache this
-  -- TODO: Recreate this if the swapchain format changes
-  (_releaseDescriptorSetLayout, descriptorSetLayout) <-
+  -- Create the RT pipeline
+  (_, descriptorSetLayout) <-
     Pipeline.createRTDescriptorSetLayout
-  (_releasePipelineLayout, fPipelineLayout) <- Pipeline.createRTPipelineLayout
-    descriptorSetLayout
-  (_releasePipeline, fPipeline) <- Pipeline.createPipeline
-    fPipelineLayout
-  (_releaseSBT, fShaderBindingTable) <- Pipeline.createShaderBindingTable
-    fPipeline
-  fDescriptorSets <- Pipeline.createRTDescriptorSets
+  (_, fPipelineLayout) <- Pipeline.createRTPipelineLayout descriptorSetLayout
+  (_, fPipeline          ) <- Pipeline.createPipeline fPipelineLayout
+  (_, fShaderBindingTable) <- Pipeline.createShaderBindingTable fPipeline
+  fDescriptorSets          <- Pipeline.createRTDescriptorSets
     descriptorSetLayout
     (srImageViews fSwapchainResources)
 
@@ -103,6 +104,8 @@ initialFrame fWindow fSurface = do
   (_, fRenderFinishedHostSemaphore) <- withSemaphore'
     (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_TIMELINE 0 :& ())
 
+  -- Create the 'RecycledResources' necessary to kick off the rest of the
+  -- concurrent frames and push them into the chan.
   bin <- V $ asks ghRecycleBin
   replicateM_ (numConcurrentFrames - 1)
     $   liftIO
@@ -111,8 +114,8 @@ initialFrame fWindow fSurface = do
   fRecycledResources <- initialRecycledResources
 
   fGPUWork           <- liftIO $ newIORef mempty
-  -- Create this resource object at the global level so it's closed correctly
-  -- on exception
+  -- Create the frame resource tracker at the global level so it's closed
+  -- correctly on exception
   fResources         <- allocate createInternalState closeInternalState
 
   pure Frame { .. }

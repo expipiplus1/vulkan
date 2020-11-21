@@ -19,7 +19,6 @@ import           Data.Vector                    ( Vector )
 import           Framebuffer
 import           MonadVulkan
 import           RefCounted
-import           RenderPass
 import qualified SDL
 import qualified SDL.Video.Vulkan              as SDL
 import           UnliftIO.Exception             ( throwString
@@ -42,12 +41,10 @@ data SwapchainInfo = SwapchainInfo
   }
 
 data SwapchainResources = SwapchainResources
-  { srInfo         :: SwapchainInfo
-  , srFramebuffers :: Vector Framebuffer
-  , srImageViews   :: Vector ImageView
-  , srImages       :: Vector Image
-  , srRenderPass   :: RenderPass
-  , srRelease      :: RefCounted
+  { srInfo       :: SwapchainInfo
+  , srImageViews :: Vector ImageView
+  , srImages     :: Vector Image
+  , srRelease    :: RefCounted
   }
 
 ----------------------------------------------------------------
@@ -65,36 +62,20 @@ allocSwapchainResources
 allocSwapchainResources oldSwapchain windowSize surface = do
   info@SwapchainInfo {..} <- createSwapchain oldSwapchain windowSize surface
 
-  -- TODO: cache this, it's probably not going to change
-  (renderPassKey, srRenderPass) <- RenderPass.createRenderPass
-    (format (siSurfaceFormat :: SurfaceFormatKHR))
-
   -- Get all the swapchain images, and create views for them
-  (_            , swapchainImages) <- getSwapchainImagesKHR' siSwapchain
-  (imageViewKeys, imageViews     ) <-
+  (_, swapchainImages) <- getSwapchainImagesKHR' siSwapchain
+  (imageViewKeys, imageViews) <-
     fmap V.unzip . V.forM swapchainImages $ \image ->
       Framebuffer.createImageView
         (format (siSurfaceFormat :: SurfaceFormatKHR))
         image
 
-  -- Also create a framebuffer for each one
-  (framebufferKeys, framebuffers) <-
-    fmap V.unzip . V.forM imageViews $ \imageView ->
-      Framebuffer.createFramebuffer srRenderPass imageView siImageExtent
-
   -- This refcount is released in 'recreateSwapchainResources'
   releaseResources <- newRefCounted $ do
-    traverse_ release framebufferKeys
     traverse_ release imageViewKeys
-    release renderPassKey
     release siSwapchainReleaseKey
 
-  pure $ SwapchainResources info
-                            framebuffers
-                            imageViews
-                            swapchainImages
-                            srRenderPass
-                            releaseResources
+  pure $ SwapchainResources info imageViews swapchainImages releaseResources
 
 recreateSwapchainResources
   :: SDL.Window

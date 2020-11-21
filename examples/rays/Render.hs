@@ -49,6 +49,23 @@ renderFrame = do
               timeoutError "Timed out (1s) trying to acquire next image"
             _ -> throwString "Unexpected Result from acquireNextImageKHR"
 
+  -- Update the necessary descriptor sets
+  updateDescriptorSets'
+    [ SomeStruct zero
+        { dstSet          = fDescriptorSets ! fromIntegral imageIndex
+        , dstBinding      = 1
+        , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
+        , descriptorCount = 1
+        , imageInfo       = [ DescriptorImageInfo
+                                { sampler = NULL_HANDLE
+                                , imageView = srImageViews ! fromIntegral imageIndex
+                                , imageLayout = IMAGE_LAYOUT_GENERAL
+                                }
+                            ]
+        }
+    ]
+    []
+
   -- Allocate a command buffer and populate it
   let commandBufferAllocateInfo = zero { commandPool = fCommandPool
                                        , level = COMMAND_BUFFER_LEVEL_PRIMARY
@@ -90,6 +107,10 @@ renderFrame = do
          }
   sayErrString ("submitted " <> show fIndex)
 
+----------------------------------------------------------------
+-- Command buffer recording
+----------------------------------------------------------------
+
 -- | Clear and render a triangle
 myRecordCommandBuffer :: Frame -> Word32 -> CmdT F ()
 myRecordCommandBuffer Frame {..} imageIndex = do
@@ -114,7 +135,7 @@ myRecordCommandBuffer Frame {..} imageIndex = do
         , size   = fromIntegral rtiShaderGroupBaseAlignment --  * 1
         }
   do
-    -- Transition image to general, to write from the compute shader
+    -- Transition image to general, to write from the ray tracing shader
     cmdPipelineBarrier'
       PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
       PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
