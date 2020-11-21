@@ -138,8 +138,10 @@ executables:
       - temporary
       - typed-process
     when:
-      condition: impl(ghc < 8.10.0)
-      buildable: false
+      - condition: impl(ghc < 8.10.0)
+        buildable: false
+      - condition: '!flag(have-shaderc)'
+        buildable: false
 
 
 when:
@@ -152,6 +154,12 @@ flags:
       Use the renderdoc API to mark the beginning and end of the 'offscreen'
       example so that it can be captured.
     default: no
+    manual: yes
+  have-shaderc:
+    description:
+      Set this flag if you have shaderc (and the glslc executable) installed.
+      It enables the examples which use HLSL shaders.
+    default: yes
     manual: yes
 
 default-extensions:
