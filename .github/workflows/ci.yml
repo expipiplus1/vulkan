@@ -114,6 +114,7 @@ jobs:
           echo "glslc could not be found"
           cabal configure -fgeneric-instances -f-have-shaderc
         fi
+      shell: bash
 
     - name: Install dependencies
       run: cabal build --only-dependencies --enable-tests --enable-benchmarks all
