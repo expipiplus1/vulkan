@@ -1,9 +1,14 @@
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedLists #-}
 
 module Pipeline
   ( createPipeline
+  , createRTPipelineLayout
+  , createRTDescriptorSetLayout
+  , createRTDescriptorSets
+  , createShaderBindingTable
   , Pipeline.createRenderPass
   ) where
 
@@ -11,75 +16,152 @@ import           Control.Monad.Trans.Resource
 import           Data.Bits
 import           Data.Foldable                  ( traverse_ )
 import qualified Data.Vector                   as V
+import           Foreign                        ( nullPtr )
 import           MonadVulkan
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
-import           Vulkan.Utils.ShaderQQ.Shaderc
+import           Vulkan.Extensions.VK_KHR_ray_tracing
+import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
+import           VulkanMemoryAllocator
+import Data.Vector (Vector)
 
--- Create the most vanilla rendering pipeline
-createPipeline :: RenderPass -> V (ReleaseKey, Pipeline)
-createPipeline renderPass = do
-  (shaderKeys, shaderStages  ) <- V.unzip <$> createShaders
-  (layoutKey , pipelineLayout) <- withPipelineLayout' zero
-  let
-    pipelineCreateInfo :: GraphicsPipelineCreateInfo '[]
-    pipelineCreateInfo = zero
-      { stages             = shaderStages
-      , vertexInputState   = Just zero
-      , inputAssemblyState = Just zero
-                               { topology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
-                               , primitiveRestartEnable = False
-                               }
-      , viewportState      = Just
-        $ SomeStruct zero { viewportCount = 1, scissorCount = 1 }
-      , rasterizationState = SomeStruct $ zero
-                               { depthClampEnable        = False
-                               , rasterizerDiscardEnable = False
-                               , lineWidth               = 1
-                               , polygonMode             = POLYGON_MODE_FILL
-                               , cullMode                = CULL_MODE_NONE
-                               , frontFace               = FRONT_FACE_CLOCKWISE
-                               , depthBiasEnable         = False
-                               }
-      , multisampleState   = Just . SomeStruct $ zero
-                               { sampleShadingEnable  = False
-                               , rasterizationSamples = SAMPLE_COUNT_1_BIT
-                               , minSampleShading     = 1
-                               , sampleMask           = [maxBound]
-                               }
-      , depthStencilState  = Nothing
-      , colorBlendState    = Just . SomeStruct $ zero
-                               { logicOpEnable = False
-                               , attachments   = [ zero
-                                                     { colorWriteMask =
-                                                       COLOR_COMPONENT_R_BIT
-                                                       .|. COLOR_COMPONENT_G_BIT
-                                                       .|. COLOR_COMPONENT_B_BIT
-                                                       .|. COLOR_COMPONENT_A_BIT
-                                                     , blendEnable    = False
-                                                     }
-                                                 ]
-                               }
-      , dynamicState       = Just zero
-                               { dynamicStates = [ DYNAMIC_STATE_VIEWPORT
-                                                 , DYNAMIC_STATE_SCISSOR
-                                                 ]
-                               }
-      , layout             = pipelineLayout
-      , renderPass         = renderPass
-      , subpass            = 0
-      , basePipelineHandle = zero
-      }
-  (key, (_, ~[graphicsPipeline])) <- withGraphicsPipelines'
+-- Create the most vanilla ray tracing pipeline
+createPipeline :: PipelineLayout -> V (ReleaseKey, Pipeline)
+createPipeline pipelineLayout = do
+  (shaderKeys, shaderStages) <- V.unzip <$> sequence [createRayGenerationShader]
+
+  let rtsgci :: RayTracingShaderGroupCreateInfoKHR
+      rtsgci = RayTracingShaderGroupCreateInfoKHR
+        RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR
+        0 -- The index of our general shader
+        SHADER_UNUSED_KHR
+        SHADER_UNUSED_KHR
+        SHADER_UNUSED_KHR
+        nullPtr
+      shaderGroups = [rtsgci]
+
+  let pipelineCreateInfo :: RayTracingPipelineCreateInfoKHR '[]
+      pipelineCreateInfo = zero { stages            = shaderStages
+                                , groups            = shaderGroups
+                                , maxRecursionDepth = 1
+                                , layout            = pipelineLayout
+                                }
+  (key, (_, ~[rtPipeline])) <- withRayTracingPipelinesKHR'
     zero
     [SomeStruct pipelineCreateInfo]
-  release layoutKey
+
   traverse_ release shaderKeys
-  pure (key, graphicsPipeline)
+
+  pure (key, rtPipeline)
+
+createRTPipelineLayout :: DescriptorSetLayout -> V (ReleaseKey, PipelineLayout)
+createRTPipelineLayout descriptorSetLayout =
+  withPipelineLayout' zero { setLayouts = [descriptorSetLayout] }
+
+createRTDescriptorSetLayout :: V (ReleaseKey, DescriptorSetLayout)
+createRTDescriptorSetLayout = withDescriptorSetLayout' zero
+  { bindings = [ zero { binding         = 1
+                      , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
+                      , descriptorCount = 1
+                      , stageFlags      = SHADER_STAGE_RAYGEN_BIT_KHR
+                      }
+               ]
+  }
+
+createRTDescriptorSets
+  :: DescriptorSetLayout -> Vector ImageView -> V (Vector DescriptorSet)
+createRTDescriptorSets descriptorSetLayout imageViews = do
+  -- Create a descriptor pool
+  (_, descriptorPool) <- withDescriptorPool' zero
+    { maxSets   = fromIntegral (V.length imageViews)
+    , poolSizes = [ DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_IMAGE
+                                       (fromIntegral (V.length imageViews))
+                  ]
+    }
+
+  -- Allocate a descriptor set from the pool with that layout
+  -- Don't use `withDescriptorSets` here as the set will be cleaned up when
+  -- the pool is destroyed.
+  descriptorSets <- allocateDescriptorSets' zero
+    { descriptorPool = descriptorPool
+    , setLayouts     = V.replicate (V.length imageViews) descriptorSetLayout
+    }
+
+  -- Assign the buffer in this descriptor set
+  updateDescriptorSets'
+    (V.zipWith
+      (\set view -> SomeStruct zero
+        { dstSet          = set
+        , dstBinding      = 1
+        , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
+        , descriptorCount = 1
+        , imageInfo = [ DescriptorImageInfo { sampler     = NULL_HANDLE
+                                            , imageView   = view
+                                            , imageLayout = IMAGE_LAYOUT_GENERAL
+                                            }
+                      ]
+        }
+      )
+      descriptorSets
+      imageViews
+    )
+    []
+
+  pure descriptorSets
+
+createRayGenerationShader
+  :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
+createRayGenerationShader = do
+  let code = $(compileShaderQ "rgen" [glsl|
+        #version 460
+        #extension GL_EXT_ray_tracing : require
+
+        layout(binding = 1, set = 0, rgba32f) uniform image2D image;
+
+        void main()
+        {
+            imageStore(image, ivec2(gl_LaunchIDEXT.xy), vec4(0.5, 0.6, 0.8, 1.0));
+        }
+      |])
+
+  (key, module') <- withShaderModule' zero { code }
+  let shaderStageCreateInfo =
+        zero { stage = SHADER_STAGE_RAYGEN_BIT_KHR, module', name = "main" }
+  pure (key, SomeStruct shaderStageCreateInfo)
+
+----------------------------------------------------------------
+-- Shader binding table
+----------------------------------------------------------------
+
+createShaderBindingTable :: Pipeline -> V (ReleaseKey, Buffer)
+createShaderBindingTable pipeline = do
+  RTInfo {..} <- getRTInfo
+  let groupCount      = 1 -- Just a generation shader
+      groupHandleSize = rtiShaderGroupHandleSize
+      baseAlignment   = rtiShaderGroupBaseAlignment
+      sbtSize         = fromIntegral (baseAlignment * groupCount)
+
+  (bufferReleaseKey, (sbtBuffer, sbtAllocation, _sbtAllocationInfo)) <- withBuffer'
+    zero { usage = BUFFER_USAGE_TRANSFER_SRC_BIT, size = sbtSize }
+    zero
+      { requiredFlags = MEMORY_PROPERTY_HOST_VISIBLE_BIT
+                          .|. MEMORY_PROPERTY_HOST_COHERENT_BIT
+      }
+  nameObject' sbtBuffer "SBT"
+
+  (memKey, mem) <- withMappedMemory' sbtAllocation
+  -- TODO: Fix alignment here
+  getRayTracingShaderGroupHandlesKHR' pipeline 0 groupCount sbtSize mem
+  release memKey
+  pure (bufferReleaseKey, sbtBuffer)
+
+----------------------------------------------------------------
+-- Render pass creation
+----------------------------------------------------------------
 
 -- | Create a renderpass with a single subpass
 createRenderPass :: Format -> V (ReleaseKey, RenderPass)
@@ -120,54 +202,3 @@ createRenderPass imageFormat = do
                        , dependencies = [subpassDependency]
                        }
 
--- | Create a vertex and fragment shader which render a colored triangle
-createShaders
-  :: V (V.Vector (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo))
-createShaders = do
-  let fragCode = [frag|
-        float4 main([[vk::location(0)]] const float3 col) : SV_TARGET
-        {
-            return float4(col, 1);
-        }
-      |]
-      vertCode = [vert|
-        const static float2 positions[3] = {
-          {0.0, -0.5},
-          {0.5, 0.5},
-          {-0.5, 0.5}
-        };
-
-        const static float3 colors[3] = {
-          {1.0, 1.0, 0.0},
-          {0.0, 1.0, 1.0},
-          {1.0, 0.0, 1.0}
-        };
-
-        struct VSOutput
-        {
-          float4 pos : SV_POSITION;
-          [[vk::location(0)]] float3 col;
-        };
-
-        VSOutput main(const uint i : SV_VertexID)
-        {
-          VSOutput output;
-          output.pos = float4(positions[i], 0, 1.0);
-          output.col = colors[i];
-          return output;
-        }
-      |]
-  (fragKey, fragModule) <- withShaderModule' zero { code = fragCode }
-  (vertKey, vertModule) <- withShaderModule' zero { code = vertCode }
-  let vertShaderStageCreateInfo = zero { stage   = SHADER_STAGE_VERTEX_BIT
-                                       , module' = vertModule
-                                       , name    = "main"
-                                       }
-      fragShaderStageCreateInfo = zero { stage   = SHADER_STAGE_FRAGMENT_BIT
-                                       , module' = fragModule
-                                       , name    = "main"
-                                       }
-  pure
-    [ (vertKey, SomeStruct vertShaderStageCreateInfo)
-    , (fragKey, SomeStruct fragShaderStageCreateInfo)
-    ]

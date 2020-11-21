@@ -20,9 +20,11 @@ import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Core10
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
+import           Vulkan.Extensions.VK_KHR_ray_tracing
 import           Vulkan.Extensions.VK_KHR_swapchain
                                                as Swap
 import           Vulkan.Zero
+import Control.Monad.Trans.Class (MonadTrans(lift))
 
 renderFrame :: F ()
 renderFrame = do
@@ -89,30 +91,75 @@ renderFrame = do
   sayErrString ("submitted " <> show fIndex)
 
 -- | Clear and render a triangle
-myRecordCommandBuffer :: MonadIO m => Frame -> Word32 -> CmdT m ()
+myRecordCommandBuffer :: Frame -> Word32 -> CmdT F ()
 myRecordCommandBuffer Frame {..} imageIndex = do
+  -- TODO: neaten
+  RTInfo {..} <- CmdT . lift . liftV $ getRTInfo
   let SwapchainResources {..} = fSwapchainResources
       SwapchainInfo {..}      = srInfo
-      renderPassBeginInfo     = zero
-        { renderPass  = srRenderPass
-        , framebuffer = srFramebuffers ! fromIntegral imageIndex
-        , renderArea  = Rect2D { offset = zero, extent = siImageExtent }
-        , clearValues = [Color (Float32 (0.3, 0.4, 0.8, 1))]
+      image                   = srImages ! fromIntegral imageIndex
+      imageWidth              = width (siImageExtent :: Extent2D)
+      imageHeight             = height (siImageExtent :: Extent2D)
+      imageSubresourceRange   = ImageSubresourceRange
+        { aspectMask     = IMAGE_ASPECT_COLOR_BIT
+        , baseMipLevel   = 0
+        , levelCount     = 1
+        , baseArrayLayer = 0
+        , layerCount     = 1
         }
-  cmdUseRenderPass' renderPassBeginInfo SUBPASS_CONTENTS_INLINE $ do
-    cmdSetViewport'
-      0
-      [ Viewport { x        = 0
-                 , y        = 0
-                 , width    = realToFrac (width (siImageExtent :: Extent2D))
-                 , height   = realToFrac (height (siImageExtent :: Extent2D))
-                 , minDepth = 0
-                 , maxDepth = 1
-                 }
+      sbtRegion = StridedBufferRegionKHR
+        { buffer = fShaderBindingTable
+        , offset = 0
+        , stride = fromIntegral rtiShaderGroupBaseAlignment
+        , size   = fromIntegral rtiShaderGroupBaseAlignment --  * 1
+        }
+  do
+    -- Transition image to general, to write from the compute shader
+    cmdPipelineBarrier'
+      PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+      PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
+      zero
+      []
+      []
+      [ SomeStruct zero { srcAccessMask    = zero
+                        , dstAccessMask    = ACCESS_SHADER_WRITE_BIT
+                        , oldLayout        = IMAGE_LAYOUT_UNDEFINED
+                        , newLayout        = IMAGE_LAYOUT_GENERAL
+                        , image            = image
+                        , subresourceRange = imageSubresourceRange
+                        }
       ]
-    cmdSetScissor' 0 [Rect2D { offset = Offset2D 0 0, extent = siImageExtent }]
-    cmdBindPipeline' PIPELINE_BIND_POINT_GRAPHICS fPipeline
-    cmdDraw' 3 1 0 0
+
+    -- Bind descriptor sets
+    cmdBindPipeline' PIPELINE_BIND_POINT_RAY_TRACING_KHR fPipeline
+    cmdBindDescriptorSets' PIPELINE_BIND_POINT_RAY_TRACING_KHR
+                           fPipelineLayout
+                           0
+                           [fDescriptorSets ! fromIntegral imageIndex]
+                           []
+
+    --
+    -- The actual ray tracing
+    --
+    cmdTraceRaysKHR' sbtRegion zero zero zero imageWidth imageHeight 1
+
+    -- Transition image back to present
+    cmdPipelineBarrier'
+      PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
+      -- No need to get anything to wait because we're synchronizing with
+      -- the semaphore
+      PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
+      zero
+      []
+      []
+      [ SomeStruct zero { srcAccessMask    = ACCESS_SHADER_WRITE_BIT
+                        , dstAccessMask    = zero
+                        , oldLayout        = IMAGE_LAYOUT_GENERAL
+                        , newLayout        = IMAGE_LAYOUT_PRESENT_SRC_KHR
+                        , image            = image
+                        , subresourceRange = imageSubresourceRange
+                        }
+      ]
 
 ----------------------------------------------------------------
 -- Utils

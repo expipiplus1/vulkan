@@ -1,6 +1,7 @@
 module Init
   ( Init.createInstance
   , Init.createDevice
+  , PhysicalDeviceInfo(..)
   , createVMA
   , createCommandPools
   ) where
@@ -26,6 +27,7 @@ import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
                                                 , IOException(IOError)
                                                 )
 import           MonadVulkan                    ( Queues(..)
+                                                , RTInfo(..)
                                                 , checkCommands
                                                 , noAllocationCallbacks
                                                 )
@@ -36,13 +38,22 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
+import           Vulkan.Extensions.VK_EXT_descriptor_indexing
+                                                ( pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+                                                )
 import           Vulkan.Extensions.VK_KHR_buffer_device_address
                                                 ( pattern KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
                                                 )
 import           Vulkan.Extensions.VK_KHR_deferred_host_operations
                                                 ( pattern KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
                                                 )
+import           Vulkan.Extensions.VK_KHR_get_memory_requirements2
+                                                ( pattern KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME
+                                                )
 import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
+import           Vulkan.Extensions.VK_KHR_maintenance3
+                                                ( pattern KHR_MAINTENANCE3_EXTENSION_NAME
+                                                )
 import           Vulkan.Extensions.VK_KHR_pipeline_library
                                                 ( pattern KHR_PIPELINE_LIBRARY_EXTENSION_NAME
                                                 )
@@ -91,6 +102,7 @@ createDevice
   -> SDL.Window
   -> m
        ( PhysicalDevice
+       , PhysicalDeviceInfo
        , Device
        , Queues (QueueFamilyIndex, Queue)
        , SurfaceKHR
@@ -104,11 +116,15 @@ createDevice inst win = do
   let deviceCreateInfo =
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
           ::& PhysicalDeviceTimelineSemaphoreFeatures True
+          :&  zero { rayTracing = True }
           :&  ()
       rayTracingExtensions =
         [ KHR_RAY_TRACING_EXTENSION_NAME
+        , EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
         , KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
         , KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+        , KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME
+        , KHR_MAINTENANCE3_EXTENSION_NAME
         , KHR_PIPELINE_LIBRARY_EXTENSION_NAME
         ]
       extensions =
@@ -117,7 +133,7 @@ createDevice inst win = do
   dev <- createDeviceWithExtensions phys [] extensions deviceCreateInfo
   requireCommands inst dev
   queues <- liftIO $ pdiGetQueues pdi dev
-  pure (phys, dev, queues, surf)
+  pure (phys, pdi, dev, queues, surf)
 
 ----------------------------------------------------------------
 -- Physical device tools
@@ -126,6 +142,7 @@ createDevice inst win = do
 -- | The Ord instance prioritises devices with more memory
 data PhysicalDeviceInfo = PhysicalDeviceInfo
   { pdiTotalMemory      :: Word64
+  , pdiRTInfo           :: RTInfo
   , pdiQueueCreateInfos :: Vector (DeviceQueueCreateInfo '[])
   , pdiGetQueues        :: Device -> IO (Queues (QueueFamilyIndex, Queue))
   }
@@ -146,13 +163,7 @@ physicalDeviceInfo surf phys = runMaybeT $ do
       <> " because it doesn't support timeline semaphores"
     empty
 
-  hasRayTracing <- deviceHasRayTracing phys
-  unless hasRayTracing $ do
-    sayErr
-      $  "Not using physical device "
-      <> deviceName
-      <> " because it doesn't support ray tracing"
-    empty
+  pdiRTInfo <- deviceHasRayTracing phys
 
   hasSwapchainSupport <- deviceHasSwapchain phys
   unless hasSwapchainSupport $ do
@@ -211,8 +222,11 @@ deviceHasTimelineSemaphores phys = do
 
   hasExt <&&> hasFeat
 
-deviceHasRayTracing :: MonadIO m => PhysicalDevice -> m Bool
+deviceHasRayTracing :: MonadIO m => PhysicalDevice -> MaybeT m RTInfo
+  -- ^ Shader group size and alignment
 deviceHasRayTracing phys = do
+  deviceName <- physicalDeviceName phys
+
   let hasExt = do
         (_, extensions) <- enumerateDeviceExtensionProperties phys Nothing
         pure $ V.any ((KHR_RAY_TRACING_EXTENSION_NAME ==) . extensionName)
@@ -223,12 +237,22 @@ deviceHasRayTracing phys = do
         let _ ::& PhysicalDeviceRayTracingFeaturesKHR {..} :& () = feats
         pure rayTracing
 
-      hasProps = do
+      getProps = do
         props <- getPhysicalDeviceProperties2KHR phys
         let _ ::& PhysicalDeviceRayTracingPropertiesKHR {..} :& () = props
-        pure True
+        pure RTInfo { rtiShaderGroupHandleSize    = shaderGroupHandleSize
+                    , rtiShaderGroupBaseAlignment = shaderGroupBaseAlignment
+                    }
 
-  hasExt <&&> hasFeat <&&> hasProps
+  has <- hasExt <&&> hasFeat
+  if has
+    then getProps
+    else do
+      sayErr
+        $  "Not using physical device "
+        <> deviceName
+        <> " because it doesn't support ray tracing"
+      empty
 
 ----------------------------------------------------------------
 -- VulkanMemoryAllocator

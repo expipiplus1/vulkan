@@ -26,6 +26,7 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
+import Data.Vector (Vector)
 
 -- | Must be positive, duh
 numConcurrentFrames :: Int
@@ -40,6 +41,9 @@ data Frame = Frame
   , fSurface                     :: SurfaceKHR
   , fSwapchainResources          :: SwapchainResources
   , fPipeline                    :: Pipeline
+  , fPipelineLayout              :: PipelineLayout
+  , fDescriptorSets              :: Vector DescriptorSet
+  , fShaderBindingTable          :: Buffer
   , fRenderFinishedHostSemaphore :: Semaphore
     -- ^ A timeline semaphore which increments to fIndex when this frame is
     -- done, the host can wait on this semaphore
@@ -82,8 +86,17 @@ initialFrame fWindow fSurface = do
 
   -- TODO: Cache this
   -- TODO: Recreate this if the swapchain format changes
+  (_releaseDescriptorSetLayout, descriptorSetLayout) <-
+    Pipeline.createRTDescriptorSetLayout
+  (_releasePipelineLayout, fPipelineLayout) <- Pipeline.createRTPipelineLayout
+    descriptorSetLayout
   (_releasePipeline, fPipeline) <- Pipeline.createPipeline
-    (srRenderPass fSwapchainResources)
+    fPipelineLayout
+  (_releaseSBT, fShaderBindingTable) <- Pipeline.createShaderBindingTable
+    fPipeline
+  fDescriptorSets <- Pipeline.createRTDescriptorSets
+    descriptorSetLayout
+    (srImageViews fSwapchainResources)
 
   -- Don't keep the release key, this semaphore lives for the lifetime of the
   -- application
@@ -128,6 +141,9 @@ advanceFrame needsNewSwapchain f = do
              , fSurface                     = fSurface f
              , fSwapchainResources
              , fPipeline                    = fPipeline f
+             , fPipelineLayout              = fPipelineLayout f
+             , fDescriptorSets              = fDescriptorSets f
+             , fShaderBindingTable          = fShaderBindingTable f
              , fRenderFinishedHostSemaphore = fRenderFinishedHostSemaphore f
              , fGPUWork
              , fResources

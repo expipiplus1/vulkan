@@ -13,6 +13,7 @@ import           SDL                            ( showWindow
 import           Swapchain                      ( threwSwapchainError )
 import           Utils
 import           Window
+import System.Exit (exitSuccess)
 
 main :: IO ()
 main = runResourceT $ do
@@ -20,15 +21,15 @@ main = runResourceT $ do
   -- Initialization
   --
   withSDL
-  win                   <- createWindow "Vulkan 🚀 Haskell" 1280 720
-  inst                  <- Init.createInstance win
-  (phys, dev, qs, surf) <- Init.createDevice inst win
-  vma                   <- createVMA inst phys dev
+  win   <- createWindow "Vulkan ⚡ Haskell" 1280 720
+  inst  <- Init.createInstance win
+  (phys, PhysicalDeviceInfo {..}, dev, qs, surf) <- Init.createDevice inst win
+  vma   <- createVMA inst phys dev
 
   --
   -- Go
   --
-  start                 <- SDL.time @Double
+  start <- SDL.time @Double
   let reportFPS f = do
         end <- SDL.time
         let frames = fIndex f
@@ -44,7 +45,7 @@ main = runResourceT $ do
             needsNewSwapchain <- threwSwapchainError (runFrame f renderFrame)
             advanceFrame needsNewSwapchain f
 
-  runV inst phys dev qs vma $ do
+  runV inst phys pdiRTInfo dev qs vma $ do
     initial <- initialFrame win surf
     showWindow win
     loopJust frame initial
