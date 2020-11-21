@@ -167,8 +167,7 @@ jobs:
         ghc-version: ${{ matrix.ghc }}
 
     - name: Cache stack global package db
-      id:   stack-global
-      if: matrix.os != 'macOS-latest'
+      id: stack-global
       uses: actions/cache@v1
       with:
         path: ~/.stack
