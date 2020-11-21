@@ -1,16 +1,18 @@
 module RefCounted where
 
 import           Control.Exception              ( throwIO )
+import           Control.Monad
 import           Control.Monad.IO.Class         ( MonadIO
                                                 , liftIO
+                                                )
+import           Control.Monad.Trans.Resource   ( MonadResource
+                                                , allocate_
                                                 )
 import           Data.IORef
 import           GHC.IO.Exception               ( IOErrorType(UserError)
                                                 , IOException(IOError)
                                                 )
 import           UnliftIO.Exception             ( mask )
-import Control.Monad
-import Control.Monad.Trans.Resource (MonadResource, allocate_)
 
 -- | A 'RefCounted' will perform the specified action when the count reaches 0
 data RefCounted = RefCounted
