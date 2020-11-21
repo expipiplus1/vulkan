@@ -6016,6 +6016,12 @@ instance FromCStruct AccelerationStructureInstanceKHR where
     pure $ AccelerationStructureInstanceKHR
              transform instanceCustomIndex' mask' instanceShaderBindingTableRecordOffset' flags' accelerationStructureReference
 
+instance Storable AccelerationStructureInstanceKHR where
+  sizeOf ~_ = 64
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
 instance Zero AccelerationStructureInstanceKHR where
   zero = AccelerationStructureInstanceKHR
            zero
