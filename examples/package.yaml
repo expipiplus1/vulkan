@@ -143,6 +143,35 @@ executables:
       - condition: '!flag(have-shaderc)'
         buildable: false
 
+  rays:
+    main: Main.hs
+    source-dirs: rays
+    dependencies:
+      - VulkanMemoryAllocator
+      - autoapply >= 0.4
+      - base <5
+      - bytestring
+      - containers
+      - primitive-unlifted
+      - resourcet >= 1.2.4
+      - say
+      - sdl2 >= 2.5.2.0
+      - template-haskell
+      - text
+      - transformers
+      - unagi-chan
+      - unliftio
+      - vector
+      - vulkan
+      - vulkan-utils
+      - file-embed
+      - extra
+      - filepath
+      - temporary
+      - typed-process
+    when:
+      - condition: impl(ghc < 8.10.0)
+        buildable: false
 
 when:
   - condition: os(windows)
