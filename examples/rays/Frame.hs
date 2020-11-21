@@ -2,8 +2,9 @@
 -- can be found in 'MonadFrame'
 module Frame where
 
+import           AccelerationStructure
 import           Control.Arrow                  ( Arrow((&&&)) )
-import           Control.Monad                  ((<=<) )
+import           Control.Monad                  ( (<=<) )
 import           Control.Monad.IO.Class         ( MonadIO(liftIO) )
 import           Control.Monad.Trans.Reader     ( asks )
 import           Control.Monad.Trans.Resource   ( InternalState
@@ -90,11 +91,12 @@ initialFrame fWindow fSurface = do
                                                  fSurface
 
   -- Create the RT pipeline
-  (_, descriptorSetLayout) <- Pipeline.createRTDescriptorSetLayout
+  (_, descriptorSetLayout)  <- Pipeline.createRTDescriptorSetLayout
   (_, fPipelineLayout) <- Pipeline.createRTPipelineLayout descriptorSetLayout
-  (_, fPipeline          ) <- Pipeline.createPipeline fPipelineLayout
-  (_, fShaderBindingTable) <- Pipeline.createShaderBindingTable fPipeline
-  descriptorSets           <- Pipeline.createRTDescriptorSets
+  (_, fPipeline, numGroups) <- Pipeline.createPipeline fPipelineLayout
+  (_, fShaderBindingTable)  <- Pipeline.createShaderBindingTable fPipeline
+                                                                 numGroups
+  descriptorSets <- Pipeline.createRTDescriptorSets
     descriptorSetLayout
     (fromIntegral numConcurrentFrames)
 
@@ -115,6 +117,8 @@ initialFrame fWindow fSurface = do
   -- Create the frame resource tracker at the global level so it's closed
   -- correctly on exception
   fResources <- allocate createInternalState closeInternalState
+
+  createBLAS
 
   pure Frame { .. }
 

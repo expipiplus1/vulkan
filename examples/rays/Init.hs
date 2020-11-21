@@ -116,7 +116,9 @@ createDevice inst win = do
   let deviceCreateInfo =
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
           ::& PhysicalDeviceTimelineSemaphoreFeatures True
-          :&  zero { rayTracing = True }
+          :&  zero { rayTracing = True
+                   , rayTracingHostAccelerationStructureCommands = True
+                   }
           :&  ()
       rayTracingExtensions =
         [ KHR_RAY_TRACING_EXTENSION_NAME
@@ -234,8 +236,8 @@ deviceHasRayTracing phys = do
 
       hasFeat = do
         feats <- getPhysicalDeviceFeatures2KHR phys
-        let _ ::& PhysicalDeviceRayTracingFeaturesKHR {..} :& () = feats
-        pure rayTracing
+        let _ ::& f@PhysicalDeviceRayTracingFeaturesKHR {..} :& () = feats
+        pure $ rayTracing && rayTracingHostAccelerationStructureCommands
 
       getProps = do
         props <- getPhysicalDeviceProperties2KHR phys

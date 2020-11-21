@@ -203,6 +203,7 @@ do
         [ 'acquireNextImageKHR
         , 'allocateCommandBuffers
         , 'allocateDescriptorSets
+        , 'buildAccelerationStructureKHR
         , 'cmdBindDescriptorSets
         , 'cmdBindPipeline
         , 'cmdDispatch
@@ -215,6 +216,7 @@ do
         , 'cmdUseRenderPass
         , 'deviceWaitIdle
         , 'deviceWaitIdleSafe
+        , 'getAccelerationStructureMemoryRequirementsKHR
         , 'getDeviceQueue
         , 'getPhysicalDeviceSurfaceCapabilitiesKHR
         , 'getPhysicalDeviceSurfaceFormatsKHR
@@ -228,6 +230,7 @@ do
         , 'waitForFencesSafe
         , 'Timeline.waitSemaphores
         , 'Timeline.waitSemaphoresSafe
+        , 'withAccelerationStructureKHR
         , 'withCommandBuffers
         , 'withCommandPool
         , 'withComputePipelines
