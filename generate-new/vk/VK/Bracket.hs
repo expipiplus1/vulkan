@@ -99,6 +99,14 @@ brackets marshaledCommands handles = context "brackets" $ do
                    "vkCreateComputePipelines"
                    "vkDestroyPipeline"
                    "vkWithComputePipelines"
+    , autoBracket' BracketCPS
+                   "vkCreateRayTracingPipelinesKHR"
+                   "vkDestroyPipeline"
+                   "vkWithRayTracingPipelinesKHR"
+    , autoBracket' BracketCPS
+                   "vkCreateRayTracingPipelinesNV"
+                   "vkDestroyPipeline"
+                   "vkWithRayTracingPipelinesNV"
     , autoBracket' BracketCPS "vkMapMemory" "vkUnmapMemory" "vkWithMappedMemory"
     , autoBracket' BracketBookend
                    "vkBeginCommandBuffer"
