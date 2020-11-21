@@ -2,6 +2,12 @@
 
 ## WIP
 
+- Change type of pickPhysicalDevice to return Nothing instead of throwing
+- Add `checkCommandsExp` function to generate an expression checking specified
+  commands for non-nullness
+- Expose Queue family index for queues assigned with `assignQueues`
+- Add `Vulkan.Utils.ShaderQQ.Shaderc` to compile HLSL shaders
+
 ## [0.2] - 2020-11-15
 
 - Add `Vulkan.Utils.Misc` for handy functions used in Vulkan programs, but not

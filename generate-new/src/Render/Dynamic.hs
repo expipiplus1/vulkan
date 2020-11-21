@@ -180,9 +180,8 @@ writeInitDeviceCmds deviceCommands = do
   tellImport 'castFunPtr
   tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
   getDeviceProcAddrTDoc <- do
-    c@Command {..} <-
-      maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
-        =<< getCommand "vkGetDeviceProcAddr"
+    c <- maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
+      =<< getCommand "vkGetDeviceProcAddr"
     renderTypeHighPrecSource =<< cToHsTypeWrapped DoLower (commandType c)
   let getFirstDeviceProcAddr = "getFirstDeviceProcAddr" :: Text
   (binds, apps) <- initCmdsStmts (pretty getFirstDeviceProcAddr)
@@ -259,9 +258,8 @@ writeGetInstanceProcAddr
   => Sem r ()
 writeGetInstanceProcAddr = do
   RenderParams {..} <- input
-  c@Command {..}    <-
-    maybe (throw "Unable to find vkGetInstanceProcAddr command") pure
-      =<< getCommand "vkGetInstanceProcAddr"
+  c <- maybe (throw "Unable to find vkGetInstanceProcAddr command") pure
+    =<< getCommand "vkGetInstanceProcAddr"
   ty   <- cToHsTypeWrapped DoLower (commandType c)
   tDoc <- renderTypeSource ty
   let n = mkFunName "vkGetInstanceProcAddr'"
@@ -285,10 +283,8 @@ writeMkGetDeviceProcAddr
      )
   => Sem r ()
 writeMkGetDeviceProcAddr = do
-  RenderParams {..} <- input
-  c@Command {..}    <-
-    maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
-      =<< getCommand "vkGetDeviceProcAddr"
+  c <- maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
+    =<< getCommand "vkGetDeviceProcAddr"
   ty   <- cToHsTypeWrapped DoLower (commandType c)
   tDoc <- renderTypeSource (ConT ''FunPtr :@ ty ~> ty)
   tellDoc [qqi|

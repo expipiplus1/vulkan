@@ -286,7 +286,6 @@ fromCStructInstance
   => MarshaledStruct AStruct
   -> Sem r ()
 fromCStructInstance m@MarshaledStruct {..} = do
-  RenderParams {..} <- input
   tellImportWithAll (TyConName "FromCStruct")
   tellImport 'plusPtr
   peekStmts <- peekCStructBody m
@@ -311,7 +310,6 @@ peekCStructBody
 peekCStructBody MarshaledStruct {..} = do
   RenderParams {..} <- input
   let con         = mkConName msName msName
-      Struct {..} = msStruct
       offset o tDoc =
         AddrDoc
           .   parens
@@ -357,8 +355,6 @@ pokeZeroCStructDecl
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
 pokeZeroCStructDecl ms@MarshaledStruct {..} = context "ZeroCStruct" $ do
-  RenderParams {..} <- input
-
   let replaceWithZeroChainPoke m = case msmScheme m of
         Custom s@(CustomScheme "Chain" _ _ _ _ _) -> m
           { msmScheme = Custom s { csDirectPoke = APoke $ const zeroNextPointer
@@ -372,7 +368,6 @@ pokeZeroCStructDecl ms@MarshaledStruct {..} = context "ZeroCStruct" $ do
       pure $ "evalContT $" <+> d
     IOStmts d -> pure d
 
-  let Struct {..} = msStruct
   addrVar' <- bool "_" addrVar . V.any isJust <$> forV msMembers zeroMemberVal
   pure
     $   "pokeZeroCStruct"

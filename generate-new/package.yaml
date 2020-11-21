@@ -97,7 +97,7 @@ dependencies:
   - pandoc
   - parsec
   - parsers
-  - polysemy == 1.3.*
+  - polysemy >= 1.4
   - polysemy-plugin
   - pretty-show
   - prettyprinter

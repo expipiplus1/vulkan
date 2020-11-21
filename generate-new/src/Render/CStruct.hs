@@ -8,7 +8,6 @@ where
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import           Polysemy
-import           Polysemy.Input
 import           Relude                  hiding ( State
                                                 , lift
                                                 )
@@ -28,7 +27,6 @@ cStructDocs = V.fromList [toCStruct, fromCStruct]
 
 toCStruct :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 toCStruct = do
-  RenderParams {..} <- input
   genRe "ToCStruct" $ do
     tellExplicitModule (vulkanModule ["CStruct"])
     tellNotReexportable
@@ -76,7 +74,6 @@ toCStruct = do
 
 fromCStruct :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 fromCStruct = do
-  RenderParams {..} <- input
   genRe "ToCStruct" $ do
     tellExplicitModule (vulkanModule ["CStruct"])
     tellNotReexportable

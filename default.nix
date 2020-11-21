@@ -1,4 +1,4 @@
-{ pkgs ? import ./nix/nixpkgs.nix, compiler ? "ghc884"
+{ pkgs ? import ./nix/nixpkgs.nix, compiler ? null
 , forShell ? pkgs.lib.inNixShell, hoogle ? forShell }:
 
 let
@@ -22,7 +22,7 @@ let
   packages = p:
     with p;
     [ vulkan vulkan-utils VulkanMemoryAllocator vulkan-examples ]
-    ++ pkgs.lib.optional (p.ghc.version == "8.8.4") generate-new;
+    ++ pkgs.lib.optional (p.ghc.version == "8.10.2") generate-new;
 
 in if forShell then
   haskellPackages.shellFor {

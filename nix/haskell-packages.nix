@@ -1,6 +1,6 @@
 # Haskell package overrides
 
-{ pkgs, hoogle }:
+{ pkgs, hoogle, buildProfiling ? false }:
 
 with pkgs.haskell.lib;
 
@@ -14,7 +14,10 @@ let
     ]) || pkgs.lib.hasInfix "/src" path || pkgs.lib.hasInfix "/vk" path
     || pkgs.lib.hasInfix "/vma" path);
 
-  mod = drv: doHaddock (disableLibraryProfiling drv);
+  mod = if buildProfiling then
+    drv: doHaddock (enableLibraryProfiling drv)
+  else
+    drv: doHaddock (disableLibraryProfiling drv);
 
 in self: super:
 {
@@ -43,7 +46,8 @@ in self: super:
     name = "vulkan-examples";
     root = gitignore ../examples;
     modifier = drv:
-      addExtraLibrary (addBuildTool (mod drv) pkgs.glslang) pkgs.renderdoc;
+      addExtraLibrary (addBuildTools (mod drv) [ pkgs.glslang pkgs.shaderc ])
+      pkgs.renderdoc;
     returnShellEnv = false;
     cabal2nixOptions = "--flag=renderdoc";
   };
@@ -57,7 +61,6 @@ in self: super:
   #
   # Overrides for examples
   #
-  th-desugar = self.th-desugar_1_11;
   pretty-simple = self.pretty-simple_4_0_0_0;
   prettyprinter = self.prettyprinter_1_7_0;
 

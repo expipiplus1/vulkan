@@ -17,3 +17,6 @@ cradle:
 
     - path: "./timeline-semaphore/"
       component: "exe:timeline-semaphore"
+
+    - path: "./hlsl/"
+      component: "exe:hlsl"

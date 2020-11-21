@@ -12,11 +12,17 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['8.10.1', '8.8.4', '8.6.5']
+        ghc: ['8.10.2', '8.8.4', '8.6.5']
         os: [ubuntu-20.04, macOS-latest, windows-latest]
         exclude:
           - ghc: 8.10.1
             os: macOS-latest
+          - os: windows-latest
+            ghc: '8.10.2'
+        include:
+          # https://github.com/actions/setup-haskell/issues/49
+          - os: windows-latest
+            ghc: '8.10.2.2'
       fail-fast: false
 
     steps:
@@ -94,14 +100,21 @@ jobs:
         sed -ibak '/examples/d' cabal.project
       if: matrix.ghc == '8.6.5'
 
-    - name: Remove generator for all but 8.8.4
+    - name: Remove generator for all but 8.10.2
       run: |
         sed -ibak '/generate-new/d' cabal.project
-      if: matrix.ghc != '8.8.4'
+      if: matrix.ghc != '8.10.2'
 
     - run: cabal update
 
-    - run: cabal configure -fgeneric-instances
+    - run: |
+        if command -v glslc &> /dev/null; then
+          cabal configure -fgeneric-instances -fhave-shaderc
+        else
+          echo "glslc could not be found"
+          cabal configure -fgeneric-instances -f-have-shaderc
+        fi
+      shell: bash
 
     - name: Install dependencies
       run: cabal build --only-dependencies --enable-tests --enable-benchmarks all
@@ -132,7 +145,15 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, macOS-latest, windows-latest]
-        stack-args: ['--system-ghc --flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances']
+        ghc: [ '8.10.2' ]
+        stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances --flag vulkan-examples:-have-shaderc --system-ghc']
+        exclude:
+          - os: windows-latest
+            ghc: '8.10.2'
+        include:
+          # https://github.com/actions/setup-haskell/issues/49
+          - os: windows-latest
+            ghc: '8.10.2.2'
       fail-fast: false
 
     steps:
@@ -143,11 +164,10 @@ jobs:
       with:
         stack-version: 'latest'
         enable-stack: true
-        ghc-version: '8.8.4'
+        ghc-version: ${{ matrix.ghc }}
 
     - name: Cache stack global package db
-      id:   stack-global
-      if: matrix.os != 'macOS-latest'
+      id: stack-global
       uses: actions/cache@v1
       with:
         path: ~/.stack

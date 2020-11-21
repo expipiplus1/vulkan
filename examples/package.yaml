@@ -17,18 +17,15 @@ executables:
       - base <5
       - vulkan
       - pretty-simple >= 3.3
-      - bytestring
 
   sdl-triangle:
     main: Main.hs
     source-dirs: sdl-triangle
     dependencies:
-      - async
       - base <5
       - bytestring
       - extra
       - managed
-      - pretty-show
       - say
       - sdl2 >= 2.5.2.0
       - text
@@ -46,7 +43,6 @@ executables:
       - autoapply >= 0.4
       - base <5
       - bytestring
-      - extra
       - resourcet
       - safe-exceptions
       - say
@@ -72,7 +68,6 @@ executables:
       - autoapply >= 0.4
       - base <5
       - bytestring
-      - extra
       - resourcet
       - safe-exceptions
       - say
@@ -94,7 +89,6 @@ executables:
       - lens
       - linear
       - resourcet >= 1.2.4
-      - safe-exceptions
       - say
       - sdl2 >= 2.5.2.0
       - text
@@ -108,20 +102,47 @@ executables:
     main: Main.hs
     source-dirs: timeline-semaphore
     dependencies:
-      - VulkanMemoryAllocator
-      - autoapply >= 0.4
       - base <5
-      - bytestring
-      - extra
       - resourcet
-      - safe-exceptions
       - say
-      - text
       - transformers
       - unliftio
       - vector
       - vulkan
       - vulkan-utils
+
+  hlsl:
+    main: Main.hs
+    source-dirs: hlsl
+    dependencies:
+      - VulkanMemoryAllocator
+      - autoapply >= 0.4
+      - base <5
+      - bytestring
+      - containers
+      - primitive-unlifted
+      - resourcet >= 1.2.4
+      - say
+      - sdl2 >= 2.5.2.0
+      - template-haskell
+      - text
+      - transformers
+      - unagi-chan
+      - unliftio
+      - vector
+      - vulkan
+      - vulkan-utils
+      - file-embed
+      - extra
+      - filepath
+      - temporary
+      - typed-process
+    when:
+      - condition: impl(ghc < 8.10.0)
+        buildable: false
+      - condition: '!flag(have-shaderc)'
+        buildable: false
+
 
 when:
   - condition: os(windows)
@@ -133,6 +154,12 @@ flags:
       Use the renderdoc API to mark the beginning and end of the 'offscreen'
       example so that it can be captured.
     default: no
+    manual: yes
+  have-shaderc:
+    description:
+      Set this flag if you have shaderc (and the glslc executable) installed.
+      It enables the examples which use HLSL shaders.
+    default: yes
     manual: yes
 
 default-extensions:
@@ -150,6 +177,7 @@ default-extensions:
   - InstanceSigs
   - LambdaCase
   - MagicHash
+  - NamedFieldPuns
   - NoMonomorphismRestriction
   - NumDecimals
   - OverloadedStrings

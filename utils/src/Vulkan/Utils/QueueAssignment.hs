@@ -8,7 +8,7 @@ module Vulkan.Utils.QueueAssignment
   , isGraphicsQueueFamily
   , isTransferQueueFamily
   , isTransferOnlyQueueFamily
-  , isPresentQueue
+  , isPresentQueueFamily
   ) where
 
 import           Control.Applicative
@@ -78,10 +78,10 @@ newtype QueueIndex = QueueIndex { unQueueIndex :: Word32 }
 -- your queues like:
 --
 -- @
--- data MyQueues a = MyQueues
---   { computeQueue            :: a
---   , graphicsAndPresentQueue :: a
---   , transferQueue           :: a
+-- data MyQueues q = MyQueues
+--   { computeQueue            :: q
+--   , graphicsAndPresentQueue :: q
+--   , transferQueue           :: q
 --   }
 --
 -- myQueueSpecs :: MyQueues QueueSpec
@@ -102,7 +102,9 @@ assignQueues
   -- ^ A set of requirements for 'Queue's to be created
   -> m
        ( Maybe
-           (Vector (DeviceQueueCreateInfo '[]), Device -> n (f Queue))
+           ( Vector (DeviceQueueCreateInfo '[])
+           , Device -> n (f (QueueFamilyIndex, Queue))
+           )
        )
   -- ^
   -- - A set of 'DeviceQueueCreateInfo's to pass to 'createDevice'
@@ -177,11 +179,11 @@ assignQueues phys specs = runMaybeT $ do
         ]
 
       -- Get
-      extractQueues :: Device -> n (f Queue)
+      extractQueues :: Device -> n (f (QueueFamilyIndex, Queue))
       extractQueues dev =
         for specsWithQueueIndex
-          $ \(_, QueueFamilyIndex familyIndex, QueueIndex index) ->
-              getDeviceQueue dev familyIndex index
+          $ \(_, i@(QueueFamilyIndex familyIndex), QueueIndex index) ->
+              (i, ) <$> getDeviceQueue dev familyIndex index
 
   pure (queueCreateInfos, extractQueues)
 
@@ -208,9 +210,9 @@ isTransferOnlyQueueFamily q =
     == QUEUE_TRANSFER_BIT
 
 -- | Can this queue family present to this surface on this device
-isPresentQueue
+isPresentQueueFamily
   :: MonadIO m => PhysicalDevice -> SurfaceKHR -> QueueFamilyIndex -> m Bool
-isPresentQueue phys surf (QueueFamilyIndex i) =
+isPresentQueueFamily phys surf (QueueFamilyIndex i) =
   getPhysicalDeviceSurfaceSupportKHR phys i surf
 
 ----------------------------------------------------------------

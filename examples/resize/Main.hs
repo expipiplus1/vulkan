@@ -4,16 +4,15 @@
 
 module Main
   ( main
-  )
-where
+  ) where
 
 import           Control.Exception              ( handle )
+import           Control.Lens.Getter
 import           Control.Monad.Extra            ( unlessM
                                                 , when
                                                 )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
-import           Control.Lens.Getter
 import           Data.Bool                      ( bool )
 import qualified Data.Vector                   as V
 import           GHC.Clock                      ( getMonotonicTimeNSec )
@@ -279,7 +278,7 @@ draw = do
           -- Transition image to general, to write from the compute shader
           cmdPipelineBarrier
             commandBuffer
-            PIPELINE_STAGE_TOP_OF_PIPE_BIT
+            PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
             PIPELINE_STAGE_COMPUTE_SHADER_BIT
             zero
             []
@@ -334,7 +333,9 @@ draw = do
           cmdPipelineBarrier
             commandBuffer
             PIPELINE_STAGE_COMPUTE_SHADER_BIT
-            PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+            -- No need to get anything to wait because we're synchronizing with
+            -- the semaphore
+            PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
             zero
             []
             []
