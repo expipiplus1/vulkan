@@ -1,2 +1,8 @@
 cradle:
   cabal:
+  - path: ./src/
+    component: lib:generate-new
+  - path: ./vk/
+    component: exe:vk
+  - path: ./vma/
+    component: exe:vma
