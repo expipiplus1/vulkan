@@ -33,6 +33,10 @@ library:
       cxx-options: -DVMA_RECORDING_ENABLED
     - condition: flag(generic-instances)
       cpp-options: -DGENERIC_INSTANCES
+    # Work around https://github.com/haskell/cabal/pull/7074
+    - condition: "impl(ghc >= 8.10)"
+      ghc-options:
+        - -optcxx -std=c++11
   ghc-options:
     - -Wall
     - -Wno-unticked-promoted-constructors
