@@ -25,7 +25,7 @@ import           Render.Element
 import           Render.Names
 import           Render.SpecInfo
 import           Render.Stmts
-import           Render.Stmts.Poke.SiblingInfo
+import {-# SOURCE #-} Render.Stmts.Poke.SiblingInfo
 import           Spec.Types
 
 -- | @MarshalScheme a@ represents how we will marshal some @a@ (a struct

@@ -7,7 +7,7 @@ import           Polysemy.Input
 import           Relude
 
 import           Error
-import {-# SOURCE #-} Marshal.Scheme
+import           Marshal.Scheme
 import           Spec.Name
 
 data SiblingInfo a = SiblingInfo
