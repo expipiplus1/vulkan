@@ -155,6 +155,7 @@ nextPointers Spec {..} =
         tellImportWithAll (TyConName "PokeChain")
         tellImport (TyConName "Chain")
         tellImport 'castPtr
+        tellImportWithAll ''ContT
         ValueDoc chain <- use chainRef
         pure
           .   ContTAction
@@ -184,6 +185,7 @@ zeroNextPointer = do
     tellImportWithAll (TyConName "PokeChain")
     tellImport (TyConName "Chain")
     tellImport 'castPtr
+    tellImportWithAll ''ContT
     pure
       .  ContTAction
       .  ValueDoc
