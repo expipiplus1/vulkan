@@ -192,7 +192,9 @@ renderBracket paramName b@Bracket {..} =
             <=< schemeTypeNegative
             )
             bInnerTypes
-          pure $ foldl' (:@) (TupleT (length ts)) ts
+          pure $ case ts of
+                   [x] -> x
+                   _ -> foldl' (:@) (TupleT (length ts)) ts
         let noDestructorResource = not (any isResource bDestroyArguments)
             noResource           = null bInnerTypes && noDestructorResource
             ioVar                = VarT (mkName "io")

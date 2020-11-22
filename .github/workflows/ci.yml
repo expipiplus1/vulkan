@@ -33,6 +33,8 @@ jobs:
       id: setup-haskell
       with:
         ghc-version: ${{ matrix.ghc }}
+        # Work around https://github.com/polysemy-research/polysemy/issues/390
+        cabal-version: '3.0.0.0'
 
     - uses: actions/cache@v1
       name: Cache cabal-store
@@ -105,6 +107,13 @@ jobs:
         sed -ibak '/generate-new/d' cabal.project
       if: matrix.ghc != '8.10.2'
 
+    # Because of https://github.com/actions/setup-haskell/issues/43 we can't
+    # set the cabal version correctly
+    - name: Remove generator for OS X
+      run: |
+        sed -ibak '/generate-new/d' cabal.project
+      if: matrix.os == 'macOS-latest'
+
     - run: cabal update
 
     - run: |
@@ -145,15 +154,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, macOS-latest, windows-latest]
-        ghc: [ '8.10.2' ]
         stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances --flag vulkan-examples:-have-shaderc --system-ghc']
         exclude:
-          - os: windows-latest
-            ghc: '8.10.2'
-        include:
           # https://github.com/actions/setup-haskell/issues/49
           - os: windows-latest
-            ghc: '8.10.2.2'
       fail-fast: false
 
     steps:
@@ -164,7 +168,7 @@ jobs:
       with:
         stack-version: 'latest'
         enable-stack: true
-        ghc-version: ${{ matrix.ghc }}
+        ghc-version: '8.10.2'
 
     - name: Cache stack global package db
       id: stack-global
@@ -230,7 +234,7 @@ jobs:
           brew cask install vulkan-sdk --verbose
 
     - name: Install dependencies
-      run: stack build $ARGS --test --bench --only-dependencies $ARGS
+      run: stack build $ARGS --test --bench --only-dependencies
       env:
         ARGS: ${{ matrix.stack-args }}
 

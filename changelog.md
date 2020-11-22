@@ -2,6 +2,10 @@
 
 ## WIP
 
+- Add bracketing functions for `withRayTracingPipelinesKHR` and
+  `withRayTracingPipelinesNV`
+- Add Storable instance to AccelerationStructureInstanceKHR
+
 ## [3.6.15] - 2020-11-16
 - Bump API version to v1.2.161
 

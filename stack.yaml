@@ -10,6 +10,7 @@ extra-deps:
 - th-desugar-1.11
 - resourcet-1.2.4
 - pretty-simple-3.3.0.0
+- primitive-unlifted-1.0.0.0
 nix:
   enable: false
   packages: [vulkan-loader vulkan-headers glslang pkg-config SDL2 zlib]

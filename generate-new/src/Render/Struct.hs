@@ -205,6 +205,7 @@ renderStoreInstances ms@MarshaledStruct {..} = do
 
     -- Render a Storable instance if it's safe to do so
     case pokes of
+      _ | msName == "VkAccelerationStructureInstanceKHR" -> storableInstance ms
       IOStmts _ -> storableInstance ms
       _         -> pure ()
 

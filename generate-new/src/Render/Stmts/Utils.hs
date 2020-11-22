@@ -42,6 +42,9 @@ storablePoke addr value = do
     ConT n :@ VarT _ -> isStructOrUnion (TyConName . T.pack . nameBase $ n)
     ConT n           -> isStructOrUnion (TyConName . T.pack . nameBase $ n)
     _                -> pure False
+  -- TODO: This should check to see if this is a Storable struct, and if so use
+  -- the regular poker.
+  -- Discussion here: https://github.com/expipiplus1/vulkan/issues/209
   if isStructOrUnion
     then unitStmt $ do
       AddrDoc  a <- use addr

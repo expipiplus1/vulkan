@@ -215,7 +215,7 @@ createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDebugReportCallbackEXT :: forall io r . MonadIO io => Instance -> DebugReportCallbackCreateInfoEXT -> Maybe AllocationCallbacks -> (io (DebugReportCallbackEXT) -> ((DebugReportCallbackEXT) -> io ()) -> r) -> r
+withDebugReportCallbackEXT :: forall io r . MonadIO io => Instance -> DebugReportCallbackCreateInfoEXT -> Maybe AllocationCallbacks -> (io DebugReportCallbackEXT -> (DebugReportCallbackEXT -> io ()) -> r) -> r
 withDebugReportCallbackEXT instance' pCreateInfo pAllocator b =
   b (createDebugReportCallbackEXT instance' pCreateInfo pAllocator)
     (\(o0) -> destroyDebugReportCallbackEXT instance' o0 pAllocator)

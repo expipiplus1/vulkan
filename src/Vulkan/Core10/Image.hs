@@ -183,7 +183,7 @@ createImage device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withImage :: forall a io r . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io) => Device -> ImageCreateInfo a -> Maybe AllocationCallbacks -> (io (Image) -> ((Image) -> io ()) -> r) -> r
+withImage :: forall a io r . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io) => Device -> ImageCreateInfo a -> Maybe AllocationCallbacks -> (io Image -> (Image -> io ()) -> r) -> r
 withImage device pCreateInfo pAllocator b =
   b (createImage device pCreateInfo pAllocator)
     (\(o0) -> destroyImage device o0 pAllocator)

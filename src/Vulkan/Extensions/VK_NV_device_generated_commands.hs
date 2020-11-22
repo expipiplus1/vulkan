@@ -1011,7 +1011,7 @@ createIndirectCommandsLayoutNV device createInfo allocator = liftIO . evalContT 
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withIndirectCommandsLayoutNV :: forall io r . MonadIO io => Device -> IndirectCommandsLayoutCreateInfoNV -> Maybe AllocationCallbacks -> (io (IndirectCommandsLayoutNV) -> ((IndirectCommandsLayoutNV) -> io ()) -> r) -> r
+withIndirectCommandsLayoutNV :: forall io r . MonadIO io => Device -> IndirectCommandsLayoutCreateInfoNV -> Maybe AllocationCallbacks -> (io IndirectCommandsLayoutNV -> (IndirectCommandsLayoutNV -> io ()) -> r) -> r
 withIndirectCommandsLayoutNV device pCreateInfo pAllocator b =
   b (createIndirectCommandsLayoutNV device pCreateInfo pAllocator)
     (\(o0) -> destroyIndirectCommandsLayoutNV device o0 pAllocator)
