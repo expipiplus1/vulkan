@@ -163,7 +163,7 @@ createRayGenerationShader = do
             const vec2 inUV = pixelCenter/vec2(gl_LaunchSizeEXT.xy);
             const vec2 d = inUV * 2.0 - 1.0;
             const vec3 origin    = vec3(-10,0,0);
-            const vec3 direction = vec3(1,d);
+            const vec3 direction = normalize(vec3(1,d));
             const uint  rayFlags = gl_RayFlagsOpaqueEXT;
             const float tMin     = 0.001;
             const float tMax     = 10000.0;
@@ -218,9 +218,20 @@ createRayIntShader = do
 
         void main()
         {
-          const float hitT = 1;
-          const uint hitKind = 0;
-          reportIntersectionEXT(hitT, hitKind);
+          const vec3 o = gl_WorldRayOriginEXT;
+          const vec3 d = gl_WorldRayDirectionEXT;
+          const vec3 s = vec3(0,0,0);
+          const float r = 1;
+
+          const vec3 diff = o - s;
+
+          const float x = (dot(d, diff) * dot(d, diff)) - (dot(diff, diff) - r*r);
+          if (x < 0)
+            return;
+
+          const float m = -(dot(d, diff));
+          reportIntersectionEXT(m - sqrt(x), 0);
+          reportIntersectionEXT(m + sqrt(x), 0);
         }
       |])
 
@@ -298,5 +309,5 @@ unpackObjects numObjs size desiredStride buf = do
                              (objectInitalPosition n)
                              (fromIntegral size)
     -- Move the object last to first
-    indicesToMove = drop 1 [numObjs, numObjs-1 .. 1]
-  liftIO $ traverse_ @[] moveObject indicesToMove
+    indicesToMove = drop 1 [numObjs, numObjs - 1 .. 1]
+  liftIO $ traverse_ moveObject indicesToMove
