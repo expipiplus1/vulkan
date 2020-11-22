@@ -107,6 +107,13 @@ jobs:
         sed -ibak '/generate-new/d' cabal.project
       if: matrix.ghc != '8.10.2'
 
+    # Because of https://github.com/actions/setup-haskell/issues/43 we can't
+    # set the cabal version correctly
+    - name: Remove generator for OS X
+      run: |
+        sed -ibak '/generate-new/d' cabal.project
+      if: matrix.os == 'macOS-latest'
+
     - run: cabal update
 
     - run: |
