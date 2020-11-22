@@ -1,5 +1,4 @@
-module Main
-  where
+module Main where
 
 import           Data.Text.Extra                ( (<+>) )
 import           Data.Version
@@ -26,7 +25,7 @@ import           Render.SpecInfo
 import           Spec.Parse
 
 import           VK.AssignModules
-import           VK.Render
+import           VK.Render                      ( renderSpec )
 
 main :: IO ()
 main =
@@ -67,10 +66,9 @@ main =
           mps          <- marshalParams spec
 
           (ss, us, cs) <- runInputConst mps $ do
-            ss <- timeItNamed "Marshaling structs"
-              $ traverseV marshalStruct specStructs
-            us <- timeItNamed "Marshaling unions"
-              $ traverseV marshalStruct specUnions
+            (ss, us) <-
+              timeItNamed "Marshaling structs and unions"
+                $ marshalStructAndUnions specStructs specUnions
             cs <- timeItNamed "Marshaling commands"
               $ traverseV marshalCommand specCommands
               -- TODO: Don't use all commands here, just those commands referenced by
