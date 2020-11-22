@@ -180,7 +180,7 @@ cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDiscardRectangleEXT is null" Nothing Nothing
   let vkCmdSetDiscardRectangleEXT' = mkVkCmdSetDiscardRectangleEXT vkCmdSetDiscardRectangleEXTPtr
   pPDiscardRectangles <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (discardRectangles)) * 16) 4
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDiscardRectangles `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (discardRectangles)
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPDiscardRectangles `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (discardRectangles)
   lift $ vkCmdSetDiscardRectangleEXT' (commandBufferHandle (commandBuffer)) (firstDiscardRectangle) ((fromIntegral (Data.Vector.length $ (discardRectangles)) :: Word32)) (pPDiscardRectangles)
   pure $ ()
 
@@ -303,7 +303,7 @@ instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT where
     lift $ poke ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT)) (discardRectangleMode)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (discardRectangles)) :: Word32))
     pPDiscardRectangles' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (discardRectangles)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDiscardRectangles' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (discardRectangles)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDiscardRectangles' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (discardRectangles)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Rect2D))) (pPDiscardRectangles')
     lift $ f
   cStructSize = 40
@@ -313,7 +313,7 @@ instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT)) (zero)
     pPDiscardRectangles' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (mempty)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDiscardRectangles' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDiscardRectangles' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Rect2D))) (pPDiscardRectangles')
     lift $ f
 

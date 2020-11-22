@@ -49,6 +49,7 @@ import           Render.Names
 import           Render.Peek
 import           Render.Scheme
 import           Render.SpecInfo
+import           Render.State                   ( HasRenderState )
 import           Render.Stmts
 import           Render.Stmts.Alloc
 import           Render.Stmts.Poke
@@ -63,6 +64,7 @@ renderCommand
      , HasSpecInfo r
      , HasStmts r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => MarshaledCommand
   -> Sem r RenderElement
@@ -129,6 +131,7 @@ marshaledCommandCall
      , HasStmts r
      , HasSiblingInfo Parameter r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => HName
   -> MarshaledCommand
@@ -229,6 +232,7 @@ commandRHS
      , HasStmts r
      , HasSiblingInfo Parameter r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => MarshaledCommand
   -> Sem r (Doc ())
@@ -415,6 +419,7 @@ marshaledDualPurposeCommandCall
      , HasStmts r
      , HasSiblingInfo Parameter r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => HName
   -> MarshaledCommand
@@ -544,6 +549,7 @@ pokesForGettingCount
      , HasStmts r
      , HasSiblingInfo Parameter r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => Vector MarshaledParam
   -> Int
@@ -876,6 +882,7 @@ getPoke
      , HasStmts r
      , HasSiblingInfo Parameter r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => Maybe (Ref s ValueDoc)
   -- ^ Might be nothing if this is elided

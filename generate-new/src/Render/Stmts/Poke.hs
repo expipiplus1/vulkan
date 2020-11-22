@@ -53,6 +53,7 @@ import           Render.Element
 import           Render.Names
 import           Render.Scheme
 import           Render.SpecInfo
+import           Render.State
 import           Render.Stmts
 import           Render.Stmts.Poke.SiblingInfo
 import           Render.Stmts.Utils
@@ -68,6 +69,7 @@ type HasPoke a r
     , HasSiblingInfo a r
     , HasStmts r
     , HasRenderedNames r
+    , HasRenderState r
     , Show a
     )
 
@@ -220,6 +222,7 @@ wrappedStructIndirect
      , HasRenderElem r
      , HasSpecInfo r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => CName
   -> CType

@@ -866,7 +866,7 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
   pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _))) (e) . ($ ())) (descriptorWrites)
   pPDescriptorCopies <- ContT $ allocaBytesAligned @CopyDescriptorSet ((Data.Vector.length (descriptorCopies)) * 56) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorCopies `plusPtr` (56 * (i)) :: Ptr CopyDescriptorSet) (e) . ($ ())) (descriptorCopies)
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorCopies `plusPtr` (56 * (i)) :: Ptr CopyDescriptorSet) (e)) (descriptorCopies)
   lift $ vkUpdateDescriptorSets' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (forgetExtensions (pPDescriptorWrites)) ((fromIntegral (Data.Vector.length $ (descriptorCopies)) :: Word32)) (pPDescriptorCopies)
   pure $ ()
 

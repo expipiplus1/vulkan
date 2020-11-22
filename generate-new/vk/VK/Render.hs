@@ -2,16 +2,19 @@
 module VK.Render
   where
 
-import           Relude                  hiding ( Enum )
-import           Polysemy
-import           Polysemy.Input
-import           Polysemy.Fixpoint
+import qualified Data.HashMap.Strict           as Map
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
-import qualified Data.HashMap.Strict           as Map
+import           Data.Vector.TopTraverse
+import           Polysemy
+import           Polysemy.Fixpoint
+import           Polysemy.Input
+import           Relude                  hiding ( Enum )
 
 import           Bespoke
 import           Bespoke.Utils
+import           CType
+import           Documentation
 import           Error
 import           Marshal
 import           Render.Alias
@@ -25,17 +28,16 @@ import           Render.Enum
 import           Render.FuncPointer
 import           Render.Handle
 import           Render.Names
-import           Render.SpecInfo
-import           Render.Spec.Versions
 import           Render.Spec.Extends
+import           Render.Spec.Versions
+import           Render.SpecInfo
 import           Render.Stmts
 import           Render.Struct
 import           Render.Union
 import           Render.VkException
 import           Spec.Parse
-import           CType
-import           Documentation
 
+import           Render.State                   ( HasRenderState )
 import           VK.Bracket
 
 data RenderedSpec a = RenderedSpec
@@ -58,6 +60,7 @@ renderSpec
      , HasStmts r
      , HasSpecInfo r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => Spec
   -> (Documentee -> Maybe Documentation)
@@ -103,9 +106,14 @@ renderSpec spec@Spec {..} getDoc ss us cs = do
   let bracketMap      = Map.fromList [ (n, b) | (n, _, b) <- toList bs ]
       renderCommand'  = commandWithBrackets (`Map.lookup` bracketMap)
       filterConstants = V.filter ((`notElem` forbiddenConstants) . constName)
+
+  -- These have to be rendered separately as the order matters, we keep track
+  -- of which Storable instances are available.
+  structsAndUnions <- renderStructsAndUnions ss us
+
   sequenceV RenderedSpec
     { rsHandles            = renderHandle <$> specHandles
-    , rsStructsAndUnions   = fmap renderStruct ss <> fmap renderUnion us
+    , rsStructsAndUnions   = pure <$> structsAndUnions
     , rsCommands           = renderCommand' <$> cs
     , rsEnums              = renderEnum <$> specEnums
     , rsAliases            = renderAlias <$> specAliases
@@ -131,6 +139,7 @@ commandWithBrackets
      , HasSpecInfo r
      , Member Fixpoint r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => (CName -> Maybe RenderElement)
   -> MarshaledCommand
@@ -140,3 +149,37 @@ commandWithBrackets getBracket cmd = do
   pure $ case getBracket (mcName cmd) of
     Nothing -> r
     Just b  -> r <> b
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+renderStructsAndUnions
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasStmts r
+     , HasRenderedNames r
+     , HasRenderState r
+     )
+  => Vector (MarshaledStruct AStruct)
+  -> Vector (MarshaledStruct AUnion)
+  -> Sem r (Vector RenderElement)
+renderStructsAndUnions ss us = traverseInTopOrder
+  (either msName msName)
+  (either (immediateDepends . msStruct) (immediateDepends . msStruct))
+  (either renderStruct renderUnion)
+  ((Left <$> ss) <> (Right <$> us))
+
+immediateDepends :: StructOrUnion t s c -> [CName]
+immediateDepends Struct {..} =
+  [ n
+  | StructMember {..} <- V.toList sMembers
+  , Just n            <- pure $ immediateDepend smType
+  ]
+ where
+  immediateDepend = \case
+    TypeName n   -> Just n
+    Bitfield t _ -> immediateDepend t
+    Array _ _ t  -> immediateDepend t
+    _            -> Nothing

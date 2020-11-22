@@ -5988,18 +5988,18 @@ deriving instance Show AccelerationStructureInstanceKHR
 
 instance ToCStruct AccelerationStructureInstanceKHR where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p AccelerationStructureInstanceKHR{..} f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr TransformMatrixKHR)) (transform) . ($ ())
-    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (((coerce @_ @Word32 (mask)) `shiftL` 24) .|. (instanceCustomIndex))
-    lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (((coerce @_ @Word32 (flags)) `shiftL` 24) .|. (instanceShaderBindingTableRecordOffset))
-    lift $ poke ((p `plusPtr` 56 :: Ptr Word64)) (accelerationStructureReference)
-    lift $ f
+  pokeCStruct p AccelerationStructureInstanceKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr TransformMatrixKHR)) (transform)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (((coerce @_ @Word32 (mask)) `shiftL` 24) .|. (instanceCustomIndex))
+    poke ((p `plusPtr` 52 :: Ptr Word32)) (((coerce @_ @Word32 (flags)) `shiftL` 24) .|. (instanceShaderBindingTableRecordOffset))
+    poke ((p `plusPtr` 56 :: Ptr Word64)) (accelerationStructureReference)
+    f
   cStructSize = 64
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr TransformMatrixKHR)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 56 :: Ptr Word64)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr TransformMatrixKHR)) (zero)
+    poke ((p `plusPtr` 56 :: Ptr Word64)) (zero)
+    f
 
 instance FromCStruct AccelerationStructureInstanceKHR where
   peekCStruct p = do

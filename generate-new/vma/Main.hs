@@ -22,7 +22,9 @@ import           Polysemy.Fail
 import           Polysemy.Fixpoint
 import           Polysemy.Input
 import           Polysemy.NonDet
+import           Polysemy.State
 import           Relude                  hiding ( Handle
+                                                , State
                                                 , Type
                                                 )
 import           Say
@@ -45,6 +47,7 @@ import           Render.Element.Write
 import           Render.FuncPointer
 import           Render.Names
 import           Render.SpecInfo
+import           Render.State
 import           Spec.Parse
 import           Write.Segment
 
@@ -100,6 +103,7 @@ main =
       runInputConst headerInfo
         . runInputConst specTypeInfo
         . runInputConst renderedNames
+        . evalStateIO initialRenderState
         $ do
             vulkanFuncPointers                    <- vulkanFuncPointers
             specMarshalParams                     <- Vk.marshalParams spec
@@ -581,3 +585,10 @@ runTrav' iw s t = case runIdentity $ runTravTWithTravState s t of
   Right (r, s) | DoNotIgnoreWarnings <- iw ->
     traverse_ (throw . show) (travErrors s) >> pure (r, s)
   Right (r, s) -> pure (r, s)
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+evalStateIO :: Member (Embed IO) r => s -> Sem (State s ': r) a -> Sem r a
+evalStateIO i = fmap snd . stateToIO i

@@ -138,7 +138,7 @@ cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = liftIO 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewportWScalingNV is null" Nothing Nothing
   let vkCmdSetViewportWScalingNV' = mkVkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNVPtr
   pPViewportWScalings <- ContT $ allocaBytesAligned @ViewportWScalingNV ((Data.Vector.length (viewportWScalings)) * 8) 4
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e) . ($ ())) (viewportWScalings)
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e)) (viewportWScalings)
   lift $ vkCmdSetViewportWScalingNV' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (viewportWScalings)) :: Word32)) (pPViewportWScalings)
   pure $ ()
 

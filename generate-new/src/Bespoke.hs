@@ -107,7 +107,7 @@ bespokeModules = do
 
 data BespokeScheme where
   BespokeScheme ::(forall a. Marshalable a => CName -> a -> Maybe (MarshalScheme a)) -> BespokeScheme
-  -- ^ Parent name -> child -> scheme
+  --- ^ Parent name -> child -> scheme
 
 bespokeSchemes :: Spec -> Sem r [BespokeScheme]
 bespokeSchemes spec =
@@ -155,6 +155,7 @@ nextPointers Spec {..} =
         tellImportWithAll (TyConName "PokeChain")
         tellImport (TyConName "Chain")
         tellImport 'castPtr
+        tellImportWithAll ''ContT
         ValueDoc chain <- use chainRef
         pure
           .   ContTAction
@@ -184,6 +185,7 @@ zeroNextPointer = do
     tellImportWithAll (TyConName "PokeChain")
     tellImport (TyConName "Chain")
     tellImport 'castPtr
+    tellImportWithAll ''ContT
     pure
       .  ContTAction
       .  ValueDoc

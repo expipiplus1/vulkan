@@ -498,7 +498,7 @@ instance (Extendss MemoryRequirements2 es, PokeChain es) => ToCStruct (MemoryReq
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr MemoryRequirements)) (memoryRequirements) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr MemoryRequirements)) (memoryRequirements)
     lift $ f
   cStructSize = 40
   cStructAlignment = 8
@@ -506,7 +506,7 @@ instance (Extendss MemoryRequirements2 es, PokeChain es) => ToCStruct (MemoryReq
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr MemoryRequirements)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr MemoryRequirements)) (zero)
     lift $ f
 
 instance (Extendss MemoryRequirements2 es, PeekChain es) => FromCStruct (MemoryRequirements2 es) where
@@ -546,24 +546,30 @@ deriving instance Show SparseImageMemoryRequirements2
 
 instance ToCStruct SparseImageMemoryRequirements2 where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p SparseImageMemoryRequirements2{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr SparseImageMemoryRequirements)) (memoryRequirements) . ($ ())
-    lift $ f
+  pokeCStruct p SparseImageMemoryRequirements2{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SparseImageMemoryRequirements)) (memoryRequirements)
+    f
   cStructSize = 64
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr SparseImageMemoryRequirements)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SparseImageMemoryRequirements)) (zero)
+    f
 
 instance FromCStruct SparseImageMemoryRequirements2 where
   peekCStruct p = do
     memoryRequirements <- peekCStruct @SparseImageMemoryRequirements ((p `plusPtr` 16 :: Ptr SparseImageMemoryRequirements))
     pure $ SparseImageMemoryRequirements2
              memoryRequirements
+
+instance Storable SparseImageMemoryRequirements2 where
+  sizeOf ~_ = 64
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero SparseImageMemoryRequirements2 where
   zero = SparseImageMemoryRequirements2

@@ -1,14 +1,16 @@
-module Main
-  where
+module Main where
 
 import           Data.Text.Extra                ( (<+>) )
 import           Data.Version
 import           Polysemy
 import           Polysemy.Fixpoint
 import           Polysemy.Input
+import           Polysemy.State
 import           Relude                  hiding ( Handle
                                                 , Type
+                                                , evalState
                                                 , uncons
+                                                , State
                                                 )
 import           Say
 import           System.TimeIt
@@ -25,6 +27,7 @@ import           Render.Names
 import           Render.SpecInfo
 import           Spec.Parse
 
+import           Render.State                   ( initialRenderState )
 import           VK.AssignModules
 import           VK.Render
 
@@ -78,9 +81,9 @@ main =
             pure (ss, us, cs)
 
           renderElements <-
-            timeItNamed "Rendering"
-            $   traverse evaluateWHNF
-            =<< renderSpec spec getDocumentation ss us cs
+            timeItNamed "Rendering" $ traverse evaluateWHNF =<< evalStateIO
+              initialRenderState
+              (renderSpec spec getDocumentation ss us cs)
 
           groups <-
             timeItNamed "Segmenting"
@@ -90,3 +93,9 @@ main =
           timeItNamed "writing"
             $ renderSegments getDocumentation "out" (mergeElements groups)
 
+----------------------------------------------------------------
+--
+----------------------------------------------------------------
+
+evalStateIO :: Member (Embed IO) r => s -> Sem (State s ': r) a -> Sem r a
+evalStateIO i = fmap snd . stateToIO i

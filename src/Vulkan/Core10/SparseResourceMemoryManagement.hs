@@ -525,16 +525,16 @@ deriving instance Show SparseImageFormatProperties
 
 instance ToCStruct SparseImageFormatProperties where
   withCStruct x f = allocaBytesAligned 20 4 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p SparseImageFormatProperties{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
-    ContT $ pokeCStruct ((p `plusPtr` 4 :: Ptr Extent3D)) (imageGranularity) . ($ ())
-    lift $ poke ((p `plusPtr` 16 :: Ptr SparseImageFormatFlags)) (flags)
-    lift $ f
+  pokeCStruct p SparseImageFormatProperties{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
+    poke ((p `plusPtr` 4 :: Ptr Extent3D)) (imageGranularity)
+    poke ((p `plusPtr` 16 :: Ptr SparseImageFormatFlags)) (flags)
+    f
   cStructSize = 20
   cStructAlignment = 4
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 4 :: Ptr Extent3D)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 4 :: Ptr Extent3D)) (zero)
+    f
 
 instance FromCStruct SparseImageFormatProperties where
   peekCStruct p = do
@@ -543,6 +543,12 @@ instance FromCStruct SparseImageFormatProperties where
     flags <- peek @SparseImageFormatFlags ((p `plusPtr` 16 :: Ptr SparseImageFormatFlags))
     pure $ SparseImageFormatProperties
              aspectMask imageGranularity flags
+
+instance Storable SparseImageFormatProperties where
+  sizeOf ~_ = 20
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero SparseImageFormatProperties where
   zero = SparseImageFormatProperties
@@ -590,22 +596,22 @@ deriving instance Show SparseImageMemoryRequirements
 
 instance ToCStruct SparseImageMemoryRequirements where
   withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p SparseImageMemoryRequirements{..} f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr SparseImageFormatProperties)) (formatProperties) . ($ ())
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (imageMipTailFirstLod)
-    lift $ poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (imageMipTailSize)
-    lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (imageMipTailOffset)
-    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (imageMipTailStride)
-    lift $ f
+  pokeCStruct p SparseImageMemoryRequirements{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr SparseImageFormatProperties)) (formatProperties)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (imageMipTailFirstLod)
+    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (imageMipTailSize)
+    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (imageMipTailOffset)
+    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (imageMipTailStride)
+    f
   cStructSize = 48
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr SparseImageFormatProperties)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
-    lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
-    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr SparseImageFormatProperties)) (zero)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
+    f
 
 instance FromCStruct SparseImageMemoryRequirements where
   peekCStruct p = do
@@ -616,6 +622,12 @@ instance FromCStruct SparseImageMemoryRequirements where
     imageMipTailStride <- peek @DeviceSize ((p `plusPtr` 40 :: Ptr DeviceSize))
     pure $ SparseImageMemoryRequirements
              formatProperties imageMipTailFirstLod imageMipTailSize imageMipTailOffset imageMipTailStride
+
+instance Storable SparseImageMemoryRequirements where
+  sizeOf ~_ = 48
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero SparseImageMemoryRequirements where
   zero = SparseImageMemoryRequirements
@@ -968,22 +980,22 @@ deriving instance Show SparseImageMemoryBind
 
 instance ToCStruct SparseImageMemoryBind where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p SparseImageMemoryBind{..} f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr ImageSubresource)) (subresource) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 12 :: Ptr Offset3D)) (offset) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent3D)) (extent) . ($ ())
-    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceMemory)) (memory)
-    lift $ poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (memoryOffset)
-    lift $ poke ((p `plusPtr` 56 :: Ptr SparseMemoryBindFlags)) (flags)
-    lift $ f
+  pokeCStruct p SparseImageMemoryBind{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ImageSubresource)) (subresource)
+    poke ((p `plusPtr` 12 :: Ptr Offset3D)) (offset)
+    poke ((p `plusPtr` 24 :: Ptr Extent3D)) (extent)
+    poke ((p `plusPtr` 40 :: Ptr DeviceMemory)) (memory)
+    poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (memoryOffset)
+    poke ((p `plusPtr` 56 :: Ptr SparseMemoryBindFlags)) (flags)
+    f
   cStructSize = 64
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr ImageSubresource)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 12 :: Ptr Offset3D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent3D)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ImageSubresource)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr Offset3D)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Extent3D)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (zero)
+    f
 
 instance FromCStruct SparseImageMemoryBind where
   peekCStruct p = do
@@ -995,6 +1007,12 @@ instance FromCStruct SparseImageMemoryBind where
     flags <- peek @SparseMemoryBindFlags ((p `plusPtr` 56 :: Ptr SparseMemoryBindFlags))
     pure $ SparseImageMemoryBind
              subresource offset extent memory memoryOffset flags
+
+instance Storable SparseImageMemoryBind where
+  sizeOf ~_ = 64
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero SparseImageMemoryBind where
   zero = SparseImageMemoryBind

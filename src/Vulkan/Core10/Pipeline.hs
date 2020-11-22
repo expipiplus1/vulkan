@@ -2166,7 +2166,7 @@ instance (Extendss PipelineViewportStateCreateInfo es, PokeChain es) => ToCStruc
       then pure nullPtr
       else do
         pPScissors <- ContT $ allocaBytesAligned @Rect2D (((Data.Vector.length (scissors))) * 16) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) ((scissors))
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) ((scissors))
         pure $ pPScissors
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Rect2D))) pScissors''
     lift $ f
@@ -3306,35 +3306,35 @@ deriving instance Show PipelineDepthStencilStateCreateInfo
 
 instance ToCStruct PipelineDepthStencilStateCreateInfo where
   withCStruct x f = allocaBytesAligned 104 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PipelineDepthStencilStateCreateInfo{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr PipelineDepthStencilStateCreateFlags)) (flags)
-    lift $ poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (depthTestEnable))
-    lift $ poke ((p `plusPtr` 24 :: Ptr Bool32)) (boolToBool32 (depthWriteEnable))
-    lift $ poke ((p `plusPtr` 28 :: Ptr CompareOp)) (depthCompareOp)
-    lift $ poke ((p `plusPtr` 32 :: Ptr Bool32)) (boolToBool32 (depthBoundsTestEnable))
-    lift $ poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (stencilTestEnable))
-    ContT $ pokeCStruct ((p `plusPtr` 40 :: Ptr StencilOpState)) (front) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 68 :: Ptr StencilOpState)) (back) . ($ ())
-    lift $ poke ((p `plusPtr` 96 :: Ptr CFloat)) (CFloat (minDepthBounds))
-    lift $ poke ((p `plusPtr` 100 :: Ptr CFloat)) (CFloat (maxDepthBounds))
-    lift $ f
+  pokeCStruct p PipelineDepthStencilStateCreateInfo{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr PipelineDepthStencilStateCreateFlags)) (flags)
+    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (depthTestEnable))
+    poke ((p `plusPtr` 24 :: Ptr Bool32)) (boolToBool32 (depthWriteEnable))
+    poke ((p `plusPtr` 28 :: Ptr CompareOp)) (depthCompareOp)
+    poke ((p `plusPtr` 32 :: Ptr Bool32)) (boolToBool32 (depthBoundsTestEnable))
+    poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (stencilTestEnable))
+    poke ((p `plusPtr` 40 :: Ptr StencilOpState)) (front)
+    poke ((p `plusPtr` 68 :: Ptr StencilOpState)) (back)
+    poke ((p `plusPtr` 96 :: Ptr CFloat)) (CFloat (minDepthBounds))
+    poke ((p `plusPtr` 100 :: Ptr CFloat)) (CFloat (maxDepthBounds))
+    f
   cStructSize = 104
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 24 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 28 :: Ptr CompareOp)) (zero)
-    lift $ poke ((p `plusPtr` 32 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (zero))
-    ContT $ pokeCStruct ((p `plusPtr` 40 :: Ptr StencilOpState)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 68 :: Ptr StencilOpState)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 96 :: Ptr CFloat)) (CFloat (zero))
-    lift $ poke ((p `plusPtr` 100 :: Ptr CFloat)) (CFloat (zero))
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 24 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 28 :: Ptr CompareOp)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 40 :: Ptr StencilOpState)) (zero)
+    poke ((p `plusPtr` 68 :: Ptr StencilOpState)) (zero)
+    poke ((p `plusPtr` 96 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 100 :: Ptr CFloat)) (CFloat (zero))
+    f
 
 instance FromCStruct PipelineDepthStencilStateCreateInfo where
   peekCStruct p = do
@@ -3350,6 +3350,12 @@ instance FromCStruct PipelineDepthStencilStateCreateInfo where
     maxDepthBounds <- peek @CFloat ((p `plusPtr` 100 :: Ptr CFloat))
     pure $ PipelineDepthStencilStateCreateInfo
              flags (bool32ToBool depthTestEnable) (bool32ToBool depthWriteEnable) depthCompareOp (bool32ToBool depthBoundsTestEnable) (bool32ToBool stencilTestEnable) front back ((\(CFloat a) -> a) minDepthBounds) ((\(CFloat a) -> a) maxDepthBounds)
+
+instance Storable PipelineDepthStencilStateCreateInfo where
+  sizeOf ~_ = 104
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PipelineDepthStencilStateCreateInfo where
   zero = PipelineDepthStencilStateCreateInfo

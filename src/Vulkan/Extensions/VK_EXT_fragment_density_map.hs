@@ -11,8 +11,6 @@ module Vulkan.Extensions.VK_EXT_fragment_density_map  ( PhysicalDeviceFragmentDe
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import Control.Monad.Trans.Class (lift)
-import Control.Monad.Trans.Cont (evalContT)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -22,7 +20,6 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
-import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.Pass (AttachmentReference)
@@ -176,22 +173,22 @@ deriving instance Show PhysicalDeviceFragmentDensityMapPropertiesEXT
 
 instance ToCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceFragmentDensityMapPropertiesEXT{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (minFragmentDensityTexelSize) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (maxFragmentDensityTexelSize) . ($ ())
-    lift $ poke ((p `plusPtr` 32 :: Ptr Bool32)) (boolToBool32 (fragmentDensityInvocations))
-    lift $ f
+  pokeCStruct p PhysicalDeviceFragmentDensityMapPropertiesEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (minFragmentDensityTexelSize)
+    poke ((p `plusPtr` 24 :: Ptr Extent2D)) (maxFragmentDensityTexelSize)
+    poke ((p `plusPtr` 32 :: Ptr Bool32)) (boolToBool32 (fragmentDensityInvocations))
+    f
   cStructSize = 40
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 32 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Bool32)) (boolToBool32 (zero))
+    f
 
 instance FromCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT where
   peekCStruct p = do
@@ -200,6 +197,12 @@ instance FromCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT where
     fragmentDensityInvocations <- peek @Bool32 ((p `plusPtr` 32 :: Ptr Bool32))
     pure $ PhysicalDeviceFragmentDensityMapPropertiesEXT
              minFragmentDensityTexelSize maxFragmentDensityTexelSize (bool32ToBool fragmentDensityInvocations)
+
+instance Storable PhysicalDeviceFragmentDensityMapPropertiesEXT where
+  sizeOf ~_ = 40
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PhysicalDeviceFragmentDensityMapPropertiesEXT where
   zero = PhysicalDeviceFragmentDensityMapPropertiesEXT
@@ -305,24 +308,30 @@ deriving instance Show RenderPassFragmentDensityMapCreateInfoEXT
 
 instance ToCStruct RenderPassFragmentDensityMapCreateInfoEXT where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p RenderPassFragmentDensityMapCreateInfoEXT{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr AttachmentReference)) (fragmentDensityMapAttachment) . ($ ())
-    lift $ f
+  pokeCStruct p RenderPassFragmentDensityMapCreateInfoEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr AttachmentReference)) (fragmentDensityMapAttachment)
+    f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr AttachmentReference)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr AttachmentReference)) (zero)
+    f
 
 instance FromCStruct RenderPassFragmentDensityMapCreateInfoEXT where
   peekCStruct p = do
     fragmentDensityMapAttachment <- peekCStruct @AttachmentReference ((p `plusPtr` 16 :: Ptr AttachmentReference))
     pure $ RenderPassFragmentDensityMapCreateInfoEXT
              fragmentDensityMapAttachment
+
+instance Storable RenderPassFragmentDensityMapCreateInfoEXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero RenderPassFragmentDensityMapCreateInfoEXT where
   zero = RenderPassFragmentDensityMapCreateInfoEXT

@@ -12,8 +12,6 @@ module Vulkan.Extensions.VK_QCOM_render_pass_transform  ( RenderPassTransformBeg
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import Control.Monad.Trans.Class (lift)
-import Control.Monad.Trans.Cont (evalContT)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -23,7 +21,6 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
-import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.FundamentalTypes (Rect2D)
@@ -151,20 +148,20 @@ deriving instance Show CommandBufferInheritanceRenderPassTransformInfoQCOM
 
 instance ToCStruct CommandBufferInheritanceRenderPassTransformInfoQCOM where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p CommandBufferInheritanceRenderPassTransformInfoQCOM{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr SurfaceTransformFlagBitsKHR)) (transform)
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Rect2D)) (renderArea) . ($ ())
-    lift $ f
+  pokeCStruct p CommandBufferInheritanceRenderPassTransformInfoQCOM{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SurfaceTransformFlagBitsKHR)) (transform)
+    poke ((p `plusPtr` 20 :: Ptr Rect2D)) (renderArea)
+    f
   cStructSize = 40
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr SurfaceTransformFlagBitsKHR)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Rect2D)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SurfaceTransformFlagBitsKHR)) (zero)
+    poke ((p `plusPtr` 20 :: Ptr Rect2D)) (zero)
+    f
 
 instance FromCStruct CommandBufferInheritanceRenderPassTransformInfoQCOM where
   peekCStruct p = do
@@ -172,6 +169,12 @@ instance FromCStruct CommandBufferInheritanceRenderPassTransformInfoQCOM where
     renderArea <- peekCStruct @Rect2D ((p `plusPtr` 20 :: Ptr Rect2D))
     pure $ CommandBufferInheritanceRenderPassTransformInfoQCOM
              transform renderArea
+
+instance Storable CommandBufferInheritanceRenderPassTransformInfoQCOM where
+  sizeOf ~_ = 40
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero CommandBufferInheritanceRenderPassTransformInfoQCOM where
   zero = CommandBufferInheritanceRenderPassTransformInfoQCOM

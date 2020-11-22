@@ -454,24 +454,30 @@ deriving instance Show DisplayPlaneProperties2KHR
 
 instance ToCStruct DisplayPlaneProperties2KHR where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DisplayPlaneProperties2KHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr DisplayPlanePropertiesKHR)) (displayPlaneProperties) . ($ ())
-    lift $ f
+  pokeCStruct p DisplayPlaneProperties2KHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DisplayPlanePropertiesKHR)) (displayPlaneProperties)
+    f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr DisplayPlanePropertiesKHR)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DisplayPlanePropertiesKHR)) (zero)
+    f
 
 instance FromCStruct DisplayPlaneProperties2KHR where
   peekCStruct p = do
     displayPlaneProperties <- peekCStruct @DisplayPlanePropertiesKHR ((p `plusPtr` 16 :: Ptr DisplayPlanePropertiesKHR))
     pure $ DisplayPlaneProperties2KHR
              displayPlaneProperties
+
+instance Storable DisplayPlaneProperties2KHR where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero DisplayPlaneProperties2KHR where
   zero = DisplayPlaneProperties2KHR
@@ -500,24 +506,30 @@ deriving instance Show DisplayModeProperties2KHR
 
 instance ToCStruct DisplayModeProperties2KHR where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DisplayModeProperties2KHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr DisplayModePropertiesKHR)) (displayModeProperties) . ($ ())
-    lift $ f
+  pokeCStruct p DisplayModeProperties2KHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DisplayModePropertiesKHR)) (displayModeProperties)
+    f
   cStructSize = 40
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr DisplayModePropertiesKHR)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DisplayModePropertiesKHR)) (zero)
+    f
 
 instance FromCStruct DisplayModeProperties2KHR where
   peekCStruct p = do
     displayModeProperties <- peekCStruct @DisplayModePropertiesKHR ((p `plusPtr` 16 :: Ptr DisplayModePropertiesKHR))
     pure $ DisplayModeProperties2KHR
              displayModeProperties
+
+instance Storable DisplayModeProperties2KHR where
+  sizeOf ~_ = 40
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero DisplayModeProperties2KHR where
   zero = DisplayModeProperties2KHR
@@ -631,24 +643,30 @@ deriving instance Show DisplayPlaneCapabilities2KHR
 
 instance ToCStruct DisplayPlaneCapabilities2KHR where
   withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DisplayPlaneCapabilities2KHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr DisplayPlaneCapabilitiesKHR)) (capabilities) . ($ ())
-    lift $ f
+  pokeCStruct p DisplayPlaneCapabilities2KHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DisplayPlaneCapabilitiesKHR)) (capabilities)
+    f
   cStructSize = 88
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr DisplayPlaneCapabilitiesKHR)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DisplayPlaneCapabilitiesKHR)) (zero)
+    f
 
 instance FromCStruct DisplayPlaneCapabilities2KHR where
   peekCStruct p = do
     capabilities <- peekCStruct @DisplayPlaneCapabilitiesKHR ((p `plusPtr` 16 :: Ptr DisplayPlaneCapabilitiesKHR))
     pure $ DisplayPlaneCapabilities2KHR
              capabilities
+
+instance Storable DisplayPlaneCapabilities2KHR where
+  sizeOf ~_ = 88
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero DisplayPlaneCapabilities2KHR where
   zero = DisplayPlaneCapabilities2KHR

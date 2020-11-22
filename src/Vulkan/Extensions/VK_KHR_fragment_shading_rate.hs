@@ -543,7 +543,7 @@ instance ToCStruct FragmentShadingRateAttachmentInfoKHR where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pFragmentShadingRateAttachment'' <- ContT @_ @_ @(Ptr (AttachmentReference2 '[])) $ \cont -> withSomeCStruct @AttachmentReference2 (fragmentShadingRateAttachment) (cont . castPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr (AttachmentReference2 _)))) pFragmentShadingRateAttachment''
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (shadingRateAttachmentTexelSize) . ($ ())
+    lift $ poke ((p `plusPtr` 24 :: Ptr Extent2D)) (shadingRateAttachmentTexelSize)
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
@@ -552,7 +552,7 @@ instance ToCStruct FragmentShadingRateAttachmentInfoKHR where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pFragmentShadingRateAttachment'' <- ContT @_ @_ @(Ptr (AttachmentReference2 '[])) $ \cont -> withSomeCStruct @AttachmentReference2 ((SomeStruct zero)) (cont . castPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr (AttachmentReference2 _)))) pFragmentShadingRateAttachment''
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 24 :: Ptr Extent2D)) (zero)
     lift $ f
 
 instance FromCStruct FragmentShadingRateAttachmentInfoKHR where
@@ -622,28 +622,28 @@ deriving instance Show PipelineFragmentShadingRateStateCreateInfoKHR
 
 instance ToCStruct PipelineFragmentShadingRateStateCreateInfoKHR where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PipelineFragmentShadingRateStateCreateInfoKHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (fragmentSize) . ($ ())
+  pokeCStruct p PipelineFragmentShadingRateStateCreateInfoKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (fragmentSize)
     let pCombinerOps' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)))
-    lift $ case (combinerOps) of
+    case (combinerOps) of
       (e0, e1) -> do
         poke (pCombinerOps' :: Ptr FragmentShadingRateCombinerOpKHR) (e0)
         poke (pCombinerOps' `plusPtr` 4 :: Ptr FragmentShadingRateCombinerOpKHR) (e1)
-    lift $ f
+    f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (zero) . ($ ())
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (zero)
     let pCombinerOps' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)))
-    lift $ case ((zero, zero)) of
+    case ((zero, zero)) of
       (e0, e1) -> do
         poke (pCombinerOps' :: Ptr FragmentShadingRateCombinerOpKHR) (e0)
         poke (pCombinerOps' `plusPtr` 4 :: Ptr FragmentShadingRateCombinerOpKHR) (e1)
-    lift $ f
+    f
 
 instance FromCStruct PipelineFragmentShadingRateStateCreateInfoKHR where
   peekCStruct p = do
@@ -653,6 +653,12 @@ instance FromCStruct PipelineFragmentShadingRateStateCreateInfoKHR where
     combinerOps1 <- peek @FragmentShadingRateCombinerOpKHR ((pcombinerOps `advancePtrBytes` 4 :: Ptr FragmentShadingRateCombinerOpKHR))
     pure $ PipelineFragmentShadingRateStateCreateInfoKHR
              fragmentSize ((combinerOps0, combinerOps1))
+
+instance Storable PipelineFragmentShadingRateStateCreateInfoKHR where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PipelineFragmentShadingRateStateCreateInfoKHR where
   zero = PipelineFragmentShadingRateStateCreateInfoKHR
@@ -970,50 +976,50 @@ deriving instance Show PhysicalDeviceFragmentShadingRatePropertiesKHR
 
 instance ToCStruct PhysicalDeviceFragmentShadingRatePropertiesKHR where
   withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceFragmentShadingRatePropertiesKHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (minFragmentShadingRateAttachmentTexelSize) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (maxFragmentShadingRateAttachmentTexelSize) . ($ ())
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (maxFragmentShadingRateAttachmentTexelSizeAspectRatio)
-    lift $ poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (primitiveFragmentShadingRateWithMultipleViewports))
-    lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (layeredShadingRateAttachments))
-    lift $ poke ((p `plusPtr` 44 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateNonTrivialCombinerOps))
-    ContT $ pokeCStruct ((p `plusPtr` 48 :: Ptr Extent2D)) (maxFragmentSize) . ($ ())
-    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (maxFragmentSizeAspectRatio)
-    lift $ poke ((p `plusPtr` 60 :: Ptr Word32)) (maxFragmentShadingRateCoverageSamples)
-    lift $ poke ((p `plusPtr` 64 :: Ptr SampleCountFlagBits)) (maxFragmentShadingRateRasterizationSamples)
-    lift $ poke ((p `plusPtr` 68 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithShaderDepthStencilWrites))
-    lift $ poke ((p `plusPtr` 72 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithSampleMask))
-    lift $ poke ((p `plusPtr` 76 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithShaderSampleMask))
-    lift $ poke ((p `plusPtr` 80 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithConservativeRasterization))
-    lift $ poke ((p `plusPtr` 84 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithFragmentShaderInterlock))
-    lift $ poke ((p `plusPtr` 88 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithCustomSampleLocations))
-    lift $ poke ((p `plusPtr` 92 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateStrictMultiplyCombiner))
-    lift $ f
+  pokeCStruct p PhysicalDeviceFragmentShadingRatePropertiesKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (minFragmentShadingRateAttachmentTexelSize)
+    poke ((p `plusPtr` 24 :: Ptr Extent2D)) (maxFragmentShadingRateAttachmentTexelSize)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (maxFragmentShadingRateAttachmentTexelSizeAspectRatio)
+    poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (primitiveFragmentShadingRateWithMultipleViewports))
+    poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (layeredShadingRateAttachments))
+    poke ((p `plusPtr` 44 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateNonTrivialCombinerOps))
+    poke ((p `plusPtr` 48 :: Ptr Extent2D)) (maxFragmentSize)
+    poke ((p `plusPtr` 56 :: Ptr Word32)) (maxFragmentSizeAspectRatio)
+    poke ((p `plusPtr` 60 :: Ptr Word32)) (maxFragmentShadingRateCoverageSamples)
+    poke ((p `plusPtr` 64 :: Ptr SampleCountFlagBits)) (maxFragmentShadingRateRasterizationSamples)
+    poke ((p `plusPtr` 68 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithShaderDepthStencilWrites))
+    poke ((p `plusPtr` 72 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithSampleMask))
+    poke ((p `plusPtr` 76 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithShaderSampleMask))
+    poke ((p `plusPtr` 80 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithConservativeRasterization))
+    poke ((p `plusPtr` 84 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithFragmentShaderInterlock))
+    poke ((p `plusPtr` 88 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateWithCustomSampleLocations))
+    poke ((p `plusPtr` 92 :: Ptr Bool32)) (boolToBool32 (fragmentShadingRateStrictMultiplyCombiner))
+    f
   cStructSize = 96
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 44 :: Ptr Bool32)) (boolToBool32 (zero))
-    ContT $ pokeCStruct ((p `plusPtr` 48 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 60 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 64 :: Ptr SampleCountFlagBits)) (zero)
-    lift $ poke ((p `plusPtr` 68 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 72 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 76 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 80 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 84 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 88 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ poke ((p `plusPtr` 92 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 44 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 48 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 60 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 64 :: Ptr SampleCountFlagBits)) (zero)
+    poke ((p `plusPtr` 68 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 72 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 76 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 80 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 84 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 88 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 92 :: Ptr Bool32)) (boolToBool32 (zero))
+    f
 
 instance FromCStruct PhysicalDeviceFragmentShadingRatePropertiesKHR where
   peekCStruct p = do
@@ -1036,6 +1042,12 @@ instance FromCStruct PhysicalDeviceFragmentShadingRatePropertiesKHR where
     fragmentShadingRateStrictMultiplyCombiner <- peek @Bool32 ((p `plusPtr` 92 :: Ptr Bool32))
     pure $ PhysicalDeviceFragmentShadingRatePropertiesKHR
              minFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSizeAspectRatio (bool32ToBool primitiveFragmentShadingRateWithMultipleViewports) (bool32ToBool layeredShadingRateAttachments) (bool32ToBool fragmentShadingRateNonTrivialCombinerOps) maxFragmentSize maxFragmentSizeAspectRatio maxFragmentShadingRateCoverageSamples maxFragmentShadingRateRasterizationSamples (bool32ToBool fragmentShadingRateWithShaderDepthStencilWrites) (bool32ToBool fragmentShadingRateWithSampleMask) (bool32ToBool fragmentShadingRateWithShaderSampleMask) (bool32ToBool fragmentShadingRateWithConservativeRasterization) (bool32ToBool fragmentShadingRateWithFragmentShaderInterlock) (bool32ToBool fragmentShadingRateWithCustomSampleLocations) (bool32ToBool fragmentShadingRateStrictMultiplyCombiner)
+
+instance Storable PhysicalDeviceFragmentShadingRatePropertiesKHR where
+  sizeOf ~_ = 96
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PhysicalDeviceFragmentShadingRatePropertiesKHR where
   zero = PhysicalDeviceFragmentShadingRatePropertiesKHR
@@ -1085,20 +1097,20 @@ deriving instance Show PhysicalDeviceFragmentShadingRateKHR
 
 instance ToCStruct PhysicalDeviceFragmentShadingRateKHR where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceFragmentShadingRateKHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr SampleCountFlags)) (sampleCounts)
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (fragmentSize) . ($ ())
-    lift $ f
+  pokeCStruct p PhysicalDeviceFragmentShadingRateKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SampleCountFlags)) (sampleCounts)
+    poke ((p `plusPtr` 20 :: Ptr Extent2D)) (fragmentSize)
+    f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr SampleCountFlags)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SampleCountFlags)) (zero)
+    poke ((p `plusPtr` 20 :: Ptr Extent2D)) (zero)
+    f
 
 instance FromCStruct PhysicalDeviceFragmentShadingRateKHR where
   peekCStruct p = do
@@ -1106,6 +1118,12 @@ instance FromCStruct PhysicalDeviceFragmentShadingRateKHR where
     fragmentSize <- peekCStruct @Extent2D ((p `plusPtr` 20 :: Ptr Extent2D))
     pure $ PhysicalDeviceFragmentShadingRateKHR
              sampleCounts fragmentSize
+
+instance Storable PhysicalDeviceFragmentShadingRateKHR where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PhysicalDeviceFragmentShadingRateKHR where
   zero = PhysicalDeviceFragmentShadingRateKHR

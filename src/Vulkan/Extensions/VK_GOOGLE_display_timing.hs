@@ -450,7 +450,7 @@ instance ToCStruct PresentTimesInfoGOOGLE where
       then pure nullPtr
       else do
         pPTimes <- ContT $ allocaBytesAligned @PresentTimeGOOGLE (((Data.Vector.length (times))) * 16) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTimes `plusPtr` (16 * (i)) :: Ptr PresentTimeGOOGLE) (e) . ($ ())) ((times))
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPTimes `plusPtr` (16 * (i)) :: Ptr PresentTimeGOOGLE) (e)) ((times))
         pure $ pPTimes
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr PresentTimeGOOGLE))) pTimes''
     lift $ f

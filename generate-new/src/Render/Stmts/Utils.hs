@@ -1,5 +1,4 @@
-module Render.Stmts.Utils
-  where
+module Render.Stmts.Utils where
 
 import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
@@ -23,29 +22,40 @@ import           Marshal.Marshalable
 import           Render.Element
 import           Render.Names
 import           Render.SpecInfo
+import           Render.State
 import           Render.Stmts
 
 -- Store using 'poke' or 'pokeCStruct'
+--
+-- Structs are stored using 'poke' if they have a storable instance
 storablePoke
   :: ( HasRenderElem r
      , HasRenderParams r
      , HasRenderedNames r
      , HasErr r
      , HasSpecInfo r
+     , HasRenderState r
      )
   => Ref s AddrDoc
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 storablePoke addr value = do
-  ty              <- refType value
-  isStructOrUnion <- case ty of
-    ConT n :@ VarT _ -> isStructOrUnion (TyConName . T.pack . nameBase $ n)
-    ConT n           -> isStructOrUnion (TyConName . T.pack . nameBase $ n)
-    _                -> pure False
-  -- TODO: This should check to see if this is a Storable struct, and if so use
-  -- the regular poker.
-  -- Discussion here: https://github.com/expipiplus1/vulkan/issues/209
-  if isStructOrUnion
+  ty <- refType value
+  let basicName = TyConName . T.pack . nameBase <$> case ty of
+        ConT n :@ VarT _ -> Just n
+        ConT n           -> Just n
+        _                -> Nothing
+  structOrUnionName <- case basicName of
+    Nothing -> pure Nothing
+    Just n  -> isStructOrUnion n <&> \case
+      False -> Nothing
+      True  -> Just n
+
+  isNotStorableStructOrUnion <- case structOrUnionName of
+    Nothing -> pure False
+    Just n  -> not <$> isStorableStructOrUnion n
+
+  if isNotStorableStructOrUnion
     then unitStmt $ do
       AddrDoc  a <- use addr
       ValueDoc v <- use value

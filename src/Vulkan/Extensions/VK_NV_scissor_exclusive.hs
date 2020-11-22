@@ -173,7 +173,7 @@ cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors =
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetExclusiveScissorNV is null" Nothing Nothing
   let vkCmdSetExclusiveScissorNV' = mkVkCmdSetExclusiveScissorNV vkCmdSetExclusiveScissorNVPtr
   pPExclusiveScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (exclusiveScissors)) * 16) 4
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPExclusiveScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (exclusiveScissors)
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPExclusiveScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (exclusiveScissors)
   lift $ vkCmdSetExclusiveScissorNV' (commandBufferHandle (commandBuffer)) (firstExclusiveScissor) ((fromIntegral (Data.Vector.length $ (exclusiveScissors)) :: Word32)) (pPExclusiveScissors)
   pure $ ()
 
@@ -308,7 +308,7 @@ instance ToCStruct PipelineViewportExclusiveScissorStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (exclusiveScissors)) :: Word32))
     pPExclusiveScissors' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (exclusiveScissors)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPExclusiveScissors' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (exclusiveScissors)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPExclusiveScissors' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (exclusiveScissors)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Rect2D))) (pPExclusiveScissors')
     lift $ f
   cStructSize = 32
@@ -317,7 +317,7 @@ instance ToCStruct PipelineViewportExclusiveScissorStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pPExclusiveScissors' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (mempty)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPExclusiveScissors' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPExclusiveScissors' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Rect2D))) (pPExclusiveScissors')
     lift $ f
 

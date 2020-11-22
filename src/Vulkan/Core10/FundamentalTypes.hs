@@ -30,8 +30,6 @@ import GHC.Show (showsPrec)
 import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
-import Control.Monad.Trans.Class (lift)
-import Control.Monad.Trans.Cont (evalContT)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -45,7 +43,6 @@ import Data.Word (Word32)
 import Data.Word (Word64)
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
-import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
@@ -341,16 +338,16 @@ deriving instance Show Rect2D
 
 instance ToCStruct Rect2D where
   withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p Rect2D{..} f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Offset2D)) (offset) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr Extent2D)) (extent) . ($ ())
-    lift $ f
+  pokeCStruct p Rect2D{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Offset2D)) (offset)
+    poke ((p `plusPtr` 8 :: Ptr Extent2D)) (extent)
+    f
   cStructSize = 16
   cStructAlignment = 4
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Offset2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Offset2D)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Extent2D)) (zero)
+    f
 
 instance FromCStruct Rect2D where
   peekCStruct p = do
@@ -358,6 +355,12 @@ instance FromCStruct Rect2D where
     extent <- peekCStruct @Extent2D ((p `plusPtr` 8 :: Ptr Extent2D))
     pure $ Rect2D
              offset extent
+
+instance Storable Rect2D where
+  sizeOf ~_ = 16
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero Rect2D where
   zero = Rect2D

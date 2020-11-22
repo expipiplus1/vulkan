@@ -24,8 +24,9 @@ import           Marshal.Marshalable
 import           Render.Element
 import           Render.Names
 import           Render.SpecInfo
+import           Render.State                   ( HasRenderState )
 import           Render.Stmts
-import           Render.Stmts.Poke.SiblingInfo
+import {-# SOURCE #-} Render.Stmts.Poke.SiblingInfo
 import           Spec.Types
 
 -- | @MarshalScheme a@ represents how we will marshal some @a@ (a struct
@@ -131,6 +132,7 @@ data CSPoke a
          , HasSiblingInfo a r
          , HasStmts r
          , HasRenderedNames r
+         , HasRenderState r
          , Show a
          )
       => Ref s ValueDoc -> Stmt s r (Ref s ValueDoc))
@@ -154,6 +156,7 @@ data CustomSchemeElided a = CustomSchemeElided
          , HasStmts r
          , HasRenderedNames r
          , HasSiblingInfo a r
+         , HasRenderState r
          , Show a
          )
       => Stmt s r (Ref s ValueDoc)

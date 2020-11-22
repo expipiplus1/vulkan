@@ -1231,8 +1231,8 @@ instance (Extendss ImageViewCreateInfo es, PokeChain es) => ToCStruct (ImageView
     lift $ poke ((p `plusPtr` 24 :: Ptr Image)) (image)
     lift $ poke ((p `plusPtr` 32 :: Ptr ImageViewType)) (viewType)
     lift $ poke ((p `plusPtr` 36 :: Ptr Format)) (format)
-    ContT $ pokeCStruct ((p `plusPtr` 40 :: Ptr ComponentMapping)) (components) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 56 :: Ptr ImageSubresourceRange)) (subresourceRange) . ($ ())
+    lift $ poke ((p `plusPtr` 40 :: Ptr ComponentMapping)) (components)
+    lift $ poke ((p `plusPtr` 56 :: Ptr ImageSubresourceRange)) (subresourceRange)
     lift $ f
   cStructSize = 80
   cStructAlignment = 8
@@ -1243,8 +1243,8 @@ instance (Extendss ImageViewCreateInfo es, PokeChain es) => ToCStruct (ImageView
     lift $ poke ((p `plusPtr` 24 :: Ptr Image)) (zero)
     lift $ poke ((p `plusPtr` 32 :: Ptr ImageViewType)) (zero)
     lift $ poke ((p `plusPtr` 36 :: Ptr Format)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 40 :: Ptr ComponentMapping)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 56 :: Ptr ImageSubresourceRange)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 40 :: Ptr ComponentMapping)) (zero)
+    lift $ poke ((p `plusPtr` 56 :: Ptr ImageSubresourceRange)) (zero)
     lift $ f
 
 instance (Extendss ImageViewCreateInfo es, PeekChain es) => FromCStruct (ImageViewCreateInfo es) where

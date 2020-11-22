@@ -669,29 +669,29 @@ deriving instance Show SurfaceCapabilitiesKHR
 
 instance ToCStruct SurfaceCapabilitiesKHR where
   withCStruct x f = allocaBytesAligned 52 4 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p SurfaceCapabilitiesKHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (minImageCount)
-    lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (maxImageCount)
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr Extent2D)) (currentExtent) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (minImageExtent) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (maxImageExtent) . ($ ())
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (maxImageArrayLayers)
-    lift $ poke ((p `plusPtr` 36 :: Ptr SurfaceTransformFlagsKHR)) (supportedTransforms)
-    lift $ poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (currentTransform)
-    lift $ poke ((p `plusPtr` 44 :: Ptr CompositeAlphaFlagsKHR)) (supportedCompositeAlpha)
-    lift $ poke ((p `plusPtr` 48 :: Ptr ImageUsageFlags)) (supportedUsageFlags)
-    lift $ f
+  pokeCStruct p SurfaceCapabilitiesKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (minImageCount)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (maxImageCount)
+    poke ((p `plusPtr` 8 :: Ptr Extent2D)) (currentExtent)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (minImageExtent)
+    poke ((p `plusPtr` 24 :: Ptr Extent2D)) (maxImageExtent)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (maxImageArrayLayers)
+    poke ((p `plusPtr` 36 :: Ptr SurfaceTransformFlagsKHR)) (supportedTransforms)
+    poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (currentTransform)
+    poke ((p `plusPtr` 44 :: Ptr CompositeAlphaFlagsKHR)) (supportedCompositeAlpha)
+    poke ((p `plusPtr` 48 :: Ptr ImageUsageFlags)) (supportedUsageFlags)
+    f
   cStructSize = 52
   cStructAlignment = 4
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr Extent2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (zero)
+    f
 
 instance FromCStruct SurfaceCapabilitiesKHR where
   peekCStruct p = do
@@ -707,6 +707,12 @@ instance FromCStruct SurfaceCapabilitiesKHR where
     supportedUsageFlags <- peek @ImageUsageFlags ((p `plusPtr` 48 :: Ptr ImageUsageFlags))
     pure $ SurfaceCapabilitiesKHR
              minImageCount maxImageCount currentExtent minImageExtent maxImageExtent maxImageArrayLayers supportedTransforms currentTransform supportedCompositeAlpha supportedUsageFlags
+
+instance Storable SurfaceCapabilitiesKHR where
+  sizeOf ~_ = 52
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero SurfaceCapabilitiesKHR where
   zero = SurfaceCapabilitiesKHR

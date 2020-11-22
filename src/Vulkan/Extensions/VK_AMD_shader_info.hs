@@ -331,36 +331,36 @@ deriving instance Show ShaderStatisticsInfoAMD
 
 instance ToCStruct ShaderStatisticsInfoAMD where
   withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p ShaderStatisticsInfoAMD{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr ShaderStageFlags)) (shaderStageMask)
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr ShaderResourceUsageAMD)) (resourceUsage) . ($ ())
-    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (numPhysicalVgprs)
-    lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (numPhysicalSgprs)
-    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (numAvailableVgprs)
-    lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (numAvailableSgprs)
+  pokeCStruct p ShaderStatisticsInfoAMD{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ShaderStageFlags)) (shaderStageMask)
+    poke ((p `plusPtr` 8 :: Ptr ShaderResourceUsageAMD)) (resourceUsage)
+    poke ((p `plusPtr` 40 :: Ptr Word32)) (numPhysicalVgprs)
+    poke ((p `plusPtr` 44 :: Ptr Word32)) (numPhysicalSgprs)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (numAvailableVgprs)
+    poke ((p `plusPtr` 52 :: Ptr Word32)) (numAvailableSgprs)
     let pComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 56 :: Ptr (FixedArray 3 Word32)))
-    lift $ case (computeWorkGroupSize) of
+    case (computeWorkGroupSize) of
       (e0, e1, e2) -> do
         poke (pComputeWorkGroupSize' :: Ptr Word32) (e0)
         poke (pComputeWorkGroupSize' `plusPtr` 4 :: Ptr Word32) (e1)
         poke (pComputeWorkGroupSize' `plusPtr` 8 :: Ptr Word32) (e2)
-    lift $ f
+    f
   cStructSize = 72
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr ShaderStageFlags)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr ShaderResourceUsageAMD)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ShaderStageFlags)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr ShaderResourceUsageAMD)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
     let pComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 56 :: Ptr (FixedArray 3 Word32)))
-    lift $ case ((zero, zero, zero)) of
+    case ((zero, zero, zero)) of
       (e0, e1, e2) -> do
         poke (pComputeWorkGroupSize' :: Ptr Word32) (e0)
         poke (pComputeWorkGroupSize' `plusPtr` 4 :: Ptr Word32) (e1)
         poke (pComputeWorkGroupSize' `plusPtr` 8 :: Ptr Word32) (e2)
-    lift $ f
+    f
 
 instance FromCStruct ShaderStatisticsInfoAMD where
   peekCStruct p = do
@@ -376,6 +376,12 @@ instance FromCStruct ShaderStatisticsInfoAMD where
     computeWorkGroupSize2 <- peek @Word32 ((pcomputeWorkGroupSize `advancePtrBytes` 8 :: Ptr Word32))
     pure $ ShaderStatisticsInfoAMD
              shaderStageMask resourceUsage numPhysicalVgprs numPhysicalSgprs numAvailableVgprs numAvailableSgprs ((computeWorkGroupSize0, computeWorkGroupSize1, computeWorkGroupSize2))
+
+instance Storable ShaderStatisticsInfoAMD where
+  sizeOf ~_ = 72
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero ShaderStatisticsInfoAMD where
   zero = ShaderStatisticsInfoAMD

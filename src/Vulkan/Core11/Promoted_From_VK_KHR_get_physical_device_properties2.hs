@@ -748,7 +748,7 @@ instance (Extendss PhysicalDeviceFeatures2 es, PokeChain es) => ToCStruct (Physi
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr PhysicalDeviceFeatures)) (features) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceFeatures)) (features)
     lift $ f
   cStructSize = 240
   cStructAlignment = 8
@@ -756,7 +756,7 @@ instance (Extendss PhysicalDeviceFeatures2 es, PokeChain es) => ToCStruct (Physi
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr PhysicalDeviceFeatures)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceFeatures)) (zero)
     lift $ f
 
 instance (Extendss PhysicalDeviceFeatures2 es, PeekChain es) => FromCStruct (PhysicalDeviceFeatures2 es) where
@@ -919,7 +919,7 @@ instance (Extendss PhysicalDeviceProperties2 es, PokeChain es) => ToCStruct (Phy
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr PhysicalDeviceProperties)) (properties) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceProperties)) (properties)
     lift $ f
   cStructSize = 840
   cStructAlignment = 8
@@ -927,7 +927,7 @@ instance (Extendss PhysicalDeviceProperties2 es, PokeChain es) => ToCStruct (Phy
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr PhysicalDeviceProperties)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceProperties)) (zero)
     lift $ f
 
 instance (Extendss PhysicalDeviceProperties2 es, PeekChain es) => FromCStruct (PhysicalDeviceProperties2 es) where
@@ -993,7 +993,7 @@ instance (Extendss FormatProperties2 es, PokeChain es) => ToCStruct (FormatPrope
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FORMAT_PROPERTIES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr FormatProperties)) (formatProperties) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr FormatProperties)) (formatProperties)
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
@@ -1001,7 +1001,7 @@ instance (Extendss FormatProperties2 es, PokeChain es) => ToCStruct (FormatPrope
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FORMAT_PROPERTIES_2)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr FormatProperties)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr FormatProperties)) (zero)
     lift $ f
 
 instance (Extendss FormatProperties2 es, PeekChain es) => FromCStruct (FormatProperties2 es) where
@@ -1097,7 +1097,7 @@ instance (Extendss ImageFormatProperties2 es, PokeChain es) => ToCStruct (ImageF
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ImageFormatProperties)) (imageFormatProperties) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr ImageFormatProperties)) (imageFormatProperties)
     lift $ f
   cStructSize = 48
   cStructAlignment = 8
@@ -1105,7 +1105,7 @@ instance (Extendss ImageFormatProperties2 es, PokeChain es) => ToCStruct (ImageF
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ImageFormatProperties)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr ImageFormatProperties)) (zero)
     lift $ f
 
 instance (Extendss ImageFormatProperties2 es, PeekChain es) => FromCStruct (ImageFormatProperties2 es) where
@@ -1343,7 +1343,7 @@ instance (Extendss QueueFamilyProperties2 es, PokeChain es) => ToCStruct (QueueF
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr QueueFamilyProperties)) (queueFamilyProperties) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr QueueFamilyProperties)) (queueFamilyProperties)
     lift $ f
   cStructSize = 40
   cStructAlignment = 8
@@ -1351,7 +1351,7 @@ instance (Extendss QueueFamilyProperties2 es, PokeChain es) => ToCStruct (QueueF
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr QueueFamilyProperties)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr QueueFamilyProperties)) (zero)
     lift $ f
 
 instance (Extendss QueueFamilyProperties2 es, PeekChain es) => FromCStruct (QueueFamilyProperties2 es) where
@@ -1420,7 +1420,7 @@ instance (Extendss PhysicalDeviceMemoryProperties2 es, PokeChain es) => ToCStruc
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr PhysicalDeviceMemoryProperties)) (memoryProperties) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceMemoryProperties)) (memoryProperties)
     lift $ f
   cStructSize = 536
   cStructAlignment = 8
@@ -1428,7 +1428,7 @@ instance (Extendss PhysicalDeviceMemoryProperties2 es, PokeChain es) => ToCStruc
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr PhysicalDeviceMemoryProperties)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceMemoryProperties)) (zero)
     lift $ f
 
 instance (Extendss PhysicalDeviceMemoryProperties2 es, PeekChain es) => FromCStruct (PhysicalDeviceMemoryProperties2 es) where
@@ -1470,24 +1470,30 @@ deriving instance Show SparseImageFormatProperties2
 
 instance ToCStruct SparseImageFormatProperties2 where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p SparseImageFormatProperties2{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr SparseImageFormatProperties)) (properties) . ($ ())
-    lift $ f
+  pokeCStruct p SparseImageFormatProperties2{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SparseImageFormatProperties)) (properties)
+    f
   cStructSize = 40
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr SparseImageFormatProperties)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SparseImageFormatProperties)) (zero)
+    f
 
 instance FromCStruct SparseImageFormatProperties2 where
   peekCStruct p = do
     properties <- peekCStruct @SparseImageFormatProperties ((p `plusPtr` 16 :: Ptr SparseImageFormatProperties))
     pure $ SparseImageFormatProperties2
              properties
+
+instance Storable SparseImageFormatProperties2 where
+  sizeOf ~_ = 40
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero SparseImageFormatProperties2 where
   zero = SparseImageFormatProperties2

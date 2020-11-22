@@ -739,7 +739,7 @@ instance (Extendss ImageMemoryBarrier es, PokeChain es) => ToCStruct (ImageMemor
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (srcQueueFamilyIndex)
     lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (dstQueueFamilyIndex)
     lift $ poke ((p `plusPtr` 40 :: Ptr Image)) (image)
-    ContT $ pokeCStruct ((p `plusPtr` 48 :: Ptr ImageSubresourceRange)) (subresourceRange) . ($ ())
+    lift $ poke ((p `plusPtr` 48 :: Ptr ImageSubresourceRange)) (subresourceRange)
     lift $ f
   cStructSize = 72
   cStructAlignment = 8
@@ -754,7 +754,7 @@ instance (Extendss ImageMemoryBarrier es, PokeChain es) => ToCStruct (ImageMemor
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr Image)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 48 :: Ptr ImageSubresourceRange)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 48 :: Ptr ImageSubresourceRange)) (zero)
     lift $ f
 
 instance (Extendss ImageMemoryBarrier es, PeekChain es) => FromCStruct (ImageMemoryBarrier es) where

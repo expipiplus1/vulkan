@@ -653,32 +653,32 @@ deriving instance Show AndroidHardwareBufferFormatPropertiesANDROID
 
 instance ToCStruct AndroidHardwareBufferFormatPropertiesANDROID where
   withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p AndroidHardwareBufferFormatPropertiesANDROID{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Format)) (format)
-    lift $ poke ((p `plusPtr` 24 :: Ptr Word64)) (externalFormat)
-    lift $ poke ((p `plusPtr` 32 :: Ptr FormatFeatureFlags)) (formatFeatures)
-    ContT $ pokeCStruct ((p `plusPtr` 36 :: Ptr ComponentMapping)) (samplerYcbcrConversionComponents) . ($ ())
-    lift $ poke ((p `plusPtr` 52 :: Ptr SamplerYcbcrModelConversion)) (suggestedYcbcrModel)
-    lift $ poke ((p `plusPtr` 56 :: Ptr SamplerYcbcrRange)) (suggestedYcbcrRange)
-    lift $ poke ((p `plusPtr` 60 :: Ptr ChromaLocation)) (suggestedXChromaOffset)
-    lift $ poke ((p `plusPtr` 64 :: Ptr ChromaLocation)) (suggestedYChromaOffset)
-    lift $ f
+  pokeCStruct p AndroidHardwareBufferFormatPropertiesANDROID{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Format)) (format)
+    poke ((p `plusPtr` 24 :: Ptr Word64)) (externalFormat)
+    poke ((p `plusPtr` 32 :: Ptr FormatFeatureFlags)) (formatFeatures)
+    poke ((p `plusPtr` 36 :: Ptr ComponentMapping)) (samplerYcbcrConversionComponents)
+    poke ((p `plusPtr` 52 :: Ptr SamplerYcbcrModelConversion)) (suggestedYcbcrModel)
+    poke ((p `plusPtr` 56 :: Ptr SamplerYcbcrRange)) (suggestedYcbcrRange)
+    poke ((p `plusPtr` 60 :: Ptr ChromaLocation)) (suggestedXChromaOffset)
+    poke ((p `plusPtr` 64 :: Ptr ChromaLocation)) (suggestedYChromaOffset)
+    f
   cStructSize = 72
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Format)) (zero)
-    lift $ poke ((p `plusPtr` 24 :: Ptr Word64)) (zero)
-    lift $ poke ((p `plusPtr` 32 :: Ptr FormatFeatureFlags)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 36 :: Ptr ComponentMapping)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 52 :: Ptr SamplerYcbcrModelConversion)) (zero)
-    lift $ poke ((p `plusPtr` 56 :: Ptr SamplerYcbcrRange)) (zero)
-    lift $ poke ((p `plusPtr` 60 :: Ptr ChromaLocation)) (zero)
-    lift $ poke ((p `plusPtr` 64 :: Ptr ChromaLocation)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Format)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Word64)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr FormatFeatureFlags)) (zero)
+    poke ((p `plusPtr` 36 :: Ptr ComponentMapping)) (zero)
+    poke ((p `plusPtr` 52 :: Ptr SamplerYcbcrModelConversion)) (zero)
+    poke ((p `plusPtr` 56 :: Ptr SamplerYcbcrRange)) (zero)
+    poke ((p `plusPtr` 60 :: Ptr ChromaLocation)) (zero)
+    poke ((p `plusPtr` 64 :: Ptr ChromaLocation)) (zero)
+    f
 
 instance FromCStruct AndroidHardwareBufferFormatPropertiesANDROID where
   peekCStruct p = do
@@ -692,6 +692,12 @@ instance FromCStruct AndroidHardwareBufferFormatPropertiesANDROID where
     suggestedYChromaOffset <- peek @ChromaLocation ((p `plusPtr` 64 :: Ptr ChromaLocation))
     pure $ AndroidHardwareBufferFormatPropertiesANDROID
              format externalFormat formatFeatures samplerYcbcrConversionComponents suggestedYcbcrModel suggestedYcbcrRange suggestedXChromaOffset suggestedYChromaOffset
+
+instance Storable AndroidHardwareBufferFormatPropertiesANDROID where
+  sizeOf ~_ = 72
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero AndroidHardwareBufferFormatPropertiesANDROID where
   zero = AndroidHardwareBufferFormatPropertiesANDROID

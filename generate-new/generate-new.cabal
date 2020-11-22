@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e2a11964ef69f9b15c87c21ed9d7c6e1c67210aa674065a1a734e31c694f87b5
+-- hash: 5239514d98fffcdddcdbabbf880d348e859b4eccc99e9610c0ec8a389c06b434
 
 name:           generate-new
 version:        0.0.0
@@ -30,6 +30,7 @@ library
       CType.Size
       Data.Text.Extra
       Data.Vector.Extra
+      Data.Vector.TopTraverse
       Documentation
       Documentation.All
       Documentation.Haddock

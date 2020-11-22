@@ -26,6 +26,7 @@ import           Render.Names
 import           Render.Peek
 import           Render.Scheme
 import           Render.SpecInfo
+import           Render.State
 import           Render.Stmts
 import           Render.Stmts.Poke
 import           Render.Type
@@ -37,12 +38,14 @@ renderUnion
      , HasSpecInfo r
      , HasStmts r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => MarshaledStruct AUnion
   -> Sem r RenderElement
 renderUnion marshaled@MarshaledStruct {..} = context (unCName msName) $ do
   RenderParams {..} <- input
   let Struct {..} = msStruct
+
   genRe ("union " <> unCName sName) $ do
     let n = mkTyName sName
     ms <- traverseV (renderUnionMember sName) msMembers
@@ -102,6 +105,7 @@ toCStructInstance
      , HasSpecInfo r
      , HasStmts r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => MarshaledStruct AUnion
   -> Sem r ()

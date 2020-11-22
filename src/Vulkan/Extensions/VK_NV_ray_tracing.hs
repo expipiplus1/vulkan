@@ -2410,16 +2410,16 @@ deriving instance Show GeometryDataNV
 
 instance ToCStruct GeometryDataNV where
   withCStruct x f = allocaBytesAligned 136 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p GeometryDataNV{..} f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr GeometryTrianglesNV)) (triangles) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 96 :: Ptr GeometryAABBNV)) (aabbs) . ($ ())
-    lift $ f
+  pokeCStruct p GeometryDataNV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr GeometryTrianglesNV)) (triangles)
+    poke ((p `plusPtr` 96 :: Ptr GeometryAABBNV)) (aabbs)
+    f
   cStructSize = 136
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr GeometryTrianglesNV)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 96 :: Ptr GeometryAABBNV)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr GeometryTrianglesNV)) (zero)
+    poke ((p `plusPtr` 96 :: Ptr GeometryAABBNV)) (zero)
+    f
 
 instance FromCStruct GeometryDataNV where
   peekCStruct p = do
@@ -2427,6 +2427,12 @@ instance FromCStruct GeometryDataNV where
     aabbs <- peekCStruct @GeometryAABBNV ((p `plusPtr` 96 :: Ptr GeometryAABBNV))
     pure $ GeometryDataNV
              triangles aabbs
+
+instance Storable GeometryDataNV where
+  sizeOf ~_ = 136
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero GeometryDataNV where
   zero = GeometryDataNV
@@ -2477,21 +2483,21 @@ deriving instance Show GeometryNV
 
 instance ToCStruct GeometryNV where
   withCStruct x f = allocaBytesAligned 168 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p GeometryNV{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr GeometryTypeKHR)) (geometryType)
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr GeometryDataNV)) (geometry) . ($ ())
-    lift $ poke ((p `plusPtr` 160 :: Ptr GeometryFlagsKHR)) (flags)
-    lift $ f
+  pokeCStruct p GeometryNV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr GeometryTypeKHR)) (geometryType)
+    poke ((p `plusPtr` 24 :: Ptr GeometryDataNV)) (geometry)
+    poke ((p `plusPtr` 160 :: Ptr GeometryFlagsKHR)) (flags)
+    f
   cStructSize = 168
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr GeometryTypeKHR)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr GeometryDataNV)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr GeometryTypeKHR)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr GeometryDataNV)) (zero)
+    f
 
 instance FromCStruct GeometryNV where
   peekCStruct p = do
@@ -2500,6 +2506,12 @@ instance FromCStruct GeometryNV where
     flags <- peek @GeometryFlagsKHR ((p `plusPtr` 160 :: Ptr GeometryFlagsKHR))
     pure $ GeometryNV
              geometryType geometry flags
+
+instance Storable GeometryNV where
+  sizeOf ~_ = 168
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero GeometryNV where
   zero = GeometryNV

@@ -294,7 +294,7 @@ instance ToCStruct BindImageMemoryDeviceGroupInfo where
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPDeviceIndices')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (splitInstanceBindRegions)) :: Word32))
     pPSplitInstanceBindRegions' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (splitInstanceBindRegions)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSplitInstanceBindRegions' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (splitInstanceBindRegions)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPSplitInstanceBindRegions' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (splitInstanceBindRegions)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Rect2D))) (pPSplitInstanceBindRegions')
     lift $ f
   cStructSize = 48
@@ -306,7 +306,7 @@ instance ToCStruct BindImageMemoryDeviceGroupInfo where
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPDeviceIndices')
     pPSplitInstanceBindRegions' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (mempty)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSplitInstanceBindRegions' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPSplitInstanceBindRegions' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (mempty)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Rect2D))) (pPSplitInstanceBindRegions')
     lift $ f
 

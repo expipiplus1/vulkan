@@ -33,7 +33,7 @@ marshalStruct
   => StructOrUnion t 'WithSize 'WithChildren
   -> Sem r (MarshaledStruct t)
 marshalStruct s@Struct {..} = contextShow sName $ do
-  let msName = sName
+  let msName   = sName
       msStruct = s
   msMembers <- forV sMembers $ \sm -> contextShow (smName sm) $ do
     scheme <- structMemberScheme s sm
