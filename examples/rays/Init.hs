@@ -38,6 +38,7 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
+import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
 import           Vulkan.Extensions.VK_EXT_descriptor_indexing
                                                 ( pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
                                                 )
@@ -64,6 +65,7 @@ import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
+                                                , AllocatorCreateFlagBits(..)
                                                 , AllocatorCreateInfo(..)
                                                 , withAllocator
                                                 )
@@ -95,6 +97,7 @@ createInstance win = do
 -- Device creation
 ----------------------------------------------------------------
 
+-- TODO: check VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddress.
 createDevice
   :: forall m
    . (MonadResource m)
@@ -116,9 +119,8 @@ createDevice inst win = do
   let deviceCreateInfo =
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
           ::& PhysicalDeviceTimelineSemaphoreFeatures True
-          :&  zero { rayTracing = True
-                   , rayTracingHostAccelerationStructureCommands = True
-                   }
+          :&  zero { rayTracing = True }
+          :&  zero { bufferDeviceAddress = True }
           :&  ()
       rayTracingExtensions =
         [ KHR_RAY_TRACING_EXTENSION_NAME
@@ -236,8 +238,8 @@ deviceHasRayTracing phys = do
 
       hasFeat = do
         feats <- getPhysicalDeviceFeatures2KHR phys
-        let _ ::& f@PhysicalDeviceRayTracingFeaturesKHR {..} :& () = feats
-        pure $ rayTracing && rayTracingHostAccelerationStructureCommands
+        let _ ::& PhysicalDeviceRayTracingFeaturesKHR {..} :& () = feats
+        pure rayTracing
 
       getProps = do
         props <- getPhysicalDeviceProperties2KHR phys
@@ -265,7 +267,7 @@ createVMA
 createVMA inst phys dev =
   snd
     <$> withAllocator
-          zero { flags            = zero
+          zero { flags            = ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
                , physicalDevice   = physicalDeviceHandle phys
                , device           = deviceHandle dev
                , instance'        = instanceHandle inst

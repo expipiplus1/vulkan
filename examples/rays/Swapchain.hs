@@ -30,6 +30,7 @@ import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Misc
 import           Vulkan.Zero
+import Say
 
 data SwapchainInfo = SwapchainInfo
   { siSwapchain           :: SwapchainKHR
@@ -124,6 +125,7 @@ createSwapchain oldSwapchain explicitSize surf = do
   -- getPhysicalDeviceSurfaceFormatsKHR doesn't return an empty list
   (_, availableFormats) <- getPhysicalDeviceSurfaceFormatsKHR' surf
   let surfaceFormat = selectSurfaceFormat availableFormats
+  sayErrString $ "Using surface format: " <> show surfaceFormat
 
   -- Calculate the extent
   let imageExtent =

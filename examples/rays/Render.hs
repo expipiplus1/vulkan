@@ -15,7 +15,6 @@ import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 )
 import           MonadFrame
 import           MonadVulkan
-import           Say
 import           Swapchain
 import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
@@ -105,7 +104,7 @@ renderFrame = do
          , swapchains          = [siSwapchain]
          , imageIndices        = [imageIndex]
          }
-  sayErrString ("submitted " <> show fIndex)
+  pure ()
 
 ----------------------------------------------------------------
 -- Command buffer recording
@@ -116,25 +115,42 @@ myRecordCommandBuffer :: Frame -> Word32 -> CmdT F ()
 myRecordCommandBuffer Frame {..} imageIndex = do
   -- TODO: neaten
   RTInfo {..} <- CmdT . lift . liftV $ getRTInfo
-  let RecycledResources {..}  = fRecycledResources
-      SwapchainResources {..} = fSwapchainResources
-      SwapchainInfo {..}      = srInfo
-      image                   = srImages ! fromIntegral imageIndex
-      imageWidth              = width (siImageExtent :: Extent2D)
-      imageHeight             = height (siImageExtent :: Extent2D)
-      imageSubresourceRange   = ImageSubresourceRange
-        { aspectMask     = IMAGE_ASPECT_COLOR_BIT
-        , baseMipLevel   = 0
-        , levelCount     = 1
-        , baseArrayLayer = 0
-        , layerCount     = 1
-        }
-      sbtRegion = StridedBufferRegionKHR
-        { buffer = fShaderBindingTable
-        , offset = 0
-        , stride = fromIntegral rtiShaderGroupBaseAlignment
-        , size   = fromIntegral rtiShaderGroupBaseAlignment --  * 1
-        }
+  let
+    RecycledResources {..}  = fRecycledResources
+    SwapchainResources {..} = fSwapchainResources
+    SwapchainInfo {..}      = srInfo
+    image                   = srImages ! fromIntegral imageIndex
+    imageWidth              = width (siImageExtent :: Extent2D)
+    imageHeight             = height (siImageExtent :: Extent2D)
+    imageSubresourceRange   = ImageSubresourceRange
+      { aspectMask     = IMAGE_ASPECT_COLOR_BIT
+      , baseMipLevel   = 0
+      , levelCount     = 1
+      , baseArrayLayer = 0
+      , layerCount     = 1
+      }
+    numRayGenShaderGroups = 1
+    rayGenRegion          = StridedBufferRegionKHR
+      { buffer = fShaderBindingTable
+      , offset = 0
+      , stride = fromIntegral rtiShaderGroupBaseAlignment
+      , size = fromIntegral rtiShaderGroupBaseAlignment * numRayGenShaderGroups
+      }
+    numHitShaderGroups = 1
+    hitRegion          = StridedBufferRegionKHR
+      { buffer = fShaderBindingTable
+      , offset = 1 * fromIntegral rtiShaderGroupBaseAlignment
+      , stride = fromIntegral rtiShaderGroupBaseAlignment
+      , size   = fromIntegral rtiShaderGroupBaseAlignment * numHitShaderGroups
+      }
+    numMissShaderGroups = 1
+    missRegion          = StridedBufferRegionKHR
+      { buffer = fShaderBindingTable
+      , offset = 2 * fromIntegral rtiShaderGroupBaseAlignment
+      , stride = fromIntegral rtiShaderGroupBaseAlignment
+      , size   = fromIntegral rtiShaderGroupBaseAlignment * numMissShaderGroups
+      }
+    callableRegion = zero
   do
     -- Transition image to general, to write from the ray tracing shader
     cmdPipelineBarrier'
@@ -163,7 +179,13 @@ myRecordCommandBuffer Frame {..} imageIndex = do
     --
     -- The actual ray tracing
     --
-    cmdTraceRaysKHR' sbtRegion zero zero zero imageWidth imageHeight 1
+    cmdTraceRaysKHR' rayGenRegion
+                     missRegion
+                     hitRegion
+                     callableRegion
+                     imageWidth
+                     imageHeight
+                     1
 
     -- Transition image back to present
     cmdPipelineBarrier'
