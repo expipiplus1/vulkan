@@ -13,18 +13,19 @@ import           Prelude
 {-# complete Empty, (:<|) #-}
 
 pattern Empty :: Vector a
-pattern Empty <- (V.null -> True) where Empty = V.empty
+pattern Empty <- (V.null -> True) where
+  Empty = V.empty
 
 uncons :: Vector a -> Maybe (a, Vector a)
 uncons Empty = Nothing
-uncons v   = Just (V.unsafeHead v, V.unsafeTail v)
+uncons v     = Just (V.unsafeHead v, V.unsafeTail v)
 
-pattern (:<|)  :: a -> Vector a -> Vector a
-pattern x :<| xs <- (uncons -> Just (x, xs))
-  where (:<|) = V.cons
+pattern (:<|) :: a -> Vector a -> Vector a
+pattern x :<| xs <- (uncons -> Just (x, xs)) where
+  (:<|) = V.cons
 infixr :<|
 
 pattern Singleton :: a -> Vector a
-pattern Singleton x <- (uncons -> Just (x, Empty))
-  where Singleton = V.singleton
+pattern Singleton x <- (uncons -> Just (x, Empty)) where
+  Singleton = V.singleton
 

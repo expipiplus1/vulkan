@@ -5,9 +5,12 @@ import           Data.Version
 import           Polysemy
 import           Polysemy.Fixpoint
 import           Polysemy.Input
+import           Polysemy.State
 import           Relude                  hiding ( Handle
                                                 , Type
+                                                , evalState
                                                 , uncons
+                                                , State
                                                 )
 import           Say
 import           System.TimeIt
@@ -24,8 +27,9 @@ import           Render.Names
 import           Render.SpecInfo
 import           Spec.Parse
 
+import           Render.State                   ( initialRenderState )
 import           VK.AssignModules
-import           VK.Render                      ( renderSpec )
+import           VK.Render
 
 main :: IO ()
 main =
@@ -66,9 +70,10 @@ main =
           mps          <- marshalParams spec
 
           (ss, us, cs) <- runInputConst mps $ do
-            (ss, us) <-
-              timeItNamed "Marshaling structs and unions"
-                $ marshalStructAndUnions specStructs specUnions
+            ss <- timeItNamed "Marshaling structs"
+              $ traverseV marshalStruct specStructs
+            us <- timeItNamed "Marshaling unions"
+              $ traverseV marshalStruct specUnions
             cs <- timeItNamed "Marshaling commands"
               $ traverseV marshalCommand specCommands
               -- TODO: Don't use all commands here, just those commands referenced by
@@ -76,9 +81,9 @@ main =
             pure (ss, us, cs)
 
           renderElements <-
-            timeItNamed "Rendering"
-            $   traverse evaluateWHNF
-            =<< renderSpec spec getDocumentation ss us cs
+            timeItNamed "Rendering" $ traverse evaluateWHNF =<< evalStateIO
+              initialRenderState
+              (renderSpec spec getDocumentation ss us cs)
 
           groups <-
             timeItNamed "Segmenting"
@@ -88,3 +93,9 @@ main =
           timeItNamed "writing"
             $ renderSegments getDocumentation "out" (mergeElements groups)
 
+----------------------------------------------------------------
+--
+----------------------------------------------------------------
+
+evalStateIO :: Member (Embed IO) r => s -> Sem (State s ': r) a -> Sem r a
+evalStateIO i = fmap snd . stateToIO i

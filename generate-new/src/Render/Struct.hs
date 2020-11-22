@@ -31,6 +31,7 @@ import           Render.Names
 import           Render.Peek
 import           Render.Scheme
 import           Render.SpecInfo
+import           Render.State
 import           Render.Stmts
 import           Render.Stmts.Poke
 import           Render.Type
@@ -43,6 +44,7 @@ renderStruct
      , HasSpecInfo r
      , HasStmts r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => MarshaledStruct AStruct
   -> Sem r RenderElement
@@ -179,6 +181,7 @@ renderStoreInstances
      , HasSiblingInfo StructMember r
      , HasStmts r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => MarshaledStruct AStruct
   -> Sem r ()
@@ -205,14 +208,13 @@ renderStoreInstances ms@MarshaledStruct {..} = do
 
     -- Render a Storable instance if it's safe to do so
     case pokes of
-      _ | msName == "VkAccelerationStructureInstanceKHR" -> storableInstance ms
       IOStmts _ -> storableInstance ms
       _         -> pure ()
 
   zeroInstanceDecl ms
 
 storableInstance
-  :: (HasErr r, HasRenderParams r, HasRenderElem r)
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasRenderState r)
   => MarshaledStruct AStruct
   -> Sem r ()
 storableInstance MarshaledStruct {..} = do
@@ -221,6 +223,7 @@ storableInstance MarshaledStruct {..} = do
   -- Some member names clash with storable members "alignment" for instance
   tellImport ''Storable
   tellQualImportWithAll ''Storable
+  declareStorable n
   tellDoc [qqi|
     instance Storable {n} where
       sizeOf ~_ = {sSize msStruct}
@@ -237,6 +240,7 @@ toCStructInstance
      , HasSpecInfo r
      , HasStmts r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => MarshaledStruct AStruct
   -> RenderedStmts (Doc ())
@@ -352,6 +356,7 @@ pokeZeroCStructDecl
      , HasSiblingInfo StructMember r
      , HasStmts r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
@@ -413,6 +418,7 @@ renderPokes
      , HasSpecInfo r
      , HasStmts r
      , HasRenderedNames r
+     , HasRenderState r
      )
   => (MarshaledStructMember -> Sem r (Maybe (Doc ())))
   -- ^ A predicate for which members we should poke

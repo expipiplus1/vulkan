@@ -107,7 +107,7 @@ bespokeModules = do
 
 data BespokeScheme where
   BespokeScheme ::(forall a. Marshalable a => CName -> a -> Maybe (MarshalScheme a)) -> BespokeScheme
-  -- ^ Parent name -> child -> scheme
+  --- ^ Parent name -> child -> scheme
 
 bespokeSchemes :: Spec -> Sem r [BespokeScheme]
 bespokeSchemes spec =

@@ -7,18 +7,19 @@ import           Data.Vector                    ( Vector )
 import           Polysemy
 import           Polysemy.Fixpoint
 
-import           Render.SpecInfo
-import           Render.Enum
-import           Render.Struct
-import           Render.Element
-import           Render.Handle
-import           Render.FuncPointer
-import           Render.Command
-import           Marshal.Struct
-import           Marshal.Command
-import           Spec.Types
 import           Error
+import           Marshal.Command
+import           Marshal.Struct
+import           Render.Command
+import           Render.Element
+import           Render.Enum
+import           Render.FuncPointer
+import           Render.Handle
 import           Render.Names
+import           Render.SpecInfo
+import           Render.State
+import           Render.Struct
+import           Spec.Types
 
 import           VMA.Bracket
 
@@ -28,6 +29,7 @@ renderHeader
      , HasSpecInfo r
      , HasRenderedNames r
      , Member Fixpoint r
+     , HasRenderState r
      )
   => Vector (a, Enum')
   -> Vector (a, MarshaledStruct AStruct)
@@ -54,6 +56,7 @@ commandWithBrackets
      , HasSpecInfo r
      , HasRenderedNames r
      , Member Fixpoint r
+     , HasRenderState r
      )
   => (CName -> Maybe RenderElement)
   -> MarshaledCommand
