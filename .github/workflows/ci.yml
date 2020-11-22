@@ -15,7 +15,8 @@ jobs:
         ghc: ['8.10.2', '8.8.4', '8.6.5']
         os: [ubuntu-20.04, macOS-latest, windows-latest]
         exclude:
-          - ghc: 8.10.1
+          # https://github.com/haskell/cabal/issues/6421
+          - ghc: 8.10.2
             os: macOS-latest
           - os: windows-latest
             ghc: '8.10.2'
@@ -63,33 +64,6 @@ jobs:
         brew cask install vulkan-sdk --verbose ||
           brew cask install vulkan-sdk --verbose ||
           brew cask install vulkan-sdk --verbose
-
-        # Work around cabal's inability to pass C++ flags
-        mkdir bin
-        cat > bin/gcc <<EOF
-        #!/usr/bin/env bash
-        arg=
-        for i in "\$@"; do
-          if [[ "\$i" =~ lib.cpp ]]; then
-            arg="-std=c++11"
-            break
-          fi
-        done
-        exec "$(command -v "${CC:-gcc}")" \$arg "\$@"
-        EOF
-        cat > bin/g++ <<EOF
-        #!/usr/bin/env bash
-        arg=
-        for i in "\$@"; do
-          if [[ "\$i" =~ lib.cpp ]]; then
-            arg="-std=c++11"
-            break
-          fi
-        done
-        exec "$(command -v "${CC:-g++}")" \$arg "\$@"
-        EOF
-        chmod +x bin/*
-        printf "%s\n" "$(pwd)/bin" >> "$GITHUB_PATH"
 
     - name: Install system dependencies Windows
       if: matrix.os == 'windows-latest'
@@ -185,6 +159,8 @@ jobs:
         exclude:
           # https://github.com/actions/setup-haskell/issues/49
           - os: windows-latest
+          # https://github.com/haskell/cabal/issues/6421
+          - os: macOS-latest
       fail-fast: false
 
     steps:
@@ -259,33 +235,6 @@ jobs:
         brew cask install vulkan-sdk --verbose ||
           brew cask install vulkan-sdk --verbose ||
           brew cask install vulkan-sdk --verbose
-
-        # Work around cabal's inability to pass C++ flags
-        mkdir bin
-        cat > bin/gcc <<EOF
-        #!/usr/bin/env bash
-        arg=
-        for i in "\$@"; do
-          if [[ "\$i" =~ lib.cpp ]]; then
-            arg="-std=c++11"
-            break
-          fi
-        done
-        exec "$(command -v "${CC:-gcc}")" \$arg "\$@"
-        EOF
-        cat > bin/g++ <<EOF
-        #!/usr/bin/env bash
-        arg=
-        for i in "\$@"; do
-          if [[ "\$i" =~ lib.cpp ]]; then
-            arg="-std=c++11"
-            break
-          fi
-        done
-        exec "$(command -v "${CC:-g++}")" \$arg "\$@"
-        EOF
-        chmod +x bin/*
-        printf "%s\n" "$(pwd)/bin" >> "$GITHUB_PATH"
 
     - name: Install dependencies
       run: stack build $ARGS --test --bench --only-dependencies
