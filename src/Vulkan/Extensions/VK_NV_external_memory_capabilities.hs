@@ -46,6 +46,7 @@ import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
@@ -235,17 +236,17 @@ deriving instance Show ExternalImageFormatPropertiesNV
 
 instance ToCStruct ExternalImageFormatPropertiesNV where
   withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p ExternalImageFormatPropertiesNV{..} f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr ImageFormatProperties)) (imageFormatProperties) . ($ ())
-    lift $ poke ((p `plusPtr` 32 :: Ptr ExternalMemoryFeatureFlagsNV)) (externalMemoryFeatures)
-    lift $ poke ((p `plusPtr` 36 :: Ptr ExternalMemoryHandleTypeFlagsNV)) (exportFromImportedHandleTypes)
-    lift $ poke ((p `plusPtr` 40 :: Ptr ExternalMemoryHandleTypeFlagsNV)) (compatibleHandleTypes)
-    lift $ f
+  pokeCStruct p ExternalImageFormatPropertiesNV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ImageFormatProperties)) (imageFormatProperties)
+    poke ((p `plusPtr` 32 :: Ptr ExternalMemoryFeatureFlagsNV)) (externalMemoryFeatures)
+    poke ((p `plusPtr` 36 :: Ptr ExternalMemoryHandleTypeFlagsNV)) (exportFromImportedHandleTypes)
+    poke ((p `plusPtr` 40 :: Ptr ExternalMemoryHandleTypeFlagsNV)) (compatibleHandleTypes)
+    f
   cStructSize = 48
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr ImageFormatProperties)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ImageFormatProperties)) (zero)
+    f
 
 instance FromCStruct ExternalImageFormatPropertiesNV where
   peekCStruct p = do
@@ -255,6 +256,12 @@ instance FromCStruct ExternalImageFormatPropertiesNV where
     compatibleHandleTypes <- peek @ExternalMemoryHandleTypeFlagsNV ((p `plusPtr` 40 :: Ptr ExternalMemoryHandleTypeFlagsNV))
     pure $ ExternalImageFormatPropertiesNV
              imageFormatProperties externalMemoryFeatures exportFromImportedHandleTypes compatibleHandleTypes
+
+instance Storable ExternalImageFormatPropertiesNV where
+  sizeOf ~_ = 48
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero ExternalImageFormatPropertiesNV where
   zero = ExternalImageFormatPropertiesNV

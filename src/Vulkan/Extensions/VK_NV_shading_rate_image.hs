@@ -687,22 +687,22 @@ deriving instance Show PhysicalDeviceShadingRateImagePropertiesNV
 
 instance ToCStruct PhysicalDeviceShadingRateImagePropertiesNV where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceShadingRateImagePropertiesNV{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (shadingRateTexelSize) . ($ ())
-    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (shadingRatePaletteSize)
-    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (shadingRateMaxCoarseSamples)
-    lift $ f
+  pokeCStruct p PhysicalDeviceShadingRateImagePropertiesNV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (shadingRateTexelSize)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (shadingRatePaletteSize)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (shadingRateMaxCoarseSamples)
+    f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
+    f
 
 instance FromCStruct PhysicalDeviceShadingRateImagePropertiesNV where
   peekCStruct p = do
@@ -711,6 +711,12 @@ instance FromCStruct PhysicalDeviceShadingRateImagePropertiesNV where
     shadingRateMaxCoarseSamples <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
     pure $ PhysicalDeviceShadingRateImagePropertiesNV
              shadingRateTexelSize shadingRatePaletteSize shadingRateMaxCoarseSamples
+
+instance Storable PhysicalDeviceShadingRateImagePropertiesNV where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PhysicalDeviceShadingRateImagePropertiesNV where
   zero = PhysicalDeviceShadingRateImagePropertiesNV

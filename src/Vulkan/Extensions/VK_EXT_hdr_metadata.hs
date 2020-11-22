@@ -108,7 +108,7 @@ setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
   pPSwapchains <- ContT $ allocaBytesAligned @SwapchainKHR ((Data.Vector.length (swapchains)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSwapchains `plusPtr` (8 * (i)) :: Ptr SwapchainKHR) (e)) (swapchains)
   pPMetadata <- ContT $ allocaBytesAligned @HdrMetadataEXT ((Data.Vector.length (metadata)) * 64) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMetadata `plusPtr` (64 * (i)) :: Ptr HdrMetadataEXT) (e) . ($ ())) (metadata)
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPMetadata `plusPtr` (64 * (i)) :: Ptr HdrMetadataEXT) (e)) (metadata)
   lift $ vkSetHdrMetadataEXT' (deviceHandle (device)) ((fromIntegral pSwapchainsLength :: Word32)) (pPSwapchains) (pPMetadata)
   pure $ ()
 
@@ -205,32 +205,32 @@ deriving instance Show HdrMetadataEXT
 
 instance ToCStruct HdrMetadataEXT where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p HdrMetadataEXT{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_HDR_METADATA_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr XYColorEXT)) (displayPrimaryRed) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr XYColorEXT)) (displayPrimaryGreen) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 32 :: Ptr XYColorEXT)) (displayPrimaryBlue) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 40 :: Ptr XYColorEXT)) (whitePoint) . ($ ())
-    lift $ poke ((p `plusPtr` 48 :: Ptr CFloat)) (CFloat (maxLuminance))
-    lift $ poke ((p `plusPtr` 52 :: Ptr CFloat)) (CFloat (minLuminance))
-    lift $ poke ((p `plusPtr` 56 :: Ptr CFloat)) (CFloat (maxContentLightLevel))
-    lift $ poke ((p `plusPtr` 60 :: Ptr CFloat)) (CFloat (maxFrameAverageLightLevel))
-    lift $ f
+  pokeCStruct p HdrMetadataEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_HDR_METADATA_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr XYColorEXT)) (displayPrimaryRed)
+    poke ((p `plusPtr` 24 :: Ptr XYColorEXT)) (displayPrimaryGreen)
+    poke ((p `plusPtr` 32 :: Ptr XYColorEXT)) (displayPrimaryBlue)
+    poke ((p `plusPtr` 40 :: Ptr XYColorEXT)) (whitePoint)
+    poke ((p `plusPtr` 48 :: Ptr CFloat)) (CFloat (maxLuminance))
+    poke ((p `plusPtr` 52 :: Ptr CFloat)) (CFloat (minLuminance))
+    poke ((p `plusPtr` 56 :: Ptr CFloat)) (CFloat (maxContentLightLevel))
+    poke ((p `plusPtr` 60 :: Ptr CFloat)) (CFloat (maxFrameAverageLightLevel))
+    f
   cStructSize = 64
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_HDR_METADATA_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr XYColorEXT)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr XYColorEXT)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 32 :: Ptr XYColorEXT)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 40 :: Ptr XYColorEXT)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 48 :: Ptr CFloat)) (CFloat (zero))
-    lift $ poke ((p `plusPtr` 52 :: Ptr CFloat)) (CFloat (zero))
-    lift $ poke ((p `plusPtr` 56 :: Ptr CFloat)) (CFloat (zero))
-    lift $ poke ((p `plusPtr` 60 :: Ptr CFloat)) (CFloat (zero))
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_HDR_METADATA_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr XYColorEXT)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr XYColorEXT)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr XYColorEXT)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr XYColorEXT)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 52 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 56 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 60 :: Ptr CFloat)) (CFloat (zero))
+    f
 
 instance FromCStruct HdrMetadataEXT where
   peekCStruct p = do
@@ -244,6 +244,12 @@ instance FromCStruct HdrMetadataEXT where
     maxFrameAverageLightLevel <- peek @CFloat ((p `plusPtr` 60 :: Ptr CFloat))
     pure $ HdrMetadataEXT
              displayPrimaryRed displayPrimaryGreen displayPrimaryBlue whitePoint ((\(CFloat a) -> a) maxLuminance) ((\(CFloat a) -> a) minLuminance) ((\(CFloat a) -> a) maxContentLightLevel) ((\(CFloat a) -> a) maxFrameAverageLightLevel)
+
+instance Storable HdrMetadataEXT where
+  sizeOf ~_ = 64
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero HdrMetadataEXT where
   zero = HdrMetadataEXT

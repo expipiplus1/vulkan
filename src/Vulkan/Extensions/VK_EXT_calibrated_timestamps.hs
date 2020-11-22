@@ -227,7 +227,7 @@ getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetCalibratedTimestampsEXT is null" Nothing Nothing
   let vkGetCalibratedTimestampsEXT' = mkVkGetCalibratedTimestampsEXT vkGetCalibratedTimestampsEXTPtr
   pPTimestampInfos <- ContT $ allocaBytesAligned @CalibratedTimestampInfoEXT ((Data.Vector.length (timestampInfos)) * 24) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTimestampInfos `plusPtr` (24 * (i)) :: Ptr CalibratedTimestampInfoEXT) (e) . ($ ())) (timestampInfos)
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPTimestampInfos `plusPtr` (24 * (i)) :: Ptr CalibratedTimestampInfoEXT) (e)) (timestampInfos)
   pPTimestamps <- ContT $ bracket (callocBytes @Word64 ((fromIntegral ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32))) * 8)) free
   pPMaxDeviation <- ContT $ bracket (callocBytes @Word64 8) free
   r <- lift $ vkGetCalibratedTimestampsEXT' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32)) (pPTimestampInfos) (pPTimestamps) (pPMaxDeviation)

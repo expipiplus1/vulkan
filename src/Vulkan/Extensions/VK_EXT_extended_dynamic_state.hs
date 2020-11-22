@@ -383,7 +383,7 @@ cmdSetViewportWithCountEXT commandBuffer viewports = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewportWithCountEXT is null" Nothing Nothing
   let vkCmdSetViewportWithCountEXT' = mkVkCmdSetViewportWithCountEXT vkCmdSetViewportWithCountEXTPtr
   pPViewports <- ContT $ allocaBytesAligned @Viewport ((Data.Vector.length (viewports)) * 24) 4
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e) . ($ ())) (viewports)
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e)) (viewports)
   lift $ vkCmdSetViewportWithCountEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (viewports)) :: Word32)) (pPViewports)
   pure $ ()
 
@@ -481,7 +481,7 @@ cmdSetScissorWithCountEXT commandBuffer scissors = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetScissorWithCountEXT is null" Nothing Nothing
   let vkCmdSetScissorWithCountEXT' = mkVkCmdSetScissorWithCountEXT vkCmdSetScissorWithCountEXTPtr
   pPScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (scissors)) * 16) 4
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (scissors)
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (scissors)
   lift $ vkCmdSetScissorWithCountEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (scissors)) :: Word32)) (pPScissors)
   pure $ ()
 

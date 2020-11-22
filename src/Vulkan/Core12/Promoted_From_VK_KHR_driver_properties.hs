@@ -14,8 +14,6 @@ import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
-import Control.Monad.Trans.Class (lift)
-import Control.Monad.Trans.Cont (evalContT)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.Storable (Storable)
@@ -27,7 +25,6 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word8)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
-import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.CStruct.Utils (pokeFixedLengthNullTerminatedByteString)
 import Vulkan.Core12.Enums.DriverId (DriverId)
@@ -147,24 +144,24 @@ deriving instance Show PhysicalDeviceDriverProperties
 
 instance ToCStruct PhysicalDeviceDriverProperties where
   withCStruct x f = allocaBytesAligned 536 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceDriverProperties{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr DriverId)) (driverID)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))) (driverName)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))) (driverInfo)
-    ContT $ pokeCStruct ((p `plusPtr` 532 :: Ptr ConformanceVersion)) (conformanceVersion) . ($ ())
-    lift $ f
+  pokeCStruct p PhysicalDeviceDriverProperties{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DriverId)) (driverID)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))) (driverName)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))) (driverInfo)
+    poke ((p `plusPtr` 532 :: Ptr ConformanceVersion)) (conformanceVersion)
+    f
   cStructSize = 536
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr DriverId)) (zero)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))) (mempty)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))) (mempty)
-    ContT $ pokeCStruct ((p `plusPtr` 532 :: Ptr ConformanceVersion)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DriverId)) (zero)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))) (mempty)
+    poke ((p `plusPtr` 532 :: Ptr ConformanceVersion)) (zero)
+    f
 
 instance FromCStruct PhysicalDeviceDriverProperties where
   peekCStruct p = do
@@ -174,6 +171,12 @@ instance FromCStruct PhysicalDeviceDriverProperties where
     conformanceVersion <- peekCStruct @ConformanceVersion ((p `plusPtr` 532 :: Ptr ConformanceVersion))
     pure $ PhysicalDeviceDriverProperties
              driverID driverName driverInfo conformanceVersion
+
+instance Storable PhysicalDeviceDriverProperties where
+  sizeOf ~_ = 536
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PhysicalDeviceDriverProperties where
   zero = PhysicalDeviceDriverProperties

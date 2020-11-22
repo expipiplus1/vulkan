@@ -764,8 +764,8 @@ instance ToCStruct DisplayPropertiesKHR where
     lift $ poke ((p `plusPtr` 0 :: Ptr DisplayKHR)) (display)
     displayName'' <- ContT $ useAsCString (displayName)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr CChar))) displayName''
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (physicalDimensions) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (physicalResolution) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr Extent2D)) (physicalDimensions)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Extent2D)) (physicalResolution)
     lift $ poke ((p `plusPtr` 32 :: Ptr SurfaceTransformFlagsKHR)) (supportedTransforms)
     lift $ poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (planeReorderPossible))
     lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (persistentContent))
@@ -776,8 +776,8 @@ instance ToCStruct DisplayPropertiesKHR where
     lift $ poke ((p `plusPtr` 0 :: Ptr DisplayKHR)) (zero)
     displayName'' <- ContT $ useAsCString (mempty)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr CChar))) displayName''
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr Extent2D)) (zero)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Extent2D)) (zero)
     lift $ poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
@@ -900,16 +900,16 @@ deriving instance Show DisplayModeParametersKHR
 
 instance ToCStruct DisplayModeParametersKHR where
   withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DisplayModeParametersKHR{..} f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Extent2D)) (visibleRegion) . ($ ())
-    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (refreshRate)
-    lift $ f
+  pokeCStruct p DisplayModeParametersKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Extent2D)) (visibleRegion)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (refreshRate)
+    f
   cStructSize = 12
   cStructAlignment = 4
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    f
 
 instance FromCStruct DisplayModeParametersKHR where
   peekCStruct p = do
@@ -917,6 +917,12 @@ instance FromCStruct DisplayModeParametersKHR where
     refreshRate <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
     pure $ DisplayModeParametersKHR
              visibleRegion refreshRate
+
+instance Storable DisplayModeParametersKHR where
+  sizeOf ~_ = 12
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero DisplayModeParametersKHR where
   zero = DisplayModeParametersKHR
@@ -949,16 +955,16 @@ deriving instance Show DisplayModePropertiesKHR
 
 instance ToCStruct DisplayModePropertiesKHR where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DisplayModePropertiesKHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr DisplayModeKHR)) (displayMode)
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr DisplayModeParametersKHR)) (parameters) . ($ ())
-    lift $ f
+  pokeCStruct p DisplayModePropertiesKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr DisplayModeKHR)) (displayMode)
+    poke ((p `plusPtr` 8 :: Ptr DisplayModeParametersKHR)) (parameters)
+    f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr DisplayModeKHR)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr DisplayModeParametersKHR)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr DisplayModeKHR)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr DisplayModeParametersKHR)) (zero)
+    f
 
 instance FromCStruct DisplayModePropertiesKHR where
   peekCStruct p = do
@@ -966,6 +972,12 @@ instance FromCStruct DisplayModePropertiesKHR where
     parameters <- peekCStruct @DisplayModeParametersKHR ((p `plusPtr` 8 :: Ptr DisplayModeParametersKHR))
     pure $ DisplayModePropertiesKHR
              displayMode parameters
+
+instance Storable DisplayModePropertiesKHR where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero DisplayModePropertiesKHR where
   zero = DisplayModePropertiesKHR
@@ -1006,19 +1018,19 @@ deriving instance Show DisplayModeCreateInfoKHR
 
 instance ToCStruct DisplayModeCreateInfoKHR where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DisplayModeCreateInfoKHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr DisplayModeCreateFlagsKHR)) (flags)
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr DisplayModeParametersKHR)) (parameters) . ($ ())
-    lift $ f
+  pokeCStruct p DisplayModeCreateInfoKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DisplayModeCreateFlagsKHR)) (flags)
+    poke ((p `plusPtr` 20 :: Ptr DisplayModeParametersKHR)) (parameters)
+    f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr DisplayModeParametersKHR)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 20 :: Ptr DisplayModeParametersKHR)) (zero)
+    f
 
 instance FromCStruct DisplayModeCreateInfoKHR where
   peekCStruct p = do
@@ -1026,6 +1038,12 @@ instance FromCStruct DisplayModeCreateInfoKHR where
     parameters <- peekCStruct @DisplayModeParametersKHR ((p `plusPtr` 20 :: Ptr DisplayModeParametersKHR))
     pure $ DisplayModeCreateInfoKHR
              flags parameters
+
+instance Storable DisplayModeCreateInfoKHR where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero DisplayModeCreateInfoKHR where
   zero = DisplayModeCreateInfoKHR
@@ -1114,29 +1132,29 @@ deriving instance Show DisplayPlaneCapabilitiesKHR
 
 instance ToCStruct DisplayPlaneCapabilitiesKHR where
   withCStruct x f = allocaBytesAligned 68 4 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DisplayPlaneCapabilitiesKHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr DisplayPlaneAlphaFlagsKHR)) (supportedAlpha)
-    ContT $ pokeCStruct ((p `plusPtr` 4 :: Ptr Offset2D)) (minSrcPosition) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 12 :: Ptr Offset2D)) (maxSrcPosition) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (minSrcExtent) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 28 :: Ptr Extent2D)) (maxSrcExtent) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 36 :: Ptr Offset2D)) (minDstPosition) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 44 :: Ptr Offset2D)) (maxDstPosition) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 52 :: Ptr Extent2D)) (minDstExtent) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 60 :: Ptr Extent2D)) (maxDstExtent) . ($ ())
-    lift $ f
+  pokeCStruct p DisplayPlaneCapabilitiesKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr DisplayPlaneAlphaFlagsKHR)) (supportedAlpha)
+    poke ((p `plusPtr` 4 :: Ptr Offset2D)) (minSrcPosition)
+    poke ((p `plusPtr` 12 :: Ptr Offset2D)) (maxSrcPosition)
+    poke ((p `plusPtr` 20 :: Ptr Extent2D)) (minSrcExtent)
+    poke ((p `plusPtr` 28 :: Ptr Extent2D)) (maxSrcExtent)
+    poke ((p `plusPtr` 36 :: Ptr Offset2D)) (minDstPosition)
+    poke ((p `plusPtr` 44 :: Ptr Offset2D)) (maxDstPosition)
+    poke ((p `plusPtr` 52 :: Ptr Extent2D)) (minDstExtent)
+    poke ((p `plusPtr` 60 :: Ptr Extent2D)) (maxDstExtent)
+    f
   cStructSize = 68
   cStructAlignment = 4
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 4 :: Ptr Offset2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 12 :: Ptr Offset2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 28 :: Ptr Extent2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 36 :: Ptr Offset2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 44 :: Ptr Offset2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 52 :: Ptr Extent2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 60 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 4 :: Ptr Offset2D)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr Offset2D)) (zero)
+    poke ((p `plusPtr` 20 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 36 :: Ptr Offset2D)) (zero)
+    poke ((p `plusPtr` 44 :: Ptr Offset2D)) (zero)
+    poke ((p `plusPtr` 52 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 60 :: Ptr Extent2D)) (zero)
+    f
 
 instance FromCStruct DisplayPlaneCapabilitiesKHR where
   peekCStruct p = do
@@ -1151,6 +1169,12 @@ instance FromCStruct DisplayPlaneCapabilitiesKHR where
     maxDstExtent <- peekCStruct @Extent2D ((p `plusPtr` 60 :: Ptr Extent2D))
     pure $ DisplayPlaneCapabilitiesKHR
              supportedAlpha minSrcPosition maxSrcPosition minSrcExtent maxSrcExtent minDstPosition maxDstPosition minDstExtent maxDstExtent
+
+instance Storable DisplayPlaneCapabilitiesKHR where
+  sizeOf ~_ = 68
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero DisplayPlaneCapabilitiesKHR where
   zero = DisplayPlaneCapabilitiesKHR
@@ -1274,31 +1298,31 @@ deriving instance Show DisplaySurfaceCreateInfoKHR
 
 instance ToCStruct DisplaySurfaceCreateInfoKHR where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DisplaySurfaceCreateInfoKHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr DisplaySurfaceCreateFlagsKHR)) (flags)
-    lift $ poke ((p `plusPtr` 24 :: Ptr DisplayModeKHR)) (displayMode)
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (planeIndex)
-    lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (planeStackIndex)
-    lift $ poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (transform)
-    lift $ poke ((p `plusPtr` 44 :: Ptr CFloat)) (CFloat (globalAlpha))
-    lift $ poke ((p `plusPtr` 48 :: Ptr DisplayPlaneAlphaFlagBitsKHR)) (alphaMode)
-    ContT $ pokeCStruct ((p `plusPtr` 52 :: Ptr Extent2D)) (imageExtent) . ($ ())
-    lift $ f
+  pokeCStruct p DisplaySurfaceCreateInfoKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DisplaySurfaceCreateFlagsKHR)) (flags)
+    poke ((p `plusPtr` 24 :: Ptr DisplayModeKHR)) (displayMode)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (planeIndex)
+    poke ((p `plusPtr` 36 :: Ptr Word32)) (planeStackIndex)
+    poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (transform)
+    poke ((p `plusPtr` 44 :: Ptr CFloat)) (CFloat (globalAlpha))
+    poke ((p `plusPtr` 48 :: Ptr DisplayPlaneAlphaFlagBitsKHR)) (alphaMode)
+    poke ((p `plusPtr` 52 :: Ptr Extent2D)) (imageExtent)
+    f
   cStructSize = 64
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 24 :: Ptr DisplayModeKHR)) (zero)
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (zero)
-    lift $ poke ((p `plusPtr` 44 :: Ptr CFloat)) (CFloat (zero))
-    lift $ poke ((p `plusPtr` 48 :: Ptr DisplayPlaneAlphaFlagBitsKHR)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 52 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 24 :: Ptr DisplayModeKHR)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (zero)
+    poke ((p `plusPtr` 44 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 48 :: Ptr DisplayPlaneAlphaFlagBitsKHR)) (zero)
+    poke ((p `plusPtr` 52 :: Ptr Extent2D)) (zero)
+    f
 
 instance FromCStruct DisplaySurfaceCreateInfoKHR where
   peekCStruct p = do
@@ -1312,6 +1336,12 @@ instance FromCStruct DisplaySurfaceCreateInfoKHR where
     imageExtent <- peekCStruct @Extent2D ((p `plusPtr` 52 :: Ptr Extent2D))
     pure $ DisplaySurfaceCreateInfoKHR
              flags displayMode planeIndex planeStackIndex transform ((\(CFloat a) -> a) globalAlpha) alphaMode imageExtent
+
+instance Storable DisplaySurfaceCreateInfoKHR where
+  sizeOf ~_ = 64
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero DisplaySurfaceCreateInfoKHR where
   zero = DisplaySurfaceCreateInfoKHR

@@ -756,7 +756,7 @@ instance ToCStruct DeviceGroupRenderPassBeginInfo where
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (deviceMask)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (deviceRenderAreas)) :: Word32))
     pPDeviceRenderAreas' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (deviceRenderAreas)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDeviceRenderAreas' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (deviceRenderAreas)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceRenderAreas' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (deviceRenderAreas)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Rect2D))) (pPDeviceRenderAreas')
     lift $ f
   cStructSize = 32
@@ -766,7 +766,7 @@ instance ToCStruct DeviceGroupRenderPassBeginInfo where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
     pPDeviceRenderAreas' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (mempty)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDeviceRenderAreas' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceRenderAreas' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Rect2D))) (pPDeviceRenderAreas')
     lift $ f
 

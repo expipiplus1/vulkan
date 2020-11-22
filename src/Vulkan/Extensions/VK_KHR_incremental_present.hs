@@ -21,8 +21,10 @@ import qualified Data.Vector (length)
 import qualified Data.Vector (null)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
@@ -174,7 +176,7 @@ instance ToCStruct PresentRegionKHR where
       then pure nullPtr
       else do
         pPRectangles <- ContT $ allocaBytesAligned @RectLayerKHR (((Data.Vector.length (rectangles))) * 20) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRectangles `plusPtr` (20 * (i)) :: Ptr RectLayerKHR) (e) . ($ ())) ((rectangles))
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPRectangles `plusPtr` (20 * (i)) :: Ptr RectLayerKHR) (e)) ((rectangles))
         pure $ pPRectangles
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr RectLayerKHR))) pRectangles''
     lift $ f
@@ -240,18 +242,18 @@ deriving instance Show RectLayerKHR
 
 instance ToCStruct RectLayerKHR where
   withCStruct x f = allocaBytesAligned 20 4 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p RectLayerKHR{..} f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Offset2D)) (offset) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr Extent2D)) (extent) . ($ ())
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (layer)
-    lift $ f
+  pokeCStruct p RectLayerKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Offset2D)) (offset)
+    poke ((p `plusPtr` 8 :: Ptr Extent2D)) (extent)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (layer)
+    f
   cStructSize = 20
   cStructAlignment = 4
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Offset2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Offset2D)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Extent2D)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    f
 
 instance FromCStruct RectLayerKHR where
   peekCStruct p = do
@@ -260,6 +262,12 @@ instance FromCStruct RectLayerKHR where
     layer <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pure $ RectLayerKHR
              offset extent layer
+
+instance Storable RectLayerKHR where
+  sizeOf ~_ = 20
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero RectLayerKHR where
   zero = RectLayerKHR

@@ -37,8 +37,10 @@ import qualified Data.Vector (length)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
@@ -274,22 +276,22 @@ deriving instance Show DisplayPresentInfoKHR
 
 instance ToCStruct DisplayPresentInfoKHR where
   withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DisplayPresentInfoKHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Rect2D)) (srcRect) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 32 :: Ptr Rect2D)) (dstRect) . ($ ())
-    lift $ poke ((p `plusPtr` 48 :: Ptr Bool32)) (boolToBool32 (persistent))
-    lift $ f
+  pokeCStruct p DisplayPresentInfoKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Rect2D)) (srcRect)
+    poke ((p `plusPtr` 32 :: Ptr Rect2D)) (dstRect)
+    poke ((p `plusPtr` 48 :: Ptr Bool32)) (boolToBool32 (persistent))
+    f
   cStructSize = 56
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Rect2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 32 :: Ptr Rect2D)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 48 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Rect2D)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Rect2D)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr Bool32)) (boolToBool32 (zero))
+    f
 
 instance FromCStruct DisplayPresentInfoKHR where
   peekCStruct p = do
@@ -298,6 +300,12 @@ instance FromCStruct DisplayPresentInfoKHR where
     persistent <- peek @Bool32 ((p `plusPtr` 48 :: Ptr Bool32))
     pure $ DisplayPresentInfoKHR
              srcRect dstRect (bool32ToBool persistent)
+
+instance Storable DisplayPresentInfoKHR where
+  sizeOf ~_ = 56
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero DisplayPresentInfoKHR where
   zero = DisplayPresentInfoKHR

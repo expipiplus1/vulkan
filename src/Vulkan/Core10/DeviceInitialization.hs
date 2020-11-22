@@ -1137,30 +1137,30 @@ deriving instance Show PhysicalDeviceProperties
 
 instance ToCStruct PhysicalDeviceProperties where
   withCStruct x f = allocaBytesAligned 824 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceProperties{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (apiVersion)
-    lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (driverVersion)
-    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (vendorID)
-    lift $ poke ((p `plusPtr` 12 :: Ptr Word32)) (deviceID)
-    lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceType)) (deviceType)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (deviceName)
-    lift $ pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (FixedArray UUID_SIZE Word8))) (pipelineCacheUUID)
-    ContT $ pokeCStruct ((p `plusPtr` 296 :: Ptr PhysicalDeviceLimits)) (limits) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties)) (sparseProperties) . ($ ())
-    lift $ f
+  pokeCStruct p PhysicalDeviceProperties{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (apiVersion)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (driverVersion)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (vendorID)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (deviceID)
+    poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceType)) (deviceType)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (deviceName)
+    pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (FixedArray UUID_SIZE Word8))) (pipelineCacheUUID)
+    poke ((p `plusPtr` 296 :: Ptr PhysicalDeviceLimits)) (limits)
+    poke ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties)) (sparseProperties)
+    f
   cStructSize = 824
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceType)) (zero)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (mempty)
-    lift $ pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
-    ContT $ pokeCStruct ((p `plusPtr` 296 :: Ptr PhysicalDeviceLimits)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceType)) (zero)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (mempty)
+    pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
+    poke ((p `plusPtr` 296 :: Ptr PhysicalDeviceLimits)) (zero)
+    poke ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties)) (zero)
+    f
 
 instance FromCStruct PhysicalDeviceProperties where
   peekCStruct p = do
@@ -1175,6 +1175,12 @@ instance FromCStruct PhysicalDeviceProperties where
     sparseProperties <- peekCStruct @PhysicalDeviceSparseProperties ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties))
     pure $ PhysicalDeviceProperties
              apiVersion driverVersion vendorID deviceID deviceType deviceName pipelineCacheUUID limits sparseProperties
+
+instance Storable PhysicalDeviceProperties where
+  sizeOf ~_ = 824
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PhysicalDeviceProperties where
   zero = PhysicalDeviceProperties
@@ -1604,19 +1610,19 @@ deriving instance Show QueueFamilyProperties
 
 instance ToCStruct QueueFamilyProperties where
   withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p QueueFamilyProperties{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr QueueFlags)) (queueFlags)
-    lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (queueCount)
-    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (timestampValidBits)
-    ContT $ pokeCStruct ((p `plusPtr` 12 :: Ptr Extent3D)) (minImageTransferGranularity) . ($ ())
-    lift $ f
+  pokeCStruct p QueueFamilyProperties{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr QueueFlags)) (queueFlags)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (queueCount)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (timestampValidBits)
+    poke ((p `plusPtr` 12 :: Ptr Extent3D)) (minImageTransferGranularity)
+    f
   cStructSize = 24
   cStructAlignment = 4
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 12 :: Ptr Extent3D)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr Extent3D)) (zero)
+    f
 
 instance FromCStruct QueueFamilyProperties where
   peekCStruct p = do
@@ -1626,6 +1632,12 @@ instance FromCStruct QueueFamilyProperties where
     minImageTransferGranularity <- peekCStruct @Extent3D ((p `plusPtr` 12 :: Ptr Extent3D))
     pure $ QueueFamilyProperties
              queueFlags queueCount timestampValidBits minImageTransferGranularity
+
+instance Storable QueueFamilyProperties where
+  sizeOf ~_ = 24
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero QueueFamilyProperties where
   zero = QueueFamilyProperties
@@ -1923,28 +1935,28 @@ deriving instance Show PhysicalDeviceMemoryProperties
 
 instance ToCStruct PhysicalDeviceMemoryProperties where
   withCStruct x f = allocaBytesAligned 520 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceMemoryProperties{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (memoryTypeCount)
-    lift $ unless ((Data.Vector.length $ (memoryTypes)) <= MAX_MEMORY_TYPES) $
+  pokeCStruct p PhysicalDeviceMemoryProperties{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (memoryTypeCount)
+    unless ((Data.Vector.length $ (memoryTypes)) <= MAX_MEMORY_TYPES) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryTypes is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e) . ($ ())) (memoryTypes)
-    lift $ poke ((p `plusPtr` 260 :: Ptr Word32)) (memoryHeapCount)
-    lift $ unless ((Data.Vector.length $ (memoryHeaps)) <= MAX_MEMORY_HEAPS) $
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e)) (memoryTypes)
+    poke ((p `plusPtr` 260 :: Ptr Word32)) (memoryHeapCount)
+    unless ((Data.Vector.length $ (memoryHeaps)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryHeaps is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e) . ($ ())) (memoryHeaps)
-    lift $ f
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e)) (memoryHeaps)
+    f
   cStructSize = 520
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
-    lift $ unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_TYPES) $
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
+    unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_TYPES) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryTypes is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 260 :: Ptr Word32)) (zero)
-    lift $ unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_HEAPS) $
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e)) (mempty)
+    poke ((p `plusPtr` 260 :: Ptr Word32)) (zero)
+    unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryHeaps is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e) . ($ ())) (mempty)
-    lift $ f
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e)) (mempty)
+    f
 
 instance FromCStruct PhysicalDeviceMemoryProperties where
   peekCStruct p = do
@@ -1954,6 +1966,12 @@ instance FromCStruct PhysicalDeviceMemoryProperties where
     memoryHeaps <- generateM (MAX_MEMORY_HEAPS) (\i -> peekCStruct @MemoryHeap (((lowerArrayPtr @MemoryHeap ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `advancePtrBytes` (16 * (i)) :: Ptr MemoryHeap)))
     pure $ PhysicalDeviceMemoryProperties
              memoryTypeCount memoryTypes memoryHeapCount memoryHeaps
+
+instance Storable PhysicalDeviceMemoryProperties where
+  sizeOf ~_ = 520
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PhysicalDeviceMemoryProperties where
   zero = PhysicalDeviceMemoryProperties
@@ -2263,21 +2281,21 @@ deriving instance Show ImageFormatProperties
 
 instance ToCStruct ImageFormatProperties where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p ImageFormatProperties{..} f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Extent3D)) (maxExtent) . ($ ())
-    lift $ poke ((p `plusPtr` 12 :: Ptr Word32)) (maxMipLevels)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (maxArrayLayers)
-    lift $ poke ((p `plusPtr` 20 :: Ptr SampleCountFlags)) (sampleCounts)
-    lift $ poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (maxResourceSize)
-    lift $ f
+  pokeCStruct p ImageFormatProperties{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Extent3D)) (maxExtent)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (maxMipLevels)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (maxArrayLayers)
+    poke ((p `plusPtr` 20 :: Ptr SampleCountFlags)) (sampleCounts)
+    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (maxResourceSize)
+    f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Extent3D)) (zero) . ($ ())
-    lift $ poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Extent3D)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
+    f
 
 instance FromCStruct ImageFormatProperties where
   peekCStruct p = do
@@ -2288,6 +2306,12 @@ instance FromCStruct ImageFormatProperties where
     maxResourceSize <- peek @DeviceSize ((p `plusPtr` 24 :: Ptr DeviceSize))
     pure $ ImageFormatProperties
              maxExtent maxMipLevels maxArrayLayers sampleCounts maxResourceSize
+
+instance Storable ImageFormatProperties where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero ImageFormatProperties where
   zero = ImageFormatProperties

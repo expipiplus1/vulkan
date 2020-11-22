@@ -344,7 +344,7 @@ instance ToCStruct SampleLocationsInfoEXT where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr SampleCountFlagBits)) (sampleLocationsPerPixel)
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (sampleLocationGridSize) . ($ ())
+    lift $ poke ((p `plusPtr` 20 :: Ptr Extent2D)) (sampleLocationGridSize)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (sampleLocations)) :: Word32))
     pPSampleLocations' <- ContT $ allocaBytesAligned @SampleLocationEXT ((Data.Vector.length (sampleLocations)) * 8) 4
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSampleLocations' `plusPtr` (8 * (i)) :: Ptr SampleLocationEXT) (e) . ($ ())) (sampleLocations)
@@ -355,7 +355,7 @@ instance ToCStruct SampleLocationsInfoEXT where
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 20 :: Ptr Extent2D)) (zero)
     pPSampleLocations' <- ContT $ allocaBytesAligned @SampleLocationEXT ((Data.Vector.length (mempty)) * 8) 4
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSampleLocations' `plusPtr` (8 * (i)) :: Ptr SampleLocationEXT) (e) . ($ ())) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr SampleLocationEXT))) (pPSampleLocations')
@@ -741,34 +741,34 @@ deriving instance Show PhysicalDeviceSampleLocationsPropertiesEXT
 
 instance ToCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
   withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceSampleLocationsPropertiesEXT{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr SampleCountFlags)) (sampleLocationSampleCounts)
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (maxSampleLocationGridSize) . ($ ())
+  pokeCStruct p PhysicalDeviceSampleLocationsPropertiesEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SampleCountFlags)) (sampleLocationSampleCounts)
+    poke ((p `plusPtr` 20 :: Ptr Extent2D)) (maxSampleLocationGridSize)
     let pSampleLocationCoordinateRange' = lowerArrayPtr ((p `plusPtr` 28 :: Ptr (FixedArray 2 CFloat)))
-    lift $ case (sampleLocationCoordinateRange) of
+    case (sampleLocationCoordinateRange) of
       (e0, e1) -> do
         poke (pSampleLocationCoordinateRange' :: Ptr CFloat) (CFloat (e0))
         poke (pSampleLocationCoordinateRange' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-    lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (sampleLocationSubPixelBits)
-    lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (variableSampleLocations))
-    lift $ f
+    poke ((p `plusPtr` 36 :: Ptr Word32)) (sampleLocationSubPixelBits)
+    poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (variableSampleLocations))
+    f
   cStructSize = 48
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr SampleCountFlags)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (zero) . ($ ())
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SampleCountFlags)) (zero)
+    poke ((p `plusPtr` 20 :: Ptr Extent2D)) (zero)
     let pSampleLocationCoordinateRange' = lowerArrayPtr ((p `plusPtr` 28 :: Ptr (FixedArray 2 CFloat)))
-    lift $ case ((zero, zero)) of
+    case ((zero, zero)) of
       (e0, e1) -> do
         poke (pSampleLocationCoordinateRange' :: Ptr CFloat) (CFloat (e0))
         poke (pSampleLocationCoordinateRange' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-    lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ f
+    poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (zero))
+    f
 
 instance FromCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
   peekCStruct p = do
@@ -781,6 +781,12 @@ instance FromCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
     variableSampleLocations <- peek @Bool32 ((p `plusPtr` 40 :: Ptr Bool32))
     pure $ PhysicalDeviceSampleLocationsPropertiesEXT
              sampleLocationSampleCounts maxSampleLocationGridSize ((((\(CFloat a) -> a) sampleLocationCoordinateRange0), ((\(CFloat a) -> a) sampleLocationCoordinateRange1))) sampleLocationSubPixelBits (bool32ToBool variableSampleLocations)
+
+instance Storable PhysicalDeviceSampleLocationsPropertiesEXT where
+  sizeOf ~_ = 48
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PhysicalDeviceSampleLocationsPropertiesEXT where
   zero = PhysicalDeviceSampleLocationsPropertiesEXT
@@ -813,24 +819,30 @@ deriving instance Show MultisamplePropertiesEXT
 
 instance ToCStruct MultisamplePropertiesEXT where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p MultisamplePropertiesEXT{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (maxSampleLocationGridSize) . ($ ())
-    lift $ f
+  pokeCStruct p MultisamplePropertiesEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (maxSampleLocationGridSize)
+    f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Extent2D)) (zero)
+    f
 
 instance FromCStruct MultisamplePropertiesEXT where
   peekCStruct p = do
     maxSampleLocationGridSize <- peekCStruct @Extent2D ((p `plusPtr` 16 :: Ptr Extent2D))
     pure $ MultisamplePropertiesEXT
              maxSampleLocationGridSize
+
+instance Storable MultisamplePropertiesEXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero MultisamplePropertiesEXT where
   zero = MultisamplePropertiesEXT

@@ -1342,7 +1342,7 @@ instance ToCStruct SubpassDescription where
     lift $ poke ((p `plusPtr` 4 :: Ptr PipelineBindPoint)) (pipelineBindPoint)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (inputAttachments)) :: Word32))
     pPInputAttachments' <- ContT $ allocaBytesAligned @AttachmentReference ((Data.Vector.length (inputAttachments)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInputAttachments' `plusPtr` (8 * (i)) :: Ptr AttachmentReference) (e) . ($ ())) (inputAttachments)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPInputAttachments' `plusPtr` (8 * (i)) :: Ptr AttachmentReference) (e)) (inputAttachments)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr AttachmentReference))) (pPInputAttachments')
     let pColorAttachmentsLength = Data.Vector.length $ (colorAttachments)
     let pResolveAttachmentsLength = Data.Vector.length $ (resolveAttachments)
@@ -1350,13 +1350,13 @@ instance ToCStruct SubpassDescription where
       throwIO $ IOError Nothing InvalidArgument "" "pResolveAttachments and pColorAttachments must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral pColorAttachmentsLength :: Word32))
     pPColorAttachments' <- ContT $ allocaBytesAligned @AttachmentReference ((Data.Vector.length (colorAttachments)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPColorAttachments' `plusPtr` (8 * (i)) :: Ptr AttachmentReference) (e) . ($ ())) (colorAttachments)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPColorAttachments' `plusPtr` (8 * (i)) :: Ptr AttachmentReference) (e)) (colorAttachments)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr AttachmentReference))) (pPColorAttachments')
     pResolveAttachments'' <- if Data.Vector.null (resolveAttachments)
       then pure nullPtr
       else do
         pPResolveAttachments <- ContT $ allocaBytesAligned @AttachmentReference (((Data.Vector.length (resolveAttachments))) * 8) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPResolveAttachments `plusPtr` (8 * (i)) :: Ptr AttachmentReference) (e) . ($ ())) ((resolveAttachments))
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPResolveAttachments `plusPtr` (8 * (i)) :: Ptr AttachmentReference) (e)) ((resolveAttachments))
         pure $ pPResolveAttachments
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr AttachmentReference))) pResolveAttachments''
     pDepthStencilAttachment'' <- case (depthStencilAttachment) of
@@ -1373,10 +1373,10 @@ instance ToCStruct SubpassDescription where
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 4 :: Ptr PipelineBindPoint)) (zero)
     pPInputAttachments' <- ContT $ allocaBytesAligned @AttachmentReference ((Data.Vector.length (mempty)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInputAttachments' `plusPtr` (8 * (i)) :: Ptr AttachmentReference) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPInputAttachments' `plusPtr` (8 * (i)) :: Ptr AttachmentReference) (e)) (mempty)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr AttachmentReference))) (pPInputAttachments')
     pPColorAttachments' <- ContT $ allocaBytesAligned @AttachmentReference ((Data.Vector.length (mempty)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPColorAttachments' `plusPtr` (8 * (i)) :: Ptr AttachmentReference) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPColorAttachments' `plusPtr` (8 * (i)) :: Ptr AttachmentReference) (e)) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr AttachmentReference))) (pPColorAttachments')
     pPPreserveAttachments' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (mempty)) * 4) 4
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPreserveAttachments' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)

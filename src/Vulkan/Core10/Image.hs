@@ -1439,7 +1439,7 @@ instance (Extendss ImageCreateInfo es, PokeChain es) => ToCStruct (ImageCreateIn
     lift $ poke ((p `plusPtr` 16 :: Ptr ImageCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr ImageType)) (imageType)
     lift $ poke ((p `plusPtr` 24 :: Ptr Format)) (format)
-    ContT $ pokeCStruct ((p `plusPtr` 28 :: Ptr Extent3D)) (extent) . ($ ())
+    lift $ poke ((p `plusPtr` 28 :: Ptr Extent3D)) (extent)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (mipLevels)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (arrayLayers)
     lift $ poke ((p `plusPtr` 48 :: Ptr SampleCountFlagBits)) (samples)
@@ -1460,7 +1460,7 @@ instance (Extendss ImageCreateInfo es, PokeChain es) => ToCStruct (ImageCreateIn
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 20 :: Ptr ImageType)) (zero)
     lift $ poke ((p `plusPtr` 24 :: Ptr Format)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 28 :: Ptr Extent3D)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 28 :: Ptr Extent3D)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 48 :: Ptr SampleCountFlagBits)) (zero)

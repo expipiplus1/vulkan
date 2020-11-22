@@ -38,8 +38,10 @@ import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
@@ -461,7 +463,7 @@ instance (Extendss SurfaceCapabilities2KHR es, PokeChain es) => ToCStruct (Surfa
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr SurfaceCapabilitiesKHR)) (surfaceCapabilities) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr SurfaceCapabilitiesKHR)) (surfaceCapabilities)
     lift $ f
   cStructSize = 72
   cStructAlignment = 8
@@ -469,7 +471,7 @@ instance (Extendss SurfaceCapabilities2KHR es, PokeChain es) => ToCStruct (Surfa
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr SurfaceCapabilitiesKHR)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr SurfaceCapabilitiesKHR)) (zero)
     lift $ f
 
 instance (Extendss SurfaceCapabilities2KHR es, PeekChain es) => FromCStruct (SurfaceCapabilities2KHR es) where
@@ -509,24 +511,30 @@ deriving instance Show SurfaceFormat2KHR
 
 instance ToCStruct SurfaceFormat2KHR where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p SurfaceFormat2KHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR)) (surfaceFormat) . ($ ())
-    lift $ f
+  pokeCStruct p SurfaceFormat2KHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR)) (surfaceFormat)
+    f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR)) (zero)
+    f
 
 instance FromCStruct SurfaceFormat2KHR where
   peekCStruct p = do
     surfaceFormat <- peekCStruct @SurfaceFormatKHR ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR))
     pure $ SurfaceFormat2KHR
              surfaceFormat
+
+instance Storable SurfaceFormat2KHR where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero SurfaceFormat2KHR where
   zero = SurfaceFormat2KHR

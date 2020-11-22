@@ -646,7 +646,7 @@ flushMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFlushMappedMemoryRanges is null" Nothing Nothing
   let vkFlushMappedMemoryRanges' = mkVkFlushMappedMemoryRanges vkFlushMappedMemoryRangesPtr
   pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e) . ($ ())) (memoryRanges)
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e)) (memoryRanges)
   r <- lift $ vkFlushMappedMemoryRanges' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32)) (pPMemoryRanges)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -718,7 +718,7 @@ invalidateMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkInvalidateMappedMemoryRanges is null" Nothing Nothing
   let vkInvalidateMappedMemoryRanges' = mkVkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRangesPtr
   pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e) . ($ ())) (memoryRanges)
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e)) (memoryRanges)
   r <- lift $ vkInvalidateMappedMemoryRanges' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32)) (pPMemoryRanges)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 

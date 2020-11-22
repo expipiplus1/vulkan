@@ -783,26 +783,26 @@ deriving instance Show ImageCopy2KHR
 
 instance ToCStruct ImageCopy2KHR where
   withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p ImageCopy2KHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_COPY_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (srcSubresource) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 32 :: Ptr Offset3D)) (srcOffset) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 44 :: Ptr ImageSubresourceLayers)) (dstSubresource) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 60 :: Ptr Offset3D)) (dstOffset) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 72 :: Ptr Extent3D)) (extent) . ($ ())
-    lift $ f
+  pokeCStruct p ImageCopy2KHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_COPY_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (srcSubresource)
+    poke ((p `plusPtr` 32 :: Ptr Offset3D)) (srcOffset)
+    poke ((p `plusPtr` 44 :: Ptr ImageSubresourceLayers)) (dstSubresource)
+    poke ((p `plusPtr` 60 :: Ptr Offset3D)) (dstOffset)
+    poke ((p `plusPtr` 72 :: Ptr Extent3D)) (extent)
+    f
   cStructSize = 88
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_COPY_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 32 :: Ptr Offset3D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 44 :: Ptr ImageSubresourceLayers)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 60 :: Ptr Offset3D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 72 :: Ptr Extent3D)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_COPY_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Offset3D)) (zero)
+    poke ((p `plusPtr` 44 :: Ptr ImageSubresourceLayers)) (zero)
+    poke ((p `plusPtr` 60 :: Ptr Offset3D)) (zero)
+    poke ((p `plusPtr` 72 :: Ptr Extent3D)) (zero)
+    f
 
 instance FromCStruct ImageCopy2KHR where
   peekCStruct p = do
@@ -813,6 +813,12 @@ instance FromCStruct ImageCopy2KHR where
     extent <- peekCStruct @Extent3D ((p `plusPtr` 72 :: Ptr Extent3D))
     pure $ ImageCopy2KHR
              srcSubresource srcOffset dstSubresource dstOffset extent
+
+instance Storable ImageCopy2KHR where
+  sizeOf ~_ = 88
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero ImageCopy2KHR where
   zero = ImageCopy2KHR
@@ -903,18 +909,18 @@ instance (Extendss ImageBlit2KHR es, PokeChain es) => ToCStruct (ImageBlit2KHR e
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_BLIT_2_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (srcSubresource) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (srcSubresource)
     let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 32 :: Ptr (FixedArray 2 Offset3D)))
-    case (srcOffsets) of
+    lift $ case (srcOffsets) of
       (e0, e1) -> do
-        ContT $ pokeCStruct (pSrcOffsets' :: Ptr Offset3D) (e0) . ($ ())
-        ContT $ pokeCStruct (pSrcOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 56 :: Ptr ImageSubresourceLayers)) (dstSubresource) . ($ ())
+        poke (pSrcOffsets' :: Ptr Offset3D) (e0)
+        poke (pSrcOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1)
+    lift $ poke ((p `plusPtr` 56 :: Ptr ImageSubresourceLayers)) (dstSubresource)
     let pDstOffsets' = lowerArrayPtr ((p `plusPtr` 72 :: Ptr (FixedArray 2 Offset3D)))
-    case (dstOffsets) of
+    lift $ case (dstOffsets) of
       (e0, e1) -> do
-        ContT $ pokeCStruct (pDstOffsets' :: Ptr Offset3D) (e0) . ($ ())
-        ContT $ pokeCStruct (pDstOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1) . ($ ())
+        poke (pDstOffsets' :: Ptr Offset3D) (e0)
+        poke (pDstOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1)
     lift $ f
   cStructSize = 96
   cStructAlignment = 8
@@ -922,18 +928,18 @@ instance (Extendss ImageBlit2KHR es, PokeChain es) => ToCStruct (ImageBlit2KHR e
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_BLIT_2_KHR)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (zero)
     let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 32 :: Ptr (FixedArray 2 Offset3D)))
-    case ((zero, zero)) of
+    lift $ case ((zero, zero)) of
       (e0, e1) -> do
-        ContT $ pokeCStruct (pSrcOffsets' :: Ptr Offset3D) (e0) . ($ ())
-        ContT $ pokeCStruct (pSrcOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 56 :: Ptr ImageSubresourceLayers)) (zero) . ($ ())
+        poke (pSrcOffsets' :: Ptr Offset3D) (e0)
+        poke (pSrcOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1)
+    lift $ poke ((p `plusPtr` 56 :: Ptr ImageSubresourceLayers)) (zero)
     let pDstOffsets' = lowerArrayPtr ((p `plusPtr` 72 :: Ptr (FixedArray 2 Offset3D)))
-    case ((zero, zero)) of
+    lift $ case ((zero, zero)) of
       (e0, e1) -> do
-        ContT $ pokeCStruct (pDstOffsets' :: Ptr Offset3D) (e0) . ($ ())
-        ContT $ pokeCStruct (pDstOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1) . ($ ())
+        poke (pDstOffsets' :: Ptr Offset3D) (e0)
+        poke (pDstOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1)
     lift $ f
 
 instance (Extendss ImageBlit2KHR es, PeekChain es) => FromCStruct (ImageBlit2KHR es) where
@@ -1057,9 +1063,9 @@ instance (Extendss BufferImageCopy2KHR es, PokeChain es) => ToCStruct (BufferIma
     lift $ poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (bufferOffset)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (bufferRowLength)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (bufferImageHeight)
-    ContT $ pokeCStruct ((p `plusPtr` 32 :: Ptr ImageSubresourceLayers)) (imageSubresource) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 48 :: Ptr Offset3D)) (imageOffset) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 60 :: Ptr Extent3D)) (imageExtent) . ($ ())
+    lift $ poke ((p `plusPtr` 32 :: Ptr ImageSubresourceLayers)) (imageSubresource)
+    lift $ poke ((p `plusPtr` 48 :: Ptr Offset3D)) (imageOffset)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Extent3D)) (imageExtent)
     lift $ f
   cStructSize = 72
   cStructAlignment = 8
@@ -1070,9 +1076,9 @@ instance (Extendss BufferImageCopy2KHR es, PokeChain es) => ToCStruct (BufferIma
     lift $ poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
-    ContT $ pokeCStruct ((p `plusPtr` 32 :: Ptr ImageSubresourceLayers)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 48 :: Ptr Offset3D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 60 :: Ptr Extent3D)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 32 :: Ptr ImageSubresourceLayers)) (zero)
+    lift $ poke ((p `plusPtr` 48 :: Ptr Offset3D)) (zero)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Extent3D)) (zero)
     lift $ f
 
 instance (Extendss BufferImageCopy2KHR es, PeekChain es) => FromCStruct (BufferImageCopy2KHR es) where
@@ -1159,26 +1165,26 @@ deriving instance Show ImageResolve2KHR
 
 instance ToCStruct ImageResolve2KHR where
   withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p ImageResolve2KHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (srcSubresource) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 32 :: Ptr Offset3D)) (srcOffset) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 44 :: Ptr ImageSubresourceLayers)) (dstSubresource) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 60 :: Ptr Offset3D)) (dstOffset) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 72 :: Ptr Extent3D)) (extent) . ($ ())
-    lift $ f
+  pokeCStruct p ImageResolve2KHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (srcSubresource)
+    poke ((p `plusPtr` 32 :: Ptr Offset3D)) (srcOffset)
+    poke ((p `plusPtr` 44 :: Ptr ImageSubresourceLayers)) (dstSubresource)
+    poke ((p `plusPtr` 60 :: Ptr Offset3D)) (dstOffset)
+    poke ((p `plusPtr` 72 :: Ptr Extent3D)) (extent)
+    f
   cStructSize = 88
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 32 :: Ptr Offset3D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 44 :: Ptr ImageSubresourceLayers)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 60 :: Ptr Offset3D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 72 :: Ptr Extent3D)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Offset3D)) (zero)
+    poke ((p `plusPtr` 44 :: Ptr ImageSubresourceLayers)) (zero)
+    poke ((p `plusPtr` 60 :: Ptr Offset3D)) (zero)
+    poke ((p `plusPtr` 72 :: Ptr Extent3D)) (zero)
+    f
 
 instance FromCStruct ImageResolve2KHR where
   peekCStruct p = do
@@ -1189,6 +1195,12 @@ instance FromCStruct ImageResolve2KHR where
     extent <- peekCStruct @Extent3D ((p `plusPtr` 72 :: Ptr Extent3D))
     pure $ ImageResolve2KHR
              srcSubresource srcOffset dstSubresource dstOffset extent
+
+instance Storable ImageResolve2KHR where
+  sizeOf ~_ = 88
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero ImageResolve2KHR where
   zero = ImageResolve2KHR

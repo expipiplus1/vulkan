@@ -295,24 +295,30 @@ deriving instance Show ExternalImageFormatProperties
 
 instance ToCStruct ExternalImageFormatProperties where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p ExternalImageFormatProperties{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ExternalMemoryProperties)) (externalMemoryProperties) . ($ ())
-    lift $ f
+  pokeCStruct p ExternalImageFormatProperties{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ExternalMemoryProperties)) (externalMemoryProperties)
+    f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ExternalMemoryProperties)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ExternalMemoryProperties)) (zero)
+    f
 
 instance FromCStruct ExternalImageFormatProperties where
   peekCStruct p = do
     externalMemoryProperties <- peekCStruct @ExternalMemoryProperties ((p `plusPtr` 16 :: Ptr ExternalMemoryProperties))
     pure $ ExternalImageFormatProperties
              externalMemoryProperties
+
+instance Storable ExternalImageFormatProperties where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero ExternalImageFormatProperties where
   zero = ExternalImageFormatProperties
@@ -434,24 +440,30 @@ deriving instance Show ExternalBufferProperties
 
 instance ToCStruct ExternalBufferProperties where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p ExternalBufferProperties{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ExternalMemoryProperties)) (externalMemoryProperties) . ($ ())
-    lift $ f
+  pokeCStruct p ExternalBufferProperties{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ExternalMemoryProperties)) (externalMemoryProperties)
+    f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ExternalMemoryProperties)) (zero) . ($ ())
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ExternalMemoryProperties)) (zero)
+    f
 
 instance FromCStruct ExternalBufferProperties where
   peekCStruct p = do
     externalMemoryProperties <- peekCStruct @ExternalMemoryProperties ((p `plusPtr` 16 :: Ptr ExternalMemoryProperties))
     pure $ ExternalBufferProperties
              externalMemoryProperties
+
+instance Storable ExternalBufferProperties where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero ExternalBufferProperties where
   zero = ExternalBufferProperties
