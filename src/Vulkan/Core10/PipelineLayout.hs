@@ -141,7 +141,7 @@ createPipelineLayout device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withPipelineLayout :: forall io r . MonadIO io => Device -> PipelineLayoutCreateInfo -> Maybe AllocationCallbacks -> (io (PipelineLayout) -> ((PipelineLayout) -> io ()) -> r) -> r
+withPipelineLayout :: forall io r . MonadIO io => Device -> PipelineLayoutCreateInfo -> Maybe AllocationCallbacks -> (io (PipelineLayout) -> (GHC.Tuple.Unit PipelineLayout -> io ()) -> r) -> r
 withPipelineLayout device pCreateInfo pAllocator b =
   b (createPipelineLayout device pCreateInfo pAllocator)
     (\(o0) -> destroyPipelineLayout device o0 pAllocator)

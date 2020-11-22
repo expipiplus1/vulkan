@@ -162,7 +162,7 @@ createImageView device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withImageView :: forall a io r . (Extendss ImageViewCreateInfo a, PokeChain a, MonadIO io) => Device -> ImageViewCreateInfo a -> Maybe AllocationCallbacks -> (io (ImageView) -> ((ImageView) -> io ()) -> r) -> r
+withImageView :: forall a io r . (Extendss ImageViewCreateInfo a, PokeChain a, MonadIO io) => Device -> ImageViewCreateInfo a -> Maybe AllocationCallbacks -> (io (ImageView) -> (GHC.Tuple.Unit ImageView -> io ()) -> r) -> r
 withImageView device pCreateInfo pAllocator b =
   b (createImageView device pCreateInfo pAllocator)
     (\(o0) -> destroyImageView device o0 pAllocator)

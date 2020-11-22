@@ -173,7 +173,7 @@ createPrivateDataSlotEXT device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withPrivateDataSlotEXT :: forall io r . MonadIO io => Device -> PrivateDataSlotCreateInfoEXT -> Maybe AllocationCallbacks -> (io (PrivateDataSlotEXT) -> ((PrivateDataSlotEXT) -> io ()) -> r) -> r
+withPrivateDataSlotEXT :: forall io r . MonadIO io => Device -> PrivateDataSlotCreateInfoEXT -> Maybe AllocationCallbacks -> (io (PrivateDataSlotEXT) -> (GHC.Tuple.Unit PrivateDataSlotEXT -> io ()) -> r) -> r
 withPrivateDataSlotEXT device pCreateInfo pAllocator b =
   b (createPrivateDataSlotEXT device pCreateInfo pAllocator)
     (\(o0) -> destroyPrivateDataSlotEXT device o0 pAllocator)

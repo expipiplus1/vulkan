@@ -266,7 +266,7 @@ allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withMemory :: forall a io r . (Extendss MemoryAllocateInfo a, PokeChain a, MonadIO io) => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> (io (DeviceMemory) -> ((DeviceMemory) -> io ()) -> r) -> r
+withMemory :: forall a io r . (Extendss MemoryAllocateInfo a, PokeChain a, MonadIO io) => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> (io (DeviceMemory) -> (GHC.Tuple.Unit DeviceMemory -> io ()) -> r) -> r
 withMemory device pAllocateInfo pAllocator b =
   b (allocateMemory device pAllocateInfo pAllocator)
     (\(o0) -> freeMemory device o0 pAllocator)
@@ -517,7 +517,7 @@ mapMemory device memory offset size flags = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withMappedMemory :: forall io r . MonadIO io => Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> (io (Ptr ()) -> ((Ptr ()) -> io ()) -> r) -> r
+withMappedMemory :: forall io r . MonadIO io => Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> (io (Ptr ()) -> (GHC.Tuple.Unit (Ptr ()) -> io ()) -> r) -> r
 withMappedMemory device memory offset size flags b =
   b (mapMemory device memory offset size flags)
     (\(_) -> unmapMemory device memory)

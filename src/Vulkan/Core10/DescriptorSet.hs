@@ -216,7 +216,7 @@ createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorSetLayout :: forall a io r . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> (io (DescriptorSetLayout) -> ((DescriptorSetLayout) -> io ()) -> r) -> r
+withDescriptorSetLayout :: forall a io r . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> (io (DescriptorSetLayout) -> (GHC.Tuple.Unit DescriptorSetLayout -> io ()) -> r) -> r
 withDescriptorSetLayout device pCreateInfo pAllocator b =
   b (createDescriptorSetLayout device pCreateInfo pAllocator)
     (\(o0) -> destroyDescriptorSetLayout device o0 pAllocator)
@@ -383,7 +383,7 @@ createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorPool :: forall a io r . (Extendss DescriptorPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> (io (DescriptorPool) -> ((DescriptorPool) -> io ()) -> r) -> r
+withDescriptorPool :: forall a io r . (Extendss DescriptorPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> (io (DescriptorPool) -> (GHC.Tuple.Unit DescriptorPool -> io ()) -> r) -> r
 withDescriptorPool device pCreateInfo pAllocator b =
   b (createDescriptorPool device pCreateInfo pAllocator)
     (\(o0) -> destroyDescriptorPool device o0 pAllocator)
@@ -679,7 +679,7 @@ allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorSets :: forall a io r . (Extendss DescriptorSetAllocateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> (io (Vector DescriptorSet) -> ((Vector DescriptorSet) -> io ()) -> r) -> r
+withDescriptorSets :: forall a io r . (Extendss DescriptorSetAllocateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> (io (Vector DescriptorSet) -> (GHC.Tuple.Unit (Vector DescriptorSet) -> io ()) -> r) -> r
 withDescriptorSets device pAllocateInfo b =
   b (allocateDescriptorSets device pAllocateInfo)
     (\(o0) -> freeDescriptorSets device (descriptorPool (pAllocateInfo :: DescriptorSetAllocateInfo a)) o0)

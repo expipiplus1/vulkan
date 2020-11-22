@@ -187,7 +187,7 @@ createPipelineCache device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withPipelineCache :: forall io r . MonadIO io => Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> (io (PipelineCache) -> ((PipelineCache) -> io ()) -> r) -> r
+withPipelineCache :: forall io r . MonadIO io => Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> (io (PipelineCache) -> (GHC.Tuple.Unit PipelineCache -> io ()) -> r) -> r
 withPipelineCache device pCreateInfo pAllocator b =
   b (createPipelineCache device pCreateInfo pAllocator)
     (\(o0) -> destroyPipelineCache device o0 pAllocator)

@@ -207,7 +207,7 @@ allocateCommandBuffers device allocateInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withCommandBuffers :: forall io r . MonadIO io => Device -> CommandBufferAllocateInfo -> (io (Vector CommandBuffer) -> ((Vector CommandBuffer) -> io ()) -> r) -> r
+withCommandBuffers :: forall io r . MonadIO io => Device -> CommandBufferAllocateInfo -> (io (Vector CommandBuffer) -> (GHC.Tuple.Unit (Vector CommandBuffer) -> io ()) -> r) -> r
 withCommandBuffers device pAllocateInfo b =
   b (allocateCommandBuffers device pAllocateInfo)
     (\(o0) -> freeCommandBuffers device (commandPool (pAllocateInfo :: CommandBufferAllocateInfo)) o0)

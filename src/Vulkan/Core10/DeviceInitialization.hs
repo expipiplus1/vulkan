@@ -336,7 +336,7 @@ createInstance createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withInstance :: forall a io r . (Extendss InstanceCreateInfo a, PokeChain a, MonadIO io) => InstanceCreateInfo a -> Maybe AllocationCallbacks -> (io (Instance) -> ((Instance) -> io ()) -> r) -> r
+withInstance :: forall a io r . (Extendss InstanceCreateInfo a, PokeChain a, MonadIO io) => InstanceCreateInfo a -> Maybe AllocationCallbacks -> (io (Instance) -> (GHC.Tuple.Unit Instance -> io ()) -> r) -> r
 withInstance pCreateInfo pAllocator b =
   b (createInstance pCreateInfo pAllocator)
     (\(o0) -> destroyInstance o0 pAllocator)

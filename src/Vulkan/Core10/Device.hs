@@ -297,7 +297,7 @@ createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDevice :: forall a io r . (Extendss DeviceCreateInfo a, PokeChain a, MonadIO io) => PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> (io (Device) -> ((Device) -> io ()) -> r) -> r
+withDevice :: forall a io r . (Extendss DeviceCreateInfo a, PokeChain a, MonadIO io) => PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> (io (Device) -> (GHC.Tuple.Unit Device -> io ()) -> r) -> r
 withDevice physicalDevice pCreateInfo pAllocator b =
   b (createDevice physicalDevice pCreateInfo pAllocator)
     (\(o0) -> destroyDevice o0 pAllocator)

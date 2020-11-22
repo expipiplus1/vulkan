@@ -165,7 +165,7 @@ createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT 
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorUpdateTemplate :: forall io r . MonadIO io => Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> (io (DescriptorUpdateTemplate) -> ((DescriptorUpdateTemplate) -> io ()) -> r) -> r
+withDescriptorUpdateTemplate :: forall io r . MonadIO io => Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> (io (DescriptorUpdateTemplate) -> (GHC.Tuple.Unit DescriptorUpdateTemplate -> io ()) -> r) -> r
 withDescriptorUpdateTemplate device pCreateInfo pAllocator b =
   b (createDescriptorUpdateTemplate device pCreateInfo pAllocator)
     (\(o0) -> destroyDescriptorUpdateTemplate device o0 pAllocator)
@@ -288,7 +288,7 @@ foreign import ccall
 --
 -- -   Host access to @descriptorSet@ /must/ be externally synchronized
 --
--- __API example.__
+-- __API example__
 --
 -- > struct AppBufferView {
 -- >     VkBufferView bufferView;
