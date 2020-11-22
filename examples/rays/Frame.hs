@@ -22,7 +22,6 @@ import qualified Pipeline
 import qualified SDL
 import           SDL                            ( Window )
 import qualified SDL.Video.Vulkan              as SDL
-import           Say
 import           Swapchain
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
@@ -30,6 +29,7 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
+import Vulkan.Extensions.VK_KHR_ray_tracing
 
 -- | Must be positive, duh
 numConcurrentFrames :: Int
@@ -45,6 +45,7 @@ data Frame = Frame
   , fSwapchainResources          :: SwapchainResources
   , fPipeline                    :: Pipeline
   , fPipelineLayout              :: PipelineLayout
+  , fAccelerationStructure       :: AccelerationStructureKHR
   , fShaderBindingTable          :: Buffer
   , fRenderFinishedHostSemaphore :: Semaphore
     -- ^ A timeline semaphore which increments to fIndex when this frame is
@@ -90,14 +91,18 @@ initialFrame fWindow fSurface = do
                                                  windowSize
                                                  fSurface
 
+  -- The acceleration structure
+  (_, fAccelerationStructure) <- createTLAS
+
   -- Create the RT pipeline
-  (_, descriptorSetLayout)  <- Pipeline.createRTDescriptorSetLayout
+  (_, descriptorSetLayout   ) <- Pipeline.createRTDescriptorSetLayout
   (_, fPipelineLayout) <- Pipeline.createRTPipelineLayout descriptorSetLayout
-  (_, fPipeline, numGroups) <- Pipeline.createPipeline fPipelineLayout
-  (_, fShaderBindingTable)  <- Pipeline.createShaderBindingTable fPipeline
-                                                                 numGroups
+  (_, fPipeline, numGroups)   <- Pipeline.createPipeline fPipelineLayout
+  (_, fShaderBindingTable)    <- Pipeline.createShaderBindingTable fPipeline
+                                                                   numGroups
   descriptorSets <- Pipeline.createRTDescriptorSets
     descriptorSetLayout
+    fAccelerationStructure
     (fromIntegral numConcurrentFrames)
 
   -- Don't keep the release key, this semaphore lives for the lifetime of the
@@ -118,8 +123,6 @@ initialFrame fWindow fSurface = do
   -- correctly on exception
   fResources <- allocate createInternalState closeInternalState
 
-  createBLAS
-
   pure Frame { .. }
 
 -- | Create the next frame
@@ -128,10 +131,8 @@ advanceFrame needsNewSwapchain f = do
   -- Wait for a prior frame to finish, then we can steal it's resources!
   nib                <- V $ asks ghRecycleNib
   fRecycledResources <- liftIO $ nib >>= \case
-    Left block -> do
-      sayErr "CPU is running ahead"
-      block
-    Right rs -> pure rs
+    Left  block -> block
+    Right rs    -> pure rs
 
   fSwapchainResources <- if needsNewSwapchain
     then recreateSwapchainResources (fWindow f) (fSwapchainResources f)
@@ -148,6 +149,7 @@ advanceFrame needsNewSwapchain f = do
              , fPipeline                    = fPipeline f
              , fPipelineLayout              = fPipelineLayout f
              , fShaderBindingTable          = fShaderBindingTable f
+             , fAccelerationStructure       = fAccelerationStructure f
              , fRenderFinishedHostSemaphore = fRenderFinishedHostSemaphore f
              , fGPUWork
              , fResources

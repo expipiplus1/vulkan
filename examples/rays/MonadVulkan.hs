@@ -24,16 +24,18 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
+import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
+                                                ( getBufferDeviceAddress )
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                as Timeline
 import           Vulkan.Extensions.VK_KHR_ray_tracing
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.CommandCheck
+import           Vulkan.Utils.Debug             ( nameObject )
 import           Vulkan.Utils.QueueAssignment
 import           VulkanMemoryAllocator         as VMA
                                          hiding ( getPhysicalDeviceProperties )
-import Vulkan.Utils.Debug (nameObject)
 
 ----------------------------------------------------------------
 -- Define the monad in which most of the program will run
@@ -197,15 +199,18 @@ do
   let vmaCommands =
         [ 'withBuffer
         , 'VMA.withMappedMemory
+        , 'VMA.withMemory
         , 'invalidateAllocation
         ]
       commands =
         [ 'acquireNextImageKHR
         , 'allocateCommandBuffers
         , 'allocateDescriptorSets
+        , 'bindAccelerationStructureMemoryKHR
         , 'buildAccelerationStructureKHR
         , 'cmdBindDescriptorSets
         , 'cmdBindPipeline
+        , 'cmdBuildAccelerationStructureKHR
         , 'cmdDispatch
         , 'cmdDraw
         , 'cmdPipelineBarrier
@@ -216,7 +221,9 @@ do
         , 'cmdUseRenderPass
         , 'deviceWaitIdle
         , 'deviceWaitIdleSafe
+        , 'getAccelerationStructureDeviceAddressKHR
         , 'getAccelerationStructureMemoryRequirementsKHR
+        , 'getBufferDeviceAddress
         , 'getDeviceQueue
         , 'getPhysicalDeviceSurfaceCapabilitiesKHR
         , 'getPhysicalDeviceSurfaceFormatsKHR

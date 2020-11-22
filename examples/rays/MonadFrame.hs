@@ -123,9 +123,7 @@ allocateGlobal_ create destroy = allocateGlobal create (const destroy)
 
 -- | Free frame resources, the frame must have finished GPU execution first.
 retireFrame :: MonadIO m => Frame -> m ()
-retireFrame Frame {..} = do
-  sayErrString ("retiring frame " <> show fIndex)
-  release (fst fResources)
+retireFrame Frame {..} = release (fst fResources)
 
 -- | Make sure a reference is held until this frame is retired
 frameRefCount :: RefCounted -> F ()
