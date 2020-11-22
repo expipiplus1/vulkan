@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e00da0dc297c314d5504d758a535ff5dd23009f3979286ad2905056f93101f13
+-- hash: c641a1d3b72c0ffdef54bfcca0660561a30596c0e2e2e2f46676e51ffe52da17
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -89,7 +89,7 @@ executable hlsl
     , extra
     , file-embed
     , filepath
-    , primitive-unlifted
+    , primitive-unlifted >=1.0
     , resourcet >=1.2.4
     , say
     , sdl2 >=2.5.2.0
