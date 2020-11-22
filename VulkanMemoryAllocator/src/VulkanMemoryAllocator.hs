@@ -284,7 +284,7 @@ createAllocator createInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withAllocator :: forall io r . MonadIO io => AllocatorCreateInfo -> (io (Allocator) -> ((Allocator) -> io ()) -> r) -> r
+withAllocator :: forall io r . MonadIO io => AllocatorCreateInfo -> (io Allocator -> (Allocator -> io ()) -> r) -> r
 withAllocator pCreateInfo b =
   b (createAllocator pCreateInfo)
     (\(o0) -> destroyAllocator o0)
@@ -465,7 +465,7 @@ foreign import ccall
 
 -- | Retrieves information about current memory budget for all memory heaps.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------+-----------+-----------------------------------------------+
 -- | out       | pBudget   | Must point to array with number of elements   |
@@ -501,7 +501,7 @@ foreign import ccall
 
 -- | Builds and returns statistics as string in JSON format.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------+---------------+-----------------------------------------------+
 -- | out       | ppStatsString | Must be freed using 'freeStatsString'         |
@@ -562,7 +562,7 @@ foreign import ccall
 -- -   Has as many flags from pAllocationCreateInfo->preferredFlags as
 --     possible.
 --
--- __Returns.__
+-- __Returns__
 --
 -- Returns VK_ERROR_FEATURE_NOT_PRESENT if not found. Receiving such result
 -- from this function or any other allocating function probably means that
@@ -679,7 +679,7 @@ foreign import ccall
 
 -- | Allocates Vulkan device memory and creates 'Pool' object.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------+-------------+-----------------------------------------------+
 -- |           | allocator   | Allocator object.                             |
@@ -711,7 +711,7 @@ createPool allocator createInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withPool :: forall io r . MonadIO io => Allocator -> PoolCreateInfo -> (io (Pool) -> ((Pool) -> io ()) -> r) -> r
+withPool :: forall io r . MonadIO io => Allocator -> PoolCreateInfo -> (io Pool -> (Pool -> io ()) -> r) -> r
 withPool allocator pCreateInfo b =
   b (createPool allocator pCreateInfo)
     (\(o0) -> destroyPool allocator o0)
@@ -746,7 +746,7 @@ foreign import ccall
 
 -- | Retrieves statistics of existing 'Pool' object.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------+------------+-----------------------------------------------+
 -- |           | allocator  | Allocator object.                             |
@@ -779,7 +779,7 @@ foreign import ccall
 -- | Marks all allocations in given pool as lost if they are not used in
 -- current frame or /VmaPoolCreateInfo::frameInUseCount/ back from now.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------+----------------------+-----------------------------------------------+
 -- |           | allocator            | Allocator object.                             |
@@ -909,7 +909,7 @@ foreign import ccall
 
 -- | General purpose memory allocation.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------+-----------------+-----------------------------------------------+
 -- | out       | pAllocation     | Handle to allocated memory.                   |
@@ -968,7 +968,7 @@ foreign import ccall
 -- | General purpose memory allocation for multiple allocation objects at
 -- once.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------+-----------------------+-----------------------------------------------+
 -- |           | allocator             | Allocator object.                             |
@@ -1047,7 +1047,7 @@ foreign import ccall
   "vmaAllocateMemoryForBuffer" ffiVmaAllocateMemoryForBuffer
   :: Allocator -> Buffer -> Ptr AllocationCreateInfo -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
--- | __Parameters.__
+-- | __Parameters__
 --
 -- +-----------+-----------------+-----------------------------------------------+
 -- | out       | pAllocation     | Handle to allocated memory.                   |
@@ -1367,7 +1367,7 @@ createLostAllocation allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withLostAllocation :: forall io r . MonadIO io => Allocator -> (io (Allocation) -> ((Allocation) -> io ()) -> r) -> r
+withLostAllocation :: forall io r . MonadIO io => Allocator -> (io Allocation -> (Allocation -> io ()) -> r) -> r
 withLostAllocation allocator b =
   b (createLostAllocation allocator)
     (\(o0) -> freeMemory allocator o0)
@@ -1442,7 +1442,7 @@ mapMemory allocator allocation = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withMappedMemory :: forall io r . MonadIO io => Allocator -> Allocation -> (io (Ptr ()) -> ((Ptr ()) -> io ()) -> r) -> r
+withMappedMemory :: forall io r . MonadIO io => Allocator -> Allocation -> (io (Ptr ()) -> (Ptr () -> io ()) -> r) -> r
 withMappedMemory allocator allocation b =
   b (mapMemory allocator allocation)
     (\(_) -> unmapMemory allocator allocation)
@@ -1590,7 +1590,7 @@ foreign import ccall
 -- ranges of given allocations. For more information, see documentation of
 -- 'flushAllocation'.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------------+--------------------------------------------------------+
 -- | allocator       |                                                        |
@@ -1661,7 +1661,7 @@ foreign import ccall
 -- given ranges of given allocations. For more information, see
 -- documentation of 'invalidateAllocation'.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------------+--------------------------------------------------------+
 -- | allocator       |                                                        |
@@ -1730,7 +1730,7 @@ foreign import ccall
 -- | Checks magic number in margins around all allocations in given memory
 -- types (in both default and custom pools) in search for corruptions.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +----------------+--------------------------------------------------------+
 -- | memoryTypeBits | Bit mask, where each bit set means that a memory type  |
@@ -1776,7 +1776,7 @@ foreign import ccall
 
 -- | Begins defragmentation process.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------+-----------+-----------------------------------------------+
 -- |           | allocator | Allocator object.                             |
@@ -1793,7 +1793,7 @@ foreign import ccall
 -- |           |           | defragmentation.                              |
 -- +-----------+-----------+-----------------------------------------------+
 --
--- __Returns.__
+-- __Returns__
 --
 -- @VK_SUCCESS@ and @*pContext == null@ if defragmentation finished within
 -- this function call. @VK_NOT_READY@ and @*pContext != null@ if
@@ -1908,7 +1908,7 @@ beginDefragmentationPass allocator context = liftIO . evalContT $ do
 --
 -- Note that 'endDefragmentationPass' is *not* called if an exception is
 -- thrown by the inner action.
-useDefragmentationPass :: forall io r . MonadIO io => Allocator -> DefragmentationContext -> ((DefragmentationPassInfo) -> io r) -> io r
+useDefragmentationPass :: forall io r . MonadIO io => Allocator -> DefragmentationContext -> (DefragmentationPassInfo -> io r) -> io r
 useDefragmentationPass allocator context a =
   do
     x <- beginDefragmentationPass allocator context
@@ -1946,7 +1946,7 @@ foreign import ccall
 
 -- | Deprecated. Compacts memory by moving allocations.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------+-----------------------+-----------------------------------------------+
 -- |           | pAllocations          | Array of allocations that can be moved during |
@@ -1969,7 +1969,7 @@ foreign import ccall
 -- |           |                       | information.                                  |
 -- +-----------+-----------------------+-----------------------------------------------+
 --
--- __Returns.__
+-- __Returns__
 --
 -- @VK_SUCCESS@ if completed, negative error code in case of error.
 --
@@ -2084,7 +2084,7 @@ foreign import ccall
 
 -- | Binds buffer to allocation with additional parameters.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------------------+--------------------------------------------------------+
 -- | allocationLocalOffset | Additional offset to be added while binding, relative  |
@@ -2164,7 +2164,7 @@ foreign import ccall
 
 -- | Binds image to allocation with additional parameters.
 --
--- __Parameters.__
+-- __Parameters__
 --
 -- +-----------------------+--------------------------------------------------------+
 -- | allocationLocalOffset | Additional offset to be added while binding, relative  |
@@ -2208,7 +2208,7 @@ foreign import ccall
   "vmaCreateBuffer" ffiVmaCreateBuffer
   :: Allocator -> Ptr (SomeStruct BufferCreateInfo) -> Ptr AllocationCreateInfo -> Ptr Buffer -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
--- | __Parameters.__
+-- | __Parameters__
 --
 -- +-----------+-----------------+-----------------------------------------------+
 -- | out       | pBuffer         | Buffer that was created.                      |
