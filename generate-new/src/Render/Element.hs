@@ -221,7 +221,11 @@ data RenderParams = RenderParams
       --  ^ Parent union or enum name
       -> CName
       -> HName
-  , mkMemberName                :: CName -> HName
+  , mkMemberName
+      :: CName
+      --  ^ Parent struct name
+      -> CName
+      -> HName
   , mkFunName                   :: CName -> HName
   , mkParamName                 :: CName -> HName
   , mkPatternName               :: CName -> HName

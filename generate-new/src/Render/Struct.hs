@@ -83,7 +83,8 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
         |]
     memberMap <- sequenceV $ Map.fromList
       [ ( smName (msmStructMember m)
-        , (\v -> SiblingInfo v (msmScheme m)) <$> recordWildCardsMemberVal m
+        , (\v -> SiblingInfo v (msmScheme m))
+          <$> recordWildCardsMemberVal msName m
         )
       | m <- V.toList msMembers
       ]
@@ -108,7 +109,7 @@ renderStructMember sName MarshaledStructMember {..} = do
       pure $ \getDoc -> align
         (vsep
           [ getDoc (Nested sName smName)
-          , pretty (mkMemberName smName) <+> "::" <+> tDoc
+          , pretty (mkMemberName sName smName) <+> "::" <+> tDoc
           ]
         )
     )
@@ -193,7 +194,7 @@ renderStoreInstances ms@MarshaledStruct {..} = do
     , showInstanceStub tellSourceImport msStruct
     ]
 
-  pokes <- renderPokes (fmap Just . recordWildCardsMemberVal)
+  pokes <- renderPokes (fmap Just . (recordWildCardsMemberVal msName))
                        (IOAction $ pretty contVar)
                        ms
 
@@ -486,10 +487,10 @@ memberVal MarshaledStructMember {..} doc = do
 
 -- | We use RecordWildCards, so just use the member name here
 recordWildCardsMemberVal
-  :: HasRenderParams r => MarshaledStructMember -> Sem r (Doc ())
-recordWildCardsMemberVal MarshaledStructMember {..} = do
+  :: HasRenderParams r => CName -> MarshaledStructMember -> Sem r (Doc ())
+recordWildCardsMemberVal structName MarshaledStructMember {..} = do
   RenderParams {..} <- input
-  let m = mkMemberName (smName msmStructMember)
+  let m = mkMemberName structName (smName msmStructMember)
   pure $ pretty m
 
 zeroMemberVal
@@ -500,10 +501,17 @@ zeroMemberVal
 zeroMemberVal MarshaledStructMember {..} = case msmScheme of
   ElidedUnivalued _ ->
     pure $ Just "error \"This should never appear in the generated source\""
-  _ | True V.:<| _ <- smIsOptional msmStructMember -> pure Nothing
+  s | True V.:<| _ <- smIsOptional msmStructMember, not (isCustom s) ->
+    pure Nothing
   Custom CustomScheme { csZeroIsZero = True } -> pure Nothing
   Length{} -> pure Nothing
   s        -> zeroScheme s
+
+isCustom :: MarshalScheme a -> Bool
+isCustom = \case
+  Custom       _ -> True
+  ElidedCustom _ -> True
+  _              -> False
 
 ----------------------------------------------------------------
 -- Instance decls

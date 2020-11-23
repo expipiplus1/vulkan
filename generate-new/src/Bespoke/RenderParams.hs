@@ -48,7 +48,8 @@ renderParams handles = r
                                           )
                                         . upperCaseFirst
                                         . dropVk
-    , mkMemberName = TermName . lowerCaseFirst . dropPointer . unCName
+    , mkMemberName                = \_parent ->
+                                      TermName . lowerCaseFirst . dropPointer . unCName
     , mkFunName                   = TermName . lowerCaseFirst . dropVk
     , mkParamName                 = TermName . dropPointer . unCName
     , mkPatternName               = ConName . upperCaseFirst . dropVk
@@ -169,7 +170,8 @@ renderParams handles = r
         tellImportWithAll (mkTyName r "VkDescriptorSetAllocateInfo")
         pure
           $   "fromIntegral . Data.Vector.length ."
-          <+> pretty (mkMemberName r "pSetLayouts")
+          <+> pretty
+                (mkMemberName r "VkDescriptorSetAllocateInfo" "pSetLayouts")
           <+> "$"
           <+> sibling
       _ -> Nothing

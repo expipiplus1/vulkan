@@ -38,7 +38,8 @@ renderParams handles = r
                                              (vulkanNameOverrides n)
     , mkConName = \_ n -> ConName $ fromMaybe (upperCaseFirst . dropVma $ n)
                                               (vulkanNameOverrides n)
-    , mkMemberName = TermName . lowerCaseFirst . dropPointer . unCName
+    , mkMemberName                = \_parent ->
+                                      TermName . lowerCaseFirst . dropPointer . unCName
     , mkFunName                   = TermName . lowerCaseFirst . dropVma
     , mkParamName                 = TermName . dropPointer . unCName
     , mkPatternName               =

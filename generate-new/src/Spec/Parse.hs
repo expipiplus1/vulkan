@@ -719,7 +719,8 @@ parseStruct n = do
     smIsOptional <- case bespokeOptionality sName smName of
       Just o  -> pure o
       Nothing -> boolListAttr "optional" m
-    smLengths <- lenListAttr "len" m
+    let listAttrName = if hasAttr "altlen" m then "altlen" else "len"
+    smLengths <- lenListAttr listAttrName m
     smValues  <- listAttr decode "values" m
     let smOffset = ()
     pure StructMember { .. }
@@ -758,7 +759,8 @@ parseCommands es =
     let typeString = allNonCommentText m
     pType       <- parseCType typeString
     pIsOptional <- boolListAttr "optional" m
-    pLengths    <- lenListAttr "len" m
+    let listAttrName = if hasAttr "altlen" m then "altlen" else "len"
+    pLengths    <- lenListAttr listAttrName m
     pure Parameter { .. }
 
 ----------------------------------------------------------------
