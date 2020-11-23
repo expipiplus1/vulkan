@@ -1,2 +1,12 @@
 cradle:
   cabal:
+    - path: "./generate-new/src/"
+      component: "lib:generate-new"
+    - path: "./generate-new/vk/"
+      component: "exe:vk"
+    - path: "./generate-new/vma/"
+      component: "exe:vma"
+    - path: "./src/"
+      component: "lib:vulkan"
+    - path: "./VulkanMemoryAllocator/"
+      component: "lib:VulkanMemoryAllocator"
