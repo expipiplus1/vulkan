@@ -25,13 +25,17 @@ jobs:
         git config user.name 'Three Of Twelve'
         git config user.email 'ThreeOfTwelve@monoid.al'
 
-    - run: |
+    - id: init
+      run: |
         message="> $(curl https://home.monoid.al/quote/tuvok --fail || echo "No response. He's deactivated his communication system.")"
         message="${message//'%'/'%25'}"
         message="${message//$'\n'/'%0A'}"
         message="${message//$'\r'/'%0D'}"
-        echo "$message" > ~/issue_body
-        echo >> ~/issue_body
+
+        issue_body=~/issue_body
+        echo "::set-output name=issue_body::$issue_body"
+        echo "$message" > "$issue_body"
+        echo >> "$issue_body"
         printf "%s\n" "pr_message=$message" >> "$GITHUB_ENV"
 
     - name: Build dependencies
@@ -43,16 +47,19 @@ jobs:
 
     - name: run update.sh
       id: update
+      env:
+        issue_body: ${{ steps.init.outputs.issue_body }}
       run: |
         set +e
         ./scripts/update.sh 2>&1 | tee --append ~/update_output
         code=${PIPESTATUS[0]}
         set -e
 
-        echo 'log of `generate-new/bin/vk`' >> ~/issue_body
-        echo '```' >> ~/issue_body
-        cat ~/update_output >> ~/issue_body
-        echo '```' >> ~/issue_body
+        echo 'log of `generate-new/bin/vk`' >> "$issue_body"
+        echo '```' >> "$issue_body"
+        cat ~/update_output >> "$issue_body"
+        echo '```' >> "$issue_body"
+
 
         (exit $code)
 
@@ -93,5 +100,5 @@ jobs:
       uses: peter-evans/create-issue-from-file@v2
       with:
         title: Failed to regenerate source for Vulkan ${{ steps.update.outputs.vulkan_version }}
-        content-filepath: ~/issue_body
+        content-filepath: ${{ steps.init.outputs.issue_body }}
         token: ${{ secrets.TUVOK_TOKEN }}
