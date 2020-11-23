@@ -2,6 +2,9 @@
 
 ## WIP
 
+- Bump API version to v1.2.162
+  - This is a breaking change to anyone using VK_KHR_ray_tracing (which no
+    longer exists)
 - Add bracketing functions for `withRayTracingPipelinesKHR` and
   `withRayTracingPipelinesNV`
 - Add all possible storable instances for Vulkan structs
