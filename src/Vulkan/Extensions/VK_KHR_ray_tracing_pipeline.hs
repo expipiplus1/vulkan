@@ -1014,8 +1014,8 @@ createRayTracingPipelinesKHR device deferredOperation pipelineCache createInfos 
 --
 -- To ensure that 'destroyPipeline' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withRayTracingPipelinesKHR :: forall io r . MonadIO io => Device -> DeferredOperationKHR -> PipelineCache -> Vector (SomeStruct RayTracingPipelineCreateInfoKHR) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
 withRayTracingPipelinesKHR device deferredOperation pipelineCache pCreateInfos pAllocator b =

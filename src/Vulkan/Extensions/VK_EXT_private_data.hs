@@ -170,8 +170,8 @@ createPrivateDataSlotEXT device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyPrivateDataSlotEXT' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withPrivateDataSlotEXT :: forall io r . MonadIO io => Device -> PrivateDataSlotCreateInfoEXT -> Maybe AllocationCallbacks -> (io PrivateDataSlotEXT -> (PrivateDataSlotEXT -> io ()) -> r) -> r
 withPrivateDataSlotEXT device pCreateInfo pAllocator b =

@@ -116,8 +116,8 @@ createDeferredOperationKHR device allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyDeferredOperationKHR' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withDeferredOperationKHR :: forall io r . MonadIO io => Device -> Maybe AllocationCallbacks -> (io DeferredOperationKHR -> (DeferredOperationKHR -> io ()) -> r) -> r
 withDeferredOperationKHR device pAllocator b =

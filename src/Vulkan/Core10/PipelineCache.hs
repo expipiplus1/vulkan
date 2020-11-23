@@ -184,8 +184,8 @@ createPipelineCache device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyPipelineCache' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withPipelineCache :: forall io r . MonadIO io => Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> (io PipelineCache -> (PipelineCache -> io ()) -> r) -> r
 withPipelineCache device pCreateInfo pAllocator b =

@@ -308,8 +308,8 @@ createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroySwapchainKHR' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withSwapchainKHR :: forall a io r . (Extendss SwapchainCreateInfoKHR a, PokeChain a, MonadIO io) => Device -> SwapchainCreateInfoKHR a -> Maybe AllocationCallbacks -> (io SwapchainKHR -> (SwapchainKHR -> io ()) -> r) -> r
 withSwapchainKHR device pCreateInfo pAllocator b =

@@ -1008,8 +1008,8 @@ createIndirectCommandsLayoutNV device createInfo allocator = liftIO . evalContT 
 --
 -- To ensure that 'destroyIndirectCommandsLayoutNV' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withIndirectCommandsLayoutNV :: forall io r . MonadIO io => Device -> IndirectCommandsLayoutCreateInfoNV -> Maybe AllocationCallbacks -> (io IndirectCommandsLayoutNV -> (IndirectCommandsLayoutNV -> io ()) -> r) -> r
 withIndirectCommandsLayoutNV device pCreateInfo pAllocator b =

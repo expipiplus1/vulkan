@@ -214,8 +214,8 @@ createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyDescriptorSetLayout' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withDescriptorSetLayout :: forall a io r . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> (io DescriptorSetLayout -> (DescriptorSetLayout -> io ()) -> r) -> r
 withDescriptorSetLayout device pCreateInfo pAllocator b =
@@ -381,8 +381,8 @@ createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyDescriptorPool' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withDescriptorPool :: forall a io r . (Extendss DescriptorPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> (io DescriptorPool -> (DescriptorPool -> io ()) -> r) -> r
 withDescriptorPool device pCreateInfo pAllocator b =
@@ -677,8 +677,8 @@ allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
 --
 -- To ensure that 'freeDescriptorSets' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withDescriptorSets :: forall a io r . (Extendss DescriptorSetAllocateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> (io (Vector DescriptorSet) -> (Vector DescriptorSet -> io ()) -> r) -> r
 withDescriptorSets device pAllocateInfo b =

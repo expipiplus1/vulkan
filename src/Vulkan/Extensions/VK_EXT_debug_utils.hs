@@ -716,8 +716,8 @@ createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT
 --
 -- To ensure that 'destroyDebugUtilsMessengerEXT' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withDebugUtilsMessengerEXT :: forall io r . MonadIO io => Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> (io DebugUtilsMessengerEXT -> (DebugUtilsMessengerEXT -> io ()) -> r) -> r
 withDebugUtilsMessengerEXT instance' pCreateInfo pAllocator b =

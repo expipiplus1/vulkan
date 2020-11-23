@@ -470,8 +470,8 @@ createAccelerationStructureNV device createInfo allocator = liftIO . evalContT $
 --
 -- To ensure that 'destroyAccelerationStructureNV' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withAccelerationStructureNV :: forall io r . MonadIO io => Device -> AccelerationStructureCreateInfoNV -> Maybe AllocationCallbacks -> (io AccelerationStructureNV -> (AccelerationStructureNV -> io ()) -> r) -> r
 withAccelerationStructureNV device pCreateInfo pAllocator b =
@@ -1788,8 +1788,8 @@ createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO 
 --
 -- To ensure that 'destroyPipeline' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withRayTracingPipelinesNV :: forall io r . MonadIO io => Device -> PipelineCache -> Vector (SomeStruct RayTracingPipelineCreateInfoNV) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
 withRayTracingPipelinesNV device pipelineCache pCreateInfos pAllocator b =

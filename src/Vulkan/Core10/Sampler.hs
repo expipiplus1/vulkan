@@ -170,8 +170,8 @@ createSampler device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroySampler' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withSampler :: forall a io r . (Extendss SamplerCreateInfo a, PokeChain a, MonadIO io) => Device -> SamplerCreateInfo a -> Maybe AllocationCallbacks -> (io Sampler -> (Sampler -> io ()) -> r) -> r
 withSampler device pCreateInfo pAllocator b =

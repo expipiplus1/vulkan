@@ -143,8 +143,8 @@ createSemaphore device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroySemaphore' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withSemaphore :: forall a io r . (Extendss SemaphoreCreateInfo a, PokeChain a, MonadIO io) => Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> (io Semaphore -> (Semaphore -> io ()) -> r) -> r
 withSemaphore device pCreateInfo pAllocator b =

@@ -164,8 +164,8 @@ createQueryPool device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyQueryPool' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withQueryPool :: forall a io r . (Extendss QueryPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> QueryPoolCreateInfo a -> Maybe AllocationCallbacks -> (io QueryPool -> (QueryPool -> io ()) -> r) -> r
 withQueryPool device pCreateInfo pAllocator b =

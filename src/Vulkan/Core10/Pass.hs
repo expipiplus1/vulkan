@@ -223,8 +223,8 @@ createFramebuffer device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyFramebuffer' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withFramebuffer :: forall a io r . (Extendss FramebufferCreateInfo a, PokeChain a, MonadIO io) => Device -> FramebufferCreateInfo a -> Maybe AllocationCallbacks -> (io Framebuffer -> (Framebuffer -> io ()) -> r) -> r
 withFramebuffer device pCreateInfo pAllocator b =
@@ -377,8 +377,8 @@ createRenderPass device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyRenderPass' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withRenderPass :: forall a io r . (Extendss RenderPassCreateInfo a, PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo a -> Maybe AllocationCallbacks -> (io RenderPass -> (RenderPass -> io ()) -> r) -> r
 withRenderPass device pCreateInfo pAllocator b =
