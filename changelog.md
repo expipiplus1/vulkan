@@ -9,6 +9,8 @@
   `withRayTracingPipelinesNV`
 - Add all possible storable instances for Vulkan structs
 - Remove tuples from the constructors of `ClearColorValue`
+- Unpack top level tuple in `TransformMatrixKHR`, the `matrix` record accessor
+  has been split into `matrixRow0`, `matrixRow1`, and `matrixRow2`
 
 ## [3.6.15] - 2020-11-16
 - Bump API version to v1.2.161
