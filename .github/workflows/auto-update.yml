@@ -44,8 +44,10 @@ jobs:
     - name: run update.sh
       id: update
       run: |
+        set +e
         ./scripts/update.sh 2>&1 | tee --append ~/update_output
         code=${PIPESTATUS[0]}
+        set -e
 
         echo 'log of `generate-new/bin/vk`' >> ~/issue_body
         echo '```' >> ~/issue_body
