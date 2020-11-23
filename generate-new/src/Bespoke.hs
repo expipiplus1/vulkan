@@ -117,6 +117,7 @@ bespokeSchemes spec =
     <> difficultLengths
     <> [bitfields]
     <> [accelerationStructureGeometry]
+    <> [buildingAccelerationStructures]
 
 baseInOut :: BespokeScheme
 baseInOut = BespokeScheme $ \case
@@ -639,6 +640,29 @@ accelerationStructureGeometryPre1_2_162 = BespokeScheme $ \case
         , csPeek       = error "unused csPeek for ppGeometries"
         }
     _ -> Nothing
+  _ -> const Nothing
+
+-- TODO: These should have length annotations which check that they match their
+-- siblings
+buildingAccelerationStructures :: BespokeScheme
+buildingAccelerationStructures = BespokeScheme $ \case
+  commandName
+    | commandName
+      `elem` [ "vkCmdBuildAccelerationStructuresKHR"
+             , "vkBuildAccelerationStructuresKHR"
+             ]
+    -> \case
+      (p :: a)
+        | "ppBuildRangeInfos" <- name p, Ptr Const (Ptr Const elemTy) <- type' p
+        -> Just $ Vector NotNullable (Vector NotNullable (Normal elemTy))
+      _ -> Nothing
+  "vkCmdBuildAccelerationStructuresIndirectKHR" -> \case
+    (p :: a)
+      | "ppMaxPrimitiveCounts" <- name p, Ptr Const (Ptr Const elemTy) <- type'
+        p
+      -> Just $ Vector NotNullable (Vector NotNullable (Normal elemTy))
+    _ -> Nothing
+
   _ -> const Nothing
 
 structChainVar :: String

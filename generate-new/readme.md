@@ -105,12 +105,14 @@ During development unfinished bits not to forget are listed here.
 - [x] VkAccelerationStructureVersionInfoKHR->pVersionData
 - [x] vkCmdBuildAccelerationStructuresIndirectKHR,
   - The `Ptr Word32` type has leaked through, this should be `Vector (Vector Word32)`
-  - [ ] Fix this non-critical issue
+  - [x] Fix this non-critical issue
+  - [ ] It's correct now, but it doesn't check the length of the array
 - [x] vkCmdBuildAccelerationStructuresKHR, vkBuildAccelerationStructuresKHR
-  - [ ] This is still incorrect as one can't pass multiple
+  - [x] This is still incorrect as one can't pass multiple
     `AccelerationStructureBuildRangeInfoKHR`'s per
     `AccelerationStructureBuildGeometryInfoKHR`. It's no more broken than
     before though.
+  - [ ] Fixed, although there's no length checking
 - [x] vkGetAccelerationStructureBuildSizesKHR
   - [ ] It's correct, but it doesn't check the length of the
     `maxPrimitiveCount` array like it would with a sibling array of same length
