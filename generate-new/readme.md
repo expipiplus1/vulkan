@@ -133,8 +133,8 @@ Optional TODOs:
 - [ ] AccelerationStructureGeometryAabbsDataKHR could use a simple poke for its
   DeviceOrHostAddressConstKHR (is this true for the union in
   AccelerationStructureGeometryKHR too)
-- [ ] Now is the time to remove the top level tuple from TransformMatrixKHR,
-  more complexity for not much gain?
+- [x] Now is the time to remove the top level tuple from TransformMatrixKHR
+
 
 # VMA TODOs
 

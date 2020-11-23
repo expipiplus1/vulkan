@@ -699,16 +699,18 @@ parseUnions = onTypes "union" parseStruct
 parseStruct :: Node -> P (StructOrUnion a WithoutSize WithoutChildren)
 parseStruct n = do
   sName <- nameAttr "struct" n
-  context (unCName sName) $ do
-    sMembers <-
-      fmap fromList
-      . traverseV (parseStructMember sName)
-      $ [ m | Element m <- contents n, name m == "member" ]
-    let sSize       = ()
-        sAlignment  = ()
-        sExtendedBy = ()
-    sExtends <- listAttr (fmap CName . decode) "structextends" n
-    pure Struct { .. }
+  case find (\(Struct n _ _ _ _ _) -> n == sName) bespokeStructsAndUnions of
+    Just s  -> pure s
+    Nothing -> context (unCName sName) $ do
+      sMembers <-
+        fmap fromList
+        . traverseV (parseStructMember sName)
+        $ [ m | Element m <- contents n, name m == "member" ]
+      let sSize       = ()
+          sAlignment  = ()
+          sExtendedBy = ()
+      sExtends <- listAttr (fmap CName . decode) "structextends" n
+      pure Struct { .. }
  where
 
   parseStructMember :: CName -> Node -> P (StructMember' WithoutSize)

@@ -4,6 +4,7 @@
 module Bespoke
   ( forbiddenConstants
   , assignBespokeModules
+  , bespokeStructsAndUnions
   , bespokeElements
   , bespokeSizes
   , bespokeOptionality
@@ -671,6 +672,44 @@ structChainVar = "es"
 ----------------------------------------------------------------
 -- Things which are easier to write by hand
 ----------------------------------------------------------------
+
+-- | These override the description in the spec, make sure they're correct!
+bespokeStructsAndUnions :: [StructOrUnion a WithoutSize WithoutChildren]
+bespokeStructsAndUnions =
+  [ Struct
+      { sName       = "VkTransformMatrixKHR"
+      , sMembers    = V.fromList
+                        [ StructMember
+                          { smName       = "matrixRow0"
+                          , smType = Array NonConst (NumericArraySize 4) Float
+                          , smValues     = mempty
+                          , smLengths    = mempty
+                          , smIsOptional = mempty
+                          , smOffset     = ()
+                          }
+                        , StructMember
+                          { smName       = "matrixRow1"
+                          , smType = Array NonConst (NumericArraySize 4) Float
+                          , smValues     = mempty
+                          , smLengths    = mempty
+                          , smIsOptional = mempty
+                          , smOffset     = ()
+                          }
+                        , StructMember
+                          { smName       = "matrixRow2"
+                          , smType = Array NonConst (NumericArraySize 4) Float
+                          , smValues     = mempty
+                          , smLengths    = mempty
+                          , smIsOptional = mempty
+                          , smOffset     = ()
+                          }
+                        ]
+      , sSize       = ()
+      , sAlignment  = ()
+      , sExtends    = mempty
+      , sExtendedBy = mempty
+      }
+  ]
 
 bespokeSizes :: [(CName, (Int, Int))]
 bespokeSizes =
