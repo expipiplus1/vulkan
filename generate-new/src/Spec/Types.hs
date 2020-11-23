@@ -28,6 +28,8 @@ data Spec = Spec
   , specDisabledExtensions :: Vector Extension
   , specAPIConstants       :: Vector Constant
   , specExtensionConstants :: Vector Constant
+  , specSPIRVExtensions    :: Vector SPIRVExtension
+  , specSPIRVCapabilities  :: Vector SPIRVCapability
   }
   deriving Show
 
@@ -227,3 +229,27 @@ data EnumType
   -- ^ Stores the name of the "Flags" type
   deriving (Show, Eq)
 
+--
+-- SPIR-V stuff
+--
+
+data SPIRVExtension = SPIRVExtension
+  { spirvExtensionName :: Text
+  , spirvExtensionReqs :: Vector SPIRVRequirement
+  }
+  deriving (Show, Eq)
+
+data SPIRVCapability = SPIRVCapability
+  { spirvCapabilityName :: Text
+  , spirvCapabilityReqs :: Vector SPIRVRequirement
+  }
+  deriving (Show, Eq)
+
+data SPIRVRequirement
+  = SPIRVReqVersion Version
+  | SPIRVReqExtension Text
+  | SPIRVReqFeature CName CName (Vector Text)
+    -- ^ Struct, feature, requires
+  | SPIRVReqProperty CName CName CName (Vector Text)
+    -- ^ Property, member, value, requires
+  deriving (Show, Eq)
