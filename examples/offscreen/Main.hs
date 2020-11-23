@@ -436,7 +436,7 @@ render = do
               { renderPass  = renderPass
               , framebuffer = framebuffer
               , renderArea  = Rect2D zero (Extent2D width height)
-              , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
+              , clearValues = [Color (Float32 0.1 0.1 0.1 1)]
               }
         cmdUseRenderPass commandBuffer
                          renderPassBeginInfo

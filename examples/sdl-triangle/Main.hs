@@ -152,7 +152,7 @@ createCommandBuffers dev renderPass graphicsPipeline graphicsQueueFamilyIndex fr
                   , renderArea  = Rect2D { offset = zero
                                          , extent = swapchainExtent
                                          }
-                  , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 0))]
+                  , clearValues = [Color (Float32 0.1 0.1 0.1 0)]
                   }
             cmdUseRenderPass buffer renderPassBeginInfo SUBPASS_CONTENTS_INLINE
               $ do

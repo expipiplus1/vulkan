@@ -97,7 +97,7 @@ myRecordCommandBuffer Frame {..} imageIndex = do
         { renderPass  = srRenderPass
         , framebuffer = srFramebuffers ! fromIntegral imageIndex
         , renderArea  = Rect2D { offset = zero, extent = siImageExtent }
-        , clearValues = [Color (Float32 (0.3, 0.4, 0.8, 1))]
+        , clearValues = [Color (Float32 0.3 0.4 0.8 1)]
         }
   cmdUseRenderPass' renderPassBeginInfo SUBPASS_CONTENTS_INLINE $ do
     cmdSetViewport'
