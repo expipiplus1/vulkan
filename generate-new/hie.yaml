@@ -1,8 +1,20 @@
 cradle:
-  cabal:
-  - path: ./src/
-    component: lib:generate-new
-  - path: ./vk/
-    component: exe:vk
-  - path: ./vma/
-    component: exe:vma
+  multi:
+  - path: ./out
+    config:
+      cradle:
+        none:
+  - path: ./out-vma
+    config:
+      cradle:
+        none:
+  - path: ./
+    config:
+      cradle:
+        cabal:
+        - path: ./src/
+          component: lib:generate-new
+        - path: ./vk/
+          component: exe:vk
+        - path: ./vma/
+          component: exe:vma
