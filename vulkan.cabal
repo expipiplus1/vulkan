@@ -471,6 +471,7 @@ library
       Vulkan.Extensions.VK_QCOM_render_pass_transform
       Vulkan.Extensions.VK_QCOM_rotated_copy_commands
       Vulkan.NamedType
+      Vulkan.SPIRVInfo
       Vulkan.Version
       Vulkan.Zero
       Vulkan.Internal.Utils
