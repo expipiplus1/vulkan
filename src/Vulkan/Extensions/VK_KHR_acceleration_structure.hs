@@ -2047,7 +2047,7 @@ cmdBuildAccelerationStructuresKHR :: forall io
                                      -- 'AccelerationStructureBuildRangeInfoKHR' structures defining dynamic
                                      -- offsets to the addresses where geometry data is stored, as defined by
                                      -- @pInfos@[i].
-                                     ("buildRangeInfos" ::: Vector AccelerationStructureBuildRangeInfoKHR)
+                                     ("buildRangeInfos" ::: Vector (Vector AccelerationStructureBuildRangeInfoKHR))
                                   -> io ()
 cmdBuildAccelerationStructuresKHR commandBuffer infos buildRangeInfos = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructuresKHRPtr = pVkCmdBuildAccelerationStructuresKHR (deviceCmds (commandBuffer :: CommandBuffer))
@@ -2061,8 +2061,9 @@ cmdBuildAccelerationStructuresKHR commandBuffer infos buildRangeInfos = liftIO .
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (80 * (i)) :: Ptr AccelerationStructureBuildGeometryInfoKHR) (e) . ($ ())) (infos)
   pPpBuildRangeInfos <- ContT $ allocaBytesAligned @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8) 8
   Data.Vector.imapM_ (\i e -> do
-    ppBuildRangeInfos <- ContT $ withCStruct (e)
-    lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) ppBuildRangeInfos) (buildRangeInfos)
+    pPpBuildRangeInfos' <- ContT $ allocaBytesAligned @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i)) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e)) (e)
+    lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
   lift $ vkCmdBuildAccelerationStructuresKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos)
   pure $ ()
 
@@ -2667,7 +2668,7 @@ cmdBuildAccelerationStructuresIndirectKHR :: forall io
                                           -> -- | @ppMaxPrimitiveCounts@ is an array of @infoCount@ arrays of
                                              -- @pInfo@[i]→@geometryCount@ values indicating the maximum number of
                                              -- primitives that will be built by this command for each geometry.
-                                             ("maxPrimitiveCounts" ::: Vector (Ptr Word32))
+                                             ("maxPrimitiveCounts" ::: Vector (Vector Word32))
                                           -> io ()
 cmdBuildAccelerationStructuresIndirectKHR commandBuffer infos indirectDeviceAddresses indirectStrides maxPrimitiveCounts = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructuresIndirectKHRPtr = pVkCmdBuildAccelerationStructuresIndirectKHR (deviceCmds (commandBuffer :: CommandBuffer))
@@ -2688,7 +2689,10 @@ cmdBuildAccelerationStructuresIndirectKHR commandBuffer infos indirectDeviceAddr
   pPIndirectStrides <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (indirectStrides)) * 4) 4
   lift $ Data.Vector.imapM_ (\i e -> poke (pPIndirectStrides `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (indirectStrides)
   pPpMaxPrimitiveCounts <- ContT $ allocaBytesAligned @(Ptr Word32) ((Data.Vector.length (maxPrimitiveCounts)) * 8) 8
-  lift $ Data.Vector.imapM_ (\i e -> poke (pPpMaxPrimitiveCounts `plusPtr` (8 * (i)) :: Ptr (Ptr Word32)) (e)) (maxPrimitiveCounts)
+  Data.Vector.imapM_ (\i e -> do
+    pPpMaxPrimitiveCounts' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (e)) * 4) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPpMaxPrimitiveCounts' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (e)
+    lift $ poke (pPpMaxPrimitiveCounts `plusPtr` (8 * (i)) :: Ptr (Ptr Word32)) (pPpMaxPrimitiveCounts')) (maxPrimitiveCounts)
   lift $ vkCmdBuildAccelerationStructuresIndirectKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPIndirectDeviceAddresses) (pPIndirectStrides) (pPpMaxPrimitiveCounts)
   pure $ ()
 
@@ -3137,7 +3141,7 @@ buildAccelerationStructuresKHR :: forall io
                                   -- 'AccelerationStructureBuildRangeInfoKHR' structures defining dynamic
                                   -- offsets to the addresses where geometry data is stored, as defined by
                                   -- @pInfos@[i].
-                                  ("buildRangeInfos" ::: Vector AccelerationStructureBuildRangeInfoKHR)
+                                  ("buildRangeInfos" ::: Vector (Vector AccelerationStructureBuildRangeInfoKHR))
                                -> io (Result)
 buildAccelerationStructuresKHR device deferredOperation infos buildRangeInfos = liftIO . evalContT $ do
   let vkBuildAccelerationStructuresKHRPtr = pVkBuildAccelerationStructuresKHR (deviceCmds (device :: Device))
@@ -3151,8 +3155,9 @@ buildAccelerationStructuresKHR device deferredOperation infos buildRangeInfos = 
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (80 * (i)) :: Ptr AccelerationStructureBuildGeometryInfoKHR) (e) . ($ ())) (infos)
   pPpBuildRangeInfos <- ContT $ allocaBytesAligned @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8) 8
   Data.Vector.imapM_ (\i e -> do
-    ppBuildRangeInfos <- ContT $ withCStruct (e)
-    lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) ppBuildRangeInfos) (buildRangeInfos)
+    pPpBuildRangeInfos' <- ContT $ allocaBytesAligned @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i)) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e)) (e)
+    lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
   r <- lift $ vkBuildAccelerationStructuresKHR' (deviceHandle (device)) (deferredOperation) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
