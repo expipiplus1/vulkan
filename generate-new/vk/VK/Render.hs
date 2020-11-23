@@ -174,12 +174,12 @@ renderStructsAndUnions ss us = traverseInTopOrder
 immediateDepends :: StructOrUnion t s c -> [CName]
 immediateDepends Struct {..} =
   [ n
-  | StructMember {..} <- V.toList sMembers
-  , Just n            <- pure $ immediateDepend smType
+  | sName `notElem` cycleBreakers
+  , StructMember {..} <- V.toList sMembers
+  , n                 <- getAllTypeNames smType
   ]
- where
-  immediateDepend = \case
-    TypeName n   -> Just n
-    Bitfield t _ -> immediateDepend t
-    Array _ _ t  -> immediateDepend t
-    _            -> Nothing
+
+-- These are the only structs with cycles, don't bother using their storable
+-- instances in poking as they're only used once
+cycleBreakers :: [CName]
+cycleBreakers = ["VkBaseInStructure", "VkBaseOutStructure"]

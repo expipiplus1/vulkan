@@ -118,12 +118,14 @@ During development unfinished bits not to forget are listed here.
 
 Optional TODOs:
 
-- [ ] cmdTraceRaysKHR is not using the storable instance of StridedDeviceAddressRegionKHR
+- [x] cmdTraceRaysKHR is not using the storable instance of StridedDeviceAddressRegionKHR
   - same for destroyAccelerationStructureKHR not using allocation callbacks
   - These are due to the `indirectStruct` case of the `normal` poker
-- [ ] likewise for `pokeCStruct` of `RayTracingPipelineCreateInfoKHR{..}`
+  - This is no problem, commands have to allocate structs on the stack anyway
+- [x] likewise for `pokeCStruct` of `RayTracingPipelineCreateInfoKHR{..}`
   - This one is because we're not looking past pointers when checking for
     direct dependents
+  - Fixed
 - [ ] Documentation on bracketing functions still mentions the "first"
   argument, this should be chagned to "last"
 - [ ] AccelerationStructureGeometryAabbsDataKHR could use a simple poke for its
