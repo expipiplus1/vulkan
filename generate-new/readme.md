@@ -91,6 +91,20 @@ The docbook documentation will be in `docs/docbook`.
 
 During development unfinished bits not to forget are listed here.
 
+### 1.2.162
+
+- optionalness on VkWriteDescriptorSetAccelerationStructureKHR->pAccelerationStructures
+- VkAccelerationStructureVersionKHR
+- VkAccelerationStructureInstanceKHR
+- VkAccelerationStructureBuildGeometryInfoKHR
+- VkAccelerationStructureBuildGeometryInfoKHR->pGeometries (esp optionalness)
+- VkAccelerationStructureBuildGeometryInfoKHR->ppGeometries (esp optionalness)
+- VkAccelerationStructureCreateInfoKHR->offset
+- VkAccelerationStructureVersionInfoKHR->pVersionData
+- VkCopyCommandTransformInfoQCOM->info
+- vkCmdBuildAccelerationStructuresIndirectKHR
+- vkGetAccelerationStructureBuildSizesKH
+
 # VMA TODOs
 
 ## TODO
