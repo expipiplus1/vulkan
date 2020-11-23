@@ -126,7 +126,7 @@ Optional TODOs:
   - This one is because we're not looking past pointers when checking for
     direct dependents
   - Fixed
-- [ ] Documentation on bracketing functions still mentions the "first"
+- [x] Documentation on bracketing functions still mentions the "first"
   argument, this should be chagned to "last"
 - [ ] AccelerationStructureGeometryAabbsDataKHR could use a simple poke for its
   DeviceOrHostAddressConstKHR (is this true for the union in
