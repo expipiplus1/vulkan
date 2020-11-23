@@ -31,6 +31,7 @@ import           Render.Stmts
 import           Render.Stmts.Poke
 import           Render.Type
 import           Spec.Parse
+import qualified Data.Text as T
 
 renderUnion
   :: ( HasErr r
@@ -92,9 +93,15 @@ renderUnionMember tyName MarshaledStructMember {..} = do
   RenderParams {..} <- input
   let StructMember {..} = msmStructMember
   let con               = mkConName tyName smName
-  t    <- note "Union member is elided" =<< schemeTypeNegative msmScheme
-  tDoc <- renderTypeHighPrec t
-  pure $ pretty con <+> tDoc
+  case msmScheme of
+    Tupled n elemScheme -> do
+      t    <- note "Union member is elided" =<< schemeTypeNegative elemScheme
+      tDoc <- renderTypeHighPrec t
+      pure $ pretty con <+> hsep (replicate (fromIntegral n) tDoc)
+    _ -> do
+      t    <- note "Union member is elided" =<< schemeTypeNegative msmScheme
+      tDoc <- renderTypeHighPrec t
+      pure $ pretty con <+> tDoc
 
 toCStructInstance
   :: forall r
@@ -117,18 +124,25 @@ toCStructInstance MarshaledStruct {..} = do
     Struct {..} = msStruct
     n           = mkTyName sName
     aVar        = mkVar "a"
-    mVar        = "v"
     structT     = ConT (typeName n)
     mkCase :: MarshaledStructMember -> Sem r (Doc ())
     mkCase MarshaledStructMember {..} = do
-      let con      = mkConName sName (smName msmStructMember)
-          ty       = mkTyName sName
-          badNames = fromList [mVar]
+      unless (smOffset msmStructMember == 0)
+        $ throw "Union has member with non-zero offset"
+      let
+        numMembers = case msmScheme of
+          Tupled n _ -> n
+          _          -> 1
+        con   = mkConName sName (smName msmStructMember)
+        ty    = mkTyName sName
+        mVars = [ "v" <> show n | n <- [0 .. numMembers - 1] ]
+        mVar  = if numMembers == 1
+          then "v"
+          else "(" <> T.intercalate ", " mVars <> ")"
+        badNames = fromList (mVar : mVars)
 
       pokeVal <- renderStmts badNames $ do
         addrRef <- stmt Nothing Nothing $ do
-          unless (smOffset msmStructMember == 0)
-            $ throw "Union has member with non-zero offset"
           tellImport 'castPtr
           pTyDoc <- renderTypeHighPrec
             =<< cToHsType DoPreserve (smType msmStructMember)
@@ -148,7 +162,9 @@ toCStructInstance MarshaledStruct {..} = do
         ContTStmts d -> pure d
 
       tellImportWith ty con
-      pure $ pretty con <+> "v" <+> "->" <+> pokeDoc
+      let matchVars =
+            if numMembers == 1 then pretty mVar else hsep (pretty <$> mVars)
+      pure $ pretty con <+> matchVars <+> "->" <+> pokeDoc
 
   cases           <- traverseV mkCase (toList msMembers)
 
@@ -208,13 +224,16 @@ zeroInstance MarshaledStruct {..} = do
     $ runNonDetMaybe
     . \MarshaledStructMember {..} -> do
         (unionSize, _) <- getTypeSize (TypeName msName)
-        zero           <- zeroScheme msmScheme >>= \case
+        let (numElems, elemScheme) = case msmScheme of
+              Tupled n e -> (n, e)
+              e          -> (1, e)
+        zero <- zeroScheme elemScheme >>= \case
           Nothing -> empty
           Just z  -> pure z
         let con = pretty (mkConName msName (smName msmStructMember))
         size <- case msmScheme of
-          Normal t -> fst <$> getTypeSize t
-          Preserve t -> fst <$> getTypeSize t
+          Normal   t          -> fst <$> getTypeSize t
+          Preserve t          -> fst <$> getTypeSize t
           Tupled n (Normal e) -> do
             (tSize, _) <- getTypeSize e
             pure $ tSize * fromIntegral n
@@ -223,7 +242,7 @@ zeroInstance MarshaledStruct {..} = do
             pure $ tSize * fromIntegral n
           _ -> empty
         guard (size == unionSize)
-        pure (con <+> zero)
+        pure (con <+> hsep (replicate (fromIntegral numElems) zero))
   zeroMember <- case zeroableMembers of
     [] ->
       throw
