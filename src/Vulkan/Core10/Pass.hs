@@ -1958,7 +1958,7 @@ instance (Extendss RenderPassCreateInfo es, PokeChain es) => ToCStruct (RenderPa
     lift $ poke ((p `plusPtr` 16 :: Ptr RenderPassCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32))
     pPAttachments' <- ContT $ allocaBytesAligned @AttachmentDescription ((Data.Vector.length (attachments)) * 36) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments' `plusPtr` (36 * (i)) :: Ptr AttachmentDescription) (e) . ($ ())) (attachments)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPAttachments' `plusPtr` (36 * (i)) :: Ptr AttachmentDescription) (e)) (attachments)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr AttachmentDescription))) (pPAttachments')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (subpasses)) :: Word32))
     pPSubpasses' <- ContT $ allocaBytesAligned @SubpassDescription ((Data.Vector.length (subpasses)) * 72) 8
@@ -1966,7 +1966,7 @@ instance (Extendss RenderPassCreateInfo es, PokeChain es) => ToCStruct (RenderPa
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr SubpassDescription))) (pPSubpasses')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (dependencies)) :: Word32))
     pPDependencies' <- ContT $ allocaBytesAligned @SubpassDependency ((Data.Vector.length (dependencies)) * 28) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDependencies' `plusPtr` (28 * (i)) :: Ptr SubpassDependency) (e) . ($ ())) (dependencies)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDependencies' `plusPtr` (28 * (i)) :: Ptr SubpassDependency) (e)) (dependencies)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr SubpassDependency))) (pPDependencies')
     lift $ f
   cStructSize = 64
@@ -1976,13 +1976,13 @@ instance (Extendss RenderPassCreateInfo es, PokeChain es) => ToCStruct (RenderPa
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     pPAttachments' <- ContT $ allocaBytesAligned @AttachmentDescription ((Data.Vector.length (mempty)) * 36) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments' `plusPtr` (36 * (i)) :: Ptr AttachmentDescription) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPAttachments' `plusPtr` (36 * (i)) :: Ptr AttachmentDescription) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr AttachmentDescription))) (pPAttachments')
     pPSubpasses' <- ContT $ allocaBytesAligned @SubpassDescription ((Data.Vector.length (mempty)) * 72) 8
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSubpasses' `plusPtr` (72 * (i)) :: Ptr SubpassDescription) (e) . ($ ())) (mempty)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr SubpassDescription))) (pPSubpasses')
     pPDependencies' <- ContT $ allocaBytesAligned @SubpassDependency ((Data.Vector.length (mempty)) * 28) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDependencies' `plusPtr` (28 * (i)) :: Ptr SubpassDependency) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDependencies' `plusPtr` (28 * (i)) :: Ptr SubpassDependency) (e)) (mempty)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr SubpassDependency))) (pPDependencies')
     lift $ f
 

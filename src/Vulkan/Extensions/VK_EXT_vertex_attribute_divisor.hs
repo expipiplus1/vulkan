@@ -164,7 +164,7 @@ instance ToCStruct PipelineVertexInputDivisorStateCreateInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (vertexBindingDivisors)) :: Word32))
     pPVertexBindingDivisors' <- ContT $ allocaBytesAligned @VertexInputBindingDivisorDescriptionEXT ((Data.Vector.length (vertexBindingDivisors)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVertexBindingDivisors' `plusPtr` (8 * (i)) :: Ptr VertexInputBindingDivisorDescriptionEXT) (e) . ($ ())) (vertexBindingDivisors)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexBindingDivisors' `plusPtr` (8 * (i)) :: Ptr VertexInputBindingDivisorDescriptionEXT) (e)) (vertexBindingDivisors)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr VertexInputBindingDivisorDescriptionEXT))) (pPVertexBindingDivisors')
     lift $ f
   cStructSize = 32
@@ -173,7 +173,7 @@ instance ToCStruct PipelineVertexInputDivisorStateCreateInfoEXT where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pPVertexBindingDivisors' <- ContT $ allocaBytesAligned @VertexInputBindingDivisorDescriptionEXT ((Data.Vector.length (mempty)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVertexBindingDivisors' `plusPtr` (8 * (i)) :: Ptr VertexInputBindingDivisorDescriptionEXT) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexBindingDivisors' `plusPtr` (8 * (i)) :: Ptr VertexInputBindingDivisorDescriptionEXT) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr VertexInputBindingDivisorDescriptionEXT))) (pPVertexBindingDivisors')
     lift $ f
 

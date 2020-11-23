@@ -347,7 +347,7 @@ instance ToCStruct SampleLocationsInfoEXT where
     lift $ poke ((p `plusPtr` 20 :: Ptr Extent2D)) (sampleLocationGridSize)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (sampleLocations)) :: Word32))
     pPSampleLocations' <- ContT $ allocaBytesAligned @SampleLocationEXT ((Data.Vector.length (sampleLocations)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSampleLocations' `plusPtr` (8 * (i)) :: Ptr SampleLocationEXT) (e) . ($ ())) (sampleLocations)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPSampleLocations' `plusPtr` (8 * (i)) :: Ptr SampleLocationEXT) (e)) (sampleLocations)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr SampleLocationEXT))) (pPSampleLocations')
     lift $ f
   cStructSize = 40
@@ -357,7 +357,7 @@ instance ToCStruct SampleLocationsInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 20 :: Ptr Extent2D)) (zero)
     pPSampleLocations' <- ContT $ allocaBytesAligned @SampleLocationEXT ((Data.Vector.length (mempty)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSampleLocations' `plusPtr` (8 * (i)) :: Ptr SampleLocationEXT) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPSampleLocations' `plusPtr` (8 * (i)) :: Ptr SampleLocationEXT) (e)) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr SampleLocationEXT))) (pPSampleLocations')
     lift $ f
 

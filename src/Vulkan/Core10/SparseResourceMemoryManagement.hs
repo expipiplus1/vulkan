@@ -1057,7 +1057,7 @@ instance ToCStruct SparseBufferMemoryBindInfo where
     lift $ poke ((p `plusPtr` 0 :: Ptr Buffer)) (buffer)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (binds)) :: Word32))
     pPBinds' <- ContT $ allocaBytesAligned @SparseMemoryBind ((Data.Vector.length (binds)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e) . ($ ())) (binds)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e)) (binds)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseMemoryBind))) (pPBinds')
     lift $ f
   cStructSize = 24
@@ -1065,7 +1065,7 @@ instance ToCStruct SparseBufferMemoryBindInfo where
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Buffer)) (zero)
     pPBinds' <- ContT $ allocaBytesAligned @SparseMemoryBind ((Data.Vector.length (mempty)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e)) (mempty)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseMemoryBind))) (pPBinds')
     lift $ f
 
@@ -1128,7 +1128,7 @@ instance ToCStruct SparseImageOpaqueMemoryBindInfo where
     lift $ poke ((p `plusPtr` 0 :: Ptr Image)) (image)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (binds)) :: Word32))
     pPBinds' <- ContT $ allocaBytesAligned @SparseMemoryBind ((Data.Vector.length (binds)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e) . ($ ())) (binds)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e)) (binds)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseMemoryBind))) (pPBinds')
     lift $ f
   cStructSize = 24
@@ -1136,7 +1136,7 @@ instance ToCStruct SparseImageOpaqueMemoryBindInfo where
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Image)) (zero)
     pPBinds' <- ContT $ allocaBytesAligned @SparseMemoryBind ((Data.Vector.length (mempty)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e)) (mempty)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseMemoryBind))) (pPBinds')
     lift $ f
 
@@ -1208,7 +1208,7 @@ instance ToCStruct SparseImageMemoryBindInfo where
     lift $ poke ((p `plusPtr` 0 :: Ptr Image)) (image)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (binds)) :: Word32))
     pPBinds' <- ContT $ allocaBytesAligned @SparseImageMemoryBind ((Data.Vector.length (binds)) * 64) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBinds' `plusPtr` (64 * (i)) :: Ptr SparseImageMemoryBind) (e) . ($ ())) (binds)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (64 * (i)) :: Ptr SparseImageMemoryBind) (e)) (binds)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseImageMemoryBind))) (pPBinds')
     lift $ f
   cStructSize = 24
@@ -1216,7 +1216,7 @@ instance ToCStruct SparseImageMemoryBindInfo where
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Image)) (zero)
     pPBinds' <- ContT $ allocaBytesAligned @SparseImageMemoryBind ((Data.Vector.length (mempty)) * 64) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBinds' `plusPtr` (64 * (i)) :: Ptr SparseImageMemoryBind) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (64 * (i)) :: Ptr SparseImageMemoryBind) (e)) (mempty)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseImageMemoryBind))) (pPBinds')
     lift $ f
 

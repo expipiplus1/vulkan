@@ -2298,7 +2298,7 @@ instance (Extendss RayTracingPipelineCreateInfoNV es, PokeChain es) => ToCStruct
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _)))) (pPStages')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (groups)) :: Word32))
     pPGroups' <- ContT $ allocaBytesAligned @RayTracingShaderGroupCreateInfoNV ((Data.Vector.length (groups)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGroups' `plusPtr` (40 * (i)) :: Ptr RayTracingShaderGroupCreateInfoNV) (e) . ($ ())) (groups)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPGroups' `plusPtr` (40 * (i)) :: Ptr RayTracingShaderGroupCreateInfoNV) (e)) (groups)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr RayTracingShaderGroupCreateInfoNV))) (pPGroups')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (maxRecursionDepth)
     lift $ poke ((p `plusPtr` 56 :: Ptr PipelineLayout)) (layout)
@@ -2315,7 +2315,7 @@ instance (Extendss RayTracingPipelineCreateInfoNV es, PokeChain es) => ToCStruct
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPStages' `plusPtr` (48 * (i)) :: Ptr (PipelineShaderStageCreateInfo _))) (e) . ($ ())) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _)))) (pPStages')
     pPGroups' <- ContT $ allocaBytesAligned @RayTracingShaderGroupCreateInfoNV ((Data.Vector.length (mempty)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGroups' `plusPtr` (40 * (i)) :: Ptr RayTracingShaderGroupCreateInfoNV) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPGroups' `plusPtr` (40 * (i)) :: Ptr RayTracingShaderGroupCreateInfoNV) (e)) (mempty)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr RayTracingShaderGroupCreateInfoNV))) (pPGroups')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 56 :: Ptr PipelineLayout)) (zero)
@@ -2895,7 +2895,7 @@ instance ToCStruct AccelerationStructureInfoNV where
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (instanceCount)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (geometries)) :: Word32))
     pPGeometries' <- ContT $ allocaBytesAligned @GeometryNV ((Data.Vector.length (geometries)) * 168) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGeometries' `plusPtr` (168 * (i)) :: Ptr GeometryNV) (e) . ($ ())) (geometries)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPGeometries' `plusPtr` (168 * (i)) :: Ptr GeometryNV) (e)) (geometries)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr GeometryNV))) (pPGeometries')
     lift $ f
   cStructSize = 40
@@ -2905,7 +2905,7 @@ instance ToCStruct AccelerationStructureInfoNV where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr AccelerationStructureTypeNV)) (zero)
     pPGeometries' <- ContT $ allocaBytesAligned @GeometryNV ((Data.Vector.length (mempty)) * 168) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGeometries' `plusPtr` (168 * (i)) :: Ptr GeometryNV) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPGeometries' `plusPtr` (168 * (i)) :: Ptr GeometryNV) (e)) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr GeometryNV))) (pPGeometries')
     lift $ f
 

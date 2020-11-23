@@ -1314,7 +1314,7 @@ instance ToCStruct CopyBufferInfo2KHR where
     lift $ poke ((p `plusPtr` 24 :: Ptr Buffer)) (dstBuffer)
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
     pPRegions' <- ContT $ allocaBytesAligned @BufferCopy2KHR ((Data.Vector.length (regions)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (40 * (i)) :: Ptr BufferCopy2KHR) (e) . ($ ())) (regions)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (40 * (i)) :: Ptr BufferCopy2KHR) (e)) (regions)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferCopy2KHR))) (pPRegions')
     lift $ f
   cStructSize = 48
@@ -1325,7 +1325,7 @@ instance ToCStruct CopyBufferInfo2KHR where
     lift $ poke ((p `plusPtr` 16 :: Ptr Buffer)) (zero)
     lift $ poke ((p `plusPtr` 24 :: Ptr Buffer)) (zero)
     pPRegions' <- ContT $ allocaBytesAligned @BufferCopy2KHR ((Data.Vector.length (mempty)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (40 * (i)) :: Ptr BufferCopy2KHR) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (40 * (i)) :: Ptr BufferCopy2KHR) (e)) (mempty)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferCopy2KHR))) (pPRegions')
     lift $ f
 
@@ -1735,7 +1735,7 @@ instance ToCStruct CopyImageInfo2KHR where
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
     pPRegions' <- ContT $ allocaBytesAligned @ImageCopy2KHR ((Data.Vector.length (regions)) * 88) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageCopy2KHR) (e) . ($ ())) (regions)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageCopy2KHR) (e)) (regions)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageCopy2KHR))) (pPRegions')
     lift $ f
   cStructSize = 56
@@ -1748,7 +1748,7 @@ instance ToCStruct CopyImageInfo2KHR where
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (zero)
     pPRegions' <- ContT $ allocaBytesAligned @ImageCopy2KHR ((Data.Vector.length (mempty)) * 88) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageCopy2KHR) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageCopy2KHR) (e)) (mempty)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageCopy2KHR))) (pPRegions')
     lift $ f
 
@@ -3014,7 +3014,7 @@ instance ToCStruct ResolveImageInfo2KHR where
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
     pPRegions' <- ContT $ allocaBytesAligned @ImageResolve2KHR ((Data.Vector.length (regions)) * 88) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageResolve2KHR) (e) . ($ ())) (regions)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageResolve2KHR) (e)) (regions)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageResolve2KHR))) (pPRegions')
     lift $ f
   cStructSize = 56
@@ -3027,7 +3027,7 @@ instance ToCStruct ResolveImageInfo2KHR where
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (zero)
     pPRegions' <- ContT $ allocaBytesAligned @ImageResolve2KHR ((Data.Vector.length (mempty)) * 88) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageResolve2KHR) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageResolve2KHR) (e)) (mempty)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageResolve2KHR))) (pPRegions')
     lift $ f
 

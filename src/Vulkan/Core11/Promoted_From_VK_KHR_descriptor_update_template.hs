@@ -662,7 +662,7 @@ instance ToCStruct DescriptorUpdateTemplateCreateInfo where
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorUpdateTemplateCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (descriptorUpdateEntries)) :: Word32))
     pPDescriptorUpdateEntries' <- ContT $ allocaBytesAligned @DescriptorUpdateTemplateEntry ((Data.Vector.length (descriptorUpdateEntries)) * 32) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorUpdateEntries' `plusPtr` (32 * (i)) :: Ptr DescriptorUpdateTemplateEntry) (e) . ($ ())) (descriptorUpdateEntries)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorUpdateEntries' `plusPtr` (32 * (i)) :: Ptr DescriptorUpdateTemplateEntry) (e)) (descriptorUpdateEntries)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorUpdateTemplateEntry))) (pPDescriptorUpdateEntries')
     lift $ poke ((p `plusPtr` 32 :: Ptr DescriptorUpdateTemplateType)) (templateType)
     lift $ poke ((p `plusPtr` 40 :: Ptr DescriptorSetLayout)) (descriptorSetLayout)
@@ -676,7 +676,7 @@ instance ToCStruct DescriptorUpdateTemplateCreateInfo where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pPDescriptorUpdateEntries' <- ContT $ allocaBytesAligned @DescriptorUpdateTemplateEntry ((Data.Vector.length (mempty)) * 32) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorUpdateEntries' `plusPtr` (32 * (i)) :: Ptr DescriptorUpdateTemplateEntry) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorUpdateEntries' `plusPtr` (32 * (i)) :: Ptr DescriptorUpdateTemplateEntry) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorUpdateTemplateEntry))) (pPDescriptorUpdateEntries')
     lift $ poke ((p `plusPtr` 32 :: Ptr DescriptorUpdateTemplateType)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr DescriptorSetLayout)) (zero)

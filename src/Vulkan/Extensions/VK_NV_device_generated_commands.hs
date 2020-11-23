@@ -2484,7 +2484,7 @@ instance ToCStruct GeneratedCommandsInfoNV where
     lift $ poke ((p `plusPtr` 32 :: Ptr IndirectCommandsLayoutNV)) (indirectCommandsLayout)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (streams)) :: Word32))
     pPStreams' <- ContT $ allocaBytesAligned @IndirectCommandsStreamNV ((Data.Vector.length (streams)) * 16) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPStreams' `plusPtr` (16 * (i)) :: Ptr IndirectCommandsStreamNV) (e) . ($ ())) (streams)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPStreams' `plusPtr` (16 * (i)) :: Ptr IndirectCommandsStreamNV) (e)) (streams)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr IndirectCommandsStreamNV))) (pPStreams')
     lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (sequencesCount)
     lift $ poke ((p `plusPtr` 64 :: Ptr Buffer)) (preprocessBuffer)
@@ -2504,7 +2504,7 @@ instance ToCStruct GeneratedCommandsInfoNV where
     lift $ poke ((p `plusPtr` 24 :: Ptr Pipeline)) (zero)
     lift $ poke ((p `plusPtr` 32 :: Ptr IndirectCommandsLayoutNV)) (zero)
     pPStreams' <- ContT $ allocaBytesAligned @IndirectCommandsStreamNV ((Data.Vector.length (mempty)) * 16) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPStreams' `plusPtr` (16 * (i)) :: Ptr IndirectCommandsStreamNV) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPStreams' `plusPtr` (16 * (i)) :: Ptr IndirectCommandsStreamNV) (e)) (mempty)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr IndirectCommandsStreamNV))) (pPStreams')
     lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 64 :: Ptr Buffer)) (zero)

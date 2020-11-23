@@ -877,7 +877,7 @@ instance ToCStruct CoarseSampleOrderCustomNV where
     lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (sampleCount)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (sampleLocations)) :: Word32))
     pPSampleLocations' <- ContT $ allocaBytesAligned @CoarseSampleLocationNV ((Data.Vector.length (sampleLocations)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSampleLocations' `plusPtr` (12 * (i)) :: Ptr CoarseSampleLocationNV) (e) . ($ ())) (sampleLocations)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPSampleLocations' `plusPtr` (12 * (i)) :: Ptr CoarseSampleLocationNV) (e)) (sampleLocations)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CoarseSampleLocationNV))) (pPSampleLocations')
     lift $ f
   cStructSize = 24
@@ -886,7 +886,7 @@ instance ToCStruct CoarseSampleOrderCustomNV where
     lift $ poke ((p `plusPtr` 0 :: Ptr ShadingRatePaletteEntryNV)) (zero)
     lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
     pPSampleLocations' <- ContT $ allocaBytesAligned @CoarseSampleLocationNV ((Data.Vector.length (mempty)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSampleLocations' `plusPtr` (12 * (i)) :: Ptr CoarseSampleLocationNV) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPSampleLocations' `plusPtr` (12 * (i)) :: Ptr CoarseSampleLocationNV) (e)) (mempty)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CoarseSampleLocationNV))) (pPSampleLocations')
     lift $ f
 

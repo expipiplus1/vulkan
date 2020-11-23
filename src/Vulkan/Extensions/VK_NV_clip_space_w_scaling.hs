@@ -243,7 +243,7 @@ instance ToCStruct PipelineViewportWScalingStateCreateInfoNV where
       then pure nullPtr
       else do
         pPViewportWScalings <- ContT $ allocaBytesAligned @ViewportWScalingNV (((Data.Vector.length (viewportWScalings))) * 8) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e) . ($ ())) ((viewportWScalings))
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e)) ((viewportWScalings))
         pure $ pPViewportWScalings
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewportWScalingNV))) pViewportWScalings''
     lift $ f

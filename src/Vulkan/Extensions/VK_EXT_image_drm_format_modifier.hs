@@ -605,7 +605,7 @@ instance ToCStruct ImageDrmFormatModifierExplicitCreateInfoEXT where
     lift $ poke ((p `plusPtr` 16 :: Ptr Word64)) (drmFormatModifier)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (planeLayouts)) :: Word32))
     pPPlaneLayouts' <- ContT $ allocaBytesAligned @SubresourceLayout ((Data.Vector.length (planeLayouts)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPlaneLayouts' `plusPtr` (40 * (i)) :: Ptr SubresourceLayout) (e) . ($ ())) (planeLayouts)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPPlaneLayouts' `plusPtr` (40 * (i)) :: Ptr SubresourceLayout) (e)) (planeLayouts)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr SubresourceLayout))) (pPPlaneLayouts')
     lift $ f
   cStructSize = 40
@@ -615,7 +615,7 @@ instance ToCStruct ImageDrmFormatModifierExplicitCreateInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word64)) (zero)
     pPPlaneLayouts' <- ContT $ allocaBytesAligned @SubresourceLayout ((Data.Vector.length (mempty)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPlaneLayouts' `plusPtr` (40 * (i)) :: Ptr SubresourceLayout) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPPlaneLayouts' `plusPtr` (40 * (i)) :: Ptr SubresourceLayout) (e)) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr SubresourceLayout))) (pPPlaneLayouts')
     lift $ f
 

@@ -180,7 +180,7 @@ instance ToCStruct PipelineViewportSwizzleStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineViewportSwizzleStateCreateFlagsNV)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewportSwizzles)) :: Word32))
     pPViewportSwizzles' <- ContT $ allocaBytesAligned @ViewportSwizzleNV ((Data.Vector.length (viewportSwizzles)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewportSwizzles' `plusPtr` (16 * (i)) :: Ptr ViewportSwizzleNV) (e) . ($ ())) (viewportSwizzles)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPViewportSwizzles' `plusPtr` (16 * (i)) :: Ptr ViewportSwizzleNV) (e)) (viewportSwizzles)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewportSwizzleNV))) (pPViewportSwizzles')
     lift $ f
   cStructSize = 32
@@ -189,7 +189,7 @@ instance ToCStruct PipelineViewportSwizzleStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pPViewportSwizzles' <- ContT $ allocaBytesAligned @ViewportSwizzleNV ((Data.Vector.length (mempty)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewportSwizzles' `plusPtr` (16 * (i)) :: Ptr ViewportSwizzleNV) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPViewportSwizzles' `plusPtr` (16 * (i)) :: Ptr ViewportSwizzleNV) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewportSwizzleNV))) (pPViewportSwizzles')
     lift $ f
 

@@ -873,7 +873,7 @@ instance ToCStruct SpecializationInfo where
   pokeCStruct p SpecializationInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (mapEntries)) :: Word32))
     pPMapEntries' <- ContT $ allocaBytesAligned @SpecializationMapEntry ((Data.Vector.length (mapEntries)) * 16) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMapEntries' `plusPtr` (16 * (i)) :: Ptr SpecializationMapEntry) (e) . ($ ())) (mapEntries)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPMapEntries' `plusPtr` (16 * (i)) :: Ptr SpecializationMapEntry) (e)) (mapEntries)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr SpecializationMapEntry))) (pPMapEntries')
     lift $ poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (dataSize))
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (data')
@@ -882,7 +882,7 @@ instance ToCStruct SpecializationInfo where
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     pPMapEntries' <- ContT $ allocaBytesAligned @SpecializationMapEntry ((Data.Vector.length (mempty)) * 16) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMapEntries' `plusPtr` (16 * (i)) :: Ptr SpecializationMapEntry) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPMapEntries' `plusPtr` (16 * (i)) :: Ptr SpecializationMapEntry) (e)) (mempty)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr SpecializationMapEntry))) (pPMapEntries')
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (zero)
     lift $ f
@@ -1738,11 +1738,11 @@ instance (Extendss PipelineVertexInputStateCreateInfo es, PokeChain es) => ToCSt
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineVertexInputStateCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (vertexBindingDescriptions)) :: Word32))
     pPVertexBindingDescriptions' <- ContT $ allocaBytesAligned @VertexInputBindingDescription ((Data.Vector.length (vertexBindingDescriptions)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVertexBindingDescriptions' `plusPtr` (12 * (i)) :: Ptr VertexInputBindingDescription) (e) . ($ ())) (vertexBindingDescriptions)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexBindingDescriptions' `plusPtr` (12 * (i)) :: Ptr VertexInputBindingDescription) (e)) (vertexBindingDescriptions)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr VertexInputBindingDescription))) (pPVertexBindingDescriptions')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (vertexAttributeDescriptions)) :: Word32))
     pPVertexAttributeDescriptions' <- ContT $ allocaBytesAligned @VertexInputAttributeDescription ((Data.Vector.length (vertexAttributeDescriptions)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVertexAttributeDescriptions' `plusPtr` (16 * (i)) :: Ptr VertexInputAttributeDescription) (e) . ($ ())) (vertexAttributeDescriptions)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexAttributeDescriptions' `plusPtr` (16 * (i)) :: Ptr VertexInputAttributeDescription) (e)) (vertexAttributeDescriptions)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr VertexInputAttributeDescription))) (pPVertexAttributeDescriptions')
     lift $ f
   cStructSize = 48
@@ -1752,10 +1752,10 @@ instance (Extendss PipelineVertexInputStateCreateInfo es, PokeChain es) => ToCSt
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     pPVertexBindingDescriptions' <- ContT $ allocaBytesAligned @VertexInputBindingDescription ((Data.Vector.length (mempty)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVertexBindingDescriptions' `plusPtr` (12 * (i)) :: Ptr VertexInputBindingDescription) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexBindingDescriptions' `plusPtr` (12 * (i)) :: Ptr VertexInputBindingDescription) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr VertexInputBindingDescription))) (pPVertexBindingDescriptions')
     pPVertexAttributeDescriptions' <- ContT $ allocaBytesAligned @VertexInputAttributeDescription ((Data.Vector.length (mempty)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVertexAttributeDescriptions' `plusPtr` (16 * (i)) :: Ptr VertexInputAttributeDescription) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexAttributeDescriptions' `plusPtr` (16 * (i)) :: Ptr VertexInputAttributeDescription) (e)) (mempty)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr VertexInputAttributeDescription))) (pPVertexAttributeDescriptions')
     lift $ f
 
@@ -2155,7 +2155,7 @@ instance (Extendss PipelineViewportStateCreateInfo es, PokeChain es) => ToCStruc
       then pure nullPtr
       else do
         pPViewports <- ContT $ allocaBytesAligned @Viewport (((Data.Vector.length (viewports))) * 24) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e) . ($ ())) ((viewports))
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e)) ((viewports))
         pure $ pPViewports
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Viewport))) pViewports''
     let pScissorsLength = Data.Vector.length $ (scissors)
@@ -2972,7 +2972,7 @@ instance (Extendss PipelineColorBlendStateCreateInfo es, PokeChain es) => ToCStr
     lift $ poke ((p `plusPtr` 24 :: Ptr LogicOp)) (logicOp)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32))
     pPAttachments' <- ContT $ allocaBytesAligned @PipelineColorBlendAttachmentState ((Data.Vector.length (attachments)) * 32) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e) . ($ ())) (attachments)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e)) (attachments)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState))) (pPAttachments')
     let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     lift $ case (blendConstants) of
@@ -2991,7 +2991,7 @@ instance (Extendss PipelineColorBlendStateCreateInfo es, PokeChain es) => ToCStr
     lift $ poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ poke ((p `plusPtr` 24 :: Ptr LogicOp)) (zero)
     pPAttachments' <- ContT $ allocaBytesAligned @PipelineColorBlendAttachmentState ((Data.Vector.length (mempty)) * 32) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e)) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState))) (pPAttachments')
     let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     lift $ case ((zero, zero, zero, zero)) of

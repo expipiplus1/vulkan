@@ -726,7 +726,7 @@ instance ToCStruct PipelineLayoutCreateInfo where
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorSetLayout))) (pPSetLayouts')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (pushConstantRanges)) :: Word32))
     pPPushConstantRanges' <- ContT $ allocaBytesAligned @PushConstantRange ((Data.Vector.length (pushConstantRanges)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPushConstantRanges' `plusPtr` (12 * (i)) :: Ptr PushConstantRange) (e) . ($ ())) (pushConstantRanges)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPPushConstantRanges' `plusPtr` (12 * (i)) :: Ptr PushConstantRange) (e)) (pushConstantRanges)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr PushConstantRange))) (pPPushConstantRanges')
     lift $ f
   cStructSize = 48
@@ -738,7 +738,7 @@ instance ToCStruct PipelineLayoutCreateInfo where
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSetLayouts' `plusPtr` (8 * (i)) :: Ptr DescriptorSetLayout) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorSetLayout))) (pPSetLayouts')
     pPPushConstantRanges' <- ContT $ allocaBytesAligned @PushConstantRange ((Data.Vector.length (mempty)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPushConstantRanges' `plusPtr` (12 * (i)) :: Ptr PushConstantRange) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPPushConstantRanges' `plusPtr` (12 * (i)) :: Ptr PushConstantRange) (e)) (mempty)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr PushConstantRange))) (pPPushConstantRanges')
     lift $ f
 

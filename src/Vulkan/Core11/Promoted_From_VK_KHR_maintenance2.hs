@@ -168,7 +168,7 @@ instance ToCStruct RenderPassInputAttachmentAspectCreateInfo where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (aspectReferences)) :: Word32))
     pPAspectReferences' <- ContT $ allocaBytesAligned @InputAttachmentAspectReference ((Data.Vector.length (aspectReferences)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAspectReferences' `plusPtr` (12 * (i)) :: Ptr InputAttachmentAspectReference) (e) . ($ ())) (aspectReferences)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPAspectReferences' `plusPtr` (12 * (i)) :: Ptr InputAttachmentAspectReference) (e)) (aspectReferences)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr InputAttachmentAspectReference))) (pPAspectReferences')
     lift $ f
   cStructSize = 32
@@ -177,7 +177,7 @@ instance ToCStruct RenderPassInputAttachmentAspectCreateInfo where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pPAspectReferences' <- ContT $ allocaBytesAligned @InputAttachmentAspectReference ((Data.Vector.length (mempty)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAspectReferences' `plusPtr` (12 * (i)) :: Ptr InputAttachmentAspectReference) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPAspectReferences' `plusPtr` (12 * (i)) :: Ptr InputAttachmentAspectReference) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr InputAttachmentAspectReference))) (pPAspectReferences')
     lift $ f
 

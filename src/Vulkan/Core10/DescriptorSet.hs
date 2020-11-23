@@ -1612,14 +1612,14 @@ instance (Extendss WriteDescriptorSet es, PokeChain es) => ToCStruct (WriteDescr
       then pure nullPtr
       else do
         pPImageInfo <- ContT $ allocaBytesAligned @DescriptorImageInfo (((Data.Vector.length (imageInfo))) * 24) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPImageInfo `plusPtr` (24 * (i)) :: Ptr DescriptorImageInfo) (e) . ($ ())) ((imageInfo))
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPImageInfo `plusPtr` (24 * (i)) :: Ptr DescriptorImageInfo) (e)) ((imageInfo))
         pure $ pPImageInfo
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr DescriptorImageInfo))) pImageInfo''
     pBufferInfo'' <- if Data.Vector.null (bufferInfo)
       then pure nullPtr
       else do
         pPBufferInfo <- ContT $ allocaBytesAligned @DescriptorBufferInfo (((Data.Vector.length (bufferInfo))) * 24) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBufferInfo `plusPtr` (24 * (i)) :: Ptr DescriptorBufferInfo) (e) . ($ ())) ((bufferInfo))
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferInfo `plusPtr` (24 * (i)) :: Ptr DescriptorBufferInfo) (e)) ((bufferInfo))
         pure $ pPBufferInfo
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr DescriptorBufferInfo))) pBufferInfo''
     pTexelBufferView'' <- if Data.Vector.null (texelBufferView)
@@ -2404,7 +2404,7 @@ instance (Extendss DescriptorPoolCreateInfo es, PokeChain es) => ToCStruct (Desc
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (maxSets)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (poolSizes)) :: Word32))
     pPPoolSizes' <- ContT $ allocaBytesAligned @DescriptorPoolSize ((Data.Vector.length (poolSizes)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPoolSizes' `plusPtr` (8 * (i)) :: Ptr DescriptorPoolSize) (e) . ($ ())) (poolSizes)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPPoolSizes' `plusPtr` (8 * (i)) :: Ptr DescriptorPoolSize) (e)) (poolSizes)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorPoolSize))) (pPPoolSizes')
     lift $ f
   cStructSize = 40
@@ -2415,7 +2415,7 @@ instance (Extendss DescriptorPoolCreateInfo es, PokeChain es) => ToCStruct (Desc
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
     pPPoolSizes' <- ContT $ allocaBytesAligned @DescriptorPoolSize ((Data.Vector.length (mempty)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPoolSizes' `plusPtr` (8 * (i)) :: Ptr DescriptorPoolSize) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPPoolSizes' `plusPtr` (8 * (i)) :: Ptr DescriptorPoolSize) (e)) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorPoolSize))) (pPPoolSizes')
     lift $ f
 
