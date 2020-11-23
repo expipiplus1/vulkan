@@ -29,6 +29,7 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
                                                   , OBJECT_TYPE_DEFERRED_OPERATION_KHR
                                                   , OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL
+                                                  , OBJECT_TYPE_ACCELERATION_STRUCTURE_NV
                                                   , OBJECT_TYPE_VALIDATION_CACHE_EXT
                                                   , OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
                                                   , OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
@@ -137,6 +138,8 @@ import Vulkan.Zero (Zero)
 -- +-----------------------------------------------+-----------------------------------------------------------+
 -- | 'OBJECT_TYPE_VALIDATION_CACHE_EXT'            | 'Vulkan.Extensions.Handles.ValidationCacheEXT'            |
 -- +-----------------------------------------------+-----------------------------------------------------------+
+-- | 'OBJECT_TYPE_ACCELERATION_STRUCTURE_NV'       | 'Vulkan.Extensions.Handles.AccelerationStructureNV'       |
+-- +-----------------------------------------------+-----------------------------------------------------------+
 -- | 'OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR'      | 'Vulkan.Extensions.Handles.AccelerationStructureKHR'      |
 -- +-----------------------------------------------+-----------------------------------------------------------+
 -- | 'OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL' | 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' |
@@ -218,10 +221,12 @@ pattern OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV = ObjectType 1000277000
 pattern OBJECT_TYPE_DEFERRED_OPERATION_KHR = ObjectType 1000268000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL"
 pattern OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL = ObjectType 1000210000
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV"
+pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_NV = ObjectType 1000165000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_VALIDATION_CACHE_EXT"
 pattern OBJECT_TYPE_VALIDATION_CACHE_EXT = ObjectType 1000160000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR"
-pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR = ObjectType 1000165000
+pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR = ObjectType 1000150000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"
 pattern OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT = ObjectType 1000128000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT"
@@ -268,6 +273,7 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = ObjectType 1000156000
              OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV,
              OBJECT_TYPE_DEFERRED_OPERATION_KHR,
              OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL,
+             OBJECT_TYPE_ACCELERATION_STRUCTURE_NV,
              OBJECT_TYPE_VALIDATION_CACHE_EXT,
              OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR,
              OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT,
@@ -311,6 +317,7 @@ instance Show ObjectType where
     OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV -> showString "OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV"
     OBJECT_TYPE_DEFERRED_OPERATION_KHR -> showString "OBJECT_TYPE_DEFERRED_OPERATION_KHR"
     OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL -> showString "OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL"
+    OBJECT_TYPE_ACCELERATION_STRUCTURE_NV -> showString "OBJECT_TYPE_ACCELERATION_STRUCTURE_NV"
     OBJECT_TYPE_VALIDATION_CACHE_EXT -> showString "OBJECT_TYPE_VALIDATION_CACHE_EXT"
     OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR -> showString "OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR"
     OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT -> showString "OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"
@@ -354,6 +361,7 @@ instance Read ObjectType where
                             , ("OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV", pure OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV)
                             , ("OBJECT_TYPE_DEFERRED_OPERATION_KHR", pure OBJECT_TYPE_DEFERRED_OPERATION_KHR)
                             , ("OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL", pure OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL)
+                            , ("OBJECT_TYPE_ACCELERATION_STRUCTURE_NV", pure OBJECT_TYPE_ACCELERATION_STRUCTURE_NV)
                             , ("OBJECT_TYPE_VALIDATION_CACHE_EXT", pure OBJECT_TYPE_VALIDATION_CACHE_EXT)
                             , ("OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR", pure OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR)
                             , ("OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT", pure OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT)

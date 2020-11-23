@@ -5,7 +5,6 @@ module Vulkan.Extensions.VK_KHR_deferred_host_operations  ( createDeferredOperat
                                                           , getDeferredOperationMaxConcurrencyKHR
                                                           , getDeferredOperationResultKHR
                                                           , deferredOperationJoinKHR
-                                                          , DeferredOperationInfoKHR(..)
                                                           , KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION
                                                           , pattern KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION
                                                           , KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
@@ -16,30 +15,22 @@ module Vulkan.Extensions.VK_KHR_deferred_host_operations  ( createDeferredOperat
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
-import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
@@ -53,16 +44,10 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroyDeferredOperationKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeferredOperationMaxConcurrencyKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeferredOperationResultKHR))
 import Vulkan.Core10.Handles (Device_T)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.Handles (DeferredOperationKHR(..))
 foreign import ccall
@@ -307,17 +292,17 @@ foreign import ccall
 --
 -- = Description
 --
--- If the deferred operation is pending, 'getDeferredOperationResultKHR'
--- returns 'Vulkan.Core10.Enums.Result.NOT_READY'.
---
 -- If no command has been deferred on @operation@,
 -- 'getDeferredOperationResultKHR' returns
 -- 'Vulkan.Core10.Enums.Result.SUCCESS'.
 --
--- Otherwise, it returns the result of the previous deferred operation.
--- This value /must/ be one of the 'Vulkan.Core10.Enums.Result.Result'
--- values which could have been returned by the original command if the
--- operation had not been deferred.
+-- If the deferred operation is pending, 'getDeferredOperationResultKHR'
+-- returns 'Vulkan.Core10.Enums.Result.NOT_READY'.
+--
+-- If the deferred operation is complete, it returns the appropriate return
+-- value from the original command. This value /must/ be one of the
+-- 'Vulkan.Core10.Enums.Result.Result' values which could have been
+-- returned by the original command if the operation had not been deferred.
 --
 -- == Return Codes
 --
@@ -459,132 +444,11 @@ deferredOperationJoinKHR device operation = liftIO $ do
   pure $ (r)
 
 
--- | VkDeferredOperationInfoKHR - Deferred operation request
---
--- = Description
---
--- The application /can/ request deferral of an operation by adding this
--- structure to the argument list of a command or by providing this in the
--- @pNext@ chain of a relevant structure for an operation when the
--- corresponding command is invoked. If this structure is not present, no
--- deferral is requested. If @operationHandle@ is
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE', no deferral is requested and
--- the command proceeds as if no 'DeferredOperationInfoKHR' structure was
--- provided.
---
--- When an application requests an operation deferral, the implementation
--- /may/ defer the operation. When deferral is requested and the
--- implementation defers any operation, the implementation /must/ return
--- 'Vulkan.Core10.Enums.Result.OPERATION_DEFERRED_KHR' as the success code
--- if no errors occurred. When deferral is requested, the implementation
--- /should/ defer the operation when the workload is significant, however
--- if the implementation chooses not to defer any of the requested
--- operations and instead executes all of them immediately, the
--- implementation /must/ return
--- 'Vulkan.Core10.Enums.Result.OPERATION_NOT_DEFERRED_KHR' as the success
--- code if no errors occurred.
---
--- A deferred operation is created /complete/ with an initial result value
--- of 'Vulkan.Core10.Enums.Result.SUCCESS'. The deferred operation becomes
--- /pending/ when an operation has been successfully deferred with that
--- @operationHandle@.
---
--- A deferred operation is considered pending until the deferred operation
--- completes. A pending deferred operation becomes /complete/ when it has
--- been fully executed by one or more threads. Pending deferred operations
--- will never complete until they are /joined/ by an application thread,
--- using 'deferredOperationJoinKHR'. Applications /can/ join multiple
--- threads to the same deferred operation, enabling concurrent execution of
--- subtasks within that operation.
---
--- The application /can/ query the status of a
--- 'Vulkan.Extensions.Handles.DeferredOperationKHR' using the
--- 'getDeferredOperationMaxConcurrencyKHR' or
--- 'getDeferredOperationResultKHR' commands.
---
--- From the perspective of other commands - parameters to the original
--- command that are externally synchronized /must/ not be accessed before
--- the deferred operation completes, and the result of the deferred
--- operation (e.g. object creation) are not considered complete until the
--- deferred operation completes.
---
--- If the deferred operation is one which creates an object (for example, a
--- pipeline object), the implementation /must/ allocate that object as it
--- normally would, and return a valid handle to the application. This
--- object is a /pending/ object, and /must/ not be used by the application
--- until the deferred operation is completed (unless otherwise specified by
--- the deferral extension). When the deferred operation is complete, the
--- application /should/ call 'getDeferredOperationResultKHR' to obtain the
--- result of the operation. If 'getDeferredOperationResultKHR' indicates
--- failure, the application /must/ destroy the pending object using an
--- appropriate command, so that the implementation has an opportunity to
--- recover the handle. The application /must/ not perform this destruction
--- until the deferred operation is complete. Construction of the pending
--- object uses the same allocator which would have been used if the
--- operation had not been deferred.
---
--- == Valid Usage
---
--- -   #VUID-VkDeferredOperationInfoKHR-operationHandle-03433# Any previous
---     deferred operation that was associated with @operationHandle@ /must/
---     be complete
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDeferredOperationInfoKHR-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR'
---
--- = See Also
---
--- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data DeferredOperationInfoKHR = DeferredOperationInfoKHR
-  { -- | @operationHandle@ is a handle to a tracking object to associate with the
-    -- deferred operation.
-    operationHandle :: DeferredOperationKHR }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (DeferredOperationInfoKHR)
-#endif
-deriving instance Show DeferredOperationInfoKHR
-
-instance ToCStruct DeferredOperationInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DeferredOperationInfoKHR{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DeferredOperationKHR)) (operationHandle)
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DeferredOperationKHR)) (zero)
-    f
-
-instance FromCStruct DeferredOperationInfoKHR where
-  peekCStruct p = do
-    operationHandle <- peek @DeferredOperationKHR ((p `plusPtr` 16 :: Ptr DeferredOperationKHR))
-    pure $ DeferredOperationInfoKHR
-             operationHandle
-
-instance Storable DeferredOperationInfoKHR where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero DeferredOperationInfoKHR where
-  zero = DeferredOperationInfoKHR
-           zero
-
-
-type KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION = 3
+type KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION = 4
 
 -- No documentation found for TopLevel "VK_KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION"
 pattern KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION = 3
+pattern KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION = 4
 
 
 type KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME = "VK_KHR_deferred_host_operations"

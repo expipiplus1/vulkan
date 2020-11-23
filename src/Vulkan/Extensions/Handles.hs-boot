@@ -1,5 +1,6 @@
 {-# language CPP #-}
 module Vulkan.Extensions.Handles  ( AccelerationStructureKHR
+                                  , AccelerationStructureNV
                                   , DebugReportCallbackEXT
                                   , DebugUtilsMessengerEXT
                                   , DeferredOperationKHR
@@ -16,6 +17,9 @@ module Vulkan.Extensions.Handles  ( AccelerationStructureKHR
 
 
 data AccelerationStructureKHR
+
+
+data AccelerationStructureNV
 
 
 data DebugReportCallbackEXT

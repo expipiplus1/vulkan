@@ -9,6 +9,7 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlagBits( PIP
                                                                            , PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR
                                                                            , PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR
                                                                            , PIPELINE_CREATE_DEFER_COMPILE_BIT_NV
+                                                                           , PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR
                                                                            , PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR
                                                                            , PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR
                                                                            , PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR
@@ -90,11 +91,11 @@ import Vulkan.Zero (Zero)
 --     /cannot/ be used directly, and instead defines a /pipeline library/
 --     that /can/ be combined with other pipelines using the
 --     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'
---     structure. This is available in raytracing pipelines.
+--     structure. This is available in ray tracing pipelines.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
---     specifies that an any hit shader will always be present when an any
---     hit shader would be executed.
+--     specifies that an any-hit shader will always be present when an
+--     any-hit shader would be executed.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR'
 --     specifies that a closest hit shader will always be present when a
@@ -114,6 +115,10 @@ import Vulkan.Zero (Zero)
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR' specifies that AABB
 --     primitives will be skipped during traversal using @OpTraceKHR@.
+--
+-- -   'PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
+--     specifies that the shader group handles /can/ be saved and reused on
+--     a subsequent run (e.g. for trace capture and replay).
 --
 -- -   'PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV' specifies that the
 --     pipeline can be used in combination with
@@ -165,6 +170,8 @@ pattern PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR = PipelineCreat
 pattern PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR = PipelineCreateFlagBits 0x00000040
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV"
 pattern PIPELINE_CREATE_DEFER_COMPILE_BIT_NV = PipelineCreateFlagBits 0x00000020
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"
+pattern PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR = PipelineCreateFlagBits 0x00080000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR"
 pattern PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR = PipelineCreateFlagBits 0x00002000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"
@@ -196,6 +203,7 @@ instance Show PipelineCreateFlagBits where
     PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR -> showString "PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR"
     PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR -> showString "PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR"
     PIPELINE_CREATE_DEFER_COMPILE_BIT_NV -> showString "PIPELINE_CREATE_DEFER_COMPILE_BIT_NV"
+    PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR -> showString "PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"
     PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR -> showString "PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR"
     PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR -> showString "PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"
     PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR -> showString "PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"
@@ -217,6 +225,7 @@ instance Read PipelineCreateFlagBits where
                             , ("PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR", pure PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR)
                             , ("PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR", pure PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR)
                             , ("PIPELINE_CREATE_DEFER_COMPILE_BIT_NV", pure PIPELINE_CREATE_DEFER_COMPILE_BIT_NV)
+                            , ("PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR", pure PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR)
                             , ("PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR", pure PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR)
                             , ("PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR", pure PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR)
                             , ("PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR", pure PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR)

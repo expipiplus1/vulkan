@@ -243,6 +243,16 @@ import Vulkan.Zero (Zero)
 --     be used as a vertex attribute format
 --     ('Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@format@).
 --
+-- -   'FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+--     specifies that the format /can/ be used as the vertex format when
+--     creating an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure acceleration structure>
+--     ('Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@).
+--     This format /can/ also be used as the vertex format in host memory
+--     when doing
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+--     builds.
+--
 -- = See Also
 --
 -- 'FormatFeatureFlags'
@@ -333,7 +343,14 @@ pattern FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = FormatFeatureF
 -- view /can/ be used as a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
 pattern FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT = FormatFeatureFlagBits 0x01000000
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"
+-- | 'FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR' specifies
+-- that the format /can/ be used as the vertex format when creating an
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure acceleration structure>
+-- ('Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@).
+-- This format /can/ also be used as the vertex format in host memory when
+-- doing
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+-- builds.
 pattern FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR = FormatFeatureFlagBits 0x20000000
 -- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG = FormatFeatureFlagBits 0x00002000

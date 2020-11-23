@@ -386,8 +386,8 @@ updateDescriptorSetWithTemplate :: forall io
                                    -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
                                    -- 'Vulkan.Core10.Handles.BufferView' structures or
                                    -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR' or
-                                   -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureNV' handles
-                                   -- used to write the descriptors.
+                                   -- 'Vulkan.Extensions.Handles.AccelerationStructureNV' handles used to
+                                   -- write the descriptors.
                                    ("data" ::: Ptr ())
                                 -> io ()
 updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate data' = liftIO $ do

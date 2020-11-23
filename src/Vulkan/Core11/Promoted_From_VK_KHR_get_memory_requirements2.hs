@@ -463,7 +463,6 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 --
 -- 'Vulkan.Core10.MemoryManagement.MemoryRequirements',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.getAccelerationStructureMemoryRequirementsKHR',
 -- 'getBufferMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.getGeneratedCommandsMemoryRequirementsNV',

@@ -26,7 +26,6 @@ module Vulkan.Core10.Enums.Result  (Result( SUCCESS
                                           , ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
                                           , ERROR_NOT_PERMITTED_EXT
                                           , ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
-                                          , ERROR_INCOMPATIBLE_VERSION_KHR
                                           , ERROR_INVALID_SHADER_NV
                                           , ERROR_VALIDATION_FAILED_EXT
                                           , ERROR_INCOMPATIBLE_DISPLAY_KHR
@@ -181,8 +180,6 @@ pattern ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT = Result (-1000255000)
 pattern ERROR_NOT_PERMITTED_EXT = Result (-1000174001)
 -- No documentation found for Nested "VkResult" "VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"
 pattern ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT = Result (-1000158000)
--- No documentation found for Nested "VkResult" "VK_ERROR_INCOMPATIBLE_VERSION_KHR"
-pattern ERROR_INCOMPATIBLE_VERSION_KHR = Result (-1000150000)
 -- | 'ERROR_INVALID_SHADER_NV' One or more shaders failed to compile or link.
 -- More details are reported back to the application via
 -- @VK_EXT_debug_report@ if enabled.
@@ -252,7 +249,6 @@ pattern ERROR_OUT_OF_POOL_MEMORY = Result (-1000069000)
              ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT,
              ERROR_NOT_PERMITTED_EXT,
              ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT,
-             ERROR_INCOMPATIBLE_VERSION_KHR,
              ERROR_INVALID_SHADER_NV,
              ERROR_VALIDATION_FAILED_EXT,
              ERROR_INCOMPATIBLE_DISPLAY_KHR,
@@ -294,7 +290,6 @@ instance Show Result where
     ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT -> showString "ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"
     ERROR_NOT_PERMITTED_EXT -> showString "ERROR_NOT_PERMITTED_EXT"
     ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT -> showString "ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"
-    ERROR_INCOMPATIBLE_VERSION_KHR -> showString "ERROR_INCOMPATIBLE_VERSION_KHR"
     ERROR_INVALID_SHADER_NV -> showString "ERROR_INVALID_SHADER_NV"
     ERROR_VALIDATION_FAILED_EXT -> showString "ERROR_VALIDATION_FAILED_EXT"
     ERROR_INCOMPATIBLE_DISPLAY_KHR -> showString "ERROR_INCOMPATIBLE_DISPLAY_KHR"
@@ -336,7 +331,6 @@ instance Read Result where
                             , ("ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT", pure ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT)
                             , ("ERROR_NOT_PERMITTED_EXT", pure ERROR_NOT_PERMITTED_EXT)
                             , ("ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT", pure ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT)
-                            , ("ERROR_INCOMPATIBLE_VERSION_KHR", pure ERROR_INCOMPATIBLE_VERSION_KHR)
                             , ("ERROR_INVALID_SHADER_NV", pure ERROR_INVALID_SHADER_NV)
                             , ("ERROR_VALIDATION_FAILED_EXT", pure ERROR_VALIDATION_FAILED_EXT)
                             , ("ERROR_INCOMPATIBLE_DISPLAY_KHR", pure ERROR_INCOMPATIBLE_DISPLAY_KHR)

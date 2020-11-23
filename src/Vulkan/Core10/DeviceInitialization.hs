@@ -524,12 +524,12 @@ foreign import ccall
 -- +----------------------+----------------------+-----------------------+
 -- | device               | @NULL@               | undefined             |
 -- +----------------------+----------------------+-----------------------+
--- | device               | core device-level    | fp2                   |
--- |                      | Vulkan command       |                       |
+-- | device               | core device-level    | fp3                   |
+-- |                      | Vulkan command2      |                       |
 -- +----------------------+----------------------+-----------------------+
--- | device               | enabled extension    | fp2                   |
+-- | device               | enabled extension    | fp3                   |
 -- |                      | device-level         |                       |
--- |                      | commands             |                       |
+-- |                      | commands2            |                       |
 -- +----------------------+----------------------+-----------------------+
 -- | any other case, not  |                      | @NULL@                |
 -- | covered above        |                      |                       |
@@ -542,6 +542,10 @@ foreign import ccall
 --     valid values, invalid values, and @NULL@).
 --
 -- [2]
+--     In this function, device-level excludes all physical-device-level
+--     commands.
+--
+-- [3]
 --     The returned function pointer /must/ only be called with a
 --     dispatchable object (the first parameter) that is @device@ or a
 --     child of @device@ e.g. 'Vulkan.Core10.Handles.Device',

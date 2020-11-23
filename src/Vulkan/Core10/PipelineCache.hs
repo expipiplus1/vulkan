@@ -96,7 +96,7 @@ foreign import ccall
 --
 -- Once created, a pipeline cache /can/ be passed to the
 -- 'Vulkan.Core10.Pipeline.createGraphicsPipelines'
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.createRayTracingPipelinesKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.createRayTracingPipelinesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV', and
 -- 'Vulkan.Core10.Pipeline.createComputePipelines' commands. If the
 -- pipeline cache passed into these commands is not

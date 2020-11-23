@@ -21,8 +21,8 @@ module Vulkan.Core10.Enums.PipelineStageFlagBits  ( PipelineStageFlagBits( PIPEL
                                                                          , PIPELINE_STAGE_MESH_SHADER_BIT_NV
                                                                          , PIPELINE_STAGE_TASK_SHADER_BIT_NV
                                                                          , PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV
-                                                                         , PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR
                                                                          , PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
+                                                                         , PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR
                                                                          , PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT
                                                                          , PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT
                                                                          , ..
@@ -64,8 +64,8 @@ newtype PipelineStageFlagBits = PipelineStageFlagBits Flags
 -- in the first scope.
 pattern PIPELINE_STAGE_TOP_OF_PIPE_BIT = PipelineStageFlagBits 0x00000001
 -- | 'PIPELINE_STAGE_DRAW_INDIRECT_BIT' specifies the stage of the pipeline
--- where Draw\/DispatchIndirect data structures are consumed. This stage
--- also includes reading commands written by
+-- where Draw\/DispatchIndirect\/TraceRaysIndirect data structures are
+-- consumed. This stage also includes reading commands written by
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdExecuteGeneratedCommandsNV'.
 pattern PIPELINE_STAGE_DRAW_INDIRECT_BIT = PipelineStageFlagBits 0x00000002
 -- | 'PIPELINE_STAGE_VERTEX_INPUT_BIT' specifies the stage of the pipeline
@@ -189,13 +189,26 @@ pattern PIPELINE_STAGE_MESH_SHADER_BIT_NV = PipelineStageFlagBits 0x00100000
 pattern PIPELINE_STAGE_TASK_SHADER_BIT_NV = PipelineStageFlagBits 0x00080000
 -- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV"
 pattern PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV = PipelineStageFlagBits 0x00400000
+-- | 'PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR' specifies the execution of
+-- the ray tracing shader stages, via
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV' ,
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysKHR', or
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysIndirectKHR'
+pattern PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR = PipelineStageFlagBits 0x00200000
 -- | 'PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR' specifies the
 -- execution of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure acceleration structure commands>.
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdCopyAccelerationStructureNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV'
+-- ,
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdBuildAccelerationStructuresKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdBuildAccelerationStructuresIndirectKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdCopyAccelerationStructureKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdCopyAccelerationStructureToMemoryKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdCopyMemoryToAccelerationStructureKHR',
+-- and
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR'.
 pattern PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR = PipelineStageFlagBits 0x02000000
--- | 'PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR' specifies the execution of
--- the ray tracing shader stages.
-pattern PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR = PipelineStageFlagBits 0x00200000
 -- | 'PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT' specifies the stage of
 -- the pipeline where the predicate of conditional rendering is consumed.
 pattern PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT = PipelineStageFlagBits 0x00040000
@@ -230,8 +243,8 @@ instance Show PipelineStageFlagBits where
     PIPELINE_STAGE_MESH_SHADER_BIT_NV -> showString "PIPELINE_STAGE_MESH_SHADER_BIT_NV"
     PIPELINE_STAGE_TASK_SHADER_BIT_NV -> showString "PIPELINE_STAGE_TASK_SHADER_BIT_NV"
     PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV -> showString "PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV"
-    PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR -> showString "PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"
     PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR -> showString "PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR"
+    PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR -> showString "PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"
     PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT -> showString "PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT"
     PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT -> showString "PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT"
     PipelineStageFlagBits x -> showParen (p >= 11) (showString "PipelineStageFlagBits 0x" . showHex x)
@@ -259,8 +272,8 @@ instance Read PipelineStageFlagBits where
                             , ("PIPELINE_STAGE_MESH_SHADER_BIT_NV", pure PIPELINE_STAGE_MESH_SHADER_BIT_NV)
                             , ("PIPELINE_STAGE_TASK_SHADER_BIT_NV", pure PIPELINE_STAGE_TASK_SHADER_BIT_NV)
                             , ("PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV", pure PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV)
-                            , ("PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR", pure PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR)
                             , ("PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR", pure PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR)
+                            , ("PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR", pure PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR)
                             , ("PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT", pure PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT)
                             , ("PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT", pure PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT)]
                      +++

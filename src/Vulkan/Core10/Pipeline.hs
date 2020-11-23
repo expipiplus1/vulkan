@@ -1146,7 +1146,7 @@ instance Zero SpecializationInfo where
 -- 'ComputePipelineCreateInfo', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PipelineShaderStageCreateFlags',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
 -- 'Vulkan.Core10.Handles.ShaderModule',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits',
@@ -1324,6 +1324,10 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 -- -   #VUID-VkComputePipelineCreateInfo-flags-03370# @flags@ /must/ not
 --     include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
+--
+-- -   #VUID-VkComputePipelineCreateInfo-flags-03576# @flags@ /must/ not
+--     include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --
 -- -   #VUID-VkComputePipelineCreateInfo-flags-02874# @flags@ /must/ not
 --     include
@@ -3056,6 +3060,7 @@ instance es ~ '[] => Zero (PipelineColorBlendStateCreateInfo es) where
 -- 'Vulkan.Core10.Enums.DynamicState.DynamicState',
 -- 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags.PipelineDynamicStateCreateFlags',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineDynamicStateCreateInfo = PipelineDynamicStateCreateInfo
   { -- | @flags@ is reserved for future use.
@@ -3893,6 +3898,10 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
 --
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-03577# @flags@ /must/ not
+--     include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
+--
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-03378# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature is not enabled, there /must/ be no element of the
@@ -4115,6 +4124,11 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV'::shadingRate
 --     /must/ not be equal to
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV'.
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-03578# All
+--     elements of the @pDynamicStates@ member of @pDynamicState@ /must/
+--     not be
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR'
 --
 -- == Valid Usage (Implicit)
 --

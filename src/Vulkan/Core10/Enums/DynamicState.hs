@@ -25,6 +25,7 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
                                                       , DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV
                                                       , DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV
+                                                      , DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR
                                                       , DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
                                                       , DYNAMIC_STATE_DISCARD_RECTANGLE_EXT
                                                       , DYNAMIC_STATE_VIEWPORT_W_SCALING_NV
@@ -256,6 +257,12 @@ pattern DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV = DynamicState 1000164006
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
 -- before any draw commands.
 pattern DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV = DynamicState 1000164004
+-- | 'DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR' specifies that the
+-- default stack size computation for the pipeline will be ignored and
+-- /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdSetRayTracingPipelineStackSizeKHR'
+-- before any ray tracing calls are performed.
+pattern DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR = DynamicState 1000347000
 -- | 'DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT' specifies that the
 -- @sampleLocationsInfo@ state in
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'
@@ -312,6 +319,7 @@ pattern DYNAMIC_STATE_VIEWPORT_W_SCALING_NV = DynamicState 1000087000
              DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV,
              DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV,
              DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV,
+             DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR,
              DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT,
              DYNAMIC_STATE_DISCARD_RECTANGLE_EXT,
              DYNAMIC_STATE_VIEWPORT_W_SCALING_NV :: DynamicState #-}
@@ -344,6 +352,7 @@ instance Show DynamicState where
     DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV -> showString "DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"
     DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV -> showString "DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"
     DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV -> showString "DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"
+    DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR -> showString "DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR"
     DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT -> showString "DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT"
     DYNAMIC_STATE_DISCARD_RECTANGLE_EXT -> showString "DYNAMIC_STATE_DISCARD_RECTANGLE_EXT"
     DYNAMIC_STATE_VIEWPORT_W_SCALING_NV -> showString "DYNAMIC_STATE_VIEWPORT_W_SCALING_NV"
@@ -376,6 +385,7 @@ instance Read DynamicState where
                             , ("DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV", pure DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV)
                             , ("DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV", pure DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV)
                             , ("DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV", pure DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV)
+                            , ("DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR", pure DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR)
                             , ("DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT", pure DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT)
                             , ("DYNAMIC_STATE_DISCARD_RECTANGLE_EXT", pure DYNAMIC_STATE_DISCARD_RECTANGLE_EXT)
                             , ("DYNAMIC_STATE_VIEWPORT_W_SCALING_NV", pure DYNAMIC_STATE_VIEWPORT_W_SCALING_NV)]

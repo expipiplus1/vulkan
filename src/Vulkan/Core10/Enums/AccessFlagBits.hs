@@ -67,7 +67,8 @@ import Vulkan.Zero (Zero)
 -- +-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
 -- | Access flag                                                                                           | Supported pipeline stages                                                                                |
 -- +=======================================================================================================+==========================================================================================================+
--- | 'ACCESS_INDIRECT_COMMAND_READ_BIT'                                                                    | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_DRAW_INDIRECT_BIT'                             |
+-- | 'ACCESS_INDIRECT_COMMAND_READ_BIT'                                                                    | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_DRAW_INDIRECT_BIT' ,                           |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'          |
 -- +-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
 -- | 'ACCESS_INDEX_READ_BIT'                                                                               | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_INPUT_BIT'                              |
 -- +-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
@@ -83,7 +84,8 @@ import Vulkan.Zero (Zero)
 -- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT', or                       |
 -- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMPUTE_SHADER_BIT'                            |
 -- +-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_SHADER_READ_BIT'                                                                              | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV',                           |
+-- | 'ACCESS_SHADER_READ_BIT'                                                                              | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',         |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV',                           |
 -- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV',                           |
 -- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR',                   |
 -- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT',                            |
@@ -115,9 +117,11 @@ import Vulkan.Zero (Zero)
 -- | 'ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'                                                           | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT', or                  |
 -- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT'                       |
 -- +-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_TRANSFER_READ_BIT'                                                                            | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'                                  |
+-- | 'ACCESS_TRANSFER_READ_BIT'                                                                            | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT' or                               |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'          |
 -- +-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_TRANSFER_WRITE_BIT'                                                                           | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'                                  |
+-- | 'ACCESS_TRANSFER_WRITE_BIT'                                                                           | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT' or                               |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'          |
 -- +-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
 -- | 'ACCESS_HOST_READ_BIT'                                                                                | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'                                      |
 -- +-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
@@ -143,7 +147,15 @@ import Vulkan.Zero (Zero)
 -- +-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
 -- | 'ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT'                                                      | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_DRAW_INDIRECT_BIT'                             |
 -- +-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'                                                          | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR', or                |
+-- | 'ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'                                                          | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV',                           |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV',                           |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT',                            |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT',              |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT',           |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT',                          |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT',                          |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMPUTE_SHADER_BIT',                           |
+-- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR', or                |
 -- |                                                                                                       | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'          |
 -- +-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
 -- | 'ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'                                                         | 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'          |
@@ -160,7 +172,8 @@ newtype AccessFlagBits = AccessFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'ACCESS_INDIRECT_COMMAND_READ_BIT' specifies read access to indirect
--- command data read as part of an indirect drawing or dispatch command.
+-- command data read as part of an indirect build, trace, drawing or
+-- dispatch command.
 pattern ACCESS_INDIRECT_COMMAND_READ_BIT = AccessFlagBits 0x00000001
 -- | 'ACCESS_INDEX_READ_BIT' specifies read access to an index buffer as part
 -- of an indexed drawing command, bound by
@@ -271,10 +284,11 @@ pattern ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV = AccessFlagBits 0x00800000
 -- | 'ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR' specifies write access to
 -- an acceleration structure or
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-scratch acceleration structure scratch buffer>
--- as part of a build command.
+-- as part of a build or copy command.
 pattern ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR = AccessFlagBits 0x00400000
 -- | 'ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR' specifies read access to an
--- acceleration structure as part of a trace or build command, or to an
+-- acceleration structure as part of a trace, build, or copy command, or to
+-- an
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-scratch acceleration structure scratch buffer>
 -- as part of a build command.
 pattern ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR = AccessFlagBits 0x00200000

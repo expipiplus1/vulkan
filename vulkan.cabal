@@ -354,6 +354,7 @@ library
       Vulkan.Extensions.VK_INTEL_shader_integer_functions2
       Vulkan.Extensions.VK_KHR_16bit_storage
       Vulkan.Extensions.VK_KHR_8bit_storage
+      Vulkan.Extensions.VK_KHR_acceleration_structure
       Vulkan.Extensions.VK_KHR_android_surface
       Vulkan.Extensions.VK_KHR_bind_memory2
       Vulkan.Extensions.VK_KHR_buffer_device_address
@@ -398,7 +399,8 @@ library
       Vulkan.Extensions.VK_KHR_pipeline_library
       Vulkan.Extensions.VK_KHR_portability_subset
       Vulkan.Extensions.VK_KHR_push_descriptor
-      Vulkan.Extensions.VK_KHR_ray_tracing
+      Vulkan.Extensions.VK_KHR_ray_query
+      Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
       Vulkan.Extensions.VK_KHR_relaxed_block_layout
       Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
       Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion

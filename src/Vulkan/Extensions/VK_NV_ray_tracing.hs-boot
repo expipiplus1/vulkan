@@ -2,6 +2,7 @@
 module Vulkan.Extensions.VK_NV_ray_tracing  ( AccelerationStructureCreateInfoNV
                                             , AccelerationStructureInfoNV
                                             , AccelerationStructureMemoryRequirementsInfoNV
+                                            , BindAccelerationStructureMemoryInfoNV
                                             , GeometryAABBNV
                                             , GeometryDataNV
                                             , GeometryNV
@@ -9,11 +10,10 @@ module Vulkan.Extensions.VK_NV_ray_tracing  ( AccelerationStructureCreateInfoNV
                                             , PhysicalDeviceRayTracingPropertiesNV
                                             , RayTracingPipelineCreateInfoNV
                                             , RayTracingShaderGroupCreateInfoNV
-                                            , AccelerationStructureNV
+                                            , WriteDescriptorSetAccelerationStructureNV
                                             ) where
 
 import Data.Kind (Type)
-import {-# SOURCE #-} Vulkan.Extensions.Handles (AccelerationStructureKHR)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
@@ -42,6 +42,14 @@ instance ToCStruct AccelerationStructureMemoryRequirementsInfoNV
 instance Show AccelerationStructureMemoryRequirementsInfoNV
 
 instance FromCStruct AccelerationStructureMemoryRequirementsInfoNV
+
+
+data BindAccelerationStructureMemoryInfoNV
+
+instance ToCStruct BindAccelerationStructureMemoryInfoNV
+instance Show BindAccelerationStructureMemoryInfoNV
+
+instance FromCStruct BindAccelerationStructureMemoryInfoNV
 
 
 data GeometryAABBNV
@@ -101,6 +109,10 @@ instance Show RayTracingShaderGroupCreateInfoNV
 instance FromCStruct RayTracingShaderGroupCreateInfoNV
 
 
--- No documentation found for TopLevel "VkAccelerationStructureNV"
-type AccelerationStructureNV = AccelerationStructureKHR
+data WriteDescriptorSetAccelerationStructureNV
+
+instance ToCStruct WriteDescriptorSetAccelerationStructureNV
+instance Show WriteDescriptorSetAccelerationStructureNV
+
+instance FromCStruct WriteDescriptorSetAccelerationStructureNV
 

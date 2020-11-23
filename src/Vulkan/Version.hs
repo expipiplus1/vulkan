@@ -14,11 +14,11 @@ import Data.Bits (shiftR)
 import Data.Word (Word32)
 
 pattern HEADER_VERSION :: Word32
-pattern HEADER_VERSION = 161
+pattern HEADER_VERSION = 162
 
 
 pattern HEADER_VERSION_COMPLETE :: Word32
-pattern HEADER_VERSION_COMPLETE = MAKE_VERSION 1 2 161
+pattern HEADER_VERSION_COMPLETE = MAKE_VERSION 1 2 162
 
 
 pattern MAKE_VERSION :: Word32 -> Word32 -> Word32 -> Word32

@@ -254,8 +254,8 @@ foreign import ccall
 -- -   The pipeline bound to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_KHR'
 --     controls the behavior of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysKHR' and
---     'Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysIndirectKHR'.
+--     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysKHR' and
+--     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysIndirectKHR'.
 --
 -- == Valid Usage
 --
@@ -9428,6 +9428,21 @@ foreign import ccall
 -- | vkCmdPushConstants - Update the values of push constants
 --
 -- = Description
+--
+-- When a command buffer begins recording, all push constant values are
+-- undefined.
+--
+-- Push constant values /can/ be updated incrementally, causing shader
+-- stages in @stageFlags@ to read the new data from @pValues@ for push
+-- constants modified by this command, while still reading the previous
+-- data for push constants not modified by this command. When a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-bindpoint-commands bound pipeline command>
+-- is issued, the bound pipeline’s layout /must/ be compatible with the
+-- layouts used to set the values of all push constants in the pipeline
+-- layout’s push constant ranges, as described in
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- Binding a pipeline with a layout that is not compatible with the push
+-- constant layout does not disturb the push constant values.
 --
 -- Note
 --

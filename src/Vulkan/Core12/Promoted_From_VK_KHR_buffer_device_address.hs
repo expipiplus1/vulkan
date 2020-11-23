@@ -315,10 +315,11 @@ data PhysicalDeviceBufferDeviceAddressFeatures = PhysicalDeviceBufferDeviceAddre
     bufferDeviceAddressCaptureReplay :: Bool
   , -- | #extension-features-bufferDeviceAddressMultiDevice#
     -- @bufferDeviceAddressMultiDevice@ indicates that the implementation
-    -- supports the @bufferDeviceAddress@ and @rayTracing@ features for logical
-    -- devices created with multiple physical devices. If this feature is not
-    -- supported, buffer and acceleration structure addresses /must/ not be
-    -- queried on a logical device created with more than one physical device.
+    -- supports the @bufferDeviceAddress@ , @rayTracingPipeline@ and @rayQuery@
+    -- features for logical devices created with multiple physical devices. If
+    -- this feature is not supported, buffer and acceleration structure
+    -- addresses /must/ not be queried on a logical device created with more
+    -- than one physical device.
     bufferDeviceAddressMultiDevice :: Bool
   }
   deriving (Typeable, Eq)

@@ -8,7 +8,9 @@ module Vulkan.Core10.Enums.BufferUsageFlagBits  ( BufferUsageFlagBits( BUFFER_US
                                                                      , BUFFER_USAGE_INDEX_BUFFER_BIT
                                                                      , BUFFER_USAGE_VERTEX_BUFFER_BIT
                                                                      , BUFFER_USAGE_INDIRECT_BUFFER_BIT
-                                                                     , BUFFER_USAGE_RAY_TRACING_BIT_KHR
+                                                                     , BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR
+                                                                     , BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR
+                                                                     , BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
                                                                      , BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT
                                                                      , BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT
                                                                      , BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT
@@ -94,10 +96,18 @@ pattern BUFFER_USAGE_VERTEX_BUFFER_BIT = BufferUsageFlagBits 0x00000080
 -- @preprocessedBuffer@ member of
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV'
 pattern BUFFER_USAGE_INDIRECT_BUFFER_BIT = BufferUsageFlagBits 0x00000100
--- | 'BUFFER_USAGE_RAY_TRACING_BIT_KHR' specifies that the buffer is suitable
--- for use in 'Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysKHR' and
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.cmdBuildAccelerationStructureKHR'.
-pattern BUFFER_USAGE_RAY_TRACING_BIT_KHR = BufferUsageFlagBits 0x00000400
+-- | 'BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR' specifies that the buffer is
+-- suitable for use as a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shader-binding-table Shader Binding Table>.
+pattern BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR = BufferUsageFlagBits 0x00000400
+-- | 'BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR' specifies that the
+-- buffer is suitable for storage space for a
+-- 'Vulkan.Extensions.Handles.AccelerationStructureKHR'.
+pattern BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR = BufferUsageFlagBits 0x00100000
+-- | 'BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
+-- specifies that the buffer is suitable for use as a read-only input to an
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-building acceleration structure build>.
+pattern BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR = BufferUsageFlagBits 0x00080000
 -- | 'BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT' specifies that the buffer
 -- is suitable for passing as the @buffer@ parameter to
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.cmdBeginConditionalRenderingEXT'.
@@ -132,7 +142,9 @@ instance Show BufferUsageFlagBits where
     BUFFER_USAGE_INDEX_BUFFER_BIT -> showString "BUFFER_USAGE_INDEX_BUFFER_BIT"
     BUFFER_USAGE_VERTEX_BUFFER_BIT -> showString "BUFFER_USAGE_VERTEX_BUFFER_BIT"
     BUFFER_USAGE_INDIRECT_BUFFER_BIT -> showString "BUFFER_USAGE_INDIRECT_BUFFER_BIT"
-    BUFFER_USAGE_RAY_TRACING_BIT_KHR -> showString "BUFFER_USAGE_RAY_TRACING_BIT_KHR"
+    BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR -> showString "BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR"
+    BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR -> showString "BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR"
+    BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR -> showString "BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR"
     BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT -> showString "BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT"
     BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT -> showString "BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT"
     BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT -> showString "BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT"
@@ -149,7 +161,9 @@ instance Read BufferUsageFlagBits where
                             , ("BUFFER_USAGE_INDEX_BUFFER_BIT", pure BUFFER_USAGE_INDEX_BUFFER_BIT)
                             , ("BUFFER_USAGE_VERTEX_BUFFER_BIT", pure BUFFER_USAGE_VERTEX_BUFFER_BIT)
                             , ("BUFFER_USAGE_INDIRECT_BUFFER_BIT", pure BUFFER_USAGE_INDIRECT_BUFFER_BIT)
-                            , ("BUFFER_USAGE_RAY_TRACING_BIT_KHR", pure BUFFER_USAGE_RAY_TRACING_BIT_KHR)
+                            , ("BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR", pure BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR)
+                            , ("BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR", pure BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR)
+                            , ("BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR", pure BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR)
                             , ("BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT", pure BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT)
                             , ("BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT", pure BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT)
                             , ("BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT", pure BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT)

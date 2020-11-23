@@ -129,11 +129,11 @@ instance Zero PipelineCreationFeedbackEXT where
 -- is set in @pPipelineCreationFeedback@.
 --
 -- When chained to
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV', or
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', the @i@ element of
 -- @pPipelineStageCreationFeedbacks@ corresponds to the @i@ element of
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR'::@pStages@,
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'::@pStages@,
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV'::@pStages@,
 -- or 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@. When
 -- chained to 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo', the first
@@ -155,10 +155,10 @@ instance Zero PipelineCreationFeedbackEXT where
 --
 -- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02670#
 --     When chained to
---     'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
+--     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 --     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
 --     /must/ equal
---     'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR'::@stageCount@
+--     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'::@stageCount@
 --
 -- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02969#
 --     When chained to
@@ -190,7 +190,7 @@ instance Zero PipelineCreationFeedbackEXT where
 -- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
 -- 'PipelineCreationFeedbackEXT',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineCreationFeedbackCreateInfoEXT = PipelineCreationFeedbackCreateInfoEXT
@@ -274,7 +274,7 @@ pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT = PipelineCreationFeedbackFlagB
 -- if it was able to avoid the large majority of pipeline or pipeline stage
 -- creation work by using the @pipelineCache@ parameter of
 -- 'Vulkan.Core10.Pipeline.createGraphicsPipelines',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.createRayTracingPipelinesKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.createRayTracingPipelinesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV', or
 -- 'Vulkan.Core10.Pipeline.createComputePipelines'. When an implementation
 -- sets this bit for the entire pipeline, it /may/ leave it unset for any

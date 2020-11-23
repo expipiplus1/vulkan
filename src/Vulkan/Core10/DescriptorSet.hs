@@ -119,7 +119,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (WriteDescriptorSetAccelerationStructureKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (WriteDescriptorSetAccelerationStructureKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (WriteDescriptorSetAccelerationStructureNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (WriteDescriptorSetInlineUniformBlockEXT)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_DESCRIPTOR_SET))
@@ -1122,16 +1123,23 @@ instance Zero DescriptorImageInfo where
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
 -- in which case the source data for the descriptor writes is taken from
 -- the
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
+-- structure in the @pNext@ chain of 'WriteDescriptorSet', or if
+-- @descriptorType@ is
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
+-- in which case the source data for the descriptor writes is taken from
+-- the
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
 -- structure in the @pNext@ chain of 'WriteDescriptorSet', as specified
 -- below.
 --
 -- If the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
--- feature is enabled, the buffer, imageView, or bufferView /can/ be
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE'. Loads from a null descriptor
--- return zero values and stores and atomics to a null descriptor are
--- discarded.
+-- feature is enabled, the buffer, acceleration structure, imageView, or
+-- bufferView /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'. Loads from
+-- a null descriptor return zero values and stores and atomics to a null
+-- descriptor are discarded. A null acceleration structure descriptor
+-- results in the miss shader being invoked.
 --
 -- If the @dstBinding@ has fewer than @descriptorCount@ array elements
 -- remaining starting from @dstArrayElement@, then the remainder will be
@@ -1276,7 +1284,15 @@ instance Zero DescriptorImageInfo where
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
 --     the @pNext@ chain /must/ include a
---     'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
+--     structure whose @accelerationStructureCount@ member equals
+--     @descriptorCount@
+--
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-03817# If @descriptorType@
+--     is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
+--     the @pNext@ chain /must/ include a
+--     'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
 --     structure whose @accelerationStructureCount@ member equals
 --     @descriptorCount@
 --
@@ -1481,7 +1497,8 @@ instance Zero DescriptorImageInfo where
 -- -   #VUID-VkWriteDescriptorSet-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR',
+--     'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV',
 --     or
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
 --
@@ -1528,7 +1545,7 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     -- 'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
     -- structure in the @pNext@ chain , or a value matching the
     -- @accelerationStructureCount@ of a
-    -- 'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
+    -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
     -- structure in the @pNext@ chain ). If the descriptor binding identified
     -- by @dstSet@ and @dstBinding@ has a descriptor type of
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
@@ -1566,6 +1583,7 @@ instance Extensible WriteDescriptorSet where
   getNext WriteDescriptorSet{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends WriteDescriptorSet e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @WriteDescriptorSetAccelerationStructureNV = Just f
     | Just Refl <- eqT @e @WriteDescriptorSetAccelerationStructureKHR = Just f
     | Just Refl <- eqT @e @WriteDescriptorSetInlineUniformBlockEXT = Just f
     | otherwise = Nothing

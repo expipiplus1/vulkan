@@ -60,13 +60,16 @@ data Bool32
 --
 -- = See Also
 --
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.BindIndexBufferIndirectCommandNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.BindVertexBufferIndirectCommandNV',
 -- 'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.DeviceOrHostAddressConstKHR',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.DeviceOrHostAddressKHR',
--- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewAddressPropertiesNVX'
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.DeviceOrHostAddressConstKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.DeviceOrHostAddressKHR',
+-- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewAddressPropertiesNVX',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.StridedDeviceAddressRegionKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdBuildAccelerationStructuresIndirectKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysIndirectKHR'
 type DeviceAddress = Word64
 
 
@@ -74,12 +77,13 @@ type DeviceAddress = Word64
 --
 -- = See Also
 --
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureBuildSizesInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryAabbsDataKHR',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryTrianglesDataKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryAabbsDataKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferPropertiesANDROID',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.BindAccelerationStructureMemoryInfoKHR',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.BufferCopy',
@@ -113,7 +117,7 @@ type DeviceAddress = Word64
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseMemoryBind',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.StridedBufferRegionKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.StridedDeviceAddressRegionKHR',
 -- 'Vulkan.Core10.Image.SubresourceLayout',
 -- 'Vulkan.Core10.MemoryManagement.bindBufferMemory',
 -- 'Vulkan.Core10.MemoryManagement.bindImageMemory',
@@ -122,7 +126,6 @@ type DeviceAddress = Word64
 -- 'Vulkan.Extensions.VK_EXT_transform_feedback.cmdBindTransformFeedbackBuffersEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindVertexBuffers',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.cmdBuildAccelerationStructureIndirectKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect',
@@ -139,7 +142,6 @@ type DeviceAddress = Word64
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectNV',
 -- 'Vulkan.Extensions.VK_EXT_transform_feedback.cmdEndTransformFeedbackEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdFillBuffer',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysIndirectKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdUpdateBuffer',
 -- 'Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarkerAMD',

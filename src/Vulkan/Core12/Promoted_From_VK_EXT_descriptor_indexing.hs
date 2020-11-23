@@ -808,6 +808,16 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --     /must/ not use
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingAccelerationStructureUpdateAfterBind-03570#
+--     If
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructureFeaturesKHR'::@descriptorBindingAccelerationStructureUpdateAfterBind@
+--     is not enabled, all bindings with descriptor type
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV'
+--     /must/ not use
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
+--
 -- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-None-03011# All
 --     bindings with descriptor type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',

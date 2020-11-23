@@ -36,21 +36,21 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevice8BitStorageFeatures = PhysicalDevice8BitStorageFeatures
   { -- | #extension-features-storageBuffer8BitAccess# @storageBuffer8BitAccess@
-    -- indicates whether objects in the @StorageBuffer@ or
-    -- @PhysicalStorageBuffer@ storage class with the @Block@ decoration /can/
-    -- have 8-bit integer members. If this feature is not enabled, 8-bit
-    -- integer members /must/ not be used in such objects. This also indicates
-    -- whether shader modules /can/ declare the @StorageBuffer8BitAccess@
-    -- capability.
+    -- indicates whether objects in the @StorageBuffer@,
+    -- @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@ storage class with
+    -- the @Block@ decoration /can/ have 8-bit integer members. If this feature
+    -- is not enabled, 8-bit integer members /must/ not be used in such
+    -- objects. This also indicates whether shader modules /can/ declare the
+    -- @StorageBuffer8BitAccess@ capability.
     storageBuffer8BitAccess :: Bool
   , -- | #extension-features-uniformAndStorageBuffer8BitAccess#
     -- @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
     -- @Uniform@ storage class with the @Block@ decoration and in the
-    -- @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the same
-    -- decoration /can/ have 8-bit integer members. If this feature is not
-    -- enabled, 8-bit integer members /must/ not be used in such objects. This
-    -- also indicates whether shader modules /can/ declare the
-    -- @UniformAndStorageBuffer8BitAccess@ capability.
+    -- @StorageBuffer@, @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@
+    -- storage class with the same decoration /can/ have 8-bit integer members.
+    -- If this feature is not enabled, 8-bit integer members /must/ not be used
+    -- in such objects. This also indicates whether shader modules /can/
+    -- declare the @UniformAndStorageBuffer8BitAccess@ capability.
     uniformAndStorageBuffer8BitAccess :: Bool
   , -- | #extension-features-storagePushConstant8# @storagePushConstant8@
     -- indicates whether objects in the @PushConstant@ storage class /can/ have
