@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5239514d98fffcdddcdbabbf880d348e859b4eccc99e9610c0ec8a389c06b434
+-- hash: 1e0679d112198eae3c2b43df14b5d8426855eeb78190488c0631be3d92c9dfc6
 
 name:           generate-new
 version:        0.0.0
@@ -61,6 +61,7 @@ library
       Render.Spec.Extends
       Render.Spec.Versions
       Render.SpecInfo
+      Render.State
       Render.Stmts
       Render.Stmts.Alloc
       Render.Stmts.Poke
