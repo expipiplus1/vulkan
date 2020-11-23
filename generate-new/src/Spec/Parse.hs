@@ -1,8 +1,7 @@
 module Spec.Parse
   ( module Spec.Types
   , parseSpec
-  )
-where
+  ) where
 
 import           Control.Monad.Extra            ( mapMaybeM )
 import           Data.Bits
@@ -102,6 +101,10 @@ parseSpec bs = do
           parseExtensions OnlyDisabled . contents =<< oneChild "extensions" n
         specAPIConstants       <- parseAPIConstants (contents n)
         specExtensionConstants <- parseExtensionConstants (contents n)
+        specSPIRVExtensions    <-
+          parseSPIRVExtensions . contents =<< oneChild "spirvextensions" n
+        specSPIRVCapabilities <-
+          parseSPIRVCapabilities . contents =<< oneChild "spirvcapabilities" n
         let
           sizeMap :: Map.Map CName (Int, Int)
           sizeMap =
@@ -342,7 +345,11 @@ data ParseDisabled = OnlyDisabled | NotDisabled
 
 parseExtensions :: ParseDisabled -> [Content] -> P (Vector Extension)
 parseExtensions parseDisabled es = V.fromList <$> sequenceV
-  [ parseExtension e | Element e <- es, "extension" == name e, disabled parseDisabled e ]
+  [ parseExtension e
+  | Element e <- es
+  , "extension" == name e
+  , disabled parseDisabled e
+  ]
  where
   parseExtension :: Node -> P Extension
   parseExtension n = do
@@ -391,7 +398,7 @@ parseExtensionConstants :: [Content] -> P (Vector Constant)
 parseExtensionConstants es = V.fromList <$> sequenceV
   [ do
       n' <- decode n
-      context n' $ (Constant (CName n') <$> parseConstant v)
+      context n' (Constant (CName n') <$> parseConstant v)
   | Element e <- es
   , "extensions" == name e
   , Element ex <- contents e
@@ -419,18 +426,18 @@ someConstants r =
 parseTypeAliases :: [ByteString] -> [Content] -> P (Vector Alias)
 parseTypeAliases categories es =
   fmap fromList
-    .  sequenceV
+    . sequenceV
     $ [ do
-           aName   <- nameAttr "struct alias" n
-           aTarget <- decodeName alias
-           let aType = TypeAlias
-           pure Alias { .. }
-       | Element n <- es
-       , "type" == name n
-       , Just alias     <- pure $ getAttr "alias" n
-       , Just c <- pure $ getAttr "category" n
-       , c `elem` categories
-       ]
+          aName   <- nameAttr "struct alias" n
+          aTarget <- decodeName alias
+          let aType = TypeAlias
+          pure Alias { .. }
+      | Element n <- es
+      , "type" == name n
+      , Just alias <- pure $ getAttr "alias" n
+      , Just c     <- pure $ getAttr "category" n
+      , c `elem` categories
+      ]
 
 parseEnumAliases :: Vector Node -> P (Vector Alias)
 parseEnumAliases rs =
@@ -447,8 +454,7 @@ parseEnumAliases rs =
       , Just alias <- pure $ getAttr "alias" ee
       ]
 
-parseCommandAliases
-  :: [Content] -> P (Vector Alias)
+parseCommandAliases :: [Content] -> P (Vector Alias)
 parseCommandAliases es =
   fmap V.fromList
     . sequenceV
@@ -476,7 +482,7 @@ parseConstantAliases es =
       , Element ee              <- contents e
       , "enum" == name ee
       , Just alias <- pure $ getAttr "alias" ee
-      , aType <- [TypeAlias, PatternAlias]
+      , aType      <- [TypeAlias, PatternAlias]
       ]
 
 ----------------------------------------------------------------
@@ -611,7 +617,8 @@ parseEnums types es = do
         Nothing -> (0x1 `shiftL`) <$> readAttr "bitpos" v
       pure EnumValue { .. }
 
-parseEnumExtensions :: Vector (Node, Maybe Int) -> P (Vector (CName, EnumValue))
+parseEnumExtensions
+  :: Vector (Node, Maybe Int) -> P (Vector (CName, EnumValue))
 parseEnumExtensions rs =
   fmap V.fromList
     . sequenceV
@@ -673,7 +680,8 @@ parseEnumExtensions rs =
     in
       fromIntegral (sign n)
 
-appendEnumExtensions :: Vector (CName, EnumValue) -> Vector Enum' -> Vector Enum'
+appendEnumExtensions
+  :: Vector (CName, EnumValue) -> Vector Enum' -> Vector Enum'
 appendEnumExtensions extensions =
   let
     extensionMap :: Map.Map CName (Vector EnumValue)
@@ -693,7 +701,8 @@ parseStructs
   :: [Content] -> P (Vector (StructOrUnion AStruct WithoutSize WithoutChildren))
 parseStructs = onTypes "struct" parseStruct
 
-parseUnions :: [Content] -> P (Vector (StructOrUnion AUnion WithoutSize WithoutChildren))
+parseUnions
+  :: [Content] -> P (Vector (StructOrUnion AUnion WithoutSize WithoutChildren))
 parseUnions = onTypes "union" parseStruct
 
 parseStruct :: Node -> P (StructOrUnion a WithoutSize WithoutChildren)
@@ -760,6 +769,60 @@ parseCommands es =
     pIsOptional <- boolListAttr "optional" m
     pLengths    <- lenListAttr "len" m
     pure Parameter { .. }
+
+----------------------------------------------------------------
+-- SPIR-V
+----------------------------------------------------------------
+
+parseSPIRVExtensions :: [Content] -> P (Vector SPIRVExtension)
+parseSPIRVExtensions = parseSPIRVThings "spirvextension" SPIRVExtension
+
+parseSPIRVCapabilities :: [Content] -> P (Vector SPIRVCapability)
+parseSPIRVCapabilities = parseSPIRVThings "spirvcapability" SPIRVCapability
+
+parseSPIRVThings
+  :: ByteString
+  -> (Text -> Vector SPIRVRequirement -> a)
+  -> [Content]
+  -> P (Vector a)
+parseSPIRVThings thingType mkThing es = V.fromList
+  <$> sequenceV [ parseExtension e | Element e <- es, thingType == name e ]
+ where
+  parseExtension n = do
+    name <- decode =<< note ("spirv " <> show thingType <> " has no name")
+                            (getAttr "name" n)
+    reqs <- V.fromList
+      <$> traverse parseSPIRVReq [ r | Element r <- contents n ]
+    pure $ mkThing name reqs
+
+parseSPIRVReq :: Node -> P SPIRVRequirement
+parseSPIRVReq r
+  | Just v <- getAttr "version" r
+  = case parseAPIVersion v of
+    Nothing -> throw $ "Unable to parse API version: " <> show v
+    Just v  -> pure $ SPIRVReqVersion v
+  | Just e <- getAttr "extension" r
+  = do
+    e' <- decode e
+    pure $ SPIRVReqExtension e'
+  | Just s <- getAttr "struct" r
+  , Just f <- getAttr "feature" r
+  = do
+    exts' <- listAttr decode "requires" r
+    s'    <- CName <$> decode s
+    f'    <- CName <$> decode f
+    pure $ SPIRVReqFeature s' f' exts'
+  | Just p <- getAttr "property" r
+  , Just m <- getAttr "member" r
+  , Just v <- getAttr "value" r
+  = do
+    exts' <- listAttr decode "requires" r
+    p'    <- CName <$> decode p
+    m'    <- CName <$> decode m
+    v'    <- CName <$> decode v
+    pure $ SPIRVReqProperty p' m' v' exts'
+  | otherwise
+  = throw $ "Couldn't parse SPIRV requirement element: " <> show r
 
 ----------------------------------------------------------------
 -- Getting all the type names
@@ -886,6 +949,17 @@ disabled p e =
         OnlyDisabled -> (==)
   in  Just "disabled" `comp` getAttr "supported" e
 
+-- >>> parseAPIVersion "VK_API_VERSION_1_2"
+-- Just (Version {versionBranch = [1,2], versionTags = []})
+parseAPIVersion :: ByteString -> Maybe Version
+parseAPIVersion b = do
+  let p = "VK_API_VERSION_"
+  v <- if p `BS.isPrefixOf` b then pure $ BS.drop (BS.length p) b else empty
+  let cs = BS.split '_' v
+  is <- traverse (readMaybe . BS.unpack) cs
+  pure $ makeVersion is
+
+
 ----------------------------------------------------------------
 -- XML
 ----------------------------------------------------------------
@@ -928,11 +1002,11 @@ allTextOn p =
 elemText :: ByteString -> Node -> Maybe ByteString
 elemText elemName node =
   let r =
-          [ m
-          | Element a <- contents node
-          , name a == elemName
-          , [Text m] <- pure (contents a)
-          ]
+        [ m
+        | Element a <- contents node
+        , name a == elemName
+        , [Text m] <- pure (contents a)
+        ]
   in  case r of
         [x] -> Just x
         _   -> Nothing

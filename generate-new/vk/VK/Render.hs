@@ -1,6 +1,5 @@
 {-# language DeriveFunctor, DeriveFoldable, DeriveTraversable #-}
-module VK.Render
-  where
+module VK.Render where
 
 import qualified Data.HashMap.Strict           as Map
 import           Data.Vector                    ( Vector )
@@ -39,6 +38,7 @@ import           Spec.Parse
 
 import           Render.State                   ( HasRenderState )
 import           VK.Bracket
+import           VK.SPIRVElements
 
 data RenderedSpec a = RenderedSpec
   { rsHandles            :: Vector a
@@ -121,15 +121,18 @@ renderSpec spec@Spec {..} getDoc ss us cs = do
     , rsAPIConstants       = renderConstant <$> filterConstants specAPIConstants
     , rsExtensionConstants = renderConstant
                                <$> filterConstants specExtensionConstants
-    , rsOthers             = bespokeElements
-                             <> V.singleton (renderDynamicLoader cs)
-                             <> cStructDocs
-                             <> V.singleton marshalUtils
-                             <> V.singleton zeroClass
-                             <> V.singleton hasObjectTypeClass
-                             <> V.singleton (vkExceptionRenderElement getDoc vkResult)
-                             <> specVersions spec
-                             <> V.singleton (structExtends spec)
+    , rsOthers             =
+      bespokeElements
+      <> V.singleton (renderDynamicLoader cs)
+      <> cStructDocs
+      <> V.singleton marshalUtils
+      <> V.singleton zeroClass
+      <> V.singleton hasObjectTypeClass
+      <> V.singleton (vkExceptionRenderElement getDoc vkResult)
+      <> specVersions spec
+      <> V.singleton (structExtends spec)
+      <> V.singleton
+           (renderSPIRVElements specSPIRVExtensions specSPIRVCapabilities)
     }
 
 -- | Render a command along with any associated bracketing function

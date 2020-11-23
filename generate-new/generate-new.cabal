@@ -142,6 +142,7 @@ executable vk
       VK.AssignModules
       VK.Bracket
       VK.Render
+      VK.SPIRVElements
       Paths_generate_new
   hs-source-dirs:
       vk
