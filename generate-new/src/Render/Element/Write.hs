@@ -1,5 +1,4 @@
-module Render.Element.Write
-  where
+module Render.Element.Write where
 
 import           Data.Char                      ( isLower )
 import           Data.List                      ( lookup )
@@ -17,6 +16,8 @@ import           Data.Text.Prettyprint.Doc.Render.Text
 import qualified Data.Vector.Extra             as V
 import           Data.Vector.Extra              ( Vector )
 import           Foreign.Ptr
+import           Language.Haskell.Brittany
+import           Language.Haskell.Brittany.Internal.Config.Types
 import           Language.Haskell.TH            ( mkName
                                                 , nameBase
                                                 , nameModule
@@ -247,7 +248,9 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
                 . fmap reExtensions
                 $ es
         in  [ "{-# language" <+> pretty e <+> "#-}" | e <- allExts ]
-      contents =
+      layoutDoc = renderStrict
+        . layoutPretty defaultLayoutOptions { layoutPageWidth = Unbounded }
+      headerContents =
         vsep
           $  languageExtensions
           <> ( (   "module"
@@ -268,17 +271,22 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
              : openImports
              : imports
              : localImports
-             : V.toList
-                 (   (<> (line <> line))
-                 <$> V.mapMaybe (($ getDocumentation) . reDoc) es
-                 )
+             : []
              )
+      layoutContent e = runMaybeT $ do
+        d <- maybe mzero pure $ reDoc e getDocumentation
+        let t = layoutDoc (d <> line <> line)
+        if getAll (reCanFormat e)
+          then liftIO (parsePrintModule brittanyConfig t) >>= \case
+            Left  _ -> error "Fail"
+            Right f -> pure f
+          else pure t
+    contentsTexts <- mapMaybeM layoutContent (V.toList es)
+    let moduleText =
+          T.intercalate "\n" (layoutDoc headerContents : contentsTexts)
 
     liftIO $ createDirectoryIfMissing True (takeDirectory f)
-    liftIO $ withFile f WriteMode $ \h -> T.hPutStr h $ renderStrict
-      (layoutPretty defaultLayoutOptions { layoutPageWidth = Unbounded }
-                    contents
-      )
+    liftIO $ withFile f WriteMode $ \h -> T.hPutStr h moduleText
 
 allExports :: Vector Export -> Vector HName
 allExports =
@@ -424,3 +432,14 @@ adoptConstructors = \case
 
 nubOrdOnV :: Ord b => (a -> b) -> Vector a -> Vector a
 nubOrdOnV p = fromList . nubOrdOn p . toList
+
+brittanyConfig :: CConfig Identity
+brittanyConfig = staticDefaultConfig
+  { _conf_preprocessor = PreProcessorConfig (pure (pure CPPModeNowarn))
+                                            (pure (pure True))
+  , _conf_layout       = (_conf_layout staticDefaultConfig)
+                           { _lconfig_cols = pure (pure 120)
+                           }
+  , _conf_forward      = ForwardOptions (pure [])
+    -- ^ TODO: put language exts here
+  }
