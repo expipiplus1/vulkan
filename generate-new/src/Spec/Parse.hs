@@ -353,10 +353,17 @@ parseExtensions parseDisabled es = V.fromList <$> sequenceV
  where
   parseExtension :: Node -> P Extension
   parseExtension n = do
-    exName      <- decode =<< note "extension has no name" (getAttr "name" n)
-    exNumber    <- readAttr "number" n
-    exRequires  <- parseRequires n
-    exSupported <- decode
+    exName   <- decode =<< note "extension has no name" (getAttr "name" n)
+    exNumber <- readAttr "number" n
+    exType   <- case getAttr "type" n of
+      Just "device"   -> pure DeviceExtension
+      Just "instance" -> pure InstanceExtension
+      Just t ->
+        throw $ "Unhandled extension type: " <> show exName <> " " <> show t
+      Nothing -> pure UnknownExtensionType
+    exDependencies <- listAttr decode "requires" n
+    exRequires     <- parseRequires n
+    exSupported    <- decode
       =<< note "extension has no supported attr" (getAttr "supported" n)
     pure Extension { .. }
 

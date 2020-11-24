@@ -45,12 +45,17 @@ data Feature = Feature
   deriving (Show)
 
 data Extension = Extension
-  { exName      :: Text
-  , exNumber    :: Int
-  , exRequires  :: Vector Require
-  , exSupported :: Text
+  { exName         :: Text
+  , exNumber       :: Int
+  , exRequires     :: Vector Require
+  , exSupported    :: Text
+  , exType         :: ExtensionType
+  , exDependencies :: Vector Text
   }
-  deriving (Show)
+  deriving Show
+
+data ExtensionType = DeviceExtension | InstanceExtension | UnknownExtensionType
+  deriving Show
 
 data Require = Require
   { rComment        :: Maybe Text
