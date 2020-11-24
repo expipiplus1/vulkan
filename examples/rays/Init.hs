@@ -6,7 +6,9 @@ module Init
   , createCommandPools
   ) where
 
-import           Control.Monad                  ( unless )
+import           Control.Monad                  ( unless
+                                                , when
+                                                )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
 import           Control.Monad.Trans.Resource
@@ -42,6 +44,7 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
 import           Vulkan.Extensions.VK_EXT_descriptor_indexing
                                                 ( pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
                                                 )
+import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Extensions.VK_KHR_buffer_device_address
                                                 ( pattern KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
                                                 )
@@ -58,11 +61,12 @@ import           Vulkan.Extensions.VK_KHR_maintenance3
 import           Vulkan.Extensions.VK_KHR_pipeline_library
                                                 ( pattern KHR_PIPELINE_LIBRARY_EXTENSION_NAME
                                                 )
-import           Vulkan.Extensions.VK_KHR_ray_tracing
+import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
+import           Vulkan.Version                 ( pattern MAKE_VERSION )
 import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
                                                 , AllocatorCreateFlagBits(..)
@@ -91,7 +95,7 @@ createInstance win = do
       extensions =
         [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
           <> windowExtensions
-  createDebugInstanceWithExtensions [] [] extensions [] createInfo
+  createInstanceWithExtensions [] [] extensions [] createInfo
 
 ----------------------------------------------------------------
 -- Device creation
@@ -119,11 +123,14 @@ createDevice inst win = do
   let deviceCreateInfo =
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
           ::& PhysicalDeviceTimelineSemaphoreFeatures True
-          :&  zero { rayTracing = True }
+          :&  zero { rayTracingPipeline = True }
+          :& (zero { accelerationStructure = True } :: PhysicalDeviceAccelerationStructureFeaturesKHR
+             )
           :&  zero { bufferDeviceAddress = True }
           :&  ()
       rayTracingExtensions =
-        [ KHR_RAY_TRACING_EXTENSION_NAME
+        [ KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
+        , KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
         , EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
         , KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
         , KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
@@ -157,7 +164,16 @@ pdiScore = pdiTotalMemory
 physicalDeviceInfo
   :: MonadIO m => SurfaceKHR -> PhysicalDevice -> m (Maybe PhysicalDeviceInfo)
 physicalDeviceInfo surf phys = runMaybeT $ do
-  deviceName            <- physicalDeviceName phys
+  deviceName  <- physicalDeviceName phys
+  deviceProps <- getPhysicalDeviceProperties phys
+  unless
+      (  apiVersion (deviceProps :: PhysicalDeviceProperties)
+      >= MAKE_VERSION 1 2 162
+      )
+    $ do
+        sayErr
+          "This application requires a device supporing at lease Vulkan 1.2.162"
+        empty
 
   hasTimelineSemaphores <- deviceHasTimelineSemaphores phys
   unless hasTimelineSemaphores $ do
@@ -167,7 +183,15 @@ physicalDeviceInfo surf phys = runMaybeT $ do
       <> " because it doesn't support timeline semaphores"
     empty
 
-  pdiRTInfo           <- deviceHasRayTracing phys
+  pdiRTInfo                       <- deviceHasRayTracingPipeline phys
+
+  hasAccelerationStructureSupport <- deviceHasAccelerationStructure phys
+  unless hasAccelerationStructureSupport $ do
+    sayErr
+      $  "Not using physical device "
+      <> deviceName
+      <> " because it doesn't support acceleration structures"
+    empty
 
   hasSwapchainSupport <- deviceHasSwapchain phys
   unless hasSwapchainSupport $ do
@@ -226,24 +250,44 @@ deviceHasTimelineSemaphores phys = do
 
   hasExt <&&> hasFeat
 
-deviceHasRayTracing :: MonadIO m => PhysicalDevice -> MaybeT m RTInfo
+deviceHasAccelerationStructure :: MonadIO m => PhysicalDevice -> m Bool
   -- ^ Shader group size and alignment
-deviceHasRayTracing phys = do
+deviceHasAccelerationStructure phys = do
+  let hasExt = do
+        (_, extensions) <- enumerateDeviceExtensionProperties phys Nothing
+        pure $ V.any
+          ((KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME ==) . extensionName)
+          extensions
+
+      hasFeat = do
+        feats <- getPhysicalDeviceFeatures2KHR phys
+        let _ ::& PhysicalDeviceAccelerationStructureFeaturesKHR {..} :& () =
+              feats
+        pure accelerationStructure
+
+  hasExt <&&> hasFeat
+
+deviceHasRayTracingPipeline :: MonadIO m => PhysicalDevice -> MaybeT m RTInfo
+  -- ^ Shader group size and alignment
+deviceHasRayTracingPipeline phys = do
   deviceName <- physicalDeviceName phys
 
   let hasExt = do
         (_, extensions) <- enumerateDeviceExtensionProperties phys Nothing
-        pure $ V.any ((KHR_RAY_TRACING_EXTENSION_NAME ==) . extensionName)
-                     extensions
+        pure $ V.any
+          ((KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME ==) . extensionName)
+          extensions
 
       hasFeat = do
         feats <- getPhysicalDeviceFeatures2KHR phys
-        let _ ::& PhysicalDeviceRayTracingFeaturesKHR {..} :& () = feats
-        pure rayTracing
+        let _ ::& PhysicalDeviceRayTracingPipelineFeaturesKHR {..} :& () =
+              feats
+        pure rayTracingPipeline
 
       getProps = do
         props <- getPhysicalDeviceProperties2KHR phys
-        let _ ::& PhysicalDeviceRayTracingPropertiesKHR {..} :& () = props
+        let _ ::& PhysicalDeviceRayTracingPipelinePropertiesKHR {..} :& () =
+              props
         pure RTInfo { rtiShaderGroupHandleSize    = shaderGroupHandleSize
                     , rtiShaderGroupBaseAlignment = shaderGroupBaseAlignment
                     }
@@ -255,7 +299,7 @@ deviceHasRayTracing phys = do
       sayErr
         $  "Not using physical device "
         <> deviceName
-        <> " because it doesn't support ray tracing"
+        <> " because it doesn't support ray tracing pipelines"
       empty
 
 ----------------------------------------------------------------

@@ -14,7 +14,9 @@ module Pipeline
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.Bits
-import           Data.Foldable                  (for_,  traverse_ )
+import           Data.Foldable                  ( for_
+                                                , traverse_
+                                                )
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
 import           Data.Word
@@ -24,16 +26,17 @@ import           Foreign.Ptr                    ( Ptr
                                                 , plusPtr
                                                 )
 import           MonadVulkan
+import           Say
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
-import           Vulkan.Extensions.VK_KHR_ray_tracing
+import           Vulkan.Extensions.VK_KHR_acceleration_structure
+import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
 import           VulkanMemoryAllocator
-import Say
 
 -- Create the most vanilla ray tracing pipeline, returns the number of shader
 -- groups
@@ -70,10 +73,11 @@ createPipeline pipelineLayout = do
       shaderGroups = [genGroup, intGroup, missGroup]
 
   let pipelineCreateInfo :: RayTracingPipelineCreateInfoKHR '[]
-      pipelineCreateInfo = zero { stages            = shaderStages
-                                , groups            = shaderGroups
-                                , maxRecursionDepth = 1
-                                , layout            = pipelineLayout
+      pipelineCreateInfo = zero { flags                        = zero
+                                , stages                       = shaderStages
+                                , groups                       = shaderGroups
+                                , maxPipelineRayRecursionDepth = 1
+                                , layout                       = pipelineLayout
                                 }
   (key, (_, ~[rtPipeline])) <- withRayTracingPipelinesKHR'
     zero
@@ -276,7 +280,7 @@ createShaderBindingTable pipeline numGroups = do
 
   (bufferReleaseKey, (sbtBuffer, sbtAllocation, _sbtAllocationInfo)) <-
     withBuffer'
-      zero { usage = BUFFER_USAGE_RAY_TRACING_BIT_KHR, size = sbtSize }
+      zero { usage = BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT, size = sbtSize }
       zero
         { requiredFlags = MEMORY_PROPERTY_HOST_VISIBLE_BIT
                             .|. MEMORY_PROPERTY_HOST_COHERENT_BIT
