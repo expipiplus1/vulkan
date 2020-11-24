@@ -281,8 +281,8 @@ createAllocator createInfo = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyAllocator' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withAllocator :: forall io r . MonadIO io => AllocatorCreateInfo -> (io Allocator -> (Allocator -> io ()) -> r) -> r
 withAllocator pCreateInfo b =
@@ -708,8 +708,8 @@ createPool allocator createInfo = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyPool' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withPool :: forall io r . MonadIO io => Allocator -> PoolCreateInfo -> (io Pool -> (Pool -> io ()) -> r) -> r
 withPool allocator pCreateInfo b =
@@ -949,8 +949,8 @@ allocateMemory allocator vkMemoryRequirements createInfo = liftIO . evalContT $ 
 --
 -- To ensure that 'freeMemory' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withMemory :: forall io r . MonadIO io => Allocator -> MemoryRequirements -> AllocationCreateInfo -> (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> r
 withMemory allocator pVkMemoryRequirements pCreateInfo b =
@@ -1031,8 +1031,8 @@ allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalCon
 --
 -- To ensure that 'freeMemoryPages' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withMemoryPages :: forall io r . MonadIO io => Allocator -> Vector MemoryRequirements -> Vector AllocationCreateInfo -> (io (Vector Allocation, Vector AllocationInfo) -> ((Vector Allocation, Vector AllocationInfo) -> io ()) -> r) -> r
 withMemoryPages allocator pVkMemoryRequirements pCreateInfo b =
@@ -1082,8 +1082,8 @@ allocateMemoryForBuffer allocator buffer createInfo = liftIO . evalContT $ do
 --
 -- To ensure that 'freeMemory' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withMemoryForBuffer :: forall io r . MonadIO io => Allocator -> Buffer -> AllocationCreateInfo -> (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> r
 withMemoryForBuffer allocator buffer pCreateInfo b =
@@ -1123,8 +1123,8 @@ allocateMemoryForImage allocator image createInfo = liftIO . evalContT $ do
 --
 -- To ensure that 'freeMemory' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withMemoryForImage :: forall io r . MonadIO io => Allocator -> Image -> AllocationCreateInfo -> (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> r
 withMemoryForImage allocator image pCreateInfo b =
@@ -1364,8 +1364,8 @@ createLostAllocation allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'freeMemory' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withLostAllocation :: forall io r . MonadIO io => Allocator -> (io Allocation -> (Allocation -> io ()) -> r) -> r
 withLostAllocation allocator b =
@@ -1439,8 +1439,8 @@ mapMemory allocator allocation = liftIO . evalContT $ do
 --
 -- To ensure that 'unmapMemory' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withMappedMemory :: forall io r . MonadIO io => Allocator -> Allocation -> (io (Ptr ()) -> (Ptr () -> io ()) -> r) -> r
 withMappedMemory allocator allocation b =
@@ -1848,8 +1848,8 @@ defragmentationBegin allocator info = liftIO . evalContT $ do
 --
 -- To ensure that 'defragmentationEnd' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withDefragmentation :: forall io r . MonadIO io => Allocator -> DefragmentationInfo2 -> (io (Result, DefragmentationStats, DefragmentationContext) -> ((Result, DefragmentationStats, DefragmentationContext) -> io ()) -> r) -> r
 withDefragmentation allocator pInfo b =
@@ -2279,8 +2279,8 @@ createBuffer allocator bufferCreateInfo allocationCreateInfo = liftIO . evalCont
 --
 -- To ensure that 'destroyBuffer' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withBuffer :: forall a io r . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> (io (Buffer, Allocation, AllocationInfo) -> ((Buffer, Allocation, AllocationInfo) -> io ()) -> r) -> r
 withBuffer allocator pBufferCreateInfo pAllocationCreateInfo b =
@@ -2352,8 +2352,8 @@ createImage allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT 
 --
 -- To ensure that 'destroyImage' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withImage :: forall a io r . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> (io (Image, Allocation, AllocationInfo) -> ((Image, Allocation, AllocationInfo) -> io ()) -> r) -> r
 withImage allocator pImageCreateInfo pAllocationCreateInfo b =
