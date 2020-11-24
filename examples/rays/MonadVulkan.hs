@@ -28,7 +28,6 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
                                                 ( getBufferDeviceAddress )
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                as Timeline
-import           Vulkan.Extensions.VK_KHR_ray_tracing
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.CommandCheck
@@ -36,6 +35,8 @@ import           Vulkan.Utils.Debug             ( nameObject )
 import           Vulkan.Utils.QueueAssignment
 import           VulkanMemoryAllocator         as VMA
                                          hiding ( getPhysicalDeviceProperties )
+import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
+import Vulkan.Extensions.VK_KHR_acceleration_structure
 
 ----------------------------------------------------------------
 -- Define the monad in which most of the program will run
@@ -189,6 +190,9 @@ spawn_ = void . spawn
 noAllocationCallbacks :: Maybe AllocationCallbacks
 noAllocationCallbacks = Nothing
 
+noPipelineCache :: PipelineCache
+noPipelineCache = NULL_HANDLE
+
 --
 -- Wrap a bunch of Vulkan commands so that they automatically pull global
 -- handles from any `HasVulkan` instance.
@@ -206,11 +210,10 @@ do
         [ 'acquireNextImageKHR
         , 'allocateCommandBuffers
         , 'allocateDescriptorSets
-        , 'bindAccelerationStructureMemoryKHR
-        , 'buildAccelerationStructureKHR
+        , 'buildAccelerationStructuresKHR
         , 'cmdBindDescriptorSets
         , 'cmdBindPipeline
-        , 'cmdBuildAccelerationStructureKHR
+        , 'cmdBuildAccelerationStructuresKHR
         , 'cmdDispatch
         , 'cmdDraw
         , 'cmdPipelineBarrier
@@ -221,8 +224,8 @@ do
         , 'cmdUseRenderPass
         , 'deviceWaitIdle
         , 'deviceWaitIdleSafe
+        , 'getAccelerationStructureBuildSizesKHR
         , 'getAccelerationStructureDeviceAddressKHR
-        , 'getAccelerationStructureMemoryRequirementsKHR
         , 'getBufferDeviceAddress
         , 'getDeviceQueue
         , 'getPhysicalDeviceSurfaceCapabilitiesKHR
@@ -263,6 +266,7 @@ do
     , 'getInstance
     , 'getAllocator
     , 'noAllocationCallbacks
+    , 'noPipelineCache
     , 'getCommandBuffer
     ]
     -- Allocate doesn't subsume the continuation type on the "with" commands, so

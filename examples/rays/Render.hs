@@ -20,7 +20,7 @@ import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Core10
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
-import           Vulkan.Extensions.VK_KHR_ray_tracing
+import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import           Vulkan.Extensions.VK_KHR_swapchain
                                                as Swap
 import           Vulkan.Zero
@@ -115,42 +115,41 @@ myRecordCommandBuffer :: Frame -> Word32 -> CmdT F ()
 myRecordCommandBuffer Frame {..} imageIndex = do
   -- TODO: neaten
   RTInfo {..} <- CmdT . lift . liftV $ getRTInfo
-  let
-    RecycledResources {..}  = fRecycledResources
-    SwapchainResources {..} = fSwapchainResources
-    SwapchainInfo {..}      = srInfo
-    image                   = srImages ! fromIntegral imageIndex
-    imageWidth              = width (siImageExtent :: Extent2D)
-    imageHeight             = height (siImageExtent :: Extent2D)
-    imageSubresourceRange   = ImageSubresourceRange
-      { aspectMask     = IMAGE_ASPECT_COLOR_BIT
-      , baseMipLevel   = 0
-      , levelCount     = 1
-      , baseArrayLayer = 0
-      , layerCount     = 1
-      }
-    numRayGenShaderGroups = 1
-    rayGenRegion          = StridedBufferRegionKHR
-      { buffer = fShaderBindingTable
-      , offset = 0
-      , stride = fromIntegral rtiShaderGroupBaseAlignment
-      , size = fromIntegral rtiShaderGroupBaseAlignment * numRayGenShaderGroups
-      }
-    numHitShaderGroups = 1
-    hitRegion          = StridedBufferRegionKHR
-      { buffer = fShaderBindingTable
-      , offset = 1 * fromIntegral rtiShaderGroupBaseAlignment
-      , stride = fromIntegral rtiShaderGroupBaseAlignment
-      , size   = fromIntegral rtiShaderGroupBaseAlignment * numHitShaderGroups
-      }
-    numMissShaderGroups = 1
-    missRegion          = StridedBufferRegionKHR
-      { buffer = fShaderBindingTable
-      , offset = 2 * fromIntegral rtiShaderGroupBaseAlignment
-      , stride = fromIntegral rtiShaderGroupBaseAlignment
-      , size   = fromIntegral rtiShaderGroupBaseAlignment * numMissShaderGroups
-      }
-    callableRegion = zero
+  let RecycledResources {..}  = fRecycledResources
+      SwapchainResources {..} = fSwapchainResources
+      SwapchainInfo {..}      = srInfo
+      image                   = srImages ! fromIntegral imageIndex
+      imageWidth              = width (siImageExtent :: Extent2D)
+      imageHeight             = height (siImageExtent :: Extent2D)
+      imageSubresourceRange   = ImageSubresourceRange
+        { aspectMask     = IMAGE_ASPECT_COLOR_BIT
+        , baseMipLevel   = 0
+        , levelCount     = 1
+        , baseArrayLayer = 0
+        , layerCount     = 1
+        }
+      numRayGenShaderGroups = 1
+      rayGenRegion          = StridedDeviceAddressRegionKHR
+        { deviceAddress = fShaderBindingTableAddress
+        , stride        = fromIntegral rtiShaderGroupBaseAlignment
+        , size          = fromIntegral rtiShaderGroupBaseAlignment
+                            * numRayGenShaderGroups
+        }
+      numHitShaderGroups = 1
+      hitRegion          = StridedDeviceAddressRegionKHR
+        { deviceAddress = fShaderBindingTableAddress
+                            + (1 * fromIntegral rtiShaderGroupBaseAlignment)
+        , stride = fromIntegral rtiShaderGroupBaseAlignment
+        , size = fromIntegral rtiShaderGroupBaseAlignment * numHitShaderGroups
+        }
+      numMissShaderGroups = 1
+      missRegion          = StridedDeviceAddressRegionKHR
+        { deviceAddress = fShaderBindingTableAddress
+                            + (2 * fromIntegral rtiShaderGroupBaseAlignment)
+        , stride = fromIntegral rtiShaderGroupBaseAlignment
+        , size = fromIntegral rtiShaderGroupBaseAlignment * numMissShaderGroups
+        }
+      callableRegion = zero
   do
     -- Transition image to general, to write from the ray tracing shader
     cmdPipelineBarrier'

@@ -6,20 +6,25 @@ import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.Bits
 import           Data.Coerce                    ( coerce )
-import           Foreign.Storable               ( Storable(sizeOf) )
-import           Foreign.Storable               ( Storable(poke) )
+import           Data.Vector                    ( Vector )
+import           Foreign.Storable               ( Storable(poke, sizeOf) )
 import           MonadVulkan
-import           Say
 import           UnliftIO.Foreign               ( castPtr )
 import           Vulkan.CStruct
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
-import           Vulkan.Core11                  ( MemoryRequirements2(..) )
 import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
-import           Vulkan.Extensions.VK_KHR_ray_tracing
+import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
-import           VulkanMemoryAllocator
+import           VulkanMemoryAllocator          ( AllocationCreateInfo
+                                                  ( requiredFlags
+                                                  , usage
+                                                  )
+                                                , MemoryUsage
+                                                  ( MEMORY_USAGE_GPU_ONLY
+                                                  )
+                                                )
 
 ----------------------------------------------------------------
 -- TLAS
@@ -27,26 +32,35 @@ import           VulkanMemoryAllocator
 
 createTLAS :: V (ReleaseKey, AccelerationStructureKHR)
 createTLAS = do
-  let geomType = zero { geometryType      = GEOMETRY_TYPE_INSTANCES_KHR
-                      , maxPrimitiveCount = 1
-                      , allowsTransforms  = False
-                      }
-      asci = zero
-        { type'         = ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR
-        , flags         = BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR
-        , geometryInfos = [geomType]
+  --
+  -- Create the bottom level accelerationStructures
+  --
+  (_blasReleaseKey, blas) <- createBLAS
+  blasAddress             <- getAccelerationStructureDeviceAddressKHR' zero
+    { accelerationStructure = blas
+    }
+  let identity = TransformMatrixKHR (1, 0, 0, 0) (0, 1, 0, 0) (0, 0, 1, 0)
+      inst :: AccelerationStructureInstanceKHR
+      inst = zero
+        { transform                      = identity
+        , instanceCustomIndex            = complement 0 -- TODO: unnecessary
+        , mask                           = complement 0
+        , instanceShaderBindingTableRecordOffset = 0
+        , flags = GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR
+        , accelerationStructureReference = coerce blasAddress
         }
-  (tlasKey, tlas) <- withAccelerationStructureKHR' asci
-  createAndBindAccelerationMemory tlas
-  nameObject' tlas "TLAS"
 
+  --
+  -- Create the buffer for the top level instances
+  --
   let numInstances = 1
       instanceDescsSize =
         numInstances * cStructSize @AccelerationStructureInstanceKHR
-  (instBufferReleaseKey, (instBuffer, instBufferAllocation, _)) <- withBuffer'
+  (_instBufferReleaseKey, (instBuffer, instBufferAllocation, _)) <- withBuffer'
     zero
-      { usage = BUFFER_USAGE_RAY_TRACING_BIT_KHR
-                  .|. BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
+      { usage =
+        BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
+          .|. BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
       , size  = fromIntegral instanceDescsSize
       }
     -- TODO: Make this GPU only and transfer to it
@@ -58,219 +72,115 @@ createTLAS = do
   instBufferDeviceAddress <- getBufferDeviceAddress' zero { buffer = instBuffer
                                                           }
 
-  (blasReleaseKey, blas) <- createBlasOnDevice
-  blasAddress            <- getAccelerationStructureDeviceAddressKHR' zero
-    { accelerationStructure = blas
-    }
-  let identity = TransformMatrixKHR ((1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0))
-      inst :: AccelerationStructureInstanceKHR
-      inst = zero
-        { transform                      = identity
-        , instanceCustomIndex            = complement 0 -- TODO: unnecessary
-        , mask                           = complement 0
-        , instanceShaderBindingTableRecordOffset = 0
-        , flags = GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR
-        , accelerationStructureReference = coerce blasAddress
-        }
+  --
+  -- populate the instance buffer
+  --
   (instMapKey, instMapPtr) <- withMappedMemory' instBufferAllocation
   liftIO $ poke (castPtr @_ @AccelerationStructureInstanceKHR instMapPtr) inst
   release instMapKey
 
-  let geomData = AccelerationStructureGeometryInstancesDataKHR
-        { arrayOfPointers = False
-        , data'           = DeviceAddressConst instBufferDeviceAddress
-        }
-      geom :: AccelerationStructureGeometryKHR
-      geom = zero { geometryType = GEOMETRY_TYPE_INSTANCES_KHR
-                  , geometry     = Instances geomData
-                  , flags        = GEOMETRY_OPAQUE_BIT_KHR
-                  }
-  let offsetInfo = zero { primitiveCount = 1, primitiveOffset = 0 }
+  let buildGeometries =
+        [ zero
+            { geometryType = GEOMETRY_TYPE_INSTANCES_KHR
+            , geometry = Instances AccelerationStructureGeometryInstancesDataKHR
+                           { arrayOfPointers = False
+                           , data' = DeviceAddressConst instBufferDeviceAddress
+                           }
+            , flags = GEOMETRY_OPAQUE_BIT_KHR
+            }
+        ]
+      buildInfo = zero { type' = ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR
+                       , mode = BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR -- ignored but used later
+                       , srcAccelerationStructure = NULL_HANDLE -- ignored
+                       , dstAccelerationStructure = NULL_HANDLE -- ignored
+                       , geometries = buildGeometries
+                       , scratchData = zero
+                       }
+      maxPrimitiveCounts = [1]
+      rangeInfos         = [zero { primitiveCount = 1, primitiveOffset = 0 }]
+  sizes <- getAccelerationStructureBuildSizesKHR'
+    ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR
+    buildInfo
+    maxPrimitiveCounts
 
-  buildTlasOnDevice tlas geom offsetInfo
-
+  (_tlasBufferKey, tlasKey, tlas) <- buildAccelerationStructure buildInfo
+                                                                rangeInfos
+                                                                sizes
+  nameObject' tlas "TLAS"
   pure (tlasKey, tlas)
 
--- TODO: deduplicate this and buildBlasOnDevice
-buildTlasOnDevice
-  :: AccelerationStructureKHR
-  -> AccelerationStructureGeometryKHR
-  -> AccelerationStructureBuildOffsetInfoKHR
-  -> V ()
-buildTlasOnDevice tlas geom offsetInfo = do
+buildAccelerationStructure
+  :: AccelerationStructureBuildGeometryInfoKHR
+  -> Vector AccelerationStructureBuildRangeInfoKHR
+  -> AccelerationStructureBuildSizesInfoKHR
+  -> V (ReleaseKey, ReleaseKey, AccelerationStructureKHR)
+buildAccelerationStructure geom ranges sizes = do
   --
-  -- Get the memory requirements for building the AS
+  -- Allocate the buffer to hold the acceleration structure
   --
-  MemoryRequirements2 () reqs <- getAccelerationStructureMemoryRequirementsKHR'
-    zero
-      { type'                 =
-        ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_KHR
-      , buildType             = ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR
-      , accelerationStructure = tlas
-      }
+  let bufferSize = accelerationStructureSize sizes
+  (asBufferKey, (asBuffer, _, _)) <- withBuffer'
+    zero { size  = bufferSize
+         , usage = BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR
+         }
+    zero { usage = MEMORY_USAGE_GPU_ONLY }
 
   --
-  -- Allocate that space on the device
+  -- Allocate scratch space for building
   --
-  (scratchKey, (scratch, scratchAllocation, scratchAllocationInfo)) <-
-    withBuffer'
-      zero
-        { usage = BUFFER_USAGE_RAY_TRACING_BIT_KHR
-                    .|. BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
-        , size  = size (reqs :: MemoryRequirements)
-        }
-      zero
-  scratchAddr <- getBufferDeviceAddress' zero { buffer = scratch }
-
-  --
-  -- Create command buffers
-  --
-  graphicsQueue                             <- getGraphicsQueue
-  QueueFamilyIndex graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
-  (poolKey, commandPool)                    <- withCommandPool' zero
-    { queueFamilyIndex = graphicsQueueFamilyIndex
-    }
-  ~[commandBuffer] <- allocateCommandBuffers' zero
-    { commandPool        = commandPool
-    , level              = COMMAND_BUFFER_LEVEL_PRIMARY
-    , commandBufferCount = 1
+  (scratchBufferKey, (scratchBuffer, _, _)) <- withBuffer'
+    zero { size  = buildScratchSize sizes
+         , usage = BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
+         }
+    zero { usage = MEMORY_USAGE_GPU_ONLY }
+  scratchBufferDeviceAddress <- getBufferDeviceAddress' zero
+    { buffer = scratchBuffer
     }
 
-  let buildGeomInfo = zero { type' = ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR
-                           , update = False
-                           , dstAccelerationStructure = tlas
-                           , scratchData = DeviceAddress scratchAddr
-                           , geometries = [geom]
-                           }
+  let asci = zero { type'  = ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR
+                  , buffer = asBuffer
+                  , offset = 0
+                  , size   = bufferSize
+                  }
+  (asKey, as) <- withAccelerationStructureKHR' asci
 
-  --
-  -- Record and kick off the build commands
-  --
-  useCommandBuffer' commandBuffer zero $ do
-    cmdBuildAccelerationStructureKHR' [SomeStruct buildGeomInfo] [offsetInfo]
-  (fenceKey, fence) <- withFence' zero
-  queueSubmit
-    graphicsQueue
-    [SomeStruct zero { commandBuffers = [commandBufferHandle commandBuffer] }]
-    fence
-  let oneSecond = 1e9
-  waitForFencesSafe' [fence] True oneSecond >>= \case
-    SUCCESS -> pure ()
-    TIMEOUT -> error "Timed out building acceleration structure"
-    _       -> error "blah"
-  sayErr "Built acceleration structure"
+  oneShotComputeCommands $ do
+    cmdBuildAccelerationStructuresKHR'
+      [ geom { dstAccelerationStructure = as
+             , scratchData = DeviceAddress scratchBufferDeviceAddress
+             }
+      ]
+      [ranges]
 
-  -- free our building resources
-  release fenceKey
-  release poolKey
-  release scratchKey
+  release scratchBufferKey
 
-----------------------------------------------------------------
--- BLAS
-----------------------------------------------------------------
+  pure (asKey, asBufferKey, as)
 
-createBlasOnDevice :: V (ReleaseKey, AccelerationStructureKHR)
-createBlasOnDevice = do
-  --
-  -- Create the AS
-  --
-  let asci :: AccelerationStructureCreateInfoKHR
-      asci = zero
-        { type'         = ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR
-        , flags         = BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR
-        , geometryInfos = [ zero { geometryType      = GEOMETRY_TYPE_AABBS_KHR
-                                 , maxPrimitiveCount = 1
-                                 }
-                          ]
-        }
-  (blasKey, blas) <- withAccelerationStructureKHR' asci
-  createAndBindAccelerationMemory blas
+--
+-- Create the bottom level acceleration structure
+--
+createBLAS :: V (ReleaseKey, AccelerationStructureKHR)
+createBLAS = do
+  (_, boxGeom, boxOffsets) <- biunitBoxGeometry
+
+  let buildInfo = zero { type' = ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR
+                       , mode = BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR -- ignored but used later
+                       , srcAccelerationStructure = NULL_HANDLE -- ignored
+                       , dstAccelerationStructure = NULL_HANDLE -- ignored
+                       , geometries = [boxGeom]
+                       , scratchData = zero
+                       }
+      maxPrimitiveCounts = [1]
+  sizes <- getAccelerationStructureBuildSizesKHR'
+    ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR
+    buildInfo
+    maxPrimitiveCounts
+
+  (_blasBufferKey, blasKey, blas) <- buildAccelerationStructure buildInfo
+                                                                boxOffsets
+                                                                sizes
   nameObject' blas "BLAS"
-
-  (_, geom, offsetInfo) <- biunitBoxGeometry
-
-  buildBlasOnDevice blas geom offsetInfo
-
   pure (blasKey, blas)
-
-buildBlasOnDevice
-  :: AccelerationStructureKHR
-  -> AccelerationStructureGeometryKHR
-  -> AccelerationStructureBuildOffsetInfoKHR
-  -> V ()
-buildBlasOnDevice blas geom offsetInfo = do
-  --
-  -- Get the memory requirements for building the AS
-  --
-  MemoryRequirements2 () reqs <- getAccelerationStructureMemoryRequirementsKHR'
-    zero
-      { type'                 =
-        ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_KHR
-      , buildType             = ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR
-      , accelerationStructure = blas
-      }
-
-  --
-  -- Allocate that space on the device
-  --
-  (scratchKey, (scratch, scratchAllocation, scratchAllocationInfo)) <-
-    withBuffer'
-      zero
-        { usage = BUFFER_USAGE_RAY_TRACING_BIT_KHR
-                    .|. BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
-        , size  = size (reqs :: MemoryRequirements)
-        }
-      zero
-  scratchAddr <- getBufferDeviceAddress' zero { buffer = scratch }
-
-  --
-  -- Create command buffers
-  --
-  graphicsQueue                             <- getGraphicsQueue
-  QueueFamilyIndex graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
-  (poolKey, commandPool)                    <- withCommandPool' zero
-    { queueFamilyIndex = graphicsQueueFamilyIndex
-    }
-  ~[commandBuffer] <- allocateCommandBuffers' zero
-    { commandPool        = commandPool
-    , level              = COMMAND_BUFFER_LEVEL_PRIMARY
-    , commandBufferCount = 1
-    }
-
-  let buildGeomInfo = zero
-        { type' = ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR
-        , update                   = False
-        , dstAccelerationStructure = blas
-        , scratchData              = DeviceAddress scratchAddr
-        , geometries               = [geom]
-        }
-
-  --
-  -- Record and kick off the build commands
-  --
-  useCommandBuffer' commandBuffer zero $ do
-    cmdBuildAccelerationStructureKHR' [SomeStruct buildGeomInfo] [offsetInfo]
-  (fenceKey, fence) <- withFence' zero
-  queueSubmit
-    graphicsQueue
-    [SomeStruct zero { commandBuffers = [commandBufferHandle commandBuffer] }]
-    fence
-  let oneSecond = 1e9
-  waitForFencesSafe' [fence] True oneSecond >>= \case
-    SUCCESS -> pure ()
-    TIMEOUT -> error "Timed out building acceleration structure"
-    _       -> error "blah"
-  sayErr "Built acceleration structure"
-
-  -- free our building resources
-  release fenceKey
-  release poolKey
-  release scratchKey
-  pure ()
-
-----------------------------------------------------------------
--- Helpers
-----------------------------------------------------------------
 
 --
 -- The geometry for a biunit AABB on the device
@@ -279,16 +189,16 @@ biunitBoxGeometry
   :: V
        ( ReleaseKey
        , AccelerationStructureGeometryKHR
-       , AccelerationStructureBuildOffsetInfoKHR
+       , Vector AccelerationStructureBuildRangeInfoKHR
        )
 biunitBoxGeometry = do
   let -- a bounding box for the unit sphere
       box = AabbPositionsKHR (-1) (-1) (-1) 1 1 1
   (bufferKey, (buffer, bufferAllocation, _)) <- withBuffer'
     zero
-      { usage = BUFFER_USAGE_TRANSFER_SRC_BIT
-                .|. BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
-                .|. BUFFER_USAGE_RAY_TRACING_BIT_KHR
+      { usage =
+        BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
+          .|. BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
       , size  = fromIntegral (sizeOf box)
       }
     zero
@@ -308,27 +218,45 @@ biunitBoxGeometry = do
                   , flags        = GEOMETRY_OPAQUE_BIT_KHR
                   , geometry     = Aabbs boxData
                   }
-  let offsetInfo = zero { primitiveCount = 1, primitiveOffset = 0 }
+  let offsetInfo = [zero { primitiveCount = 1, primitiveOffset = 0 }]
   pure (bufferKey, geom, offsetInfo)
 
-createAndBindAccelerationMemory :: AccelerationStructureKHR -> V ()
-createAndBindAccelerationMemory as = do
-  MemoryRequirements2 () reqs <- getAccelerationStructureMemoryRequirementsKHR'
-    zero { type' = ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_KHR
-         , buildType = ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR
-         , accelerationStructure = as
-         }
 
-  (releaseMem, (allocation, allocationInfo)) <- withMemory'
-    reqs
-    zero { usage         = MEMORY_USAGE_GPU_ONLY
-         , requiredFlags = MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-         }
 
-  let bindInfo :: BindAccelerationStructureMemoryInfoKHR
-      bindInfo = zero
-        { accelerationStructure = as
-        , memory                = deviceMemory allocationInfo
-        , memoryOffset          = offset (allocationInfo :: AllocationInfo)
-        }
-  bindAccelerationStructureMemoryKHR' [bindInfo]
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+-- TODO: use compute queue here
+oneShotComputeCommands :: CmdT V () -> V ()
+oneShotComputeCommands cmds = do
+   --
+   -- Create command buffers
+   --
+  graphicsQueue                             <- getGraphicsQueue
+  QueueFamilyIndex graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
+  (poolKey, commandPool)                    <- withCommandPool' zero
+    { queueFamilyIndex = graphicsQueueFamilyIndex
+    }
+  ~[commandBuffer] <- allocateCommandBuffers' zero
+    { commandPool        = commandPool
+    , level              = COMMAND_BUFFER_LEVEL_PRIMARY
+    , commandBufferCount = 1
+    }
+
+  --
+  -- Record and kick off the build commands
+  --
+  useCommandBuffer' commandBuffer zero cmds
+  (fenceKey, fence) <- withFence' zero
+  queueSubmit
+    graphicsQueue
+    [SomeStruct zero { commandBuffers = [commandBufferHandle commandBuffer] }]
+    fence
+  let oneSecond = 1e9
+  waitForFencesSafe' [fence] True oneSecond >>= \case
+    SUCCESS -> pure ()
+    TIMEOUT -> error "Timed out running one shot commands"
+    _       -> error "Unhandled exit code in oneShotComputeCommands"
+  release fenceKey
+  release poolKey

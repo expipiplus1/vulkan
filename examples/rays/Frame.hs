@@ -25,11 +25,12 @@ import qualified SDL.Video.Vulkan              as SDL
 import           Swapchain
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
+import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
+import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
-import Vulkan.Extensions.VK_KHR_ray_tracing
 
 -- | Must be positive, duh
 numConcurrentFrames :: Int
@@ -47,6 +48,7 @@ data Frame = Frame
   , fPipelineLayout              :: PipelineLayout
   , fAccelerationStructure       :: AccelerationStructureKHR
   , fShaderBindingTable          :: Buffer
+  , fShaderBindingTableAddress   :: DeviceAddress
   , fRenderFinishedHostSemaphore :: Semaphore
     -- ^ A timeline semaphore which increments to fIndex when this frame is
     -- done, the host can wait on this semaphore
@@ -100,6 +102,9 @@ initialFrame fWindow fSurface = do
   (_, fPipeline, numGroups)   <- Pipeline.createPipeline fPipelineLayout
   (_, fShaderBindingTable)    <- Pipeline.createShaderBindingTable fPipeline
                                                                    numGroups
+  fShaderBindingTableAddress <- getBufferDeviceAddress' zero
+    { buffer = fShaderBindingTable
+    }
   descriptorSets <- Pipeline.createRTDescriptorSets
     descriptorSetLayout
     fAccelerationStructure
@@ -149,6 +154,7 @@ advanceFrame needsNewSwapchain f = do
              , fPipeline                    = fPipeline f
              , fPipelineLayout              = fPipelineLayout f
              , fShaderBindingTable          = fShaderBindingTable f
+             , fShaderBindingTableAddress   = fShaderBindingTableAddress f
              , fAccelerationStructure       = fAccelerationStructure f
              , fRenderFinishedHostSemaphore = fRenderFinishedHostSemaphore f
              , fGPUWork
