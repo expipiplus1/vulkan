@@ -162,8 +162,8 @@ executables:
       - unagi-chan
       - unliftio
       - vector
-      - vulkan
-      - vulkan-utils
+      - vulkan >= 3.7
+      - vulkan-utils >= 0.3
       - file-embed
       - extra
       - filepath
