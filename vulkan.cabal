@@ -485,6 +485,7 @@ library
       base <5
     , bytestring
     , transformers
+    , unordered-containers
     , vector
   if os(windows)
     extra-libraries:
