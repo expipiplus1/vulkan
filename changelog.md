@@ -5,7 +5,7 @@
 - Add bracketing functions for `withRayTracingPipelinesKHR` and
   `withRayTracingPipelinesNV`
 - Add all possible storable instances for Vulkan structs
-- Expose SPIR-V Extensions and Capabilities in `Vulkan.SPIRVInfo`
+- Expose SPIR-V Extensions and Capabilities in `Vulkan.SPIRVRequirements`
 
 ## [3.6.15] - 2020-11-16
 - Bump API version to v1.2.161
