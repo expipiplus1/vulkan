@@ -1,145 +1,234 @@
-{-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE OverloadedLists, NamedFieldPuns #-}
 
 module Vulkan.Utils.Initialization
-  ( createDebugInstanceWithExtensions
-  , createInstanceWithExtensions
+  ( createInstanceFromRequirements
+  , addDebugRequirements
   , pickPhysicalDevice
   , physicalDeviceName
-  , createDeviceWithExtensions
+  , createDeviceFromRequirements
   ) where
 
+import           Control.Applicative
+import           Control.Monad
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.Bits
 import           Data.ByteString                ( ByteString )
 import           Data.Foldable
+import           Data.HashMap.Strict            ( HashMap )
+import qualified Data.HashMap.Strict           as HashMap
+import           Data.HashSet                   ( HashSet )
+import qualified Data.HashSet                  as HashSet
 import           Data.Maybe
 import           Data.Ord
 import           Data.Text                      ( Text )
+import qualified Data.Text                     as Text
 import           Data.Text.Encoding             ( decodeUtf8 )
 import qualified Data.Vector                   as V
+import           Data.Word
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Extensions.VK_EXT_validation_features
+import           Vulkan.Requirements
 import           Vulkan.Utils.Debug
+import           Vulkan.Utils.Internal
 import           Vulkan.Utils.Misc
+import           Vulkan.Version
 import           Vulkan.Zero
+
+import Vulkan.Core10.DeviceInitialization
+  ( AllocationCallbacks, ApplicationInfo(..), Instance, InstanceCreateInfo(..)
+  , PhysicalDevice, PhysicalDeviceFeatures, PhysicalDeviceProperties
+  , createInstance, destroyInstance
+  , getPhysicalDeviceFeatures, getPhysicalDeviceProperties
+  )
+import Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2
+  ( PhysicalDeviceFeatures2(..), getPhysicalDeviceFeatures2 )
+import Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2
+  ( PhysicalDeviceProperties2(..), getPhysicalDeviceProperties2 )
 
 ----------------------------------------------------------------
 -- * Instance Creation
 ----------------------------------------------------------------
 
--- | Like 'createInstanceWithExtensions' except it will create a debug utils
--- messenger (from the @VK_EXT_debug_utils@ extension).
---
--- If the @VK_EXT_validation_features@ extension (from the
--- @VK_LAYER_KHRONOS_validation@ layer) is available is it will be enabled and
--- best practices messages enabled.
-createDebugInstanceWithExtensions
-  :: forall es m
-   . (Extendss InstanceCreateInfo es, PokeChain es, MonadResource m)
-  => [ByteString]
-  -- ^ Required layers
-  -> [ByteString]
-  -- ^ Optional layers
-  -> [ByteString]
-  -- ^ Required extensions
-  -> [ByteString]
-  -- ^ Optional extensions
-  -> InstanceCreateInfo es
-  -> m Instance
-createDebugInstanceWithExtensions requiredLayers optionalLayers requiredExtensions optionalExtensions instanceCreateInfo
-  = do
-    let debugMessengerCreateInfo = zero
-          { messageSeverity = DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
-                                .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
-          , messageType     = DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
-                              .|. DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
-                              .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
-          , pfnUserCallback = debugCallbackPtr
-          }
-        validationFeatures = ValidationFeaturesEXT
-          [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT]
-          []
-        instanceCreateInfo'
-          :: InstanceCreateInfo
-               (DebugUtilsMessengerCreateInfoEXT : ValidationFeaturesEXT : es)
-        instanceCreateInfo' = instanceCreateInfo
-          { next = debugMessengerCreateInfo :& validationFeatures :& next
-                     (instanceCreateInfo :: InstanceCreateInfo es)
-          }
-    inst <- createInstanceWithExtensions
-      requiredLayers
-      ("VK_LAYER_KHRONOS_validation" : optionalLayers)
-      (EXT_DEBUG_UTILS_EXTENSION_NAME : requiredExtensions)
-      (EXT_VALIDATION_FEATURES_EXTENSION_NAME : optionalExtensions)
-      instanceCreateInfo'
-    _ <- withDebugUtilsMessengerEXT inst
-                                    debugMessengerCreateInfo
-                                    Nothing
-                                    allocate
-    pure inst
-
 -- | Create an 'Instance' with some layers and extensions, the layers and
 -- extensions will be added to the provided 'InstanceCreateInfo'.
 --
+-- Returns all the names of instance layers which were enabled.
+--
 -- Will throw an 'IOError in the case of missing layers or extensions. Details
 -- on missing layers and extensions will be reported in stderr.
-createInstanceWithExtensions
-  :: forall es m
-   . (Extendss InstanceCreateInfo es, PokeChain es, MonadResource m)
-  => [ByteString]
-  -- ^ Required layers
-  -> [ByteString]
-  -- ^ Optional layers
-  -> [ByteString]
-  -- ^ Required extensions
-  -> [ByteString]
-  -- ^ Optional extensions
-  -> InstanceCreateInfo es
-  -> m Instance
-createInstanceWithExtensions requiredLayers optionalLayers requiredExtensions optionalExtensions instanceCreateInfo
+createInstanceFromRequirements
+  :: forall m
+   . MonadResource m
+  => Requirements
+  -> InstanceCreateInfo '[]
+  -> m (Instance, [ByteString])
+createInstanceFromRequirements
+  ( Requirements
+    { version                 = ReqAndOpt reqVersion optVersion
+    , instanceLayers          = ReqAndOpt requiredLayers optionalLayers
+    , instanceExtensions      = reqAndOptExtensions
+    , enableSettingsOtherThan = enableSettingsOtherThan :: HashSet ByteString -> Chain settings
+    }
+  )
+  instanceCreateInfo
   = do
     --
-    -- First get the layers, they're needed to get the list of supported
+    -- We start by checking that the Vulkan API version
+    -- that the user asked for is compatible with the requirements.
+    --
+    let
+      mbGivenVersion :: Maybe Word32
+      mbGivenVersion = ( apiVersion :: ApplicationInfo -> Word32 ) <$> applicationInfo ( instanceCreateInfo :: InstanceCreateInfo '[] )
+    for_ mbGivenVersion $ \ givenVersion -> do
+      unless (givenVersion >= reqVersion)
+        ( liftIO $ noSuchThing
+          ( "Requirements imply a minimum Vulkan API version " <> showVersion reqVersion <> ",\n\
+            \but the version specified by the application is " <> showVersion givenVersion <> "."
+          )
+        )
+      unless (givenVersion >= optVersion)
+        ( sayErr
+          ( "Optional preference: minimum Vulkan API version " <> showVersion optVersion <> ",\n\
+            \but the version specified by the application is " <> showVersion givenVersion <> "."
+          )
+        )
+    --
+    -- Next get the layers, they're needed to get the list of supported
     -- extensions, as some of them may only be present in layers.
     --
     availableLayerNames <-
       toList . fmap layerName . snd <$> enumerateInstanceLayerProperties
-    layers <- partitionOptReqIO "layer"
-                                availableLayerNames
-                                optionalLayers
-                                requiredLayers
-
+    (okLayers, missingOptLayers)
+      <- partitionOptReqIO "layer"
+            availableLayerNames
+            (HashMap.keys $ optionalLayers)
+            (HashMap.keys $ requiredLayers)
     -- Run 'enumerateInstanceExtensionProperties' once for the instance itself,
     -- and once for each layer and collect the results.
     availableExtensionNames <- concat <$> traverse
       ( fmap (toList . fmap extensionName . snd)
       . enumerateInstanceExtensionProperties
       )
-      (Nothing : (Just <$> layers))
-    extensions <- partitionOptReqIO "instance extension"
-                                    availableExtensionNames
-                                    optionalExtensions
-                                    requiredExtensions
-
+      (Nothing : (Just <$> okLayers))
     let
-      instanceCreateInfo' :: InstanceCreateInfo es
+      optionalExtensions, requiredExtensions :: [ByteString]
+      ReqAndOpt requiredExtensions optionalExtensions
+        = ( ( \ ( req, opt ) -> ReqAndOpt ( HashMap.keys =<< req ) ( HashMap.keys =<< opt ) ) )
+        . unzip
+        . map ( \ ( ReqAndOpt req opt ) -> (req,opt) )
+        $ HashMap.elems reqAndOptExtensions
+    (okExts, missingOptExts)
+      <- partitionOptReqIO "instance extension"
+            availableExtensionNames
+            optionalExtensions
+            requiredExtensions
+    let
+      enabledLayers, enabledExtensions :: V.Vector ByteString
+      enabledLayers
+        = enabledLayerNames (instanceCreateInfo :: InstanceCreateInfo '[])
+        <> V.fromList okLayers
+      enabledExtensions
+        = enabledExtensionNames (instanceCreateInfo :: InstanceCreateInfo '[])
+        <> V.fromList okExts
+      instanceCreateInfo' :: InstanceCreateInfo settings
       instanceCreateInfo' = instanceCreateInfo
-        { enabledLayerNames     =
-          enabledLayerNames (instanceCreateInfo :: InstanceCreateInfo es)
-            <> V.fromList layers
-        , enabledExtensionNames =
-          enabledExtensionNames (instanceCreateInfo :: InstanceCreateInfo es)
-            <> V.fromList extensions
+        { next                  = enableSettingsOtherThan HashSet.empty -- not using the 'OtherThan' functionality here
+        , enabledLayerNames     = enabledLayers
+        , enabledExtensionNames = enabledExtensions
         }
     (_, inst) <- withInstance instanceCreateInfo' Nothing allocate
-    pure inst
+    pure (inst, okLayers)
+
+-- | Adds debugging features to the requirements.
+--
+-- Creates a debug utils messenger (from the @VK_EXT_debug_utils@ extension).
+--
+-- If the @VK_EXT_validation_features@ extension (from the
+-- @VK_LAYER_KHRONOS_validation@ layer) is available is it will be enabled and
+-- best practices messages enabled.
+--
+-- __Note__ might override other validation layers set in the requirements.
+addDebugRequirements :: Requirements -> Requirements
+addDebugRequirements reqs = foldr' addRequirement reqs debugReqs
+  where
+    debugReqs :: [ OptionalRequirement ]
+    debugReqs =
+      [ Optionally  $ RequireInstanceLayer "VK_LAYER_KHRONOS_validation" 0
+      , Necessarily $ RequireInstanceExtension Nothing EXT_DEBUG_UTILS_EXTENSION_NAME 0
+      , Optionally  $ RequireInstanceExtension Nothing EXT_VALIDATION_FEATURES_EXTENSION_NAME 0
+      , Necessarily $ RequireInstanceSetting "VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT"
+          ( const validationFeatures ) -- overrides any previous 'ValidationFeaturesEXT' structure
+      , Necessarily $ RequireInstanceSetting "VK_EXT_debug_utils_messenger"
+          ( const debugMessenger ) -- overrides any previous 'DebugUtilsMessengerCreateInfoEXT' structure
+      ]
+    validationFeatures :: ValidationFeaturesEXT
+    validationFeatures = ValidationFeaturesEXT
+      [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT]
+      []
+    debugMessenger :: DebugUtilsMessengerCreateInfoEXT
+    debugMessenger = zero
+      { messageSeverity = DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+                            .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+      , messageType     = DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+                          .|. DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+                          .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+      , pfnUserCallback = debugCallbackPtr
+      }
 
 ----------------------------------------------------------------
 -- * Physical device selection
 ----------------------------------------------------------------
+
+-- | Check whether a 'PhysicalDevice' meets the provided 'Requirements'.
+-- 
+-- If the 'PhysicalDevice' meets the 'Requirements':
+--   - returns 'Just' the optional properties and features (in this order) that did not meet the 'Requirements'.
+-- If the 'PhysicalDevice' did not fit the 'Requirements':
+--   - returns 'Nothing'.
+--
+-- __Note__: This function assumes that the context (i.e. the Vulkan instance) already meets the 'Requirements',
+-- in particular that the Vulkan API version is set to at least 1.1 if the 'Requirements' impose this restriction.
+physicalDeviceFitsRequirements
+  :: MonadIO m
+  => Requirements
+  -> PhysicalDevice
+  -> m ( Maybe ( HashSet ByteString, HashSet ByteString ) )
+physicalDeviceFitsRequirements
+  ( Requirements
+    { missingProperties = missingProperties :: PhysicalDeviceProperties2 props -> ReqAndOpt (HashSet ByteString)
+    , missingFeatures   = missingFeatures   :: PhysicalDeviceFeatures2   feats -> ReqAndOpt (HashSet ByteString)
+    }
+  )
+  physicalDevice = do
+    ( ReqAndOpt missingReqProps missingOptProps :: ReqAndOpt ( HashSet ByteString ) ) <-
+      case sLength @props of
+        SNil    -> do
+          physicalDeviceProperties <- getPhysicalDeviceProperties physicalDevice
+          pure $ missingProperties ( zero { properties = physicalDeviceProperties } )
+        SCons _ -> do
+          physicalDeviceProperties2 <- getPhysicalDeviceProperties2 @props physicalDevice
+          pure $ missingProperties physicalDeviceProperties2
+    ( ReqAndOpt missingReqFeats missingOptFeats :: ReqAndOpt ( HashSet ByteString ) ) <-
+      case sLength @feats of
+        SNil    -> do
+          physicalDeviceFeatures <- getPhysicalDeviceFeatures physicalDevice
+          pure $ missingFeatures ( zero { features = physicalDeviceFeatures } )
+        SCons _ -> do
+          physicalDeviceFeatures2 <- getPhysicalDeviceFeatures2 @feats physicalDevice
+          pure $ missingFeatures physicalDeviceFeatures2
+    if HashSet.null missingReqProps && HashSet.null missingReqFeats
+    then pure $ Just ( missingOptProps, missingOptFeats )
+    else do
+      devName <- physicalDeviceName physicalDevice
+      sayErr
+        ( "Physical device " <> Text.unpack devName <> " does not meet requirements.\n\
+          \Missing required properties: " <> show missingReqProps <> "\n\
+          \Missing required features  : " <> show missingReqFeats
+        )
+      pure Nothing
 
 -- | Get a single 'PhysicalDevice' deciding with a scoring function
 --
@@ -182,39 +271,77 @@ physicalDeviceName =
 -- | Create a 'Device' with some extensions, the extensions will be added to
 -- the provided 'DeviceCreateInfo'.
 --
+-- Assumes the provided 'PhysicalDevice' satisfies the 'Requirements',
+-- and that the provided layers have indeed been enabled in the current Vulkan instance.
+--
 -- Will throw an 'IOError in the case of missing extensions. Missing extensions
 -- will be listed on stderr.
-createDeviceWithExtensions
-  :: forall es m
-   . (Extendss DeviceCreateInfo es, PokeChain es, MonadResource m)
+createDeviceFromRequirements
+  :: MonadResource m
   => PhysicalDevice
+  -> Requirements
+  -> HashSet ByteString
+  -- ^ Optional features that the device does not support,
+  -- as returned in the second component by 'physicalDeviceFitsRequirements'.
   -> [ByteString]
-  -- ^ Required extensions
-  -> [ByteString]
-  -- ^ Optional extensions
-  -> DeviceCreateInfo es
+  -- ^ Enabled instance layers,
+  -- as returned by 'createInstanceFromRequirements'.
+  -> V.Vector ( SomeStruct DeviceQueueCreateInfo )
   -> m Device
-createDeviceWithExtensions phys requiredExtensions optionalExtensions deviceCreateInfo
+createDeviceFromRequirements
+  phys
+  ( Requirements
+    { deviceExtensions        = reqAndOptExtensions
+    , enableFeaturesOtherThan = enableFeaturesOtherThan :: HashSet ByteString -> PhysicalDeviceFeatures2 feats
+    }
+  )
+  don'tEnableThese
+  enabledLayers
+  queueCreateInfos
   = do
+    let
+      optionalExtensions, requiredExtensions :: [ByteString]
+      ReqAndOpt requiredExtensions optionalExtensions
+        = ( ( \ ( req, opt ) -> ReqAndOpt ( HashMap.keys =<< req ) ( HashMap.keys =<< opt ) ) )
+        . unzip
+        . map ( \ ( ReqAndOpt req opt ) -> (req,opt) )
+        $ HashMap.elems reqAndOptExtensions
     availableExtensionNames <-
       fmap extensionName
       .   snd
       <$> enumerateDeviceExtensionProperties phys Nothing
-    extensions <- partitionOptReqIO "device extension"
+    (okExtensions,_) <- partitionOptReqIO "device extension"
                                     (toList availableExtensionNames)
-                                    requiredExtensions
                                     optionalExtensions
+                                    requiredExtensions
 
-    let
-      deviceCreateInfo' :: DeviceCreateInfo es
-      deviceCreateInfo' = deviceCreateInfo
-        { enabledExtensionNames =
-          enabledExtensionNames (deviceCreateInfo :: DeviceCreateInfo es)
-            <> V.fromList extensions
-        }
-
-    (_, dev) <- withDevice phys deviceCreateInfo' Nothing allocate
-    pure dev
+    case sLength @feats of
+      SNil    -> do
+        let
+          deviceCreateInfo :: DeviceCreateInfo '[]
+          deviceCreateInfo = deviceCreateInfo
+              { next                  = ()
+              , flags                 = zero
+              , queueCreateInfos
+              , enabledLayerNames     = V.fromList enabledLayers
+              , enabledExtensionNames = V.fromList okExtensions
+              , enabledFeatures       = Just $ features ( enableFeaturesOtherThan don'tEnableThese )
+              }
+        snd <$> withDevice phys deviceCreateInfo Nothing allocate
+      SCons _ -> do
+        let
+          deviceCreateInfo :: DeviceCreateInfo ( PhysicalDeviceFeatures2 '[] ': feats )
+          deviceCreateInfo
+            | PhysicalDeviceFeatures2 {next, features} <- enableFeaturesOtherThan don'tEnableThese
+            = DeviceCreateInfo
+              { next                  = (zero {features}, next)
+              , flags                 = zero
+              , queueCreateInfos
+              , enabledLayerNames     = V.fromList enabledLayers
+              , enabledExtensionNames = V.fromList okExtensions
+              , enabledFeatures       = Nothing
+              }
+        snd <$> withDevice phys deviceCreateInfo Nothing allocate
 
 ----------------------------------------------------------------
 -- Utils
@@ -222,3 +349,11 @@ createDeviceWithExtensions phys requiredExtensions optionalExtensions deviceCrea
 
 maximumByMay :: Foldable t => (a -> a -> Ordering) -> t a -> Maybe a
 maximumByMay f xs = if null xs then Nothing else Just (maximumBy f xs)
+
+showVersion :: Word32 -> String
+showVersion ver = show maj <> " " <> show min <> " " <> show patch
+  where
+    maj, min, patch :: Word32
+    maj   = _VERSION_MAJOR ver
+    min   = _VERSION_MINOR ver
+    patch = _VERSION_PATCH ver

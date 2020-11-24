@@ -469,10 +469,10 @@ library
       Vulkan.Extensions.VK_QCOM_render_pass_transform
       Vulkan.Extensions.VK_QCOM_rotated_copy_commands
       Vulkan.NamedType
+      Vulkan.Requirements
       Vulkan.SPIRVRequirements
       Vulkan.Version
       Vulkan.Zero
-      Vulkan.Requirements
   hs-source-dirs:
       src
       src-manual
