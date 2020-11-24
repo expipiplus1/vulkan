@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8160fb6fed8915e2c12af69faf0370f418c57bd3969f3086e1ec1911c86d0047
+-- hash: c051f4aea0c23de2816e028f1846fa45d3e3688d483c5c0c9e59f68ae8e064c0
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -203,8 +203,8 @@ executable rays
     , unagi-chan
     , unliftio
     , vector
-    , vulkan
-    , vulkan-utils
+    , vulkan >=3.7
+    , vulkan-utils >=0.3
   if os(windows)
     ghc-options: -optl-mconsole
   if impl(ghc < 8.10.0)
