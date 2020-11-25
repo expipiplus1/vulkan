@@ -1,11 +1,11 @@
 {-# LANGUAGE OverloadedLists, NamedFieldPuns #-}
 
 module Vulkan.Utils.Initialization
-  ( createInstanceFromRequirements
-  , addDebugRequirements
+  ( createInstanceFromRequests
+  , createDebugInstanceFromRequests
   , pickPhysicalDevice
   , physicalDeviceName
-  , createDeviceFromRequirements
+  , createDeviceFromRequests
   ) where
 
 import           Control.Applicative
@@ -28,6 +28,7 @@ import qualified Data.Vector                   as V
 import           Data.Word
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
+import           Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Requirements
@@ -56,10 +57,10 @@ createInstanceFromRequests
   -> m (Instance, [ByteString])
 createInstanceFromRequests
   ( InstanceRequests
-    { version                 = ReqAndOpt reqVersion optVersion
-    , instanceLayers          = ReqAndOpt requiredLayers optionalLayers
-    , instanceExtensions      = reqAndOptExtensions
-    , enableSettingsOtherThan = enableSettingsOtherThan :: HashSet ByteString -> Chain settings
+    { version            = ReqAndOpt reqVersion optVersion
+    , instanceLayers     = ReqAndOpt requiredLayers optionalLayers
+    , instanceExtensions = reqAndOptExtensions
+    , enableSettings     = enableSettings :: Chain settings
     }
   )
   instanceCreateInfo
@@ -124,7 +125,7 @@ createInstanceFromRequests
         <> V.fromList okExts
       instanceCreateInfo' :: InstanceCreateInfo settings
       instanceCreateInfo' = instanceCreateInfo
-        { next                  = enableSettingsOtherThan HashSet.empty -- not using the 'OtherThan' functionality here
+        { next                  = enableSettings
         , enabledLayerNames     = enabledLayers
         , enabledExtensionNames = enabledExtensions
         }
@@ -153,12 +154,12 @@ createDebugInstanceFromRequests reqs createInfo = do
 
   where
     debugReqs :: Requests Instance
-    debugReqs = addRequests reqs
-      [ Option  $ RequireInstanceLayer "VK_LAYER_KHRONOS_validation" 0
+    debugReqs = addRequests @[] reqs
+      [ Option  $ RequireInstanceLayer "VK_LAYER_KHRONOS_validation" 0 100
       , Require $ RequireInstanceExtension Nothing EXT_DEBUG_UTILS_EXTENSION_NAME 0
       , Option  $ RequireInstanceExtension Nothing EXT_VALIDATION_FEATURES_EXTENSION_NAME 0
       , Require $ RequireInstanceSetting validationFeatures
-      , Require $ RequireInstanceSetting debugMessengerInfo
+      , Require $ RequireInstanceSetting debugMessengerCreateInfo
       ]
     validationFeatures :: ValidationFeaturesEXT
     validationFeatures = ValidationFeaturesEXT
@@ -181,14 +182,20 @@ createDebugInstanceFromRequests reqs createInfo = do
 -- | Check whether a 'PhysicalDevice' meets the provided 'Requests'.
 -- 
 -- If the 'PhysicalDevice' meets the 'Requests':
---   - returns 'Just' the optional properties, features and extensions (in this order) that did not meet the 'Requests'.
+--   - returns 'Just' the enabled extensions,
+--     together with the optional properties, features and extensions (in this order)
+--     which were requested but could not be enabled.
 -- If the 'PhysicalDevice' did not fit the 'Requests':
 --   - returns 'Nothing'.
 physicalDeviceFitsRequests
   :: MonadIO m
   => Requests PhysicalDevice
   -> PhysicalDevice
-  -> m (Maybe (HashSet ByteString, HashSet ByteString, HashSet ByteString))
+  -> m ( Maybe 
+           ( V.Vector ByteString
+           , (HashSet ByteString, HashSet ByteString, HashSet ByteString)
+           )
+        )
 physicalDeviceFitsRequests
   ( PhysicalDeviceRequests
     { missingProperties = missingProperties :: PhysicalDeviceProperties2 props -> ReqAndOpt (HashSet ByteString)
@@ -203,7 +210,7 @@ physicalDeviceFitsRequests
       vulkan1p1 :: Word32
       vulkan1p1 = MAKE_VERSION 1 1 0
       deviceVersion :: Word32
-      deviceVersion = (apiVersion :: VkPhysicalDeviceProperties -> Word32) physicalDeviceProperties
+      deviceVersion = (apiVersion :: PhysicalDeviceProperties -> Word32) physicalDeviceProperties
     ( ReqAndOpt missingReqProps missingOptProps :: ReqAndOpt ( HashSet ByteString ) ) <-
       case sLength @props of
         SNil    -> do
@@ -241,12 +248,15 @@ physicalDeviceFitsRequests
           . map ( \ ( ReqAndOpt req opt ) -> (req,opt) )
           $ HashMap.elems reqAndOptExtensions
       availableExtensionNames <-
-        fmap extensionName . snd <$> enumerateDeviceExtensionProperties phys Nothing
-      ( missingOptExts, eitherMissingReqExtsOrEnabledExts) <-
-        partitionOptReq
-          availableExtensionNames
-          optionalExtensions
-          requiredExtensions
+        fmap extensionName . snd <$> enumerateDeviceExtensionProperties physicalDevice Nothing
+      let
+        missingOptExts :: [ByteString]
+        eitherMissingReqExtsOrEnabledExts :: Either [ByteString] [ByteString]
+        (missingOptExts, eitherMissingReqExtsOrEnabledExts)
+          = partitionOptReq
+            (V.toList availableExtensionNames)
+            optionalExtensions
+            requiredExtensions
       case eitherMissingReqExtsOrEnabledExts of
         Left missingExts -> do
           devName <- physicalDeviceName physicalDevice
@@ -256,8 +266,8 @@ physicalDeviceFitsRequests
             <> show missingExts
             )
           pure Nothing
-        Right _ ->
-          pure ( Just ( missingOptProps, missingOptFeats, missingOptExts ) )
+        Right enabledExts ->
+          pure ( Just (V.fromList enabledExts, (missingOptProps, missingOptFeats, HashSet.fromList missingOptExts)) )
     else do
       sayErr
         ( "Physical device " <> Text.unpack devName <> " does not meet requirements.\n\
@@ -318,10 +328,10 @@ createDeviceFromRequests
   -> Requests PhysicalDevice
   -> HashSet ByteString
   -- ^ Optional features that the device does not support,
-  -- as returned in the second component by 'physicalDeviceFitsRequirements'.
-  -> [ByteString]
-  -- ^ Enabled instance layers,
-  -- as returned by 'createInstanceFromRequirements'.
+  -- as returned by 'physicalDeviceFitsRequirements'.
+  -> V.Vector ByteString
+  -- ^ Enabled extensions,
+  -- as returned by 'physicalDeviceFitsRequirement'.
   -> V.Vector (SomeStruct DeviceQueueCreateInfo)
   -> m Device
 createDeviceFromRequests
@@ -331,7 +341,7 @@ createDeviceFromRequests
     }
   )
   don'tEnableThese
-  enabledLayers
+  okExtensions
   queueCreateInfos
   = do
     case sLength @feats of
@@ -342,8 +352,8 @@ createDeviceFromRequests
               { next                  = ()
               , flags                 = zero
               , queueCreateInfos
-              , enabledLayerNames     = V.fromList enabledLayers
-              , enabledExtensionNames = V.fromList okExtensions
+              , enabledLayerNames     = V.empty -- device layers aren't used
+              , enabledExtensionNames = okExtensions
               , enabledFeatures       = Just $ features ( enableFeaturesOtherThan don'tEnableThese )
               }
         snd <$> withDevice phys deviceCreateInfo Nothing allocate
@@ -356,8 +366,8 @@ createDeviceFromRequests
               { next                  = (zero {features}, next)
               , flags                 = zero
               , queueCreateInfos
-              , enabledLayerNames     = V.fromList enabledLayers
-              , enabledExtensionNames = V.fromList okExtensions
+              , enabledLayerNames     = V.empty -- device layers aren't used
+              , enabledExtensionNames = okExtensions
               , enabledFeatures       = Nothing
               }
         snd <$> withDevice phys deviceCreateInfo Nothing allocate
