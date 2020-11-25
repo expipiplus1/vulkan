@@ -1,4 +1,5 @@
 {-# language TemplateHaskell #-}
+{-# language QuasiQuotes #-}
 module Render.Enum
   where
 
@@ -13,18 +14,26 @@ import           Text.Show
 
 import           Data.Bits
 import           Foreign.Storable
-import           GHC.Read                hiding ( parens )
+import           GHC.Read                hiding ( list
+                                                , parens
+                                                )
 import           Numeric
 import           Text.Read               hiding ( parens )
 
 import           CType                          ( CType(TypeName) )
+import qualified Data.Text                     as T
 import           Error
 import           Haskell                       as H
+import qualified Prelude                       as P
 import           Render.Element
 import           Render.SpecInfo
 import           Render.Type
-import           Render.Utils
 import           Spec.Parse
+import           Text.InterpolatedString.Perl6.Unindented
+import           Text.ParserCombinators.ReadP   ( skipSpaces
+                                                , string
+                                                )
+import qualified Text.ParserCombinators.ReadPrec
 
 renderEnum
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -33,6 +42,8 @@ renderEnum
 renderEnum e@Enum {..} = do
   RenderParams {..} <- input
   genRe ("enum " <> unCName eName) $ do
+    tellCanFormat
+
     innerTy <- case eType of
       AnEnum     -> pure $ ConT ''Int32
       -- TODO: remove vulkan specific stuff
@@ -96,8 +107,7 @@ renderEnum e@Enum {..} = do
            , vsep (toList (($ getDoc) <$> patterns))
            ]
         ++ maybeToList complete
-    renderShowInstance e
-    renderReadInstance e
+    renderReadShowInstances e
 
 completePragma :: HName -> V.Vector HName -> Maybe (Doc ())
 completePragma ty pats = if V.null pats
@@ -137,74 +147,125 @@ renderEnumValue eName conName enumType EnumValue {..} = do
 -- Read and Show instances
 ----------------------------------------------------------------
 
-renderShowInstance
+renderReadShowInstances
   :: (HasErr r, HasRenderParams r, HasRenderElem r) => Enum' -> Sem r ()
-renderShowInstance Enum {..} = do
+renderReadShowInstances e@Enum {..} = do
+  RenderParams {..} <- input
+  let n        = mkTyName eName
+      conName  = mkConName eName eName
+      patNames = mkPatternName . evName <$> toList eValues
+  let enumPrefix       = commonPrefix (T.unpack . unName <$> patNames)
+      dropCommonPrefix = T.drop (length enumPrefix)
+      prefixStringName = "enumPrefix" <> pretty n
+      conNameName      = "conName" <> pretty conName
+      showTableName    = "showTable" <> pretty n
+  tableElems <- forV patNames $ \pat -> do
+    tellImport pat
+    pure $ tupled [pretty pat, viaShow (dropCommonPrefix (unName pat))]
+  tellDoc $ vsep
+    [ conNameName <+> ":: String"
+    , conNameName <+> "=" <+> dquotes (pretty conName)
+    , emptyDoc
+    , prefixStringName <+> ":: String"
+    , prefixStringName <+> "=" <+> viaShow enumPrefix
+    , emptyDoc
+    , showTableName <+> ":: [(" <> pretty n <> ", String)]"
+    , showTableName <+> "=" <+> list tableElems
+    ]
+  renderShowInstance prefixStringName showTableName conNameName e
+  renderReadInstance prefixStringName showTableName conNameName e
+
+-- >>> commonPrefix ["hello", "help"]
+-- "hel"
+--
+-- >>> commonPrefix []
+-- []
+--
+-- >>> commonPrefix ["foo", "foobar"]
+-- "foo"
+--
+-- >>> commonPrefix ["foo", "foobar", "beach"]
+-- ""
+commonPrefix :: Eq a => [[a]] -> [a]
+commonPrefix = \case
+  [] -> []
+  xs ->
+    let shortest = P.minimum (length <$> xs)
+        ts       = take shortest (transpose xs)
+        sames    = takeWhile (\(c : cs) -> all (== c) cs) ts
+    in  P.head <$> sames
+
+renderShowInstance
+  :: (HasErr r, HasRenderParams r, HasRenderElem r)
+  => Doc ()
+  -> Doc ()
+  -> Doc ()
+  -> Enum'
+  -> Sem r ()
+renderShowInstance prefixString showTableName conNameName Enum {..} = do
   RenderParams {..} <- input
   let n       = mkTyName eName
       conName = mkConName eName eName
-  valueCases <- forV eValues $ \EnumValue {..} -> do
-    let pat = mkPatternName evName
-    tellImport pat
-    tellImport 'showString
-    pure $ pretty pat <+> "-> showString" <+> viaShow (unName pat)
-  defaultCase <- do
-    tellImportWith n conName
-    tellImport 'showParen
-    tellImport 'showString
-    (prefix, shows) <- case eType of
-      AnEnum -> do
-        tellImport 'showsPrec
-        pure ("", "showsPrec 11")
-      ABitmask _ -> do
-        tellImport 'showHex
-        pure ("0x", "showHex")
-    pure $ pretty conName <+> "x -> showParen (p >= 11)" <+> parens
-      (   "showString"
-      <+> viaShow (unName conName <> " " <> prefix)
-      <+> "."
-      <+> shows
-      <+> "x"
-      )
-  let cases = toList valueCases <> [defaultCase]
-  tellDoc $ "instance Show" <+> pretty n <+> "where" <> line <> indent
-    2
-    ("showsPrec p = \\case" <> line <> indent 2 (vsep cases))
+  tellImportWith n conName
+  tellImport 'showString
+  tellImport 'showParen
+  (prefix, shows) <- case eType of
+    AnEnum -> do
+      tellImport 'showsPrec
+      pure ("" :: Text, "showsPrec 11" :: Text)
+    ABitmask _ -> do
+      tellImport 'showHex
+      pure ("0x", "showHex")
+  tellDoc [qqi|
+    instance Show {n} where
+      showsPrec p e = case lookup e {showTableName} of
+        Just s -> showString {prefixString} . showString s
+        Nothing ->
+          let {conName} x = e
+          in  showParen
+                (p >= 11)
+                (showString {conNameName} . showString " {prefix}" . {shows} x)
+  |]
 
 renderReadInstance
-  :: (HasErr r, HasRenderParams r, HasRenderElem r) => Enum' -> Sem r ()
-renderReadInstance Enum {..} = do
+  :: (HasErr r, HasRenderParams r, HasRenderElem r)
+  => Doc ()
+  -> Doc ()
+  -> Doc ()
+  -> Enum'
+  -> Sem r ()
+renderReadInstance prefixString showTableName conNameName Enum {..} = do
   RenderParams {..} <- input
   let n       = mkTyName eName
       conName = mkConName eName eName
-  matchTuples <- forV eValues $ \EnumValue {..} -> do
-    let pat = mkPatternName evName
-    tellImport pat
-    pure $ tupled [viaShow (unName pat), "pure" <+> pretty pat]
   tellImportWith ''Read 'readPrec
   tellImport 'R.parens
-  tellImport 'choose
-  tellImport '(+++)
+  tellImport 'skipSpaces
   tellImport 'expectP
   tellImportWith ''Lexeme 'Ident
+  tellImport 'choose
+  tellImport '(+++)
   tellImport 'step
   tellImport 'prec
-  tellDoc $ "instance Read" <+> pretty n <+> "where" <> line <> indent
-    2
-    ("readPrec = parens" <+> parens
-      (align
-        (vsep
-          [ "choose" <+> align
-            (brackets (hsep (punctuate (line <> ",") (toList matchTuples))))
-          , "+++"
-          , "prec 10" <+> parens
-            (doBlock
-              [ "expectP" <+> parens ("Ident" <+> viaShow (unName conName))
-              , "v <- step readPrec"
-              , "pure" <+> parens (pretty conName <+> "v")
-              ]
+  tellImport 'string
+  tellImport '(<$)
+  tellImport 'asum
+  tellQualImport 'Text.ParserCombinators.ReadPrec.lift
+  tellDoc [qqi|
+    instance Read {n} where
+      readPrec = parens
+        (   Text.ParserCombinators.ReadPrec.lift
+            (do
+              skipSpaces
+              _ <- string {prefixString}
+              asum ((\\(e, s) -> e <$ string s) <$> {showTableName})
             )
-          ]
+        +++ prec
+              10
+              (do
+                expectP (Ident {conNameName})
+                v <- step readPrec
+                pure ({conName} v)
+              )
         )
-      )
-    )
+  |]
