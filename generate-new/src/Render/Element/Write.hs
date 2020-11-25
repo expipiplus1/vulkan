@@ -280,8 +280,17 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
         let t = layoutDoc (d <> line <> line)
         if getAll (reCanFormat e)
           then liftIO (parsePrintModule brittanyConfig t) >>= \case
-            Left  _ -> error "Fail"
-            Right f -> pure f
+            Left  err -> error $ "Fail: Brittany failed to handle module:\n" <>
+                                    T.intercalate "\n" (fmap (T.pack . showBError) err)
+                                    <> "\n\n\n" <> t
+              where showBError = \case
+                      ErrorInput x -> "ErrorInput " <> x
+                      ErrorUnusedComment x -> "ErrorUnusedComent " <> x
+                      ErrorMacroConfig x y -> "ErrorMacroConfig " <> x <> " " <> y
+                      LayoutWarning x -> "LayoutWarning " <> x
+                      ErrorUnknownNode x _ -> "ErrorUnknownNode " <> x <> " <<>>"
+                      ErrorOutputCheck -> "ErrorOutputCheck"
+            Right f   -> pure f
           else pure t
     contentsTexts <- mapMaybeM layoutContent (V.toList es)
     let moduleText =

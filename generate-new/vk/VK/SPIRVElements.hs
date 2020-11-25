@@ -73,26 +73,29 @@ renderSPIRVThing
   -> Vector a
   -> Sem r ()
 renderSPIRVThing funName name reqs xs = do
+  tellLanguageExtension (LanguageExtension "TupleSections")
   let case' x = do
         let mergeReqs = Prelude.head -- TODO: this is probably wrong! discarding the
                                      -- other reqs
-        reqs' <- mergeReqs <$> traverse renderReq (V.toList (reqs x))
-        pure $ viaShow (name x) <+> "->" <+> list reqs'
-  cases <- (<> ["_ -> []"]) <$> traverse case' (V.toList xs)
+        (instReqs', devReqs') <- mergeReqs <$> traverse renderReq (V.toList (reqs x))
+        pure $ viaShow (name x) <+> "-> (,)" <+> list instReqs' <+> list devReqs'
+  cases <- (<> ["_ -> ([],[])"]) <$> traverse case' (V.toList xs)
   tellImport ''ByteString
+  tellImport (TyConName "Instance")
+  tellImport (TyConName "PhysicalDevice")
   tellImport (mkName "Vulkan.Requirements.Requirement")
   tellExport (ETerm (TermName funName))
   tellDoc $ vsep
-    [ pretty funName <+> ":: ByteString -> [Requirement]"
+    [ pretty funName <+> ":: ByteString -> ([Requirement Instance], [Requirement PhysicalDevice])"
     , pretty funName <+> "= \\case" <> line <> indent 2 (vsep cases)
     ]
 
 renderReq
   :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)
   => SPIRVRequirement
-  -> Sem r [Doc ()]
+  -> Sem r ([Doc ()],[Doc ()])
 renderReq = \case
-  SPIRVReqVersion   v    -> pure <$> versionReq v
+  SPIRVReqVersion   v    -> ( \(iReq,devReq) -> ([iReq],[devReq]) ) <$> versionReq v
 
   SPIRVReqExtension p    -> minVersionAndExtensionsReqs (V.singleton p)
 
@@ -105,8 +108,9 @@ renderReq = \case
     traverse_ tellImportWithAll (allTypeNames sTy)
     checkTDoc <- renderType (sTy ~> ConT ''Bool)
     sTyDoc    <- renderType sTy
-    otherReqs <- minVersionAndExtensionsReqs rs
-    let featureMemberName = mkMemberName s f
+    (otherInstReqs, otherDevReqs) <- minVersionAndExtensionsReqs rs
+    let
+      featureMemberName = mkMemberName s f
     let xs =
           [ ("featureName" , viaShow f)
           , ("checkFeature", pretty featureMemberName <+> "::" <+> checkTDoc)
@@ -118,7 +122,9 @@ renderReq = \case
               <+> sTyDoc
             )
           ]
-    pure $ "RequireFeature" <> braceAssignmentList xs : otherReqs
+    pure ( otherInstReqs
+         , "RequireDeviceFeature" <> braceAssignmentList xs : otherDevReqs
+         )
 
   SPIRVReqProperty p m v rs -> do
     RenderParams {..} <- input
@@ -130,7 +136,7 @@ renderReq = \case
     sTyDoc <- renderType sTy
     let propertyMemberName = mkMemberName p m
         propertyValueName  = mkPatternName v
-    otherReqs <- minVersionAndExtensionsReqs rs
+    (otherInstReqs, otherDevReqs) <- minVersionAndExtensionsReqs rs
     -- TODO, do this properly
     checker   <- if
       | v == "VK_TRUE"
@@ -155,12 +161,14 @@ renderReq = \case
           <+> pretty propertyMemberName
           <+> parens ("p ::" <+> sTyDoc)
     let xs = [("propertyName", viaShow p), ("checkProperty", checker)]
-    pure $ "RequireProperty" <> braceAssignmentList xs : otherReqs
+    pure ( otherInstReqs
+         , "RequireDeviceProperty" <> braceAssignmentList xs : otherDevReqs
+         )
 
 minVersionAndExtensionsReqs
   :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)
   => Vector Text
-  -> Sem r [Doc ()]
+  -> Sem r ([Doc ()],[Doc ()])
 minVersionAndExtensionsReqs rs = do
   SpecInfo {..} <- input
   let dependencies = nubOrd $ toList rs <> concatMap siExtensionDeps rs
@@ -177,22 +185,23 @@ minVersionAndExtensionsReqs rs = do
     [] -> pure Nothing
     xs -> Just <$> versionReq (maximum xs)
 
-  pure
-    $  maybeToList v
-    <> [ "RequireInstanceExtension" <> braceAssignmentList
-           [ ("instanceExtensionLayerName" , "Nothing")
-           , ("instanceExtensionName"      , e)
-           , ("instanceExtensionMinVersion", v)
-           ]
-       | (e, v) <- instanceExtensions
-       ]
-    <> [ "RequireDeviceExtension" <> braceAssignmentList
-           [ ("deviceExtensionLayerName" , "Nothing")
-           , ("deviceExtensionName"      , e)
-           , ("deviceExtensionMinVersion", v)
-           ]
-       | (e, v) <- deviceExtensions
-       ]
+  pure ( maybe id ((:) . fst) v
+          [ "RequireInstanceExtension" <> braceAssignmentList
+              [ ("instanceExtensionLayerName" , "Nothing")
+              , ("instanceExtensionName"      , e)
+              , ("instanceExtensionMinVersion", v)
+              ]
+          | (e, v) <- instanceExtensions
+          ]
+       , maybe id ((:) . snd) v
+          [ "RequireDeviceExtension" <> braceAssignmentList
+              [ ("deviceExtensionLayerName" , "Nothing")
+              , ("deviceExtensionName"      , e)
+              , ("deviceExtensionMinVersion", v)
+              ]
+          | (e, v) <- deviceExtensions
+          ]
+       )
 
 extensionNamePattern
   :: (HasRenderElem r, HasRenderParams r, HasErr r, HasSpecInfo r)
@@ -234,11 +243,14 @@ data RequireType
   -- ^ _EXTENSION_NAME and _SPEC_VERSION
 
 versionReq
-  :: (HasRenderParams r, HasRenderElem r, HasErr r) => Version -> Sem r (Doc ())
+  :: (HasRenderParams r, HasRenderElem r, HasErr r) => Version -> Sem r (Doc (), Doc())
 versionReq v = do
   tellImportWithAll (mkName "Vulkan.Requirements.Requirement")
   vDoc <- versionDoc v
-  pure $ "RequireVersion $" <+> vDoc
+  pure
+    ( "RequireInstanceVersion $" <+> vDoc
+    , "RequireDeviceVersion   $" <+> vDoc
+    )
 
 versionDoc
   :: (HasRenderParams r, HasRenderElem r, HasErr r) => Version -> Sem r (Doc ())
