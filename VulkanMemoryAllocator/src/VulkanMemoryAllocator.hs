@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "VulkanMemoryAllocator"
 module VulkanMemoryAllocator  ( createAllocator
                               , withAllocator
                               , destroyAllocator
