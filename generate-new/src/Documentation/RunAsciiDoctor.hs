@@ -43,51 +43,58 @@ asciidoctor
   -> IO (Either Text Text)
 asciidoctor extensions vkPathRelative manTxt = do
   vkPath <- makeAbsolute vkPathRelative
-  let asciidoctorPath = "asciidoctor"
-      -- This is mimicing the Makefile in Vulkan-Docs but generates docbook5
-      -- output.
-      extAttribs      = preceedAll "-a" (T.unpack <$> extensions)
-      -- TODO: Version information here
-      attribOpts =
-        [ "-a"
-        , "chapters=" <> vkPath <> "/chapters"
-        , "-a"
-        , "images=" <> vkPath <> "/images"
-        , "-a"
-        , "generated=" <> vkPath <> "/gen"
-        , "-a"
-        , "config=" <> vkPath <> "/config"
-        , "-a"
-        , "refprefix="
-        ]
-      noteOpts = []
-      adocExts =
+  let
+    asciidoctorPath = "asciidoctor"
+    -- This is mimicing the Makefile in Vulkan-Docs but generates docbook5
+    -- output.
+    extAttribs      = preceedAll "-a" (T.unpack <$> extensions)
+    -- TODO: Version information here
+    -- Base path to SPIR-V extensions on the web.
+    spirvPath
+      = "https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions"
+    attribOpts =
+      [ "-a"
+      , "chapters=" <> vkPath <> "/chapters"
+      , "-a"
+      , "images=" <> vkPath <> "/images"
+      , "-a"
+      , "generated=" <> vkPath <> "/gen"
+      , "-a"
+      , "config=" <> vkPath <> "/config"
+      , "-a"
+      , "refprefix="
+      , "-a"
+      , "spirv=" <> spirvPath
+      ]
+
+    noteOpts = []
+    adocExts =
+      [ "-r"
+      , vkPath </> "config/spec-macros.rb"
+      , "-r"
+      , vkPath </> "config/tilde_open_block.rb"
+      ]
+    adocOpts           = attribOpts ++ noteOpts ++ adocExts
+    mathAsInlineImages = False
+    mathemeticalOpts   = if mathAsInlineImages
+      then
         [ "-r"
-        , vkPath </> "config/spec-macros.rb"
+        , "asciidoctor-mathematical"
         , "-r"
-        , vkPath </> "config/tilde_open_block.rb"
+        , vkPath </> "config/asciidoctor-mathematical-ext.rb"
+        , "-a"
+        , "mathematical-format=png"
+        , "-a"
+        , "mathematical-ppi=100"
         ]
-      adocOpts           = attribOpts ++ noteOpts ++ adocExts
-      mathAsInlineImages = False
-      mathemeticalOpts   = if mathAsInlineImages
-        then
-          [ "-r"
-          , "asciidoctor-mathematical"
-          , "-r"
-          , vkPath </> "config/asciidoctor-mathematical-ext.rb"
-          , "-a"
-          , "mathematical-format=png"
-          , "-a"
-          , "mathematical-ppi=100"
-          ]
-        else []
-      args =
-        attribOpts
-          ++ extAttribs
-          ++ adocOpts
-          ++ mathemeticalOpts
-          ++ ["--backend", "docbook5", manTxt, "--out-file", "-"]
-      p = setStdin closed $ proc asciidoctorPath args
+      else []
+    args =
+      attribOpts
+        ++ extAttribs
+        ++ adocOpts
+        ++ mathemeticalOpts
+        ++ ["--backend", "docbook5", manTxt, "--out-file", "-"]
+    p = setStdin closed $ proc asciidoctorPath args
   (exitCode, out, err) <- readProcess p
   case exitCode of
     ExitFailure e ->
