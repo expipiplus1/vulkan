@@ -106,7 +106,7 @@ renderReq = \case
     checkTDoc <- renderType (sTy ~> ConT ''Bool)
     sTyDoc    <- renderType sTy
     otherReqs <- minVersionAndExtensionsReqs rs
-    let featureMemberName = mkMemberName f
+    let featureMemberName = mkMemberName s f
     let xs =
           [ ("featureName" , viaShow f)
           , ("checkFeature", pretty featureMemberName <+> "::" <+> checkTDoc)
@@ -128,7 +128,7 @@ renderReq = \case
     sTy <- cToHsType DoNotPreserve (TypeName p)
     traverse_ tellImportWithAll (allTypeNames sTy)
     sTyDoc <- renderType sTy
-    let propertyMemberName = mkMemberName m
+    let propertyMemberName = mkMemberName p m
         propertyValueName  = mkPatternName v
     otherReqs <- minVersionAndExtensionsReqs rs
     -- TODO, do this properly
