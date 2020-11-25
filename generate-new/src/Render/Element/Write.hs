@@ -44,6 +44,7 @@ import           Render.SpecInfo
 import           Render.Utils
 import           Spec.Types
 import           Write.Segment
+import qualified Prelude
 
 ----------------------------------------------------------------
 -- Rendering
@@ -247,32 +248,36 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
                 . fmap reExtensions
                 $ es
         in  [ "{-# language" <+> pretty e <+> "#-}" | e <- allExts ]
+      moduleChapter (ModName m) =
+        let lastComponent = Prelude.last (T.splitOn "." m)
+        in  Chapter lastComponent
+      moduleDocumentation = getDocumentation (moduleChapter modName)
       contents =
         vsep
-          $  languageExtensions
-          <> ( (   "module"
-               <+> pretty modName
-               <>  indent
-                     2
-                     (  parenList
-                     $  ( fmap exportDoc
-                        . nubOrdOnV exportName
-                        $ (exports <> reexports)
-                        )
-                     <> (   (\(ModName m) -> renderExport Module m mempty)
-                        <$> allReexportedModules
-                        )
+          $ vsep languageExtensions
+          : moduleDocumentation
+          : (   "module"
+            <+> pretty modName
+            <>  indent
+                  2
+                  (  parenList
+                  $  ( fmap exportDoc
+                     . nubOrdOnV exportName
+                     $ (exports <> reexports)
                      )
-               <+> "where"
-               )
-             : openImports
-             : imports
-             : localImports
-             : V.toList
-                 (   (<> (line <> line))
-                 <$> V.mapMaybe (($ getDocumentation) . reDoc) es
-                 )
-             )
+                  <> (   (\(ModName m) -> renderExport Module m mempty)
+                     <$> allReexportedModules
+                     )
+                  )
+            <+> "where"
+            )
+          : openImports
+          : imports
+          : localImports
+          : V.toList
+              (   (<> (line <> line))
+              <$> V.mapMaybe (($ getDocumentation) . reDoc) es
+              )
 
     liftIO $ createDirectoryIfMissing True (takeDirectory f)
     liftIO $ withFile f WriteMode $ \h -> T.hPutStr h $ renderStrict

@@ -57,6 +57,8 @@ asciidoctor extensions vkPathRelative manTxt = do
         , "generated=" <> vkPath <> "/gen"
         , "-a"
         , "config=" <> vkPath <> "/config"
+        , "-a"
+        , "refprefix="
         ]
       noteOpts = []
       adocExts =

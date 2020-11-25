@@ -1,11 +1,8 @@
-{-# LANGUAGE RecursiveDo         #-}
-
 module Documentation
   ( Documentation(..)
   , Documentee(..)
   , docBookToDocumentation
   , splitDocumentation
-  , guessDocumentee
   , iterateSuffixesM
   , iterateSuffixes
   , pattern Section
@@ -14,9 +11,11 @@ module Documentation
   ) where
 
 import           Control.Monad
+import           Data.Char                      ( isLower )
 import           Data.Default
 import           Data.Foldable
 import           Data.Maybe
+import qualified Data.Text                     as T
 import           Documentation.RunAsciiDoctor
                                          hiding ( main )
 import           Relude                  hiding ( elem
@@ -25,6 +24,7 @@ import           Relude                  hiding ( elem
 import           Say
 import           Spec.Name
 import           System.Environment
+import           System.FilePath                ( takeBaseName )
 import           Text.Pandoc
 import           Text.Show.Pretty
 
@@ -39,45 +39,42 @@ data Documentation = Documentation
 data Documentee
   = TopLevel CName
   | Nested CName CName
+  | Chapter Text
   deriving (Show, Eq, Ord)
 
 docBookToDocumentation
-  :: (Documentee -> Bool)
-  -- ^ Is a valid documentee name
-  -> Text
+  :: Text
   -- ^ The docbook string
+  -> Text
+  -- ^ The documentee name
   -> Either Text [Documentation]
-docBookToDocumentation isValid db = mdo
+docBookToDocumentation db name = do
   let readerOptions = def
+
   pandoc <- first show $ runPure (readDocBook readerOptions db)
-  (removed, unmergedSubDocs) <- splitDocumentation name pandoc
-  name <- guessDocumentee isValid removed
 
-  let mergedSubDocs =
-        let sorted = sortOn dDocumentee unmergedSubDocs
-        in  foldr
-              (curry
-                (\case
-                  (x, (y : ys)) | dDocumentee x == dDocumentee y ->
-                    Documentation (dDocumentee x)
-                                  (dDocumentation x <> dDocumentation y)
-                      : ys
-                  (x, ys) -> x : ys
+  if "VK_" `T.isPrefixOf` name && T.any isLower name
+    then pure [Documentation (Chapter name) pandoc]
+    else do
+      (removed, unmergedSubDocs) <- splitDocumentation (CName name) pandoc
+
+      let mergedSubDocs =
+            let sorted = sortOn dDocumentee unmergedSubDocs
+            in
+              foldr
+                (curry
+                  (\case
+                    (x, y : ys) | dDocumentee x == dDocumentee y ->
+                      Documentation (dDocumentee x)
+                                    (dDocumentation x <> dDocumentation y)
+                        : ys
+                    (x, ys) -> x : ys
+                  )
                 )
-              )
-              []
-              sorted
-  pure $ Documentation (TopLevel name) removed : mergedSubDocs
+                []
+                sorted
+      pure $ Documentation (TopLevel (CName name)) removed : mergedSubDocs
 
-guessDocumentee :: (Documentee -> Bool) -> Pandoc -> Either Text CName
-guessDocumentee isValid (Pandoc _ bs) = do
-  firstWord <- case bs of
-    Para (Str n : _) : _ -> pure n
-    _                    -> Left "Unable to find first word in documentation"
-  if isValid (TopLevel (CName firstWord))
-    then pure (CName firstWord)
-    -- TODO: Fix error message here.
-    else Left "First word of documentation doesn't begin with \"vk\" or \"pfn\""
 
 -- | If the description is a bullet list of "enames" then remove those from the
 -- original documentation and return them separately.
@@ -172,10 +169,11 @@ main :: IO ()
 main = do
   [vulkanDocsDir, manPage] <- getArgs
   manTxtToDocbook [] vulkanDocsDir manPage >>= \case
-    Left  e  -> sayErr e
-    Right d' -> case docBookToDocumentation (const True) d' of
-      Left  e  -> sayErr e
-      Right ds -> for_ ds pPrint
+    Left e -> sayErr e
+    Right d' ->
+      case docBookToDocumentation d' (T.pack (takeBaseName manPage)) of
+        Left  e  -> sayErr e
+        Right ds -> for_ ds pPrint
 
 ----------------------------------------------------------------
 -- Utils
