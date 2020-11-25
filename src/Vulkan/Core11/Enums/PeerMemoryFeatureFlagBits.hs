@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PeerMemoryFeatureFlagBits"
-module Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits  ( PeerMemoryFeatureFlagBits( PEER_MEMORY_FEATURE_COPY_SRC_BIT
+module Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits  ( PeerMemoryFeatureFlags
+                                                      , PeerMemoryFeatureFlagBits( PEER_MEMORY_FEATURE_COPY_SRC_BIT
                                                                                  , PEER_MEMORY_FEATURE_COPY_DST_BIT
                                                                                  , PEER_MEMORY_FEATURE_GENERIC_SRC_BIT
                                                                                  , PEER_MEMORY_FEATURE_GENERIC_DST_BIT
                                                                                  , ..
                                                                                  )
-                                                      , PeerMemoryFeatureFlags
                                                       ) where
 
 import GHC.Read (choose)
@@ -25,6 +25,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
+
 -- | VkPeerMemoryFeatureFlagBits - Bitmask specifying supported peer memory
 -- features
 --
@@ -66,8 +68,6 @@ pattern PEER_MEMORY_FEATURE_GENERIC_SRC_BIT = PeerMemoryFeatureFlagBits 0x000000
 -- written as any memory access type. Shader atomics are considered to be
 -- writes.
 pattern PEER_MEMORY_FEATURE_GENERIC_DST_BIT = PeerMemoryFeatureFlagBits 0x00000008
-
-type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
 
 instance Show PeerMemoryFeatureFlagBits where
   showsPrec p = \case

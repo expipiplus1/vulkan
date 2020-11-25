@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DescriptorBindingFlagBits"
-module Vulkan.Core12.Enums.DescriptorBindingFlagBits  ( DescriptorBindingFlagBits
-                                                      , DescriptorBindingFlags
+module Vulkan.Core12.Enums.DescriptorBindingFlagBits  ( DescriptorBindingFlags
+                                                      , DescriptorBindingFlagBits
                                                       ) where
 
 
 
-data DescriptorBindingFlagBits
-
 type DescriptorBindingFlags = DescriptorBindingFlagBits
+
+data DescriptorBindingFlagBits
 

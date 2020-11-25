@@ -1082,8 +1082,8 @@ module Vulkan.Extensions.VK_KHR_swapchain  ( AcquireNextImageInfoKHR
                                            , ImageSwapchainCreateInfoKHR
                                            , PresentInfoKHR
                                            , SwapchainCreateInfoKHR
-                                           , DeviceGroupPresentModeFlagBitsKHR
                                            , DeviceGroupPresentModeFlagsKHR
+                                           , DeviceGroupPresentModeFlagBitsKHR
                                            ) where
 
 import Data.Kind (Type)
@@ -1159,7 +1159,7 @@ instance Show (Chain es) => Show (SwapchainCreateInfoKHR es)
 instance (Extendss SwapchainCreateInfoKHR es, PeekChain es) => FromCStruct (SwapchainCreateInfoKHR es)
 
 
-data DeviceGroupPresentModeFlagBitsKHR
-
 type DeviceGroupPresentModeFlagsKHR = DeviceGroupPresentModeFlagBitsKHR
+
+data DeviceGroupPresentModeFlagBitsKHR
 

@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "AttachmentDescriptionFlagBits"
-module Vulkan.Core10.Enums.AttachmentDescriptionFlagBits  ( AttachmentDescriptionFlagBits( ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
+module Vulkan.Core10.Enums.AttachmentDescriptionFlagBits  ( AttachmentDescriptionFlags
+                                                          , AttachmentDescriptionFlagBits( ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
                                                                                          , ..
                                                                                          )
-                                                          , AttachmentDescriptionFlags
                                                           ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type AttachmentDescriptionFlags = AttachmentDescriptionFlagBits
+
 -- | VkAttachmentDescriptionFlagBits - Bitmask specifying additional
 -- properties of an attachment
 --
@@ -34,8 +36,6 @@ newtype AttachmentDescriptionFlagBits = AttachmentDescriptionFlagBits Flags
 -- | 'ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT' specifies that the attachment
 -- aliases the same device memory as other attachments.
 pattern ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = AttachmentDescriptionFlagBits 0x00000001
-
-type AttachmentDescriptionFlags = AttachmentDescriptionFlagBits
 
 instance Show AttachmentDescriptionFlagBits where
   showsPrec p = \case

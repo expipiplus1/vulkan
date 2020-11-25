@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "CommandBufferResetFlagBits"
-module Vulkan.Core10.Enums.CommandBufferResetFlagBits  ( CommandBufferResetFlagBits( COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
+module Vulkan.Core10.Enums.CommandBufferResetFlagBits  ( CommandBufferResetFlags
+                                                       , CommandBufferResetFlagBits( COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
                                                                                    , ..
                                                                                    )
-                                                       , CommandBufferResetFlags
                                                        ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type CommandBufferResetFlags = CommandBufferResetFlagBits
+
 -- | VkCommandBufferResetFlagBits - Bitmask controlling behavior of a command
 -- buffer reset
 --
@@ -38,8 +40,6 @@ newtype CommandBufferResetFlagBits = CommandBufferResetFlagBits Flags
 -- recording commands. @commandBuffer@ is moved to the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
 pattern COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = CommandBufferResetFlagBits 0x00000001
-
-type CommandBufferResetFlags = CommandBufferResetFlagBits
 
 instance Show CommandBufferResetFlagBits where
   showsPrec p = \case

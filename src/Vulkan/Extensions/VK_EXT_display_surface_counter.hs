@@ -102,10 +102,10 @@ module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurf
                                                          , pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT
                                                          , pattern SURFACE_COUNTER_VBLANK_EXT
                                                          , SurfaceCapabilities2EXT(..)
+                                                         , SurfaceCounterFlagsEXT
                                                          , SurfaceCounterFlagBitsEXT( SURFACE_COUNTER_VBLANK_BIT_EXT
                                                                                     , ..
                                                                                     )
-                                                         , SurfaceCounterFlagsEXT
                                                          , EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION
                                                          , pattern EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION
                                                          , EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME
@@ -392,6 +392,8 @@ instance Zero SurfaceCapabilities2EXT where
            zero
 
 
+type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
+
 -- | VkSurfaceCounterFlagBitsEXT - Surface-relative counter types
 --
 -- = See Also
@@ -405,8 +407,6 @@ newtype SurfaceCounterFlagBitsEXT = SurfaceCounterFlagBitsEXT Flags
 -- every time a vertical blanking period occurs on the display associated
 -- with the surface.
 pattern SURFACE_COUNTER_VBLANK_BIT_EXT = SurfaceCounterFlagBitsEXT 0x00000001
-
-type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
 
 instance Show SurfaceCounterFlagBitsEXT where
   showsPrec p = \case

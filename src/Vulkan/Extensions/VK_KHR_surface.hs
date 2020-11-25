@@ -405,13 +405,14 @@ module Vulkan.Extensions.VK_KHR_surface  ( destroySurfaceKHR
                                                         , COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT
                                                         , ..
                                                         )
+                                         , CompositeAlphaFlagsKHR
                                          , CompositeAlphaFlagBitsKHR( COMPOSITE_ALPHA_OPAQUE_BIT_KHR
                                                                     , COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR
                                                                     , COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR
                                                                     , COMPOSITE_ALPHA_INHERIT_BIT_KHR
                                                                     , ..
                                                                     )
-                                         , CompositeAlphaFlagsKHR
+                                         , SurfaceTransformFlagsKHR
                                          , SurfaceTransformFlagBitsKHR( SURFACE_TRANSFORM_IDENTITY_BIT_KHR
                                                                       , SURFACE_TRANSFORM_ROTATE_90_BIT_KHR
                                                                       , SURFACE_TRANSFORM_ROTATE_180_BIT_KHR
@@ -423,7 +424,6 @@ module Vulkan.Extensions.VK_KHR_surface  ( destroySurfaceKHR
                                                                       , SURFACE_TRANSFORM_INHERIT_BIT_KHR
                                                                       , ..
                                                                       )
-                                         , SurfaceTransformFlagsKHR
                                          , KHR_SURFACE_SPEC_VERSION
                                          , pattern KHR_SURFACE_SPEC_VERSION
                                          , KHR_SURFACE_EXTENSION_NAME
@@ -1508,6 +1508,8 @@ instance Read ColorSpaceKHR where
                        pure (ColorSpaceKHR v)))
 
 
+type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
+
 -- | VkCompositeAlphaFlagBitsKHR - alpha compositing modes supported on a
 -- device
 --
@@ -1546,8 +1548,6 @@ pattern COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00
 -- commands, then a platform-specific default will be used.
 pattern COMPOSITE_ALPHA_INHERIT_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000008
 
-type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
-
 instance Show CompositeAlphaFlagBitsKHR where
   showsPrec p = \case
     COMPOSITE_ALPHA_OPAQUE_BIT_KHR -> showString "COMPOSITE_ALPHA_OPAQUE_BIT_KHR"
@@ -1567,6 +1567,8 @@ instance Read CompositeAlphaFlagBitsKHR where
                        v <- step readPrec
                        pure (CompositeAlphaFlagBitsKHR v)))
 
+
+type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
 
 -- | VkSurfaceTransformFlagBitsKHR - presentation transforms supported on a
 -- device
@@ -1614,8 +1616,6 @@ pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = SurfaceTransfor
 -- transform is not specified, and is instead determined by
 -- platform-specific considerations and mechanisms outside Vulkan.
 pattern SURFACE_TRANSFORM_INHERIT_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000100
-
-type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
 
 instance Show SurfaceTransformFlagBitsKHR where
   showsPrec p = \case

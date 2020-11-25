@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PipelineCacheCreateFlagBits"
-module Vulkan.Core10.Enums.PipelineCacheCreateFlagBits  ( PipelineCacheCreateFlagBits( PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT
+module Vulkan.Core10.Enums.PipelineCacheCreateFlagBits  ( PipelineCacheCreateFlags
+                                                        , PipelineCacheCreateFlagBits( PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT
                                                                                      , ..
                                                                                      )
-                                                        , PipelineCacheCreateFlags
                                                         ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type PipelineCacheCreateFlags = PipelineCacheCreateFlagBits
+
 -- | VkPipelineCacheCreateFlagBits - Bitmask specifying the behavior of the
 -- pipeline cache
 --
@@ -39,8 +41,6 @@ newtype PipelineCacheCreateFlagBits = PipelineCacheCreateFlagBits Flags
 -- needed to support simultaneous modification from multiple threads where
 -- allowed.
 pattern PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT = PipelineCacheCreateFlagBits 0x00000001
-
-type PipelineCacheCreateFlags = PipelineCacheCreateFlagBits
 
 instance Show PipelineCacheCreateFlagBits where
   showsPrec p = \case

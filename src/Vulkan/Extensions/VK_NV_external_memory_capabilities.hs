@@ -138,19 +138,19 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_external_memory_capabilities  ( getPhysicalDeviceExternalImageFormatPropertiesNV
                                                              , ExternalImageFormatPropertiesNV(..)
+                                                             , ExternalMemoryHandleTypeFlagsNV
                                                              , ExternalMemoryHandleTypeFlagBitsNV( EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV
                                                                                                  , EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV
                                                                                                  , EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV
                                                                                                  , EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV
                                                                                                  , ..
                                                                                                  )
-                                                             , ExternalMemoryHandleTypeFlagsNV
+                                                             , ExternalMemoryFeatureFlagsNV
                                                              , ExternalMemoryFeatureFlagBitsNV( EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV
                                                                                               , EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV
                                                                                               , EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV
                                                                                               , ..
                                                                                               )
-                                                             , ExternalMemoryFeatureFlagsNV
                                                              , NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION
                                                              , pattern NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION
                                                              , NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
@@ -408,6 +408,8 @@ instance Zero ExternalImageFormatPropertiesNV where
            zero
 
 
+type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
+
 -- | VkExternalMemoryHandleTypeFlagBitsNV - Bitmask specifying external
 -- memory handle types
 --
@@ -434,8 +436,6 @@ pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV = ExternalMemoryHandleTyp
 -- to memory returned by @IDXGIResource::GetSharedHandle()@.
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV = ExternalMemoryHandleTypeFlagBitsNV 0x00000008
 
-type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
-
 instance Show ExternalMemoryHandleTypeFlagBitsNV where
   showsPrec p = \case
     EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV -> showString "EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV"
@@ -455,6 +455,8 @@ instance Read ExternalMemoryHandleTypeFlagBitsNV where
                        v <- step readPrec
                        pure (ExternalMemoryHandleTypeFlagBitsNV v)))
 
+
+type ExternalMemoryFeatureFlagsNV = ExternalMemoryFeatureFlagBitsNV
 
 -- | VkExternalMemoryFeatureFlagBitsNV - Bitmask specifying external memory
 -- features
@@ -476,8 +478,6 @@ pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV = ExternalMemoryFeatureFlagBit
 -- | 'EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV' specifies that the
 -- implementation supports importing handles of the specified type.
 pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV = ExternalMemoryFeatureFlagBitsNV 0x00000004
-
-type ExternalMemoryFeatureFlagsNV = ExternalMemoryFeatureFlagBitsNV
 
 instance Show ExternalMemoryFeatureFlagBitsNV where
   showsPrec p = \case

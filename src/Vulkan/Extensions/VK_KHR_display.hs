@@ -528,13 +528,13 @@ module Vulkan.Extensions.VK_KHR_display  ( getPhysicalDeviceDisplayPropertiesKHR
                                          , DisplaySurfaceCreateInfoKHR(..)
                                          , DisplayModeCreateFlagsKHR(..)
                                          , DisplaySurfaceCreateFlagsKHR(..)
+                                         , DisplayPlaneAlphaFlagsKHR
                                          , DisplayPlaneAlphaFlagBitsKHR( DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR
                                                                        , DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR
                                                                        , DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR
                                                                        , DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR
                                                                        , ..
                                                                        )
-                                         , DisplayPlaneAlphaFlagsKHR
                                          , KHR_DISPLAY_SPEC_VERSION
                                          , pattern KHR_DISPLAY_SPEC_VERSION
                                          , KHR_DISPLAY_EXTENSION_NAME
@@ -1924,6 +1924,8 @@ instance Read DisplaySurfaceCreateFlagsKHR where
                        pure (DisplaySurfaceCreateFlagsKHR v)))
 
 
+type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
+
 -- | VkDisplayPlaneAlphaFlagBitsKHR - Alpha blending type
 --
 -- = See Also
@@ -1950,8 +1952,6 @@ pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x0
 -- are assumed to be premultiplied into the source image’s other color
 -- channels.
 pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000008
-
-type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
 
 instance Show DisplayPlaneAlphaFlagBitsKHR where
   showsPrec p = \case

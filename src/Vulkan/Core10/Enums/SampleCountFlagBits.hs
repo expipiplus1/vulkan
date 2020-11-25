@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SampleCountFlagBits"
-module Vulkan.Core10.Enums.SampleCountFlagBits  ( SampleCountFlagBits( SAMPLE_COUNT_1_BIT
+module Vulkan.Core10.Enums.SampleCountFlagBits  ( SampleCountFlags
+                                                , SampleCountFlagBits( SAMPLE_COUNT_1_BIT
                                                                      , SAMPLE_COUNT_2_BIT
                                                                      , SAMPLE_COUNT_4_BIT
                                                                      , SAMPLE_COUNT_8_BIT
@@ -9,7 +10,6 @@ module Vulkan.Core10.Enums.SampleCountFlagBits  ( SampleCountFlagBits( SAMPLE_CO
                                                                      , SAMPLE_COUNT_64_BIT
                                                                      , ..
                                                                      )
-                                                , SampleCountFlags
                                                 ) where
 
 import GHC.Read (choose)
@@ -28,6 +28,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type SampleCountFlags = SampleCountFlagBits
+
 -- | VkSampleCountFlagBits - Bitmask specifying sample counts supported for
 -- an image used for storage operations
 --
@@ -62,8 +64,6 @@ pattern SAMPLE_COUNT_16_BIT = SampleCountFlagBits 0x00000010
 pattern SAMPLE_COUNT_32_BIT = SampleCountFlagBits 0x00000020
 -- | 'SAMPLE_COUNT_64_BIT' specifies an image with 64 samples per pixel.
 pattern SAMPLE_COUNT_64_BIT = SampleCountFlagBits 0x00000040
-
-type SampleCountFlags = SampleCountFlagBits
 
 instance Show SampleCountFlagBits where
   showsPrec p = \case

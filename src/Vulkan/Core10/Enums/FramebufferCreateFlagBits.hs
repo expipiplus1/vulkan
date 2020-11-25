@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "FramebufferCreateFlagBits"
-module Vulkan.Core10.Enums.FramebufferCreateFlagBits  ( FramebufferCreateFlagBits( FRAMEBUFFER_CREATE_IMAGELESS_BIT
+module Vulkan.Core10.Enums.FramebufferCreateFlagBits  ( FramebufferCreateFlags
+                                                      , FramebufferCreateFlagBits( FRAMEBUFFER_CREATE_IMAGELESS_BIT
                                                                                  , ..
                                                                                  )
-                                                      , FramebufferCreateFlags
                                                       ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type FramebufferCreateFlags = FramebufferCreateFlagBits
+
 -- | VkFramebufferCreateFlagBits - Bitmask specifying framebuffer properties
 --
 -- = See Also
@@ -36,8 +38,6 @@ newtype FramebufferCreateFlagBits = FramebufferCreateFlagBits Flags
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentImageInfo'
 -- structure.
 pattern FRAMEBUFFER_CREATE_IMAGELESS_BIT = FramebufferCreateFlagBits 0x00000001
-
-type FramebufferCreateFlags = FramebufferCreateFlagBits
 
 instance Show FramebufferCreateFlagBits where
   showsPrec p = \case

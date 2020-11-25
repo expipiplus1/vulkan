@@ -1,13 +1,13 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "BufferCreateFlagBits"
-module Vulkan.Core10.Enums.BufferCreateFlagBits  ( BufferCreateFlagBits( BUFFER_CREATE_SPARSE_BINDING_BIT
+module Vulkan.Core10.Enums.BufferCreateFlagBits  ( BufferCreateFlags
+                                                 , BufferCreateFlagBits( BUFFER_CREATE_SPARSE_BINDING_BIT
                                                                        , BUFFER_CREATE_SPARSE_RESIDENCY_BIT
                                                                        , BUFFER_CREATE_SPARSE_ALIASED_BIT
                                                                        , BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT
                                                                        , BUFFER_CREATE_PROTECTED_BIT
                                                                        , ..
                                                                        )
-                                                 , BufferCreateFlags
                                                  ) where
 
 import GHC.Read (choose)
@@ -26,6 +26,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type BufferCreateFlags = BufferCreateFlagBits
+
 -- | VkBufferCreateFlagBits - Bitmask specifying additional parameters of a
 -- buffer
 --
@@ -66,8 +68,6 @@ pattern BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = BufferCreateFlagBits 0
 -- | 'BUFFER_CREATE_PROTECTED_BIT' specifies that the buffer is a protected
 -- buffer.
 pattern BUFFER_CREATE_PROTECTED_BIT = BufferCreateFlagBits 0x00000008
-
-type BufferCreateFlags = BufferCreateFlagBits
 
 instance Show BufferCreateFlagBits where
   showsPrec p = \case

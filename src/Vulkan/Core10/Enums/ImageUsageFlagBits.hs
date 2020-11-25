@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ImageUsageFlagBits"
-module Vulkan.Core10.Enums.ImageUsageFlagBits  ( ImageUsageFlagBits( IMAGE_USAGE_TRANSFER_SRC_BIT
+module Vulkan.Core10.Enums.ImageUsageFlagBits  ( ImageUsageFlags
+                                               , ImageUsageFlagBits( IMAGE_USAGE_TRANSFER_SRC_BIT
                                                                    , IMAGE_USAGE_TRANSFER_DST_BIT
                                                                    , IMAGE_USAGE_SAMPLED_BIT
                                                                    , IMAGE_USAGE_STORAGE_BIT
@@ -12,7 +13,6 @@ module Vulkan.Core10.Enums.ImageUsageFlagBits  ( ImageUsageFlagBits( IMAGE_USAGE
                                                                    , IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV
                                                                    , ..
                                                                    )
-                                               , ImageUsageFlags
                                                ) where
 
 import GHC.Read (choose)
@@ -31,6 +31,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ImageUsageFlags = ImageUsageFlagBits
+
 -- | VkImageUsageFlagBits - Bitmask specifying intended usage of an image
 --
 -- = See Also
@@ -89,8 +91,6 @@ pattern IMAGE_USAGE_INPUT_ATTACHMENT_BIT = ImageUsageFlagBits 0x00000080
 pattern IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT = ImageUsageFlagBits 0x00000200
 -- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV"
 pattern IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV = ImageUsageFlagBits 0x00000100
-
-type ImageUsageFlags = ImageUsageFlagBits
 
 instance Show ImageUsageFlagBits where
   showsPrec p = \case

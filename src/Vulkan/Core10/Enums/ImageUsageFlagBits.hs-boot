@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ImageUsageFlagBits"
-module Vulkan.Core10.Enums.ImageUsageFlagBits  ( ImageUsageFlagBits
-                                               , ImageUsageFlags
+module Vulkan.Core10.Enums.ImageUsageFlagBits  ( ImageUsageFlags
+                                               , ImageUsageFlagBits
                                                ) where
 
 
 
-data ImageUsageFlagBits
-
 type ImageUsageFlags = ImageUsageFlagBits
+
+data ImageUsageFlagBits
 

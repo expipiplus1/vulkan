@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "BufferUsageFlagBits"
-module Vulkan.Core10.Enums.BufferUsageFlagBits  ( BufferUsageFlagBits( BUFFER_USAGE_TRANSFER_SRC_BIT
+module Vulkan.Core10.Enums.BufferUsageFlagBits  ( BufferUsageFlags
+                                                , BufferUsageFlagBits( BUFFER_USAGE_TRANSFER_SRC_BIT
                                                                      , BUFFER_USAGE_TRANSFER_DST_BIT
                                                                      , BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT
                                                                      , BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT
@@ -18,7 +19,6 @@ module Vulkan.Core10.Enums.BufferUsageFlagBits  ( BufferUsageFlagBits( BUFFER_US
                                                                      , BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
                                                                      , ..
                                                                      )
-                                                , BufferUsageFlags
                                                 ) where
 
 import GHC.Read (choose)
@@ -37,6 +37,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type BufferUsageFlags = BufferUsageFlagBits
+
 -- | VkBufferUsageFlagBits - Bitmask specifying allowed usage of a buffer
 --
 -- = See Also
@@ -129,8 +131,6 @@ pattern BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT = BufferUsageFlagBits 0x0
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.getBufferDeviceAddress'
 -- and use that address to access the buffer’s memory from a shader.
 pattern BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT = BufferUsageFlagBits 0x00020000
-
-type BufferUsageFlags = BufferUsageFlagBits
 
 instance Show BufferUsageFlagBits where
   showsPrec p = \case

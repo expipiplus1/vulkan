@@ -1171,18 +1171,19 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         , DeviceOrHostAddressKHR(..)
                                                         , DeviceOrHostAddressConstKHR(..)
                                                         , AccelerationStructureGeometryDataKHR(..)
+                                                        , GeometryInstanceFlagsKHR
                                                         , GeometryInstanceFlagBitsKHR( GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR
                                                                                      , ..
                                                                                      )
-                                                        , GeometryInstanceFlagsKHR
+                                                        , GeometryFlagsKHR
                                                         , GeometryFlagBitsKHR( GEOMETRY_OPAQUE_BIT_KHR
                                                                              , GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR
                                                                              , ..
                                                                              )
-                                                        , GeometryFlagsKHR
+                                                        , BuildAccelerationStructureFlagsKHR
                                                         , BuildAccelerationStructureFlagBitsKHR( BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR
                                                                                                , BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR
                                                                                                , BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR
@@ -1190,11 +1191,10 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                                                                , BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR
                                                                                                , ..
                                                                                                )
-                                                        , BuildAccelerationStructureFlagsKHR
+                                                        , AccelerationStructureCreateFlagsKHR
                                                         , AccelerationStructureCreateFlagBitsKHR( ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR
                                                                                                 , ..
                                                                                                 )
-                                                        , AccelerationStructureCreateFlagsKHR
                                                         , CopyAccelerationStructureModeKHR( COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR
                                                                                           , COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR
                                                                                           , COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR
@@ -6584,6 +6584,8 @@ instance Zero AccelerationStructureGeometryDataKHR where
   zero = Triangles zero
 
 
+type GeometryInstanceFlagsKHR = GeometryInstanceFlagBitsKHR
+
 -- | VkGeometryInstanceFlagBitsKHR - Instance flag bits
 --
 -- = Description
@@ -6618,8 +6620,6 @@ pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x0
 -- SPIR-V @OpaqueKHR@ ray flag.
 pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000008
 
-type GeometryInstanceFlagsKHR = GeometryInstanceFlagBitsKHR
-
 instance Show GeometryInstanceFlagBitsKHR where
   showsPrec p = \case
     GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR -> showString "GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR"
@@ -6640,6 +6640,8 @@ instance Read GeometryInstanceFlagBitsKHR where
                        pure (GeometryInstanceFlagBitsKHR v)))
 
 
+type GeometryFlagsKHR = GeometryFlagBitsKHR
+
 -- | VkGeometryFlagBitsKHR - Bitmask specifying additional parameters for a
 -- geometry
 --
@@ -6658,8 +6660,6 @@ pattern GEOMETRY_OPAQUE_BIT_KHR = GeometryFlagBitsKHR 0x00000001
 -- /may/ invoke the any-hit shader more than once for this geometry.
 pattern GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR = GeometryFlagBitsKHR 0x00000002
 
-type GeometryFlagsKHR = GeometryFlagBitsKHR
-
 instance Show GeometryFlagBitsKHR where
   showsPrec p = \case
     GEOMETRY_OPAQUE_BIT_KHR -> showString "GEOMETRY_OPAQUE_BIT_KHR"
@@ -6675,6 +6675,8 @@ instance Read GeometryFlagBitsKHR where
                        v <- step readPrec
                        pure (GeometryFlagBitsKHR v)))
 
+
+type BuildAccelerationStructureFlagsKHR = BuildAccelerationStructureFlagBitsKHR
 
 -- | VkBuildAccelerationStructureFlagBitsKHR - Bitmask specifying additional
 -- parameters for acceleration structure builds
@@ -6720,8 +6722,6 @@ pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR = BuildAccelerati
 -- trace performance.
 pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000010
 
-type BuildAccelerationStructureFlagsKHR = BuildAccelerationStructureFlagBitsKHR
-
 instance Show BuildAccelerationStructureFlagBitsKHR where
   showsPrec p = \case
     BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR -> showString "BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR"
@@ -6744,6 +6744,8 @@ instance Read BuildAccelerationStructureFlagBitsKHR where
                        pure (BuildAccelerationStructureFlagBitsKHR v)))
 
 
+type AccelerationStructureCreateFlagsKHR = AccelerationStructureCreateFlagBitsKHR
+
 -- | VkAccelerationStructureCreateFlagBitsKHR - Bitmask specifying additional
 -- creation parameters for acceleration structure
 --
@@ -6757,8 +6759,6 @@ newtype AccelerationStructureCreateFlagBitsKHR = AccelerationStructureCreateFlag
 -- specifies that the acceleration structure’s address /can/ be saved and
 -- reused on a subsequent run.
 pattern ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR = AccelerationStructureCreateFlagBitsKHR 0x00000001
-
-type AccelerationStructureCreateFlagsKHR = AccelerationStructureCreateFlagBitsKHR
 
 instance Show AccelerationStructureCreateFlagBitsKHR where
   showsPrec p = \case

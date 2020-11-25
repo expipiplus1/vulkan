@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "FenceCreateFlagBits"
-module Vulkan.Core10.Enums.FenceCreateFlagBits  ( FenceCreateFlagBits( FENCE_CREATE_SIGNALED_BIT
+module Vulkan.Core10.Enums.FenceCreateFlagBits  ( FenceCreateFlags
+                                                , FenceCreateFlagBits( FENCE_CREATE_SIGNALED_BIT
                                                                      , ..
                                                                      )
-                                                , FenceCreateFlags
                                                 ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type FenceCreateFlags = FenceCreateFlagBits
+
 -- | VkFenceCreateFlagBits - Bitmask specifying initial state and behavior of
 -- a fence
 --
@@ -34,8 +36,6 @@ newtype FenceCreateFlagBits = FenceCreateFlagBits Flags
 -- | 'FENCE_CREATE_SIGNALED_BIT' specifies that the fence object is created
 -- in the signaled state. Otherwise, it is created in the unsignaled state.
 pattern FENCE_CREATE_SIGNALED_BIT = FenceCreateFlagBits 0x00000001
-
-type FenceCreateFlags = FenceCreateFlagBits
 
 instance Show FenceCreateFlagBits where
   showsPrec p = \case

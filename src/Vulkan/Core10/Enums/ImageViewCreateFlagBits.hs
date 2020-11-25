@@ -1,10 +1,10 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ImageViewCreateFlagBits"
-module Vulkan.Core10.Enums.ImageViewCreateFlagBits  ( ImageViewCreateFlagBits( IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
+module Vulkan.Core10.Enums.ImageViewCreateFlagBits  ( ImageViewCreateFlags
+                                                    , ImageViewCreateFlagBits( IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
                                                                              , IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
                                                                              , ..
                                                                              )
-                                                    , ImageViewCreateFlags
                                                     ) where
 
 import GHC.Read (choose)
@@ -23,6 +23,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ImageViewCreateFlags = ImageViewCreateFlagBits
+
 -- | VkImageViewCreateFlagBits - Bitmask specifying additional parameters of
 -- an image view
 --
@@ -41,8 +43,6 @@ pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT = ImageViewCreat
 -- the fragment density map will be read by device during
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT = ImageViewCreateFlagBits 0x00000001
-
-type ImageViewCreateFlags = ImageViewCreateFlagBits
 
 instance Show ImageViewCreateFlagBits where
   showsPrec p = \case

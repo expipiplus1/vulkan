@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SemaphoreWaitFlagBits"
-module Vulkan.Core12.Enums.SemaphoreWaitFlagBits  ( SemaphoreWaitFlagBits( SEMAPHORE_WAIT_ANY_BIT
+module Vulkan.Core12.Enums.SemaphoreWaitFlagBits  ( SemaphoreWaitFlags
+                                                  , SemaphoreWaitFlagBits( SEMAPHORE_WAIT_ANY_BIT
                                                                          , ..
                                                                          )
-                                                  , SemaphoreWaitFlags
                                                   ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type SemaphoreWaitFlags = SemaphoreWaitFlagBits
+
 -- | VkSemaphoreWaitFlagBits - Bitmask specifying additional parameters of a
 -- semaphore wait operation
 --
@@ -42,8 +44,6 @@ newtype SemaphoreWaitFlagBits = SemaphoreWaitFlagBits Flags
 -- have reached the value specified by the corresponding element of
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreWaitInfo'::@pValues@.
 pattern SEMAPHORE_WAIT_ANY_BIT = SemaphoreWaitFlagBits 0x00000001
-
-type SemaphoreWaitFlags = SemaphoreWaitFlagBits
 
 instance Show SemaphoreWaitFlagBits where
   showsPrec p = \case

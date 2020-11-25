@@ -99,8 +99,8 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_display_surface_counter  ( SurfaceCapabilities2EXT
-                                                         , SurfaceCounterFlagBitsEXT
                                                          , SurfaceCounterFlagsEXT
+                                                         , SurfaceCounterFlagBitsEXT
                                                          ) where
 
 import Data.Kind (Type)
@@ -114,7 +114,7 @@ instance Show SurfaceCapabilities2EXT
 instance FromCStruct SurfaceCapabilities2EXT
 
 
-data SurfaceCounterFlagBitsEXT
-
 type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
+
+data SurfaceCounterFlagBitsEXT
 

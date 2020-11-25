@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "QueryPipelineStatisticFlagBits"
-module Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits  ( QueryPipelineStatisticFlagBits( QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT
+module Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits  ( QueryPipelineStatisticFlags
+                                                           , QueryPipelineStatisticFlagBits( QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT
                                                                                            , QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT
                                                                                            , QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT
                                                                                            , QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT
@@ -13,7 +14,6 @@ module Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits  ( QueryPipelineStatis
                                                                                            , QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT
                                                                                            , ..
                                                                                            )
-                                                           , QueryPipelineStatisticFlags
                                                            ) where
 
 import GHC.Read (choose)
@@ -32,6 +32,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
+
 -- | VkQueryPipelineStatisticFlagBits - Bitmask specifying queried pipeline
 -- statistics
 --
@@ -153,8 +155,6 @@ pattern QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT 
 -- invocations for implementation-dependent reasons as long as the results
 -- of rendering otherwise remain unchanged.
 pattern QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = QueryPipelineStatisticFlagBits 0x00000400
-
-type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
 
 instance Show QueryPipelineStatisticFlagBits where
   showsPrec p = \case

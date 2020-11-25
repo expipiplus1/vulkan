@@ -98,12 +98,12 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_device_diagnostics_config  ( PhysicalDeviceDiagnosticsConfigFeaturesNV(..)
                                                           , DeviceDiagnosticsConfigCreateInfoNV(..)
+                                                          , DeviceDiagnosticsConfigFlagsNV
                                                           , DeviceDiagnosticsConfigFlagBitsNV( DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV
                                                                                              , DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV
                                                                                              , DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV
                                                                                              , ..
                                                                                              )
-                                                          , DeviceDiagnosticsConfigFlagsNV
                                                           , NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION
                                                           , pattern NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION
                                                           , NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME
@@ -270,6 +270,8 @@ instance Zero DeviceDiagnosticsConfigCreateInfoNV where
            zero
 
 
+type DeviceDiagnosticsConfigFlagsNV = DeviceDiagnosticsConfigFlagBitsNV
+
 -- | VkDeviceDiagnosticsConfigFlagBitsNV - Bitmask specifying diagnostics
 -- flags
 --
@@ -293,8 +295,6 @@ pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV = DeviceDiagno
 -- at the time of the command will be associated as the marker data for the
 -- automatically inserted checkpoints.
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000004
-
-type DeviceDiagnosticsConfigFlagsNV = DeviceDiagnosticsConfigFlagBitsNV
 
 instance Show DeviceDiagnosticsConfigFlagBitsNV where
   showsPrec p = \case

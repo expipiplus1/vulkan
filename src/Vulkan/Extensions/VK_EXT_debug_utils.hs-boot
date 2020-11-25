@@ -491,10 +491,10 @@ module Vulkan.Extensions.VK_EXT_debug_utils  ( DebugUtilsLabelEXT
                                              , DebugUtilsMessengerCreateInfoEXT
                                              , DebugUtilsObjectNameInfoEXT
                                              , DebugUtilsObjectTagInfoEXT
-                                             , DebugUtilsMessageSeverityFlagBitsEXT
                                              , DebugUtilsMessageSeverityFlagsEXT
-                                             , DebugUtilsMessageTypeFlagBitsEXT
+                                             , DebugUtilsMessageSeverityFlagBitsEXT
                                              , DebugUtilsMessageTypeFlagsEXT
+                                             , DebugUtilsMessageTypeFlagBitsEXT
                                              ) where
 
 import Data.Kind (Type)
@@ -540,12 +540,12 @@ instance Show DebugUtilsObjectTagInfoEXT
 instance FromCStruct DebugUtilsObjectTagInfoEXT
 
 
-data DebugUtilsMessageSeverityFlagBitsEXT
-
 type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
 
+data DebugUtilsMessageSeverityFlagBitsEXT
 
-data DebugUtilsMessageTypeFlagBitsEXT
 
 type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
+
+data DebugUtilsMessageTypeFlagBitsEXT
 

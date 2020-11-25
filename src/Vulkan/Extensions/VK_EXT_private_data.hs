@@ -144,8 +144,8 @@ module Vulkan.Extensions.VK_EXT_private_data  ( createPrivateDataSlotEXT
                                               , DevicePrivateDataCreateInfoEXT(..)
                                               , PrivateDataSlotCreateInfoEXT(..)
                                               , PhysicalDevicePrivateDataFeaturesEXT(..)
-                                              , PrivateDataSlotCreateFlagBitsEXT(..)
                                               , PrivateDataSlotCreateFlagsEXT
+                                              , PrivateDataSlotCreateFlagBitsEXT(..)
                                               , EXT_PRIVATE_DATA_SPEC_VERSION
                                               , pattern EXT_PRIVATE_DATA_SPEC_VERSION
                                               , EXT_PRIVATE_DATA_EXTENSION_NAME
@@ -694,6 +694,8 @@ instance Zero PhysicalDevicePrivateDataFeaturesEXT where
            zero
 
 
+type PrivateDataSlotCreateFlagsEXT = PrivateDataSlotCreateFlagBitsEXT
+
 -- | VkPrivateDataSlotCreateFlagBitsEXT - Bitmask specifying additional
 -- parameters for private data slot creation
 --
@@ -704,8 +706,6 @@ newtype PrivateDataSlotCreateFlagBitsEXT = PrivateDataSlotCreateFlagBitsEXT Flag
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
-
-type PrivateDataSlotCreateFlagsEXT = PrivateDataSlotCreateFlagBitsEXT
 
 instance Show PrivateDataSlotCreateFlagBitsEXT where
   showsPrec p = \case

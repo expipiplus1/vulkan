@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "QueryResultFlagBits"
-module Vulkan.Core10.Enums.QueryResultFlagBits  ( QueryResultFlagBits( QUERY_RESULT_64_BIT
+module Vulkan.Core10.Enums.QueryResultFlagBits  ( QueryResultFlags
+                                                , QueryResultFlagBits( QUERY_RESULT_64_BIT
                                                                      , QUERY_RESULT_WAIT_BIT
                                                                      , QUERY_RESULT_WITH_AVAILABILITY_BIT
                                                                      , QUERY_RESULT_PARTIAL_BIT
                                                                      , ..
                                                                      )
-                                                , QueryResultFlags
                                                 ) where
 
 import GHC.Read (choose)
@@ -25,6 +25,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type QueryResultFlags = QueryResultFlagBits
+
 -- | VkQueryResultFlagBits - Bitmask specifying how and when query results
 -- are returned
 --
@@ -47,8 +49,6 @@ pattern QUERY_RESULT_WITH_AVAILABILITY_BIT = QueryResultFlagBits 0x00000004
 -- | 'QUERY_RESULT_PARTIAL_BIT' specifies that returning partial results is
 -- acceptable.
 pattern QUERY_RESULT_PARTIAL_BIT = QueryResultFlagBits 0x00000008
-
-type QueryResultFlags = QueryResultFlagBits
 
 instance Show QueryResultFlagBits where
   showsPrec p = \case

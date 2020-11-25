@@ -553,16 +553,16 @@ module Vulkan.Extensions.VK_NV_device_generated_commands  ( cmdExecuteGeneratedC
                                                           , IndirectCommandsLayoutCreateInfoNV(..)
                                                           , GeneratedCommandsInfoNV(..)
                                                           , GeneratedCommandsMemoryRequirementsInfoNV(..)
+                                                          , IndirectCommandsLayoutUsageFlagsNV
                                                           , IndirectCommandsLayoutUsageFlagBitsNV( INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV
                                                                                                  , INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV
                                                                                                  , INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV
                                                                                                  , ..
                                                                                                  )
-                                                          , IndirectCommandsLayoutUsageFlagsNV
+                                                          , IndirectStateFlagsNV
                                                           , IndirectStateFlagBitsNV( INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV
                                                                                    , ..
                                                                                    )
-                                                          , IndirectStateFlagsNV
                                                           , IndirectCommandsTokenTypeNV( INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV
                                                                                        , INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV
                                                                                        , INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV
@@ -3189,6 +3189,8 @@ instance Zero GeneratedCommandsMemoryRequirementsInfoNV where
            zero
 
 
+type IndirectCommandsLayoutUsageFlagsNV = IndirectCommandsLayoutUsageFlagBitsNV
+
 -- | VkIndirectCommandsLayoutUsageFlagBitsNV - Bitmask specifying allowed
 -- usage of an indirect commands layout
 --
@@ -3215,8 +3217,6 @@ pattern INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV = IndirectComman
 -- using the same input data.
 pattern INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV = IndirectCommandsLayoutUsageFlagBitsNV 0x00000004
 
-type IndirectCommandsLayoutUsageFlagsNV = IndirectCommandsLayoutUsageFlagBitsNV
-
 instance Show IndirectCommandsLayoutUsageFlagBitsNV where
   showsPrec p = \case
     INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV -> showString "INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV"
@@ -3235,6 +3235,8 @@ instance Read IndirectCommandsLayoutUsageFlagBitsNV where
                        pure (IndirectCommandsLayoutUsageFlagBitsNV v)))
 
 
+type IndirectStateFlagsNV = IndirectStateFlagBitsNV
+
 -- | VkIndirectStateFlagBitsNV - Bitmask specifiying state that can be
 -- altered on the device
 --
@@ -3248,8 +3250,6 @@ newtype IndirectStateFlagBitsNV = IndirectStateFlagBitsNV Flags
 -- 'Vulkan.Core10.Enums.FrontFace.FrontFace' rasterization state for
 -- subsequent draw operations.
 pattern INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV = IndirectStateFlagBitsNV 0x00000001
-
-type IndirectStateFlagsNV = IndirectStateFlagBitsNV
 
 instance Show IndirectStateFlagBitsNV where
   showsPrec p = \case

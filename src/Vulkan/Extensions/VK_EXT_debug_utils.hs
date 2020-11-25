@@ -506,19 +506,19 @@ module Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameEXT
                                              , DebugUtilsMessengerCallbackDataEXT(..)
                                              , DebugUtilsMessengerCreateFlagsEXT(..)
                                              , DebugUtilsMessengerCallbackDataFlagsEXT(..)
+                                             , DebugUtilsMessageSeverityFlagsEXT
                                              , DebugUtilsMessageSeverityFlagBitsEXT( DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
                                                                                    , DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
                                                                                    , DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
                                                                                    , DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
                                                                                    , ..
                                                                                    )
-                                             , DebugUtilsMessageSeverityFlagsEXT
+                                             , DebugUtilsMessageTypeFlagsEXT
                                              , DebugUtilsMessageTypeFlagBitsEXT( DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
                                                                                , DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
                                                                                , DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
                                                                                , ..
                                                                                )
-                                             , DebugUtilsMessageTypeFlagsEXT
                                              , PFN_vkDebugUtilsMessengerCallbackEXT
                                              , FN_vkDebugUtilsMessengerCallbackEXT
                                              , EXT_DEBUG_UTILS_SPEC_VERSION
@@ -2020,6 +2020,8 @@ instance Read DebugUtilsMessengerCallbackDataFlagsEXT where
                        pure (DebugUtilsMessengerCallbackDataFlagsEXT v)))
 
 
+type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
+
 -- | VkDebugUtilsMessageSeverityFlagBitsEXT - Bitmask specifying which
 -- severities of events cause a debug messenger callback
 --
@@ -2049,8 +2051,6 @@ pattern DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = DebugUtilsMessageSeverity
 -- application has violated a valid usage condition of the specification.
 pattern DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00001000
 
-type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
-
 instance Show DebugUtilsMessageSeverityFlagBitsEXT where
   showsPrec p = \case
     DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT"
@@ -2070,6 +2070,8 @@ instance Read DebugUtilsMessageSeverityFlagBitsEXT where
                        v <- step readPrec
                        pure (DebugUtilsMessageSeverityFlagBitsEXT v)))
 
+
+type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
 
 -- | VkDebugUtilsMessageTypeFlagBitsEXT - Bitmask specifying which types of
 -- events cause a debug messenger callback
@@ -2095,8 +2097,6 @@ pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = DebugUtilsMessageTypeFlagB
 -- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR' would
 -- have worked.
 pattern DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x00000004
-
-type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
 
 instance Show DebugUtilsMessageTypeFlagBitsEXT where
   showsPrec p = \case

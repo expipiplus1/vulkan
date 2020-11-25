@@ -169,6 +169,7 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_tooling_info  ( getPhysicalDeviceToolPropertiesEXT
                                               , PhysicalDeviceToolPropertiesEXT(..)
+                                              , ToolPurposeFlagsEXT
                                               , ToolPurposeFlagBitsEXT( TOOL_PURPOSE_VALIDATION_BIT_EXT
                                                                       , TOOL_PURPOSE_PROFILING_BIT_EXT
                                                                       , TOOL_PURPOSE_TRACING_BIT_EXT
@@ -178,7 +179,6 @@ module Vulkan.Extensions.VK_EXT_tooling_info  ( getPhysicalDeviceToolPropertiesE
                                                                       , TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT
                                                                       , ..
                                                                       )
-                                              , ToolPurposeFlagsEXT
                                               , EXT_TOOLING_INFO_SPEC_VERSION
                                               , pattern EXT_TOOLING_INFO_SPEC_VERSION
                                               , EXT_TOOLING_INFO_EXTENSION_NAME
@@ -416,6 +416,8 @@ instance Zero PhysicalDeviceToolPropertiesEXT where
            mempty
 
 
+type ToolPurposeFlagsEXT = ToolPurposeFlagBitsEXT
+
 -- | VkToolPurposeFlagBitsEXT - Bitmask specifying the purposes of an active
 -- tool
 --
@@ -456,8 +458,6 @@ pattern TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT = ToolPurposeFlagBitsEXT 0x00000040
 -- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT' or
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT'
 pattern TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT = ToolPurposeFlagBitsEXT 0x00000020
-
-type ToolPurposeFlagsEXT = ToolPurposeFlagBitsEXT
 
 instance Show ToolPurposeFlagBitsEXT where
   showsPrec p = \case

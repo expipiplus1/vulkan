@@ -1,11 +1,11 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "MemoryAllocateFlagBits"
-module Vulkan.Core11.Enums.MemoryAllocateFlagBits  ( MemoryAllocateFlagBits( MEMORY_ALLOCATE_DEVICE_MASK_BIT
+module Vulkan.Core11.Enums.MemoryAllocateFlagBits  ( MemoryAllocateFlags
+                                                   , MemoryAllocateFlagBits( MEMORY_ALLOCATE_DEVICE_MASK_BIT
                                                                            , MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT
                                                                            , MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT
                                                                            , ..
                                                                            )
-                                                   , MemoryAllocateFlags
                                                    ) where
 
 import GHC.Read (choose)
@@ -24,6 +24,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type MemoryAllocateFlags = MemoryAllocateFlagBits
+
 -- | VkMemoryAllocateFlagBits - Bitmask specifying flags for a device memory
 -- allocation
 --
@@ -50,8 +52,6 @@ pattern MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = MemoryAllocateFlagBi
 -- an opaque address via
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.getDeviceMemoryOpaqueCaptureAddress'.
 pattern MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT = MemoryAllocateFlagBits 0x00000002
-
-type MemoryAllocateFlags = MemoryAllocateFlagBits
 
 instance Show MemoryAllocateFlagBits where
   showsPrec p = \case

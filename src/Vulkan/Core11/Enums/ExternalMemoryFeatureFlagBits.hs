@@ -1,11 +1,11 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ExternalMemoryFeatureFlagBits"
-module Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits  ( ExternalMemoryFeatureFlagBits( EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
+module Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits  ( ExternalMemoryFeatureFlags
+                                                          , ExternalMemoryFeatureFlagBits( EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
                                                                                          , EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
                                                                                          , EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
                                                                                          , ..
                                                                                          )
-                                                          , ExternalMemoryFeatureFlags
                                                           ) where
 
 import GHC.Read (choose)
@@ -24,6 +24,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ExternalMemoryFeatureFlags = ExternalMemoryFeatureFlagBits
+
 -- | VkExternalMemoryFeatureFlagBits - Bitmask specifying features of an
 -- external memory handle type
 --
@@ -65,8 +67,6 @@ pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT = ExternalMemoryFeatureFlagBits 0
 -- | 'EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT' specifies that handles of this
 -- type /can/ be imported as Vulkan memory objects.
 pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT = ExternalMemoryFeatureFlagBits 0x00000004
-
-type ExternalMemoryFeatureFlags = ExternalMemoryFeatureFlagBits
 
 instance Show ExternalMemoryFeatureFlagBits where
   showsPrec p = \case

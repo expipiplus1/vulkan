@@ -1,10 +1,10 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ExternalFenceFeatureFlagBits"
-module Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits  ( ExternalFenceFeatureFlagBits( EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
+module Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits  ( ExternalFenceFeatureFlags
+                                                         , ExternalFenceFeatureFlagBits( EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
                                                                                        , EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT
                                                                                        , ..
                                                                                        )
-                                                         , ExternalFenceFeatureFlags
                                                          ) where
 
 import GHC.Read (choose)
@@ -23,6 +23,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ExternalFenceFeatureFlags = ExternalFenceFeatureFlagBits
+
 -- | VkExternalFenceFeatureFlagBits - Bitfield describing features of an
 -- external fence handle type
 --
@@ -38,8 +40,6 @@ pattern EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x0
 -- | 'EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT' specifies handles of this type
 -- /can/ be imported to Vulkan fence objects.
 pattern EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x00000002
-
-type ExternalFenceFeatureFlags = ExternalFenceFeatureFlagBits
 
 instance Show ExternalFenceFeatureFlagBits where
   showsPrec p = \case

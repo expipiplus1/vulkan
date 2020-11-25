@@ -1,11 +1,11 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "CommandPoolCreateFlagBits"
-module Vulkan.Core10.Enums.CommandPoolCreateFlagBits  ( CommandPoolCreateFlagBits( COMMAND_POOL_CREATE_TRANSIENT_BIT
+module Vulkan.Core10.Enums.CommandPoolCreateFlagBits  ( CommandPoolCreateFlags
+                                                      , CommandPoolCreateFlagBits( COMMAND_POOL_CREATE_TRANSIENT_BIT
                                                                                  , COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
                                                                                  , COMMAND_POOL_CREATE_PROTECTED_BIT
                                                                                  , ..
                                                                                  )
-                                                      , CommandPoolCreateFlags
                                                       ) where
 
 import GHC.Read (choose)
@@ -24,6 +24,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type CommandPoolCreateFlags = CommandPoolCreateFlagBits
+
 -- | VkCommandPoolCreateFlagBits - Bitmask specifying usage behavior for a
 -- command pool
 --
@@ -51,8 +53,6 @@ pattern COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = CommandPoolCreateFlagBits
 -- | 'COMMAND_POOL_CREATE_PROTECTED_BIT' specifies that command buffers
 -- allocated from the pool are protected command buffers.
 pattern COMMAND_POOL_CREATE_PROTECTED_BIT = CommandPoolCreateFlagBits 0x00000004
-
-type CommandPoolCreateFlags = CommandPoolCreateFlagBits
 
 instance Show CommandPoolCreateFlagBits where
   showsPrec p = \case

@@ -1,13 +1,13 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "QueueFlagBits"
-module Vulkan.Core10.Enums.QueueFlagBits  ( QueueFlagBits( QUEUE_GRAPHICS_BIT
+module Vulkan.Core10.Enums.QueueFlagBits  ( QueueFlags
+                                          , QueueFlagBits( QUEUE_GRAPHICS_BIT
                                                          , QUEUE_COMPUTE_BIT
                                                          , QUEUE_TRANSFER_BIT
                                                          , QUEUE_SPARSE_BINDING_BIT
                                                          , QUEUE_PROTECTED_BIT
                                                          , ..
                                                          )
-                                          , QueueFlags
                                           ) where
 
 import GHC.Read (choose)
@@ -26,6 +26,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type QueueFlags = QueueFlagBits
+
 -- | VkQueueFlagBits - Bitmask specifying capabilities of queues in a queue
 -- family
 --
@@ -92,8 +94,6 @@ pattern QUEUE_TRANSFER_BIT = QueueFlagBits 0x00000004
 pattern QUEUE_SPARSE_BINDING_BIT = QueueFlagBits 0x00000008
 -- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_PROTECTED_BIT"
 pattern QUEUE_PROTECTED_BIT = QueueFlagBits 0x00000010
-
-type QueueFlags = QueueFlagBits
 
 instance Show QueueFlagBits where
   showsPrec p = \case

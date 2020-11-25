@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "FenceImportFlagBits"
-module Vulkan.Core11.Enums.FenceImportFlagBits  ( FenceImportFlagBits( FENCE_IMPORT_TEMPORARY_BIT
+module Vulkan.Core11.Enums.FenceImportFlagBits  ( FenceImportFlags
+                                                , FenceImportFlagBits( FENCE_IMPORT_TEMPORARY_BIT
                                                                      , ..
                                                                      )
-                                                , FenceImportFlags
                                                 ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type FenceImportFlags = FenceImportFlagBits
+
 -- | VkFenceImportFlagBits - Bitmask specifying additional parameters of
 -- fence payload import
 --
@@ -36,8 +38,6 @@ newtype FenceImportFlagBits = FenceImportFlagBits Flags
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>,
 -- regardless of the permanence of @handleType@.
 pattern FENCE_IMPORT_TEMPORARY_BIT = FenceImportFlagBits 0x00000001
-
-type FenceImportFlags = FenceImportFlagBits
 
 instance Show FenceImportFlagBits where
   showsPrec p = \case

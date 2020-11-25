@@ -519,13 +519,13 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
                                                                                  , PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR
                                                                                  , ..
                                                                                  )
+                                                   , PerformanceCounterDescriptionFlagsKHR
                                                    , PerformanceCounterDescriptionFlagBitsKHR( PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR
                                                                                              , PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR
                                                                                              , ..
                                                                                              )
-                                                   , PerformanceCounterDescriptionFlagsKHR
-                                                   , AcquireProfilingLockFlagBitsKHR(..)
                                                    , AcquireProfilingLockFlagsKHR
+                                                   , AcquireProfilingLockFlagBitsKHR(..)
                                                    , KHR_PERFORMANCE_QUERY_SPEC_VERSION
                                                    , pattern KHR_PERFORMANCE_QUERY_SPEC_VERSION
                                                    , KHR_PERFORMANCE_QUERY_EXTENSION_NAME
@@ -1595,6 +1595,8 @@ instance Read PerformanceCounterStorageKHR where
                        pure (PerformanceCounterStorageKHR v)))
 
 
+type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBitsKHR
+
 -- | VkPerformanceCounterDescriptionFlagBitsKHR - Bitmask specifying usage
 -- behavior for a counter
 --
@@ -1613,8 +1615,6 @@ pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR = Performa
 -- command buffers are running /may/ impact the accuracy of the recording.
 pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000002
 
-type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBitsKHR
-
 instance Show PerformanceCounterDescriptionFlagBitsKHR where
   showsPrec p = \case
     PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR -> showString "PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR"
@@ -1631,6 +1631,8 @@ instance Read PerformanceCounterDescriptionFlagBitsKHR where
                        pure (PerformanceCounterDescriptionFlagBitsKHR v)))
 
 
+type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
+
 -- | VkAcquireProfilingLockFlagBitsKHR - Reserved for future use
 --
 -- = See Also
@@ -1640,8 +1642,6 @@ newtype AcquireProfilingLockFlagBitsKHR = AcquireProfilingLockFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
-
-type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
 
 instance Show AcquireProfilingLockFlagBitsKHR where
   showsPrec p = \case

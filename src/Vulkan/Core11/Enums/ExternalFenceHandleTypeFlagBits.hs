@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ExternalFenceHandleTypeFlagBits"
-module Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits  ( ExternalFenceHandleTypeFlagBits( EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
+module Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits  ( ExternalFenceHandleTypeFlags
+                                                            , ExternalFenceHandleTypeFlagBits( EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
                                                                                              , EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
                                                                                              , EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
                                                                                              , EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
                                                                                              , ..
                                                                                              )
-                                                            , ExternalFenceHandleTypeFlags
                                                             ) where
 
 import GHC.Read (choose)
@@ -25,6 +25,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ExternalFenceHandleTypeFlags = ExternalFenceHandleTypeFlagBits
+
 -- | VkExternalFenceHandleTypeFlagBits - Bitmask of valid external fence
 -- handle types
 --
@@ -89,8 +91,6 @@ pattern EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = ExternalFenceHandleTyp
 -- handle type /must/ accept any type of sync or fence FD supported by the
 -- native system they are running on.
 pattern EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT = ExternalFenceHandleTypeFlagBits 0x00000008
-
-type ExternalFenceHandleTypeFlags = ExternalFenceHandleTypeFlagBits
 
 instance Show ExternalFenceHandleTypeFlagBits where
   showsPrec p = \case

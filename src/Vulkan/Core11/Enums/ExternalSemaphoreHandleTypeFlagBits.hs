@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ExternalSemaphoreHandleTypeFlagBits"
 module Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits  ( pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_FENCE_BIT
+                                                                , ExternalSemaphoreHandleTypeFlags
                                                                 , ExternalSemaphoreHandleTypeFlagBits( EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT
                                                                                                      , EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
                                                                                                      , EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
@@ -8,7 +9,6 @@ module Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits  ( pattern EXTERN
                                                                                                      , EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT
                                                                                                      , ..
                                                                                                      )
-                                                                , ExternalSemaphoreHandleTypeFlags
                                                                 ) where
 
 import GHC.Read (choose)
@@ -30,6 +30,8 @@ import Vulkan.Zero (Zero)
 -- No documentation found for TopLevel "VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_FENCE_BIT"
 pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_FENCE_BIT = EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT
 
+
+type ExternalSemaphoreHandleTypeFlags = ExternalSemaphoreHandleTypeFlagBits
 
 -- | VkExternalSemaphoreHandleTypeFlagBits - Bitmask of valid external
 -- semaphore handle types
@@ -114,8 +116,6 @@ pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT = ExternalSemaphoreHandle
 -- importing this handle type /must/ accept any type of sync or fence FD
 -- supported by the native system they are running on.
 pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000010
-
-type ExternalSemaphoreHandleTypeFlags = ExternalSemaphoreHandleTypeFlagBits
 
 instance Show ExternalSemaphoreHandleTypeFlagBits where
   showsPrec p = \case

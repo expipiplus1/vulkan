@@ -1154,12 +1154,12 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( AabbPositionsKHR
                                                         , AccelerationStructureBuildTypeKHR
                                                         , AccelerationStructureCompatibilityKHR
                                                         , CopyAccelerationStructureModeKHR
-                                                        , GeometryFlagBitsKHR
                                                         , GeometryFlagsKHR
-                                                        , GeometryInstanceFlagBitsKHR
+                                                        , GeometryFlagBitsKHR
                                                         , GeometryInstanceFlagsKHR
-                                                        , BuildAccelerationStructureFlagBitsKHR
+                                                        , GeometryInstanceFlagBitsKHR
                                                         , BuildAccelerationStructureFlagsKHR
+                                                        , BuildAccelerationStructureFlagBitsKHR
                                                         , AccelerationStructureTypeKHR
                                                         , GeometryTypeKHR
                                                         ) where
@@ -1314,19 +1314,19 @@ data AccelerationStructureCompatibilityKHR
 data CopyAccelerationStructureModeKHR
 
 
-data GeometryFlagBitsKHR
-
 type GeometryFlagsKHR = GeometryFlagBitsKHR
 
+data GeometryFlagBitsKHR
 
-data GeometryInstanceFlagBitsKHR
 
 type GeometryInstanceFlagsKHR = GeometryInstanceFlagBitsKHR
 
+data GeometryInstanceFlagBitsKHR
 
-data BuildAccelerationStructureFlagBitsKHR
 
 type BuildAccelerationStructureFlagsKHR = BuildAccelerationStructureFlagBitsKHR
+
+data BuildAccelerationStructureFlagBitsKHR
 
 
 data AccelerationStructureTypeKHR

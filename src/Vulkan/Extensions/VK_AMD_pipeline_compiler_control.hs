@@ -102,8 +102,8 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_AMD_pipeline_compiler_control  ( PipelineCompilerControlCreateInfoAMD(..)
-                                                           , PipelineCompilerControlFlagBitsAMD(..)
                                                            , PipelineCompilerControlFlagsAMD
+                                                           , PipelineCompilerControlFlagBitsAMD(..)
                                                            , AMD_PIPELINE_COMPILER_CONTROL_SPEC_VERSION
                                                            , pattern AMD_PIPELINE_COMPILER_CONTROL_SPEC_VERSION
                                                            , AMD_PIPELINE_COMPILER_CONTROL_EXTENSION_NAME
@@ -198,6 +198,8 @@ instance Zero PipelineCompilerControlCreateInfoAMD where
            zero
 
 
+type PipelineCompilerControlFlagsAMD = PipelineCompilerControlFlagBitsAMD
+
 -- | VkPipelineCompilerControlFlagBitsAMD - Enum specifying available
 -- compilation control flags
 --
@@ -208,8 +210,6 @@ newtype PipelineCompilerControlFlagBitsAMD = PipelineCompilerControlFlagBitsAMD 
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
-
-type PipelineCompilerControlFlagsAMD = PipelineCompilerControlFlagBitsAMD
 
 instance Show PipelineCompilerControlFlagBitsAMD where
   showsPrec p = \case

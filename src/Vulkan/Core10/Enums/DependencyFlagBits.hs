@@ -1,11 +1,11 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DependencyFlagBits"
-module Vulkan.Core10.Enums.DependencyFlagBits  ( DependencyFlagBits( DEPENDENCY_BY_REGION_BIT
+module Vulkan.Core10.Enums.DependencyFlagBits  ( DependencyFlags
+                                               , DependencyFlagBits( DEPENDENCY_BY_REGION_BIT
                                                                    , DEPENDENCY_VIEW_LOCAL_BIT
                                                                    , DEPENDENCY_DEVICE_GROUP_BIT
                                                                    , ..
                                                                    )
-                                               , DependencyFlags
                                                ) where
 
 import GHC.Read (choose)
@@ -24,6 +24,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type DependencyFlags = DependencyFlagBits
+
 -- | VkDependencyFlagBits - Bitmask specifying how execution and memory
 -- dependencies are formed
 --
@@ -42,8 +44,6 @@ pattern DEPENDENCY_VIEW_LOCAL_BIT = DependencyFlagBits 0x00000002
 -- | 'DEPENDENCY_DEVICE_GROUP_BIT' specifies that dependencies are
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-device-local-dependencies non-device-local dependency>.
 pattern DEPENDENCY_DEVICE_GROUP_BIT = DependencyFlagBits 0x00000004
-
-type DependencyFlags = DependencyFlagBits
 
 instance Show DependencyFlagBits where
   showsPrec p = \case

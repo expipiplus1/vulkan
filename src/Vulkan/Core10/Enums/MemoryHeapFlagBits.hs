@@ -1,10 +1,10 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "MemoryHeapFlagBits"
-module Vulkan.Core10.Enums.MemoryHeapFlagBits  ( MemoryHeapFlagBits( MEMORY_HEAP_DEVICE_LOCAL_BIT
+module Vulkan.Core10.Enums.MemoryHeapFlagBits  ( MemoryHeapFlags
+                                               , MemoryHeapFlagBits( MEMORY_HEAP_DEVICE_LOCAL_BIT
                                                                    , MEMORY_HEAP_MULTI_INSTANCE_BIT
                                                                    , ..
                                                                    )
-                                               , MemoryHeapFlags
                                                ) where
 
 import GHC.Read (choose)
@@ -23,6 +23,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type MemoryHeapFlags = MemoryHeapFlagBits
+
 -- | VkMemoryHeapFlagBits - Bitmask specifying attribute flags for a heap
 --
 -- = See Also
@@ -42,8 +44,6 @@ pattern MEMORY_HEAP_DEVICE_LOCAL_BIT = MemoryHeapFlagBits 0x00000001
 -- a heap will be replicated to each physical device’s instance of the
 -- heap.
 pattern MEMORY_HEAP_MULTI_INSTANCE_BIT = MemoryHeapFlagBits 0x00000002
-
-type MemoryHeapFlags = MemoryHeapFlagBits
 
 instance Show MemoryHeapFlagBits where
   showsPrec p = \case

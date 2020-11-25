@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "FormatFeatureFlagBits"
-module Vulkan.Core10.Enums.FormatFeatureFlagBits  ( FormatFeatureFlagBits( FORMAT_FEATURE_SAMPLED_IMAGE_BIT
+module Vulkan.Core10.Enums.FormatFeatureFlagBits  ( FormatFeatureFlags
+                                                  , FormatFeatureFlagBits( FORMAT_FEATURE_SAMPLED_IMAGE_BIT
                                                                          , FORMAT_FEATURE_STORAGE_IMAGE_BIT
                                                                          , FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT
                                                                          , FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT
@@ -29,7 +30,6 @@ module Vulkan.Core10.Enums.FormatFeatureFlagBits  ( FormatFeatureFlagBits( FORMA
                                                                          , FORMAT_FEATURE_TRANSFER_SRC_BIT
                                                                          , ..
                                                                          )
-                                                  , FormatFeatureFlags
                                                   ) where
 
 import GHC.Read (choose)
@@ -48,6 +48,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type FormatFeatureFlags = FormatFeatureFlagBits
+
 -- | VkFormatFeatureFlagBits - Bitmask specifying features supported by a
 -- buffer
 --
@@ -431,8 +433,6 @@ pattern FORMAT_FEATURE_TRANSFER_DST_BIT = FormatFeatureFlagBits 0x00008000
 -- as a source image for
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>.
 pattern FORMAT_FEATURE_TRANSFER_SRC_BIT = FormatFeatureFlagBits 0x00004000
-
-type FormatFeatureFlags = FormatFeatureFlagBits
 
 instance Show FormatFeatureFlagBits where
   showsPrec p = \case

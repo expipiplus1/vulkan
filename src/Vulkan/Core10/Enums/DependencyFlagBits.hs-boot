@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DependencyFlagBits"
-module Vulkan.Core10.Enums.DependencyFlagBits  ( DependencyFlagBits
-                                               , DependencyFlags
+module Vulkan.Core10.Enums.DependencyFlagBits  ( DependencyFlags
+                                               , DependencyFlagBits
                                                ) where
 
 
 
-data DependencyFlagBits
-
 type DependencyFlags = DependencyFlagBits
+
+data DependencyFlagBits
 

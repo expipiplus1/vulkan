@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ExternalFenceFeatureFlagBits"
-module Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits  ( ExternalFenceFeatureFlagBits
-                                                         , ExternalFenceFeatureFlags
+module Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits  ( ExternalFenceFeatureFlags
+                                                         , ExternalFenceFeatureFlagBits
                                                          ) where
 
 
 
-data ExternalFenceFeatureFlagBits
-
 type ExternalFenceFeatureFlags = ExternalFenceFeatureFlagBits
+
+data ExternalFenceFeatureFlagBits
 

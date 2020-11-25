@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DescriptorBindingFlagBits"
-module Vulkan.Core12.Enums.DescriptorBindingFlagBits  ( DescriptorBindingFlagBits( DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT
+module Vulkan.Core12.Enums.DescriptorBindingFlagBits  ( DescriptorBindingFlags
+                                                      , DescriptorBindingFlagBits( DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT
                                                                                  , DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT
                                                                                  , DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT
                                                                                  , DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT
                                                                                  , ..
                                                                                  )
-                                                      , DescriptorBindingFlags
                                                       ) where
 
 import GHC.Read (choose)
@@ -25,6 +25,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type DescriptorBindingFlags = DescriptorBindingFlagBits
+
 -- | VkDescriptorBindingFlagBits - Bitmask specifying descriptor set layout
 -- binding properties
 --
@@ -93,8 +95,6 @@ pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = DescriptorBindingFlagBits 0x000
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxInlineUniformBlockSize maxInlineUniformBlockSize>
 -- limit instead. .
 pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT = DescriptorBindingFlagBits 0x00000008
-
-type DescriptorBindingFlags = DescriptorBindingFlagBits
 
 instance Show DescriptorBindingFlagBits where
   showsPrec p = \case

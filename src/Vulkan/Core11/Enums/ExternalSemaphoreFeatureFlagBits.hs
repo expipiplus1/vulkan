@@ -1,10 +1,10 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ExternalSemaphoreFeatureFlagBits"
-module Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits  ( ExternalSemaphoreFeatureFlagBits( EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT
+module Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits  ( ExternalSemaphoreFeatureFlags
+                                                             , ExternalSemaphoreFeatureFlagBits( EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT
                                                                                                , EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT
                                                                                                , ..
                                                                                                )
-                                                             , ExternalSemaphoreFeatureFlags
                                                              ) where
 
 import GHC.Read (choose)
@@ -23,6 +23,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ExternalSemaphoreFeatureFlags = ExternalSemaphoreFeatureFlagBits
+
 -- | VkExternalSemaphoreFeatureFlagBits - Bitfield describing features of an
 -- external semaphore handle type
 --
@@ -38,8 +40,6 @@ pattern EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT = ExternalSemaphoreFeatureFlag
 -- | 'EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT' specifies that handles of
 -- this type /can/ be imported as Vulkan semaphore objects.
 pattern EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT = ExternalSemaphoreFeatureFlagBits 0x00000002
-
-type ExternalSemaphoreFeatureFlags = ExternalSemaphoreFeatureFlagBits
 
 instance Show ExternalSemaphoreFeatureFlagBits where
   showsPrec p = \case

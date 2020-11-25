@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ExternalMemoryHandleTypeFlagBits"
-module Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits  ( ExternalMemoryHandleTypeFlagBits( EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
+module Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits  ( ExternalMemoryHandleTypeFlags
+                                                             , ExternalMemoryHandleTypeFlagBits( EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT
@@ -13,7 +14,6 @@ module Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits  ( ExternalMemoryHan
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT
                                                                                                , ..
                                                                                                )
-                                                             , ExternalMemoryHandleTypeFlags
                                                              ) where
 
 import GHC.Read (choose)
@@ -32,6 +32,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ExternalMemoryHandleTypeFlags = ExternalMemoryHandleTypeFlagBits
+
 -- | VkExternalMemoryHandleTypeFlagBits - Bit specifying external memory
 -- handle types
 --
@@ -172,8 +174,6 @@ pattern EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID = Extern
 -- Linux dma_buf. It owns a reference to the underlying memory resource
 -- represented by its Vulkan memory object.
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT = ExternalMemoryHandleTypeFlagBits 0x00000200
-
-type ExternalMemoryHandleTypeFlags = ExternalMemoryHandleTypeFlagBits
 
 instance Show ExternalMemoryHandleTypeFlagBits where
   showsPrec p = \case

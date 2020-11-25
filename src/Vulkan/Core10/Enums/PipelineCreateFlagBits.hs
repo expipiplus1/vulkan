@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PipelineCreateFlagBits"
-module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlagBits( PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
+module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
+                                                   , PipelineCreateFlagBits( PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
                                                                            , PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
                                                                            , PIPELINE_CREATE_DERIVATIVE_BIT
                                                                            , PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT
@@ -21,7 +22,6 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlagBits( PIP
                                                                            , PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
                                                                            , ..
                                                                            )
-                                                   , PipelineCreateFlags
                                                    ) where
 
 import GHC.Read (choose)
@@ -40,6 +40,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type PipelineCreateFlags = PipelineCreateFlagBits
+
 -- | VkPipelineCreateFlagBits - Bitmask controlling how a pipeline is created
 --
 -- = Description
@@ -189,8 +191,6 @@ pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR = PipelineCr
 pattern PIPELINE_CREATE_DISPATCH_BASE_BIT = PipelineCreateFlagBits 0x00000010
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"
 pattern PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = PipelineCreateFlagBits 0x00000008
-
-type PipelineCreateFlags = PipelineCreateFlagBits
 
 instance Show PipelineCreateFlagBits where
   showsPrec p = \case

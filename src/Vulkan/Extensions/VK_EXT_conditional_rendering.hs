@@ -166,10 +166,10 @@ module Vulkan.Extensions.VK_EXT_conditional_rendering  ( cmdBeginConditionalRend
                                                        , ConditionalRenderingBeginInfoEXT(..)
                                                        , CommandBufferInheritanceConditionalRenderingInfoEXT(..)
                                                        , PhysicalDeviceConditionalRenderingFeaturesEXT(..)
+                                                       , ConditionalRenderingFlagsEXT
                                                        , ConditionalRenderingFlagBitsEXT( CONDITIONAL_RENDERING_INVERTED_BIT_EXT
                                                                                         , ..
                                                                                         )
-                                                       , ConditionalRenderingFlagsEXT
                                                        , EXT_CONDITIONAL_RENDERING_SPEC_VERSION
                                                        , pattern EXT_CONDITIONAL_RENDERING_SPEC_VERSION
                                                        , EXT_CONDITIONAL_RENDERING_EXTENSION_NAME
@@ -650,6 +650,8 @@ instance Zero PhysicalDeviceConditionalRenderingFeaturesEXT where
            zero
 
 
+type ConditionalRenderingFlagsEXT = ConditionalRenderingFlagBitsEXT
+
 -- | VkConditionalRenderingFlagBitsEXT - Specify the behavior of conditional
 -- rendering
 --
@@ -665,8 +667,6 @@ newtype ConditionalRenderingFlagBitsEXT = ConditionalRenderingFlagBitsEXT Flags
 -- rendering commands are not discarded, and if non zero, then they are
 -- discarded.
 pattern CONDITIONAL_RENDERING_INVERTED_BIT_EXT = ConditionalRenderingFlagBitsEXT 0x00000001
-
-type ConditionalRenderingFlagsEXT = ConditionalRenderingFlagBitsEXT
 
 instance Show ConditionalRenderingFlagBitsEXT where
   showsPrec p = \case

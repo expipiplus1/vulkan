@@ -1,10 +1,10 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SamplerCreateFlagBits"
-module Vulkan.Core10.Enums.SamplerCreateFlagBits  ( SamplerCreateFlagBits( SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
+module Vulkan.Core10.Enums.SamplerCreateFlagBits  ( SamplerCreateFlags
+                                                  , SamplerCreateFlagBits( SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
                                                                          , SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
                                                                          , ..
                                                                          )
-                                                  , SamplerCreateFlags
                                                   ) where
 
 import GHC.Read (choose)
@@ -23,6 +23,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type SamplerCreateFlags = SamplerCreateFlagBits
+
 -- | VkSamplerCreateFlagBits - Bitmask specifying additional parameters of
 -- sampler
 --
@@ -52,8 +54,6 @@ pattern SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT = SamplerCreateF
 -- containing
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'.
 pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT = SamplerCreateFlagBits 0x00000001
-
-type SamplerCreateFlags = SamplerCreateFlagBits
 
 instance Show SamplerCreateFlagBits where
   showsPrec p = \case

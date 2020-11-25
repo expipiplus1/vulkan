@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ShaderStageFlagBits"
-module Vulkan.Core10.Enums.ShaderStageFlagBits  ( ShaderStageFlagBits( SHADER_STAGE_VERTEX_BIT
+module Vulkan.Core10.Enums.ShaderStageFlagBits  ( ShaderStageFlags
+                                                , ShaderStageFlagBits( SHADER_STAGE_VERTEX_BIT
                                                                      , SHADER_STAGE_TESSELLATION_CONTROL_BIT
                                                                      , SHADER_STAGE_TESSELLATION_EVALUATION_BIT
                                                                      , SHADER_STAGE_GEOMETRY_BIT
@@ -18,7 +19,6 @@ module Vulkan.Core10.Enums.ShaderStageFlagBits  ( ShaderStageFlagBits( SHADER_ST
                                                                      , SHADER_STAGE_RAYGEN_BIT_KHR
                                                                      , ..
                                                                      )
-                                                , ShaderStageFlags
                                                 ) where
 
 import GHC.Read (choose)
@@ -37,6 +37,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ShaderStageFlags = ShaderStageFlagBits
+
 -- | VkShaderStageFlagBits - Bitmask specifying a pipeline stage
 --
 -- = Description
@@ -93,8 +95,6 @@ pattern SHADER_STAGE_CLOSEST_HIT_BIT_KHR = ShaderStageFlagBits 0x00000400
 pattern SHADER_STAGE_ANY_HIT_BIT_KHR = ShaderStageFlagBits 0x00000200
 -- | 'SHADER_STAGE_RAYGEN_BIT_KHR' specifies the ray generation stage.
 pattern SHADER_STAGE_RAYGEN_BIT_KHR = ShaderStageFlagBits 0x00000100
-
-type ShaderStageFlags = ShaderStageFlagBits
 
 instance Show ShaderStageFlagBits where
   showsPrec p = \case

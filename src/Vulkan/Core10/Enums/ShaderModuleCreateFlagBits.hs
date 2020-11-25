@@ -1,7 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ShaderModuleCreateFlagBits"
-module Vulkan.Core10.Enums.ShaderModuleCreateFlagBits  ( ShaderModuleCreateFlagBits(..)
-                                                       , ShaderModuleCreateFlags
+module Vulkan.Core10.Enums.ShaderModuleCreateFlagBits  ( ShaderModuleCreateFlags
+                                                       , ShaderModuleCreateFlagBits(..)
                                                        ) where
 
 import GHC.Read (choose)
@@ -20,13 +20,13 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ShaderModuleCreateFlags = ShaderModuleCreateFlagBits
+
 -- No documentation found for TopLevel "VkShaderModuleCreateFlagBits"
 newtype ShaderModuleCreateFlagBits = ShaderModuleCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
-
-type ShaderModuleCreateFlags = ShaderModuleCreateFlagBits
 
 instance Show ShaderModuleCreateFlagBits where
   showsPrec p = \case

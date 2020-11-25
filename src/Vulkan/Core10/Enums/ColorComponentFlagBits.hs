@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ColorComponentFlagBits"
-module Vulkan.Core10.Enums.ColorComponentFlagBits  ( ColorComponentFlagBits( COLOR_COMPONENT_R_BIT
+module Vulkan.Core10.Enums.ColorComponentFlagBits  ( ColorComponentFlags
+                                                   , ColorComponentFlagBits( COLOR_COMPONENT_R_BIT
                                                                            , COLOR_COMPONENT_G_BIT
                                                                            , COLOR_COMPONENT_B_BIT
                                                                            , COLOR_COMPONENT_A_BIT
                                                                            , ..
                                                                            )
-                                                   , ColorComponentFlags
                                                    ) where
 
 import GHC.Read (choose)
@@ -25,6 +25,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ColorComponentFlags = ColorComponentFlagBits
+
 -- | VkColorComponentFlagBits - Bitmask controlling which components are
 -- written to the framebuffer
 --
@@ -55,8 +57,6 @@ pattern COLOR_COMPONENT_B_BIT = ColorComponentFlagBits 0x00000004
 -- color attachment for the appropriate sample. Otherwise, the value in
 -- memory is unmodified.
 pattern COLOR_COMPONENT_A_BIT = ColorComponentFlagBits 0x00000008
-
-type ColorComponentFlags = ColorComponentFlagBits
 
 instance Show ColorComponentFlagBits where
   showsPrec p = \case

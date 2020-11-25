@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "MemoryPropertyFlagBits"
-module Vulkan.Core10.Enums.MemoryPropertyFlagBits  ( MemoryPropertyFlagBits( MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+module Vulkan.Core10.Enums.MemoryPropertyFlagBits  ( MemoryPropertyFlags
+                                                   , MemoryPropertyFlagBits( MEMORY_PROPERTY_DEVICE_LOCAL_BIT
                                                                            , MEMORY_PROPERTY_HOST_VISIBLE_BIT
                                                                            , MEMORY_PROPERTY_HOST_COHERENT_BIT
                                                                            , MEMORY_PROPERTY_HOST_CACHED_BIT
@@ -10,7 +11,6 @@ module Vulkan.Core10.Enums.MemoryPropertyFlagBits  ( MemoryPropertyFlagBits( MEM
                                                                            , MEMORY_PROPERTY_PROTECTED_BIT
                                                                            , ..
                                                                            )
-                                                   , MemoryPropertyFlags
                                                    ) where
 
 import GHC.Read (choose)
@@ -29,6 +29,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type MemoryPropertyFlags = MemoryPropertyFlagBits
+
 -- | VkMemoryPropertyFlagBits - Bitmask specifying properties for a memory
 -- type
 --
@@ -105,8 +107,6 @@ pattern MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD = MemoryPropertyFlagBits 0x00000
 -- 'MEMORY_PROPERTY_HOST_COHERENT_BIT' set, or
 -- 'MEMORY_PROPERTY_HOST_CACHED_BIT' set.
 pattern MEMORY_PROPERTY_PROTECTED_BIT = MemoryPropertyFlagBits 0x00000020
-
-type MemoryPropertyFlags = MemoryPropertyFlagBits
 
 instance Show MemoryPropertyFlagBits where
   showsPrec p = \case

@@ -1094,19 +1094,19 @@ module Vulkan.Extensions.VK_KHR_swapchain  ( createSwapchainKHR
                                            , AcquireNextImageInfoKHR(..)
                                            , DeviceGroupPresentInfoKHR(..)
                                            , DeviceGroupSwapchainCreateInfoKHR(..)
+                                           , DeviceGroupPresentModeFlagsKHR
                                            , DeviceGroupPresentModeFlagBitsKHR( DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR
                                                                               , DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR
                                                                               , DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR
                                                                               , DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR
                                                                               , ..
                                                                               )
-                                           , DeviceGroupPresentModeFlagsKHR
+                                           , SwapchainCreateFlagsKHR
                                            , SwapchainCreateFlagBitsKHR( SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR
                                                                        , SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
                                                                        , SWAPCHAIN_CREATE_PROTECTED_BIT_KHR
                                                                        , ..
                                                                        )
-                                           , SwapchainCreateFlagsKHR
                                            , KHR_SWAPCHAIN_SPEC_VERSION
                                            , pattern KHR_SWAPCHAIN_SPEC_VERSION
                                            , KHR_SWAPCHAIN_EXTENSION_NAME
@@ -3602,6 +3602,8 @@ instance Zero DeviceGroupSwapchainCreateInfoKHR where
            zero
 
 
+type DeviceGroupPresentModeFlagsKHR = DeviceGroupPresentModeFlagBitsKHR
+
 -- | VkDeviceGroupPresentModeFlagBitsKHR - Bitmask specifying supported
 -- device group present modes
 --
@@ -3628,8 +3630,6 @@ pattern DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR = DeviceGroupPresentModeFlagBitsKH
 -- their own swapchain images.
 pattern DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000008
 
-type DeviceGroupPresentModeFlagsKHR = DeviceGroupPresentModeFlagBitsKHR
-
 instance Show DeviceGroupPresentModeFlagBitsKHR where
   showsPrec p = \case
     DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR -> showString "DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR"
@@ -3649,6 +3649,8 @@ instance Read DeviceGroupPresentModeFlagBitsKHR where
                        v <- step readPrec
                        pure (DeviceGroupPresentModeFlagBitsKHR v)))
 
+
+type SwapchainCreateFlagsKHR = SwapchainCreateFlagBitsKHR
 
 -- | VkSwapchainCreateFlagBitsKHR - Bitmask controlling swapchain creation
 --
@@ -3678,8 +3680,6 @@ pattern SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = SwapchainCreateFl
 -- | 'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR' specifies that images created from
 -- the swapchain are protected images.
 pattern SWAPCHAIN_CREATE_PROTECTED_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000002
-
-type SwapchainCreateFlagsKHR = SwapchainCreateFlagBitsKHR
 
 instance Show SwapchainCreateFlagBitsKHR where
   showsPrec p = \case

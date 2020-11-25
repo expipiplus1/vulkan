@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "RenderPassCreateFlagBits"
-module Vulkan.Core10.Enums.RenderPassCreateFlagBits  ( RenderPassCreateFlagBits( RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM
+module Vulkan.Core10.Enums.RenderPassCreateFlagBits  ( RenderPassCreateFlags
+                                                     , RenderPassCreateFlagBits( RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM
                                                                                , ..
                                                                                )
-                                                     , RenderPassCreateFlags
                                                      ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type RenderPassCreateFlags = RenderPassCreateFlagBits
+
 -- | VkRenderPassCreateFlagBits - Bitmask specifying additional properties of
 -- a renderpass
 --
@@ -35,8 +37,6 @@ newtype RenderPassCreateFlagBits = RenderPassCreateFlagBits Flags
 -- renderpass is compatible with
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
 pattern RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM = RenderPassCreateFlagBits 0x00000002
-
-type RenderPassCreateFlags = RenderPassCreateFlagBits
 
 instance Show RenderPassCreateFlagBits where
   showsPrec p = \case

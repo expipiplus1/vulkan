@@ -1,10 +1,10 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PipelineShaderStageCreateFlagBits"
-module Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits  ( PipelineShaderStageCreateFlagBits( PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT
+module Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits  ( PipelineShaderStageCreateFlags
+                                                              , PipelineShaderStageCreateFlagBits( PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT
                                                                                                  , PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT
                                                                                                  , ..
                                                                                                  )
-                                                              , PipelineShaderStageCreateFlags
                                                               ) where
 
 import GHC.Read (choose)
@@ -23,6 +23,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type PipelineShaderStageCreateFlags = PipelineShaderStageCreateFlagBits
+
 -- | VkPipelineShaderStageCreateFlagBits - Bitmask controlling how a pipeline
 -- shader stage is created
 --
@@ -59,8 +61,6 @@ pattern PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT = PipelineSh
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-sgs SubgroupSize>
 -- /may/ vary in the shader stage.
 pattern PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT = PipelineShaderStageCreateFlagBits 0x00000001
-
-type PipelineShaderStageCreateFlags = PipelineShaderStageCreateFlagBits
 
 instance Show PipelineShaderStageCreateFlagBits where
   showsPrec p = \case

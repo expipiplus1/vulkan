@@ -1,10 +1,10 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DescriptorPoolCreateFlagBits"
-module Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits  ( DescriptorPoolCreateFlagBits( DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
+module Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits  ( DescriptorPoolCreateFlags
+                                                         , DescriptorPoolCreateFlagBits( DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
                                                                                        , DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT
                                                                                        , ..
                                                                                        )
-                                                         , DescriptorPoolCreateFlags
                                                          ) where
 
 import GHC.Read (choose)
@@ -23,6 +23,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type DescriptorPoolCreateFlags = DescriptorPoolCreateFlagBits
+
 -- | VkDescriptorPoolCreateFlagBits - Bitmask specifying certain supported
 -- operations on a descriptor pool
 --
@@ -51,8 +53,6 @@ pattern DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = DescriptorPoolCreateFla
 -- bit from a pool that has 'DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 -- set.
 pattern DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT = DescriptorPoolCreateFlagBits 0x00000002
-
-type DescriptorPoolCreateFlags = DescriptorPoolCreateFlagBits
 
 instance Show DescriptorPoolCreateFlagBits where
   showsPrec p = \case

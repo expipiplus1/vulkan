@@ -1,11 +1,11 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "CommandBufferUsageFlagBits"
-module Vulkan.Core10.Enums.CommandBufferUsageFlagBits  ( CommandBufferUsageFlagBits( COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
+module Vulkan.Core10.Enums.CommandBufferUsageFlagBits  ( CommandBufferUsageFlags
+                                                       , CommandBufferUsageFlagBits( COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
                                                                                    , COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT
                                                                                    , COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT
                                                                                    , ..
                                                                                    )
-                                                       , CommandBufferUsageFlags
                                                        ) where
 
 import GHC.Read (choose)
@@ -24,6 +24,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type CommandBufferUsageFlags = CommandBufferUsageFlagBits
+
 -- | VkCommandBufferUsageFlagBits - Bitmask specifying usage behavior for
 -- command buffer
 --
@@ -45,8 +47,6 @@ pattern COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = CommandBufferUsageFlagBi
 -- buffer /can/ be resubmitted to a queue while it is in the /pending
 -- state/, and recorded into multiple primary command buffers.
 pattern COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = CommandBufferUsageFlagBits 0x00000004
-
-type CommandBufferUsageFlags = CommandBufferUsageFlagBits
 
 instance Show CommandBufferUsageFlagBits where
   showsPrec p = \case

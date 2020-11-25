@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "CullModeFlagBits"
-module Vulkan.Core10.Enums.CullModeFlagBits  ( CullModeFlagBits( CULL_MODE_NONE
+module Vulkan.Core10.Enums.CullModeFlagBits  ( CullModeFlags
+                                             , CullModeFlagBits( CULL_MODE_NONE
                                                                , CULL_MODE_FRONT_BIT
                                                                , CULL_MODE_BACK_BIT
                                                                , CULL_MODE_FRONT_AND_BACK
                                                                , ..
                                                                )
-                                             , CullModeFlags
                                              ) where
 
 import GHC.Read (choose)
@@ -25,6 +25,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type CullModeFlags = CullModeFlagBits
+
 -- | VkCullModeFlagBits - Bitmask controlling triangle culling
 --
 -- = Description
@@ -47,8 +49,6 @@ pattern CULL_MODE_FRONT_BIT = CullModeFlagBits 0x00000001
 pattern CULL_MODE_BACK_BIT = CullModeFlagBits 0x00000002
 -- | 'CULL_MODE_FRONT_AND_BACK' specifies that all triangles are discarded.
 pattern CULL_MODE_FRONT_AND_BACK = CullModeFlagBits 0x00000003
-
-type CullModeFlags = CullModeFlagBits
 
 instance Show CullModeFlagBits where
   showsPrec p = \case

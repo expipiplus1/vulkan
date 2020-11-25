@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "AccessFlagBits"
-module Vulkan.Core10.Enums.AccessFlagBits  ( AccessFlagBits( ACCESS_INDIRECT_COMMAND_READ_BIT
+module Vulkan.Core10.Enums.AccessFlagBits  ( AccessFlags
+                                           , AccessFlagBits( ACCESS_INDIRECT_COMMAND_READ_BIT
                                                            , ACCESS_INDEX_READ_BIT
                                                            , ACCESS_VERTEX_ATTRIBUTE_READ_BIT
                                                            , ACCESS_UNIFORM_READ_BIT
@@ -30,7 +31,6 @@ module Vulkan.Core10.Enums.AccessFlagBits  ( AccessFlagBits( ACCESS_INDIRECT_COM
                                                            , ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT
                                                            , ..
                                                            )
-                                           , AccessFlags
                                            ) where
 
 import GHC.Read (choose)
@@ -49,6 +49,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type AccessFlags = AccessFlagBits
+
 -- | VkAccessFlagBits - Bitmask specifying memory access types that will
 -- participate in a memory dependency
 --
@@ -313,8 +315,6 @@ pattern ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT = AccessFlagBits 0x040000
 -- | 'ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT' specifies write access to a
 -- transform feedback buffer made when transform feedback is active.
 pattern ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT = AccessFlagBits 0x02000000
-
-type AccessFlags = AccessFlagBits
 
 instance Show AccessFlagBits where
   showsPrec p = \case

@@ -96,8 +96,8 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_AMD_shader_core_properties2  ( PhysicalDeviceShaderCoreProperties2AMD(..)
-                                                         , ShaderCorePropertiesFlagBitsAMD(..)
                                                          , ShaderCorePropertiesFlagsAMD
+                                                         , ShaderCorePropertiesFlagBitsAMD(..)
                                                          , AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION
                                                          , pattern AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION
                                                          , AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME
@@ -212,6 +212,8 @@ instance Zero PhysicalDeviceShaderCoreProperties2AMD where
            zero
 
 
+type ShaderCorePropertiesFlagsAMD = ShaderCorePropertiesFlagBitsAMD
+
 -- | VkShaderCorePropertiesFlagBitsAMD - Bitmask specifying shader core
 -- properties
 --
@@ -222,8 +224,6 @@ newtype ShaderCorePropertiesFlagBitsAMD = ShaderCorePropertiesFlagBitsAMD Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
-
-type ShaderCorePropertiesFlagsAMD = ShaderCorePropertiesFlagBitsAMD
 
 instance Show ShaderCorePropertiesFlagBitsAMD where
   showsPrec p = \case

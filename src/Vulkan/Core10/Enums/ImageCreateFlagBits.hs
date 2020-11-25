@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ImageCreateFlagBits"
-module Vulkan.Core10.Enums.ImageCreateFlagBits  ( ImageCreateFlagBits( IMAGE_CREATE_SPARSE_BINDING_BIT
+module Vulkan.Core10.Enums.ImageCreateFlagBits  ( ImageCreateFlags
+                                                , ImageCreateFlagBits( IMAGE_CREATE_SPARSE_BINDING_BIT
                                                                      , IMAGE_CREATE_SPARSE_RESIDENCY_BIT
                                                                      , IMAGE_CREATE_SPARSE_ALIASED_BIT
                                                                      , IMAGE_CREATE_MUTABLE_FORMAT_BIT
@@ -17,7 +18,6 @@ module Vulkan.Core10.Enums.ImageCreateFlagBits  ( ImageCreateFlagBits( IMAGE_CRE
                                                                      , IMAGE_CREATE_ALIAS_BIT
                                                                      , ..
                                                                      )
-                                                , ImageCreateFlags
                                                 ) where
 
 import GHC.Read (choose)
@@ -36,6 +36,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ImageCreateFlags = ImageCreateFlagBits
+
 -- | VkImageCreateFlagBits - Bitmask specifying additional parameters of an
 -- image
 --
@@ -173,8 +175,6 @@ pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = ImageCreateFlagBits 0x000
 -- structure whose @handleTypes@ member is not @0@, it is as if
 -- 'IMAGE_CREATE_ALIAS_BIT' is set.
 pattern IMAGE_CREATE_ALIAS_BIT = ImageCreateFlagBits 0x00000400
-
-type ImageCreateFlags = ImageCreateFlagBits
 
 instance Show ImageCreateFlagBits where
   showsPrec p = \case

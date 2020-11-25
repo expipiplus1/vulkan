@@ -117,12 +117,12 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback  ( PipelineCreationFeedbackEXT(..)
                                                             , PipelineCreationFeedbackCreateInfoEXT(..)
+                                                            , PipelineCreationFeedbackFlagsEXT
                                                             , PipelineCreationFeedbackFlagBitsEXT( PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT
                                                                                                  , PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT
                                                                                                  , PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT
                                                                                                  , ..
                                                                                                  )
-                                                            , PipelineCreationFeedbackFlagsEXT
                                                             , EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION
                                                             , pattern EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION
                                                             , EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME
@@ -367,6 +367,8 @@ instance Zero PipelineCreationFeedbackCreateInfoEXT where
            zero
 
 
+type PipelineCreationFeedbackFlagsEXT = PipelineCreationFeedbackFlagBitsEXT
+
 -- | VkPipelineCreationFeedbackFlagBitsEXT - Bitmask specifying pipeline or
 -- pipeline stage creation feedback
 --
@@ -422,8 +424,6 @@ pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT = Pipe
 -- bit. For example, a 1% reduction in duration may not warrant setting
 -- this bit, while a 50% reduction would.
 pattern PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT = PipelineCreationFeedbackFlagBitsEXT 0x00000004
-
-type PipelineCreationFeedbackFlagsEXT = PipelineCreationFeedbackFlagBitsEXT
 
 instance Show PipelineCreationFeedbackFlagBitsEXT where
   showsPrec p = \case

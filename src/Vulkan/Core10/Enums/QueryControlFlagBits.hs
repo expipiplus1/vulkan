@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "QueryControlFlagBits"
-module Vulkan.Core10.Enums.QueryControlFlagBits  ( QueryControlFlagBits( QUERY_CONTROL_PRECISE_BIT
+module Vulkan.Core10.Enums.QueryControlFlagBits  ( QueryControlFlags
+                                                 , QueryControlFlagBits( QUERY_CONTROL_PRECISE_BIT
                                                                        , ..
                                                                        )
-                                                 , QueryControlFlags
                                                  ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type QueryControlFlags = QueryControlFlagBits
+
 -- | VkQueryControlFlagBits - Bitmask specifying constraints on a query
 --
 -- = See Also
@@ -33,8 +35,6 @@ newtype QueryControlFlagBits = QueryControlFlagBits Flags
 -- | 'QUERY_CONTROL_PRECISE_BIT' specifies the precision of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-occlusion occlusion queries>.
 pattern QUERY_CONTROL_PRECISE_BIT = QueryControlFlagBits 0x00000001
-
-type QueryControlFlags = QueryControlFlagBits
 
 instance Show QueryControlFlagBits where
   showsPrec p = \case

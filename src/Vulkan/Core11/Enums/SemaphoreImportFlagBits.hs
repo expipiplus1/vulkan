@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SemaphoreImportFlagBits"
-module Vulkan.Core11.Enums.SemaphoreImportFlagBits  ( SemaphoreImportFlagBits( SEMAPHORE_IMPORT_TEMPORARY_BIT
+module Vulkan.Core11.Enums.SemaphoreImportFlagBits  ( SemaphoreImportFlags
+                                                    , SemaphoreImportFlagBits( SEMAPHORE_IMPORT_TEMPORARY_BIT
                                                                              , ..
                                                                              )
-                                                    , SemaphoreImportFlags
                                                     ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type SemaphoreImportFlags = SemaphoreImportFlagBits
+
 -- | VkSemaphoreImportFlagBits - Bitmask specifying additional parameters of
 -- semaphore payload import
 --
@@ -40,8 +42,6 @@ newtype SemaphoreImportFlagBits = SemaphoreImportFlagBits Flags
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
 -- regardless of the permanence of @handleType@.
 pattern SEMAPHORE_IMPORT_TEMPORARY_BIT = SemaphoreImportFlagBits 0x00000001
-
-type SemaphoreImportFlags = SemaphoreImportFlagBits
 
 instance Show SemaphoreImportFlagBits where
   showsPrec p = \case

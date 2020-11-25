@@ -1,11 +1,11 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SparseImageFormatFlagBits"
-module Vulkan.Core10.Enums.SparseImageFormatFlagBits  ( SparseImageFormatFlagBits( SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT
+module Vulkan.Core10.Enums.SparseImageFormatFlagBits  ( SparseImageFormatFlags
+                                                      , SparseImageFormatFlagBits( SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT
                                                                                  , SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT
                                                                                  , SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT
                                                                                  , ..
                                                                                  )
-                                                      , SparseImageFormatFlags
                                                       ) where
 
 import GHC.Read (choose)
@@ -24,6 +24,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type SparseImageFormatFlags = SparseImageFormatFlagBits
+
 -- | VkSparseImageFormatFlagBits - Bitmask specifying additional information
 -- about a sparse image resource
 --
@@ -45,8 +47,6 @@ pattern SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = SparseImageFormatFlagBits 0x0
 -- @imageGranularity@ values do not match the standard sparse image block
 -- dimensions for the given format.
 pattern SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = SparseImageFormatFlagBits 0x00000004
-
-type SparseImageFormatFlags = SparseImageFormatFlagBits
 
 instance Show SparseImageFormatFlagBits where
   showsPrec p = \case

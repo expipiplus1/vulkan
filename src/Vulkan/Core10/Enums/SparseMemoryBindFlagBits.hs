@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SparseMemoryBindFlagBits"
-module Vulkan.Core10.Enums.SparseMemoryBindFlagBits  ( SparseMemoryBindFlagBits( SPARSE_MEMORY_BIND_METADATA_BIT
+module Vulkan.Core10.Enums.SparseMemoryBindFlagBits  ( SparseMemoryBindFlags
+                                                     , SparseMemoryBindFlagBits( SPARSE_MEMORY_BIND_METADATA_BIT
                                                                                , ..
                                                                                )
-                                                     , SparseMemoryBindFlags
                                                      ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type SparseMemoryBindFlags = SparseMemoryBindFlagBits
+
 -- | VkSparseMemoryBindFlagBits - Bitmask specifying usage of a sparse memory
 -- binding operation
 --
@@ -34,8 +36,6 @@ newtype SparseMemoryBindFlagBits = SparseMemoryBindFlagBits Flags
 -- | 'SPARSE_MEMORY_BIND_METADATA_BIT' specifies that the memory being bound
 -- is only for the metadata aspect.
 pattern SPARSE_MEMORY_BIND_METADATA_BIT = SparseMemoryBindFlagBits 0x00000001
-
-type SparseMemoryBindFlags = SparseMemoryBindFlagBits
 
 instance Show SparseMemoryBindFlagBits where
   showsPrec p = \case

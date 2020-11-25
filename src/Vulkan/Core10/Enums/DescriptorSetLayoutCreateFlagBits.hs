@@ -1,10 +1,10 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DescriptorSetLayoutCreateFlagBits"
-module Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits  ( DescriptorSetLayoutCreateFlagBits( DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
+module Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits  ( DescriptorSetLayoutCreateFlags
+                                                              , DescriptorSetLayoutCreateFlagBits( DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
                                                                                                  , DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT
                                                                                                  , ..
                                                                                                  )
-                                                              , DescriptorSetLayoutCreateFlags
                                                               ) where
 
 import GHC.Read (choose)
@@ -23,6 +23,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlagBits
+
 -- | VkDescriptorSetLayoutCreateFlagBits - Bitmask specifying descriptor set
 -- layout properties
 --
@@ -48,8 +50,6 @@ pattern DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = DescriptorSetLayo
 -- descriptors, but the limits /may/ be higher than the non-UpdateAfterBind
 -- limits.
 pattern DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT = DescriptorSetLayoutCreateFlagBits 0x00000002
-
-type DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlagBits
 
 instance Show DescriptorSetLayoutCreateFlagBits where
   showsPrec p = \case

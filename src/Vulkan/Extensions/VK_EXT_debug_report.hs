@@ -315,6 +315,7 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
                                               , pattern DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT
                                               , pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT
                                               , DebugReportCallbackCreateInfoEXT(..)
+                                              , DebugReportFlagsEXT
                                               , DebugReportFlagBitsEXT( DEBUG_REPORT_INFORMATION_BIT_EXT
                                                                       , DEBUG_REPORT_WARNING_BIT_EXT
                                                                       , DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT
@@ -322,7 +323,6 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
                                                                       , DEBUG_REPORT_DEBUG_BIT_EXT
                                                                       , ..
                                                                       )
-                                              , DebugReportFlagsEXT
                                               , DebugReportObjectTypeEXT( DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT
@@ -794,6 +794,8 @@ instance Zero DebugReportCallbackCreateInfoEXT where
            zero
 
 
+type DebugReportFlagsEXT = DebugReportFlagBitsEXT
+
 -- | VkDebugReportFlagBitsEXT - Bitmask specifying events which cause a debug
 -- report callback
 --
@@ -828,8 +830,6 @@ pattern DEBUG_REPORT_ERROR_BIT_EXT = DebugReportFlagBitsEXT 0x00000008
 -- | 'DEBUG_REPORT_DEBUG_BIT_EXT' specifies diagnostic information from the
 -- implementation and layers.
 pattern DEBUG_REPORT_DEBUG_BIT_EXT = DebugReportFlagBitsEXT 0x00000010
-
-type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 
 instance Show DebugReportFlagBitsEXT where
   showsPrec p = \case

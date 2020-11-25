@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SubgroupFeatureFlagBits"
-module Vulkan.Core11.Enums.SubgroupFeatureFlagBits  ( SubgroupFeatureFlagBits( SUBGROUP_FEATURE_BASIC_BIT
+module Vulkan.Core11.Enums.SubgroupFeatureFlagBits  ( SubgroupFeatureFlags
+                                                    , SubgroupFeatureFlagBits( SUBGROUP_FEATURE_BASIC_BIT
                                                                              , SUBGROUP_FEATURE_VOTE_BIT
                                                                              , SUBGROUP_FEATURE_ARITHMETIC_BIT
                                                                              , SUBGROUP_FEATURE_BALLOT_BIT
@@ -11,7 +12,6 @@ module Vulkan.Core11.Enums.SubgroupFeatureFlagBits  ( SubgroupFeatureFlagBits( S
                                                                              , SUBGROUP_FEATURE_PARTITIONED_BIT_NV
                                                                              , ..
                                                                              )
-                                                    , SubgroupFeatureFlags
                                                     ) where
 
 import GHC.Read (choose)
@@ -30,6 +30,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type SubgroupFeatureFlags = SubgroupFeatureFlagBits
+
 -- | VkSubgroupFeatureFlagBits - Enum describing what group operations are
 -- supported with subgroup scope
 --
@@ -76,8 +78,6 @@ pattern SUBGROUP_FEATURE_QUAD_BIT = SubgroupFeatureFlagBits 0x00000080
 -- specifies the device will accept SPIR-V shader modules containing the
 -- @GroupNonUniformPartitionedNV@ capability.
 pattern SUBGROUP_FEATURE_PARTITIONED_BIT_NV = SubgroupFeatureFlagBits 0x00000100
-
-type SubgroupFeatureFlags = SubgroupFeatureFlagBits
 
 instance Show SubgroupFeatureFlagBits where
   showsPrec p = \case

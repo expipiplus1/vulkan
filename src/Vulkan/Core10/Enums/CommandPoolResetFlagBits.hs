@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "CommandPoolResetFlagBits"
-module Vulkan.Core10.Enums.CommandPoolResetFlagBits  ( CommandPoolResetFlagBits( COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+module Vulkan.Core10.Enums.CommandPoolResetFlagBits  ( CommandPoolResetFlags
+                                                     , CommandPoolResetFlagBits( COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
                                                                                , ..
                                                                                )
-                                                     , CommandPoolResetFlags
                                                      ) where
 
 import GHC.Read (choose)
@@ -22,6 +22,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type CommandPoolResetFlags = CommandPoolResetFlagBits
+
 -- | VkCommandPoolResetFlagBits - Bitmask controlling behavior of a command
 -- pool reset
 --
@@ -35,8 +37,6 @@ newtype CommandPoolResetFlagBits = CommandPoolResetFlagBits Flags
 -- command pool recycles all of the resources from the command pool back to
 -- the system.
 pattern COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = CommandPoolResetFlagBits 0x00000001
-
-type CommandPoolResetFlags = CommandPoolResetFlagBits
 
 instance Show CommandPoolResetFlagBits where
   showsPrec p = \case

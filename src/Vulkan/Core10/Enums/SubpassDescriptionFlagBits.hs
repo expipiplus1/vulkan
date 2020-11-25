@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SubpassDescriptionFlagBits"
-module Vulkan.Core10.Enums.SubpassDescriptionFlagBits  ( SubpassDescriptionFlagBits( SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
+module Vulkan.Core10.Enums.SubpassDescriptionFlagBits  ( SubpassDescriptionFlags
+                                                       , SubpassDescriptionFlagBits( SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
                                                                                    , SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM
                                                                                    , SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX
                                                                                    , SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX
                                                                                    , ..
                                                                                    )
-                                                       , SubpassDescriptionFlags
                                                        ) where
 
 import GHC.Read (choose)
@@ -25,6 +25,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type SubpassDescriptionFlags = SubpassDescriptionFlagBits
+
 -- | VkSubpassDescriptionFlagBits - Bitmask specifying usage of a subpass
 --
 -- = Description
@@ -65,8 +67,6 @@ pattern SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX = SubpassDescriptio
 -- attributes to the @*PerViewNV[]@ shader outputs, in addition to the
 -- non-per-view (e.g. @Position@) outputs.
 pattern SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX = SubpassDescriptionFlagBits 0x00000001
-
-type SubpassDescriptionFlags = SubpassDescriptionFlagBits
 
 instance Show SubpassDescriptionFlagBits where
   showsPrec p = \case

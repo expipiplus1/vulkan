@@ -70,6 +70,7 @@ module VulkanMemoryAllocator  ( createAllocator
                               , PFN_vmaFreeDeviceMemoryFunction
                               , FN_vmaFreeDeviceMemoryFunction
                               , DeviceMemoryCallbacks(..)
+                              , AllocatorCreateFlags
                               , AllocatorCreateFlagBits( ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT
                                                        , ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT
                                                        , ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT
@@ -78,12 +79,11 @@ module VulkanMemoryAllocator  ( createAllocator
                                                        , ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
                                                        , ..
                                                        )
-                              , AllocatorCreateFlags
                               , VulkanFunctions(..)
+                              , RecordFlags
                               , RecordFlagBits( RECORD_FLUSH_AFTER_CALL_BIT
                                               , ..
                                               )
-                              , RecordFlags
                               , RecordSettings(..)
                               , AllocatorCreateInfo(..)
                               , AllocatorInfo(..)
@@ -100,6 +100,7 @@ module VulkanMemoryAllocator  ( createAllocator
                                            , MEMORY_USAGE_GPU_LAZILY_ALLOCATED
                                            , ..
                                            )
+                              , AllocationCreateFlags
                               , AllocationCreateFlagBits( ALLOCATION_CREATE_DEDICATED_MEMORY_BIT
                                                         , ALLOCATION_CREATE_NEVER_ALLOCATE_BIT
                                                         , ALLOCATION_CREATE_MAPPED_BIT
@@ -118,24 +119,23 @@ module VulkanMemoryAllocator  ( createAllocator
                                                         , ALLOCATION_CREATE_STRATEGY_MASK
                                                         , ..
                                                         )
-                              , AllocationCreateFlags
                               , AllocationCreateInfo(..)
+                              , PoolCreateFlags
                               , PoolCreateFlagBits( POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT
                                                   , POOL_CREATE_LINEAR_ALGORITHM_BIT
                                                   , POOL_CREATE_BUDDY_ALGORITHM_BIT
                                                   , POOL_CREATE_ALGORITHM_MASK
                                                   , ..
                                                   )
-                              , PoolCreateFlags
                               , PoolCreateInfo(..)
                               , PoolStats(..)
                               , Allocation(..)
                               , AllocationInfo(..)
                               , DefragmentationContext(..)
+                              , DefragmentationFlags
                               , DefragmentationFlagBits( DEFRAGMENTATION_FLAG_INCREMENTAL
                                                        , ..
                                                        )
-                              , DefragmentationFlags
                               , DefragmentationInfo2(..)
                               , DefragmentationPassMoveInfo(..)
                               , DefragmentationPassInfo(..)
@@ -2583,6 +2583,8 @@ instance Zero DeviceMemoryCallbacks where
            zero
 
 
+type AllocatorCreateFlags = AllocatorCreateFlagBits
+
 -- | Flags for created 'Allocator'.
 newtype AllocatorCreateFlagBits = AllocatorCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2697,8 +2699,6 @@ pattern ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT = AllocatorCreateFlagBit
 -- For more information, see documentation chapter /Enabling buffer device
 -- address/.
 pattern ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT = AllocatorCreateFlagBits 0x00000020
-
-type AllocatorCreateFlags = AllocatorCreateFlagBits
 
 instance Show AllocatorCreateFlagBits where
   showsPrec p = \case
@@ -2870,6 +2870,8 @@ instance Zero VulkanFunctions where
            zero
 
 
+type RecordFlags = RecordFlagBits
+
 -- | Flags to be used in /VmaRecordSettings::flags/.
 newtype RecordFlagBits = RecordFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2879,8 +2881,6 @@ newtype RecordFlagBits = RecordFlagBits Flags
 -- Enable it if you expect your application to crash, which may leave
 -- recording file truncated. It may degrade performance though.
 pattern RECORD_FLUSH_AFTER_CALL_BIT = RecordFlagBits 0x00000001
-
-type RecordFlags = RecordFlagBits
 
 instance Show RecordFlagBits where
   showsPrec p = \case
@@ -3584,6 +3584,8 @@ instance Read MemoryUsage where
                        pure (MemoryUsage v)))
 
 
+type AllocationCreateFlags = AllocationCreateFlagBits
+
 -- | Flags to be passed as /VmaAllocationCreateInfo::flags/.
 newtype AllocationCreateFlagBits = AllocationCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -3685,8 +3687,6 @@ pattern ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT = AllocationCreateFlagBits 0x000
 pattern ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT = AllocationCreateFlagBits 0x00020000
 -- | A bit mask to extract only @STRATEGY@ bits from entire set of flags.
 pattern ALLOCATION_CREATE_STRATEGY_MASK = AllocationCreateFlagBits 0x00070000
-
-type AllocationCreateFlags = AllocationCreateFlagBits
 
 instance Show AllocationCreateFlagBits where
   showsPrec p = \case
@@ -3845,6 +3845,8 @@ instance Zero AllocationCreateInfo where
            zero
 
 
+type PoolCreateFlags = PoolCreateFlagBits
+
 -- | Flags to be passed as /VmaPoolCreateInfo::flags/.
 newtype PoolCreateFlagBits = PoolCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -3898,8 +3900,6 @@ pattern POOL_CREATE_LINEAR_ALGORITHM_BIT = PoolCreateFlagBits 0x00000004
 pattern POOL_CREATE_BUDDY_ALGORITHM_BIT = PoolCreateFlagBits 0x00000008
 -- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
 pattern POOL_CREATE_ALGORITHM_MASK = PoolCreateFlagBits 0x0000000c
-
-type PoolCreateFlags = PoolCreateFlagBits
 
 instance Show PoolCreateFlagBits where
   showsPrec p = \case
@@ -4258,6 +4258,8 @@ instance Show DefragmentationContext where
   showsPrec p (DefragmentationContext x) = showParen (p >= 11) (showString "DefragmentationContext 0x" . showHex x)
 
 
+type DefragmentationFlags = DefragmentationFlagBits
+
 -- | Flags to be used in 'defragmentationBegin'. None at the moment. Reserved
 -- for future use.
 newtype DefragmentationFlagBits = DefragmentationFlagBits Flags
@@ -4265,8 +4267,6 @@ newtype DefragmentationFlagBits = DefragmentationFlagBits Flags
 
 
 pattern DEFRAGMENTATION_FLAG_INCREMENTAL = DefragmentationFlagBits 0x00000001
-
-type DefragmentationFlags = DefragmentationFlagBits
 
 instance Show DefragmentationFlagBits where
   showsPrec p = \case

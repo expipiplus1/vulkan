@@ -1,13 +1,13 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ResolveModeFlagBits"
-module Vulkan.Core12.Enums.ResolveModeFlagBits  ( ResolveModeFlagBits( RESOLVE_MODE_NONE
+module Vulkan.Core12.Enums.ResolveModeFlagBits  ( ResolveModeFlags
+                                                , ResolveModeFlagBits( RESOLVE_MODE_NONE
                                                                      , RESOLVE_MODE_SAMPLE_ZERO_BIT
                                                                      , RESOLVE_MODE_AVERAGE_BIT
                                                                      , RESOLVE_MODE_MIN_BIT
                                                                      , RESOLVE_MODE_MAX_BIT
                                                                      , ..
                                                                      )
-                                                , ResolveModeFlags
                                                 ) where
 
 import GHC.Read (choose)
@@ -26,6 +26,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ResolveModeFlags = ResolveModeFlagBits
+
 -- | VkResolveModeFlagBits - Bitmask indicating supported depth and stencil
 -- resolve modes
 --
@@ -50,8 +52,6 @@ pattern RESOLVE_MODE_MIN_BIT = ResolveModeFlagBits 0x00000004
 -- | 'RESOLVE_MODE_MAX_BIT' indicates that result of the resolve operation is
 -- the maximum of the sample values.
 pattern RESOLVE_MODE_MAX_BIT = ResolveModeFlagBits 0x00000008
-
-type ResolveModeFlags = ResolveModeFlagBits
 
 instance Show ResolveModeFlagBits where
   showsPrec p = \case

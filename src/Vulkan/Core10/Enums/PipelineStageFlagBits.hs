@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PipelineStageFlagBits"
-module Vulkan.Core10.Enums.PipelineStageFlagBits  ( PipelineStageFlagBits( PIPELINE_STAGE_TOP_OF_PIPE_BIT
+module Vulkan.Core10.Enums.PipelineStageFlagBits  ( PipelineStageFlags
+                                                  , PipelineStageFlagBits( PIPELINE_STAGE_TOP_OF_PIPE_BIT
                                                                          , PIPELINE_STAGE_DRAW_INDIRECT_BIT
                                                                          , PIPELINE_STAGE_VERTEX_INPUT_BIT
                                                                          , PIPELINE_STAGE_VERTEX_SHADER_BIT
@@ -28,7 +29,6 @@ module Vulkan.Core10.Enums.PipelineStageFlagBits  ( PipelineStageFlagBits( PIPEL
                                                                          , PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT
                                                                          , ..
                                                                          )
-                                                  , PipelineStageFlags
                                                   ) where
 
 import GHC.Read (choose)
@@ -47,6 +47,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type PipelineStageFlags = PipelineStageFlagBits
+
 -- | VkPipelineStageFlagBits - Bitmask specifying pipeline stages
 --
 -- = See Also
@@ -217,8 +219,6 @@ pattern PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT = PipelineStageFlagBits 0x0
 -- pipeline where vertex attribute output values are written to the
 -- transform feedback buffers.
 pattern PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT = PipelineStageFlagBits 0x01000000
-
-type PipelineStageFlags = PipelineStageFlagBits
 
 instance Show PipelineStageFlagBits where
   showsPrec p = \case

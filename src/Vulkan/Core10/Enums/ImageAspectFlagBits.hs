@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ImageAspectFlagBits"
-module Vulkan.Core10.Enums.ImageAspectFlagBits  ( ImageAspectFlagBits( IMAGE_ASPECT_COLOR_BIT
+module Vulkan.Core10.Enums.ImageAspectFlagBits  ( ImageAspectFlags
+                                                , ImageAspectFlagBits( IMAGE_ASPECT_COLOR_BIT
                                                                      , IMAGE_ASPECT_DEPTH_BIT
                                                                      , IMAGE_ASPECT_STENCIL_BIT
                                                                      , IMAGE_ASPECT_METADATA_BIT
@@ -13,7 +14,6 @@ module Vulkan.Core10.Enums.ImageAspectFlagBits  ( ImageAspectFlagBits( IMAGE_ASP
                                                                      , IMAGE_ASPECT_PLANE_0_BIT
                                                                      , ..
                                                                      )
-                                                , ImageAspectFlags
                                                 ) where
 
 import GHC.Read (choose)
@@ -32,6 +32,8 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ImageAspectFlags = ImageAspectFlagBits
+
 -- | VkImageAspectFlagBits - Bitmask specifying which aspects of an image are
 -- included in a view
 --
@@ -71,8 +73,6 @@ pattern IMAGE_ASPECT_PLANE_1_BIT = ImageAspectFlagBits 0x00000020
 -- | 'IMAGE_ASPECT_PLANE_0_BIT' specifies plane 0 of a /multi-planar/ image
 -- format.
 pattern IMAGE_ASPECT_PLANE_0_BIT = ImageAspectFlagBits 0x00000010
-
-type ImageAspectFlags = ImageAspectFlagBits
 
 instance Show ImageAspectFlagBits where
   showsPrec p = \case
