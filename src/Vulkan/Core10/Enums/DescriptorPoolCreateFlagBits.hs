@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DescriptorPoolCreateFlagBits"
 module Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits  ( DescriptorPoolCreateFlagBits( DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
                                                                                        , DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT
                                                                                        , ..

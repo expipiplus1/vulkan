@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "FundamentalTypes"
 module Vulkan.Core10.FundamentalTypes  ( boolToBool32
                                        , bool32ToBool
                                        , Offset2D(..)

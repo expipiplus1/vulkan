@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ImageUsageFlagBits"
 module Vulkan.Core10.Enums.ImageUsageFlagBits  ( ImageUsageFlagBits( IMAGE_USAGE_TRANSFER_SRC_BIT
                                                                    , IMAGE_USAGE_TRANSFER_DST_BIT
                                                                    , IMAGE_USAGE_SAMPLED_BIT

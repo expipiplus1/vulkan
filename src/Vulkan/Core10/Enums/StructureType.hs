@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "StructureType"
 module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICATION_INFO
                                                         , STRUCTURE_TYPE_INSTANCE_CREATE_INFO
                                                         , STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO

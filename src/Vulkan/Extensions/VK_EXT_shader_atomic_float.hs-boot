@@ -1,4 +1,94 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_shader_atomic_float - device extension
+--
+-- = Registered Extension Number
+--
+-- 261
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2020-07-15
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires
+--         {spirv}\/EXT\/SPV_EXT_shader_atomic_float_add.html[@SPV_EXT_shader_atomic_float_add@]
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/tree/master/extensions/ext/GLSL_EXT_shader_atomic_float.txt GL_EXT_shader_atomic_float>
+--
+-- [__Contributors__]
+--
+--     -   Vikram Kushwaha, NVIDIA
+--
+--     -   Jeff Bolz, NVIDIA
+--
+-- == Description
+--
+-- This extension allows a shader to contain floating-point atomic
+-- operations on buffer, workgroup, and image memory. It also advertises
+-- the SPIR-V @AtomicFloat32AddEXT@ and @AtomicFloat64AddEXT@ capabilities
+-- that allows atomic addition on floating-points numbers. The supported
+-- operations include @OpAtomicFAddEXT@, @OpAtomicExchange@, @OpAtomicLoad@
+-- and @OpAtomicStore@.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceShaderAtomicFloatFeaturesEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME'
+--
+-- -   'EXT_SHADER_ATOMIC_FLOAT_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT'
+--
+-- == New SPIR-V Capabilities
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat32AddEXT AtomicFloat32AddEXT>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat64AddEXT AtomicFloat64AddEXT>
+--
+-- == Version History
+--
+-- -   Revision 1, 2020-07-15 (Vikram Kushwaha)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'PhysicalDeviceShaderAtomicFloatFeaturesEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_atomic_float Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_shader_atomic_float  (PhysicalDeviceShaderAtomicFloatFeaturesEXT) where
 
 import Data.Kind (Type)

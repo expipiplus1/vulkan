@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "CommandPoolCreateFlagBits"
 module Vulkan.Core10.Enums.CommandPoolCreateFlagBits  ( CommandPoolCreateFlagBits( COMMAND_POOL_CREATE_TRANSIENT_BIT
                                                                                  , COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
                                                                                  , COMMAND_POOL_CREATE_PROTECTED_BIT

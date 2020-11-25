@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PointClippingBehavior"
 module Vulkan.Core11.Enums.PointClippingBehavior  (PointClippingBehavior( POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
                                                                         , POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
                                                                         , ..

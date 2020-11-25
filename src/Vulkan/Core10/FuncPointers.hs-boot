@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "FuncPointers"
 module Vulkan.Core10.FuncPointers  ( PFN_vkVoidFunction
                                    , FN_vkVoidFunction
                                    ) where

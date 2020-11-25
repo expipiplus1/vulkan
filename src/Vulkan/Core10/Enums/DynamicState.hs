@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DynamicState"
 module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_SCISSOR
                                                       , DYNAMIC_STATE_LINE_WIDTH

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "FrontFace"
 module Vulkan.Core10.Enums.FrontFace  (FrontFace( FRONT_FACE_COUNTER_CLOCKWISE
                                                 , FRONT_FACE_CLOCKWISE
                                                 , ..

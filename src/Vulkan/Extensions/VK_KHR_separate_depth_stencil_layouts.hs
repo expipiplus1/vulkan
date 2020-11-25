@@ -1,4 +1,126 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_separate_depth_stencil_layouts - device extension
+--
+-- = Registered Extension Number
+--
+-- 242
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- -   Requires @VK_KHR_create_renderpass2@
+--
+-- = Deprecation state
+--
+-- -   /Promoted/ to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2019-06-25
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.2 Core
+--
+-- [__Contributors__]
+--
+--     -   Daniel Koch, NVIDIA
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Jesse Barker, Unity
+--
+--     -   Tobias Hector, AMD
+--
+-- == Description
+--
+-- This extension allows image memory barriers for depth\/stencil images to
+-- have just one of the
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+-- aspect bits set, rather than require both. This allows their layouts to
+-- be set independently. To support depth\/stencil images with different
+-- layouts for the depth and stencil aspects, the depth\/stencil attachment
+-- interface has been updated to support a separate layout for stencil.
+--
+-- == Promotion to Vulkan 1.2
+--
+-- All functionality in this extension is included in core Vulkan 1.2, with
+-- the KHR suffix omitted. The original type, enum and command names are
+-- still available as aliases of the core functionality.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2':
+--
+--     -   'AttachmentDescriptionStencilLayoutKHR'
+--
+-- -   Extending
+--     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentReference2':
+--
+--     -   'AttachmentReferenceStencilLayoutKHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_SEPARATE_DEPTH_STENCIL_LAYOUTS_EXTENSION_NAME'
+--
+-- -   'KHR_SEPARATE_DEPTH_STENCIL_LAYOUTS_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.ImageLayout.ImageLayout':
+--
+--     -   'IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL_KHR'
+--
+--     -   'IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL_KHR'
+--
+--     -   'IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL_KHR'
+--
+--     -   'IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT_KHR'
+--
+--     -   'STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT_KHR'
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES_KHR'
+--
+-- == Version History
+--
+-- -   Revision 1, 2019-06-25 (Piers Daniell)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'AttachmentDescriptionStencilLayoutKHR',
+-- 'AttachmentReferenceStencilLayoutKHR',
+-- 'PhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_separate_depth_stencil_layouts Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES_KHR
                                                                 , pattern STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT_KHR
                                                                 , pattern STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT_KHR

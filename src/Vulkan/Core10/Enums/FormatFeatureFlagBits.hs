@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "FormatFeatureFlagBits"
 module Vulkan.Core10.Enums.FormatFeatureFlagBits  ( FormatFeatureFlagBits( FORMAT_FEATURE_SAMPLED_IMAGE_BIT
                                                                          , FORMAT_FEATURE_STORAGE_IMAGE_BIT
                                                                          , FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT

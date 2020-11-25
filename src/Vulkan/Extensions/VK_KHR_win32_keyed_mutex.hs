@@ -1,4 +1,80 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_win32_keyed_mutex - device extension
+--
+-- = Registered Extension Number
+--
+-- 76
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- -   Requires @VK_KHR_external_memory_win32@
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2016-10-21
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   James Jones, NVIDIA
+--
+--     -   Jeff Juliano, NVIDIA
+--
+--     -   Carsten Rohde, NVIDIA
+--
+-- == Description
+--
+-- Applications that wish to import Direct3D 11 memory objects into the
+-- Vulkan API may wish to use the native keyed mutex mechanism to
+-- synchronize access to the memory between Vulkan and Direct3D. This
+-- extension provides a way for an application to access the keyed mutex
+-- associated with an imported Vulkan memory object when submitting command
+-- buffers to a queue.
+--
+-- == New Structures
+--
+-- -   Extending 'Vulkan.Core10.Queue.SubmitInfo':
+--
+--     -   'Win32KeyedMutexAcquireReleaseInfoKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME'
+--
+-- -   'KHR_WIN32_KEYED_MUTEX_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR'
+--
+-- == Version History
+--
+-- -   Revision 1, 2016-10-21 (James Jones)
+--
+--     -   Initial revision
+--
+-- = See Also
+--
+-- 'Win32KeyedMutexAcquireReleaseInfoKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_keyed_mutex Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_win32_keyed_mutex  ( Win32KeyedMutexAcquireReleaseInfoKHR(..)
                                                    , KHR_WIN32_KEYED_MUTEX_SPEC_VERSION
                                                    , pattern KHR_WIN32_KEYED_MUTEX_SPEC_VERSION

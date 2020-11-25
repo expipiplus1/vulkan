@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_depth_stencil_resolve"
 module Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve  ( PhysicalDeviceDepthStencilResolveProperties(..)
                                                                  , SubpassDescriptionDepthStencilResolve(..)
                                                                  , StructureType(..)

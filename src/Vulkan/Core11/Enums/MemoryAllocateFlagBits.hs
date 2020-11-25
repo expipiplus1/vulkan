@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "MemoryAllocateFlagBits"
 module Vulkan.Core11.Enums.MemoryAllocateFlagBits  ( MemoryAllocateFlagBits( MEMORY_ALLOCATE_DEVICE_MASK_BIT
                                                                            , MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT
                                                                            , MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT

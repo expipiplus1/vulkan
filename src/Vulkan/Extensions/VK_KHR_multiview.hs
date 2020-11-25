@@ -1,4 +1,143 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_multiview - device extension
+--
+-- = Registered Extension Number
+--
+-- 54
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- = Deprecation state
+--
+-- -   /Promoted/ to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2016-10-28
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.1 Core
+--
+--     -   This extension requires
+--         {spirv}\/KHR\/SPV_KHR_multiview.html[@SPV_KHR_multiview@]
+--
+--     -   This extension provides API support for
+--         <https://raw.githubusercontent.com/KhronosGroup/GLSL/master/extensions/ext/GL_EXT_multiview.txt GL_EXT_multiview>
+--
+-- [__Contributors__]
+--
+--     -   Jeff Bolz, NVIDIA
+--
+-- == Description
+--
+-- This extension has the same goal as the OpenGL ES @GL_OVR_multiview@
+-- extension. Multiview is a rendering technique originally designed for VR
+-- where it is more efficient to record a single set of commands to be
+-- executed with slightly different behavior for each \"view\".
+--
+-- It includes a concise way to declare a render pass with multiple views,
+-- and gives implementations freedom to render the views in the most
+-- efficient way possible. This is done with a multiview configuration
+-- specified during
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass render pass>
+-- creation with the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'
+-- passed into 'Vulkan.Core10.Pass.RenderPassCreateInfo'::@pNext@.
+--
+-- This extension enables the use of the
+-- {spirv}\/KHR\/SPV_KHR_multiview.html[@SPV_KHR_multiview@] shader
+-- extension which adds a new @ViewIndex@ built-in type to shaders that
+-- allow shaders to control what to do for each view. If using GLSL there
+-- is also a
+-- <https://raw.githubusercontent.com/KhronosGroup/GLSL/master/extensions/ext/GL_EXT_multiview.txt GL_EXT_multiview>
+-- extension that introduces a @highp int gl_ViewIndex;@ built-in variable
+-- for vertex, tessellation, geometry, and fragment shaders.
+--
+-- == Promotion to Vulkan 1.1
+--
+-- All functionality in this extension is included in core Vulkan 1.1, with
+-- the KHR suffix omitted. The original type, enum and command names are
+-- still available as aliases of the core functionality.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceMultiviewFeaturesKHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
+--
+--     -   'PhysicalDeviceMultiviewPropertiesKHR'
+--
+-- -   Extending 'Vulkan.Core10.Pass.RenderPassCreateInfo':
+--
+--     -   'RenderPassMultiviewCreateInfoKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_MULTIVIEW_EXTENSION_NAME'
+--
+-- -   'KHR_MULTIVIEW_SPEC_VERSION'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlagBits':
+--
+--     -   'DEPENDENCY_VIEW_LOCAL_BIT_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES_KHR'
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES_KHR'
+--
+--     -   'STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO_KHR'
+--
+-- == New Built-In Variables
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-viewindex ViewIndex>
+--
+-- == New SPIR-V Capabilities
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-multiview MultiView>
+--
+-- == Version History
+--
+-- -   Revision 1, 2016-10-28 (Jeff Bolz)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'PhysicalDeviceMultiviewFeaturesKHR',
+-- 'PhysicalDeviceMultiviewPropertiesKHR',
+-- 'RenderPassMultiviewCreateInfoKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_multiview Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_multiview  ( pattern STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO_KHR
                                            , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES_KHR
                                            , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES_KHR

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SamplerMipmapMode"
 module Vulkan.Core10.Enums.SamplerMipmapMode  (SamplerMipmapMode( SAMPLER_MIPMAP_MODE_NEAREST
                                                                 , SAMPLER_MIPMAP_MODE_LINEAR
                                                                 , ..

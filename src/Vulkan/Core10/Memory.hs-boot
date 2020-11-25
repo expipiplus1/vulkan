@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Memory"
 module Vulkan.Core10.Memory  ( MappedMemoryRange
                              , MemoryAllocateInfo
                              ) where

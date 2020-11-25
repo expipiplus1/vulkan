@@ -1,4 +1,129 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_sampler_filter_minmax - device extension
+--
+-- = Registered Extension Number
+--
+-- 131
+--
+-- = Revision
+--
+-- 2
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- = Deprecation state
+--
+-- -   /Promoted/ to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2017-05-19
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.2 Core
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Piers Daniell, NVIDIA
+--
+-- == Description
+--
+-- In unextended Vulkan, minification and magnification filters such as
+-- LINEAR allow sampled image lookups to return a filtered texel value
+-- produced by computing a weighted average of a collection of texels in
+-- the neighborhood of the texture coordinate provided.
+--
+-- This extension provides a new sampler parameter which allows
+-- applications to produce a filtered texel value by computing a
+-- component-wise minimum (MIN) or maximum (MAX) of the texels that would
+-- normally be averaged. The reduction mode is orthogonal to the
+-- minification and magnification filter parameters. The filter parameters
+-- are used to identify the set of texels used to produce a final filtered
+-- value; the reduction mode identifies how these texels are combined.
+--
+-- == Promotion to Vulkan 1.2
+--
+-- All functionality in this extension is included in core Vulkan 1.2, with
+-- the EXT suffix omitted. The original type, enum and command names are
+-- still available as aliases of the core functionality.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
+--
+--     -   'PhysicalDeviceSamplerFilterMinmaxPropertiesEXT'
+--
+-- -   Extending 'Vulkan.Core10.Sampler.SamplerCreateInfo':
+--
+--     -   'SamplerReductionModeCreateInfoEXT'
+--
+-- == New Enums
+--
+-- -   'SamplerReductionModeEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME'
+--
+-- -   'EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
+--
+--     -   'FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT'
+--
+-- -   Extending
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode':
+--
+--     -   'SAMPLER_REDUCTION_MODE_MAX_EXT'
+--
+--     -   'SAMPLER_REDUCTION_MODE_MIN_EXT'
+--
+--     -   'SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT'
+--
+--     -   'STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT'
+--
+-- == Version History
+--
+-- -   Revision 2, 2017-05-19 (Piers Daniell)
+--
+--     -   Renamed to EXT
+--
+-- -   Revision 1, 2017-03-25 (Jeff Bolz)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'PhysicalDeviceSamplerFilterMinmaxPropertiesEXT',
+-- 'SamplerReductionModeCreateInfoEXT', 'SamplerReductionModeEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sampler_filter_minmax Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_sampler_filter_minmax  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT
                                                        , pattern STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT
                                                        , pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT

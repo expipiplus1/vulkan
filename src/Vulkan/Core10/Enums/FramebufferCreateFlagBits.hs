@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "FramebufferCreateFlagBits"
 module Vulkan.Core10.Enums.FramebufferCreateFlagBits  ( FramebufferCreateFlagBits( FRAMEBUFFER_CREATE_IMAGELESS_BIT
                                                                                  , ..
                                                                                  )

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Utils"
 module Vulkan.CStruct.Utils  ( pokeFixedLengthByteString
                              , pokeFixedLengthNullTerminatedByteString
                              , peekByteStringFromSizedVectorPtr

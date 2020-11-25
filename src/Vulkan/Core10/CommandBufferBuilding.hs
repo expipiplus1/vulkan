@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "CommandBufferBuilding"
 module Vulkan.Core10.CommandBufferBuilding  ( cmdBindPipeline
                                             , cmdSetViewport
                                             , cmdSetScissor

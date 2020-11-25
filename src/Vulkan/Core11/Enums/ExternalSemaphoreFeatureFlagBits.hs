@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ExternalSemaphoreFeatureFlagBits"
 module Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits  ( ExternalSemaphoreFeatureFlagBits( EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT
                                                                                                , EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT
                                                                                                , ..

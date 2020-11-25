@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Fence"
 module Vulkan.Core10.Fence  ( createFence
                             , withFence
                             , destroyFence

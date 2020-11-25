@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ImageLayout"
 module Vulkan.Core10.Enums.ImageLayout  (ImageLayout( IMAGE_LAYOUT_UNDEFINED
                                                     , IMAGE_LAYOUT_GENERAL
                                                     , IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL

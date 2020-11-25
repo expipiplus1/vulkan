@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ShaderStageFlagBits"
 module Vulkan.Core10.Enums.ShaderStageFlagBits  ( ShaderStageFlagBits( SHADER_STAGE_VERTEX_BIT
                                                                      , SHADER_STAGE_TESSELLATION_CONTROL_BIT
                                                                      , SHADER_STAGE_TESSELLATION_EVALUATION_BIT

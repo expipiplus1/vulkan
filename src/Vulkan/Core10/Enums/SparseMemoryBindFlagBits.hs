@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SparseMemoryBindFlagBits"
 module Vulkan.Core10.Enums.SparseMemoryBindFlagBits  ( SparseMemoryBindFlagBits( SPARSE_MEMORY_BIND_METADATA_BIT
                                                                                , ..
                                                                                )

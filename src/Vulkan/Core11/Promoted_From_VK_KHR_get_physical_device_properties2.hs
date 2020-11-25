@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_get_physical_device_properties2"
 module Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2  ( getPhysicalDeviceFeatures2
                                                                            , getPhysicalDeviceProperties2
                                                                            , getPhysicalDeviceFormatProperties2

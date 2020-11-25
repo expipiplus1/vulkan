@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineStageFlagBits"
 module Vulkan.Core10.Enums.PipelineStageFlagBits  ( PipelineStageFlagBits( PIPELINE_STAGE_TOP_OF_PIPE_BIT
                                                                          , PIPELINE_STAGE_DRAW_INDIRECT_BIT
                                                                          , PIPELINE_STAGE_VERTEX_INPUT_BIT

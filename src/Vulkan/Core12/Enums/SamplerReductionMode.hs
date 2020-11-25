@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SamplerReductionMode"
 module Vulkan.Core12.Enums.SamplerReductionMode  (SamplerReductionMode( SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE
                                                                       , SAMPLER_REDUCTION_MODE_MIN
                                                                       , SAMPLER_REDUCTION_MODE_MAX

@@ -1,4 +1,176 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_maintenance1 - device extension
+--
+-- = Registered Extension Number
+--
+-- 70
+--
+-- = Revision
+--
+-- 2
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- = Deprecation state
+--
+-- -   /Promoted/ to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2018-03-13
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.1 Core
+--
+-- [__Contributors__]
+--
+--     -   Dan Ginsburg, Valve
+--
+--     -   Daniel Koch, NVIDIA
+--
+--     -   Daniel Rakos, AMD
+--
+--     -   Jan-Harald Fredriksen, ARM
+--
+--     -   Jason Ekstrand, Intel
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Jesse Hall, Google
+--
+--     -   John Kessenich, Google
+--
+--     -   Michael Worcester, Imagination Technologies
+--
+--     -   Neil Henning, Codeplay Software Ltd.
+--
+--     -   Piers Daniell, NVIDIA
+--
+--     -   Slawomir Grajewski, Intel
+--
+--     -   Tobias Hector, Imagination Technologies
+--
+--     -   Tom Olson, ARM
+--
+-- == Description
+--
+-- @VK_KHR_maintenance1@ adds a collection of minor features that were
+-- intentionally left out or overlooked from the original Vulkan 1.0
+-- release.
+--
+-- The new features are as follows:
+--
+-- -   Allow 2D and 2D array image views to be created from 3D images,
+--     which can then be used as color framebuffer attachments. This allows
+--     applications to render to slices of a 3D image.
+--
+-- -   Support 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImage' between
+--     2D array layers and 3D slices. This extension allows copying from
+--     layers of a 2D array image to slices of a 3D image and vice versa.
+--
+-- -   Allow negative height to be specified in the
+--     'Vulkan.Core10.Pipeline.Viewport'::@height@ field to perform
+--     y-inversion of the clip-space to framebuffer-space transform. This
+--     allows apps to avoid having to use @gl_Position.y = -gl_Position.y@
+--     in shaders also targeting other APIs.
+--
+-- -   Allow implementations to express support for doing just transfers
+--     and clears of image formats that they otherwise support no other
+--     format features for. This is done by adding new format feature flags
+--     'FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR' and
+--     'FORMAT_FEATURE_TRANSFER_DST_BIT_KHR'.
+--
+-- -   Support 'Vulkan.Core10.CommandBufferBuilding.cmdFillBuffer' on
+--     transfer-only queues. Previously
+--     'Vulkan.Core10.CommandBufferBuilding.cmdFillBuffer' was defined to
+--     only work on command buffers allocated from command pools which
+--     support graphics or compute queues. It is now allowed on queues that
+--     just support transfer operations.
+--
+-- -   Fix the inconsistency of how error conditions are returned between
+--     the 'Vulkan.Core10.Pipeline.createGraphicsPipelines' and
+--     'Vulkan.Core10.Pipeline.createComputePipelines' functions and the
+--     'Vulkan.Core10.DescriptorSet.allocateDescriptorSets' and
+--     'Vulkan.Core10.CommandBuffer.allocateCommandBuffers' functions.
+--
+-- -   Add new 'ERROR_OUT_OF_POOL_MEMORY_KHR' error so implementations can
+--     give a more precise reason for
+--     'Vulkan.Core10.DescriptorSet.allocateDescriptorSets' failures.
+--
+-- -   Add a new command 'trimCommandPoolKHR' which gives the
+--     implementation an opportunity to release any unused command pool
+--     memory back to the system.
+--
+-- == Promotion to Vulkan 1.1
+--
+-- All functionality in this extension is included in core Vulkan 1.1, with
+-- the KHR suffix omitted. The original type, enum and command names are
+-- still available as aliases of the core functionality.
+--
+-- == New Commands
+--
+-- -   'trimCommandPoolKHR'
+--
+-- == New Bitmasks
+--
+-- -   'CommandPoolTrimFlagsKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_MAINTENANCE1_EXTENSION_NAME'
+--
+-- -   'KHR_MAINTENANCE1_SPEC_VERSION'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
+--
+--     -   'FORMAT_FEATURE_TRANSFER_DST_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits':
+--
+--     -   'IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.Result.Result':
+--
+--     -   'ERROR_OUT_OF_POOL_MEMORY_KHR'
+--
+-- == Issues
+--
+-- 1.  Are viewports with zero height allowed?
+--
+--     __RESOLVED__: Yes, although they have low utility.
+--
+-- == Version History
+--
+-- -   Revision 1, 2016-10-26 (Piers Daniell)
+--
+--     -   Internal revisions
+--
+-- -   Revision 2, 2018-03-13 (Jon Leech)
+--
+--     -   Add issue for zero-height viewports
+--
+-- = See Also
+--
+-- 'CommandPoolTrimFlagsKHR', 'trimCommandPoolKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_maintenance1  ( pattern ERROR_OUT_OF_POOL_MEMORY_KHR
                                               , pattern FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR
                                               , pattern FORMAT_FEATURE_TRANSFER_DST_BIT_KHR

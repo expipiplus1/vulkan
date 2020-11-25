@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Shader"
 module Vulkan.Core10.Shader  (ShaderModuleCreateInfo) where
 
 import Data.Kind (Type)

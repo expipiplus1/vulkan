@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "StencilOp"
 module Vulkan.Core10.Enums.StencilOp  (StencilOp( STENCIL_OP_KEEP
                                                 , STENCIL_OP_ZERO
                                                 , STENCIL_OP_REPLACE

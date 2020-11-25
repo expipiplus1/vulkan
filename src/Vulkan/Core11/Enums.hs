@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Enums"
 module Vulkan.Core11.Enums  ( module Vulkan.Core11.Enums.ChromaLocation
                             , module Vulkan.Core11.Enums.CommandPoolTrimFlags
                             , module Vulkan.Core11.Enums.DescriptorUpdateTemplateCreateFlags

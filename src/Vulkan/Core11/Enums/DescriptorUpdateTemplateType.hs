@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DescriptorUpdateTemplateType"
 module Vulkan.Core11.Enums.DescriptorUpdateTemplateType  (DescriptorUpdateTemplateType( DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
                                                                                       , DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
                                                                                       , ..

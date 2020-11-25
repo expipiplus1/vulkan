@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "CompareOp"
 module Vulkan.Core10.Enums.CompareOp  (CompareOp( COMPARE_OP_NEVER
                                                 , COMPARE_OP_LESS
                                                 , COMPARE_OP_EQUAL

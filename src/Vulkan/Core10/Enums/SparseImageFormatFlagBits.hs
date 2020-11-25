@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SparseImageFormatFlagBits"
 module Vulkan.Core10.Enums.SparseImageFormatFlagBits  ( SparseImageFormatFlagBits( SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT
                                                                                  , SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT
                                                                                  , SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT

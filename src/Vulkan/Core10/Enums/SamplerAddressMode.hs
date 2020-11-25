@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SamplerAddressMode"
 module Vulkan.Core10.Enums.SamplerAddressMode  (SamplerAddressMode( SAMPLER_ADDRESS_MODE_REPEAT
                                                                   , SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT
                                                                   , SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE

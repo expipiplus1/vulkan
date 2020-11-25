@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DependencyFlagBits"
 module Vulkan.Core10.Enums.DependencyFlagBits  ( DependencyFlagBits( DEPENDENCY_BY_REGION_BIT
                                                                    , DEPENDENCY_VIEW_LOCAL_BIT
                                                                    , DEPENDENCY_DEVICE_GROUP_BIT

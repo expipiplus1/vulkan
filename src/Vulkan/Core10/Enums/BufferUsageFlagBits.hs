@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "BufferUsageFlagBits"
 module Vulkan.Core10.Enums.BufferUsageFlagBits  ( BufferUsageFlagBits( BUFFER_USAGE_TRANSFER_SRC_BIT
                                                                      , BUFFER_USAGE_TRANSFER_DST_BIT
                                                                      , BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT

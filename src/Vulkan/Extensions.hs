@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Extensions"
 module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_AMD_buffer_marker
                           , module Vulkan.Extensions.VK_AMD_device_coherent_memory

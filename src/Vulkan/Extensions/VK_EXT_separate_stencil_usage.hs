@@ -1,4 +1,88 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_separate_stencil_usage - device extension
+--
+-- = Registered Extension Number
+--
+-- 247
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- = Deprecation state
+--
+-- -   /Promoted/ to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2018-11-08
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.2 Core
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Daniel Rakos, AMD
+--
+--     -   Jordan Logan, AMD
+--
+-- == Description
+--
+-- This extension allows specifying separate usage flags for the stencil
+-- aspect of images with a depth-stencil format at image creation time.
+--
+-- == Promotion to Vulkan 1.2
+--
+-- All functionality in this extension is included in core Vulkan 1.2, with
+-- the EXT suffix omitted. The original type, enum and command names are
+-- still available as aliases of the core functionality.
+--
+-- == New Structures
+--
+-- -   Extending 'Vulkan.Core10.Image.ImageCreateInfo',
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2':
+--
+--     -   'ImageStencilUsageCreateInfoEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_SEPARATE_STENCIL_USAGE_EXTENSION_NAME'
+--
+-- -   'EXT_SEPARATE_STENCIL_USAGE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT'
+--
+-- == Version History
+--
+-- -   Revision 1, 2018-11-08 (Daniel Rakos)
+--
+--     -   Internal revisions.
+--
+-- = See Also
+--
+-- 'ImageStencilUsageCreateInfoEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_separate_stencil_usage Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_separate_stencil_usage  ( pattern STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT
                                                         , ImageStencilUsageCreateInfoEXT
                                                         , EXT_SEPARATE_STENCIL_USAGE_SPEC_VERSION

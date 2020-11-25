@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "StencilFaceFlagBits"
 module Vulkan.Core10.Enums.StencilFaceFlagBits  ( pattern STENCIL_FRONT_AND_BACK
                                                 , StencilFaceFlagBits( STENCIL_FACE_FRONT_BIT
                                                                      , STENCIL_FACE_BACK_BIT

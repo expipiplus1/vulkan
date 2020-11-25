@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ShaderModuleCreateFlagBits"
 module Vulkan.Core10.Enums.ShaderModuleCreateFlagBits  ( ShaderModuleCreateFlagBits(..)
                                                        , ShaderModuleCreateFlags
                                                        ) where

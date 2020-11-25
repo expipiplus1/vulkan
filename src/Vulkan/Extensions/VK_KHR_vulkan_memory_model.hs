@@ -1,4 +1,120 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_vulkan_memory_model - device extension
+--
+-- = Registered Extension Number
+--
+-- 212
+--
+-- = Revision
+--
+-- 3
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- = Deprecation state
+--
+-- -   /Promoted/ to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2018-12-10
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.2 Core
+--
+--     -   This extension requires
+--         {spirv}\/KHR\/SPV_KHR_vulkan_memory_model.html[@SPV_KHR_vulkan_memory_model@]
+--
+-- [__Contributors__]
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Alan Baker, Google
+--
+--     -   Tobias Hector, AMD
+--
+--     -   David Neto, Google
+--
+--     -   Robert Simpson, Qualcomm Technologies, Inc.
+--
+--     -   Brian Sumner, AMD
+--
+-- == Description
+--
+-- The @VK_KHR_vulkan_memory_model@ extension allows use of the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model Vulkan Memory Model>,
+-- which formally defines how to synchronize memory accesses to the same
+-- memory locations performed by multiple shader invocations.
+--
+-- Note
+--
+-- Version 3 of the spec added a member
+-- (@vulkanMemoryModelAvailabilityVisibilityChains@) to
+-- 'PhysicalDeviceVulkanMemoryModelFeaturesKHR', which is an incompatible
+-- change from version 2.
+--
+-- == Promotion to Vulkan 1.2
+--
+-- All functionality in this extension is included in core Vulkan 1.2, with
+-- the KHR suffix omitted. However, if Vulkan 1.2 is supported and this
+-- extension is not, the @vulkanMemoryModel@ capability is optional. The
+-- original type, enum and command names are still available as aliases of
+-- the core functionality.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceVulkanMemoryModelFeaturesKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME'
+--
+-- -   'KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR'
+--
+-- == New SPIR-V Capabilities
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-memorymodel VulkanMemoryModelKHR>
+--
+-- == Version History
+--
+-- -   Revision 1, 2018-06-24 (Jeff Bolz)
+--
+--     -   Initial draft
+--
+-- -   Revision 3, 2018-12-10 (Jeff Bolz)
+--
+--     -   Add vulkanMemoryModelAvailabilityVisibilityChains member to the
+--         VkPhysicalDeviceVulkanMemoryModelFeaturesKHR structure.
+--
+-- = See Also
+--
+-- 'PhysicalDeviceVulkanMemoryModelFeaturesKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_vulkan_memory_model Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_vulkan_memory_model  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR
                                                      , PhysicalDeviceVulkanMemoryModelFeaturesKHR
                                                      , KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION

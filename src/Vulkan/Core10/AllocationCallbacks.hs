@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "AllocationCallbacks"
 module Vulkan.Core10.AllocationCallbacks  (AllocationCallbacks(..)) where
 
 import Foreign.Marshal.Alloc (allocaBytesAligned)

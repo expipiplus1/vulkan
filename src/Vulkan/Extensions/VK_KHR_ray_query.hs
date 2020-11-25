@@ -1,4 +1,239 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_ray_query - device extension
+--
+-- = Registered Extension Number
+--
+-- 349
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.1
+--
+-- -   Requires @VK_KHR_spirv_1_4@
+--
+-- -   Requires @VK_KHR_acceleration_structure@
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2020-11-12
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_query.html SPV_KHR_ray_query>
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_query.txt GLSL_EXT_ray_query>
+--
+-- [__Contributors__]
+--
+--     -   Matthäus Chajdas, AMD
+--
+--     -   Greg Grebe, AMD
+--
+--     -   Nicolai Hähnle, AMD
+--
+--     -   Tobias Hector, AMD
+--
+--     -   Dave Oldcorn, AMD
+--
+--     -   Skyler Saleh, AMD
+--
+--     -   Mathieu Robart, Arm
+--
+--     -   Marius Bjorge, Arm
+--
+--     -   Tom Olson, Arm
+--
+--     -   Sebastian Tafuri, EA
+--
+--     -   Henrik Rydgard, Embark
+--
+--     -   Juan Cañada, Epic Games
+--
+--     -   Patrick Kelly, Epic Games
+--
+--     -   Yuriy O’Donnell, Epic Games
+--
+--     -   Michael Doggett, Facebook\/Oculus
+--
+--     -   Andrew Garrard, Imagination
+--
+--     -   Don Scorgie, Imagination
+--
+--     -   Dae Kim, Imagination
+--
+--     -   Joshua Barczak, Intel
+--
+--     -   Slawek Grajewski, Intel
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Pascal Gautron, NVIDIA
+--
+--     -   Daniel Koch, NVIDIA
+--
+--     -   Christoph Kubisch, NVIDIA
+--
+--     -   Ashwin Lele, NVIDIA
+--
+--     -   Robert Stepinski, NVIDIA
+--
+--     -   Martin Stich, NVIDIA
+--
+--     -   Nuno Subtil, NVIDIA
+--
+--     -   Eric Werness, NVIDIA
+--
+--     -   Jon Leech, Khronos
+--
+--     -   Jeroen van Schijndel, OTOY
+--
+--     -   Juul Joosten, OTOY
+--
+--     -   Alex Bourd, Qualcomm
+--
+--     -   Roman Larionov, Qualcomm
+--
+--     -   David McAllister, Qualcomm
+--
+--     -   Spencer Fricke, Samsung
+--
+--     -   Lewis Gordon, Samsung
+--
+--     -   Ralph Potter, Samsung
+--
+--     -   Jasper Bekkers, Traverse Research
+--
+--     -   Jesse Barker, Unity
+--
+--     -   Baldur Karlsson, Valve
+--
+-- == Description
+--
+-- Rasterization has been the dominant method to produce interactive
+-- graphics, but increasing performance of graphics hardware has made ray
+-- tracing a viable option for interactive rendering. Being able to
+-- integrate ray tracing with traditional rasterization makes it easier for
+-- applications to incrementally add ray traced effects to existing
+-- applications or to do hybrid approaches with rasterization for primary
+-- visibility and ray tracing for secondary queries.
+--
+-- Ray queries are available to all shader types, including graphics,
+-- compute and ray tracing pipelines. Ray queries are not able to launch
+-- additional shaders, instead returning traversal results to the calling
+-- shader.
+--
+-- This extension adds support for the following SPIR-V extension in
+-- Vulkan:
+--
+-- -   @SPV_KHR_ray_query@
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceRayQueryFeaturesKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_RAY_QUERY_EXTENSION_NAME'
+--
+-- -   'KHR_RAY_QUERY_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR'
+--
+-- == New SPIR-V Capabilities
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-khr-raytracing RayQueryKHR>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-khr-raytracing RayTraversalPrimitiveCullingKHR>
+--
+-- == Sample Code
+--
+-- Example of ray query in a GLSL shader
+--
+-- > rayQueryEXT rq;
+-- >
+-- > rayQueryInitializeEXT(rq, accStruct, gl_RayFlagsNoneEXT, 0, origin, tMin, direction, tMax);
+-- >
+-- > while(rayQueryProceedEXT(rq)) {
+-- > 	if (rayQueryGetIntersectionTypeEXT(rq, false) == gl_RayQueryCandidateIntersectionTriangleEXT) {
+-- > 		//...
+-- > 		rayQueryConfirmIntersectionEXT(rq);
+-- > 	}
+-- > }
+-- >
+-- > if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersectionNoneEXT) {
+-- > 	//...
+-- > }
+--
+-- == Issues
+--
+-- (1) What are the changes between the public provisional
+-- (VK_KHR_ray_tracing v8) release and the final
+-- (VK_KHR_acceleration_structure v11 \/ VK_KHR_ray_query v1) release?
+--
+-- -   refactor VK_KHR_ray_tracing into 3 extensions, enabling
+--     implementation flexibility and decoupling ray query support from ray
+--     pipelines:
+--
+--     -   <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
+--         (for acceleration structure operations)
+--
+--     -   <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
+--         (for ray tracing pipeline and shader stages)
+--
+--     -   <VK_KHR_ray_query.html VK_KHR_ray_query> (for ray queries in
+--         existing shader stages)
+--
+-- -   Update SPIRV capabilities to use @RayQueryKHR@
+--
+-- -   extension is no longer provisional
+--
+-- == Version History
+--
+-- -   Revision 1, 2020-11-12 (Mathieu Robart, Daniel Koch, Andrew Garrard)
+--
+--     -   Decomposition of the specification, from VK_KHR_ray_tracing to
+--         VK_KHR_ray_query (#1918,!3912)
+--
+--     -   update to use @RayQueryKHR@ SPIR-V capability
+--
+--     -   add numerical limits for ray parameters (#2235,!3960)
+--
+--     -   relax formula for ray intersection candidate determination
+--         (#2322,!4080)
+--
+--     -   restrict traces to TLAS (#2239,!4141)
+--
+--     -   require @HitT@ to be in ray interval for
+--         @OpRayQueryGenerateIntersectionKHR@ (#2359,!4146)
+--
+--     -   add ray query shader stages for AS read bit (#2407,!4203)
+--
+-- = See Also
+--
+-- 'PhysicalDeviceRayQueryFeaturesKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_query Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_ray_query  ( PhysicalDeviceRayQueryFeaturesKHR(..)
                                            , KHR_RAY_QUERY_SPEC_VERSION
                                            , pattern KHR_RAY_QUERY_SPEC_VERSION

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SemaphoreWaitFlagBits"
 module Vulkan.Core12.Enums.SemaphoreWaitFlagBits  ( SemaphoreWaitFlagBits( SEMAPHORE_WAIT_ANY_BIT
                                                                          , ..
                                                                          )

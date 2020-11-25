@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "EventCreateFlags"
 module Vulkan.Core10.Enums.EventCreateFlags  (EventCreateFlags(..)) where
 
 import GHC.Read (choose)

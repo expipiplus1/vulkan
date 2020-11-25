@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "BorderColor"
 module Vulkan.Core10.Enums.BorderColor  (BorderColor( BORDER_COLOR_FLOAT_TRANSPARENT_BLACK
                                                     , BORDER_COLOR_INT_TRANSPARENT_BLACK
                                                     , BORDER_COLOR_FLOAT_OPAQUE_BLACK

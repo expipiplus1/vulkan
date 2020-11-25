@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Handles"
 module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , ValidationCacheEXT(..)
                                   , AccelerationStructureKHR(..)

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PeerMemoryFeatureFlagBits"
 module Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits  ( PeerMemoryFeatureFlagBits( PEER_MEMORY_FEATURE_COPY_SRC_BIT
                                                                                  , PEER_MEMORY_FEATURE_COPY_DST_BIT
                                                                                  , PEER_MEMORY_FEATURE_GENERIC_SRC_BIT

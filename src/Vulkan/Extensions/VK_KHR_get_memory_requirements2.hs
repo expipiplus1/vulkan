@@ -1,4 +1,122 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_get_memory_requirements2 - device extension
+--
+-- = Registered Extension Number
+--
+-- 147
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- = Deprecation state
+--
+-- -   /Promoted/ to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2017-09-05
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.1 Core
+--
+-- [__Contributors__]
+--
+--     -   Jason Ekstrand, Intel
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Jesse Hall, Google
+--
+-- == Description
+--
+-- This extension provides new entry points to query memory requirements of
+-- images and buffers in a way that can be easily extended by other
+-- extensions, without introducing any further entry points. The Vulkan 1.0
+-- 'Vulkan.Core10.MemoryManagement.MemoryRequirements' and
+-- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements'
+-- structures do not include @sType@ and @pNext@ members. This extension
+-- wraps them in new structures with these members, so an application can
+-- query a chain of memory requirements structures by constructing the
+-- chain and letting the implementation fill them in. A new command is
+-- added for each @vkGet*MemoryRequrements@ command in core Vulkan 1.0.
+--
+-- == Promotion to Vulkan 1.1
+--
+-- All functionality in this extension is included in core Vulkan 1.1, with
+-- the KHR suffix omitted. The original type, enum and command names are
+-- still available as aliases of the core functionality.
+--
+-- == New Commands
+--
+-- -   'getBufferMemoryRequirements2KHR'
+--
+-- -   'getImageMemoryRequirements2KHR'
+--
+-- -   'getImageSparseMemoryRequirements2KHR'
+--
+-- == New Structures
+--
+-- -   'BufferMemoryRequirementsInfo2KHR'
+--
+-- -   'ImageMemoryRequirementsInfo2KHR'
+--
+-- -   'ImageSparseMemoryRequirementsInfo2KHR'
+--
+-- -   'MemoryRequirements2KHR'
+--
+-- -   'SparseImageMemoryRequirements2KHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME'
+--
+-- -   'KHR_GET_MEMORY_REQUIREMENTS_2_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2_KHR'
+--
+-- == Version History
+--
+-- -   Revision 1, 2017-03-23 (Jason Ekstrand)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'BufferMemoryRequirementsInfo2KHR', 'ImageMemoryRequirementsInfo2KHR',
+-- 'ImageSparseMemoryRequirementsInfo2KHR', 'MemoryRequirements2KHR',
+-- 'SparseImageMemoryRequirements2KHR', 'getBufferMemoryRequirements2KHR',
+-- 'getImageMemoryRequirements2KHR', 'getImageSparseMemoryRequirements2KHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_get_memory_requirements2  ( pattern STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2_KHR
                                                           , pattern STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2_KHR
                                                           , pattern STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2_KHR

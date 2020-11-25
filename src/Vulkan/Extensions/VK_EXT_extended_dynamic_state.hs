@@ -1,4 +1,151 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_extended_dynamic_state - device extension
+--
+-- = Registered Extension Number
+--
+-- 268
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2019-12-09
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Dan Ginsburg, Valve Corporation
+--
+--     -   Graeme Leese, Broadcom
+--
+--     -   Hans-Kristian Arntzen, Valve Corporation
+--
+--     -   Jan-Harald Fredriksen, Arm Limited
+--
+--     -   Jason Ekstrand, Intel
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Jesse Hall, Google
+--
+--     -   Philip Rebohle, Valve Corporation
+--
+--     -   Stuart Smith, Imagination Technologies
+--
+--     -   Tobias Hector, AMD
+--
+-- == Description
+--
+-- This extension adds some more dynamic state to support applications that
+-- need to reduce the number of pipeline state objects they compile and
+-- bind.
+--
+-- == New Commands
+--
+-- -   'cmdBindVertexBuffers2EXT'
+--
+-- -   'cmdSetCullModeEXT'
+--
+-- -   'cmdSetDepthBoundsTestEnableEXT'
+--
+-- -   'cmdSetDepthCompareOpEXT'
+--
+-- -   'cmdSetDepthTestEnableEXT'
+--
+-- -   'cmdSetDepthWriteEnableEXT'
+--
+-- -   'cmdSetFrontFaceEXT'
+--
+-- -   'cmdSetPrimitiveTopologyEXT'
+--
+-- -   'cmdSetScissorWithCountEXT'
+--
+-- -   'cmdSetStencilOpEXT'
+--
+-- -   'cmdSetStencilTestEnableEXT'
+--
+-- -   'cmdSetViewportWithCountEXT'
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceExtendedDynamicStateFeaturesEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_EXTENDED_DYNAMIC_STATE_EXTENSION_NAME'
+--
+-- -   'EXT_EXTENDED_DYNAMIC_STATE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRONT_FACE_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_OP_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT'
+--
+-- == Version History
+--
+-- -   Revision 1, 2019-12-09 (Piers Daniell)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'PhysicalDeviceExtendedDynamicStateFeaturesEXT',
+-- 'cmdBindVertexBuffers2EXT', 'cmdSetCullModeEXT',
+-- 'cmdSetDepthBoundsTestEnableEXT', 'cmdSetDepthCompareOpEXT',
+-- 'cmdSetDepthTestEnableEXT', 'cmdSetDepthWriteEnableEXT',
+-- 'cmdSetFrontFaceEXT', 'cmdSetPrimitiveTopologyEXT',
+-- 'cmdSetScissorWithCountEXT', 'cmdSetStencilOpEXT',
+-- 'cmdSetStencilTestEnableEXT', 'cmdSetViewportWithCountEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_extended_dynamic_state  ( cmdSetCullModeEXT
                                                         , cmdSetFrontFaceEXT
                                                         , cmdSetPrimitiveTopologyEXT

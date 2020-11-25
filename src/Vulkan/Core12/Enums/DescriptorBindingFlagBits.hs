@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DescriptorBindingFlagBits"
 module Vulkan.Core12.Enums.DescriptorBindingFlagBits  ( DescriptorBindingFlagBits( DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT
                                                                                  , DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT
                                                                                  , DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT

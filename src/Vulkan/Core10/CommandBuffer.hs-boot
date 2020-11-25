@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "CommandBuffer"
 module Vulkan.Core10.CommandBuffer  ( CommandBufferAllocateInfo
                                     , CommandBufferBeginInfo
                                     , CommandBufferInheritanceInfo

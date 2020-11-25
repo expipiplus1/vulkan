@@ -1,5 +1,6 @@
 {-# language CPP #-}
 {-# language NoDuplicateRecordFields #-}
+-- No documentation found for Chapter "Dynamic"
 module Vulkan.Dynamic  ( InstanceCmds(..)
                        , getInstanceProcAddr'
                        , initInstanceCmds

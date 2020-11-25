@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ImageAspectFlagBits"
 module Vulkan.Core10.Enums.ImageAspectFlagBits  ( ImageAspectFlagBits( IMAGE_ASPECT_COLOR_BIT
                                                                      , IMAGE_ASPECT_DEPTH_BIT
                                                                      , IMAGE_ASPECT_STENCIL_BIT

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SamplerCreateFlagBits"
 module Vulkan.Core10.Enums.SamplerCreateFlagBits  ( SamplerCreateFlagBits( SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
                                                                          , SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
                                                                          , ..

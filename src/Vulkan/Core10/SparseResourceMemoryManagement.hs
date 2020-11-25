@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SparseResourceMemoryManagement"
 module Vulkan.Core10.SparseResourceMemoryManagement  ( getImageSparseMemoryRequirements
                                                      , getPhysicalDeviceSparseImageFormatProperties
                                                      , queueBindSparse

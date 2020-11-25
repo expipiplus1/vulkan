@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineLayoutCreateFlags"
 module Vulkan.Core10.Enums.PipelineLayoutCreateFlags  (PipelineLayoutCreateFlags(..)) where
 
 import GHC.Read (choose)

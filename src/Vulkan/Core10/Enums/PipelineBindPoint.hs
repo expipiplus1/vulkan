@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineBindPoint"
 module Vulkan.Core10.Enums.PipelineBindPoint  (PipelineBindPoint( PIPELINE_BIND_POINT_GRAPHICS
                                                                 , PIPELINE_BIND_POINT_COMPUTE
                                                                 , PIPELINE_BIND_POINT_RAY_TRACING_KHR

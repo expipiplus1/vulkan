@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "RenderPassCreateFlagBits"
 module Vulkan.Core10.Enums.RenderPassCreateFlagBits  ( RenderPassCreateFlagBits( RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM
                                                                                , ..
                                                                                )

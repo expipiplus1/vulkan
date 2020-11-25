@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Enums"
 module Vulkan.Core12.Enums  ( module Vulkan.Core12.Enums.DescriptorBindingFlagBits
                             , module Vulkan.Core12.Enums.DriverId
                             , module Vulkan.Core12.Enums.ResolveModeFlagBits

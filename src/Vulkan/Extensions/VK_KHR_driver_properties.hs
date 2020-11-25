@@ -1,4 +1,140 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_driver_properties - device extension
+--
+-- = Registered Extension Number
+--
+-- 197
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- = Deprecation state
+--
+-- -   /Promoted/ to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2018-04-11
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.2 Core
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Baldur Karlsson
+--
+--     -   Matthaeus G. Chajdas, AMD
+--
+--     -   Piers Daniell, NVIDIA
+--
+--     -   Alexander Galazin, Arm
+--
+--     -   Jesse Hall, Google
+--
+--     -   Daniel Rakos, AMD
+--
+-- == Description
+--
+-- This extension provides a new physical device query which allows
+-- retrieving information about the driver implementation, allowing
+-- applications to determine which physical device corresponds to which
+-- particular vendor’s driver, and which conformance test suite version the
+-- driver implementation is compliant with.
+--
+-- == Promotion to Vulkan 1.2
+--
+-- All functionality in this extension is included in core Vulkan 1.2, with
+-- the KHR suffix omitted. The original type, enum and command names are
+-- still available as aliases of the core functionality.
+--
+-- == New Structures
+--
+-- -   'ConformanceVersionKHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
+--
+--     -   'PhysicalDeviceDriverPropertiesKHR'
+--
+-- == New Enums
+--
+-- -   'DriverIdKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_DRIVER_PROPERTIES_EXTENSION_NAME'
+--
+-- -   'KHR_DRIVER_PROPERTIES_SPEC_VERSION'
+--
+-- -   'Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE_KHR'
+--
+-- -   'Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE_KHR'
+--
+-- -   Extending 'Vulkan.Core12.Enums.DriverId.DriverId':
+--
+--     -   'DRIVER_ID_AMD_OPEN_SOURCE_KHR'
+--
+--     -   'DRIVER_ID_AMD_PROPRIETARY_KHR'
+--
+--     -   'DRIVER_ID_ARM_PROPRIETARY_KHR'
+--
+--     -   'DRIVER_ID_BROADCOM_PROPRIETARY_KHR'
+--
+--     -   'DRIVER_ID_GGP_PROPRIETARY_KHR'
+--
+--     -   'DRIVER_ID_GOOGLE_SWIFTSHADER_KHR'
+--
+--     -   'DRIVER_ID_IMAGINATION_PROPRIETARY_KHR'
+--
+--     -   'DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR'
+--
+--     -   'DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR'
+--
+--     -   'DRIVER_ID_MESA_RADV_KHR'
+--
+--     -   'DRIVER_ID_NVIDIA_PROPRIETARY_KHR'
+--
+--     -   'DRIVER_ID_QUALCOMM_PROPRIETARY_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR'
+--
+-- == Version History
+--
+-- -   Revision 1, 2018-04-11 (Daniel Rakos)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE_KHR',
+-- 'Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE_KHR',
+-- 'ConformanceVersionKHR', 'DriverIdKHR',
+-- 'PhysicalDeviceDriverPropertiesKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_driver_properties Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_driver_properties  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
                                                    , pattern DRIVER_ID_AMD_PROPRIETARY_KHR
                                                    , pattern DRIVER_ID_AMD_OPEN_SOURCE_KHR

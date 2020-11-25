@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SamplerYcbcrModelConversion"
 module Vulkan.Core11.Enums.SamplerYcbcrModelConversion  (SamplerYcbcrModelConversion( SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
                                                                                     , SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY
                                                                                     , SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709

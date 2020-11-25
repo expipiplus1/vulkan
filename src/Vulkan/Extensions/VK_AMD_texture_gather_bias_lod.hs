@@ -1,4 +1,143 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_AMD_texture_gather_bias_lod - device extension
+--
+-- = Registered Extension Number
+--
+-- 42
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2017-03-21
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires
+--         {spirv}\/AMD\/SPV_AMD_texture_gather_bias_lod.html[@SPV_AMD_texture_gather_bias_lod@]
+--
+-- [__Contributors__]
+--
+--     -   Dominik Witczak, AMD
+--
+--     -   Daniel Rakos, AMD
+--
+--     -   Graham Sellers, AMD
+--
+--     -   Matthaeus G. Chajdas, AMD
+--
+--     -   Qun Lin, AMD
+--
+--     -   Rex Xu, AMD
+--
+--     -   Timothy Lottes, AMD
+--
+-- == Description
+--
+-- This extension adds two related features.
+--
+-- Firstly, support for the following SPIR-V extension in Vulkan is added:
+--
+-- -   @SPV_AMD_texture_gather_bias_lod@
+--
+-- Secondly, the extension allows the application to query which formats
+-- can be used together with the new function prototypes introduced by the
+-- SPIR-V extension.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2':
+--
+--     -   'TextureLODGatherFormatPropertiesAMD'
+--
+-- == New Enum Constants
+--
+-- -   'AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME'
+--
+-- -   'AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD'
+--
+-- == New SPIR-V Capabilities
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-imagegatherbiaslodamd ImageGatherBiasLodAMD>
+--
+-- == Examples
+--
+-- > struct VkTextureLODGatherFormatPropertiesAMD
+-- > {
+-- >     VkStructureType sType;
+-- >     const void*     pNext;
+-- >     VkBool32        supportsTextureGatherLODBiasAMD;
+-- > };
+-- >
+-- > // ----------------------------------------------------------------------------------------
+-- > // How to detect if an image format can be used with the new function prototypes.
+-- > VkPhysicalDeviceImageFormatInfo2   formatInfo;
+-- > VkImageFormatProperties2           formatProps;
+-- > VkTextureLODGatherFormatPropertiesAMD textureLODGatherSupport;
+-- >
+-- > textureLODGatherSupport.sType = VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD;
+-- > textureLODGatherSupport.pNext = nullptr;
+-- >
+-- > formatInfo.sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2;
+-- > formatInfo.pNext  = nullptr;
+-- > formatInfo.format = ...;
+-- > formatInfo.type   = ...;
+-- > formatInfo.tiling = ...;
+-- > formatInfo.usage  = ...;
+-- > formatInfo.flags  = ...;
+-- >
+-- > formatProps.sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2;
+-- > formatProps.pNext = &textureLODGatherSupport;
+-- >
+-- > vkGetPhysicalDeviceImageFormatProperties2(physical_device, &formatInfo, &formatProps);
+-- >
+-- > if (textureLODGatherSupport.supportsTextureGatherLODBiasAMD == VK_TRUE)
+-- > {
+-- >     // physical device supports SPV_AMD_texture_gather_bias_lod for the specified
+-- >     // format configuration.
+-- > }
+-- > else
+-- > {
+-- >     // physical device does not support SPV_AMD_texture_gather_bias_lod for the
+-- >     // specified format configuration.
+-- > }
+--
+-- == Version History
+--
+-- -   Revision 1, 2017-03-21 (Dominik Witczak)
+--
+--     -   Initial draft
+--
+-- = See Also
+--
+-- 'TextureLODGatherFormatPropertiesAMD'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_texture_gather_bias_lod Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_AMD_texture_gather_bias_lod  ( TextureLODGatherFormatPropertiesAMD(..)
                                                          , AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION
                                                          , pattern AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION

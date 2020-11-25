@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ColorComponentFlagBits"
 module Vulkan.Core10.Enums.ColorComponentFlagBits  ( ColorComponentFlagBits( COLOR_COMPONENT_R_BIT
                                                                            , COLOR_COMPONENT_G_BIT
                                                                            , COLOR_COMPONENT_B_BIT

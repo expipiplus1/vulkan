@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Device"
 module Vulkan.Core10.Device  ( DeviceCreateInfo
                              , DeviceQueueCreateInfo
                              ) where

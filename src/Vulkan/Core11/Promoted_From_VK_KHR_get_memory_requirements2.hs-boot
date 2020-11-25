@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_get_memory_requirements2"
 module Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2  ( BufferMemoryRequirementsInfo2
                                                                     , ImageMemoryRequirementsInfo2
                                                                     , ImageSparseMemoryRequirementsInfo2

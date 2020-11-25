@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_timeline_semaphore"
 module Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore  ( PhysicalDeviceTimelineSemaphoreFeatures
                                                               , PhysicalDeviceTimelineSemaphoreProperties
                                                               , SemaphoreSignalInfo

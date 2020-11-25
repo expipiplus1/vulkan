@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "CommandPoolResetFlagBits"
 module Vulkan.Core10.Enums.CommandPoolResetFlagBits  ( CommandPoolResetFlagBits( COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
                                                                                , ..
                                                                                )

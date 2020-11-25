@@ -1,4 +1,97 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_direct_mode_display - instance extension
+--
+-- = Registered Extension Number
+--
+-- 89
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- -   Requires @VK_KHR_display@
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2016-12-13
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Pierre Boudier, NVIDIA
+--
+--     -   James Jones, NVIDIA
+--
+--     -   Damien Leone, NVIDIA
+--
+--     -   Pierre-Loup Griffais, Valve
+--
+--     -   Liam Middlebrook, NVIDIA
+--
+-- == Description
+--
+-- This is extension, along with related platform extensions, allows
+-- applications to take exclusive control of displays associated with a
+-- native windowing system. This is especially useful for virtual reality
+-- applications that wish to hide HMDs (head mounted displays) from the
+-- native platform’s display management system, desktop, and\/or other
+-- applications.
+--
+-- == New Commands
+--
+-- -   'releaseDisplayEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_DIRECT_MODE_DISPLAY_EXTENSION_NAME'
+--
+-- -   'EXT_DIRECT_MODE_DISPLAY_SPEC_VERSION'
+--
+-- == Issues
+--
+-- 1) Should this extension and its related platform-specific extensions
+-- leverage @VK_KHR_display@, or provide separate equivalent interfaces.
+--
+-- __RESOLVED__: Use @VK_KHR_display@ concepts and objects.
+-- @VK_KHR_display@ can be used to enumerate all displays on the system,
+-- including those attached to\/in use by a window system or native
+-- platform, but @VK_KHR_display_swapchain@ will fail to create a swapchain
+-- on in-use displays. This extension and its platform-specific children
+-- will allow applications to grab in-use displays away from window systems
+-- and\/or native platforms, allowing them to be used with
+-- @VK_KHR_display_swapchain@.
+--
+-- 2) Are separate calls needed to acquire displays and enable direct mode?
+--
+-- __RESOLVED__: No, these operations happen in one combined command.
+-- Acquiring a display puts it into direct mode.
+--
+-- == Version History
+--
+-- -   Revision 1, 2016-12-13 (James Jones)
+--
+--     -   Initial draft
+--
+-- = See Also
+--
+-- 'releaseDisplayEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_direct_mode_display Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_direct_mode_display  ( releaseDisplayEXT
                                                      , EXT_DIRECT_MODE_DISPLAY_SPEC_VERSION
                                                      , pattern EXT_DIRECT_MODE_DISPLAY_SPEC_VERSION

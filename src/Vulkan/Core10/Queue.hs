@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Queue"
 module Vulkan.Core10.Queue  ( getDeviceQueue
                             , queueSubmit
                             , queueWaitIdle

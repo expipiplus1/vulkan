@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "QueueSemaphore"
 module Vulkan.Core10.QueueSemaphore  ( createSemaphore
                                      , withSemaphore
                                      , destroySemaphore

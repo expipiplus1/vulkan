@@ -1,4 +1,151 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_variable_pointers - device extension
+--
+-- = Registered Extension Number
+--
+-- 121
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- -   Requires @VK_KHR_storage_buffer_storage_class@
+--
+-- = Deprecation state
+--
+-- -   /Promoted/ to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2017-09-05
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires
+--         {spirv}\/KHR\/SPV_KHR_variable_pointers.html[@SPV_KHR_variable_pointers@]
+--
+--     -   Promoted to Vulkan 1.1 Core
+--
+-- [__Contributors__]
+--
+--     -   John Kessenich, Google
+--
+--     -   Neil Henning, Codeplay
+--
+--     -   David Neto, Google
+--
+--     -   Daniel Koch, Nvidia
+--
+--     -   Graeme Leese, Broadcom
+--
+--     -   Weifeng Zhang, Qualcomm
+--
+--     -   Stephen Clarke, Imagination Technologies
+--
+--     -   Jason Ekstrand, Intel
+--
+--     -   Jesse Hall, Google
+--
+-- == Description
+--
+-- The @VK_KHR_variable_pointers@ extension allows implementations to
+-- indicate their level of support for the @SPV_KHR_variable_pointers@
+-- SPIR-V extension. The SPIR-V extension allows shader modules to use
+-- invocation-private pointers into uniform and\/or storage buffers, where
+-- the pointer values can be dynamic and non-uniform.
+--
+-- The @SPV_KHR_variable_pointers@ extension introduces two capabilities.
+-- The first, @VariablePointersStorageBuffer@, /must/ be supported by all
+-- implementations of this extension. The second, @VariablePointers@, is
+-- optional.
+--
+-- == Promotion to Vulkan 1.1
+--
+-- All functionality in this extension is included in core Vulkan 1.1, with
+-- the KHR suffix omitted, however support for the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-variablePointersStorageBuffer variablePointersStorageBuffer>
+-- feature is made optional. The original type, enum and command names are
+-- still available as aliases of the core functionality.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceVariablePointerFeaturesKHR'
+--
+--     -   'PhysicalDeviceVariablePointersFeaturesKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_VARIABLE_POINTERS_EXTENSION_NAME'
+--
+-- -   'KHR_VARIABLE_POINTERS_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES_KHR'
+--
+-- == New SPIR-V Capabilities
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-variablepointers VariablePointers>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-variablepointers VariablePointersStorageBuffer>
+--
+-- == Issues
+--
+-- 1) Do we need an optional property for the SPIR-V
+-- @VariablePointersStorageBuffer@ capability or should it be mandatory
+-- when this extension is advertised?
+--
+-- __RESOLVED__: Add it as a distinct feature, but make support mandatory.
+-- Adding it as a feature makes the extension easier to include in a future
+-- core API version. In the extension, the feature is mandatory, so that
+-- presence of the extension guarantees some functionality. When included
+-- in a core API version, the feature would be optional.
+--
+-- 2) Can support for these capabilities vary between shader stages?
+--
+-- __RESOLVED__: No, if the capability is supported in any stage it must be
+-- supported in all stages.
+--
+-- 3) Should the capabilities be features or limits?
+--
+-- __RESOLVED__: Features, primarily for consistency with other similar
+-- extensions.
+--
+-- == Version History
+--
+-- -   Revision 1, 2017-03-14 (Jesse Hall and John Kessenich)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'PhysicalDeviceVariablePointerFeaturesKHR',
+-- 'PhysicalDeviceVariablePointersFeaturesKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_variable_pointers Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_variable_pointers  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES_KHR
                                                    , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES_KHR
                                                    , PhysicalDeviceVariablePointersFeaturesKHR

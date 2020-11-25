@@ -1,4 +1,390 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_sampler_ycbcr_conversion - device extension
+--
+-- = Registered Extension Number
+--
+-- 157
+--
+-- = Revision
+--
+-- 14
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- -   Requires @VK_KHR_maintenance1@
+--
+-- -   Requires @VK_KHR_bind_memory2@
+--
+-- -   Requires @VK_KHR_get_memory_requirements2@
+--
+-- -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- = Deprecation state
+--
+-- -   /Promoted/ to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2017-08-11
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.1 Core
+--
+-- [__Contributors__]
+--
+--     -   Andrew Garrard, Samsung Electronics
+--
+--     -   Tobias Hector, Imagination Technologies
+--
+--     -   James Jones, NVIDIA
+--
+--     -   Daniel Koch, NVIDIA
+--
+--     -   Daniel Rakos, AMD
+--
+--     -   Romain Guy, Google
+--
+--     -   Jesse Hall, Google
+--
+--     -   Tom Cooksey, ARM Ltd
+--
+--     -   Jeff Leger, Qualcomm Technologies, Inc
+--
+--     -   Jan-Harald Fredriksen, ARM Ltd
+--
+--     -   Jan Outters, Samsung Electronics
+--
+--     -   Alon Or-bach, Samsung Electronics
+--
+--     -   Michael Worcester, Imagination Technologies
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Tony Zlatinski, NVIDIA
+--
+--     -   Matthew Netsch, Qualcomm Technologies, Inc
+--
+-- == Description
+--
+-- The use of Y′CBCR sampler conversion is an area in 3D graphics not used
+-- by most Vulkan developers. It’s mainly used for processing inputs from
+-- video decoders and cameras. The use of the extension assumes basic
+-- knowledge of Y′CBCR concepts.
+--
+-- This extension provides the ability to perform specified color space
+-- conversions during texture sampling operations for the Y′CBCR color
+-- space natively. It also adds a selection of multi-planar formats, image
+-- aspect plane, and the ability to bind memory to the planes of an image
+-- collectively or separately.
+--
+-- == Promotion to Vulkan 1.1
+--
+-- All functionality in this extension is included in core Vulkan 1.1, with
+-- the KHR suffix omitted. However, if Vulkan 1.1 is supported and this
+-- extension is not, the @samplerYcbcrConversion@ capability is optional.
+-- The original type, enum and command names are still available as aliases
+-- of the core functionality.
+--
+-- == New Object Types
+--
+-- -   'SamplerYcbcrConversionKHR'
+--
+-- == New Commands
+--
+-- -   'createSamplerYcbcrConversionKHR'
+--
+-- -   'destroySamplerYcbcrConversionKHR'
+--
+-- == New Structures
+--
+-- -   'SamplerYcbcrConversionCreateInfoKHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo':
+--
+--     -   'BindImagePlaneMemoryInfoKHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2':
+--
+--     -   'SamplerYcbcrConversionImageFormatPropertiesKHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.ImageMemoryRequirementsInfo2':
+--
+--     -   'ImagePlaneMemoryRequirementsInfoKHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceSamplerYcbcrConversionFeaturesKHR'
+--
+-- -   Extending 'Vulkan.Core10.Sampler.SamplerCreateInfo',
+--     'Vulkan.Core10.ImageView.ImageViewCreateInfo':
+--
+--     -   'SamplerYcbcrConversionInfoKHR'
+--
+-- == New Enums
+--
+-- -   'ChromaLocationKHR'
+--
+-- -   'SamplerYcbcrModelConversionKHR'
+--
+-- -   'SamplerYcbcrRangeKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_SAMPLER_YCBCR_CONVERSION_EXTENSION_NAME'
+--
+-- -   'KHR_SAMPLER_YCBCR_CONVERSION_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation':
+--
+--     -   'CHROMA_LOCATION_COSITED_EVEN_KHR'
+--
+--     -   'CHROMA_LOCATION_MIDPOINT_KHR'
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
+--
+--     -   'DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR_EXT'
+--
+-- -   Extending 'Vulkan.Core10.Enums.Format.Format':
+--
+--     -   'FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16_KHR'
+--
+--     -   'FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16_KHR'
+--
+--     -   'FORMAT_B16G16R16G16_422_UNORM_KHR'
+--
+--     -   'FORMAT_B8G8R8G8_422_UNORM_KHR'
+--
+--     -   'FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16_KHR'
+--
+--     -   'FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16_KHR'
+--
+--     -   'FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16_KHR'
+--
+--     -   'FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16_KHR'
+--
+--     -   'FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16_KHR'
+--
+--     -   'FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16_KHR'
+--
+--     -   'FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16_KHR'
+--
+--     -   'FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16_KHR'
+--
+--     -   'FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16_KHR'
+--
+--     -   'FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16_KHR'
+--
+--     -   'FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16_KHR'
+--
+--     -   'FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16_KHR'
+--
+--     -   'FORMAT_G16B16G16R16_422_UNORM_KHR'
+--
+--     -   'FORMAT_G16_B16R16_2PLANE_420_UNORM_KHR'
+--
+--     -   'FORMAT_G16_B16R16_2PLANE_422_UNORM_KHR'
+--
+--     -   'FORMAT_G16_B16_R16_3PLANE_420_UNORM_KHR'
+--
+--     -   'FORMAT_G16_B16_R16_3PLANE_422_UNORM_KHR'
+--
+--     -   'FORMAT_G16_B16_R16_3PLANE_444_UNORM_KHR'
+--
+--     -   'FORMAT_G8B8G8R8_422_UNORM_KHR'
+--
+--     -   'FORMAT_G8_B8R8_2PLANE_420_UNORM_KHR'
+--
+--     -   'FORMAT_G8_B8R8_2PLANE_422_UNORM_KHR'
+--
+--     -   'FORMAT_G8_B8_R8_3PLANE_420_UNORM_KHR'
+--
+--     -   'FORMAT_G8_B8_R8_3PLANE_422_UNORM_KHR'
+--
+--     -   'FORMAT_G8_B8_R8_3PLANE_444_UNORM_KHR'
+--
+--     -   'FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16_KHR'
+--
+--     -   'FORMAT_R10X6G10X6_UNORM_2PACK16_KHR'
+--
+--     -   'FORMAT_R10X6_UNORM_PACK16_KHR'
+--
+--     -   'FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16_KHR'
+--
+--     -   'FORMAT_R12X4G12X4_UNORM_2PACK16_KHR'
+--
+--     -   'FORMAT_R12X4_UNORM_PACK16_KHR'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
+--
+--     -   'FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_DISJOINT_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits':
+--
+--     -   'IMAGE_ASPECT_PLANE_0_BIT_KHR'
+--
+--     -   'IMAGE_ASPECT_PLANE_1_BIT_KHR'
+--
+--     -   'IMAGE_ASPECT_PLANE_2_BIT_KHR'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits':
+--
+--     -   'IMAGE_CREATE_DISJOINT_BIT_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
+--
+--     -   'OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SamplerYcbcrModelConversion':
+--
+--     -   'SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY_KHR'
+--
+--     -   'SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020_KHR'
+--
+--     -   'SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601_KHR'
+--
+--     -   'SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709_KHR'
+--
+--     -   'SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY_KHR'
+--
+-- -   Extending 'Vulkan.Core11.Enums.SamplerYcbcrRange.SamplerYcbcrRange':
+--
+--     -   'SAMPLER_YCBCR_RANGE_ITU_FULL_KHR'
+--
+--     -   'SAMPLER_YCBCR_RANGE_ITU_NARROW_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO_KHR'
+--
+--     -   'STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO_KHR'
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES_KHR'
+--
+--     -   'STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO_KHR'
+--
+--     -   'STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES_KHR'
+--
+--     -   'STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO_KHR'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
+--
+--     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT'
+--
+-- == Version History
+--
+-- -   Revision 1, 2017-01-24 (Andrew Garrard)
+--
+--     -   Initial draft
+--
+-- -   Revision 2, 2017-01-25 (Andrew Garrard)
+--
+--     -   After initial feedback
+--
+-- -   Revision 3, 2017-01-27 (Andrew Garrard)
+--
+--     -   Higher bit depth formats, renaming, swizzle
+--
+-- -   Revision 4, 2017-02-22 (Andrew Garrard)
+--
+--     -   Added query function, formats as RGB, clarifications
+--
+-- -   Revision 5, 2017-04 (Andrew Garrard)
+--
+--     -   Simplified query and removed output conversions
+--
+-- -   Revision 6, 2017-4-24 (Andrew Garrard)
+--
+--     -   Tidying, incorporated new image query, restored transfer
+--         functions
+--
+-- -   Revision 7, 2017-04-25 (Andrew Garrard)
+--
+--     -   Added cosited option\/midpoint requirement for formats,
+--         \"bypassConversion\"
+--
+-- -   Revision 8, 2017-04-25 (Andrew Garrard)
+--
+--     -   Simplified further
+--
+-- -   Revision 9, 2017-04-27 (Andrew Garrard)
+--
+--     -   Disjoint no more
+--
+-- -   Revision 10, 2017-04-28 (Andrew Garrard)
+--
+--     -   Restored disjoint
+--
+-- -   Revision 11, 2017-04-29 (Andrew Garrard)
+--
+--     -   Now Ycbcr conversion, and KHR
+--
+-- -   Revision 12, 2017-06-06 (Andrew Garrard)
+--
+--     -   Added conversion to image view creation
+--
+-- -   Revision 13, 2017-07-13 (Andrew Garrard)
+--
+--     -   Allowed cosited-only chroma samples for formats
+--
+-- -   Revision 14, 2017-08-11 (Andrew Garrard)
+--
+--     -   Reflected quantization changes in BT.2100-1
+--
+-- = See Also
+--
+-- 'BindImagePlaneMemoryInfoKHR', 'ChromaLocationKHR',
+-- 'ImagePlaneMemoryRequirementsInfoKHR',
+-- 'PhysicalDeviceSamplerYcbcrConversionFeaturesKHR',
+-- 'SamplerYcbcrConversionCreateInfoKHR',
+-- 'SamplerYcbcrConversionImageFormatPropertiesKHR',
+-- 'SamplerYcbcrConversionInfoKHR', 'SamplerYcbcrConversionKHR',
+-- 'SamplerYcbcrModelConversionKHR', 'SamplerYcbcrRangeKHR',
+-- 'createSamplerYcbcrConversionKHR', 'destroySamplerYcbcrConversionKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion  ( pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO_KHR
                                                           , pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO_KHR
                                                           , pattern STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO_KHR

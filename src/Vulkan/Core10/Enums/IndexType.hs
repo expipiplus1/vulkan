@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "IndexType"
 module Vulkan.Core10.Enums.IndexType  (IndexType( INDEX_TYPE_UINT16
                                                 , INDEX_TYPE_UINT32
                                                 , INDEX_TYPE_UINT8_EXT

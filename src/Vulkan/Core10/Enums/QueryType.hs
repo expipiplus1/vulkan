@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "QueryType"
 module Vulkan.Core10.Enums.QueryType  (QueryType( QUERY_TYPE_OCCLUSION
                                                 , QUERY_TYPE_PIPELINE_STATISTICS
                                                 , QUERY_TYPE_TIMESTAMP

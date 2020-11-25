@@ -1,4 +1,101 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_NV_glsl_shader - device extension
+--
+-- = Registered Extension Number
+--
+-- 13
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- = Deprecation state
+--
+-- -   /Deprecated/ without replacement
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2016-02-14
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Piers Daniell, NVIDIA
+--
+-- == Description
+--
+-- This extension allows GLSL shaders written to the @GL_KHR_vulkan_glsl@
+-- extension specification to be used instead of SPIR-V. The implementation
+-- will automatically detect whether the shader is SPIR-V or GLSL, and
+-- compile it appropriately.
+--
+-- == Deprecation
+--
+-- Functionality in this extension is outside of the scope of Vulkan and is
+-- better served by a compiler library such as
+-- <https://github.com/KhronosGroup/glslang glslang>. No new
+-- implementations will support this extension, so applications /should/
+-- not use it.
+--
+-- == New Enum Constants
+--
+-- -   'NV_GLSL_SHADER_EXTENSION_NAME'
+--
+-- -   'NV_GLSL_SHADER_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.Result.Result':
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_SHADER_NV'
+--
+-- == Examples
+--
+-- __Example 1__
+--
+-- Passing in GLSL code
+--
+-- >     char const vss[] =
+-- >         "#version 450 core\n"
+-- >         "layout(location = 0) in vec2 aVertex;\n"
+-- >         "layout(location = 1) in vec4 aColor;\n"
+-- >         "out vec4 vColor;\n"
+-- >         "void main()\n"
+-- >         "{\n"
+-- >         "    vColor = aColor;\n"
+-- >         "    gl_Position = vec4(aVertex, 0, 1);\n"
+-- >         "}\n"
+-- >     ;
+-- >     VkShaderModuleCreateInfo vertexShaderInfo = { VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO };
+-- >     vertexShaderInfo.codeSize = sizeof vss;
+-- >     vertexShaderInfo.pCode = vss;
+-- >     VkShaderModule vertexShader;
+-- >     vkCreateShaderModule(device, &vertexShaderInfo, 0, &vertexShader);
+--
+-- == Version History
+--
+-- -   Revision 1, 2016-02-14 (Piers Daniell)
+--
+--     -   Initial draft
+--
+-- = See Also
+--
+-- No cross-references are available
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_glsl_shader Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_glsl_shader  ( NV_GLSL_SHADER_SPEC_VERSION
                                             , pattern NV_GLSL_SHADER_SPEC_VERSION
                                             , NV_GLSL_SHADER_EXTENSION_NAME

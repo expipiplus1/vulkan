@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ExternalSemaphoreHandleTypeFlagBits"
 module Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits  ( pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_FENCE_BIT
                                                                 , ExternalSemaphoreHandleTypeFlagBits( EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT
                                                                                                      , EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT

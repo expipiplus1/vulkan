@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "BufferView"
 module Vulkan.Core10.BufferView  ( createBufferView
                                  , withBufferView
                                  , destroyBufferView

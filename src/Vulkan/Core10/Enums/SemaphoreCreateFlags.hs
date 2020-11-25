@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SemaphoreCreateFlags"
 module Vulkan.Core10.Enums.SemaphoreCreateFlags  (SemaphoreCreateFlags(..)) where
 
 import GHC.Read (choose)

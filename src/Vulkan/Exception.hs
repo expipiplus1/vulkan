@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Exception"
 module Vulkan.Exception  (VulkanException(..)) where
 
 import GHC.Exception.Type (Exception(..))

@@ -1,4 +1,106 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_image_format_list - device extension
+--
+-- = Registered Extension Number
+--
+-- 148
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- = Deprecation state
+--
+-- -   /Promoted/ to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2017-03-20
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.2 Core
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Jason Ekstrand, Intel
+--
+--     -   Jan-Harald Fredriksen, ARM
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Jeff Leger, Qualcomm
+--
+--     -   Neil Henning, Codeplay
+--
+-- == Description
+--
+-- On some implementations, setting the
+-- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
+-- on image creation can cause access to that image to perform worse than
+-- an equivalent image created without
+-- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
+-- because the implementation does not know what view formats will be
+-- paired with the image.
+--
+-- This extension allows an application to provide the list of all formats
+-- that /can/ be used with an image when it is created. The implementation
+-- may then be able to create a more efficient image that supports the
+-- subset of formats required by the application without having to support
+-- all formats in the format compatibility class of the image format.
+--
+-- == Promotion to Vulkan 1.2
+--
+-- All functionality in this extension is included in core Vulkan 1.2, with
+-- the KHR suffix omitted. The original type, enum and command names are
+-- still available as aliases of the core functionality.
+--
+-- == New Structures
+--
+-- -   Extending 'Vulkan.Core10.Image.ImageCreateInfo',
+--     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2':
+--
+--     -   'ImageFormatListCreateInfoKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME'
+--
+-- -   'KHR_IMAGE_FORMAT_LIST_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR'
+--
+-- == Version History
+--
+-- -   Revision 1, 2017-03-20 (Jason Ekstrand)
+--
+--     -   Initial revision
+--
+-- = See Also
+--
+-- 'ImageFormatListCreateInfoKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_image_format_list Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_image_format_list  ( pattern STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR
                                                    , ImageFormatListCreateInfoKHR
                                                    , KHR_IMAGE_FORMAT_LIST_SPEC_VERSION

@@ -1,4 +1,80 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_AMD_buffer_marker - device extension
+--
+-- = Registered Extension Number
+--
+-- 180
+--
+-- = Revision
+--
+-- 1
+--
+-- = Extension and Version Dependencies
+--
+-- -   Requires Vulkan 1.0
+--
+-- = Special Use
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2018-01-26
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Matthaeus G. Chajdas, AMD
+--
+--     -   Jaakko Konttinen, AMD
+--
+--     -   Daniel Rakos, AMD
+--
+-- == Description
+--
+-- This extension adds a new operation to execute pipelined writes of small
+-- marker values into a 'Vulkan.Core10.Handles.Buffer' object.
+--
+-- The primary purpose of these markers is to facilitate the development of
+-- debugging tools for tracking which pipelined command contributed to
+-- device loss.
+--
+-- == New Commands
+--
+-- -   'cmdWriteBufferMarkerAMD'
+--
+-- == New Enum Constants
+--
+-- -   'AMD_BUFFER_MARKER_EXTENSION_NAME'
+--
+-- -   'AMD_BUFFER_MARKER_SPEC_VERSION'
+--
+-- == Examples
+--
+-- None.
+--
+-- == Version History
+--
+-- -   Revision 1, 2018-01-26 (Jaakko Konttinen)
+--
+--     -   Initial revision
+--
+-- = See Also
+--
+-- 'cmdWriteBufferMarkerAMD'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_buffer_marker Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_AMD_buffer_marker  ( cmdWriteBufferMarkerAMD
                                                , AMD_BUFFER_MARKER_SPEC_VERSION
                                                , pattern AMD_BUFFER_MARKER_SPEC_VERSION

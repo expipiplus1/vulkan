@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "VertexInputRate"
 module Vulkan.Core10.Enums.VertexInputRate  (VertexInputRate( VERTEX_INPUT_RATE_VERTEX
                                                             , VERTEX_INPUT_RATE_INSTANCE
                                                             , ..

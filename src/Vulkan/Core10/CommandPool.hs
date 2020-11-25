@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "CommandPool"
 module Vulkan.Core10.CommandPool  ( createCommandPool
                                   , withCommandPool
                                   , destroyCommandPool

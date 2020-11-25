@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DescriptorType"
 module Vulkan.Core10.Enums.DescriptorType  (DescriptorType( DESCRIPTOR_TYPE_SAMPLER
                                                           , DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
                                                           , DESCRIPTOR_TYPE_SAMPLED_IMAGE

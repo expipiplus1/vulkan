@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "AttachmentStoreOp"
 module Vulkan.Core10.Enums.AttachmentStoreOp  (AttachmentStoreOp( ATTACHMENT_STORE_OP_STORE
                                                                 , ATTACHMENT_STORE_OP_DONT_CARE
                                                                 , ATTACHMENT_STORE_OP_NONE_QCOM

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "LayerDiscovery"
 module Vulkan.Core10.LayerDiscovery  ( enumerateInstanceLayerProperties
                                      , enumerateDeviceLayerProperties
                                      , LayerProperties(..)

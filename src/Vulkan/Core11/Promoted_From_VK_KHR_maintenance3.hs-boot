@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_maintenance3"
 module Vulkan.Core11.Promoted_From_VK_KHR_maintenance3  ( DescriptorSetLayoutSupport
                                                         , PhysicalDeviceMaintenance3Properties
                                                         ) where

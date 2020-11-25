@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineMultisampleStateCreateFlags"
 module Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags  (PipelineMultisampleStateCreateFlags(..)) where
 
 import GHC.Read (choose)

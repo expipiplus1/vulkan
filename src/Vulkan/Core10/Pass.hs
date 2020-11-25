@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Pass"
 module Vulkan.Core10.Pass  ( createFramebuffer
                            , withFramebuffer
                            , destroyFramebuffer

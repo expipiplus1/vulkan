@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "FenceCreateFlagBits"
 module Vulkan.Core10.Enums.FenceCreateFlagBits  ( FenceCreateFlagBits( FENCE_CREATE_SIGNALED_BIT
                                                                      , ..
                                                                      )

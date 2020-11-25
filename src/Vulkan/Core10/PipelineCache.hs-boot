@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineCache"
 module Vulkan.Core10.PipelineCache  (PipelineCacheCreateInfo) where
 
 import Data.Kind (Type)

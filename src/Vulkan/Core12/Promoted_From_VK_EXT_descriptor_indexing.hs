@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_EXT_descriptor_indexing"
 module Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing  ( PhysicalDeviceDescriptorIndexingFeatures(..)
                                                                , PhysicalDeviceDescriptorIndexingProperties(..)
                                                                , DescriptorSetLayoutBindingFlagsCreateInfo(..)
