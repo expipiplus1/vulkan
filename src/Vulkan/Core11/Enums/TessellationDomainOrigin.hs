@@ -5,24 +5,13 @@ module Vulkan.Core11.Enums.TessellationDomainOrigin  (TessellationDomainOrigin( 
                                                                               , ..
                                                                               )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkTessellationDomainOrigin - Enum describing tessellation domain origin
 --
@@ -60,26 +49,15 @@ showTableTessellationDomainOrigin =
   [(TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT, "UPPER_LEFT"), (TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT, "LOWER_LEFT")]
 
 instance Show TessellationDomainOrigin where
-  showsPrec p e = case lookup e showTableTessellationDomainOrigin of
-    Just s -> showString enumPrefixTessellationDomainOrigin . showString s
-    Nothing ->
-      let TessellationDomainOrigin x = e
-      in  showParen (p >= 11) (showString conNameTessellationDomainOrigin . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixTessellationDomainOrigin
+                            showTableTessellationDomainOrigin
+                            conNameTessellationDomainOrigin
+                            (\(TessellationDomainOrigin x) -> x)
+                            (showsPrec 11)
 
 instance Read TessellationDomainOrigin where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixTessellationDomainOrigin
-          asum ((\(e, s) -> e <$ string s) <$> showTableTessellationDomainOrigin)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameTessellationDomainOrigin)
-            v <- step readPrec
-            pure (TessellationDomainOrigin v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixTessellationDomainOrigin
+                          showTableTessellationDomainOrigin
+                          conNameTessellationDomainOrigin
+                          TessellationDomainOrigin
 

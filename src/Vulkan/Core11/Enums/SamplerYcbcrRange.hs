@@ -5,24 +5,13 @@ module Vulkan.Core11.Enums.SamplerYcbcrRange  (SamplerYcbcrRange( SAMPLER_YCBCR_
                                                                 , ..
                                                                 )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkSamplerYcbcrRange - Range of encoded values in a color space
 --
@@ -69,26 +58,13 @@ showTableSamplerYcbcrRange :: [(SamplerYcbcrRange, String)]
 showTableSamplerYcbcrRange = [(SAMPLER_YCBCR_RANGE_ITU_FULL, "FULL"), (SAMPLER_YCBCR_RANGE_ITU_NARROW, "NARROW")]
 
 instance Show SamplerYcbcrRange where
-  showsPrec p e = case lookup e showTableSamplerYcbcrRange of
-    Just s -> showString enumPrefixSamplerYcbcrRange . showString s
-    Nothing ->
-      let SamplerYcbcrRange x = e
-      in  showParen (p >= 11) (showString conNameSamplerYcbcrRange . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixSamplerYcbcrRange
+                            showTableSamplerYcbcrRange
+                            conNameSamplerYcbcrRange
+                            (\(SamplerYcbcrRange x) -> x)
+                            (showsPrec 11)
 
 instance Read SamplerYcbcrRange where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixSamplerYcbcrRange
-          asum ((\(e, s) -> e <$ string s) <$> showTableSamplerYcbcrRange)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameSamplerYcbcrRange)
-            v <- step readPrec
-            pure (SamplerYcbcrRange v)
-          )
-    )
+  readPrec =
+    enumReadPrec enumPrefixSamplerYcbcrRange showTableSamplerYcbcrRange conNameSamplerYcbcrRange SamplerYcbcrRange
 

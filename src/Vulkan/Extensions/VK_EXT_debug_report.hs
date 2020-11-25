@@ -370,32 +370,22 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
                                               , DebugReportCallbackEXT(..)
                                               ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -420,8 +410,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -852,28 +842,17 @@ showTableDebugReportFlagBitsEXT =
   ]
 
 instance Show DebugReportFlagBitsEXT where
-  showsPrec p e = case lookup e showTableDebugReportFlagBitsEXT of
-    Just s -> showString enumPrefixDebugReportFlagBitsEXT . showString s
-    Nothing ->
-      let DebugReportFlagBitsEXT x = e
-      in  showParen (p >= 11) (showString conNameDebugReportFlagBitsEXT . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDebugReportFlagBitsEXT
+                            showTableDebugReportFlagBitsEXT
+                            conNameDebugReportFlagBitsEXT
+                            (\(DebugReportFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DebugReportFlagBitsEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDebugReportFlagBitsEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableDebugReportFlagBitsEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDebugReportFlagBitsEXT)
-            v <- step readPrec
-            pure (DebugReportFlagBitsEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDebugReportFlagBitsEXT
+                          showTableDebugReportFlagBitsEXT
+                          conNameDebugReportFlagBitsEXT
+                          DebugReportFlagBitsEXT
 
 
 -- | VkDebugReportObjectTypeEXT - Specify the type of an object handle
@@ -1123,28 +1102,17 @@ showTableDebugReportObjectTypeEXT =
   ]
 
 instance Show DebugReportObjectTypeEXT where
-  showsPrec p e = case lookup e showTableDebugReportObjectTypeEXT of
-    Just s -> showString enumPrefixDebugReportObjectTypeEXT . showString s
-    Nothing ->
-      let DebugReportObjectTypeEXT x = e
-      in  showParen (p >= 11) (showString conNameDebugReportObjectTypeEXT . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixDebugReportObjectTypeEXT
+                            showTableDebugReportObjectTypeEXT
+                            conNameDebugReportObjectTypeEXT
+                            (\(DebugReportObjectTypeEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read DebugReportObjectTypeEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDebugReportObjectTypeEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableDebugReportObjectTypeEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDebugReportObjectTypeEXT)
-            v <- step readPrec
-            pure (DebugReportObjectTypeEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDebugReportObjectTypeEXT
+                          showTableDebugReportObjectTypeEXT
+                          conNameDebugReportObjectTypeEXT
+                          DebugReportObjectTypeEXT
 
 
 type FN_vkDebugReportCallbackEXT = DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> ("object" ::: Word64) -> ("location" ::: CSize) -> ("messageCode" ::: Int32) -> ("pLayerPrefix" ::: Ptr CChar) -> ("pMessage" ::: Ptr CChar) -> ("pUserData" ::: Ptr ()) -> IO Bool32

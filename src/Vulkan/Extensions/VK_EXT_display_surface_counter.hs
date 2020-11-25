@@ -117,28 +117,18 @@ module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurf
                                                          , SurfaceTransformFlagsKHR
                                                          ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -156,8 +146,8 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagsKHR)
@@ -423,28 +413,17 @@ showTableSurfaceCounterFlagBitsEXT :: [(SurfaceCounterFlagBitsEXT, String)]
 showTableSurfaceCounterFlagBitsEXT = [(SURFACE_COUNTER_VBLANK_BIT_EXT, "")]
 
 instance Show SurfaceCounterFlagBitsEXT where
-  showsPrec p e = case lookup e showTableSurfaceCounterFlagBitsEXT of
-    Just s -> showString enumPrefixSurfaceCounterFlagBitsEXT . showString s
-    Nothing ->
-      let SurfaceCounterFlagBitsEXT x = e
-      in  showParen (p >= 11) (showString conNameSurfaceCounterFlagBitsEXT . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixSurfaceCounterFlagBitsEXT
+                            showTableSurfaceCounterFlagBitsEXT
+                            conNameSurfaceCounterFlagBitsEXT
+                            (\(SurfaceCounterFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read SurfaceCounterFlagBitsEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixSurfaceCounterFlagBitsEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableSurfaceCounterFlagBitsEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameSurfaceCounterFlagBitsEXT)
-            v <- step readPrec
-            pure (SurfaceCounterFlagBitsEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixSurfaceCounterFlagBitsEXT
+                          showTableSurfaceCounterFlagBitsEXT
+                          conNameSurfaceCounterFlagBitsEXT
+                          SurfaceCounterFlagBitsEXT
 
 
 type EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION = 1

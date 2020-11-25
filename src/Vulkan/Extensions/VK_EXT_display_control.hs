@@ -179,31 +179,20 @@ module Vulkan.Extensions.VK_EXT_display_control  ( displayPowerControlEXT
                                                  , SurfaceCounterFlagsEXT
                                                  ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -220,8 +209,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -809,28 +798,17 @@ showTableDisplayPowerStateEXT =
   ]
 
 instance Show DisplayPowerStateEXT where
-  showsPrec p e = case lookup e showTableDisplayPowerStateEXT of
-    Just s -> showString enumPrefixDisplayPowerStateEXT . showString s
-    Nothing ->
-      let DisplayPowerStateEXT x = e
-      in  showParen (p >= 11) (showString conNameDisplayPowerStateEXT . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixDisplayPowerStateEXT
+                            showTableDisplayPowerStateEXT
+                            conNameDisplayPowerStateEXT
+                            (\(DisplayPowerStateEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read DisplayPowerStateEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDisplayPowerStateEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableDisplayPowerStateEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDisplayPowerStateEXT)
-            v <- step readPrec
-            pure (DisplayPowerStateEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDisplayPowerStateEXT
+                          showTableDisplayPowerStateEXT
+                          conNameDisplayPowerStateEXT
+                          DisplayPowerStateEXT
 
 
 -- | VkDeviceEventTypeEXT - Events that can occur on a device object
@@ -858,28 +836,15 @@ showTableDeviceEventTypeEXT :: [(DeviceEventTypeEXT, String)]
 showTableDeviceEventTypeEXT = [(DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT, "")]
 
 instance Show DeviceEventTypeEXT where
-  showsPrec p e = case lookup e showTableDeviceEventTypeEXT of
-    Just s -> showString enumPrefixDeviceEventTypeEXT . showString s
-    Nothing ->
-      let DeviceEventTypeEXT x = e
-      in  showParen (p >= 11) (showString conNameDeviceEventTypeEXT . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixDeviceEventTypeEXT
+                            showTableDeviceEventTypeEXT
+                            conNameDeviceEventTypeEXT
+                            (\(DeviceEventTypeEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read DeviceEventTypeEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDeviceEventTypeEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableDeviceEventTypeEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDeviceEventTypeEXT)
-            v <- step readPrec
-            pure (DeviceEventTypeEXT v)
-          )
-    )
+  readPrec =
+    enumReadPrec enumPrefixDeviceEventTypeEXT showTableDeviceEventTypeEXT conNameDeviceEventTypeEXT DeviceEventTypeEXT
 
 
 -- | VkDisplayEventTypeEXT - Events that can occur on a display object
@@ -906,28 +871,17 @@ showTableDisplayEventTypeEXT :: [(DisplayEventTypeEXT, String)]
 showTableDisplayEventTypeEXT = [(DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT, "")]
 
 instance Show DisplayEventTypeEXT where
-  showsPrec p e = case lookup e showTableDisplayEventTypeEXT of
-    Just s -> showString enumPrefixDisplayEventTypeEXT . showString s
-    Nothing ->
-      let DisplayEventTypeEXT x = e
-      in  showParen (p >= 11) (showString conNameDisplayEventTypeEXT . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixDisplayEventTypeEXT
+                            showTableDisplayEventTypeEXT
+                            conNameDisplayEventTypeEXT
+                            (\(DisplayEventTypeEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read DisplayEventTypeEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDisplayEventTypeEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableDisplayEventTypeEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDisplayEventTypeEXT)
-            v <- step readPrec
-            pure (DisplayEventTypeEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDisplayEventTypeEXT
+                          showTableDisplayEventTypeEXT
+                          conNameDisplayEventTypeEXT
+                          DisplayEventTypeEXT
 
 
 type EXT_DISPLAY_CONTROL_SPEC_VERSION = 1

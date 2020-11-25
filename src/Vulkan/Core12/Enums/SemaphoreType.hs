@@ -5,24 +5,13 @@ module Vulkan.Core12.Enums.SemaphoreType  (SemaphoreType( SEMAPHORE_TYPE_BINARY
                                                         , ..
                                                         )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkSemaphoreType - Sepcifies the type of a semaphore object
 --
@@ -56,26 +45,12 @@ showTableSemaphoreType :: [(SemaphoreType, String)]
 showTableSemaphoreType = [(SEMAPHORE_TYPE_BINARY, "BINARY"), (SEMAPHORE_TYPE_TIMELINE, "TIMELINE")]
 
 instance Show SemaphoreType where
-  showsPrec p e = case lookup e showTableSemaphoreType of
-    Just s -> showString enumPrefixSemaphoreType . showString s
-    Nothing ->
-      let SemaphoreType x = e
-      in  showParen (p >= 11) (showString conNameSemaphoreType . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixSemaphoreType
+                            showTableSemaphoreType
+                            conNameSemaphoreType
+                            (\(SemaphoreType x) -> x)
+                            (showsPrec 11)
 
 instance Read SemaphoreType where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixSemaphoreType
-          asum ((\(e, s) -> e <$ string s) <$> showTableSemaphoreType)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameSemaphoreType)
-            v <- step readPrec
-            pure (SemaphoreType v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixSemaphoreType showTableSemaphoreType conNameSemaphoreType SemaphoreType
 

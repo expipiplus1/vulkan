@@ -104,23 +104,13 @@ module Vulkan.Extensions.VK_AMD_shader_core_properties2  ( PhysicalDeviceShaderC
                                                          , pattern AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME
                                                          ) where
 
-import Data.Foldable (asum)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
@@ -132,8 +122,8 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
@@ -240,28 +230,17 @@ showTableShaderCorePropertiesFlagBitsAMD :: [(ShaderCorePropertiesFlagBitsAMD, S
 showTableShaderCorePropertiesFlagBitsAMD = []
 
 instance Show ShaderCorePropertiesFlagBitsAMD where
-  showsPrec p e = case lookup e showTableShaderCorePropertiesFlagBitsAMD of
-    Just s -> showString enumPrefixShaderCorePropertiesFlagBitsAMD . showString s
-    Nothing ->
-      let ShaderCorePropertiesFlagBitsAMD x = e
-      in  showParen (p >= 11) (showString conNameShaderCorePropertiesFlagBitsAMD . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixShaderCorePropertiesFlagBitsAMD
+                            showTableShaderCorePropertiesFlagBitsAMD
+                            conNameShaderCorePropertiesFlagBitsAMD
+                            (\(ShaderCorePropertiesFlagBitsAMD x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ShaderCorePropertiesFlagBitsAMD where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixShaderCorePropertiesFlagBitsAMD
-          asum ((\(e, s) -> e <$ string s) <$> showTableShaderCorePropertiesFlagBitsAMD)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameShaderCorePropertiesFlagBitsAMD)
-            v <- step readPrec
-            pure (ShaderCorePropertiesFlagBitsAMD v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixShaderCorePropertiesFlagBitsAMD
+                          showTableShaderCorePropertiesFlagBitsAMD
+                          conNameShaderCorePropertiesFlagBitsAMD
+                          ShaderCorePropertiesFlagBitsAMD
 
 
 type AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION = 1

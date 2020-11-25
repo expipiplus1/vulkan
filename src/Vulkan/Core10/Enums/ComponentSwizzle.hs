@@ -10,24 +10,13 @@ module Vulkan.Core10.Enums.ComponentSwizzle  (ComponentSwizzle( COMPONENT_SWIZZL
                                                               , ..
                                                               )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkComponentSwizzle - Specify how a component is swizzled
 --
@@ -105,26 +94,12 @@ showTableComponentSwizzle =
   ]
 
 instance Show ComponentSwizzle where
-  showsPrec p e = case lookup e showTableComponentSwizzle of
-    Just s -> showString enumPrefixComponentSwizzle . showString s
-    Nothing ->
-      let ComponentSwizzle x = e
-      in  showParen (p >= 11) (showString conNameComponentSwizzle . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixComponentSwizzle
+                            showTableComponentSwizzle
+                            conNameComponentSwizzle
+                            (\(ComponentSwizzle x) -> x)
+                            (showsPrec 11)
 
 instance Read ComponentSwizzle where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixComponentSwizzle
-          asum ((\(e, s) -> e <$ string s) <$> showTableComponentSwizzle)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameComponentSwizzle)
-            v <- step readPrec
-            pure (ComponentSwizzle v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixComponentSwizzle showTableComponentSwizzle conNameComponentSwizzle ComponentSwizzle
 

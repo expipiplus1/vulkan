@@ -179,31 +179,20 @@ module Vulkan.Extensions.VK_EXT_calibrated_timestamps  ( getPhysicalDeviceCalibr
                                                        , pattern EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME
                                                        ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -223,9 +212,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -534,28 +523,14 @@ showTableTimeDomainEXT =
   ]
 
 instance Show TimeDomainEXT where
-  showsPrec p e = case lookup e showTableTimeDomainEXT of
-    Just s -> showString enumPrefixTimeDomainEXT . showString s
-    Nothing ->
-      let TimeDomainEXT x = e
-      in  showParen (p >= 11) (showString conNameTimeDomainEXT . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixTimeDomainEXT
+                            showTableTimeDomainEXT
+                            conNameTimeDomainEXT
+                            (\(TimeDomainEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read TimeDomainEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixTimeDomainEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableTimeDomainEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameTimeDomainEXT)
-            v <- step readPrec
-            pure (TimeDomainEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixTimeDomainEXT showTableTimeDomainEXT conNameTimeDomainEXT TimeDomainEXT
 
 
 type EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 1

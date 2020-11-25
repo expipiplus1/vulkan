@@ -102,23 +102,12 @@ module Vulkan.Extensions.VK_AMD_memory_overallocation_behavior  ( DeviceMemoryOv
                                                                 , pattern AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME
                                                                 ) where
 
-import Data.Foldable (asum)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -129,7 +118,7 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -233,28 +222,17 @@ showTableMemoryOverallocationBehaviorAMD =
   ]
 
 instance Show MemoryOverallocationBehaviorAMD where
-  showsPrec p e = case lookup e showTableMemoryOverallocationBehaviorAMD of
-    Just s -> showString enumPrefixMemoryOverallocationBehaviorAMD . showString s
-    Nothing ->
-      let MemoryOverallocationBehaviorAMD x = e
-      in  showParen (p >= 11) (showString conNameMemoryOverallocationBehaviorAMD . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixMemoryOverallocationBehaviorAMD
+                            showTableMemoryOverallocationBehaviorAMD
+                            conNameMemoryOverallocationBehaviorAMD
+                            (\(MemoryOverallocationBehaviorAMD x) -> x)
+                            (showsPrec 11)
 
 instance Read MemoryOverallocationBehaviorAMD where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixMemoryOverallocationBehaviorAMD
-          asum ((\(e, s) -> e <$ string s) <$> showTableMemoryOverallocationBehaviorAMD)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameMemoryOverallocationBehaviorAMD)
-            v <- step readPrec
-            pure (MemoryOverallocationBehaviorAMD v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixMemoryOverallocationBehaviorAMD
+                          showTableMemoryOverallocationBehaviorAMD
+                          conNameMemoryOverallocationBehaviorAMD
+                          MemoryOverallocationBehaviorAMD
 
 
 type AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION = 1

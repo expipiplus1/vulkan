@@ -246,24 +246,13 @@ module Vulkan.Core10.Enums.Format  (Format( FORMAT_UNDEFINED
                                           , ..
                                           )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkFormat - Available image formats
 --
@@ -2221,24 +2210,8 @@ showTableFormat =
   ]
 
 instance Show Format where
-  showsPrec p e = case lookup e showTableFormat of
-    Just s  -> showString enumPrefixFormat . showString s
-    Nothing -> let Format x = e in showParen (p >= 11) (showString conNameFormat . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixFormat showTableFormat conNameFormat (\(Format x) -> x) (showsPrec 11)
 
 instance Read Format where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixFormat
-          asum ((\(e, s) -> e <$ string s) <$> showTableFormat)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameFormat)
-            v <- step readPrec
-            pure (Format v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixFormat showTableFormat conNameFormat Format
 

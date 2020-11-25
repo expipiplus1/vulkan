@@ -16,25 +16,15 @@ module Vulkan.Core10.Enums.ImageAspectFlagBits  ( ImageAspectFlags
                                                                      )
                                                 ) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type ImageAspectFlags = ImageAspectFlagBits
@@ -101,26 +91,15 @@ showTableImageAspectFlagBits =
   ]
 
 instance Show ImageAspectFlagBits where
-  showsPrec p e = case lookup e showTableImageAspectFlagBits of
-    Just s -> showString enumPrefixImageAspectFlagBits . showString s
-    Nothing ->
-      let ImageAspectFlagBits x = e
-      in  showParen (p >= 11) (showString conNameImageAspectFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixImageAspectFlagBits
+                            showTableImageAspectFlagBits
+                            conNameImageAspectFlagBits
+                            (\(ImageAspectFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ImageAspectFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixImageAspectFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTableImageAspectFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameImageAspectFlagBits)
-            v <- step readPrec
-            pure (ImageAspectFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixImageAspectFlagBits
+                          showTableImageAspectFlagBits
+                          conNameImageAspectFlagBits
+                          ImageAspectFlagBits
 

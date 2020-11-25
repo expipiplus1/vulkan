@@ -5,24 +5,13 @@ module Vulkan.Core10.Enums.SharingMode  (SharingMode( SHARING_MODE_EXCLUSIVE
                                                     , ..
                                                     )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkSharingMode - Buffer and image sharing modes
 --
@@ -94,25 +83,9 @@ showTableSharingMode :: [(SharingMode, String)]
 showTableSharingMode = [(SHARING_MODE_EXCLUSIVE, "EXCLUSIVE"), (SHARING_MODE_CONCURRENT, "CONCURRENT")]
 
 instance Show SharingMode where
-  showsPrec p e = case lookup e showTableSharingMode of
-    Just s -> showString enumPrefixSharingMode . showString s
-    Nothing ->
-      let SharingMode x = e in showParen (p >= 11) (showString conNameSharingMode . showString " " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixSharingMode showTableSharingMode conNameSharingMode (\(SharingMode x) -> x) (showsPrec 11)
 
 instance Read SharingMode where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixSharingMode
-          asum ((\(e, s) -> e <$ string s) <$> showTableSharingMode)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameSharingMode)
-            v <- step readPrec
-            pure (SharingMode v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixSharingMode showTableSharingMode conNameSharingMode SharingMode
 

@@ -11,24 +11,13 @@ module Vulkan.Core10.Enums.CompareOp  (CompareOp( COMPARE_OP_NEVER
                                                 , ..
                                                 )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkCompareOp - Stencil comparison function
 --
@@ -86,25 +75,9 @@ showTableCompareOp =
   ]
 
 instance Show CompareOp where
-  showsPrec p e = case lookup e showTableCompareOp of
-    Just s -> showString enumPrefixCompareOp . showString s
-    Nothing ->
-      let CompareOp x = e in showParen (p >= 11) (showString conNameCompareOp . showString " " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixCompareOp showTableCompareOp conNameCompareOp (\(CompareOp x) -> x) (showsPrec 11)
 
 instance Read CompareOp where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixCompareOp
-          asum ((\(e, s) -> e <$ string s) <$> showTableCompareOp)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameCompareOp)
-            v <- step readPrec
-            pure (CompareOp v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixCompareOp showTableCompareOp conNameCompareOp CompareOp
 

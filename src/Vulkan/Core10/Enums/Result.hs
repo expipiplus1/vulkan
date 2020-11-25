@@ -41,24 +41,13 @@ module Vulkan.Core10.Enums.Result  (Result( SUCCESS
                                           , ..
                                           )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkResult - Vulkan command return codes
 --
@@ -316,24 +305,8 @@ showTableResult =
   ]
 
 instance Show Result where
-  showsPrec p e = case lookup e showTableResult of
-    Just s  -> showString enumPrefixResult . showString s
-    Nothing -> let Result x = e in showParen (p >= 11) (showString conNameResult . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixResult showTableResult conNameResult (\(Result x) -> x) (showsPrec 11)
 
 instance Read Result where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixResult
-          asum ((\(e, s) -> e <$ string s) <$> showTableResult)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameResult)
-            v <- step readPrec
-            pure (Result v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixResult showTableResult conNameResult Result
 

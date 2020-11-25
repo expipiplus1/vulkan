@@ -19,24 +19,13 @@ module Vulkan.Core10.Enums.LogicOp  (LogicOp( LOGIC_OP_CLEAR
                                             , ..
                                             )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkLogicOp - Framebuffer logical operations
 --
@@ -183,24 +172,8 @@ showTableLogicOp =
   ]
 
 instance Show LogicOp where
-  showsPrec p e = case lookup e showTableLogicOp of
-    Just s  -> showString enumPrefixLogicOp . showString s
-    Nothing -> let LogicOp x = e in showParen (p >= 11) (showString conNameLogicOp . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixLogicOp showTableLogicOp conNameLogicOp (\(LogicOp x) -> x) (showsPrec 11)
 
 instance Read LogicOp where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixLogicOp
-          asum ((\(e, s) -> e <$ string s) <$> showTableLogicOp)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameLogicOp)
-            v <- step readPrec
-            pure (LogicOp v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixLogicOp showTableLogicOp conNameLogicOp LogicOp
 

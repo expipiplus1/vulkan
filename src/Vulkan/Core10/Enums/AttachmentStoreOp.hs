@@ -6,24 +6,13 @@ module Vulkan.Core10.Enums.AttachmentStoreOp  (AttachmentStoreOp( ATTACHMENT_STO
                                                                 , ..
                                                                 )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkAttachmentStoreOp - Specify how contents of an attachment are treated
 -- at the end of a subpass
@@ -81,26 +70,13 @@ showTableAttachmentStoreOp =
   ]
 
 instance Show AttachmentStoreOp where
-  showsPrec p e = case lookup e showTableAttachmentStoreOp of
-    Just s -> showString enumPrefixAttachmentStoreOp . showString s
-    Nothing ->
-      let AttachmentStoreOp x = e
-      in  showParen (p >= 11) (showString conNameAttachmentStoreOp . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixAttachmentStoreOp
+                            showTableAttachmentStoreOp
+                            conNameAttachmentStoreOp
+                            (\(AttachmentStoreOp x) -> x)
+                            (showsPrec 11)
 
 instance Read AttachmentStoreOp where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixAttachmentStoreOp
-          asum ((\(e, s) -> e <$ string s) <$> showTableAttachmentStoreOp)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameAttachmentStoreOp)
-            v <- step readPrec
-            pure (AttachmentStoreOp v)
-          )
-    )
+  readPrec =
+    enumReadPrec enumPrefixAttachmentStoreOp showTableAttachmentStoreOp conNameAttachmentStoreOp AttachmentStoreOp
 

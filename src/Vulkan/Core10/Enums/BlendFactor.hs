@@ -22,24 +22,13 @@ module Vulkan.Core10.Enums.BlendFactor  (BlendFactor( BLEND_FACTOR_ZERO
                                                     , ..
                                                     )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkBlendFactor - Framebuffer blending factors
 --
@@ -208,25 +197,9 @@ showTableBlendFactor =
   ]
 
 instance Show BlendFactor where
-  showsPrec p e = case lookup e showTableBlendFactor of
-    Just s -> showString enumPrefixBlendFactor . showString s
-    Nothing ->
-      let BlendFactor x = e in showParen (p >= 11) (showString conNameBlendFactor . showString " " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixBlendFactor showTableBlendFactor conNameBlendFactor (\(BlendFactor x) -> x) (showsPrec 11)
 
 instance Read BlendFactor where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixBlendFactor
-          asum ((\(e, s) -> e <$ string s) <$> showTableBlendFactor)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameBlendFactor)
-            v <- step readPrec
-            pure (BlendFactor v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixBlendFactor showTableBlendFactor conNameBlendFactor BlendFactor
 

@@ -580,34 +580,24 @@ module Vulkan.Extensions.VK_NV_device_generated_commands  ( cmdExecuteGeneratedC
                                                           , IndirectCommandsLayoutNV(..)
                                                           ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -629,8 +619,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -3236,28 +3226,17 @@ showTableIndirectCommandsLayoutUsageFlagBitsNV =
   ]
 
 instance Show IndirectCommandsLayoutUsageFlagBitsNV where
-  showsPrec p e = case lookup e showTableIndirectCommandsLayoutUsageFlagBitsNV of
-    Just s -> showString enumPrefixIndirectCommandsLayoutUsageFlagBitsNV . showString s
-    Nothing ->
-      let IndirectCommandsLayoutUsageFlagBitsNV x = e
-      in  showParen (p >= 11) (showString conNameIndirectCommandsLayoutUsageFlagBitsNV . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixIndirectCommandsLayoutUsageFlagBitsNV
+                            showTableIndirectCommandsLayoutUsageFlagBitsNV
+                            conNameIndirectCommandsLayoutUsageFlagBitsNV
+                            (\(IndirectCommandsLayoutUsageFlagBitsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read IndirectCommandsLayoutUsageFlagBitsNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixIndirectCommandsLayoutUsageFlagBitsNV
-          asum ((\(e, s) -> e <$ string s) <$> showTableIndirectCommandsLayoutUsageFlagBitsNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameIndirectCommandsLayoutUsageFlagBitsNV)
-            v <- step readPrec
-            pure (IndirectCommandsLayoutUsageFlagBitsNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixIndirectCommandsLayoutUsageFlagBitsNV
+                          showTableIndirectCommandsLayoutUsageFlagBitsNV
+                          conNameIndirectCommandsLayoutUsageFlagBitsNV
+                          IndirectCommandsLayoutUsageFlagBitsNV
 
 
 type IndirectStateFlagsNV = IndirectStateFlagBitsNV
@@ -3286,28 +3265,17 @@ showTableIndirectStateFlagBitsNV :: [(IndirectStateFlagBitsNV, String)]
 showTableIndirectStateFlagBitsNV = [(INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV, "")]
 
 instance Show IndirectStateFlagBitsNV where
-  showsPrec p e = case lookup e showTableIndirectStateFlagBitsNV of
-    Just s -> showString enumPrefixIndirectStateFlagBitsNV . showString s
-    Nothing ->
-      let IndirectStateFlagBitsNV x = e
-      in  showParen (p >= 11) (showString conNameIndirectStateFlagBitsNV . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixIndirectStateFlagBitsNV
+                            showTableIndirectStateFlagBitsNV
+                            conNameIndirectStateFlagBitsNV
+                            (\(IndirectStateFlagBitsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read IndirectStateFlagBitsNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixIndirectStateFlagBitsNV
-          asum ((\(e, s) -> e <$ string s) <$> showTableIndirectStateFlagBitsNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameIndirectStateFlagBitsNV)
-            v <- step readPrec
-            pure (IndirectStateFlagBitsNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixIndirectStateFlagBitsNV
+                          showTableIndirectStateFlagBitsNV
+                          conNameIndirectStateFlagBitsNV
+                          IndirectStateFlagBitsNV
 
 
 -- | VkIndirectCommandsTokenTypeNV - Enum specifying token commands
@@ -3388,28 +3356,17 @@ showTableIndirectCommandsTokenTypeNV =
   ]
 
 instance Show IndirectCommandsTokenTypeNV where
-  showsPrec p e = case lookup e showTableIndirectCommandsTokenTypeNV of
-    Just s -> showString enumPrefixIndirectCommandsTokenTypeNV . showString s
-    Nothing ->
-      let IndirectCommandsTokenTypeNV x = e
-      in  showParen (p >= 11) (showString conNameIndirectCommandsTokenTypeNV . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixIndirectCommandsTokenTypeNV
+                            showTableIndirectCommandsTokenTypeNV
+                            conNameIndirectCommandsTokenTypeNV
+                            (\(IndirectCommandsTokenTypeNV x) -> x)
+                            (showsPrec 11)
 
 instance Read IndirectCommandsTokenTypeNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixIndirectCommandsTokenTypeNV
-          asum ((\(e, s) -> e <$ string s) <$> showTableIndirectCommandsTokenTypeNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameIndirectCommandsTokenTypeNV)
-            v <- step readPrec
-            pure (IndirectCommandsTokenTypeNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixIndirectCommandsTokenTypeNV
+                          showTableIndirectCommandsTokenTypeNV
+                          conNameIndirectCommandsTokenTypeNV
+                          IndirectCommandsTokenTypeNV
 
 
 type NV_DEVICE_GENERATED_COMMANDS_SPEC_VERSION = 3

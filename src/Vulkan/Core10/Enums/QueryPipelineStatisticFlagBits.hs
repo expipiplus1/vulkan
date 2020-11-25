@@ -16,25 +16,15 @@ module Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits  ( QueryPipelineStatis
                                                                                            )
                                                            ) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
@@ -186,26 +176,15 @@ showTableQueryPipelineStatisticFlagBits =
   ]
 
 instance Show QueryPipelineStatisticFlagBits where
-  showsPrec p e = case lookup e showTableQueryPipelineStatisticFlagBits of
-    Just s -> showString enumPrefixQueryPipelineStatisticFlagBits . showString s
-    Nothing ->
-      let QueryPipelineStatisticFlagBits x = e
-      in  showParen (p >= 11) (showString conNameQueryPipelineStatisticFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixQueryPipelineStatisticFlagBits
+                            showTableQueryPipelineStatisticFlagBits
+                            conNameQueryPipelineStatisticFlagBits
+                            (\(QueryPipelineStatisticFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read QueryPipelineStatisticFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixQueryPipelineStatisticFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTableQueryPipelineStatisticFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameQueryPipelineStatisticFlagBits)
-            v <- step readPrec
-            pure (QueryPipelineStatisticFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixQueryPipelineStatisticFlagBits
+                          showTableQueryPipelineStatisticFlagBits
+                          conNameQueryPipelineStatisticFlagBits
+                          QueryPipelineStatisticFlagBits
 

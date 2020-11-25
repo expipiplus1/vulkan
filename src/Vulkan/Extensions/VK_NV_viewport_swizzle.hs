@@ -282,24 +282,14 @@ module Vulkan.Extensions.VK_NV_viewport_swizzle  ( ViewportSwizzleNV(..)
                                                  , pattern NV_VIEWPORT_SWIZZLE_EXTENSION_NAME
                                                  ) where
 
-import Data.Foldable (asum)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -317,8 +307,8 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -502,29 +492,17 @@ showTablePipelineViewportSwizzleStateCreateFlagsNV :: [(PipelineViewportSwizzleS
 showTablePipelineViewportSwizzleStateCreateFlagsNV = []
 
 instance Show PipelineViewportSwizzleStateCreateFlagsNV where
-  showsPrec p e = case lookup e showTablePipelineViewportSwizzleStateCreateFlagsNV of
-    Just s -> showString enumPrefixPipelineViewportSwizzleStateCreateFlagsNV . showString s
-    Nothing ->
-      let PipelineViewportSwizzleStateCreateFlagsNV x = e
-      in  showParen (p >= 11)
-                    (showString conNamePipelineViewportSwizzleStateCreateFlagsNV . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineViewportSwizzleStateCreateFlagsNV
+                            showTablePipelineViewportSwizzleStateCreateFlagsNV
+                            conNamePipelineViewportSwizzleStateCreateFlagsNV
+                            (\(PipelineViewportSwizzleStateCreateFlagsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineViewportSwizzleStateCreateFlagsNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPipelineViewportSwizzleStateCreateFlagsNV
-          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineViewportSwizzleStateCreateFlagsNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePipelineViewportSwizzleStateCreateFlagsNV)
-            v <- step readPrec
-            pure (PipelineViewportSwizzleStateCreateFlagsNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPipelineViewportSwizzleStateCreateFlagsNV
+                          showTablePipelineViewportSwizzleStateCreateFlagsNV
+                          conNamePipelineViewportSwizzleStateCreateFlagsNV
+                          PipelineViewportSwizzleStateCreateFlagsNV
 
 
 -- | VkViewportCoordinateSwizzleNV - Specify how a viewport coordinate is
@@ -585,28 +563,17 @@ showTableViewportCoordinateSwizzleNV =
   ]
 
 instance Show ViewportCoordinateSwizzleNV where
-  showsPrec p e = case lookup e showTableViewportCoordinateSwizzleNV of
-    Just s -> showString enumPrefixViewportCoordinateSwizzleNV . showString s
-    Nothing ->
-      let ViewportCoordinateSwizzleNV x = e
-      in  showParen (p >= 11) (showString conNameViewportCoordinateSwizzleNV . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixViewportCoordinateSwizzleNV
+                            showTableViewportCoordinateSwizzleNV
+                            conNameViewportCoordinateSwizzleNV
+                            (\(ViewportCoordinateSwizzleNV x) -> x)
+                            (showsPrec 11)
 
 instance Read ViewportCoordinateSwizzleNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixViewportCoordinateSwizzleNV
-          asum ((\(e, s) -> e <$ string s) <$> showTableViewportCoordinateSwizzleNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameViewportCoordinateSwizzleNV)
-            v <- step readPrec
-            pure (ViewportCoordinateSwizzleNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixViewportCoordinateSwizzleNV
+                          showTableViewportCoordinateSwizzleNV
+                          conNameViewportCoordinateSwizzleNV
+                          ViewportCoordinateSwizzleNV
 
 
 type NV_VIEWPORT_SWIZZLE_SPEC_VERSION = 1

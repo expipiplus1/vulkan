@@ -98,23 +98,13 @@ module Vulkan.Extensions.VK_NV_fragment_coverage_to_color  ( PipelineCoverageToC
                                                            , pattern NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME
                                                            ) where
 
-import Data.Foldable (asum)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
@@ -126,8 +116,8 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -276,29 +266,17 @@ showTablePipelineCoverageToColorStateCreateFlagsNV :: [(PipelineCoverageToColorS
 showTablePipelineCoverageToColorStateCreateFlagsNV = []
 
 instance Show PipelineCoverageToColorStateCreateFlagsNV where
-  showsPrec p e = case lookup e showTablePipelineCoverageToColorStateCreateFlagsNV of
-    Just s -> showString enumPrefixPipelineCoverageToColorStateCreateFlagsNV . showString s
-    Nothing ->
-      let PipelineCoverageToColorStateCreateFlagsNV x = e
-      in  showParen (p >= 11)
-                    (showString conNamePipelineCoverageToColorStateCreateFlagsNV . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineCoverageToColorStateCreateFlagsNV
+                            showTablePipelineCoverageToColorStateCreateFlagsNV
+                            conNamePipelineCoverageToColorStateCreateFlagsNV
+                            (\(PipelineCoverageToColorStateCreateFlagsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCoverageToColorStateCreateFlagsNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPipelineCoverageToColorStateCreateFlagsNV
-          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineCoverageToColorStateCreateFlagsNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePipelineCoverageToColorStateCreateFlagsNV)
-            v <- step readPrec
-            pure (PipelineCoverageToColorStateCreateFlagsNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPipelineCoverageToColorStateCreateFlagsNV
+                          showTablePipelineCoverageToColorStateCreateFlagsNV
+                          conNamePipelineCoverageToColorStateCreateFlagsNV
+                          PipelineCoverageToColorStateCreateFlagsNV
 
 
 type NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION = 1

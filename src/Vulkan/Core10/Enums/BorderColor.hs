@@ -11,24 +11,13 @@ module Vulkan.Core10.Enums.BorderColor  (BorderColor( BORDER_COLOR_FLOAT_TRANSPA
                                                     , ..
                                                     )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkBorderColor - Specify border color used for texture lookups
 --
@@ -101,25 +90,9 @@ showTableBorderColor =
   ]
 
 instance Show BorderColor where
-  showsPrec p e = case lookup e showTableBorderColor of
-    Just s -> showString enumPrefixBorderColor . showString s
-    Nothing ->
-      let BorderColor x = e in showParen (p >= 11) (showString conNameBorderColor . showString " " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixBorderColor showTableBorderColor conNameBorderColor (\(BorderColor x) -> x) (showsPrec 11)
 
 instance Read BorderColor where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixBorderColor
-          asum ((\(e, s) -> e <$ string s) <$> showTableBorderColor)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameBorderColor)
-            v <- step readPrec
-            pure (BorderColor v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixBorderColor showTableBorderColor conNameBorderColor BorderColor
 

@@ -6,24 +6,13 @@ module Vulkan.Core10.Enums.AttachmentLoadOp  (AttachmentLoadOp( ATTACHMENT_LOAD_
                                                               , ..
                                                               )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkAttachmentLoadOp - Specify how contents of an attachment are treated
 -- at the beginning of a subpass
@@ -73,26 +62,12 @@ showTableAttachmentLoadOp =
   [(ATTACHMENT_LOAD_OP_LOAD, "LOAD"), (ATTACHMENT_LOAD_OP_CLEAR, "CLEAR"), (ATTACHMENT_LOAD_OP_DONT_CARE, "DONT_CARE")]
 
 instance Show AttachmentLoadOp where
-  showsPrec p e = case lookup e showTableAttachmentLoadOp of
-    Just s -> showString enumPrefixAttachmentLoadOp . showString s
-    Nothing ->
-      let AttachmentLoadOp x = e
-      in  showParen (p >= 11) (showString conNameAttachmentLoadOp . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixAttachmentLoadOp
+                            showTableAttachmentLoadOp
+                            conNameAttachmentLoadOp
+                            (\(AttachmentLoadOp x) -> x)
+                            (showsPrec 11)
 
 instance Read AttachmentLoadOp where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixAttachmentLoadOp
-          asum ((\(e, s) -> e <$ string s) <$> showTableAttachmentLoadOp)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameAttachmentLoadOp)
-            v <- step readPrec
-            pure (AttachmentLoadOp v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixAttachmentLoadOp showTableAttachmentLoadOp conNameAttachmentLoadOp AttachmentLoadOp
 

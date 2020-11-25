@@ -14,24 +14,13 @@ module Vulkan.Core10.Enums.PrimitiveTopology  (PrimitiveTopology( PRIMITIVE_TOPO
                                                                 , ..
                                                                 )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkPrimitiveTopology - Supported primitive topologies
 --
@@ -151,26 +140,13 @@ showTablePrimitiveTopology =
   ]
 
 instance Show PrimitiveTopology where
-  showsPrec p e = case lookup e showTablePrimitiveTopology of
-    Just s -> showString enumPrefixPrimitiveTopology . showString s
-    Nothing ->
-      let PrimitiveTopology x = e
-      in  showParen (p >= 11) (showString conNamePrimitiveTopology . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPrimitiveTopology
+                            showTablePrimitiveTopology
+                            conNamePrimitiveTopology
+                            (\(PrimitiveTopology x) -> x)
+                            (showsPrec 11)
 
 instance Read PrimitiveTopology where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPrimitiveTopology
-          asum ((\(e, s) -> e <$ string s) <$> showTablePrimitiveTopology)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePrimitiveTopology)
-            v <- step readPrec
-            pure (PrimitiveTopology v)
-          )
-    )
+  readPrec =
+    enumReadPrec enumPrefixPrimitiveTopology showTablePrimitiveTopology conNamePrimitiveTopology PrimitiveTopology
 

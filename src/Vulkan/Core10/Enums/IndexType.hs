@@ -7,24 +7,13 @@ module Vulkan.Core10.Enums.IndexType  (IndexType( INDEX_TYPE_UINT16
                                                 , ..
                                                 )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkIndexType - Type of index buffer indices
 --
@@ -69,25 +58,9 @@ showTableIndexType =
   ]
 
 instance Show IndexType where
-  showsPrec p e = case lookup e showTableIndexType of
-    Just s -> showString enumPrefixIndexType . showString s
-    Nothing ->
-      let IndexType x = e in showParen (p >= 11) (showString conNameIndexType . showString " " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixIndexType showTableIndexType conNameIndexType (\(IndexType x) -> x) (showsPrec 11)
 
 instance Read IndexType where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixIndexType
-          asum ((\(e, s) -> e <$ string s) <$> showTableIndexType)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameIndexType)
-            v <- step readPrec
-            pure (IndexType v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixIndexType showTableIndexType conNameIndexType IndexType
 

@@ -176,31 +176,20 @@ module Vulkan.Extensions.VK_NV_cooperative_matrix  ( getPhysicalDeviceCooperativ
                                                    , pattern NV_COOPERATIVE_MATRIX_EXTENSION_NAME
                                                    ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -218,8 +207,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -633,26 +622,10 @@ showTableScopeNV =
   ]
 
 instance Show ScopeNV where
-  showsPrec p e = case lookup e showTableScopeNV of
-    Just s  -> showString enumPrefixScopeNV . showString s
-    Nothing -> let ScopeNV x = e in showParen (p >= 11) (showString conNameScopeNV . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixScopeNV showTableScopeNV conNameScopeNV (\(ScopeNV x) -> x) (showsPrec 11)
 
 instance Read ScopeNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixScopeNV
-          asum ((\(e, s) -> e <$ string s) <$> showTableScopeNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameScopeNV)
-            v <- step readPrec
-            pure (ScopeNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixScopeNV showTableScopeNV conNameScopeNV ScopeNV
 
 
 -- | VkComponentTypeNV - Specify SPIR-V cooperative matrix component type
@@ -719,28 +692,14 @@ showTableComponentTypeNV =
   ]
 
 instance Show ComponentTypeNV where
-  showsPrec p e = case lookup e showTableComponentTypeNV of
-    Just s -> showString enumPrefixComponentTypeNV . showString s
-    Nothing ->
-      let ComponentTypeNV x = e
-      in  showParen (p >= 11) (showString conNameComponentTypeNV . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixComponentTypeNV
+                            showTableComponentTypeNV
+                            conNameComponentTypeNV
+                            (\(ComponentTypeNV x) -> x)
+                            (showsPrec 11)
 
 instance Read ComponentTypeNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixComponentTypeNV
-          asum ((\(e, s) -> e <$ string s) <$> showTableComponentTypeNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameComponentTypeNV)
-            v <- step readPrec
-            pure (ComponentTypeNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixComponentTypeNV showTableComponentTypeNV conNameComponentTypeNV ComponentTypeNV
 
 
 type NV_COOPERATIVE_MATRIX_SPEC_VERSION = 1

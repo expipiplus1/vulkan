@@ -6,25 +6,15 @@ module Vulkan.Core10.Enums.FenceCreateFlagBits  ( FenceCreateFlags
                                                                      )
                                                 ) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type FenceCreateFlags = FenceCreateFlagBits
@@ -52,26 +42,15 @@ showTableFenceCreateFlagBits :: [(FenceCreateFlagBits, String)]
 showTableFenceCreateFlagBits = [(FENCE_CREATE_SIGNALED_BIT, "")]
 
 instance Show FenceCreateFlagBits where
-  showsPrec p e = case lookup e showTableFenceCreateFlagBits of
-    Just s -> showString enumPrefixFenceCreateFlagBits . showString s
-    Nothing ->
-      let FenceCreateFlagBits x = e
-      in  showParen (p >= 11) (showString conNameFenceCreateFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixFenceCreateFlagBits
+                            showTableFenceCreateFlagBits
+                            conNameFenceCreateFlagBits
+                            (\(FenceCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read FenceCreateFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixFenceCreateFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTableFenceCreateFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameFenceCreateFlagBits)
-            v <- step readPrec
-            pure (FenceCreateFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixFenceCreateFlagBits
+                          showTableFenceCreateFlagBits
+                          conNameFenceCreateFlagBits
+                          FenceCreateFlagBits
 

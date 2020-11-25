@@ -224,32 +224,21 @@ module Vulkan.Extensions.VK_KHR_fragment_shading_rate  ( cmdSetFragmentShadingRa
                                                        ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -267,8 +256,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -1401,28 +1390,17 @@ showTableFragmentShadingRateCombinerOpKHR =
   ]
 
 instance Show FragmentShadingRateCombinerOpKHR where
-  showsPrec p e = case lookup e showTableFragmentShadingRateCombinerOpKHR of
-    Just s -> showString enumPrefixFragmentShadingRateCombinerOpKHR . showString s
-    Nothing ->
-      let FragmentShadingRateCombinerOpKHR x = e
-      in  showParen (p >= 11) (showString conNameFragmentShadingRateCombinerOpKHR . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixFragmentShadingRateCombinerOpKHR
+                            showTableFragmentShadingRateCombinerOpKHR
+                            conNameFragmentShadingRateCombinerOpKHR
+                            (\(FragmentShadingRateCombinerOpKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read FragmentShadingRateCombinerOpKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixFragmentShadingRateCombinerOpKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableFragmentShadingRateCombinerOpKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameFragmentShadingRateCombinerOpKHR)
-            v <- step readPrec
-            pure (FragmentShadingRateCombinerOpKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixFragmentShadingRateCombinerOpKHR
+                          showTableFragmentShadingRateCombinerOpKHR
+                          conNameFragmentShadingRateCombinerOpKHR
+                          FragmentShadingRateCombinerOpKHR
 
 
 type KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION = 1

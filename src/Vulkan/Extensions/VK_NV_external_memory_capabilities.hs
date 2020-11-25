@@ -157,27 +157,17 @@ module Vulkan.Extensions.VK_NV_external_memory_capabilities  ( getPhysicalDevice
                                                              , pattern NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
                                                              ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -195,7 +185,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -456,28 +446,17 @@ showTableExternalMemoryHandleTypeFlagBitsNV =
   ]
 
 instance Show ExternalMemoryHandleTypeFlagBitsNV where
-  showsPrec p e = case lookup e showTableExternalMemoryHandleTypeFlagBitsNV of
-    Just s -> showString enumPrefixExternalMemoryHandleTypeFlagBitsNV . showString s
-    Nothing ->
-      let ExternalMemoryHandleTypeFlagBitsNV x = e
-      in  showParen (p >= 11) (showString conNameExternalMemoryHandleTypeFlagBitsNV . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixExternalMemoryHandleTypeFlagBitsNV
+                            showTableExternalMemoryHandleTypeFlagBitsNV
+                            conNameExternalMemoryHandleTypeFlagBitsNV
+                            (\(ExternalMemoryHandleTypeFlagBitsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ExternalMemoryHandleTypeFlagBitsNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixExternalMemoryHandleTypeFlagBitsNV
-          asum ((\(e, s) -> e <$ string s) <$> showTableExternalMemoryHandleTypeFlagBitsNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameExternalMemoryHandleTypeFlagBitsNV)
-            v <- step readPrec
-            pure (ExternalMemoryHandleTypeFlagBitsNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixExternalMemoryHandleTypeFlagBitsNV
+                          showTableExternalMemoryHandleTypeFlagBitsNV
+                          conNameExternalMemoryHandleTypeFlagBitsNV
+                          ExternalMemoryHandleTypeFlagBitsNV
 
 
 type ExternalMemoryFeatureFlagsNV = ExternalMemoryFeatureFlagBitsNV
@@ -517,28 +496,17 @@ showTableExternalMemoryFeatureFlagBitsNV =
   ]
 
 instance Show ExternalMemoryFeatureFlagBitsNV where
-  showsPrec p e = case lookup e showTableExternalMemoryFeatureFlagBitsNV of
-    Just s -> showString enumPrefixExternalMemoryFeatureFlagBitsNV . showString s
-    Nothing ->
-      let ExternalMemoryFeatureFlagBitsNV x = e
-      in  showParen (p >= 11) (showString conNameExternalMemoryFeatureFlagBitsNV . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixExternalMemoryFeatureFlagBitsNV
+                            showTableExternalMemoryFeatureFlagBitsNV
+                            conNameExternalMemoryFeatureFlagBitsNV
+                            (\(ExternalMemoryFeatureFlagBitsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ExternalMemoryFeatureFlagBitsNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixExternalMemoryFeatureFlagBitsNV
-          asum ((\(e, s) -> e <$ string s) <$> showTableExternalMemoryFeatureFlagBitsNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameExternalMemoryFeatureFlagBitsNV)
-            v <- step readPrec
-            pure (ExternalMemoryFeatureFlagBitsNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixExternalMemoryFeatureFlagBitsNV
+                          showTableExternalMemoryFeatureFlagBitsNV
+                          conNameExternalMemoryFeatureFlagBitsNV
+                          ExternalMemoryFeatureFlagBitsNV
 
 
 type NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION = 1

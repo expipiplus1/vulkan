@@ -1234,6 +1234,8 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -1241,30 +1243,18 @@ import Data.Bits ((.&.))
 import Data.Bits ((.|.))
 import Data.Bits (shiftL)
 import Data.Bits (shiftR)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import qualified Data.ByteString (length)
 import Data.ByteString (packCStringLen)
 import Data.ByteString.Unsafe (unsafeUseAsCString)
@@ -1298,10 +1288,10 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.Word (Word8)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -6640,28 +6630,17 @@ showTableGeometryInstanceFlagBitsKHR =
   ]
 
 instance Show GeometryInstanceFlagBitsKHR where
-  showsPrec p e = case lookup e showTableGeometryInstanceFlagBitsKHR of
-    Just s -> showString enumPrefixGeometryInstanceFlagBitsKHR . showString s
-    Nothing ->
-      let GeometryInstanceFlagBitsKHR x = e
-      in  showParen (p >= 11) (showString conNameGeometryInstanceFlagBitsKHR . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixGeometryInstanceFlagBitsKHR
+                            showTableGeometryInstanceFlagBitsKHR
+                            conNameGeometryInstanceFlagBitsKHR
+                            (\(GeometryInstanceFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read GeometryInstanceFlagBitsKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixGeometryInstanceFlagBitsKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableGeometryInstanceFlagBitsKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameGeometryInstanceFlagBitsKHR)
-            v <- step readPrec
-            pure (GeometryInstanceFlagBitsKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixGeometryInstanceFlagBitsKHR
+                          showTableGeometryInstanceFlagBitsKHR
+                          conNameGeometryInstanceFlagBitsKHR
+                          GeometryInstanceFlagBitsKHR
 
 
 type GeometryFlagsKHR = GeometryFlagBitsKHR
@@ -6697,28 +6676,17 @@ showTableGeometryFlagBitsKHR =
   ]
 
 instance Show GeometryFlagBitsKHR where
-  showsPrec p e = case lookup e showTableGeometryFlagBitsKHR of
-    Just s -> showString enumPrefixGeometryFlagBitsKHR . showString s
-    Nothing ->
-      let GeometryFlagBitsKHR x = e
-      in  showParen (p >= 11) (showString conNameGeometryFlagBitsKHR . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixGeometryFlagBitsKHR
+                            showTableGeometryFlagBitsKHR
+                            conNameGeometryFlagBitsKHR
+                            (\(GeometryFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read GeometryFlagBitsKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixGeometryFlagBitsKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableGeometryFlagBitsKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameGeometryFlagBitsKHR)
-            v <- step readPrec
-            pure (GeometryFlagBitsKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixGeometryFlagBitsKHR
+                          showTableGeometryFlagBitsKHR
+                          conNameGeometryFlagBitsKHR
+                          GeometryFlagBitsKHR
 
 
 type BuildAccelerationStructureFlagsKHR = BuildAccelerationStructureFlagBitsKHR
@@ -6783,28 +6751,17 @@ showTableBuildAccelerationStructureFlagBitsKHR =
   ]
 
 instance Show BuildAccelerationStructureFlagBitsKHR where
-  showsPrec p e = case lookup e showTableBuildAccelerationStructureFlagBitsKHR of
-    Just s -> showString enumPrefixBuildAccelerationStructureFlagBitsKHR . showString s
-    Nothing ->
-      let BuildAccelerationStructureFlagBitsKHR x = e
-      in  showParen (p >= 11) (showString conNameBuildAccelerationStructureFlagBitsKHR . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixBuildAccelerationStructureFlagBitsKHR
+                            showTableBuildAccelerationStructureFlagBitsKHR
+                            conNameBuildAccelerationStructureFlagBitsKHR
+                            (\(BuildAccelerationStructureFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read BuildAccelerationStructureFlagBitsKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixBuildAccelerationStructureFlagBitsKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableBuildAccelerationStructureFlagBitsKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameBuildAccelerationStructureFlagBitsKHR)
-            v <- step readPrec
-            pure (BuildAccelerationStructureFlagBitsKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixBuildAccelerationStructureFlagBitsKHR
+                          showTableBuildAccelerationStructureFlagBitsKHR
+                          conNameBuildAccelerationStructureFlagBitsKHR
+                          BuildAccelerationStructureFlagBitsKHR
 
 
 type AccelerationStructureCreateFlagsKHR = AccelerationStructureCreateFlagBitsKHR
@@ -6836,28 +6793,17 @@ showTableAccelerationStructureCreateFlagBitsKHR =
   [(ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR, "")]
 
 instance Show AccelerationStructureCreateFlagBitsKHR where
-  showsPrec p e = case lookup e showTableAccelerationStructureCreateFlagBitsKHR of
-    Just s -> showString enumPrefixAccelerationStructureCreateFlagBitsKHR . showString s
-    Nothing ->
-      let AccelerationStructureCreateFlagBitsKHR x = e
-      in  showParen (p >= 11) (showString conNameAccelerationStructureCreateFlagBitsKHR . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixAccelerationStructureCreateFlagBitsKHR
+                            showTableAccelerationStructureCreateFlagBitsKHR
+                            conNameAccelerationStructureCreateFlagBitsKHR
+                            (\(AccelerationStructureCreateFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read AccelerationStructureCreateFlagBitsKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixAccelerationStructureCreateFlagBitsKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableAccelerationStructureCreateFlagBitsKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameAccelerationStructureCreateFlagBitsKHR)
-            v <- step readPrec
-            pure (AccelerationStructureCreateFlagBitsKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixAccelerationStructureCreateFlagBitsKHR
+                          showTableAccelerationStructureCreateFlagBitsKHR
+                          conNameAccelerationStructureCreateFlagBitsKHR
+                          AccelerationStructureCreateFlagBitsKHR
 
 
 -- | VkCopyAccelerationStructureModeKHR - Acceleration structure copy mode
@@ -6911,28 +6857,17 @@ showTableCopyAccelerationStructureModeKHR =
   ]
 
 instance Show CopyAccelerationStructureModeKHR where
-  showsPrec p e = case lookup e showTableCopyAccelerationStructureModeKHR of
-    Just s -> showString enumPrefixCopyAccelerationStructureModeKHR . showString s
-    Nothing ->
-      let CopyAccelerationStructureModeKHR x = e
-      in  showParen (p >= 11) (showString conNameCopyAccelerationStructureModeKHR . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixCopyAccelerationStructureModeKHR
+                            showTableCopyAccelerationStructureModeKHR
+                            conNameCopyAccelerationStructureModeKHR
+                            (\(CopyAccelerationStructureModeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read CopyAccelerationStructureModeKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixCopyAccelerationStructureModeKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableCopyAccelerationStructureModeKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameCopyAccelerationStructureModeKHR)
-            v <- step readPrec
-            pure (CopyAccelerationStructureModeKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixCopyAccelerationStructureModeKHR
+                          showTableCopyAccelerationStructureModeKHR
+                          conNameCopyAccelerationStructureModeKHR
+                          CopyAccelerationStructureModeKHR
 
 
 -- | VkBuildAccelerationStructureModeKHR - Enum specifying the type of build
@@ -6968,28 +6903,17 @@ showTableBuildAccelerationStructureModeKHR =
   ]
 
 instance Show BuildAccelerationStructureModeKHR where
-  showsPrec p e = case lookup e showTableBuildAccelerationStructureModeKHR of
-    Just s -> showString enumPrefixBuildAccelerationStructureModeKHR . showString s
-    Nothing ->
-      let BuildAccelerationStructureModeKHR x = e
-      in  showParen (p >= 11) (showString conNameBuildAccelerationStructureModeKHR . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixBuildAccelerationStructureModeKHR
+                            showTableBuildAccelerationStructureModeKHR
+                            conNameBuildAccelerationStructureModeKHR
+                            (\(BuildAccelerationStructureModeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read BuildAccelerationStructureModeKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixBuildAccelerationStructureModeKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableBuildAccelerationStructureModeKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameBuildAccelerationStructureModeKHR)
-            v <- step readPrec
-            pure (BuildAccelerationStructureModeKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixBuildAccelerationStructureModeKHR
+                          showTableBuildAccelerationStructureModeKHR
+                          conNameBuildAccelerationStructureModeKHR
+                          BuildAccelerationStructureModeKHR
 
 
 -- | VkAccelerationStructureTypeKHR - Type of acceleration structure
@@ -7030,28 +6954,17 @@ showTableAccelerationStructureTypeKHR =
   ]
 
 instance Show AccelerationStructureTypeKHR where
-  showsPrec p e = case lookup e showTableAccelerationStructureTypeKHR of
-    Just s -> showString enumPrefixAccelerationStructureTypeKHR . showString s
-    Nothing ->
-      let AccelerationStructureTypeKHR x = e
-      in  showParen (p >= 11) (showString conNameAccelerationStructureTypeKHR . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixAccelerationStructureTypeKHR
+                            showTableAccelerationStructureTypeKHR
+                            conNameAccelerationStructureTypeKHR
+                            (\(AccelerationStructureTypeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read AccelerationStructureTypeKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixAccelerationStructureTypeKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableAccelerationStructureTypeKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameAccelerationStructureTypeKHR)
-            v <- step readPrec
-            pure (AccelerationStructureTypeKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixAccelerationStructureTypeKHR
+                          showTableAccelerationStructureTypeKHR
+                          conNameAccelerationStructureTypeKHR
+                          AccelerationStructureTypeKHR
 
 
 -- | VkGeometryTypeKHR - Enum specifying which type of geometry is provided
@@ -7090,28 +7003,14 @@ showTableGeometryTypeKHR =
   ]
 
 instance Show GeometryTypeKHR where
-  showsPrec p e = case lookup e showTableGeometryTypeKHR of
-    Just s -> showString enumPrefixGeometryTypeKHR . showString s
-    Nothing ->
-      let GeometryTypeKHR x = e
-      in  showParen (p >= 11) (showString conNameGeometryTypeKHR . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixGeometryTypeKHR
+                            showTableGeometryTypeKHR
+                            conNameGeometryTypeKHR
+                            (\(GeometryTypeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read GeometryTypeKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixGeometryTypeKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableGeometryTypeKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameGeometryTypeKHR)
-            v <- step readPrec
-            pure (GeometryTypeKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixGeometryTypeKHR showTableGeometryTypeKHR conNameGeometryTypeKHR GeometryTypeKHR
 
 
 -- | VkAccelerationStructureBuildTypeKHR - Acceleration structure build type
@@ -7150,28 +7049,17 @@ showTableAccelerationStructureBuildTypeKHR =
   ]
 
 instance Show AccelerationStructureBuildTypeKHR where
-  showsPrec p e = case lookup e showTableAccelerationStructureBuildTypeKHR of
-    Just s -> showString enumPrefixAccelerationStructureBuildTypeKHR . showString s
-    Nothing ->
-      let AccelerationStructureBuildTypeKHR x = e
-      in  showParen (p >= 11) (showString conNameAccelerationStructureBuildTypeKHR . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixAccelerationStructureBuildTypeKHR
+                            showTableAccelerationStructureBuildTypeKHR
+                            conNameAccelerationStructureBuildTypeKHR
+                            (\(AccelerationStructureBuildTypeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read AccelerationStructureBuildTypeKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixAccelerationStructureBuildTypeKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableAccelerationStructureBuildTypeKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameAccelerationStructureBuildTypeKHR)
-            v <- step readPrec
-            pure (AccelerationStructureBuildTypeKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixAccelerationStructureBuildTypeKHR
+                          showTableAccelerationStructureBuildTypeKHR
+                          conNameAccelerationStructureBuildTypeKHR
+                          AccelerationStructureBuildTypeKHR
 
 
 -- | VkAccelerationStructureCompatibilityKHR - Acceleration structure
@@ -7206,29 +7094,17 @@ showTableAccelerationStructureCompatibilityKHR =
   ]
 
 instance Show AccelerationStructureCompatibilityKHR where
-  showsPrec p e = case lookup e showTableAccelerationStructureCompatibilityKHR of
-    Just s -> showString enumPrefixAccelerationStructureCompatibilityKHR . showString s
-    Nothing ->
-      let AccelerationStructureCompatibilityKHR x = e
-      in  showParen (p >= 11)
-                    (showString conNameAccelerationStructureCompatibilityKHR . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixAccelerationStructureCompatibilityKHR
+                            showTableAccelerationStructureCompatibilityKHR
+                            conNameAccelerationStructureCompatibilityKHR
+                            (\(AccelerationStructureCompatibilityKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read AccelerationStructureCompatibilityKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixAccelerationStructureCompatibilityKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableAccelerationStructureCompatibilityKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameAccelerationStructureCompatibilityKHR)
-            v <- step readPrec
-            pure (AccelerationStructureCompatibilityKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixAccelerationStructureCompatibilityKHR
+                          showTableAccelerationStructureCompatibilityKHR
+                          conNameAccelerationStructureCompatibilityKHR
+                          AccelerationStructureCompatibilityKHR
 
 
 type KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 11

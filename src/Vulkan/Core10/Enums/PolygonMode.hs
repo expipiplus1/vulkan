@@ -7,24 +7,13 @@ module Vulkan.Core10.Enums.PolygonMode  (PolygonMode( POLYGON_MODE_FILL
                                                     , ..
                                                     )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkPolygonMode - Control polygon rasterization mode
 --
@@ -88,25 +77,9 @@ showTablePolygonMode =
   ]
 
 instance Show PolygonMode where
-  showsPrec p e = case lookup e showTablePolygonMode of
-    Just s -> showString enumPrefixPolygonMode . showString s
-    Nothing ->
-      let PolygonMode x = e in showParen (p >= 11) (showString conNamePolygonMode . showString " " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixPolygonMode showTablePolygonMode conNamePolygonMode (\(PolygonMode x) -> x) (showsPrec 11)
 
 instance Read PolygonMode where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPolygonMode
-          asum ((\(e, s) -> e <$ string s) <$> showTablePolygonMode)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePolygonMode)
-            v <- step readPrec
-            pure (PolygonMode v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPolygonMode showTablePolygonMode conNamePolygonMode PolygonMode
 

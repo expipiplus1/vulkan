@@ -44,24 +44,13 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , ..
                                                   )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkObjectType - Specify an enumeration to track object handle types
 --
@@ -343,25 +332,9 @@ showTableObjectType =
   ]
 
 instance Show ObjectType where
-  showsPrec p e = case lookup e showTableObjectType of
-    Just s -> showString enumPrefixObjectType . showString s
-    Nothing ->
-      let ObjectType x = e in showParen (p >= 11) (showString conNameObjectType . showString " " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixObjectType showTableObjectType conNameObjectType (\(ObjectType x) -> x) (showsPrec 11)
 
 instance Read ObjectType where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixObjectType
-          asum ((\(e, s) -> e <$ string s) <$> showTableObjectType)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameObjectType)
-            v <- step readPrec
-            pure (ObjectType v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixObjectType showTableObjectType conNameObjectType ObjectType
 

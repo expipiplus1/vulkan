@@ -200,32 +200,21 @@ module Vulkan.Extensions.VK_KHR_pipeline_executable_properties  ( getPipelineExe
                                                                 ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -251,9 +240,9 @@ import Data.Int (Int64)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -1137,28 +1126,17 @@ showTablePipelineExecutableStatisticFormatKHR =
   ]
 
 instance Show PipelineExecutableStatisticFormatKHR where
-  showsPrec p e = case lookup e showTablePipelineExecutableStatisticFormatKHR of
-    Just s -> showString enumPrefixPipelineExecutableStatisticFormatKHR . showString s
-    Nothing ->
-      let PipelineExecutableStatisticFormatKHR x = e
-      in  showParen (p >= 11) (showString conNamePipelineExecutableStatisticFormatKHR . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPipelineExecutableStatisticFormatKHR
+                            showTablePipelineExecutableStatisticFormatKHR
+                            conNamePipelineExecutableStatisticFormatKHR
+                            (\(PipelineExecutableStatisticFormatKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PipelineExecutableStatisticFormatKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPipelineExecutableStatisticFormatKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineExecutableStatisticFormatKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePipelineExecutableStatisticFormatKHR)
-            v <- step readPrec
-            pure (PipelineExecutableStatisticFormatKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPipelineExecutableStatisticFormatKHR
+                          showTablePipelineExecutableStatisticFormatKHR
+                          conNamePipelineExecutableStatisticFormatKHR
+                          PipelineExecutableStatisticFormatKHR
 
 
 type KHR_PIPELINE_EXECUTABLE_PROPERTIES_SPEC_VERSION = 1

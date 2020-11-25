@@ -294,23 +294,12 @@ module Vulkan.Extensions.VK_EXT_blend_operation_advanced  ( PhysicalDeviceBlendO
                                                           , pattern EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME
                                                           ) where
 
-import Data.Foldable (asum)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -321,8 +310,8 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -693,28 +682,14 @@ showTableBlendOverlapEXT =
   ]
 
 instance Show BlendOverlapEXT where
-  showsPrec p e = case lookup e showTableBlendOverlapEXT of
-    Just s -> showString enumPrefixBlendOverlapEXT . showString s
-    Nothing ->
-      let BlendOverlapEXT x = e
-      in  showParen (p >= 11) (showString conNameBlendOverlapEXT . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixBlendOverlapEXT
+                            showTableBlendOverlapEXT
+                            conNameBlendOverlapEXT
+                            (\(BlendOverlapEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read BlendOverlapEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixBlendOverlapEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableBlendOverlapEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameBlendOverlapEXT)
-            v <- step readPrec
-            pure (BlendOverlapEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixBlendOverlapEXT showTableBlendOverlapEXT conNameBlendOverlapEXT BlendOverlapEXT
 
 
 type EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION = 2

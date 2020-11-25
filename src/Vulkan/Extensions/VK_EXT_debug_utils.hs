@@ -529,32 +529,22 @@ module Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameEXT
                                              ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
@@ -583,9 +573,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -1994,28 +1984,17 @@ showTableDebugUtilsMessengerCreateFlagsEXT :: [(DebugUtilsMessengerCreateFlagsEX
 showTableDebugUtilsMessengerCreateFlagsEXT = []
 
 instance Show DebugUtilsMessengerCreateFlagsEXT where
-  showsPrec p e = case lookup e showTableDebugUtilsMessengerCreateFlagsEXT of
-    Just s -> showString enumPrefixDebugUtilsMessengerCreateFlagsEXT . showString s
-    Nothing ->
-      let DebugUtilsMessengerCreateFlagsEXT x = e
-      in  showParen (p >= 11) (showString conNameDebugUtilsMessengerCreateFlagsEXT . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessengerCreateFlagsEXT
+                            showTableDebugUtilsMessengerCreateFlagsEXT
+                            conNameDebugUtilsMessengerCreateFlagsEXT
+                            (\(DebugUtilsMessengerCreateFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessengerCreateFlagsEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDebugUtilsMessengerCreateFlagsEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableDebugUtilsMessengerCreateFlagsEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDebugUtilsMessengerCreateFlagsEXT)
-            v <- step readPrec
-            pure (DebugUtilsMessengerCreateFlagsEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDebugUtilsMessengerCreateFlagsEXT
+                          showTableDebugUtilsMessengerCreateFlagsEXT
+                          conNameDebugUtilsMessengerCreateFlagsEXT
+                          DebugUtilsMessengerCreateFlagsEXT
 
 
 -- | VkDebugUtilsMessengerCallbackDataFlagsEXT - Reserved for future use
@@ -2043,28 +2022,17 @@ showTableDebugUtilsMessengerCallbackDataFlagsEXT :: [(DebugUtilsMessengerCallbac
 showTableDebugUtilsMessengerCallbackDataFlagsEXT = []
 
 instance Show DebugUtilsMessengerCallbackDataFlagsEXT where
-  showsPrec p e = case lookup e showTableDebugUtilsMessengerCallbackDataFlagsEXT of
-    Just s -> showString enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT . showString s
-    Nothing ->
-      let DebugUtilsMessengerCallbackDataFlagsEXT x = e
-      in  showParen (p >= 11) (showString conNameDebugUtilsMessengerCallbackDataFlagsEXT . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT
+                            showTableDebugUtilsMessengerCallbackDataFlagsEXT
+                            conNameDebugUtilsMessengerCallbackDataFlagsEXT
+                            (\(DebugUtilsMessengerCallbackDataFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessengerCallbackDataFlagsEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableDebugUtilsMessengerCallbackDataFlagsEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDebugUtilsMessengerCallbackDataFlagsEXT)
-            v <- step readPrec
-            pure (DebugUtilsMessengerCallbackDataFlagsEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT
+                          showTableDebugUtilsMessengerCallbackDataFlagsEXT
+                          conNameDebugUtilsMessengerCallbackDataFlagsEXT
+                          DebugUtilsMessengerCallbackDataFlagsEXT
 
 
 type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
@@ -2113,28 +2081,17 @@ showTableDebugUtilsMessageSeverityFlagBitsEXT =
   ]
 
 instance Show DebugUtilsMessageSeverityFlagBitsEXT where
-  showsPrec p e = case lookup e showTableDebugUtilsMessageSeverityFlagBitsEXT of
-    Just s -> showString enumPrefixDebugUtilsMessageSeverityFlagBitsEXT . showString s
-    Nothing ->
-      let DebugUtilsMessageSeverityFlagBitsEXT x = e
-      in  showParen (p >= 11) (showString conNameDebugUtilsMessageSeverityFlagBitsEXT . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
+                            showTableDebugUtilsMessageSeverityFlagBitsEXT
+                            conNameDebugUtilsMessageSeverityFlagBitsEXT
+                            (\(DebugUtilsMessageSeverityFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessageSeverityFlagBitsEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableDebugUtilsMessageSeverityFlagBitsEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDebugUtilsMessageSeverityFlagBitsEXT)
-            v <- step readPrec
-            pure (DebugUtilsMessageSeverityFlagBitsEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
+                          showTableDebugUtilsMessageSeverityFlagBitsEXT
+                          conNameDebugUtilsMessageSeverityFlagBitsEXT
+                          DebugUtilsMessageSeverityFlagBitsEXT
 
 
 type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
@@ -2178,28 +2135,17 @@ showTableDebugUtilsMessageTypeFlagBitsEXT =
   ]
 
 instance Show DebugUtilsMessageTypeFlagBitsEXT where
-  showsPrec p e = case lookup e showTableDebugUtilsMessageTypeFlagBitsEXT of
-    Just s -> showString enumPrefixDebugUtilsMessageTypeFlagBitsEXT . showString s
-    Nothing ->
-      let DebugUtilsMessageTypeFlagBitsEXT x = e
-      in  showParen (p >= 11) (showString conNameDebugUtilsMessageTypeFlagBitsEXT . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageTypeFlagBitsEXT
+                            showTableDebugUtilsMessageTypeFlagBitsEXT
+                            conNameDebugUtilsMessageTypeFlagBitsEXT
+                            (\(DebugUtilsMessageTypeFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessageTypeFlagBitsEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDebugUtilsMessageTypeFlagBitsEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableDebugUtilsMessageTypeFlagBitsEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDebugUtilsMessageTypeFlagBitsEXT)
-            v <- step readPrec
-            pure (DebugUtilsMessageTypeFlagBitsEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDebugUtilsMessageTypeFlagBitsEXT
+                          showTableDebugUtilsMessageTypeFlagBitsEXT
+                          conNameDebugUtilsMessageTypeFlagBitsEXT
+                          DebugUtilsMessageTypeFlagBitsEXT
 
 
 type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr DebugUtilsMessengerCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO Bool32

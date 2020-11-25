@@ -17,24 +17,13 @@ module Vulkan.Core12.Enums.DriverId  (DriverId( DRIVER_ID_AMD_PROPRIETARY
                                               , ..
                                               )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkDriverId - Khronos driver IDs
 --
@@ -129,25 +118,8 @@ showTableDriverId =
   ]
 
 instance Show DriverId where
-  showsPrec p e = case lookup e showTableDriverId of
-    Just s -> showString enumPrefixDriverId . showString s
-    Nothing ->
-      let DriverId x = e in showParen (p >= 11) (showString conNameDriverId . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixDriverId showTableDriverId conNameDriverId (\(DriverId x) -> x) (showsPrec 11)
 
 instance Read DriverId where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDriverId
-          asum ((\(e, s) -> e <$ string s) <$> showTableDriverId)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDriverId)
-            v <- step readPrec
-            pure (DriverId v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDriverId showTableDriverId conNameDriverId DriverId
 

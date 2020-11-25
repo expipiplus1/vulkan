@@ -6,24 +6,13 @@ module Vulkan.Core10.Enums.Filter  (Filter( FILTER_NEAREST
                                           , ..
                                           )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkFilter - Specify filters used for texture lookups
 --
@@ -61,24 +50,8 @@ showTableFilter :: [(Filter, String)]
 showTableFilter = [(FILTER_NEAREST, "NEAREST"), (FILTER_LINEAR, "LINEAR"), (FILTER_CUBIC_IMG, "CUBIC_IMG")]
 
 instance Show Filter where
-  showsPrec p e = case lookup e showTableFilter of
-    Just s  -> showString enumPrefixFilter . showString s
-    Nothing -> let Filter x = e in showParen (p >= 11) (showString conNameFilter . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixFilter showTableFilter conNameFilter (\(Filter x) -> x) (showsPrec 11)
 
 instance Read Filter where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixFilter
-          asum ((\(e, s) -> e <$ string s) <$> showTableFilter)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameFilter)
-            v <- step readPrec
-            pure (Filter v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixFilter showTableFilter conNameFilter Filter
 

@@ -6,24 +6,13 @@ module Vulkan.Core12.Enums.SamplerReductionMode  (SamplerReductionMode( SAMPLER_
                                                                       , ..
                                                                       )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkSamplerReductionMode - Specify reduction mode for texture filtering
 --
@@ -64,26 +53,15 @@ showTableSamplerReductionMode =
   ]
 
 instance Show SamplerReductionMode where
-  showsPrec p e = case lookup e showTableSamplerReductionMode of
-    Just s -> showString enumPrefixSamplerReductionMode . showString s
-    Nothing ->
-      let SamplerReductionMode x = e
-      in  showParen (p >= 11) (showString conNameSamplerReductionMode . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixSamplerReductionMode
+                            showTableSamplerReductionMode
+                            conNameSamplerReductionMode
+                            (\(SamplerReductionMode x) -> x)
+                            (showsPrec 11)
 
 instance Read SamplerReductionMode where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixSamplerReductionMode
-          asum ((\(e, s) -> e <$ string s) <$> showTableSamplerReductionMode)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameSamplerReductionMode)
-            v <- step readPrec
-            pure (SamplerReductionMode v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixSamplerReductionMode
+                          showTableSamplerReductionMode
+                          conNameSamplerReductionMode
+                          SamplerReductionMode
 

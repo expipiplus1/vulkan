@@ -7,25 +7,15 @@ module Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits  ( PipelineShaderSt
                                                                                                  )
                                                               ) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type PipelineShaderStageCreateFlags = PipelineShaderStageCreateFlagBits
@@ -80,26 +70,15 @@ showTablePipelineShaderStageCreateFlagBits =
   ]
 
 instance Show PipelineShaderStageCreateFlagBits where
-  showsPrec p e = case lookup e showTablePipelineShaderStageCreateFlagBits of
-    Just s -> showString enumPrefixPipelineShaderStageCreateFlagBits . showString s
-    Nothing ->
-      let PipelineShaderStageCreateFlagBits x = e
-      in  showParen (p >= 11) (showString conNamePipelineShaderStageCreateFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineShaderStageCreateFlagBits
+                            showTablePipelineShaderStageCreateFlagBits
+                            conNamePipelineShaderStageCreateFlagBits
+                            (\(PipelineShaderStageCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineShaderStageCreateFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPipelineShaderStageCreateFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineShaderStageCreateFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePipelineShaderStageCreateFlagBits)
-            v <- step readPrec
-            pure (PipelineShaderStageCreateFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPipelineShaderStageCreateFlagBits
+                          showTablePipelineShaderStageCreateFlagBits
+                          conNamePipelineShaderStageCreateFlagBits
+                          PipelineShaderStageCreateFlagBits
 

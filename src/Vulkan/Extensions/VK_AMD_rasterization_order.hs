@@ -175,23 +175,12 @@ module Vulkan.Extensions.VK_AMD_rasterization_order  ( PipelineRasterizationStat
                                                      , pattern AMD_RASTERIZATION_ORDER_EXTENSION_NAME
                                                      ) where
 
-import Data.Foldable (asum)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -202,7 +191,7 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -303,28 +292,17 @@ showTableRasterizationOrderAMD =
   [(RASTERIZATION_ORDER_STRICT_AMD, "STRICT_AMD"), (RASTERIZATION_ORDER_RELAXED_AMD, "RELAXED_AMD")]
 
 instance Show RasterizationOrderAMD where
-  showsPrec p e = case lookup e showTableRasterizationOrderAMD of
-    Just s -> showString enumPrefixRasterizationOrderAMD . showString s
-    Nothing ->
-      let RasterizationOrderAMD x = e
-      in  showParen (p >= 11) (showString conNameRasterizationOrderAMD . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixRasterizationOrderAMD
+                            showTableRasterizationOrderAMD
+                            conNameRasterizationOrderAMD
+                            (\(RasterizationOrderAMD x) -> x)
+                            (showsPrec 11)
 
 instance Read RasterizationOrderAMD where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixRasterizationOrderAMD
-          asum ((\(e, s) -> e <$ string s) <$> showTableRasterizationOrderAMD)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameRasterizationOrderAMD)
-            v <- step readPrec
-            pure (RasterizationOrderAMD v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixRasterizationOrderAMD
+                          showTableRasterizationOrderAMD
+                          conNameRasterizationOrderAMD
+                          RasterizationOrderAMD
 
 
 type AMD_RASTERIZATION_ORDER_SPEC_VERSION = 1

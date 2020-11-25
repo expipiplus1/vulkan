@@ -533,33 +533,23 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
                                                    ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -589,10 +579,10 @@ import Data.Int (Int64)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.Word (Word8)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -1452,28 +1442,17 @@ showTablePerformanceCounterScopeKHR =
   ]
 
 instance Show PerformanceCounterScopeKHR where
-  showsPrec p e = case lookup e showTablePerformanceCounterScopeKHR of
-    Just s -> showString enumPrefixPerformanceCounterScopeKHR . showString s
-    Nothing ->
-      let PerformanceCounterScopeKHR x = e
-      in  showParen (p >= 11) (showString conNamePerformanceCounterScopeKHR . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterScopeKHR
+                            showTablePerformanceCounterScopeKHR
+                            conNamePerformanceCounterScopeKHR
+                            (\(PerformanceCounterScopeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceCounterScopeKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPerformanceCounterScopeKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTablePerformanceCounterScopeKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePerformanceCounterScopeKHR)
-            v <- step readPrec
-            pure (PerformanceCounterScopeKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPerformanceCounterScopeKHR
+                          showTablePerformanceCounterScopeKHR
+                          conNamePerformanceCounterScopeKHR
+                          PerformanceCounterScopeKHR
 
 
 -- | VkPerformanceCounterUnitKHR - Supported counter unit types
@@ -1551,28 +1530,17 @@ showTablePerformanceCounterUnitKHR =
   ]
 
 instance Show PerformanceCounterUnitKHR where
-  showsPrec p e = case lookup e showTablePerformanceCounterUnitKHR of
-    Just s -> showString enumPrefixPerformanceCounterUnitKHR . showString s
-    Nothing ->
-      let PerformanceCounterUnitKHR x = e
-      in  showParen (p >= 11) (showString conNamePerformanceCounterUnitKHR . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterUnitKHR
+                            showTablePerformanceCounterUnitKHR
+                            conNamePerformanceCounterUnitKHR
+                            (\(PerformanceCounterUnitKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceCounterUnitKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPerformanceCounterUnitKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTablePerformanceCounterUnitKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePerformanceCounterUnitKHR)
-            v <- step readPrec
-            pure (PerformanceCounterUnitKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPerformanceCounterUnitKHR
+                          showTablePerformanceCounterUnitKHR
+                          conNamePerformanceCounterUnitKHR
+                          PerformanceCounterUnitKHR
 
 
 -- | VkPerformanceCounterStorageKHR - Supported counter storage types
@@ -1625,28 +1593,17 @@ showTablePerformanceCounterStorageKHR =
   ]
 
 instance Show PerformanceCounterStorageKHR where
-  showsPrec p e = case lookup e showTablePerformanceCounterStorageKHR of
-    Just s -> showString enumPrefixPerformanceCounterStorageKHR . showString s
-    Nothing ->
-      let PerformanceCounterStorageKHR x = e
-      in  showParen (p >= 11) (showString conNamePerformanceCounterStorageKHR . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterStorageKHR
+                            showTablePerformanceCounterStorageKHR
+                            conNamePerformanceCounterStorageKHR
+                            (\(PerformanceCounterStorageKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceCounterStorageKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPerformanceCounterStorageKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTablePerformanceCounterStorageKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePerformanceCounterStorageKHR)
-            v <- step readPrec
-            pure (PerformanceCounterStorageKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPerformanceCounterStorageKHR
+                          showTablePerformanceCounterStorageKHR
+                          conNamePerformanceCounterStorageKHR
+                          PerformanceCounterStorageKHR
 
 
 type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBitsKHR
@@ -1684,29 +1641,17 @@ showTablePerformanceCounterDescriptionFlagBitsKHR =
   ]
 
 instance Show PerformanceCounterDescriptionFlagBitsKHR where
-  showsPrec p e = case lookup e showTablePerformanceCounterDescriptionFlagBitsKHR of
-    Just s -> showString enumPrefixPerformanceCounterDescriptionFlagBitsKHR . showString s
-    Nothing ->
-      let PerformanceCounterDescriptionFlagBitsKHR x = e
-      in  showParen (p >= 11)
-                    (showString conNamePerformanceCounterDescriptionFlagBitsKHR . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterDescriptionFlagBitsKHR
+                            showTablePerformanceCounterDescriptionFlagBitsKHR
+                            conNamePerformanceCounterDescriptionFlagBitsKHR
+                            (\(PerformanceCounterDescriptionFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PerformanceCounterDescriptionFlagBitsKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPerformanceCounterDescriptionFlagBitsKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTablePerformanceCounterDescriptionFlagBitsKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePerformanceCounterDescriptionFlagBitsKHR)
-            v <- step readPrec
-            pure (PerformanceCounterDescriptionFlagBitsKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPerformanceCounterDescriptionFlagBitsKHR
+                          showTablePerformanceCounterDescriptionFlagBitsKHR
+                          conNamePerformanceCounterDescriptionFlagBitsKHR
+                          PerformanceCounterDescriptionFlagBitsKHR
 
 
 type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
@@ -1731,28 +1676,17 @@ showTableAcquireProfilingLockFlagBitsKHR :: [(AcquireProfilingLockFlagBitsKHR, S
 showTableAcquireProfilingLockFlagBitsKHR = []
 
 instance Show AcquireProfilingLockFlagBitsKHR where
-  showsPrec p e = case lookup e showTableAcquireProfilingLockFlagBitsKHR of
-    Just s -> showString enumPrefixAcquireProfilingLockFlagBitsKHR . showString s
-    Nothing ->
-      let AcquireProfilingLockFlagBitsKHR x = e
-      in  showParen (p >= 11) (showString conNameAcquireProfilingLockFlagBitsKHR . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixAcquireProfilingLockFlagBitsKHR
+                            showTableAcquireProfilingLockFlagBitsKHR
+                            conNameAcquireProfilingLockFlagBitsKHR
+                            (\(AcquireProfilingLockFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read AcquireProfilingLockFlagBitsKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixAcquireProfilingLockFlagBitsKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableAcquireProfilingLockFlagBitsKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameAcquireProfilingLockFlagBitsKHR)
-            v <- step readPrec
-            pure (AcquireProfilingLockFlagBitsKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixAcquireProfilingLockFlagBitsKHR
+                          showTableAcquireProfilingLockFlagBitsKHR
+                          conNameAcquireProfilingLockFlagBitsKHR
+                          AcquireProfilingLockFlagBitsKHR
 
 
 type KHR_PERFORMANCE_QUERY_SPEC_VERSION = 1

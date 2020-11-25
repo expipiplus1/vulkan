@@ -11,25 +11,15 @@ module Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits  ( pattern EXTERN
                                                                                                      )
                                                                 ) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 -- No documentation found for TopLevel "VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_FENCE_BIT"
@@ -138,26 +128,15 @@ showTableExternalSemaphoreHandleTypeFlagBits =
   ]
 
 instance Show ExternalSemaphoreHandleTypeFlagBits where
-  showsPrec p e = case lookup e showTableExternalSemaphoreHandleTypeFlagBits of
-    Just s -> showString enumPrefixExternalSemaphoreHandleTypeFlagBits . showString s
-    Nothing ->
-      let ExternalSemaphoreHandleTypeFlagBits x = e
-      in  showParen (p >= 11) (showString conNameExternalSemaphoreHandleTypeFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixExternalSemaphoreHandleTypeFlagBits
+                            showTableExternalSemaphoreHandleTypeFlagBits
+                            conNameExternalSemaphoreHandleTypeFlagBits
+                            (\(ExternalSemaphoreHandleTypeFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ExternalSemaphoreHandleTypeFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixExternalSemaphoreHandleTypeFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTableExternalSemaphoreHandleTypeFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameExternalSemaphoreHandleTypeFlagBits)
-            v <- step readPrec
-            pure (ExternalSemaphoreHandleTypeFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixExternalSemaphoreHandleTypeFlagBits
+                          showTableExternalSemaphoreHandleTypeFlagBits
+                          conNameExternalSemaphoreHandleTypeFlagBits
+                          ExternalSemaphoreHandleTypeFlagBits
 

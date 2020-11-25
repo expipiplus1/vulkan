@@ -10,24 +10,13 @@ module Vulkan.Core10.Enums.ImageViewType  (ImageViewType( IMAGE_VIEW_TYPE_1D
                                                         , ..
                                                         )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkImageViewType - Image view types
 --
@@ -88,26 +77,12 @@ showTableImageViewType =
   ]
 
 instance Show ImageViewType where
-  showsPrec p e = case lookup e showTableImageViewType of
-    Just s -> showString enumPrefixImageViewType . showString s
-    Nothing ->
-      let ImageViewType x = e
-      in  showParen (p >= 11) (showString conNameImageViewType . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixImageViewType
+                            showTableImageViewType
+                            conNameImageViewType
+                            (\(ImageViewType x) -> x)
+                            (showsPrec 11)
 
 instance Read ImageViewType where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixImageViewType
-          asum ((\(e, s) -> e <$ string s) <$> showTableImageViewType)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameImageViewType)
-            v <- step readPrec
-            pure (ImageViewType v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixImageViewType showTableImageViewType conNameImageViewType ImageViewType
 

@@ -361,32 +361,21 @@ module Vulkan.Extensions.VK_INTEL_performance_query  ( initializePerformanceApiI
                                                      , PerformanceConfigurationINTEL(..)
                                                      ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
@@ -409,9 +398,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -1504,28 +1493,17 @@ showTablePerformanceConfigurationTypeINTEL =
   [(PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL, "")]
 
 instance Show PerformanceConfigurationTypeINTEL where
-  showsPrec p e = case lookup e showTablePerformanceConfigurationTypeINTEL of
-    Just s -> showString enumPrefixPerformanceConfigurationTypeINTEL . showString s
-    Nothing ->
-      let PerformanceConfigurationTypeINTEL x = e
-      in  showParen (p >= 11) (showString conNamePerformanceConfigurationTypeINTEL . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceConfigurationTypeINTEL
+                            showTablePerformanceConfigurationTypeINTEL
+                            conNamePerformanceConfigurationTypeINTEL
+                            (\(PerformanceConfigurationTypeINTEL x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceConfigurationTypeINTEL where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPerformanceConfigurationTypeINTEL
-          asum ((\(e, s) -> e <$ string s) <$> showTablePerformanceConfigurationTypeINTEL)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePerformanceConfigurationTypeINTEL)
-            v <- step readPrec
-            pure (PerformanceConfigurationTypeINTEL v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPerformanceConfigurationTypeINTEL
+                          showTablePerformanceConfigurationTypeINTEL
+                          conNamePerformanceConfigurationTypeINTEL
+                          PerformanceConfigurationTypeINTEL
 
 
 -- | VkQueryPoolSamplingModeINTEL - Enum specifying how performance queries
@@ -1554,28 +1532,17 @@ showTableQueryPoolSamplingModeINTEL :: [(QueryPoolSamplingModeINTEL, String)]
 showTableQueryPoolSamplingModeINTEL = [(QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL, "")]
 
 instance Show QueryPoolSamplingModeINTEL where
-  showsPrec p e = case lookup e showTableQueryPoolSamplingModeINTEL of
-    Just s -> showString enumPrefixQueryPoolSamplingModeINTEL . showString s
-    Nothing ->
-      let QueryPoolSamplingModeINTEL x = e
-      in  showParen (p >= 11) (showString conNameQueryPoolSamplingModeINTEL . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixQueryPoolSamplingModeINTEL
+                            showTableQueryPoolSamplingModeINTEL
+                            conNameQueryPoolSamplingModeINTEL
+                            (\(QueryPoolSamplingModeINTEL x) -> x)
+                            (showsPrec 11)
 
 instance Read QueryPoolSamplingModeINTEL where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixQueryPoolSamplingModeINTEL
-          asum ((\(e, s) -> e <$ string s) <$> showTableQueryPoolSamplingModeINTEL)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameQueryPoolSamplingModeINTEL)
-            v <- step readPrec
-            pure (QueryPoolSamplingModeINTEL v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixQueryPoolSamplingModeINTEL
+                          showTableQueryPoolSamplingModeINTEL
+                          conNameQueryPoolSamplingModeINTEL
+                          QueryPoolSamplingModeINTEL
 
 
 -- | VkPerformanceOverrideTypeINTEL - Performance override type
@@ -1609,28 +1576,17 @@ showTablePerformanceOverrideTypeINTEL =
   ]
 
 instance Show PerformanceOverrideTypeINTEL where
-  showsPrec p e = case lookup e showTablePerformanceOverrideTypeINTEL of
-    Just s -> showString enumPrefixPerformanceOverrideTypeINTEL . showString s
-    Nothing ->
-      let PerformanceOverrideTypeINTEL x = e
-      in  showParen (p >= 11) (showString conNamePerformanceOverrideTypeINTEL . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceOverrideTypeINTEL
+                            showTablePerformanceOverrideTypeINTEL
+                            conNamePerformanceOverrideTypeINTEL
+                            (\(PerformanceOverrideTypeINTEL x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceOverrideTypeINTEL where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPerformanceOverrideTypeINTEL
-          asum ((\(e, s) -> e <$ string s) <$> showTablePerformanceOverrideTypeINTEL)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePerformanceOverrideTypeINTEL)
-            v <- step readPrec
-            pure (PerformanceOverrideTypeINTEL v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPerformanceOverrideTypeINTEL
+                          showTablePerformanceOverrideTypeINTEL
+                          conNamePerformanceOverrideTypeINTEL
+                          PerformanceOverrideTypeINTEL
 
 
 -- | VkPerformanceParameterTypeINTEL - Parameters that can be queried
@@ -1664,28 +1620,17 @@ showTablePerformanceParameterTypeINTEL =
   ]
 
 instance Show PerformanceParameterTypeINTEL where
-  showsPrec p e = case lookup e showTablePerformanceParameterTypeINTEL of
-    Just s -> showString enumPrefixPerformanceParameterTypeINTEL . showString s
-    Nothing ->
-      let PerformanceParameterTypeINTEL x = e
-      in  showParen (p >= 11) (showString conNamePerformanceParameterTypeINTEL . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceParameterTypeINTEL
+                            showTablePerformanceParameterTypeINTEL
+                            conNamePerformanceParameterTypeINTEL
+                            (\(PerformanceParameterTypeINTEL x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceParameterTypeINTEL where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPerformanceParameterTypeINTEL
-          asum ((\(e, s) -> e <$ string s) <$> showTablePerformanceParameterTypeINTEL)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePerformanceParameterTypeINTEL)
-            v <- step readPrec
-            pure (PerformanceParameterTypeINTEL v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPerformanceParameterTypeINTEL
+                          showTablePerformanceParameterTypeINTEL
+                          conNamePerformanceParameterTypeINTEL
+                          PerformanceParameterTypeINTEL
 
 
 -- | VkPerformanceValueTypeINTEL - Type of the parameters that can be queried
@@ -1728,28 +1673,17 @@ showTablePerformanceValueTypeINTEL =
   ]
 
 instance Show PerformanceValueTypeINTEL where
-  showsPrec p e = case lookup e showTablePerformanceValueTypeINTEL of
-    Just s -> showString enumPrefixPerformanceValueTypeINTEL . showString s
-    Nothing ->
-      let PerformanceValueTypeINTEL x = e
-      in  showParen (p >= 11) (showString conNamePerformanceValueTypeINTEL . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceValueTypeINTEL
+                            showTablePerformanceValueTypeINTEL
+                            conNamePerformanceValueTypeINTEL
+                            (\(PerformanceValueTypeINTEL x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceValueTypeINTEL where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPerformanceValueTypeINTEL
-          asum ((\(e, s) -> e <$ string s) <$> showTablePerformanceValueTypeINTEL)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePerformanceValueTypeINTEL)
-            v <- step readPrec
-            pure (PerformanceValueTypeINTEL v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPerformanceValueTypeINTEL
+                          showTablePerformanceValueTypeINTEL
+                          conNamePerformanceValueTypeINTEL
+                          PerformanceValueTypeINTEL
 
 
 -- No documentation found for TopLevel "VkQueryPoolCreateInfoINTEL"

@@ -21,25 +21,15 @@ module Vulkan.Core10.Enums.BufferUsageFlagBits  ( BufferUsageFlags
                                                                      )
                                                 ) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type BufferUsageFlags = BufferUsageFlagBits
@@ -166,26 +156,15 @@ showTableBufferUsageFlagBits =
   ]
 
 instance Show BufferUsageFlagBits where
-  showsPrec p e = case lookup e showTableBufferUsageFlagBits of
-    Just s -> showString enumPrefixBufferUsageFlagBits . showString s
-    Nothing ->
-      let BufferUsageFlagBits x = e
-      in  showParen (p >= 11) (showString conNameBufferUsageFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixBufferUsageFlagBits
+                            showTableBufferUsageFlagBits
+                            conNameBufferUsageFlagBits
+                            (\(BufferUsageFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read BufferUsageFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixBufferUsageFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTableBufferUsageFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameBufferUsageFlagBits)
-            v <- step readPrec
-            pure (BufferUsageFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixBufferUsageFlagBits
+                          showTableBufferUsageFlagBits
+                          conNameBufferUsageFlagBits
+                          BufferUsageFlagBits
 

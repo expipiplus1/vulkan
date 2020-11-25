@@ -8,24 +8,13 @@ module Vulkan.Core10.Enums.PhysicalDeviceType  (PhysicalDeviceType( PHYSICAL_DEV
                                                                   , ..
                                                                   )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkPhysicalDeviceType - Supported physical device types
 --
@@ -79,26 +68,13 @@ showTablePhysicalDeviceType =
   ]
 
 instance Show PhysicalDeviceType where
-  showsPrec p e = case lookup e showTablePhysicalDeviceType of
-    Just s -> showString enumPrefixPhysicalDeviceType . showString s
-    Nothing ->
-      let PhysicalDeviceType x = e
-      in  showParen (p >= 11) (showString conNamePhysicalDeviceType . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPhysicalDeviceType
+                            showTablePhysicalDeviceType
+                            conNamePhysicalDeviceType
+                            (\(PhysicalDeviceType x) -> x)
+                            (showsPrec 11)
 
 instance Read PhysicalDeviceType where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPhysicalDeviceType
-          asum ((\(e, s) -> e <$ string s) <$> showTablePhysicalDeviceType)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePhysicalDeviceType)
-            v <- step readPrec
-            pure (PhysicalDeviceType v)
-          )
-    )
+  readPrec =
+    enumReadPrec enumPrefixPhysicalDeviceType showTablePhysicalDeviceType conNamePhysicalDeviceType PhysicalDeviceType
 

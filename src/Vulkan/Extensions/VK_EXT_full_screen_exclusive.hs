@@ -281,31 +281,20 @@ module Vulkan.Extensions.VK_EXT_full_screen_exclusive  ( getPhysicalDeviceSurfac
                                                        , DeviceGroupPresentModeFlagsKHR
                                                        ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -323,8 +312,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -912,28 +901,17 @@ showTableFullScreenExclusiveEXT =
   ]
 
 instance Show FullScreenExclusiveEXT where
-  showsPrec p e = case lookup e showTableFullScreenExclusiveEXT of
-    Just s -> showString enumPrefixFullScreenExclusiveEXT . showString s
-    Nothing ->
-      let FullScreenExclusiveEXT x = e
-      in  showParen (p >= 11) (showString conNameFullScreenExclusiveEXT . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixFullScreenExclusiveEXT
+                            showTableFullScreenExclusiveEXT
+                            conNameFullScreenExclusiveEXT
+                            (\(FullScreenExclusiveEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read FullScreenExclusiveEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixFullScreenExclusiveEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableFullScreenExclusiveEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameFullScreenExclusiveEXT)
-            v <- step readPrec
-            pure (FullScreenExclusiveEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixFullScreenExclusiveEXT
+                          showTableFullScreenExclusiveEXT
+                          conNameFullScreenExclusiveEXT
+                          FullScreenExclusiveEXT
 
 
 type EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION = 4

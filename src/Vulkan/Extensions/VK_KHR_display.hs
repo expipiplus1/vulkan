@@ -546,31 +546,21 @@ module Vulkan.Extensions.VK_KHR_display  ( getPhysicalDeviceDisplayPropertiesKHR
                                          , SurfaceTransformFlagsKHR
                                          ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
@@ -594,8 +584,8 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -1898,28 +1888,17 @@ showTableDisplayModeCreateFlagsKHR :: [(DisplayModeCreateFlagsKHR, String)]
 showTableDisplayModeCreateFlagsKHR = []
 
 instance Show DisplayModeCreateFlagsKHR where
-  showsPrec p e = case lookup e showTableDisplayModeCreateFlagsKHR of
-    Just s -> showString enumPrefixDisplayModeCreateFlagsKHR . showString s
-    Nothing ->
-      let DisplayModeCreateFlagsKHR x = e
-      in  showParen (p >= 11) (showString conNameDisplayModeCreateFlagsKHR . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDisplayModeCreateFlagsKHR
+                            showTableDisplayModeCreateFlagsKHR
+                            conNameDisplayModeCreateFlagsKHR
+                            (\(DisplayModeCreateFlagsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DisplayModeCreateFlagsKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDisplayModeCreateFlagsKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableDisplayModeCreateFlagsKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDisplayModeCreateFlagsKHR)
-            v <- step readPrec
-            pure (DisplayModeCreateFlagsKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDisplayModeCreateFlagsKHR
+                          showTableDisplayModeCreateFlagsKHR
+                          conNameDisplayModeCreateFlagsKHR
+                          DisplayModeCreateFlagsKHR
 
 
 -- | VkDisplaySurfaceCreateFlagsKHR - Reserved for future use
@@ -1947,28 +1926,17 @@ showTableDisplaySurfaceCreateFlagsKHR :: [(DisplaySurfaceCreateFlagsKHR, String)
 showTableDisplaySurfaceCreateFlagsKHR = []
 
 instance Show DisplaySurfaceCreateFlagsKHR where
-  showsPrec p e = case lookup e showTableDisplaySurfaceCreateFlagsKHR of
-    Just s -> showString enumPrefixDisplaySurfaceCreateFlagsKHR . showString s
-    Nothing ->
-      let DisplaySurfaceCreateFlagsKHR x = e
-      in  showParen (p >= 11) (showString conNameDisplaySurfaceCreateFlagsKHR . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDisplaySurfaceCreateFlagsKHR
+                            showTableDisplaySurfaceCreateFlagsKHR
+                            conNameDisplaySurfaceCreateFlagsKHR
+                            (\(DisplaySurfaceCreateFlagsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DisplaySurfaceCreateFlagsKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDisplaySurfaceCreateFlagsKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableDisplaySurfaceCreateFlagsKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDisplaySurfaceCreateFlagsKHR)
-            v <- step readPrec
-            pure (DisplaySurfaceCreateFlagsKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDisplaySurfaceCreateFlagsKHR
+                          showTableDisplaySurfaceCreateFlagsKHR
+                          conNameDisplaySurfaceCreateFlagsKHR
+                          DisplaySurfaceCreateFlagsKHR
 
 
 type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
@@ -2015,28 +1983,17 @@ showTableDisplayPlaneAlphaFlagBitsKHR =
   ]
 
 instance Show DisplayPlaneAlphaFlagBitsKHR where
-  showsPrec p e = case lookup e showTableDisplayPlaneAlphaFlagBitsKHR of
-    Just s -> showString enumPrefixDisplayPlaneAlphaFlagBitsKHR . showString s
-    Nothing ->
-      let DisplayPlaneAlphaFlagBitsKHR x = e
-      in  showParen (p >= 11) (showString conNameDisplayPlaneAlphaFlagBitsKHR . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDisplayPlaneAlphaFlagBitsKHR
+                            showTableDisplayPlaneAlphaFlagBitsKHR
+                            conNameDisplayPlaneAlphaFlagBitsKHR
+                            (\(DisplayPlaneAlphaFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DisplayPlaneAlphaFlagBitsKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDisplayPlaneAlphaFlagBitsKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableDisplayPlaneAlphaFlagBitsKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDisplayPlaneAlphaFlagBitsKHR)
-            v <- step readPrec
-            pure (DisplayPlaneAlphaFlagBitsKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDisplayPlaneAlphaFlagBitsKHR
+                          showTableDisplayPlaneAlphaFlagBitsKHR
+                          conNameDisplayPlaneAlphaFlagBitsKHR
+                          DisplayPlaneAlphaFlagBitsKHR
 
 
 type KHR_DISPLAY_SPEC_VERSION = 23

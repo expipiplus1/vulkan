@@ -33,24 +33,13 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , ..
                                                       )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkDynamicState - Indicate which dynamic state is taken from dynamic
 -- state commands
@@ -371,25 +360,12 @@ showTableDynamicState =
   ]
 
 instance Show DynamicState where
-  showsPrec p e = case lookup e showTableDynamicState of
-    Just s -> showString enumPrefixDynamicState . showString s
-    Nothing ->
-      let DynamicState x = e in showParen (p >= 11) (showString conNameDynamicState . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixDynamicState
+                            showTableDynamicState
+                            conNameDynamicState
+                            (\(DynamicState x) -> x)
+                            (showsPrec 11)
 
 instance Read DynamicState where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDynamicState
-          asum ((\(e, s) -> e <$ string s) <$> showTableDynamicState)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDynamicState)
-            v <- step readPrec
-            pure (DynamicState v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDynamicState showTableDynamicState conNameDynamicState DynamicState
 

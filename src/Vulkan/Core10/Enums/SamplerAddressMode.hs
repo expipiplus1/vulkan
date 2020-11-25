@@ -8,24 +8,13 @@ module Vulkan.Core10.Enums.SamplerAddressMode  (SamplerAddressMode( SAMPLER_ADDR
                                                                   , ..
                                                                   )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkSamplerAddressMode - Specify behavior of sampling with texture
 -- coordinates outside an image
@@ -76,26 +65,13 @@ showTableSamplerAddressMode =
   ]
 
 instance Show SamplerAddressMode where
-  showsPrec p e = case lookup e showTableSamplerAddressMode of
-    Just s -> showString enumPrefixSamplerAddressMode . showString s
-    Nothing ->
-      let SamplerAddressMode x = e
-      in  showParen (p >= 11) (showString conNameSamplerAddressMode . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixSamplerAddressMode
+                            showTableSamplerAddressMode
+                            conNameSamplerAddressMode
+                            (\(SamplerAddressMode x) -> x)
+                            (showsPrec 11)
 
 instance Read SamplerAddressMode where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixSamplerAddressMode
-          asum ((\(e, s) -> e <$ string s) <$> showTableSamplerAddressMode)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameSamplerAddressMode)
-            v <- step readPrec
-            pure (SamplerAddressMode v)
-          )
-    )
+  readPrec =
+    enumReadPrec enumPrefixSamplerAddressMode showTableSamplerAddressMode conNameSamplerAddressMode SamplerAddressMode
 

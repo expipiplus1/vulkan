@@ -129,23 +129,13 @@ module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback  ( PipelineCreationFe
                                                             , pattern EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME
                                                             ) where
 
-import Data.Foldable (asum)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
@@ -157,9 +147,9 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
@@ -445,28 +435,17 @@ showTablePipelineCreationFeedbackFlagBitsEXT =
   ]
 
 instance Show PipelineCreationFeedbackFlagBitsEXT where
-  showsPrec p e = case lookup e showTablePipelineCreationFeedbackFlagBitsEXT of
-    Just s -> showString enumPrefixPipelineCreationFeedbackFlagBitsEXT . showString s
-    Nothing ->
-      let PipelineCreationFeedbackFlagBitsEXT x = e
-      in  showParen (p >= 11) (showString conNamePipelineCreationFeedbackFlagBitsEXT . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineCreationFeedbackFlagBitsEXT
+                            showTablePipelineCreationFeedbackFlagBitsEXT
+                            conNamePipelineCreationFeedbackFlagBitsEXT
+                            (\(PipelineCreationFeedbackFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCreationFeedbackFlagBitsEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPipelineCreationFeedbackFlagBitsEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineCreationFeedbackFlagBitsEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePipelineCreationFeedbackFlagBitsEXT)
-            v <- step readPrec
-            pure (PipelineCreationFeedbackFlagBitsEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPipelineCreationFeedbackFlagBitsEXT
+                          showTablePipelineCreationFeedbackFlagBitsEXT
+                          conNamePipelineCreationFeedbackFlagBitsEXT
+                          PipelineCreationFeedbackFlagBitsEXT
 
 
 type EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION = 1

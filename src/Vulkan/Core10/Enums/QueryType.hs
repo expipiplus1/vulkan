@@ -12,24 +12,13 @@ module Vulkan.Core10.Enums.QueryType  (QueryType( QUERY_TYPE_OCCLUSION
                                                 , ..
                                                 )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkQueryType - Specify the type of queries managed by a query pool
 --
@@ -98,25 +87,9 @@ showTableQueryType =
   ]
 
 instance Show QueryType where
-  showsPrec p e = case lookup e showTableQueryType of
-    Just s -> showString enumPrefixQueryType . showString s
-    Nothing ->
-      let QueryType x = e in showParen (p >= 11) (showString conNameQueryType . showString " " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixQueryType showTableQueryType conNameQueryType (\(QueryType x) -> x) (showsPrec 11)
 
 instance Read QueryType where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixQueryType
-          asum ((\(e, s) -> e <$ string s) <$> showTableQueryType)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameQueryType)
-            v <- step readPrec
-            pure (QueryType v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixQueryType showTableQueryType conNameQueryType QueryType
 

@@ -5,24 +5,13 @@ module Vulkan.Core10.Enums.FrontFace  (FrontFace( FRONT_FACE_COUNTER_CLOCKWISE
                                                 , ..
                                                 )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkFrontFace - Interpret polygon front-facing orientation
 --
@@ -57,25 +46,9 @@ showTableFrontFace :: [(FrontFace, String)]
 showTableFrontFace = [(FRONT_FACE_COUNTER_CLOCKWISE, "OUNTER_CLOCKWISE"), (FRONT_FACE_CLOCKWISE, "LOCKWISE")]
 
 instance Show FrontFace where
-  showsPrec p e = case lookup e showTableFrontFace of
-    Just s -> showString enumPrefixFrontFace . showString s
-    Nothing ->
-      let FrontFace x = e in showParen (p >= 11) (showString conNameFrontFace . showString " " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixFrontFace showTableFrontFace conNameFrontFace (\(FrontFace x) -> x) (showsPrec 11)
 
 instance Read FrontFace where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixFrontFace
-          asum ((\(e, s) -> e <$ string s) <$> showTableFrontFace)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameFrontFace)
-            v <- step readPrec
-            pure (FrontFace v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixFrontFace showTableFrontFace conNameFrontFace FrontFace
 

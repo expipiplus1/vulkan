@@ -148,27 +148,16 @@ module Vulkan.Extensions.VK_EXT_line_rasterization  ( cmdSetLineStippleEXT
                                                     , pattern EXT_LINE_RASTERIZATION_EXTENSION_NAME
                                                     ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -183,9 +172,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word16)
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -630,28 +619,17 @@ showTableLineRasterizationModeEXT =
   ]
 
 instance Show LineRasterizationModeEXT where
-  showsPrec p e = case lookup e showTableLineRasterizationModeEXT of
-    Just s -> showString enumPrefixLineRasterizationModeEXT . showString s
-    Nothing ->
-      let LineRasterizationModeEXT x = e
-      in  showParen (p >= 11) (showString conNameLineRasterizationModeEXT . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixLineRasterizationModeEXT
+                            showTableLineRasterizationModeEXT
+                            conNameLineRasterizationModeEXT
+                            (\(LineRasterizationModeEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read LineRasterizationModeEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixLineRasterizationModeEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableLineRasterizationModeEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameLineRasterizationModeEXT)
-            v <- step readPrec
-            pure (LineRasterizationModeEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixLineRasterizationModeEXT
+                          showTableLineRasterizationModeEXT
+                          conNameLineRasterizationModeEXT
+                          LineRasterizationModeEXT
 
 
 type EXT_LINE_RASTERIZATION_SPEC_VERSION = 1

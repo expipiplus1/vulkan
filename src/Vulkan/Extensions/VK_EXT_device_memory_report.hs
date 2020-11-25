@@ -251,24 +251,14 @@ module Vulkan.Extensions.VK_EXT_device_memory_report  ( PhysicalDeviceDeviceMemo
                                                       , pattern EXT_DEVICE_MEMORY_REPORT_EXTENSION_NAME
                                                       ) where
 
-import Data.Foldable (asum)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
@@ -282,9 +272,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -612,28 +602,17 @@ showTableDeviceMemoryReportFlagsEXT :: [(DeviceMemoryReportFlagsEXT, String)]
 showTableDeviceMemoryReportFlagsEXT = []
 
 instance Show DeviceMemoryReportFlagsEXT where
-  showsPrec p e = case lookup e showTableDeviceMemoryReportFlagsEXT of
-    Just s -> showString enumPrefixDeviceMemoryReportFlagsEXT . showString s
-    Nothing ->
-      let DeviceMemoryReportFlagsEXT x = e
-      in  showParen (p >= 11) (showString conNameDeviceMemoryReportFlagsEXT . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDeviceMemoryReportFlagsEXT
+                            showTableDeviceMemoryReportFlagsEXT
+                            conNameDeviceMemoryReportFlagsEXT
+                            (\(DeviceMemoryReportFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DeviceMemoryReportFlagsEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDeviceMemoryReportFlagsEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableDeviceMemoryReportFlagsEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDeviceMemoryReportFlagsEXT)
-            v <- step readPrec
-            pure (DeviceMemoryReportFlagsEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDeviceMemoryReportFlagsEXT
+                          showTableDeviceMemoryReportFlagsEXT
+                          conNameDeviceMemoryReportFlagsEXT
+                          DeviceMemoryReportFlagsEXT
 
 
 -- | VkDeviceMemoryReportEventTypeEXT - Events that can occur on a device
@@ -685,28 +664,17 @@ showTableDeviceMemoryReportEventTypeEXT =
   ]
 
 instance Show DeviceMemoryReportEventTypeEXT where
-  showsPrec p e = case lookup e showTableDeviceMemoryReportEventTypeEXT of
-    Just s -> showString enumPrefixDeviceMemoryReportEventTypeEXT . showString s
-    Nothing ->
-      let DeviceMemoryReportEventTypeEXT x = e
-      in  showParen (p >= 11) (showString conNameDeviceMemoryReportEventTypeEXT . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixDeviceMemoryReportEventTypeEXT
+                            showTableDeviceMemoryReportEventTypeEXT
+                            conNameDeviceMemoryReportEventTypeEXT
+                            (\(DeviceMemoryReportEventTypeEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read DeviceMemoryReportEventTypeEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDeviceMemoryReportEventTypeEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableDeviceMemoryReportEventTypeEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDeviceMemoryReportEventTypeEXT)
-            v <- step readPrec
-            pure (DeviceMemoryReportEventTypeEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDeviceMemoryReportEventTypeEXT
+                          showTableDeviceMemoryReportEventTypeEXT
+                          conNameDeviceMemoryReportEventTypeEXT
+                          DeviceMemoryReportEventTypeEXT
 
 
 type FN_vkDeviceMemoryReportCallbackEXT = ("pCallbackData" ::: Ptr DeviceMemoryReportCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO ()

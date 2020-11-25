@@ -102,31 +102,21 @@ module Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface  ( createImagePipeSurfaceF
                                                        , SurfaceKHR(..)
                                                        ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -144,8 +134,8 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -333,28 +323,17 @@ showTableImagePipeSurfaceCreateFlagsFUCHSIA :: [(ImagePipeSurfaceCreateFlagsFUCH
 showTableImagePipeSurfaceCreateFlagsFUCHSIA = []
 
 instance Show ImagePipeSurfaceCreateFlagsFUCHSIA where
-  showsPrec p e = case lookup e showTableImagePipeSurfaceCreateFlagsFUCHSIA of
-    Just s -> showString enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA . showString s
-    Nothing ->
-      let ImagePipeSurfaceCreateFlagsFUCHSIA x = e
-      in  showParen (p >= 11) (showString conNameImagePipeSurfaceCreateFlagsFUCHSIA . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA
+                            showTableImagePipeSurfaceCreateFlagsFUCHSIA
+                            conNameImagePipeSurfaceCreateFlagsFUCHSIA
+                            (\(ImagePipeSurfaceCreateFlagsFUCHSIA x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ImagePipeSurfaceCreateFlagsFUCHSIA where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA
-          asum ((\(e, s) -> e <$ string s) <$> showTableImagePipeSurfaceCreateFlagsFUCHSIA)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameImagePipeSurfaceCreateFlagsFUCHSIA)
-            v <- step readPrec
-            pure (ImagePipeSurfaceCreateFlagsFUCHSIA v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA
+                          showTableImagePipeSurfaceCreateFlagsFUCHSIA
+                          conNameImagePipeSurfaceCreateFlagsFUCHSIA
+                          ImagePipeSurfaceCreateFlagsFUCHSIA
 
 
 type FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION = 1

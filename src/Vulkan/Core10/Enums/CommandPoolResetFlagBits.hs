@@ -6,25 +6,15 @@ module Vulkan.Core10.Enums.CommandPoolResetFlagBits  ( CommandPoolResetFlags
                                                                                )
                                                      ) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type CommandPoolResetFlags = CommandPoolResetFlagBits
@@ -53,26 +43,15 @@ showTableCommandPoolResetFlagBits :: [(CommandPoolResetFlagBits, String)]
 showTableCommandPoolResetFlagBits = [(COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT, "")]
 
 instance Show CommandPoolResetFlagBits where
-  showsPrec p e = case lookup e showTableCommandPoolResetFlagBits of
-    Just s -> showString enumPrefixCommandPoolResetFlagBits . showString s
-    Nothing ->
-      let CommandPoolResetFlagBits x = e
-      in  showParen (p >= 11) (showString conNameCommandPoolResetFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixCommandPoolResetFlagBits
+                            showTableCommandPoolResetFlagBits
+                            conNameCommandPoolResetFlagBits
+                            (\(CommandPoolResetFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read CommandPoolResetFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixCommandPoolResetFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTableCommandPoolResetFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameCommandPoolResetFlagBits)
-            v <- step readPrec
-            pure (CommandPoolResetFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixCommandPoolResetFlagBits
+                          showTableCommandPoolResetFlagBits
+                          conNameCommandPoolResetFlagBits
+                          CommandPoolResetFlagBits
 

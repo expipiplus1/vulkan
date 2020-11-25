@@ -5,24 +5,13 @@ module Vulkan.Core10.Enums.CommandBufferLevel  (CommandBufferLevel( COMMAND_BUFF
                                                                   , ..
                                                                   )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkCommandBufferLevel - Enumerant specifying a command buffer level
 --
@@ -50,26 +39,13 @@ showTableCommandBufferLevel =
   [(COMMAND_BUFFER_LEVEL_PRIMARY, "PRIMARY"), (COMMAND_BUFFER_LEVEL_SECONDARY, "SECONDARY")]
 
 instance Show CommandBufferLevel where
-  showsPrec p e = case lookup e showTableCommandBufferLevel of
-    Just s -> showString enumPrefixCommandBufferLevel . showString s
-    Nothing ->
-      let CommandBufferLevel x = e
-      in  showParen (p >= 11) (showString conNameCommandBufferLevel . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixCommandBufferLevel
+                            showTableCommandBufferLevel
+                            conNameCommandBufferLevel
+                            (\(CommandBufferLevel x) -> x)
+                            (showsPrec 11)
 
 instance Read CommandBufferLevel where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixCommandBufferLevel
-          asum ((\(e, s) -> e <$ string s) <$> showTableCommandBufferLevel)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameCommandBufferLevel)
-            v <- step readPrec
-            pure (CommandBufferLevel v)
-          )
-    )
+  readPrec =
+    enumReadPrec enumPrefixCommandBufferLevel showTableCommandBufferLevel conNameCommandBufferLevel CommandBufferLevel
 

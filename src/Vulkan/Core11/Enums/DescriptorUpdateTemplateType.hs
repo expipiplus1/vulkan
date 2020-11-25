@@ -5,24 +5,13 @@ module Vulkan.Core11.Enums.DescriptorUpdateTemplateType  (DescriptorUpdateTempla
                                                                                       , ..
                                                                                       )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkDescriptorUpdateTemplateType - Indicates the valid usage of the
 -- descriptor update template
@@ -56,26 +45,15 @@ showTableDescriptorUpdateTemplateType =
   ]
 
 instance Show DescriptorUpdateTemplateType where
-  showsPrec p e = case lookup e showTableDescriptorUpdateTemplateType of
-    Just s -> showString enumPrefixDescriptorUpdateTemplateType . showString s
-    Nothing ->
-      let DescriptorUpdateTemplateType x = e
-      in  showParen (p >= 11) (showString conNameDescriptorUpdateTemplateType . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixDescriptorUpdateTemplateType
+                            showTableDescriptorUpdateTemplateType
+                            conNameDescriptorUpdateTemplateType
+                            (\(DescriptorUpdateTemplateType x) -> x)
+                            (showsPrec 11)
 
 instance Read DescriptorUpdateTemplateType where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDescriptorUpdateTemplateType
-          asum ((\(e, s) -> e <$ string s) <$> showTableDescriptorUpdateTemplateType)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDescriptorUpdateTemplateType)
-            v <- step readPrec
-            pure (DescriptorUpdateTemplateType v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDescriptorUpdateTemplateType
+                          showTableDescriptorUpdateTemplateType
+                          conNameDescriptorUpdateTemplateType
+                          DescriptorUpdateTemplateType
 

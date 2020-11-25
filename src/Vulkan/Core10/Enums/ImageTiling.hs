@@ -6,24 +6,13 @@ module Vulkan.Core10.Enums.ImageTiling  (ImageTiling( IMAGE_TILING_OPTIMAL
                                                     , ..
                                                     )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkImageTiling - Specifies the tiling arrangement of data in an image
 --
@@ -73,25 +62,9 @@ showTableImageTiling =
   ]
 
 instance Show ImageTiling where
-  showsPrec p e = case lookup e showTableImageTiling of
-    Just s -> showString enumPrefixImageTiling . showString s
-    Nothing ->
-      let ImageTiling x = e in showParen (p >= 11) (showString conNameImageTiling . showString " " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixImageTiling showTableImageTiling conNameImageTiling (\(ImageTiling x) -> x) (showsPrec 11)
 
 instance Read ImageTiling where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixImageTiling
-          asum ((\(e, s) -> e <$ string s) <$> showTableImageTiling)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameImageTiling)
-            v <- step readPrec
-            pure (ImageTiling v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixImageTiling showTableImageTiling conNameImageTiling ImageTiling
 

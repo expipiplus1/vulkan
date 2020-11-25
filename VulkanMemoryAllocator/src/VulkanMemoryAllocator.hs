@@ -172,6 +172,8 @@ import Vulkan (PhysicalDeviceProperties)
 import Vulkan (PhysicalDevice_T)
 import Vulkan (Result)
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
@@ -180,29 +182,18 @@ import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
@@ -253,9 +244,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -2722,28 +2713,17 @@ showTableAllocatorCreateFlagBits =
   ]
 
 instance Show AllocatorCreateFlagBits where
-  showsPrec p e = case lookup e showTableAllocatorCreateFlagBits of
-    Just s -> showString enumPrefixAllocatorCreateFlagBits . showString s
-    Nothing ->
-      let AllocatorCreateFlagBits x = e
-      in  showParen (p >= 11) (showString conNameAllocatorCreateFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixAllocatorCreateFlagBits
+                            showTableAllocatorCreateFlagBits
+                            conNameAllocatorCreateFlagBits
+                            (\(AllocatorCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read AllocatorCreateFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixAllocatorCreateFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTableAllocatorCreateFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameAllocatorCreateFlagBits)
-            v <- step readPrec
-            pure (AllocatorCreateFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixAllocatorCreateFlagBits
+                          showTableAllocatorCreateFlagBits
+                          conNameAllocatorCreateFlagBits
+                          AllocatorCreateFlagBits
 
 
 -- | VmaVulkanFunctions
@@ -2914,27 +2894,14 @@ showTableRecordFlagBits :: [(RecordFlagBits, String)]
 showTableRecordFlagBits = [(RECORD_FLUSH_AFTER_CALL_BIT, "")]
 
 instance Show RecordFlagBits where
-  showsPrec p e = case lookup e showTableRecordFlagBits of
-    Just s -> showString enumPrefixRecordFlagBits . showString s
-    Nothing ->
-      let RecordFlagBits x = e in showParen (p >= 11) (showString conNameRecordFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixRecordFlagBits
+                            showTableRecordFlagBits
+                            conNameRecordFlagBits
+                            (\(RecordFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read RecordFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixRecordFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTableRecordFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameRecordFlagBits)
-            v <- step readPrec
-            pure (RecordFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixRecordFlagBits showTableRecordFlagBits conNameRecordFlagBits RecordFlagBits
 
 
 -- | VmaRecordSettings
@@ -3617,27 +3584,11 @@ showTableMemoryUsage =
   ]
 
 instance Show MemoryUsage where
-  showsPrec p e = case lookup e showTableMemoryUsage of
-    Just s -> showString enumPrefixMemoryUsage . showString s
-    Nothing ->
-      let MemoryUsage x = e in showParen (p >= 11) (showString conNameMemoryUsage . showString " " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixMemoryUsage showTableMemoryUsage conNameMemoryUsage (\(MemoryUsage x) -> x) (showsPrec 11)
 
 instance Read MemoryUsage where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixMemoryUsage
-          asum ((\(e, s) -> e <$ string s) <$> showTableMemoryUsage)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameMemoryUsage)
-            v <- step readPrec
-            pure (MemoryUsage v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixMemoryUsage showTableMemoryUsage conNameMemoryUsage MemoryUsage
 
 
 type AllocationCreateFlags = AllocationCreateFlagBits
@@ -3771,28 +3722,17 @@ showTableAllocationCreateFlagBits =
   ]
 
 instance Show AllocationCreateFlagBits where
-  showsPrec p e = case lookup e showTableAllocationCreateFlagBits of
-    Just s -> showString enumPrefixAllocationCreateFlagBits . showString s
-    Nothing ->
-      let AllocationCreateFlagBits x = e
-      in  showParen (p >= 11) (showString conNameAllocationCreateFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixAllocationCreateFlagBits
+                            showTableAllocationCreateFlagBits
+                            conNameAllocationCreateFlagBits
+                            (\(AllocationCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read AllocationCreateFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixAllocationCreateFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTableAllocationCreateFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameAllocationCreateFlagBits)
-            v <- step readPrec
-            pure (AllocationCreateFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixAllocationCreateFlagBits
+                          showTableAllocationCreateFlagBits
+                          conNameAllocationCreateFlagBits
+                          AllocationCreateFlagBits
 
 
 -- | VmaAllocationCreateInfo
@@ -3979,28 +3919,15 @@ showTablePoolCreateFlagBits =
   ]
 
 instance Show PoolCreateFlagBits where
-  showsPrec p e = case lookup e showTablePoolCreateFlagBits of
-    Just s -> showString enumPrefixPoolCreateFlagBits . showString s
-    Nothing ->
-      let PoolCreateFlagBits x = e
-      in  showParen (p >= 11) (showString conNamePoolCreateFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPoolCreateFlagBits
+                            showTablePoolCreateFlagBits
+                            conNamePoolCreateFlagBits
+                            (\(PoolCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PoolCreateFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPoolCreateFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTablePoolCreateFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePoolCreateFlagBits)
-            v <- step readPrec
-            pure (PoolCreateFlagBits v)
-          )
-    )
+  readPrec =
+    enumReadPrec enumPrefixPoolCreateFlagBits showTablePoolCreateFlagBits conNamePoolCreateFlagBits PoolCreateFlagBits
 
 
 -- | VmaPoolCreateInfo
@@ -4360,28 +4287,17 @@ showTableDefragmentationFlagBits :: [(DefragmentationFlagBits, String)]
 showTableDefragmentationFlagBits = [(DEFRAGMENTATION_FLAG_INCREMENTAL, "")]
 
 instance Show DefragmentationFlagBits where
-  showsPrec p e = case lookup e showTableDefragmentationFlagBits of
-    Just s -> showString enumPrefixDefragmentationFlagBits . showString s
-    Nothing ->
-      let DefragmentationFlagBits x = e
-      in  showParen (p >= 11) (showString conNameDefragmentationFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDefragmentationFlagBits
+                            showTableDefragmentationFlagBits
+                            conNameDefragmentationFlagBits
+                            (\(DefragmentationFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DefragmentationFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDefragmentationFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTableDefragmentationFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDefragmentationFlagBits)
-            v <- step readPrec
-            pure (DefragmentationFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDefragmentationFlagBits
+                          showTableDefragmentationFlagBits
+                          conNameDefragmentationFlagBits
+                          DefragmentationFlagBits
 
 
 -- | VmaDefragmentationInfo2

@@ -12,25 +12,15 @@ module Vulkan.Core10.Enums.SampleCountFlagBits  ( SampleCountFlags
                                                                      )
                                                 ) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type SampleCountFlags = SampleCountFlagBits
@@ -88,26 +78,15 @@ showTableSampleCountFlagBits =
   ]
 
 instance Show SampleCountFlagBits where
-  showsPrec p e = case lookup e showTableSampleCountFlagBits of
-    Just s -> showString enumPrefixSampleCountFlagBits . showString s
-    Nothing ->
-      let SampleCountFlagBits x = e
-      in  showParen (p >= 11) (showString conNameSampleCountFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixSampleCountFlagBits
+                            showTableSampleCountFlagBits
+                            conNameSampleCountFlagBits
+                            (\(SampleCountFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read SampleCountFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixSampleCountFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTableSampleCountFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameSampleCountFlagBits)
-            v <- step readPrec
-            pure (SampleCountFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixSampleCountFlagBits
+                          showTableSampleCountFlagBits
+                          conNameSampleCountFlagBits
+                          SampleCountFlagBits
 

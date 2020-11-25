@@ -54,24 +54,13 @@ module Vulkan.Core10.Enums.BlendOp  (BlendOp( BLEND_OP_ADD
                                             , ..
                                             )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkBlendOp - Framebuffer blending operations
 --
@@ -363,24 +352,8 @@ showTableBlendOp =
   ]
 
 instance Show BlendOp where
-  showsPrec p e = case lookup e showTableBlendOp of
-    Just s  -> showString enumPrefixBlendOp . showString s
-    Nothing -> let BlendOp x = e in showParen (p >= 11) (showString conNameBlendOp . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixBlendOp showTableBlendOp conNameBlendOp (\(BlendOp x) -> x) (showsPrec 11)
 
 instance Read BlendOp where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixBlendOp
-          asum ((\(e, s) -> e <$ string s) <$> showTableBlendOp)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameBlendOp)
-            v <- step readPrec
-            pure (BlendOp v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixBlendOp showTableBlendOp conNameBlendOp BlendOp
 

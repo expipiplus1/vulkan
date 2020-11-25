@@ -203,27 +203,16 @@ module Vulkan.Extensions.VK_NV_fragment_shading_rate_enums  ( cmdSetFragmentShad
                                                             ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -240,7 +229,7 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.CStruct.Utils (advancePtrBytes)
@@ -784,28 +773,17 @@ showTableFragmentShadingRateNV =
   ]
 
 instance Show FragmentShadingRateNV where
-  showsPrec p e = case lookup e showTableFragmentShadingRateNV of
-    Just s -> showString enumPrefixFragmentShadingRateNV . showString s
-    Nothing ->
-      let FragmentShadingRateNV x = e
-      in  showParen (p >= 11) (showString conNameFragmentShadingRateNV . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixFragmentShadingRateNV
+                            showTableFragmentShadingRateNV
+                            conNameFragmentShadingRateNV
+                            (\(FragmentShadingRateNV x) -> x)
+                            (showsPrec 11)
 
 instance Read FragmentShadingRateNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixFragmentShadingRateNV
-          asum ((\(e, s) -> e <$ string s) <$> showTableFragmentShadingRateNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameFragmentShadingRateNV)
-            v <- step readPrec
-            pure (FragmentShadingRateNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixFragmentShadingRateNV
+                          showTableFragmentShadingRateNV
+                          conNameFragmentShadingRateNV
+                          FragmentShadingRateNV
 
 
 -- | VkFragmentShadingRateTypeNV - Enumeration with fragment shading rate
@@ -847,28 +825,17 @@ showTableFragmentShadingRateTypeNV =
   [(FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV, "FRAGMENT_SIZE_NV"), (FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV, "ENUMS_NV")]
 
 instance Show FragmentShadingRateTypeNV where
-  showsPrec p e = case lookup e showTableFragmentShadingRateTypeNV of
-    Just s -> showString enumPrefixFragmentShadingRateTypeNV . showString s
-    Nothing ->
-      let FragmentShadingRateTypeNV x = e
-      in  showParen (p >= 11) (showString conNameFragmentShadingRateTypeNV . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixFragmentShadingRateTypeNV
+                            showTableFragmentShadingRateTypeNV
+                            conNameFragmentShadingRateTypeNV
+                            (\(FragmentShadingRateTypeNV x) -> x)
+                            (showsPrec 11)
 
 instance Read FragmentShadingRateTypeNV where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixFragmentShadingRateTypeNV
-          asum ((\(e, s) -> e <$ string s) <$> showTableFragmentShadingRateTypeNV)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameFragmentShadingRateTypeNV)
-            v <- step readPrec
-            pure (FragmentShadingRateTypeNV v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixFragmentShadingRateTypeNV
+                          showTableFragmentShadingRateTypeNV
+                          conNameFragmentShadingRateTypeNV
+                          FragmentShadingRateTypeNV
 
 
 type NV_FRAGMENT_SHADING_RATE_ENUMS_SPEC_VERSION = 1

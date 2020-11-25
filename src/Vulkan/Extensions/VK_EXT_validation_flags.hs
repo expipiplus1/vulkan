@@ -115,23 +115,12 @@ module Vulkan.Extensions.VK_EXT_validation_flags  ( ValidationFlagsEXT(..)
                                                   , pattern EXT_VALIDATION_FLAGS_EXTENSION_NAME
                                                   ) where
 
-import Data.Foldable (asum)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -146,8 +135,8 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -243,28 +232,15 @@ showTableValidationCheckEXT :: [(ValidationCheckEXT, String)]
 showTableValidationCheckEXT = [(VALIDATION_CHECK_ALL_EXT, "ALL_EXT"), (VALIDATION_CHECK_SHADERS_EXT, "SHADERS_EXT")]
 
 instance Show ValidationCheckEXT where
-  showsPrec p e = case lookup e showTableValidationCheckEXT of
-    Just s -> showString enumPrefixValidationCheckEXT . showString s
-    Nothing ->
-      let ValidationCheckEXT x = e
-      in  showParen (p >= 11) (showString conNameValidationCheckEXT . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixValidationCheckEXT
+                            showTableValidationCheckEXT
+                            conNameValidationCheckEXT
+                            (\(ValidationCheckEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read ValidationCheckEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixValidationCheckEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableValidationCheckEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameValidationCheckEXT)
-            v <- step readPrec
-            pure (ValidationCheckEXT v)
-          )
-    )
+  readPrec =
+    enumReadPrec enumPrefixValidationCheckEXT showTableValidationCheckEXT conNameValidationCheckEXT ValidationCheckEXT
 
 
 type EXT_VALIDATION_FLAGS_SPEC_VERSION = 2

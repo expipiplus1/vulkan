@@ -5,24 +5,13 @@ module Vulkan.Core10.Enums.SubpassContents  (SubpassContents( SUBPASS_CONTENTS_I
                                                             , ..
                                                             )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkSubpassContents - Specify how commands in the first subpass of a
 -- render pass are provided
@@ -61,26 +50,12 @@ showTableSubpassContents =
   [(SUBPASS_CONTENTS_INLINE, "INLINE"), (SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS, "SECONDARY_COMMAND_BUFFERS")]
 
 instance Show SubpassContents where
-  showsPrec p e = case lookup e showTableSubpassContents of
-    Just s -> showString enumPrefixSubpassContents . showString s
-    Nothing ->
-      let SubpassContents x = e
-      in  showParen (p >= 11) (showString conNameSubpassContents . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixSubpassContents
+                            showTableSubpassContents
+                            conNameSubpassContents
+                            (\(SubpassContents x) -> x)
+                            (showsPrec 11)
 
 instance Read SubpassContents where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixSubpassContents
-          asum ((\(e, s) -> e <$ string s) <$> showTableSubpassContents)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameSubpassContents)
-            v <- step readPrec
-            pure (SubpassContents v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixSubpassContents showTableSubpassContents conNameSubpassContents SubpassContents
 

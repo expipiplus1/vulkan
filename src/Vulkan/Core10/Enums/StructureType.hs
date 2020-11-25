@@ -474,24 +474,13 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , ..
                                                         )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkStructureType - Vulkan structure types (@sType@)
 --
@@ -3078,26 +3067,12 @@ showTableStructureType =
   ]
 
 instance Show StructureType where
-  showsPrec p e = case lookup e showTableStructureType of
-    Just s -> showString enumPrefixStructureType . showString s
-    Nothing ->
-      let StructureType x = e
-      in  showParen (p >= 11) (showString conNameStructureType . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixStructureType
+                            showTableStructureType
+                            conNameStructureType
+                            (\(StructureType x) -> x)
+                            (showsPrec 11)
 
 instance Read StructureType where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixStructureType
-          asum ((\(e, s) -> e <$ string s) <$> showTableStructureType)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameStructureType)
-            v <- step readPrec
-            pure (StructureType v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixStructureType showTableStructureType conNameStructureType StructureType
 

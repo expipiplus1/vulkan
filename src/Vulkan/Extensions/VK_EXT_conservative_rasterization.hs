@@ -165,24 +165,14 @@ module Vulkan.Extensions.VK_EXT_conservative_rasterization  ( PhysicalDeviceCons
                                                             , pattern EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME
                                                             ) where
 
-import Data.Foldable (asum)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
@@ -197,7 +187,7 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -490,30 +480,17 @@ showTablePipelineRasterizationConservativeStateCreateFlagsEXT
 showTablePipelineRasterizationConservativeStateCreateFlagsEXT = []
 
 instance Show PipelineRasterizationConservativeStateCreateFlagsEXT where
-  showsPrec p e = case lookup e showTablePipelineRasterizationConservativeStateCreateFlagsEXT of
-    Just s -> showString enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT . showString s
-    Nothing ->
-      let PipelineRasterizationConservativeStateCreateFlagsEXT x = e
-      in  showParen
-            (p >= 11)
-            (showString conNamePipelineRasterizationConservativeStateCreateFlagsEXT . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT
+                            showTablePipelineRasterizationConservativeStateCreateFlagsEXT
+                            conNamePipelineRasterizationConservativeStateCreateFlagsEXT
+                            (\(PipelineRasterizationConservativeStateCreateFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineRasterizationConservativeStateCreateFlagsEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineRasterizationConservativeStateCreateFlagsEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePipelineRasterizationConservativeStateCreateFlagsEXT)
-            v <- step readPrec
-            pure (PipelineRasterizationConservativeStateCreateFlagsEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT
+                          showTablePipelineRasterizationConservativeStateCreateFlagsEXT
+                          conNamePipelineRasterizationConservativeStateCreateFlagsEXT
+                          PipelineRasterizationConservativeStateCreateFlagsEXT
 
 
 -- | VkConservativeRasterizationModeEXT - Specify the conservative
@@ -553,28 +530,17 @@ showTableConservativeRasterizationModeEXT =
   ]
 
 instance Show ConservativeRasterizationModeEXT where
-  showsPrec p e = case lookup e showTableConservativeRasterizationModeEXT of
-    Just s -> showString enumPrefixConservativeRasterizationModeEXT . showString s
-    Nothing ->
-      let ConservativeRasterizationModeEXT x = e
-      in  showParen (p >= 11) (showString conNameConservativeRasterizationModeEXT . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixConservativeRasterizationModeEXT
+                            showTableConservativeRasterizationModeEXT
+                            conNameConservativeRasterizationModeEXT
+                            (\(ConservativeRasterizationModeEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read ConservativeRasterizationModeEXT where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixConservativeRasterizationModeEXT
-          asum ((\(e, s) -> e <$ string s) <$> showTableConservativeRasterizationModeEXT)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameConservativeRasterizationModeEXT)
-            v <- step readPrec
-            pure (ConservativeRasterizationModeEXT v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixConservativeRasterizationModeEXT
+                          showTableConservativeRasterizationModeEXT
+                          conNameConservativeRasterizationModeEXT
+                          ConservativeRasterizationModeEXT
 
 
 type EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION = 1

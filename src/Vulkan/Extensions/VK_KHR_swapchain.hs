@@ -1122,33 +1122,23 @@ module Vulkan.Extensions.VK_KHR_swapchain  ( createSwapchainKHR
                                            ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -1170,9 +1160,9 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -3650,28 +3640,17 @@ showTableDeviceGroupPresentModeFlagBitsKHR =
   ]
 
 instance Show DeviceGroupPresentModeFlagBitsKHR where
-  showsPrec p e = case lookup e showTableDeviceGroupPresentModeFlagBitsKHR of
-    Just s -> showString enumPrefixDeviceGroupPresentModeFlagBitsKHR . showString s
-    Nothing ->
-      let DeviceGroupPresentModeFlagBitsKHR x = e
-      in  showParen (p >= 11) (showString conNameDeviceGroupPresentModeFlagBitsKHR . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDeviceGroupPresentModeFlagBitsKHR
+                            showTableDeviceGroupPresentModeFlagBitsKHR
+                            conNameDeviceGroupPresentModeFlagBitsKHR
+                            (\(DeviceGroupPresentModeFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DeviceGroupPresentModeFlagBitsKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixDeviceGroupPresentModeFlagBitsKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableDeviceGroupPresentModeFlagBitsKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameDeviceGroupPresentModeFlagBitsKHR)
-            v <- step readPrec
-            pure (DeviceGroupPresentModeFlagBitsKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixDeviceGroupPresentModeFlagBitsKHR
+                          showTableDeviceGroupPresentModeFlagBitsKHR
+                          conNameDeviceGroupPresentModeFlagBitsKHR
+                          DeviceGroupPresentModeFlagBitsKHR
 
 
 type SwapchainCreateFlagsKHR = SwapchainCreateFlagBitsKHR
@@ -3719,28 +3698,17 @@ showTableSwapchainCreateFlagBitsKHR =
   ]
 
 instance Show SwapchainCreateFlagBitsKHR where
-  showsPrec p e = case lookup e showTableSwapchainCreateFlagBitsKHR of
-    Just s -> showString enumPrefixSwapchainCreateFlagBitsKHR . showString s
-    Nothing ->
-      let SwapchainCreateFlagBitsKHR x = e
-      in  showParen (p >= 11) (showString conNameSwapchainCreateFlagBitsKHR . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixSwapchainCreateFlagBitsKHR
+                            showTableSwapchainCreateFlagBitsKHR
+                            conNameSwapchainCreateFlagBitsKHR
+                            (\(SwapchainCreateFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read SwapchainCreateFlagBitsKHR where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixSwapchainCreateFlagBitsKHR
-          asum ((\(e, s) -> e <$ string s) <$> showTableSwapchainCreateFlagBitsKHR)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameSwapchainCreateFlagBitsKHR)
-            v <- step readPrec
-            pure (SwapchainCreateFlagBitsKHR v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixSwapchainCreateFlagBitsKHR
+                          showTableSwapchainCreateFlagBitsKHR
+                          conNameSwapchainCreateFlagBitsKHR
+                          SwapchainCreateFlagBitsKHR
 
 
 type KHR_SWAPCHAIN_SPEC_VERSION = 70

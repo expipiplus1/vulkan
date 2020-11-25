@@ -2,25 +2,15 @@
 -- No documentation found for Chapter "PipelineDynamicStateCreateFlags"
 module Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags  (PipelineDynamicStateCreateFlags(..)) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 -- | VkPipelineDynamicStateCreateFlags - Reserved for future use
@@ -48,26 +38,15 @@ showTablePipelineDynamicStateCreateFlags :: [(PipelineDynamicStateCreateFlags, S
 showTablePipelineDynamicStateCreateFlags = []
 
 instance Show PipelineDynamicStateCreateFlags where
-  showsPrec p e = case lookup e showTablePipelineDynamicStateCreateFlags of
-    Just s -> showString enumPrefixPipelineDynamicStateCreateFlags . showString s
-    Nothing ->
-      let PipelineDynamicStateCreateFlags x = e
-      in  showParen (p >= 11) (showString conNamePipelineDynamicStateCreateFlags . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineDynamicStateCreateFlags
+                            showTablePipelineDynamicStateCreateFlags
+                            conNamePipelineDynamicStateCreateFlags
+                            (\(PipelineDynamicStateCreateFlags x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineDynamicStateCreateFlags where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPipelineDynamicStateCreateFlags
-          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineDynamicStateCreateFlags)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePipelineDynamicStateCreateFlags)
-            v <- step readPrec
-            pure (PipelineDynamicStateCreateFlags v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPipelineDynamicStateCreateFlags
+                          showTablePipelineDynamicStateCreateFlags
+                          conNamePipelineDynamicStateCreateFlags
+                          PipelineDynamicStateCreateFlags
 

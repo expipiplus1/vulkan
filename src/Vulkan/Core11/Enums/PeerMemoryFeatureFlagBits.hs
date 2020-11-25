@@ -9,25 +9,15 @@ module Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits  ( PeerMemoryFeatureFlags
                                                                                  )
                                                       ) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
@@ -89,26 +79,15 @@ showTablePeerMemoryFeatureFlagBits =
   ]
 
 instance Show PeerMemoryFeatureFlagBits where
-  showsPrec p e = case lookup e showTablePeerMemoryFeatureFlagBits of
-    Just s -> showString enumPrefixPeerMemoryFeatureFlagBits . showString s
-    Nothing ->
-      let PeerMemoryFeatureFlagBits x = e
-      in  showParen (p >= 11) (showString conNamePeerMemoryFeatureFlagBits . showString " 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPeerMemoryFeatureFlagBits
+                            showTablePeerMemoryFeatureFlagBits
+                            conNamePeerMemoryFeatureFlagBits
+                            (\(PeerMemoryFeatureFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PeerMemoryFeatureFlagBits where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPeerMemoryFeatureFlagBits
-          asum ((\(e, s) -> e <$ string s) <$> showTablePeerMemoryFeatureFlagBits)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePeerMemoryFeatureFlagBits)
-            v <- step readPrec
-            pure (PeerMemoryFeatureFlagBits v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPeerMemoryFeatureFlagBits
+                          showTablePeerMemoryFeatureFlagBits
+                          conNamePeerMemoryFeatureFlagBits
+                          PeerMemoryFeatureFlagBits
 

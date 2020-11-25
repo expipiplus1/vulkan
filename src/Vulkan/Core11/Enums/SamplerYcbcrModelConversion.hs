@@ -8,24 +8,13 @@ module Vulkan.Core11.Enums.SamplerYcbcrModelConversion  (SamplerYcbcrModelConver
                                                                                     , ..
                                                                                     )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkSamplerYcbcrModelConversion - Color model component of a color space
 --
@@ -128,26 +117,15 @@ showTableSamplerYcbcrModelConversion =
   ]
 
 instance Show SamplerYcbcrModelConversion where
-  showsPrec p e = case lookup e showTableSamplerYcbcrModelConversion of
-    Just s -> showString enumPrefixSamplerYcbcrModelConversion . showString s
-    Nothing ->
-      let SamplerYcbcrModelConversion x = e
-      in  showParen (p >= 11) (showString conNameSamplerYcbcrModelConversion . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixSamplerYcbcrModelConversion
+                            showTableSamplerYcbcrModelConversion
+                            conNameSamplerYcbcrModelConversion
+                            (\(SamplerYcbcrModelConversion x) -> x)
+                            (showsPrec 11)
 
 instance Read SamplerYcbcrModelConversion where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixSamplerYcbcrModelConversion
-          asum ((\(e, s) -> e <$ string s) <$> showTableSamplerYcbcrModelConversion)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNameSamplerYcbcrModelConversion)
-            v <- step readPrec
-            pure (SamplerYcbcrModelConversion v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixSamplerYcbcrModelConversion
+                          showTableSamplerYcbcrModelConversion
+                          conNameSamplerYcbcrModelConversion
+                          SamplerYcbcrModelConversion
 

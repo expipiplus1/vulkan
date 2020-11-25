@@ -4,24 +4,13 @@ module Vulkan.Core10.Enums.PipelineCacheHeaderVersion  (PipelineCacheHeaderVersi
                                                                                   , ..
                                                                                   )) where
 
-import Data.Foldable (asum)
-import GHC.Base ((<$))
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadP (skipSpaces)
-import Text.ParserCombinators.ReadP (string)
-import Text.ParserCombinators.ReadPrec ((+++))
-import qualified Text.ParserCombinators.ReadPrec (lift)
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkPipelineCacheHeaderVersion - Encode pipeline cache version
 --
@@ -48,26 +37,15 @@ showTablePipelineCacheHeaderVersion :: [(PipelineCacheHeaderVersion, String)]
 showTablePipelineCacheHeaderVersion = [(PIPELINE_CACHE_HEADER_VERSION_ONE, "")]
 
 instance Show PipelineCacheHeaderVersion where
-  showsPrec p e = case lookup e showTablePipelineCacheHeaderVersion of
-    Just s -> showString enumPrefixPipelineCacheHeaderVersion . showString s
-    Nothing ->
-      let PipelineCacheHeaderVersion x = e
-      in  showParen (p >= 11) (showString conNamePipelineCacheHeaderVersion . showString " " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPipelineCacheHeaderVersion
+                            showTablePipelineCacheHeaderVersion
+                            conNamePipelineCacheHeaderVersion
+                            (\(PipelineCacheHeaderVersion x) -> x)
+                            (showsPrec 11)
 
 instance Read PipelineCacheHeaderVersion where
-  readPrec = parens
-    (   Text.ParserCombinators.ReadPrec.lift
-        (do
-          skipSpaces
-          _ <- string enumPrefixPipelineCacheHeaderVersion
-          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineCacheHeaderVersion)
-        )
-    +++ prec
-          10
-          (do
-            expectP (Ident conNamePipelineCacheHeaderVersion)
-            v <- step readPrec
-            pure (PipelineCacheHeaderVersion v)
-          )
-    )
+  readPrec = enumReadPrec enumPrefixPipelineCacheHeaderVersion
+                          showTablePipelineCacheHeaderVersion
+                          conNamePipelineCacheHeaderVersion
+                          PipelineCacheHeaderVersion
 
