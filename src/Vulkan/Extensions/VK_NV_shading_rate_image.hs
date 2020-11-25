@@ -1,4 +1,279 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_NV_shading_rate_image - device extension
+--
+-- == VK_NV_shading_rate_image
+--
+-- [__Name String__]
+--     @VK_NV_shading_rate_image@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     165
+--
+-- [__Revision__]
+--     3
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Pat Brown
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_shading_rate_image:%20&body=@nvpbrown%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2019-07-18
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shading_rate.html SPV_NV_shading_rate>
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_shading_rate_image.txt GL_NV_shading_rate_image>
+--
+-- [__Contributors__]
+--
+--     -   Pat Brown, NVIDIA
+--
+--     -   Carsten Rohde, NVIDIA
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Daniel Koch, NVIDIA
+--
+--     -   Mathias Schott, NVIDIA
+--
+--     -   Matthew Netsch, Qualcomm Technologies, Inc.
+--
+-- == Description
+--
+-- This extension allows applications to use a variable shading rate when
+-- processing fragments of rasterized primitives. By default, Vulkan will
+-- spawn one fragment shader for each pixel covered by a primitive. In this
+-- extension, applications can bind a /shading rate image/ that can be used
+-- to vary the number of fragment shader invocations across the
+-- framebuffer. Some portions of the screen may be configured to spawn up
+-- to 16 fragment shaders for each pixel, while other portions may use a
+-- single fragment shader invocation for a 4x4 block of pixels. This can be
+-- useful for use cases like eye tracking, where the portion of the
+-- framebuffer that the user is looking at directly can be processed at
+-- high frequency, while distant corners of the image can be processed at
+-- lower frequency. Each texel in the shading rate image represents a
+-- fixed-size rectangle in the framebuffer, covering 16x16 pixels in the
+-- initial implementation of this extension. When rasterizing a primitive
+-- covering one of these rectangles, the Vulkan implementation reads a
+-- texel in the bound shading rate image and looks up the fetched value in
+-- a palette to determine a base shading rate.
+--
+-- In addition to the API support controlling rasterization, this extension
+-- also adds Vulkan support for the
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shading_rate.html SPV_NV_shading_rate>
+-- extension to SPIR-V. That extension provides two fragment shader
+-- variable decorations that allow fragment shaders to determine the
+-- shading rate used for processing the fragment:
+--
+-- -   @FragmentSizeNV@, which indicates the width and height of the set of
+--     pixels processed by the fragment shader.
+--
+-- -   @InvocationsPerPixel@, which indicates the maximum number of
+--     fragment shader invocations that could be spawned for the pixel(s)
+--     covered by the fragment.
+--
+-- When using SPIR-V in conjunction with the OpenGL Shading Language
+-- (GLSL), the fragment shader capabilities are provided by the
+-- @GL_NV_shading_rate_image@ language extension and correspond to the
+-- built-in variables @gl_FragmentSizeNV@ and @gl_InvocationsPerPixelNV@,
+-- respectively.
+--
+-- == New Commands
+--
+-- -   'cmdBindShadingRateImageNV'
+--
+-- -   'cmdSetCoarseSampleOrderNV'
+--
+-- -   'cmdSetViewportShadingRatePaletteNV'
+--
+-- == New Structures
+--
+-- -   'CoarseSampleLocationNV'
+--
+-- -   'CoarseSampleOrderCustomNV'
+--
+-- -   'ShadingRatePaletteNV'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceShadingRateImageFeaturesNV'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
+--
+--     -   'PhysicalDeviceShadingRateImagePropertiesNV'
+--
+-- -   Extending 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo':
+--
+--     -   'PipelineViewportCoarseSampleOrderStateCreateInfoNV'
+--
+--     -   'PipelineViewportShadingRateImageStateCreateInfoNV'
+--
+-- == New Enums
+--
+-- -   'CoarseSampleOrderTypeNV'
+--
+-- -   'ShadingRatePaletteEntryNV'
+--
+-- == New Enum Constants
+--
+-- -   'NV_SHADING_RATE_IMAGE_EXTENSION_NAME'
+--
+-- -   'NV_SHADING_RATE_IMAGE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV'
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
+--
+-- -   Extending 'Vulkan.Core10.Enums.ImageLayout.ImageLayout':
+--
+--     -   'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV'
+--
+-- == Issues
+--
+-- (1) When using shading rates specifying “coarse” fragments covering
+-- multiple pixels, we will generate a combined coverage mask that combines
+-- the coverage masks of all pixels covered by the fragment. By default,
+-- these masks are combined in an implementation-dependent order. Should we
+-- provide a mechanism allowing applications to query or specify an exact
+-- order?
+--
+-- __RESOLVED__: Yes, this feature is useful for cases where most of the
+-- fragment shader can be evaluated once for an entire coarse fragment, but
+-- where some per-pixel computations are also required. For example, a
+-- per-pixel alpha test may want to kill all the samples for some pixels in
+-- a coarse fragment. This sort of test can be implemented using an output
+-- sample mask, but such a shader would need to know which bit in the mask
+-- corresponds to each sample in the coarse fragment. We are including a
+-- mechanism to allow aplications to specify the orders of coverage samples
+-- for each shading rate and sample count, either as static pipeline state
+-- or dynamically via a command buffer. This portion of the extension has
+-- its own feature bit.
+--
+-- We will not be providing a query to determine the
+-- implementation-dependent default ordering. The thinking here is that if
+-- an application cares enough about the coarse fragment sample ordering to
+-- perform such a query, it could instead just set its own order, also
+-- using custom per-pixel sample locations if required.
+--
+-- (2) For the pipeline stage
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV',
+-- should we specify a precise location in the pipeline the shading rate
+-- image is accessed (after geometry shading, but before the early fragment
+-- tests) or leave it under-specified in case there are other
+-- implementations that access the image in a different pipeline location?
+--
+-- __RESOLVED__ We are specifying the pipeline stage to be between the
+-- final stage used for vertex processing
+-- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT')
+-- and before the first stage used for fragment processing
+-- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT'),
+-- which seems to be the natural place to access the shading rate image.
+--
+-- (3) How do centroid-sampled variables work with fragments larger than
+-- one pixel?
+--
+-- __RESOLVED__ For single-pixel fragments, fragment shader inputs
+-- decorated with @Centroid@ are sampled at an implementation-dependent
+-- location in the intersection of the area of the primitive being
+-- rasterized and the area of the pixel that corresponds to the fragment.
+-- With multi-pixel fragments, we follow a similar pattern, using the
+-- intersection of the primitive and the __set__ of pixels corresponding to
+-- the fragment.
+--
+-- One important thing to keep in mind when using such “coarse” shading
+-- rates is that fragment attributes are sampled at the center of the
+-- fragment by default, regardless of the set of pixels\/samples covered by
+-- the fragment. For fragments with a size of 4x4 pixels, this center
+-- location will be more than two pixels (1.5 * sqrt(2)) away from the
+-- center of the pixels at the corners of the fragment. When rendering a
+-- primitive that covers only a small part of a coarse fragment, sampling a
+-- color outside the primitive can produce overly bright or dark color
+-- values if the color values have a large gradient. To deal with this, an
+-- application can use centroid sampling on attributes where
+-- “extrapolation” artifacts can lead to overly bright or dark pixels. Note
+-- that this same problem also exists for multisampling with single-pixel
+-- fragments, but is less severe because it only affects certain samples of
+-- a pixel and such bright\/dark samples may be averaged with other samples
+-- that don’t have a similar problem.
+--
+-- == Version History
+--
+-- -   Revision 3, 2019-07-18 (Mathias Schott)
+--
+--     -   Fully list extension interfaces in this appendix.
+--
+-- -   Revision 2, 2018-09-13 (Pat Brown)
+--
+--     -   Miscellaneous edits preparing the specification for publication.
+--
+-- -   Revision 1, 2018-08-08 (Pat Brown)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'CoarseSampleLocationNV', 'CoarseSampleOrderCustomNV',
+-- 'CoarseSampleOrderTypeNV', 'PhysicalDeviceShadingRateImageFeaturesNV',
+-- 'PhysicalDeviceShadingRateImagePropertiesNV',
+-- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV',
+-- 'PipelineViewportShadingRateImageStateCreateInfoNV',
+-- 'ShadingRatePaletteEntryNV', 'ShadingRatePaletteNV',
+-- 'cmdBindShadingRateImageNV', 'cmdSetCoarseSampleOrderNV',
+-- 'cmdSetViewportShadingRatePaletteNV'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_shading_rate_image  ( cmdBindShadingRateImageNV
                                                    , cmdSetViewportShadingRatePaletteNV
                                                    , cmdSetCoarseSampleOrderNV
@@ -35,6 +310,8 @@ module Vulkan.Extensions.VK_NV_shading_rate_image  ( cmdBindShadingRateImageNV
                                                    , pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME
                                                    ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -42,15 +319,7 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -70,8 +339,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -877,7 +1146,7 @@ instance ToCStruct CoarseSampleOrderCustomNV where
     lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (sampleCount)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (sampleLocations)) :: Word32))
     pPSampleLocations' <- ContT $ allocaBytesAligned @CoarseSampleLocationNV ((Data.Vector.length (sampleLocations)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSampleLocations' `plusPtr` (12 * (i)) :: Ptr CoarseSampleLocationNV) (e) . ($ ())) (sampleLocations)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPSampleLocations' `plusPtr` (12 * (i)) :: Ptr CoarseSampleLocationNV) (e)) (sampleLocations)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CoarseSampleLocationNV))) (pPSampleLocations')
     lift $ f
   cStructSize = 24
@@ -886,7 +1155,7 @@ instance ToCStruct CoarseSampleOrderCustomNV where
     lift $ poke ((p `plusPtr` 0 :: Ptr ShadingRatePaletteEntryNV)) (zero)
     lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
     pPSampleLocations' <- ContT $ allocaBytesAligned @CoarseSampleLocationNV ((Data.Vector.length (mempty)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSampleLocations' `plusPtr` (12 * (i)) :: Ptr CoarseSampleLocationNV) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPSampleLocations' `plusPtr` (12 * (i)) :: Ptr CoarseSampleLocationNV) (e)) (mempty)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CoarseSampleLocationNV))) (pPSampleLocations')
     lift $ f
 
@@ -1054,17 +1323,17 @@ newtype ShadingRatePaletteEntryNV = ShadingRatePaletteEntryNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV = ShadingRatePaletteEntryNV 0
+pattern SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV              = ShadingRatePaletteEntryNV 0
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV = ShadingRatePaletteEntryNV 1
+pattern SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV    = ShadingRatePaletteEntryNV 1
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV = ShadingRatePaletteEntryNV 2
+pattern SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV     = ShadingRatePaletteEntryNV 2
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV = ShadingRatePaletteEntryNV 3
+pattern SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV     = ShadingRatePaletteEntryNV 3
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV = ShadingRatePaletteEntryNV 4
+pattern SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV     = ShadingRatePaletteEntryNV 4
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV = ShadingRatePaletteEntryNV 5
+pattern SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV      = ShadingRatePaletteEntryNV 5
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV"
 pattern SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV = ShadingRatePaletteEntryNV 6
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV"
@@ -1090,40 +1359,40 @@ pattern SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV = ShadingRateP
              SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV,
              SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV :: ShadingRatePaletteEntryNV #-}
 
+conNameShadingRatePaletteEntryNV :: String
+conNameShadingRatePaletteEntryNV = "ShadingRatePaletteEntryNV"
+
+enumPrefixShadingRatePaletteEntryNV :: String
+enumPrefixShadingRatePaletteEntryNV = "SHADING_RATE_PALETTE_ENTRY_"
+
+showTableShadingRatePaletteEntryNV :: [(ShadingRatePaletteEntryNV, String)]
+showTableShadingRatePaletteEntryNV =
+  [ (SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV             , "NO_INVOCATIONS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV   , "16_INVOCATIONS_PER_PIXEL_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV    , "8_INVOCATIONS_PER_PIXEL_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV    , "4_INVOCATIONS_PER_PIXEL_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV    , "2_INVOCATIONS_PER_PIXEL_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV     , "1_INVOCATION_PER_PIXEL_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV, "1_INVOCATION_PER_2X1_PIXELS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV, "1_INVOCATION_PER_1X2_PIXELS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X2_PIXELS_NV, "1_INVOCATION_PER_2X2_PIXELS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_PIXELS_NV, "1_INVOCATION_PER_4X2_PIXELS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV, "1_INVOCATION_PER_2X4_PIXELS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV, "1_INVOCATION_PER_4X4_PIXELS_NV")
+  ]
+
 instance Show ShadingRatePaletteEntryNV where
-  showsPrec p = \case
-    SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV"
-    SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV -> showString "SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV"
-    SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV -> showString "SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV"
-    SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV -> showString "SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV"
-    SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV -> showString "SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X2_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X2_PIXELS_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_PIXELS_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV"
-    ShadingRatePaletteEntryNV x -> showParen (p >= 11) (showString "ShadingRatePaletteEntryNV " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixShadingRatePaletteEntryNV
+                            showTableShadingRatePaletteEntryNV
+                            conNameShadingRatePaletteEntryNV
+                            (\(ShadingRatePaletteEntryNV x) -> x)
+                            (showsPrec 11)
 
 instance Read ShadingRatePaletteEntryNV where
-  readPrec = parens (choose [("SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV", pure SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV", pure SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV", pure SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV", pure SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV", pure SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X2_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X2_PIXELS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_PIXELS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ShadingRatePaletteEntryNV")
-                       v <- step readPrec
-                       pure (ShadingRatePaletteEntryNV v)))
+  readPrec = enumReadPrec enumPrefixShadingRatePaletteEntryNV
+                          showTableShadingRatePaletteEntryNV
+                          conNameShadingRatePaletteEntryNV
+                          ShadingRatePaletteEntryNV
 
 
 -- | VkCoarseSampleOrderTypeNV - Shading rate image sample ordering types
@@ -1137,18 +1406,18 @@ newtype CoarseSampleOrderTypeNV = CoarseSampleOrderTypeNV Int32
 
 -- | 'COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV' specifies that coverage samples
 -- will be ordered in an implementation-dependent manner.
-pattern COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV = CoarseSampleOrderTypeNV 0
+pattern COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV      = CoarseSampleOrderTypeNV 0
 -- | 'COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV' specifies that coverage samples
 -- will be ordered according to the array of custom orderings provided in
 -- either the @pCustomSampleOrders@ member of
 -- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV' or the
 -- @pCustomSampleOrders@ member of 'cmdSetCoarseSampleOrderNV'.
-pattern COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV = CoarseSampleOrderTypeNV 1
+pattern COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV       = CoarseSampleOrderTypeNV 1
 -- | 'COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV' specifies that coverage
 -- samples will be ordered sequentially, sorted first by pixel coordinate
 -- (in row-major order) and then by
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>.
-pattern COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV = CoarseSampleOrderTypeNV 2
+pattern COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV  = CoarseSampleOrderTypeNV 2
 -- | 'COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV' specifies that coverage
 -- samples will be ordered sequentially, sorted first by
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
@@ -1159,24 +1428,32 @@ pattern COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV = CoarseSampleOrderTypeNV 3
              COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV,
              COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV :: CoarseSampleOrderTypeNV #-}
 
+conNameCoarseSampleOrderTypeNV :: String
+conNameCoarseSampleOrderTypeNV = "CoarseSampleOrderTypeNV"
+
+enumPrefixCoarseSampleOrderTypeNV :: String
+enumPrefixCoarseSampleOrderTypeNV = "COARSE_SAMPLE_ORDER_TYPE_"
+
+showTableCoarseSampleOrderTypeNV :: [(CoarseSampleOrderTypeNV, String)]
+showTableCoarseSampleOrderTypeNV =
+  [ (COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV     , "DEFAULT_NV")
+  , (COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV      , "CUSTOM_NV")
+  , (COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV , "PIXEL_MAJOR_NV")
+  , (COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV, "SAMPLE_MAJOR_NV")
+  ]
+
 instance Show CoarseSampleOrderTypeNV where
-  showsPrec p = \case
-    COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV -> showString "COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV"
-    COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV -> showString "COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV"
-    COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV -> showString "COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV"
-    COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV -> showString "COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV"
-    CoarseSampleOrderTypeNV x -> showParen (p >= 11) (showString "CoarseSampleOrderTypeNV " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixCoarseSampleOrderTypeNV
+                            showTableCoarseSampleOrderTypeNV
+                            conNameCoarseSampleOrderTypeNV
+                            (\(CoarseSampleOrderTypeNV x) -> x)
+                            (showsPrec 11)
 
 instance Read CoarseSampleOrderTypeNV where
-  readPrec = parens (choose [("COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV", pure COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV)
-                            , ("COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV", pure COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV)
-                            , ("COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV", pure COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV)
-                            , ("COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV", pure COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CoarseSampleOrderTypeNV")
-                       v <- step readPrec
-                       pure (CoarseSampleOrderTypeNV v)))
+  readPrec = enumReadPrec enumPrefixCoarseSampleOrderTypeNV
+                          showTableCoarseSampleOrderTypeNV
+                          conNameCoarseSampleOrderTypeNV
+                          CoarseSampleOrderTypeNV
 
 
 type NV_SHADING_RATE_IMAGE_SPEC_VERSION = 3

@@ -1,25 +1,164 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_NV_external_memory_capabilities - instance extension
+--
+-- == VK_NV_external_memory_capabilities
+--
+-- [__Name String__]
+--     @VK_NV_external_memory_capabilities@
+--
+-- [__Extension Type__]
+--     Instance extension
+--
+-- [__Registered Extension Number__]
+--     56
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Deprecation state__]
+--
+--     -   /Deprecated/ by @VK_KHR_external_memory_capabilities@ extension
+--
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- [__Contact__]
+--
+--     -   James Jones
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_external_memory_capabilities:%20&body=@cubanismo%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2016-08-19
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Interacts with Vulkan 1.1.
+--
+--     -   Interacts with @VK_KHR_dedicated_allocation@.
+--
+--     -   Interacts with @VK_NV_dedicated_allocation@.
+--
+-- [__Contributors__]
+--
+--     -   James Jones, NVIDIA
+--
+-- == Description
+--
+-- Applications may wish to import memory from the Direct 3D API, or export
+-- memory to other Vulkan instances. This extension provides a set of
+-- capability queries that allow applications determine what types of win32
+-- memory handles an implementation supports for a given set of use cases.
+--
+-- == New Commands
+--
+-- -   'getPhysicalDeviceExternalImageFormatPropertiesNV'
+--
+-- == New Structures
+--
+-- -   'ExternalImageFormatPropertiesNV'
+--
+-- == New Enums
+--
+-- -   'ExternalMemoryFeatureFlagBitsNV'
+--
+-- -   'ExternalMemoryHandleTypeFlagBitsNV'
+--
+-- == New Bitmasks
+--
+-- -   'ExternalMemoryFeatureFlagsNV'
+--
+-- -   'ExternalMemoryHandleTypeFlagsNV'
+--
+-- == New Enum Constants
+--
+-- -   'NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME'
+--
+-- -   'NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION'
+--
+-- == Issues
+--
+-- 1) Why do so many external memory capabilities need to be queried on a
+-- per-memory-handle-type basis?
+--
+-- __RESOLVED__: This is because some handle types are based on OS-native
+-- objects that have far more limited capabilities than the very generic
+-- Vulkan memory objects. Not all memory handle types can name memory
+-- objects that support 3D images, for example. Some handle types cannot
+-- even support the deferred image and memory binding behavior of Vulkan
+-- and require specifying the image when allocating or importing the memory
+-- object.
+--
+-- 2) Does the 'ExternalImageFormatPropertiesNV' struct need to include a
+-- list of memory type bits that support the given handle type?
+--
+-- __RESOLVED__: No. The memory types that do not support the handle types
+-- will simply be filtered out of the results returned by
+-- 'Vulkan.Core10.MemoryManagement.getImageMemoryRequirements' when a set
+-- of handle types was specified at image creation time.
+--
+-- 3) Should the non-opaque handle types be moved to their own extension?
+--
+-- __RESOLVED__: Perhaps. However, defining the handle type bits does very
+-- little and does not require any platform-specific types on its own, and
+-- it is easier to maintain the bitmask values in a single extension for
+-- now. Presumably more handle types could be added by separate extensions
+-- though, and it would be midly weird to have some platform-specific ones
+-- defined in the core spec and some in extensions
+--
+-- == Version History
+--
+-- -   Revision 1, 2016-08-19 (James Jones)
+--
+--     -   Initial version
+--
+-- = See Also
+--
+-- 'ExternalImageFormatPropertiesNV', 'ExternalMemoryFeatureFlagBitsNV',
+-- 'ExternalMemoryFeatureFlagsNV', 'ExternalMemoryHandleTypeFlagBitsNV',
+-- 'ExternalMemoryHandleTypeFlagsNV',
+-- 'getPhysicalDeviceExternalImageFormatPropertiesNV'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_capabilities Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_external_memory_capabilities  ( getPhysicalDeviceExternalImageFormatPropertiesNV
                                                              , ExternalImageFormatPropertiesNV(..)
+                                                             , ExternalMemoryHandleTypeFlagsNV
                                                              , ExternalMemoryHandleTypeFlagBitsNV( EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV
                                                                                                  , EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV
                                                                                                  , EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV
                                                                                                  , EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV
                                                                                                  , ..
                                                                                                  )
-                                                             , ExternalMemoryHandleTypeFlagsNV
+                                                             , ExternalMemoryFeatureFlagsNV
                                                              , ExternalMemoryFeatureFlagBitsNV( EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV
                                                                                               , EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV
                                                                                               , EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV
                                                                                               , ..
                                                                                               )
-                                                             , ExternalMemoryFeatureFlagsNV
                                                              , NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION
                                                              , pattern NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION
                                                              , NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
                                                              , pattern NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
                                                              ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -27,15 +166,8 @@ import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -53,7 +185,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -271,6 +403,8 @@ instance Zero ExternalImageFormatPropertiesNV where
            zero
 
 
+type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
+
 -- | VkExternalMemoryHandleTypeFlagBitsNV - Bitmask specifying external
 -- memory handle types
 --
@@ -284,7 +418,7 @@ newtype ExternalMemoryHandleTypeFlagBitsNV = ExternalMemoryHandleTypeFlagBitsNV 
 -- memory returned by
 -- 'Vulkan.Extensions.VK_NV_external_memory_win32.getMemoryWin32HandleNV',
 -- or one duplicated from such a handle using @DuplicateHandle()@.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV = ExternalMemoryHandleTypeFlagBitsNV 0x00000001
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV     = ExternalMemoryHandleTypeFlagBitsNV 0x00000001
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV' specifies a handle
 -- to memory returned by
 -- 'Vulkan.Extensions.VK_NV_external_memory_win32.getMemoryWin32HandleNV'.
@@ -292,32 +426,40 @@ pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV = ExternalMemoryHand
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV' specifies a valid NT
 -- handle to memory returned by @IDXGIResource1::CreateSharedHandle@, or a
 -- handle duplicated from such a handle using @DuplicateHandle()@.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV = ExternalMemoryHandleTypeFlagBitsNV 0x00000004
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV      = ExternalMemoryHandleTypeFlagBitsNV 0x00000004
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV' specifies a handle
 -- to memory returned by @IDXGIResource::GetSharedHandle()@.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV = ExternalMemoryHandleTypeFlagBitsNV 0x00000008
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV  = ExternalMemoryHandleTypeFlagBitsNV 0x00000008
 
-type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
+conNameExternalMemoryHandleTypeFlagBitsNV :: String
+conNameExternalMemoryHandleTypeFlagBitsNV = "ExternalMemoryHandleTypeFlagBitsNV"
+
+enumPrefixExternalMemoryHandleTypeFlagBitsNV :: String
+enumPrefixExternalMemoryHandleTypeFlagBitsNV = "EXTERNAL_MEMORY_HANDLE_TYPE_"
+
+showTableExternalMemoryHandleTypeFlagBitsNV :: [(ExternalMemoryHandleTypeFlagBitsNV, String)]
+showTableExternalMemoryHandleTypeFlagBitsNV =
+  [ (EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV    , "OPAQUE_WIN32_BIT_NV")
+  , (EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV, "OPAQUE_WIN32_KMT_BIT_NV")
+  , (EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV     , "D3D11_IMAGE_BIT_NV")
+  , (EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV , "D3D11_IMAGE_KMT_BIT_NV")
+  ]
 
 instance Show ExternalMemoryHandleTypeFlagBitsNV where
-  showsPrec p = \case
-    EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV -> showString "EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV"
-    EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV -> showString "EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV"
-    EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV -> showString "EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV"
-    EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV -> showString "EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV"
-    ExternalMemoryHandleTypeFlagBitsNV x -> showParen (p >= 11) (showString "ExternalMemoryHandleTypeFlagBitsNV 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixExternalMemoryHandleTypeFlagBitsNV
+                            showTableExternalMemoryHandleTypeFlagBitsNV
+                            conNameExternalMemoryHandleTypeFlagBitsNV
+                            (\(ExternalMemoryHandleTypeFlagBitsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ExternalMemoryHandleTypeFlagBitsNV where
-  readPrec = parens (choose [("EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV", pure EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV)
-                            , ("EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV", pure EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV)
-                            , ("EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV", pure EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV)
-                            , ("EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV", pure EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ExternalMemoryHandleTypeFlagBitsNV")
-                       v <- step readPrec
-                       pure (ExternalMemoryHandleTypeFlagBitsNV v)))
+  readPrec = enumReadPrec enumPrefixExternalMemoryHandleTypeFlagBitsNV
+                          showTableExternalMemoryHandleTypeFlagBitsNV
+                          conNameExternalMemoryHandleTypeFlagBitsNV
+                          ExternalMemoryHandleTypeFlagBitsNV
 
+
+type ExternalMemoryFeatureFlagsNV = ExternalMemoryFeatureFlagBitsNV
 
 -- | VkExternalMemoryFeatureFlagBitsNV - Bitmask specifying external memory
 -- features
@@ -335,29 +477,36 @@ newtype ExternalMemoryFeatureFlagBitsNV = ExternalMemoryFeatureFlagBitsNV Flags
 pattern EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV = ExternalMemoryFeatureFlagBitsNV 0x00000001
 -- | 'EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV' specifies that the
 -- implementation supports exporting handles of the specified type.
-pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV = ExternalMemoryFeatureFlagBitsNV 0x00000002
+pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV     = ExternalMemoryFeatureFlagBitsNV 0x00000002
 -- | 'EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV' specifies that the
 -- implementation supports importing handles of the specified type.
-pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV = ExternalMemoryFeatureFlagBitsNV 0x00000004
+pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV     = ExternalMemoryFeatureFlagBitsNV 0x00000004
 
-type ExternalMemoryFeatureFlagsNV = ExternalMemoryFeatureFlagBitsNV
+conNameExternalMemoryFeatureFlagBitsNV :: String
+conNameExternalMemoryFeatureFlagBitsNV = "ExternalMemoryFeatureFlagBitsNV"
+
+enumPrefixExternalMemoryFeatureFlagBitsNV :: String
+enumPrefixExternalMemoryFeatureFlagBitsNV = "EXTERNAL_MEMORY_FEATURE_"
+
+showTableExternalMemoryFeatureFlagBitsNV :: [(ExternalMemoryFeatureFlagBitsNV, String)]
+showTableExternalMemoryFeatureFlagBitsNV =
+  [ (EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV, "DEDICATED_ONLY_BIT_NV")
+  , (EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV    , "EXPORTABLE_BIT_NV")
+  , (EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV    , "IMPORTABLE_BIT_NV")
+  ]
 
 instance Show ExternalMemoryFeatureFlagBitsNV where
-  showsPrec p = \case
-    EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV -> showString "EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV"
-    EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV -> showString "EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV"
-    EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV -> showString "EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV"
-    ExternalMemoryFeatureFlagBitsNV x -> showParen (p >= 11) (showString "ExternalMemoryFeatureFlagBitsNV 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixExternalMemoryFeatureFlagBitsNV
+                            showTableExternalMemoryFeatureFlagBitsNV
+                            conNameExternalMemoryFeatureFlagBitsNV
+                            (\(ExternalMemoryFeatureFlagBitsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ExternalMemoryFeatureFlagBitsNV where
-  readPrec = parens (choose [("EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV", pure EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV)
-                            , ("EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV", pure EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV)
-                            , ("EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV", pure EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ExternalMemoryFeatureFlagBitsNV")
-                       v <- step readPrec
-                       pure (ExternalMemoryFeatureFlagBitsNV v)))
+  readPrec = enumReadPrec enumPrefixExternalMemoryFeatureFlagBitsNV
+                          showTableExternalMemoryFeatureFlagBitsNV
+                          conNameExternalMemoryFeatureFlagBitsNV
+                          ExternalMemoryFeatureFlagBitsNV
 
 
 type NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION = 1

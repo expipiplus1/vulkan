@@ -1,4 +1,115 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_MVK_ios_surface - instance extension
+--
+-- == VK_MVK_ios_surface
+--
+-- [__Name String__]
+--     @VK_MVK_ios_surface@
+--
+-- [__Extension Type__]
+--     Instance extension
+--
+-- [__Registered Extension Number__]
+--     123
+--
+-- [__Revision__]
+--     3
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Deprecation state__]
+--
+--     -   /Deprecated/ by @VK_EXT_metal_surface@ extension
+--
+-- [__Contact__]
+--
+--     -   Bill Hollings
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_MVK_ios_surface:%20&body=@billhollings%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2020-07-31
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Bill Hollings, The Brenwill Workshop Ltd.
+--
+-- == Description
+--
+-- The @VK_MVK_ios_surface@ extension is an instance extension. It provides
+-- a mechanism to create a 'Vulkan.Extensions.Handles.SurfaceKHR' object
+-- (defined by the @VK_KHR_surface@ extension) based on a @UIView@, the
+-- native surface type of iOS, which is underpinned by a
+-- 'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer', to support
+-- rendering to the surface using Apple’s Metal framework.
+--
+-- == Deprecation by @VK_EXT_metal_surface@
+--
+-- The @VK_MVK_ios_surface@ extension is considered deprecated and has been
+-- superseded by the @VK_EXT_metal_surface@ extension.
+--
+-- == New Commands
+--
+-- -   'createIOSSurfaceMVK'
+--
+-- == New Structures
+--
+-- -   'IOSSurfaceCreateInfoMVK'
+--
+-- == New Bitmasks
+--
+-- -   'IOSSurfaceCreateFlagsMVK'
+--
+-- == New Enum Constants
+--
+-- -   'MVK_IOS_SURFACE_EXTENSION_NAME'
+--
+-- -   'MVK_IOS_SURFACE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK'
+--
+-- == Version History
+--
+-- -   Revision 1, 2017-02-15 (Bill Hollings)
+--
+--     -   Initial draft.
+--
+-- -   Revision 2, 2017-02-24 (Bill Hollings)
+--
+--     -   Minor syntax fix to emphasize firm requirement for @UIView@ to
+--         be backed by a
+--         'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
+--
+-- -   Revision 3, 2020-07-31 (Bill Hollings)
+--
+--     -   Update documentation on requirements for UIView.
+--
+--     -   Mark as deprecated by @VK_EXT_metal_surface@.
+--
+-- = See Also
+--
+-- 'IOSSurfaceCreateFlagsMVK', 'IOSSurfaceCreateInfoMVK',
+-- 'createIOSSurfaceMVK'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_ios_surface Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_MVK_ios_surface  ( createIOSSurfaceMVK
                                              , IOSSurfaceCreateInfoMVK(..)
                                              , IOSSurfaceCreateFlagsMVK(..)
@@ -9,6 +120,8 @@ module Vulkan.Extensions.VK_MVK_ios_surface  ( createIOSSurfaceMVK
                                              , SurfaceKHR(..)
                                              ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -20,15 +133,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -46,7 +152,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -259,17 +365,27 @@ newtype IOSSurfaceCreateFlagsMVK = IOSSurfaceCreateFlagsMVK Flags
 
 
 
+conNameIOSSurfaceCreateFlagsMVK :: String
+conNameIOSSurfaceCreateFlagsMVK = "IOSSurfaceCreateFlagsMVK"
+
+enumPrefixIOSSurfaceCreateFlagsMVK :: String
+enumPrefixIOSSurfaceCreateFlagsMVK = ""
+
+showTableIOSSurfaceCreateFlagsMVK :: [(IOSSurfaceCreateFlagsMVK, String)]
+showTableIOSSurfaceCreateFlagsMVK = []
+
 instance Show IOSSurfaceCreateFlagsMVK where
-  showsPrec p = \case
-    IOSSurfaceCreateFlagsMVK x -> showParen (p >= 11) (showString "IOSSurfaceCreateFlagsMVK 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixIOSSurfaceCreateFlagsMVK
+                            showTableIOSSurfaceCreateFlagsMVK
+                            conNameIOSSurfaceCreateFlagsMVK
+                            (\(IOSSurfaceCreateFlagsMVK x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read IOSSurfaceCreateFlagsMVK where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "IOSSurfaceCreateFlagsMVK")
-                       v <- step readPrec
-                       pure (IOSSurfaceCreateFlagsMVK v)))
+  readPrec = enumReadPrec enumPrefixIOSSurfaceCreateFlagsMVK
+                          showTableIOSSurfaceCreateFlagsMVK
+                          conNameIOSSurfaceCreateFlagsMVK
+                          IOSSurfaceCreateFlagsMVK
 
 
 type MVK_IOS_SURFACE_SPEC_VERSION = 3

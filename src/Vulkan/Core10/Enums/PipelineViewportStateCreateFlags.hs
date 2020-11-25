@@ -1,20 +1,16 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineViewportStateCreateFlags"
 module Vulkan.Core10.Enums.PipelineViewportStateCreateFlags  (PipelineViewportStateCreateFlags(..)) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 -- | VkPipelineViewportStateCreateFlags - Reserved for future use
@@ -32,15 +28,25 @@ newtype PipelineViewportStateCreateFlags = PipelineViewportStateCreateFlags Flag
 
 
 
+conNamePipelineViewportStateCreateFlags :: String
+conNamePipelineViewportStateCreateFlags = "PipelineViewportStateCreateFlags"
+
+enumPrefixPipelineViewportStateCreateFlags :: String
+enumPrefixPipelineViewportStateCreateFlags = ""
+
+showTablePipelineViewportStateCreateFlags :: [(PipelineViewportStateCreateFlags, String)]
+showTablePipelineViewportStateCreateFlags = []
+
 instance Show PipelineViewportStateCreateFlags where
-  showsPrec p = \case
-    PipelineViewportStateCreateFlags x -> showParen (p >= 11) (showString "PipelineViewportStateCreateFlags 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineViewportStateCreateFlags
+                            showTablePipelineViewportStateCreateFlags
+                            conNamePipelineViewportStateCreateFlags
+                            (\(PipelineViewportStateCreateFlags x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineViewportStateCreateFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineViewportStateCreateFlags")
-                       v <- step readPrec
-                       pure (PipelineViewportStateCreateFlags v)))
+  readPrec = enumReadPrec enumPrefixPipelineViewportStateCreateFlags
+                          showTablePipelineViewportStateCreateFlags
+                          conNamePipelineViewportStateCreateFlags
+                          PipelineViewportStateCreateFlags
 

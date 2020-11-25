@@ -1,11 +1,12 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.StencilFaceFlagBits  ( StencilFaceFlagBits
-                                                , StencilFaceFlags
+-- No documentation found for Chapter "StencilFaceFlagBits"
+module Vulkan.Core10.Enums.StencilFaceFlagBits  ( StencilFaceFlags
+                                                , StencilFaceFlagBits
                                                 ) where
 
 
 
-data StencilFaceFlagBits
-
 type StencilFaceFlags = StencilFaceFlagBits
+
+data StencilFaceFlagBits
 

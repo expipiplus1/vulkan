@@ -1,29 +1,27 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.ColorComponentFlagBits  ( ColorComponentFlagBits( COLOR_COMPONENT_R_BIT
+-- No documentation found for Chapter "ColorComponentFlagBits"
+module Vulkan.Core10.Enums.ColorComponentFlagBits  ( ColorComponentFlags
+                                                   , ColorComponentFlagBits( COLOR_COMPONENT_R_BIT
                                                                            , COLOR_COMPONENT_G_BIT
                                                                            , COLOR_COMPONENT_B_BIT
                                                                            , COLOR_COMPONENT_A_BIT
                                                                            , ..
                                                                            )
-                                                   , ColorComponentFlags
                                                    ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ColorComponentFlags = ColorComponentFlagBits
+
 -- | VkColorComponentFlagBits - Bitmask controlling which components are
 -- written to the framebuffer
 --
@@ -55,24 +53,30 @@ pattern COLOR_COMPONENT_B_BIT = ColorComponentFlagBits 0x00000004
 -- memory is unmodified.
 pattern COLOR_COMPONENT_A_BIT = ColorComponentFlagBits 0x00000008
 
-type ColorComponentFlags = ColorComponentFlagBits
+conNameColorComponentFlagBits :: String
+conNameColorComponentFlagBits = "ColorComponentFlagBits"
+
+enumPrefixColorComponentFlagBits :: String
+enumPrefixColorComponentFlagBits = "COLOR_COMPONENT_"
+
+showTableColorComponentFlagBits :: [(ColorComponentFlagBits, String)]
+showTableColorComponentFlagBits =
+  [ (COLOR_COMPONENT_R_BIT, "R_BIT")
+  , (COLOR_COMPONENT_G_BIT, "G_BIT")
+  , (COLOR_COMPONENT_B_BIT, "B_BIT")
+  , (COLOR_COMPONENT_A_BIT, "A_BIT")
+  ]
 
 instance Show ColorComponentFlagBits where
-  showsPrec p = \case
-    COLOR_COMPONENT_R_BIT -> showString "COLOR_COMPONENT_R_BIT"
-    COLOR_COMPONENT_G_BIT -> showString "COLOR_COMPONENT_G_BIT"
-    COLOR_COMPONENT_B_BIT -> showString "COLOR_COMPONENT_B_BIT"
-    COLOR_COMPONENT_A_BIT -> showString "COLOR_COMPONENT_A_BIT"
-    ColorComponentFlagBits x -> showParen (p >= 11) (showString "ColorComponentFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixColorComponentFlagBits
+                            showTableColorComponentFlagBits
+                            conNameColorComponentFlagBits
+                            (\(ColorComponentFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ColorComponentFlagBits where
-  readPrec = parens (choose [("COLOR_COMPONENT_R_BIT", pure COLOR_COMPONENT_R_BIT)
-                            , ("COLOR_COMPONENT_G_BIT", pure COLOR_COMPONENT_G_BIT)
-                            , ("COLOR_COMPONENT_B_BIT", pure COLOR_COMPONENT_B_BIT)
-                            , ("COLOR_COMPONENT_A_BIT", pure COLOR_COMPONENT_A_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ColorComponentFlagBits")
-                       v <- step readPrec
-                       pure (ColorComponentFlagBits v)))
+  readPrec = enumReadPrec enumPrefixColorComponentFlagBits
+                          showTableColorComponentFlagBits
+                          conNameColorComponentFlagBits
+                          ColorComponentFlagBits
 

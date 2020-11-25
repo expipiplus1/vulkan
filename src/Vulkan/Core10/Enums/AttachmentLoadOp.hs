@@ -1,23 +1,18 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "AttachmentLoadOp"
 module Vulkan.Core10.Enums.AttachmentLoadOp  (AttachmentLoadOp( ATTACHMENT_LOAD_OP_LOAD
                                                               , ATTACHMENT_LOAD_OP_CLEAR
                                                               , ATTACHMENT_LOAD_OP_DONT_CARE
                                                               , ..
                                                               )) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkAttachmentLoadOp - Specify how contents of an attachment are treated
 -- at the beginning of a subpass
@@ -35,7 +30,7 @@ newtype AttachmentLoadOp = AttachmentLoadOp Int32
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT'.
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_READ_BIT'.
-pattern ATTACHMENT_LOAD_OP_LOAD = AttachmentLoadOp 0
+pattern ATTACHMENT_LOAD_OP_LOAD      = AttachmentLoadOp 0
 -- | 'ATTACHMENT_LOAD_OP_CLEAR' specifies that the contents within the render
 -- area will be cleared to a uniform value, which is specified when a
 -- render pass instance is begun. For attachments with a depth\/stencil
@@ -43,7 +38,7 @@ pattern ATTACHMENT_LOAD_OP_LOAD = AttachmentLoadOp 0
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
-pattern ATTACHMENT_LOAD_OP_CLEAR = AttachmentLoadOp 1
+pattern ATTACHMENT_LOAD_OP_CLEAR     = AttachmentLoadOp 1
 -- | 'ATTACHMENT_LOAD_OP_DONT_CARE' specifies that the previous contents
 -- within the area need not be preserved; the contents of the attachment
 -- will be undefined inside the render area. For attachments with a
@@ -56,20 +51,23 @@ pattern ATTACHMENT_LOAD_OP_DONT_CARE = AttachmentLoadOp 2
              ATTACHMENT_LOAD_OP_CLEAR,
              ATTACHMENT_LOAD_OP_DONT_CARE :: AttachmentLoadOp #-}
 
+conNameAttachmentLoadOp :: String
+conNameAttachmentLoadOp = "AttachmentLoadOp"
+
+enumPrefixAttachmentLoadOp :: String
+enumPrefixAttachmentLoadOp = "ATTACHMENT_LOAD_OP_"
+
+showTableAttachmentLoadOp :: [(AttachmentLoadOp, String)]
+showTableAttachmentLoadOp =
+  [(ATTACHMENT_LOAD_OP_LOAD, "LOAD"), (ATTACHMENT_LOAD_OP_CLEAR, "CLEAR"), (ATTACHMENT_LOAD_OP_DONT_CARE, "DONT_CARE")]
+
 instance Show AttachmentLoadOp where
-  showsPrec p = \case
-    ATTACHMENT_LOAD_OP_LOAD -> showString "ATTACHMENT_LOAD_OP_LOAD"
-    ATTACHMENT_LOAD_OP_CLEAR -> showString "ATTACHMENT_LOAD_OP_CLEAR"
-    ATTACHMENT_LOAD_OP_DONT_CARE -> showString "ATTACHMENT_LOAD_OP_DONT_CARE"
-    AttachmentLoadOp x -> showParen (p >= 11) (showString "AttachmentLoadOp " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixAttachmentLoadOp
+                            showTableAttachmentLoadOp
+                            conNameAttachmentLoadOp
+                            (\(AttachmentLoadOp x) -> x)
+                            (showsPrec 11)
 
 instance Read AttachmentLoadOp where
-  readPrec = parens (choose [("ATTACHMENT_LOAD_OP_LOAD", pure ATTACHMENT_LOAD_OP_LOAD)
-                            , ("ATTACHMENT_LOAD_OP_CLEAR", pure ATTACHMENT_LOAD_OP_CLEAR)
-                            , ("ATTACHMENT_LOAD_OP_DONT_CARE", pure ATTACHMENT_LOAD_OP_DONT_CARE)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AttachmentLoadOp")
-                       v <- step readPrec
-                       pure (AttachmentLoadOp v)))
+  readPrec = enumReadPrec enumPrefixAttachmentLoadOp showTableAttachmentLoadOp conNameAttachmentLoadOp AttachmentLoadOp
 

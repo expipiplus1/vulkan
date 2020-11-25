@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PolygonMode"
 module Vulkan.Core10.Enums.PolygonMode  (PolygonMode( POLYGON_MODE_FILL
                                                     , POLYGON_MODE_LINE
                                                     , POLYGON_MODE_POINT
@@ -6,19 +7,13 @@ module Vulkan.Core10.Enums.PolygonMode  (PolygonMode( POLYGON_MODE_FILL
                                                     , ..
                                                     )) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkPolygonMode - Control polygon rasterization mode
 --
@@ -36,13 +31,13 @@ newtype PolygonMode = PolygonMode Int32
 
 -- | 'POLYGON_MODE_FILL' specifies that polygons are rendered using the
 -- polygon rasterization rules in this section.
-pattern POLYGON_MODE_FILL = PolygonMode 0
+pattern POLYGON_MODE_FILL              = PolygonMode 0
 -- | 'POLYGON_MODE_LINE' specifies that polygon edges are drawn as line
 -- segments.
-pattern POLYGON_MODE_LINE = PolygonMode 1
+pattern POLYGON_MODE_LINE              = PolygonMode 1
 -- | 'POLYGON_MODE_POINT' specifies that polygon vertices are drawn as
 -- points.
-pattern POLYGON_MODE_POINT = PolygonMode 2
+pattern POLYGON_MODE_POINT             = PolygonMode 2
 -- | 'POLYGON_MODE_FILL_RECTANGLE_NV' specifies that polygons are rendered
 -- using polygon rasterization rules, modified to consider a sample within
 -- the primitive if the sample location is inside the axis-aligned bounding
@@ -67,22 +62,24 @@ pattern POLYGON_MODE_FILL_RECTANGLE_NV = PolygonMode 1000153000
              POLYGON_MODE_POINT,
              POLYGON_MODE_FILL_RECTANGLE_NV :: PolygonMode #-}
 
+conNamePolygonMode :: String
+conNamePolygonMode = "PolygonMode"
+
+enumPrefixPolygonMode :: String
+enumPrefixPolygonMode = "POLYGON_MODE_"
+
+showTablePolygonMode :: [(PolygonMode, String)]
+showTablePolygonMode =
+  [ (POLYGON_MODE_FILL             , "FILL")
+  , (POLYGON_MODE_LINE             , "LINE")
+  , (POLYGON_MODE_POINT            , "POINT")
+  , (POLYGON_MODE_FILL_RECTANGLE_NV, "FILL_RECTANGLE_NV")
+  ]
+
 instance Show PolygonMode where
-  showsPrec p = \case
-    POLYGON_MODE_FILL -> showString "POLYGON_MODE_FILL"
-    POLYGON_MODE_LINE -> showString "POLYGON_MODE_LINE"
-    POLYGON_MODE_POINT -> showString "POLYGON_MODE_POINT"
-    POLYGON_MODE_FILL_RECTANGLE_NV -> showString "POLYGON_MODE_FILL_RECTANGLE_NV"
-    PolygonMode x -> showParen (p >= 11) (showString "PolygonMode " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixPolygonMode showTablePolygonMode conNamePolygonMode (\(PolygonMode x) -> x) (showsPrec 11)
 
 instance Read PolygonMode where
-  readPrec = parens (choose [("POLYGON_MODE_FILL", pure POLYGON_MODE_FILL)
-                            , ("POLYGON_MODE_LINE", pure POLYGON_MODE_LINE)
-                            , ("POLYGON_MODE_POINT", pure POLYGON_MODE_POINT)
-                            , ("POLYGON_MODE_FILL_RECTANGLE_NV", pure POLYGON_MODE_FILL_RECTANGLE_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PolygonMode")
-                       v <- step readPrec
-                       pure (PolygonMode v)))
+  readPrec = enumReadPrec enumPrefixPolygonMode showTablePolygonMode conNamePolygonMode PolygonMode
 

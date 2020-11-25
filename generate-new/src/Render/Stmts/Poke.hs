@@ -316,8 +316,12 @@ lengthFromNames
   -> Stmt s r (Ref s ValueDoc)
 lengthFromNames True _ _ Empty Empty = throw "No vectors to get length from"
 lengthFromNames isElided lenName lenType os rs = do
-  rsLengthRefs <- forV rs $ \r -> (r, False, ) <$> lenRefFromSibling @a r
-  osLengthRefs <- forV os $ \o -> (o, True, ) <$> lenRefFromSibling @a o
+  rsLengthRefs <- forVMaybes
+    rs
+    (\r -> fmap (r, False, ) <$> lenRefFromSibling @a r)
+  osLengthRefs <- forVMaybes
+    os
+    (\o -> fmap (o, True, ) <$> lenRefFromSibling @a o)
   let
     givenErr vecName opt givenName =
             -- TODO: these should be the names we give to the variable, not the C names
@@ -416,19 +420,22 @@ lengthFromNames isElided lenName lenType os rs = do
         else pure l1
 
 lenRefFromSibling
-  :: forall a r s . HasPoke a r => CName -> Stmt s r (Ref s (Doc ()))
-lenRefFromSibling name = stmt Nothing (Just (unCName name <> "Length")) $ do
+  :: forall a r s . HasPoke a r => CName -> Stmt s r (Maybe (Ref s (Doc ())))
+lenRefFromSibling name = do
   SiblingInfo {..} <- getSiblingInfo @a name
-  tellQualImport 'V.length
-  ValueDoc vec <- useViaName (unCName name)
-  case siScheme of
-    Vector _ _     -> pure $ Pure InlineOnce ("Data.Vector.length $" <+> vec)
-    EitherWord32 _ -> pure $ Pure
-      InlineOnce
-      ("either id (fromIntegral . Data.Vector.length)" <+> vec)
-    -- Assume vector for now, TODO, put this in CustomScheme
-    Custom _ -> pure $ Pure InlineOnce ("Data.Vector.length $" <+> vec)
-    _        -> throw "Trying to get the length of a non vector type sibling"
+  if isElided siScheme
+    then pure Nothing
+    else fmap Just . stmt Nothing (Just (unCName name <> "Length")) $ do
+      tellQualImport 'V.length
+      ValueDoc vec <- useViaName (unCName name)
+      case siScheme of
+        Vector _ _ -> pure $ Pure InlineOnce ("Data.Vector.length $" <+> vec)
+        EitherWord32 _ -> pure $ Pure
+          InlineOnce
+          ("either id (fromIntegral . Data.Vector.length)" <+> vec)
+        -- Assume vector for now, TODO, put this in CustomScheme
+        Custom _ -> pure $ Pure InlineOnce ("Data.Vector.length $" <+> vec)
+        _ -> throw "Trying to get the length of a non vector type sibling"
 
 
 -- TODO: the type of the value here could be improved
@@ -794,28 +801,30 @@ fixedArrayIndirect
   -> Stmt s r (Ref s ValueDoc)
 fixedArrayIndirect name size toElem fromElem valueRef addrRef = do
   RenderParams {..} <- input
-  checkLength       <- stmtC Nothing name $ do
-    len     <- use =<< lenRefFromSibling @a name
-    maxSize <-
-      let arraySizeDoc = \case
-            NumericArraySize  n -> pure $ viaShow n
-            SymbolicArraySize n -> do
-              let n' = mkPatternName n
-              tellImport n'
-              pure (pretty n')
-            MultipleArraySize a b -> do
-              a' <- arraySizeDoc (NumericArraySize a)
-              b' <- arraySizeDoc b
-              pure (a' <+> "*" <+> b')
-      in  arraySizeDoc size
-    let err :: Text
-        err =
-          unCName name
-            <> " is too long, a maximum of "
-            <> show maxSize
-            <> " elements are allowed"
-        cond = parens (len <+> "<=" <+> maxSize)
-    throwErrDoc err cond
+  checkLength       <- lenRefFromSibling @a name >>= \case
+    Nothing            -> pure Nothing
+    Just siblingLenRef -> fmap Just . stmtC Nothing name $ do
+      len     <- use siblingLenRef
+      maxSize <-
+        let arraySizeDoc = \case
+              NumericArraySize  n -> pure $ viaShow n
+              SymbolicArraySize n -> do
+                let n' = mkPatternName n
+                tellImport n'
+                pure (pretty n')
+              MultipleArraySize a b -> do
+                a' <- arraySizeDoc (NumericArraySize a)
+                b' <- arraySizeDoc b
+                pure (a' <+> "*" <+> b')
+        in  arraySizeDoc size
+      let err :: Text
+          err =
+            unCName name
+              <> " is too long, a maximum of "
+              <> show maxSize
+              <> " elements are allowed"
+          cond = parens (len <+> "<=" <+> maxSize)
+      throwErrDoc err cond
   castAddrRef <-
     stmt Nothing (Just ("p" <> T.upperCaseFirst (unCName name))) $ do
       tellImport (TermName "lowerArrayPtr")
@@ -827,7 +836,7 @@ fixedArrayIndirect name size toElem fromElem valueRef addrRef = do
   stmtC Nothing name $ do
     -- TODO: the interface in Stmts doesn't actually define the ordering here,
     -- however we need checkLength to come first.
-    after checkLength
+    traverse_ after checkLength
     after pokeVector
     pure $ Pure AlwaysInline (ValueDoc "()")
 
@@ -909,3 +918,5 @@ elemAddrRef toElem addrRef index = stmt Nothing Nothing $ do
 raise2 :: Sem r a -> Sem (e1 : e2 : r) a
 raise2 = raise . raise
 
+forVMaybes :: HasErr r => Vector a -> (a -> Sem r (Maybe b)) -> Sem r (Vector b)
+forVMaybes xs f = V.mapMaybe id <$> traverseV f xs

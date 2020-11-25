@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_sampler_ycbcr_conversion"
 module Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion  ( createSamplerYcbcrConversion
                                                                     , withSamplerYcbcrConversion
                                                                     , destroySamplerYcbcrConversion
@@ -205,8 +206,8 @@ createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ 
 --
 -- To ensure that 'destroySamplerYcbcrConversion' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withSamplerYcbcrConversion :: forall a io r . (Extendss SamplerYcbcrConversionCreateInfo a, PokeChain a, MonadIO io) => Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> (io SamplerYcbcrConversion -> (SamplerYcbcrConversion -> io ()) -> r) -> r
 withSamplerYcbcrConversion device pCreateInfo pAllocator b =

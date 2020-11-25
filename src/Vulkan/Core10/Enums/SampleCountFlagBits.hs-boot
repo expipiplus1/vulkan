@@ -1,11 +1,12 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.SampleCountFlagBits  ( SampleCountFlagBits
-                                                , SampleCountFlags
+-- No documentation found for Chapter "SampleCountFlagBits"
+module Vulkan.Core10.Enums.SampleCountFlagBits  ( SampleCountFlags
+                                                , SampleCountFlagBits
                                                 ) where
 
 
 
-data SampleCountFlagBits
-
 type SampleCountFlags = SampleCountFlagBits
+
+data SampleCountFlagBits
 

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DeviceInitialization"
 module Vulkan.Core10.DeviceInitialization  ( createInstance
                                            , withInstance
                                            , destroyInstance
@@ -333,8 +334,8 @@ createInstance createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyInstance' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withInstance :: forall a io r . (Extendss InstanceCreateInfo a, PokeChain a, MonadIO io) => InstanceCreateInfo a -> Maybe AllocationCallbacks -> (io Instance -> (Instance -> io ()) -> r) -> r
 withInstance pCreateInfo pAllocator b =
@@ -524,12 +525,12 @@ foreign import ccall
 -- +----------------------+----------------------+-----------------------+
 -- | device               | @NULL@               | undefined             |
 -- +----------------------+----------------------+-----------------------+
--- | device               | core device-level    | fp2                   |
--- |                      | Vulkan command       |                       |
+-- | device               | core device-level    | fp3                   |
+-- |                      | Vulkan command2      |                       |
 -- +----------------------+----------------------+-----------------------+
--- | device               | enabled extension    | fp2                   |
+-- | device               | enabled extension    | fp3                   |
 -- |                      | device-level         |                       |
--- |                      | commands             |                       |
+-- |                      | commands2            |                       |
 -- +----------------------+----------------------+-----------------------+
 -- | any other case, not  |                      | @NULL@                |
 -- | covered above        |                      |                       |
@@ -542,6 +543,10 @@ foreign import ccall
 --     valid values, invalid values, and @NULL@).
 --
 -- [2]
+--     In this function, device-level excludes all physical-device-level
+--     commands.
+--
+-- [3]
 --     The returned function pointer /must/ only be called with a
 --     dispatchable object (the first parameter) that is @device@ or a
 --     child of @device@ e.g. 'Vulkan.Core10.Handles.Device',

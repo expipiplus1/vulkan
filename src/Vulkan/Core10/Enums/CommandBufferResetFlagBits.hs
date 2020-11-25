@@ -1,26 +1,24 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.CommandBufferResetFlagBits  ( CommandBufferResetFlagBits( COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
+-- No documentation found for Chapter "CommandBufferResetFlagBits"
+module Vulkan.Core10.Enums.CommandBufferResetFlagBits  ( CommandBufferResetFlags
+                                                       , CommandBufferResetFlagBits( COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
                                                                                    , ..
                                                                                    )
-                                                       , CommandBufferResetFlags
                                                        ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type CommandBufferResetFlags = CommandBufferResetFlagBits
+
 -- | VkCommandBufferResetFlagBits - Bitmask controlling behavior of a command
 -- buffer reset
 --
@@ -38,18 +36,25 @@ newtype CommandBufferResetFlagBits = CommandBufferResetFlagBits Flags
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
 pattern COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = CommandBufferResetFlagBits 0x00000001
 
-type CommandBufferResetFlags = CommandBufferResetFlagBits
+conNameCommandBufferResetFlagBits :: String
+conNameCommandBufferResetFlagBits = "CommandBufferResetFlagBits"
+
+enumPrefixCommandBufferResetFlagBits :: String
+enumPrefixCommandBufferResetFlagBits = "COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"
+
+showTableCommandBufferResetFlagBits :: [(CommandBufferResetFlagBits, String)]
+showTableCommandBufferResetFlagBits = [(COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT, "")]
 
 instance Show CommandBufferResetFlagBits where
-  showsPrec p = \case
-    COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT -> showString "COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"
-    CommandBufferResetFlagBits x -> showParen (p >= 11) (showString "CommandBufferResetFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixCommandBufferResetFlagBits
+                            showTableCommandBufferResetFlagBits
+                            conNameCommandBufferResetFlagBits
+                            (\(CommandBufferResetFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read CommandBufferResetFlagBits where
-  readPrec = parens (choose [("COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT", pure COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CommandBufferResetFlagBits")
-                       v <- step readPrec
-                       pure (CommandBufferResetFlagBits v)))
+  readPrec = enumReadPrec enumPrefixCommandBufferResetFlagBits
+                          showTableCommandBufferResetFlagBits
+                          conNameCommandBufferResetFlagBits
+                          CommandBufferResetFlagBits
 

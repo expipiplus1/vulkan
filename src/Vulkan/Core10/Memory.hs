@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Memory"
 module Vulkan.Core10.Memory  ( allocateMemory
                              , withMemory
                              , freeMemory
@@ -263,8 +264,8 @@ allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'freeMemory' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withMemory :: forall a io r . (Extendss MemoryAllocateInfo a, PokeChain a, MonadIO io) => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> (io DeviceMemory -> (DeviceMemory -> io ()) -> r) -> r
 withMemory device pAllocateInfo pAllocator b =
@@ -514,8 +515,8 @@ mapMemory device memory offset size flags = liftIO . evalContT $ do
 --
 -- To ensure that 'unmapMemory' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withMappedMemory :: forall io r . MonadIO io => Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> (io (Ptr ()) -> (Ptr () -> io ()) -> r) -> r
 withMappedMemory device memory offset size flags b =

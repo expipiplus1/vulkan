@@ -258,8 +258,8 @@ renderBracket paramName b@Bracket {..} =
                   <> unName destroy
                   <> "' is always called: pass 'Control.Exception.bracket"
                   <> bracketSuffix
-                  <> "' (or the allocate function from your favourite resource management library) as the first argument."
-                  , "To just extract the pair pass '(,)' as the first argument."
+                  <> "' (or the allocate function from your favourite resource management library) as the last argument."
+                  , "To just extract the pair pass '(,)' as the last argument."
                   , ""
                   ]
                   <> [ "Note that there is no inner resource" | noResource ]

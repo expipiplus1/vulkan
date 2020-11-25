@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "APIConstants"
 module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                    , LUID_SIZE_KHR
                                    , QUEUE_FAMILY_EXTERNAL_KHR

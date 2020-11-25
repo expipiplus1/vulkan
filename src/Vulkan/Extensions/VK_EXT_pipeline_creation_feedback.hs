@@ -1,30 +1,141 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_pipeline_creation_feedback - device extension
+--
+-- == VK_EXT_pipeline_creation_feedback
+--
+-- [__Name String__]
+--     @VK_EXT_pipeline_creation_feedback@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     193
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+--
+-- [__Contact__]
+--
+--     -   Jean-Francois Roy
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_pipeline_creation_feedback:%20&body=@jfroy%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2019-03-12
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Jean-Francois Roy, Google
+--
+--     -   Hai Nguyen, Google
+--
+--     -   Andrew Ellem, Google
+--
+--     -   Bob Fraser, Google
+--
+--     -   Sujeevan Rajayogam, Google
+--
+--     -   Jan-Harald Fredriksen, ARM
+--
+--     -   Jeff Leger, Qualcomm Technologies, Inc.
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Daniel Koch, NVIDIA
+--
+--     -   Neil Henning, AMD
+--
+-- == Description
+--
+-- This extension adds a mechanism to provide feedback to an application
+-- about pipeline creation, with the specific goal of allowing a feedback
+-- loop between build systems and in-the-field application executions to
+-- ensure effective pipeline caches are shipped to customers.
+--
+-- == New Structures
+--
+-- -   'PipelineCreationFeedbackEXT'
+--
+-- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+--     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
+--     'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
+--     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR':
+--
+--     -   'PipelineCreationFeedbackCreateInfoEXT'
+--
+-- == New Enums
+--
+-- -   'PipelineCreationFeedbackFlagBitsEXT'
+--
+-- == New Bitmasks
+--
+-- -   'PipelineCreationFeedbackFlagsEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME'
+--
+-- -   'EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT'
+--
+-- == Version History
+--
+-- -   Revision 1, 2019-03-12 (Jean-Francois Roy)
+--
+--     -   Initial revision
+--
+-- = See Also
+--
+-- 'PipelineCreationFeedbackCreateInfoEXT', 'PipelineCreationFeedbackEXT',
+-- 'PipelineCreationFeedbackFlagBitsEXT',
+-- 'PipelineCreationFeedbackFlagsEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback  ( PipelineCreationFeedbackEXT(..)
                                                             , PipelineCreationFeedbackCreateInfoEXT(..)
+                                                            , PipelineCreationFeedbackFlagsEXT
                                                             , PipelineCreationFeedbackFlagBitsEXT( PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT
                                                                                                  , PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT
                                                                                                  , PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT
                                                                                                  , ..
                                                                                                  )
-                                                            , PipelineCreationFeedbackFlagsEXT
                                                             , EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION
                                                             , pattern EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION
                                                             , EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME
                                                             , pattern EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME
                                                             ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
@@ -36,9 +147,9 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
@@ -129,11 +240,11 @@ instance Zero PipelineCreationFeedbackEXT where
 -- is set in @pPipelineCreationFeedback@.
 --
 -- When chained to
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV', or
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', the @i@ element of
 -- @pPipelineStageCreationFeedbacks@ corresponds to the @i@ element of
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR'::@pStages@,
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'::@pStages@,
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV'::@pStages@,
 -- or 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@. When
 -- chained to 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo', the first
@@ -155,10 +266,10 @@ instance Zero PipelineCreationFeedbackEXT where
 --
 -- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02670#
 --     When chained to
---     'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
+--     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 --     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
 --     /must/ equal
---     'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR'::@stageCount@
+--     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'::@stageCount@
 --
 -- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02969#
 --     When chained to
@@ -190,7 +301,7 @@ instance Zero PipelineCreationFeedbackEXT where
 -- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
 -- 'PipelineCreationFeedbackEXT',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineCreationFeedbackCreateInfoEXT = PipelineCreationFeedbackCreateInfoEXT
@@ -251,6 +362,8 @@ instance Zero PipelineCreationFeedbackCreateInfoEXT where
            zero
 
 
+type PipelineCreationFeedbackFlagsEXT = PipelineCreationFeedbackFlagBitsEXT
+
 -- | VkPipelineCreationFeedbackFlagBitsEXT - Bitmask specifying pipeline or
 -- pipeline stage creation feedback
 --
@@ -274,7 +387,7 @@ pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT = PipelineCreationFeedbackFlagB
 -- if it was able to avoid the large majority of pipeline or pipeline stage
 -- creation work by using the @pipelineCache@ parameter of
 -- 'Vulkan.Core10.Pipeline.createGraphicsPipelines',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.createRayTracingPipelinesKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.createRayTracingPipelinesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV', or
 -- 'Vulkan.Core10.Pipeline.createComputePipelines'. When an implementation
 -- sets this bit for the entire pipeline, it /may/ leave it unset for any
@@ -288,7 +401,8 @@ pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT = PipelineCreationFeedbackFlagB
 -- it gets\" using the pipeline cache provided by the application. If an
 -- implementation uses an internal cache, it is discouraged from setting
 -- this bit as the feedback would be unactionable.
-pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT = PipelineCreationFeedbackFlagBitsEXT 0x00000002
+pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT =
+  PipelineCreationFeedbackFlagBitsEXT 0x00000002
 -- | 'PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT'
 -- indicates that the base pipeline specified by the @basePipelineHandle@
 -- or @basePipelineIndex@ member of the @Vk*PipelineCreateInfo@ structure
@@ -307,24 +421,31 @@ pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT = Pipe
 -- this bit, while a 50% reduction would.
 pattern PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT = PipelineCreationFeedbackFlagBitsEXT 0x00000004
 
-type PipelineCreationFeedbackFlagsEXT = PipelineCreationFeedbackFlagBitsEXT
+conNamePipelineCreationFeedbackFlagBitsEXT :: String
+conNamePipelineCreationFeedbackFlagBitsEXT = "PipelineCreationFeedbackFlagBitsEXT"
+
+enumPrefixPipelineCreationFeedbackFlagBitsEXT :: String
+enumPrefixPipelineCreationFeedbackFlagBitsEXT = "PIPELINE_CREATION_FEEDBACK_"
+
+showTablePipelineCreationFeedbackFlagBitsEXT :: [(PipelineCreationFeedbackFlagBitsEXT, String)]
+showTablePipelineCreationFeedbackFlagBitsEXT =
+  [ (PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT                         , "VALID_BIT_EXT")
+  , (PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT, "APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT")
+  , (PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT    , "BASE_PIPELINE_ACCELERATION_BIT_EXT")
+  ]
 
 instance Show PipelineCreationFeedbackFlagBitsEXT where
-  showsPrec p = \case
-    PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT -> showString "PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT"
-    PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT -> showString "PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT"
-    PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT -> showString "PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT"
-    PipelineCreationFeedbackFlagBitsEXT x -> showParen (p >= 11) (showString "PipelineCreationFeedbackFlagBitsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineCreationFeedbackFlagBitsEXT
+                            showTablePipelineCreationFeedbackFlagBitsEXT
+                            conNamePipelineCreationFeedbackFlagBitsEXT
+                            (\(PipelineCreationFeedbackFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCreationFeedbackFlagBitsEXT where
-  readPrec = parens (choose [("PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT", pure PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT)
-                            , ("PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT", pure PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT)
-                            , ("PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT", pure PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCreationFeedbackFlagBitsEXT")
-                       v <- step readPrec
-                       pure (PipelineCreationFeedbackFlagBitsEXT v)))
+  readPrec = enumReadPrec enumPrefixPipelineCreationFeedbackFlagBitsEXT
+                          showTablePipelineCreationFeedbackFlagBitsEXT
+                          conNamePipelineCreationFeedbackFlagBitsEXT
+                          PipelineCreationFeedbackFlagBitsEXT
 
 
 type EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION = 1

@@ -1,30 +1,28 @@
 {-# language CPP #-}
-module Vulkan.Core12.Enums.ResolveModeFlagBits  ( ResolveModeFlagBits( RESOLVE_MODE_NONE
+-- No documentation found for Chapter "ResolveModeFlagBits"
+module Vulkan.Core12.Enums.ResolveModeFlagBits  ( ResolveModeFlags
+                                                , ResolveModeFlagBits( RESOLVE_MODE_NONE
                                                                      , RESOLVE_MODE_SAMPLE_ZERO_BIT
                                                                      , RESOLVE_MODE_AVERAGE_BIT
                                                                      , RESOLVE_MODE_MIN_BIT
                                                                      , RESOLVE_MODE_MAX_BIT
                                                                      , ..
                                                                      )
-                                                , ResolveModeFlags
                                                 ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ResolveModeFlags = ResolveModeFlagBits
+
 -- | VkResolveModeFlagBits - Bitmask indicating supported depth and stencil
 -- resolve modes
 --
@@ -36,40 +34,45 @@ newtype ResolveModeFlagBits = ResolveModeFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'RESOLVE_MODE_NONE' indicates that no resolve operation is done.
-pattern RESOLVE_MODE_NONE = ResolveModeFlagBits 0x00000000
+pattern RESOLVE_MODE_NONE            = ResolveModeFlagBits 0x00000000
 -- | 'RESOLVE_MODE_SAMPLE_ZERO_BIT' indicates that result of the resolve
 -- operation is equal to the value of sample 0.
 pattern RESOLVE_MODE_SAMPLE_ZERO_BIT = ResolveModeFlagBits 0x00000001
 -- | 'RESOLVE_MODE_AVERAGE_BIT' indicates that result of the resolve
 -- operation is the average of the sample values.
-pattern RESOLVE_MODE_AVERAGE_BIT = ResolveModeFlagBits 0x00000002
+pattern RESOLVE_MODE_AVERAGE_BIT     = ResolveModeFlagBits 0x00000002
 -- | 'RESOLVE_MODE_MIN_BIT' indicates that result of the resolve operation is
 -- the minimum of the sample values.
-pattern RESOLVE_MODE_MIN_BIT = ResolveModeFlagBits 0x00000004
+pattern RESOLVE_MODE_MIN_BIT         = ResolveModeFlagBits 0x00000004
 -- | 'RESOLVE_MODE_MAX_BIT' indicates that result of the resolve operation is
 -- the maximum of the sample values.
-pattern RESOLVE_MODE_MAX_BIT = ResolveModeFlagBits 0x00000008
+pattern RESOLVE_MODE_MAX_BIT         = ResolveModeFlagBits 0x00000008
 
-type ResolveModeFlags = ResolveModeFlagBits
+conNameResolveModeFlagBits :: String
+conNameResolveModeFlagBits = "ResolveModeFlagBits"
+
+enumPrefixResolveModeFlagBits :: String
+enumPrefixResolveModeFlagBits = "RESOLVE_MODE_"
+
+showTableResolveModeFlagBits :: [(ResolveModeFlagBits, String)]
+showTableResolveModeFlagBits =
+  [ (RESOLVE_MODE_NONE           , "NONE")
+  , (RESOLVE_MODE_SAMPLE_ZERO_BIT, "SAMPLE_ZERO_BIT")
+  , (RESOLVE_MODE_AVERAGE_BIT    , "AVERAGE_BIT")
+  , (RESOLVE_MODE_MIN_BIT        , "MIN_BIT")
+  , (RESOLVE_MODE_MAX_BIT        , "MAX_BIT")
+  ]
 
 instance Show ResolveModeFlagBits where
-  showsPrec p = \case
-    RESOLVE_MODE_NONE -> showString "RESOLVE_MODE_NONE"
-    RESOLVE_MODE_SAMPLE_ZERO_BIT -> showString "RESOLVE_MODE_SAMPLE_ZERO_BIT"
-    RESOLVE_MODE_AVERAGE_BIT -> showString "RESOLVE_MODE_AVERAGE_BIT"
-    RESOLVE_MODE_MIN_BIT -> showString "RESOLVE_MODE_MIN_BIT"
-    RESOLVE_MODE_MAX_BIT -> showString "RESOLVE_MODE_MAX_BIT"
-    ResolveModeFlagBits x -> showParen (p >= 11) (showString "ResolveModeFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixResolveModeFlagBits
+                            showTableResolveModeFlagBits
+                            conNameResolveModeFlagBits
+                            (\(ResolveModeFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ResolveModeFlagBits where
-  readPrec = parens (choose [("RESOLVE_MODE_NONE", pure RESOLVE_MODE_NONE)
-                            , ("RESOLVE_MODE_SAMPLE_ZERO_BIT", pure RESOLVE_MODE_SAMPLE_ZERO_BIT)
-                            , ("RESOLVE_MODE_AVERAGE_BIT", pure RESOLVE_MODE_AVERAGE_BIT)
-                            , ("RESOLVE_MODE_MIN_BIT", pure RESOLVE_MODE_MIN_BIT)
-                            , ("RESOLVE_MODE_MAX_BIT", pure RESOLVE_MODE_MAX_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ResolveModeFlagBits")
-                       v <- step readPrec
-                       pure (ResolveModeFlagBits v)))
+  readPrec = enumReadPrec enumPrefixResolveModeFlagBits
+                          showTableResolveModeFlagBits
+                          conNameResolveModeFlagBits
+                          ResolveModeFlagBits
 

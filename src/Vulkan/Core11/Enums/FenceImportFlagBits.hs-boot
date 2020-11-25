@@ -1,11 +1,12 @@
 {-# language CPP #-}
-module Vulkan.Core11.Enums.FenceImportFlagBits  ( FenceImportFlagBits
-                                                , FenceImportFlags
+-- No documentation found for Chapter "FenceImportFlagBits"
+module Vulkan.Core11.Enums.FenceImportFlagBits  ( FenceImportFlags
+                                                , FenceImportFlagBits
                                                 ) where
 
 
 
-data FenceImportFlagBits
-
 type FenceImportFlags = FenceImportFlagBits
+
+data FenceImportFlagBits
 

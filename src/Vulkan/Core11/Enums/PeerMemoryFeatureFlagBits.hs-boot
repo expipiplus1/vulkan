@@ -1,11 +1,12 @@
 {-# language CPP #-}
-module Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits  ( PeerMemoryFeatureFlagBits
-                                                      , PeerMemoryFeatureFlags
+-- No documentation found for Chapter "PeerMemoryFeatureFlagBits"
+module Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits  ( PeerMemoryFeatureFlags
+                                                      , PeerMemoryFeatureFlagBits
                                                       ) where
 
 
 
-data PeerMemoryFeatureFlagBits
-
 type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
+
+data PeerMemoryFeatureFlagBits
 

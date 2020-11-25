@@ -337,36 +337,40 @@ arrayScheme wes wdh sibs p = case lengths p of
       _              -> ByteString
 
   -- TODO: Don't ignore the tail here
-  -- TODO: Handle NamedMemberLength here
-  NamedLength l :<| _ -> do
+  l :<| _
+    | case l of
+      NamedLength _         -> True
+      NamedMemberLength _ _ -> True
+      _                     -> False
+    -> do
     -- It's a const pointer
-    Ptr Const t <- pure $ type' p
-    -- TODO: What's the impact of isTopOptional here
-    let isOpt = case isOptional p of
-          True :<| _ -> True
-          _          -> False
-    elemType <- case t of
-          -- If it's an array of bytes use a ByteString
-      Ptr Const c | isByteArrayElem c -> pure $ case isOptional p of
-        Singleton True -> Maybe ByteString
-        _              -> ByteString
-      _ -> dropPtrToStruct t >>= innerType wes wdh
+      Ptr Const t <- pure $ type' p
+      -- TODO: What's the impact of isTopOptional here
+      let isOpt = case isOptional p of
+            True :<| _ -> True
+            _          -> False
+      elemType <- case t of
+            -- If it's an array of bytes use a ByteString
+        Ptr Const c | isByteArrayElem c -> pure $ case isOptional p of
+          Singleton True -> Maybe ByteString
+          _              -> ByteString
+        _ -> dropPtrToStruct t >>= innerType wes wdh
 
-    -- Is the length constrained by a non-optional sibling
-    let constrainedLengthBySibling = not isOpt || (not . null)
-          [ ()
-          | s                    <- toList sibs
-          , NamedLength l' :<| _ <- pure $ lengths s
-          , l == l'
-          , not (isTopOptional s)
-          ]
-        -- It is often clearer to preserve the length member for optional
-        -- arrays
-        constrainedLengthByClarity = True
-        nullable                   = bool NotNullable Nullable isOpt
-    pure $ if constrainedLengthByClarity || constrainedLengthBySibling
-      then Vector nullable elemType
-      else EitherWord32 elemType
+      -- Is the length constrained by a non-optional sibling
+      let constrainedLengthBySibling = not isOpt || (not . null)
+            [ ()
+            | s        <- toList sibs
+            , l' :<| _ <- pure $ lengths s
+            , l == l'
+            , not (isTopOptional s)
+            ]
+          -- It is often clearer to preserve the length member for optional
+          -- arrays
+          constrainedLengthByClarity = True
+          nullable                   = bool NotNullable Nullable isOpt
+      pure $ if constrainedLengthByClarity || constrainedLengthBySibling
+        then Vector nullable elemType
+        else EitherWord32 elemType
 
   _ -> empty
 

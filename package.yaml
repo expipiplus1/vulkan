@@ -1,5 +1,5 @@
 name: vulkan
-version: "3.6.15"
+version: "3.7"
 synopsis: Bindings to the Vulkan graphics API.
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
@@ -11,7 +11,9 @@ extra-source-files:
 license: BSD-3-Clause
 
 library:
-  source-dirs: src
+  source-dirs:
+    - src
+    - src-manual
   verbatim:
     other-modules:
   dependencies:

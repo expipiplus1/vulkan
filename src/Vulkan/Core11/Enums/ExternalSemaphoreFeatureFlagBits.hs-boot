@@ -1,11 +1,12 @@
 {-# language CPP #-}
-module Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits  ( ExternalSemaphoreFeatureFlagBits
-                                                             , ExternalSemaphoreFeatureFlags
+-- No documentation found for Chapter "ExternalSemaphoreFeatureFlagBits"
+module Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits  ( ExternalSemaphoreFeatureFlags
+                                                             , ExternalSemaphoreFeatureFlagBits
                                                              ) where
 
 
 
-data ExternalSemaphoreFeatureFlagBits
-
 type ExternalSemaphoreFeatureFlags = ExternalSemaphoreFeatureFlagBits
+
+data ExternalSemaphoreFeatureFlagBits
 

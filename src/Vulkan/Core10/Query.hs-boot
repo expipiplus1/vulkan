@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Query"
 module Vulkan.Core10.Query  (QueryPoolCreateInfo) where
 
 import Data.Kind (Type)

@@ -1,20 +1,16 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "EventCreateFlags"
 module Vulkan.Core10.Enums.EventCreateFlags  (EventCreateFlags(..)) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 -- | VkEventCreateFlags - Reserved for future use
@@ -32,15 +28,22 @@ newtype EventCreateFlags = EventCreateFlags Flags
 
 
 
+conNameEventCreateFlags :: String
+conNameEventCreateFlags = "EventCreateFlags"
+
+enumPrefixEventCreateFlags :: String
+enumPrefixEventCreateFlags = ""
+
+showTableEventCreateFlags :: [(EventCreateFlags, String)]
+showTableEventCreateFlags = []
+
 instance Show EventCreateFlags where
-  showsPrec p = \case
-    EventCreateFlags x -> showParen (p >= 11) (showString "EventCreateFlags 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixEventCreateFlags
+                            showTableEventCreateFlags
+                            conNameEventCreateFlags
+                            (\(EventCreateFlags x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read EventCreateFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "EventCreateFlags")
-                       v <- step readPrec
-                       pure (EventCreateFlags v)))
+  readPrec = enumReadPrec enumPrefixEventCreateFlags showTableEventCreateFlags conNameEventCreateFlags EventCreateFlags
 

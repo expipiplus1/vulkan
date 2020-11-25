@@ -1,4 +1,481 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_performance_query - device extension
+--
+-- == VK_KHR_performance_query
+--
+-- [__Name String__]
+--     @VK_KHR_performance_query@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     117
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+--
+-- [__Contact__]
+--
+--     -   Alon Or-bach
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_performance_query:%20&body=@alonorbach%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2019-10-08
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Jesse Barker, Unity Technologies
+--
+--     -   Kenneth Benzie, Codeplay
+--
+--     -   Jan-Harald Fredriksen, ARM
+--
+--     -   Jeff Leger, Qualcomm
+--
+--     -   Jesse Hall, Google
+--
+--     -   Tobias Hector, AMD
+--
+--     -   Neil Henning, Codeplay
+--
+--     -   Baldur Karlsson
+--
+--     -   Lionel Landwerlin, Intel
+--
+--     -   Peter Lohrmann, AMD
+--
+--     -   Alon Or-bach, Samsung
+--
+--     -   Daniel Rakos, AMD
+--
+--     -   Niklas Smedberg, Unity Technologies
+--
+--     -   Igor Ostrowski, Intel
+--
+-- == Description
+--
+-- The @VK_KHR_performance_query@ extension adds a mechanism to allow
+-- querying of performance counters for use in applications and by
+-- profiling tools.
+--
+-- Each queue family /may/ expose counters that /can/ be enabled on a queue
+-- of that family. We extend 'Vulkan.Core10.Enums.QueryType.QueryType' to
+-- add a new query type for performance queries, and chain a structure on
+-- 'Vulkan.Core10.Query.QueryPoolCreateInfo' to specify the performance
+-- queries to enable.
+--
+-- == New Commands
+--
+-- -   'acquireProfilingLockKHR'
+--
+-- -   'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'
+--
+-- -   'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
+--
+-- -   'releaseProfilingLockKHR'
+--
+-- == New Structures
+--
+-- -   'AcquireProfilingLockInfoKHR'
+--
+-- -   'PerformanceCounterDescriptionKHR'
+--
+-- -   'PerformanceCounterKHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDevicePerformanceQueryFeaturesKHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
+--
+--     -   'PhysicalDevicePerformanceQueryPropertiesKHR'
+--
+-- -   Extending 'Vulkan.Core10.Query.QueryPoolCreateInfo':
+--
+--     -   'QueryPoolPerformanceCreateInfoKHR'
+--
+-- -   Extending 'Vulkan.Core10.Queue.SubmitInfo':
+--
+--     -   'PerformanceQuerySubmitInfoKHR'
+--
+-- == New Unions
+--
+-- -   'PerformanceCounterResultKHR'
+--
+-- == New Enums
+--
+-- -   'AcquireProfilingLockFlagBitsKHR'
+--
+-- -   'PerformanceCounterDescriptionFlagBitsKHR'
+--
+-- -   'PerformanceCounterScopeKHR'
+--
+-- -   'PerformanceCounterStorageKHR'
+--
+-- -   'PerformanceCounterUnitKHR'
+--
+-- == New Bitmasks
+--
+-- -   'AcquireProfilingLockFlagsKHR'
+--
+-- -   'PerformanceCounterDescriptionFlagsKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_PERFORMANCE_QUERY_EXTENSION_NAME'
+--
+-- -   'KHR_PERFORMANCE_QUERY_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.QueryType.QueryType':
+--
+--     -   'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACQUIRE_PROFILING_LOCK_INFO_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_COUNTER_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_FEATURES_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_PROPERTIES_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_CREATE_INFO_KHR'
+--
+-- == Issues
+--
+-- 1) Should this extension include a mechanism to begin a query in command
+-- buffer /A/ and end the query in command buffer /B/?
+--
+-- __RESOLVED__ No - queries are tied to command buffer creation and thus
+-- have to be encapsulated within a single command buffer.
+--
+-- 2) Should this extension include a mechanism to begin and end queries
+-- globally on the queue, not using the existing command buffer commands?
+--
+-- __RESOLVED__ No - for the same reasoning as the resolution of 1).
+--
+-- 3) Should this extension expose counters that require multiple passes?
+--
+-- __RESOLVED__ Yes - users should re-submit a command buffer with the same
+-- commands in it multiple times, specifying the pass to count as the query
+-- parameter in VkPerformanceQuerySubmitInfoKHR.
+--
+-- 4) How to handle counters across parallel workloads?
+--
+-- __RESOLVED__ In the spirit of Vulkan, a counter description flag
+-- 'PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR' denotes
+-- that the accuracy of a counter result is affected by parallel workloads.
+--
+-- 5) How to handle secondary command buffers?
+--
+-- __RESOLVED__ Secondary command buffers inherit any counter pass index
+-- specified in the parent primary command buffer. Note: this is no longer
+-- an issue after change from issue 10 resolution
+--
+-- 6) What commands does the profiling lock have to be held for?
+--
+-- __RESOLVED__ For any command buffer that is being queried with a
+-- performance query pool, the profiling lock /must/ be held while that
+-- command buffer is in the /recording/, /executable/, or /pending state/.
+--
+-- 7) Should we support
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults'?
+--
+-- __RESOLVED__ Yes.
+--
+-- 8) Should we allow performance queries to interact with multiview?
+--
+-- __RESOLVED__ Yes, but the performance queries must be performed once for
+-- each pass per view.
+--
+-- 9) Should a @queryCount > 1@ be usable for performance queries?
+--
+-- __RESOLVED__ Yes. Some vendors will have costly performance counter
+-- query pool creation, and would rather if a certain set of counters were
+-- to be used multiple times that a @queryCount > 1@ can be used to
+-- amortize the instantiation cost.
+--
+-- 10) Should we introduce an indirect mechanism to set the counter pass
+-- index?
+--
+-- __RESOLVED__ Specify the counter pass index at submit time instead to
+-- avoid requiring re-recording of command buffers when multiple counter
+-- passes needed.
+--
+-- == Examples
+--
+-- The following example shows how to find what performance counters a
+-- queue family supports, setup a query pool to record these performance
+-- counters, how to add the query pool to the command buffer to record
+-- information, and how to get the results from the query pool.
+--
+-- > // A previously created physical device
+-- > VkPhysicalDevice physicalDevice;
+-- >
+-- > // One of the queue families our device supports
+-- > uint32_t queueFamilyIndex;
+-- >
+-- > uint32_t counterCount;
+-- >
+-- > // Get the count of counters supported
+-- > vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(
+-- >   physicalDevice,
+-- >   queueFamilyIndex,
+-- >   &counterCount,
+-- >   NULL,
+-- >   NULL);
+-- >
+-- > VkPerformanceCounterKHR* counters =
+-- >   malloc(sizeof(VkPerformanceCounterKHR) * counterCount);
+-- > VkPerformanceCounterDescriptionKHR* counterDescriptions =
+-- >   malloc(sizeof(VkPerformanceCounterDescriptionKHR) * counterCount);
+-- >
+-- > // Get the counters supported
+-- > vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(
+-- >   physicalDevice,
+-- >   queueFamilyIndex,
+-- >   &counterCount,
+-- >   counters,
+-- >   counterDescriptions);
+-- >
+-- > // Try to enable the first 8 counters
+-- > uint32_t enabledCounters[8];
+-- >
+-- > const uint32_t enabledCounterCount = min(counterCount, 8));
+-- >
+-- > for (uint32_t i = 0; i < enabledCounterCount; i++) {
+-- >   enabledCounters[i] = i;
+-- > }
+-- >
+-- > // A previously created device that had the performanceCounterQueryPools feature
+-- > // set to VK_TRUE
+-- > VkDevice device;
+-- >
+-- > VkQueryPoolPerformanceCreateInfoKHR performanceQueryCreateInfo = {
+-- >   VK_STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_CREATE_INFO_KHR,
+-- >   NULL,
+-- >
+-- >   // Specify the queue family that this performance query is performed on
+-- >   queueFamilyIndex,
+-- >
+-- >   // The number of counters to enable
+-- >   enabledCounterCount,
+-- >
+-- >   // The array of indices of counters to enable
+-- >   enabledCounters
+-- > };
+-- >
+-- >
+-- > // Get the number of passes our counters will require.
+-- > uint32_t numPasses;
+-- >
+-- > vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(
+-- >   physicalDevice,
+-- >   &performanceQueryCreateInfo,
+-- >   &numPasses);
+-- >
+-- > VkQueryPoolCreateInfo queryPoolCreateInfo = {
+-- >   VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO,
+-- >   &performanceQueryCreateInfo,
+-- >   0,
+-- >
+-- >   // Using our new query type here
+-- >   VK_QUERY_TYPE_PERFORMANCE_QUERY_KHR,
+-- >
+-- >   1,
+-- >
+-- >   0
+-- > };
+-- >
+-- > VkQueryPool queryPool;
+-- >
+-- > VkResult result = vkCreateQueryPool(
+-- >   device,
+-- >   &queryPoolCreateInfo,
+-- >   NULL,
+-- >   &queryPool);
+-- >
+-- > assert(VK_SUCCESS == result);
+-- >
+-- > // A queue from queueFamilyIndex
+-- > VkQueue queue;
+-- >
+-- > // A command buffer we want to record counters on
+-- > VkCommandBuffer commandBuffer;
+-- >
+-- > VkCommandBufferBeginInfo commandBufferBeginInfo = {
+-- >   VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+-- >   NULL,
+-- >   0,
+-- >   NULL
+-- > };
+-- >
+-- > VkAcquireProfilingLockInfoKHR lockInfo = {
+-- >   VK_STRUCTURE_TYPE_ACQUIRE_PROFILING_LOCK_INFO_KHR,
+-- >   NULL,
+-- >   0,
+-- >   UINT64_MAX // Wait forever for the lock
+-- > };
+-- >
+-- > // Acquire the profiling lock before we record command buffers
+-- > // that will use performance queries
+-- >
+-- > result = vkAcquireProfilingLockKHR(device, &lockInfo);
+-- >
+-- > assert(VK_SUCCESS == result);
+-- >
+-- > result = vkBeginCommandBuffer(commandBuffer, &commandBufferBeginInfo);
+-- >
+-- > assert(VK_SUCCESS == result);
+-- >
+-- > vkCmdResetQueryPool(
+-- >   commandBuffer,
+-- >   queryPool,
+-- >   0,
+-- >   1);
+-- >
+-- > vkCmdBeginQuery(
+-- >   commandBuffer,
+-- >   queryPool,
+-- >   0,
+-- >   0);
+-- >
+-- > // Perform the commands you want to get performance information on
+-- > // ...
+-- >
+-- > // Perform a barrier to ensure all previous commands were complete before
+-- > // ending the query
+-- > vkCmdPipelineBarrier(commandBuffer,
+-- >   VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+-- >   VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+-- >   0,
+-- >   0,
+-- >   NULL,
+-- >   0,
+-- >   NULL,
+-- >   0,
+-- >   NULL);
+-- >
+-- > vkCmdEndQuery(
+-- >   commandBuffer,
+-- >   queryPool,
+-- >   0);
+-- >
+-- > result = vkEndCommandBuffer(commandBuffer);
+-- >
+-- > assert(VK_SUCCESS == result);
+-- >
+-- > for (uint32_t counterPass = 0; counterPass < numPasses; counterPass++) {
+-- >
+-- >   VkPerformanceQuerySubmitInfoKHR performanceQuerySubmitInfo = {
+-- >     VK_STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR,
+-- >     NULL,
+-- >     counterPass
+-- >   };
+-- >
+-- >
+-- >   // Submit the command buffer and wait for its completion
+-- >   // ...
+-- > }
+-- >
+-- > // Release the profiling lock after the command buffer is no longer in the
+-- > // pending state.
+-- > vkReleaseProfilingLockKHR(device);
+-- >
+-- > result = vkResetCommandBuffer(commandBuffer, 0);
+-- >
+-- > assert(VK_SUCCESS == result);
+-- >
+-- > // Create an array to hold the results of all counters
+-- > VkPerformanceCounterResultKHR* recordedCounters = malloc(
+-- >   sizeof(VkPerformanceCounterResultKHR) * enabledCounterCount);
+-- >
+-- > result = vkGetQueryPoolResults(
+-- >   device,
+-- >   queryPool,
+-- >   0,
+-- >   1,
+-- >   sizeof(VkPerformanceCounterResultKHR) * enabledCounterCount,
+-- >   recordedCounters,
+-- >   sizeof(VkPerformanceCounterResultKHR),
+-- >   NULL);
+-- >
+-- > // recordedCounters is filled with our counters, we'll look at one for posterity
+-- > switch (counters[0].storage) {
+-- >   case VK_PERFORMANCE_COUNTER_STORAGE_INT32:
+-- >     // use recordCounters[0].int32 to get at the counter result!
+-- >     break;
+-- >   case VK_PERFORMANCE_COUNTER_STORAGE_INT64:
+-- >     // use recordCounters[0].int64 to get at the counter result!
+-- >     break;
+-- >   case VK_PERFORMANCE_COUNTER_STORAGE_UINT32:
+-- >     // use recordCounters[0].uint32 to get at the counter result!
+-- >     break;
+-- >   case VK_PERFORMANCE_COUNTER_STORAGE_UINT64:
+-- >     // use recordCounters[0].uint64 to get at the counter result!
+-- >     break;
+-- >   case VK_PERFORMANCE_COUNTER_STORAGE_FLOAT32:
+-- >     // use recordCounters[0].float32 to get at the counter result!
+-- >     break;
+-- >   case VK_PERFORMANCE_COUNTER_STORAGE_FLOAT64:
+-- >     // use recordCounters[0].float64 to get at the counter result!
+-- >     break;
+-- > }
+--
+-- == Version History
+--
+-- -   Revision 1, 2019-10-08
+--
+-- = See Also
+--
+-- 'AcquireProfilingLockFlagBitsKHR', 'AcquireProfilingLockFlagsKHR',
+-- 'AcquireProfilingLockInfoKHR',
+-- 'PerformanceCounterDescriptionFlagBitsKHR',
+-- 'PerformanceCounterDescriptionFlagsKHR',
+-- 'PerformanceCounterDescriptionKHR', 'PerformanceCounterKHR',
+-- 'PerformanceCounterResultKHR', 'PerformanceCounterScopeKHR',
+-- 'PerformanceCounterStorageKHR', 'PerformanceCounterUnitKHR',
+-- 'PerformanceQuerySubmitInfoKHR',
+-- 'PhysicalDevicePerformanceQueryFeaturesKHR',
+-- 'PhysicalDevicePerformanceQueryPropertiesKHR',
+-- 'QueryPoolPerformanceCreateInfoKHR', 'acquireProfilingLockKHR',
+-- 'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR',
+-- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR',
+-- 'releaseProfilingLockKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR
                                                    , getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR
                                                    , acquireProfilingLockKHR
@@ -42,13 +519,13 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
                                                                                  , PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR
                                                                                  , ..
                                                                                  )
+                                                   , PerformanceCounterDescriptionFlagsKHR
                                                    , PerformanceCounterDescriptionFlagBitsKHR( PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR
                                                                                              , PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR
                                                                                              , ..
                                                                                              )
-                                                   , PerformanceCounterDescriptionFlagsKHR
-                                                   , AcquireProfilingLockFlagBitsKHR(..)
                                                    , AcquireProfilingLockFlagsKHR
+                                                   , AcquireProfilingLockFlagBitsKHR(..)
                                                    , KHR_PERFORMANCE_QUERY_SPEC_VERSION
                                                    , pattern KHR_PERFORMANCE_QUERY_SPEC_VERSION
                                                    , KHR_PERFORMANCE_QUERY_EXTENSION_NAME
@@ -56,6 +533,8 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
                                                    ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -68,16 +547,9 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -107,10 +579,10 @@ import Data.Int (Int64)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.Word (Word8)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -948,30 +1420,39 @@ pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR = PerformanceCounterScopeKH
 -- scope is zero or more complete render passes. The performance query
 -- containing the performance counter /must/ begin and end outside a render
 -- pass instance.
-pattern PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR = PerformanceCounterScopeKHR 1
+pattern PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR    = PerformanceCounterScopeKHR 1
 -- | 'PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR' - the performance counter scope
 -- is zero or more commands.
-pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR = PerformanceCounterScopeKHR 2
+pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR        = PerformanceCounterScopeKHR 2
 {-# complete PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR,
              PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR,
              PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR :: PerformanceCounterScopeKHR #-}
 
+conNamePerformanceCounterScopeKHR :: String
+conNamePerformanceCounterScopeKHR = "PerformanceCounterScopeKHR"
+
+enumPrefixPerformanceCounterScopeKHR :: String
+enumPrefixPerformanceCounterScopeKHR = "PERFORMANCE_COUNTER_SCOPE_"
+
+showTablePerformanceCounterScopeKHR :: [(PerformanceCounterScopeKHR, String)]
+showTablePerformanceCounterScopeKHR =
+  [ (PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR, "COMMAND_BUFFER_KHR")
+  , (PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR   , "RENDER_PASS_KHR")
+  , (PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR       , "COMMAND_KHR")
+  ]
+
 instance Show PerformanceCounterScopeKHR where
-  showsPrec p = \case
-    PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR -> showString "PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR"
-    PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR -> showString "PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR"
-    PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR -> showString "PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR"
-    PerformanceCounterScopeKHR x -> showParen (p >= 11) (showString "PerformanceCounterScopeKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterScopeKHR
+                            showTablePerformanceCounterScopeKHR
+                            conNamePerformanceCounterScopeKHR
+                            (\(PerformanceCounterScopeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceCounterScopeKHR where
-  readPrec = parens (choose [("PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR", pure PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR)
-                            , ("PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR", pure PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR)
-                            , ("PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR", pure PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceCounterScopeKHR")
-                       v <- step readPrec
-                       pure (PerformanceCounterScopeKHR v)))
+  readPrec = enumReadPrec enumPrefixPerformanceCounterScopeKHR
+                          showTablePerformanceCounterScopeKHR
+                          conNamePerformanceCounterScopeKHR
+                          PerformanceCounterScopeKHR
 
 
 -- | VkPerformanceCounterUnitKHR - Supported counter unit types
@@ -984,37 +1465,37 @@ newtype PerformanceCounterUnitKHR = PerformanceCounterUnitKHR Int32
 
 -- | 'PERFORMANCE_COUNTER_UNIT_GENERIC_KHR' - the performance counter unit is
 -- a generic data point.
-pattern PERFORMANCE_COUNTER_UNIT_GENERIC_KHR = PerformanceCounterUnitKHR 0
+pattern PERFORMANCE_COUNTER_UNIT_GENERIC_KHR          = PerformanceCounterUnitKHR 0
 -- | 'PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR' - the performance counter unit
 -- is a percentage (%).
-pattern PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR = PerformanceCounterUnitKHR 1
+pattern PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR       = PerformanceCounterUnitKHR 1
 -- | 'PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR' - the performance counter
 -- unit is a value of nanoseconds (ns).
-pattern PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR = PerformanceCounterUnitKHR 2
+pattern PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR      = PerformanceCounterUnitKHR 2
 -- | 'PERFORMANCE_COUNTER_UNIT_BYTES_KHR' - the performance counter unit is a
 -- value of bytes.
-pattern PERFORMANCE_COUNTER_UNIT_BYTES_KHR = PerformanceCounterUnitKHR 3
+pattern PERFORMANCE_COUNTER_UNIT_BYTES_KHR            = PerformanceCounterUnitKHR 3
 -- | 'PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR' - the performance
 -- counter unit is a value of bytes\/s.
 pattern PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR = PerformanceCounterUnitKHR 4
 -- | 'PERFORMANCE_COUNTER_UNIT_KELVIN_KHR' - the performance counter unit is
 -- a temperature reported in Kelvin.
-pattern PERFORMANCE_COUNTER_UNIT_KELVIN_KHR = PerformanceCounterUnitKHR 5
+pattern PERFORMANCE_COUNTER_UNIT_KELVIN_KHR           = PerformanceCounterUnitKHR 5
 -- | 'PERFORMANCE_COUNTER_UNIT_WATTS_KHR' - the performance counter unit is a
 -- value of watts (W).
-pattern PERFORMANCE_COUNTER_UNIT_WATTS_KHR = PerformanceCounterUnitKHR 6
+pattern PERFORMANCE_COUNTER_UNIT_WATTS_KHR            = PerformanceCounterUnitKHR 6
 -- | 'PERFORMANCE_COUNTER_UNIT_VOLTS_KHR' - the performance counter unit is a
 -- value of volts (V).
-pattern PERFORMANCE_COUNTER_UNIT_VOLTS_KHR = PerformanceCounterUnitKHR 7
+pattern PERFORMANCE_COUNTER_UNIT_VOLTS_KHR            = PerformanceCounterUnitKHR 7
 -- | 'PERFORMANCE_COUNTER_UNIT_AMPS_KHR' - the performance counter unit is a
 -- value of amps (A).
-pattern PERFORMANCE_COUNTER_UNIT_AMPS_KHR = PerformanceCounterUnitKHR 8
+pattern PERFORMANCE_COUNTER_UNIT_AMPS_KHR             = PerformanceCounterUnitKHR 8
 -- | 'PERFORMANCE_COUNTER_UNIT_HERTZ_KHR' - the performance counter unit is a
 -- value of hertz (Hz).
-pattern PERFORMANCE_COUNTER_UNIT_HERTZ_KHR = PerformanceCounterUnitKHR 9
+pattern PERFORMANCE_COUNTER_UNIT_HERTZ_KHR            = PerformanceCounterUnitKHR 9
 -- | 'PERFORMANCE_COUNTER_UNIT_CYCLES_KHR' - the performance counter unit is
 -- a value of cycles.
-pattern PERFORMANCE_COUNTER_UNIT_CYCLES_KHR = PerformanceCounterUnitKHR 10
+pattern PERFORMANCE_COUNTER_UNIT_CYCLES_KHR           = PerformanceCounterUnitKHR 10
 {-# complete PERFORMANCE_COUNTER_UNIT_GENERIC_KHR,
              PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR,
              PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR,
@@ -1027,38 +1508,39 @@ pattern PERFORMANCE_COUNTER_UNIT_CYCLES_KHR = PerformanceCounterUnitKHR 10
              PERFORMANCE_COUNTER_UNIT_HERTZ_KHR,
              PERFORMANCE_COUNTER_UNIT_CYCLES_KHR :: PerformanceCounterUnitKHR #-}
 
+conNamePerformanceCounterUnitKHR :: String
+conNamePerformanceCounterUnitKHR = "PerformanceCounterUnitKHR"
+
+enumPrefixPerformanceCounterUnitKHR :: String
+enumPrefixPerformanceCounterUnitKHR = "PERFORMANCE_COUNTER_UNIT_"
+
+showTablePerformanceCounterUnitKHR :: [(PerformanceCounterUnitKHR, String)]
+showTablePerformanceCounterUnitKHR =
+  [ (PERFORMANCE_COUNTER_UNIT_GENERIC_KHR         , "GENERIC_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR      , "PERCENTAGE_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR     , "NANOSECONDS_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_BYTES_KHR           , "BYTES_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR, "BYTES_PER_SECOND_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_KELVIN_KHR          , "KELVIN_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_WATTS_KHR           , "WATTS_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_VOLTS_KHR           , "VOLTS_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_AMPS_KHR            , "AMPS_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_HERTZ_KHR           , "HERTZ_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_CYCLES_KHR          , "CYCLES_KHR")
+  ]
+
 instance Show PerformanceCounterUnitKHR where
-  showsPrec p = \case
-    PERFORMANCE_COUNTER_UNIT_GENERIC_KHR -> showString "PERFORMANCE_COUNTER_UNIT_GENERIC_KHR"
-    PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR -> showString "PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR"
-    PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR -> showString "PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR"
-    PERFORMANCE_COUNTER_UNIT_BYTES_KHR -> showString "PERFORMANCE_COUNTER_UNIT_BYTES_KHR"
-    PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR -> showString "PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR"
-    PERFORMANCE_COUNTER_UNIT_KELVIN_KHR -> showString "PERFORMANCE_COUNTER_UNIT_KELVIN_KHR"
-    PERFORMANCE_COUNTER_UNIT_WATTS_KHR -> showString "PERFORMANCE_COUNTER_UNIT_WATTS_KHR"
-    PERFORMANCE_COUNTER_UNIT_VOLTS_KHR -> showString "PERFORMANCE_COUNTER_UNIT_VOLTS_KHR"
-    PERFORMANCE_COUNTER_UNIT_AMPS_KHR -> showString "PERFORMANCE_COUNTER_UNIT_AMPS_KHR"
-    PERFORMANCE_COUNTER_UNIT_HERTZ_KHR -> showString "PERFORMANCE_COUNTER_UNIT_HERTZ_KHR"
-    PERFORMANCE_COUNTER_UNIT_CYCLES_KHR -> showString "PERFORMANCE_COUNTER_UNIT_CYCLES_KHR"
-    PerformanceCounterUnitKHR x -> showParen (p >= 11) (showString "PerformanceCounterUnitKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterUnitKHR
+                            showTablePerformanceCounterUnitKHR
+                            conNamePerformanceCounterUnitKHR
+                            (\(PerformanceCounterUnitKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceCounterUnitKHR where
-  readPrec = parens (choose [("PERFORMANCE_COUNTER_UNIT_GENERIC_KHR", pure PERFORMANCE_COUNTER_UNIT_GENERIC_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR", pure PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR", pure PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_BYTES_KHR", pure PERFORMANCE_COUNTER_UNIT_BYTES_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR", pure PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_KELVIN_KHR", pure PERFORMANCE_COUNTER_UNIT_KELVIN_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_WATTS_KHR", pure PERFORMANCE_COUNTER_UNIT_WATTS_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_VOLTS_KHR", pure PERFORMANCE_COUNTER_UNIT_VOLTS_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_AMPS_KHR", pure PERFORMANCE_COUNTER_UNIT_AMPS_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_HERTZ_KHR", pure PERFORMANCE_COUNTER_UNIT_HERTZ_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_CYCLES_KHR", pure PERFORMANCE_COUNTER_UNIT_CYCLES_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceCounterUnitKHR")
-                       v <- step readPrec
-                       pure (PerformanceCounterUnitKHR v)))
+  readPrec = enumReadPrec enumPrefixPerformanceCounterUnitKHR
+                          showTablePerformanceCounterUnitKHR
+                          conNamePerformanceCounterUnitKHR
+                          PerformanceCounterUnitKHR
 
 
 -- | VkPerformanceCounterStorageKHR - Supported counter storage types
@@ -1071,16 +1553,16 @@ newtype PerformanceCounterStorageKHR = PerformanceCounterStorageKHR Int32
 
 -- | 'PERFORMANCE_COUNTER_STORAGE_INT32_KHR' - the performance counter
 -- storage is a 32-bit signed integer.
-pattern PERFORMANCE_COUNTER_STORAGE_INT32_KHR = PerformanceCounterStorageKHR 0
+pattern PERFORMANCE_COUNTER_STORAGE_INT32_KHR   = PerformanceCounterStorageKHR 0
 -- | 'PERFORMANCE_COUNTER_STORAGE_INT64_KHR' - the performance counter
 -- storage is a 64-bit signed integer.
-pattern PERFORMANCE_COUNTER_STORAGE_INT64_KHR = PerformanceCounterStorageKHR 1
+pattern PERFORMANCE_COUNTER_STORAGE_INT64_KHR   = PerformanceCounterStorageKHR 1
 -- | 'PERFORMANCE_COUNTER_STORAGE_UINT32_KHR' - the performance counter
 -- storage is a 32-bit unsigned integer.
-pattern PERFORMANCE_COUNTER_STORAGE_UINT32_KHR = PerformanceCounterStorageKHR 2
+pattern PERFORMANCE_COUNTER_STORAGE_UINT32_KHR  = PerformanceCounterStorageKHR 2
 -- | 'PERFORMANCE_COUNTER_STORAGE_UINT64_KHR' - the performance counter
 -- storage is a 64-bit unsigned integer.
-pattern PERFORMANCE_COUNTER_STORAGE_UINT64_KHR = PerformanceCounterStorageKHR 3
+pattern PERFORMANCE_COUNTER_STORAGE_UINT64_KHR  = PerformanceCounterStorageKHR 3
 -- | 'PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR' - the performance counter
 -- storage is a 32-bit floating-point.
 pattern PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR = PerformanceCounterStorageKHR 4
@@ -1094,29 +1576,37 @@ pattern PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR = PerformanceCounterStorageKHR 5
              PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR,
              PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR :: PerformanceCounterStorageKHR #-}
 
+conNamePerformanceCounterStorageKHR :: String
+conNamePerformanceCounterStorageKHR = "PerformanceCounterStorageKHR"
+
+enumPrefixPerformanceCounterStorageKHR :: String
+enumPrefixPerformanceCounterStorageKHR = "PERFORMANCE_COUNTER_STORAGE_"
+
+showTablePerformanceCounterStorageKHR :: [(PerformanceCounterStorageKHR, String)]
+showTablePerformanceCounterStorageKHR =
+  [ (PERFORMANCE_COUNTER_STORAGE_INT32_KHR  , "INT32_KHR")
+  , (PERFORMANCE_COUNTER_STORAGE_INT64_KHR  , "INT64_KHR")
+  , (PERFORMANCE_COUNTER_STORAGE_UINT32_KHR , "UINT32_KHR")
+  , (PERFORMANCE_COUNTER_STORAGE_UINT64_KHR , "UINT64_KHR")
+  , (PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR, "FLOAT32_KHR")
+  , (PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR, "FLOAT64_KHR")
+  ]
+
 instance Show PerformanceCounterStorageKHR where
-  showsPrec p = \case
-    PERFORMANCE_COUNTER_STORAGE_INT32_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_INT32_KHR"
-    PERFORMANCE_COUNTER_STORAGE_INT64_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_INT64_KHR"
-    PERFORMANCE_COUNTER_STORAGE_UINT32_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_UINT32_KHR"
-    PERFORMANCE_COUNTER_STORAGE_UINT64_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_UINT64_KHR"
-    PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR"
-    PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR"
-    PerformanceCounterStorageKHR x -> showParen (p >= 11) (showString "PerformanceCounterStorageKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterStorageKHR
+                            showTablePerformanceCounterStorageKHR
+                            conNamePerformanceCounterStorageKHR
+                            (\(PerformanceCounterStorageKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceCounterStorageKHR where
-  readPrec = parens (choose [("PERFORMANCE_COUNTER_STORAGE_INT32_KHR", pure PERFORMANCE_COUNTER_STORAGE_INT32_KHR)
-                            , ("PERFORMANCE_COUNTER_STORAGE_INT64_KHR", pure PERFORMANCE_COUNTER_STORAGE_INT64_KHR)
-                            , ("PERFORMANCE_COUNTER_STORAGE_UINT32_KHR", pure PERFORMANCE_COUNTER_STORAGE_UINT32_KHR)
-                            , ("PERFORMANCE_COUNTER_STORAGE_UINT64_KHR", pure PERFORMANCE_COUNTER_STORAGE_UINT64_KHR)
-                            , ("PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR", pure PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR)
-                            , ("PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR", pure PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceCounterStorageKHR")
-                       v <- step readPrec
-                       pure (PerformanceCounterStorageKHR v)))
+  readPrec = enumReadPrec enumPrefixPerformanceCounterStorageKHR
+                          showTablePerformanceCounterStorageKHR
+                          conNamePerformanceCounterStorageKHR
+                          PerformanceCounterStorageKHR
 
+
+type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBitsKHR
 
 -- | VkPerformanceCounterDescriptionFlagBitsKHR - Bitmask specifying usage
 -- behavior for a counter
@@ -1130,29 +1620,41 @@ newtype PerformanceCounterDescriptionFlagBitsKHR = PerformanceCounterDescription
 -- | 'PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR'
 -- specifies that recording the counter /may/ have a noticeable performance
 -- impact.
-pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000001
+pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR =
+  PerformanceCounterDescriptionFlagBitsKHR 0x00000001
 -- | 'PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR'
 -- specifies that concurrently recording the counter while other submitted
 -- command buffers are running /may/ impact the accuracy of the recording.
-pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000002
+pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR =
+  PerformanceCounterDescriptionFlagBitsKHR 0x00000002
 
-type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBitsKHR
+conNamePerformanceCounterDescriptionFlagBitsKHR :: String
+conNamePerformanceCounterDescriptionFlagBitsKHR = "PerformanceCounterDescriptionFlagBitsKHR"
+
+enumPrefixPerformanceCounterDescriptionFlagBitsKHR :: String
+enumPrefixPerformanceCounterDescriptionFlagBitsKHR = "PERFORMANCE_COUNTER_DESCRIPTION_"
+
+showTablePerformanceCounterDescriptionFlagBitsKHR :: [(PerformanceCounterDescriptionFlagBitsKHR, String)]
+showTablePerformanceCounterDescriptionFlagBitsKHR =
+  [ (PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR, "PERFORMANCE_IMPACTING_BIT_KHR")
+  , (PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR, "CONCURRENTLY_IMPACTED_BIT_KHR")
+  ]
 
 instance Show PerformanceCounterDescriptionFlagBitsKHR where
-  showsPrec p = \case
-    PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR -> showString "PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR"
-    PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR -> showString "PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR"
-    PerformanceCounterDescriptionFlagBitsKHR x -> showParen (p >= 11) (showString "PerformanceCounterDescriptionFlagBitsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterDescriptionFlagBitsKHR
+                            showTablePerformanceCounterDescriptionFlagBitsKHR
+                            conNamePerformanceCounterDescriptionFlagBitsKHR
+                            (\(PerformanceCounterDescriptionFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PerformanceCounterDescriptionFlagBitsKHR where
-  readPrec = parens (choose [("PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR", pure PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR)
-                            , ("PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR", pure PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceCounterDescriptionFlagBitsKHR")
-                       v <- step readPrec
-                       pure (PerformanceCounterDescriptionFlagBitsKHR v)))
+  readPrec = enumReadPrec enumPrefixPerformanceCounterDescriptionFlagBitsKHR
+                          showTablePerformanceCounterDescriptionFlagBitsKHR
+                          conNamePerformanceCounterDescriptionFlagBitsKHR
+                          PerformanceCounterDescriptionFlagBitsKHR
 
+
+type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
 
 -- | VkAcquireProfilingLockFlagBitsKHR - Reserved for future use
 --
@@ -1164,19 +1666,27 @@ newtype AcquireProfilingLockFlagBitsKHR = AcquireProfilingLockFlagBitsKHR Flags
 
 
 
-type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
+conNameAcquireProfilingLockFlagBitsKHR :: String
+conNameAcquireProfilingLockFlagBitsKHR = "AcquireProfilingLockFlagBitsKHR"
+
+enumPrefixAcquireProfilingLockFlagBitsKHR :: String
+enumPrefixAcquireProfilingLockFlagBitsKHR = ""
+
+showTableAcquireProfilingLockFlagBitsKHR :: [(AcquireProfilingLockFlagBitsKHR, String)]
+showTableAcquireProfilingLockFlagBitsKHR = []
 
 instance Show AcquireProfilingLockFlagBitsKHR where
-  showsPrec p = \case
-    AcquireProfilingLockFlagBitsKHR x -> showParen (p >= 11) (showString "AcquireProfilingLockFlagBitsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixAcquireProfilingLockFlagBitsKHR
+                            showTableAcquireProfilingLockFlagBitsKHR
+                            conNameAcquireProfilingLockFlagBitsKHR
+                            (\(AcquireProfilingLockFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read AcquireProfilingLockFlagBitsKHR where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AcquireProfilingLockFlagBitsKHR")
-                       v <- step readPrec
-                       pure (AcquireProfilingLockFlagBitsKHR v)))
+  readPrec = enumReadPrec enumPrefixAcquireProfilingLockFlagBitsKHR
+                          showTableAcquireProfilingLockFlagBitsKHR
+                          conNameAcquireProfilingLockFlagBitsKHR
+                          AcquireProfilingLockFlagBitsKHR
 
 
 type KHR_PERFORMANCE_QUERY_SPEC_VERSION = 1

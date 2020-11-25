@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "CommandBufferBuilding"
 module Vulkan.Core10.CommandBufferBuilding  ( cmdBindPipeline
                                             , cmdSetViewport
                                             , cmdSetScissor
@@ -254,8 +255,8 @@ foreign import ccall
 -- -   The pipeline bound to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_KHR'
 --     controls the behavior of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysKHR' and
---     'Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysIndirectKHR'.
+--     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysKHR' and
+--     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysIndirectKHR'.
 --
 -- == Valid Usage
 --
@@ -9429,6 +9430,21 @@ foreign import ccall
 --
 -- = Description
 --
+-- When a command buffer begins recording, all push constant values are
+-- undefined.
+--
+-- Push constant values /can/ be updated incrementally, causing shader
+-- stages in @stageFlags@ to read the new data from @pValues@ for push
+-- constants modified by this command, while still reading the previous
+-- data for push constants not modified by this command. When a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-bindpoint-commands bound pipeline command>
+-- is issued, the bound pipeline’s layout /must/ be compatible with the
+-- layouts used to set the values of all push constants in the pipeline
+-- layout’s push constant ranges, as described in
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- Binding a pipeline with a layout that is not compatible with the push
+-- constant layout does not disturb the push constant values.
+--
 -- Note
 --
 -- As @stageFlags@ needs to include all flags the relevant push constant
@@ -11439,34 +11455,34 @@ instance Zero ClearAttachment where
 
 
 data ClearColorValue
-  = Float32 ((Float, Float, Float, Float))
-  | Int32 ((Int32, Int32, Int32, Int32))
-  | Uint32 ((Word32, Word32, Word32, Word32))
+  = Float32 Float Float Float Float
+  | Int32 Int32 Int32 Int32 Int32
+  | Uint32 Word32 Word32 Word32 Word32
   deriving (Show)
 
 instance ToCStruct ClearColorValue where
   withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr ClearColorValue -> ClearColorValue -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
-    Float32 v -> lift $ do
+    Float32 v0 v1 v2 v3 -> lift $ do
       let pFloat32 = lowerArrayPtr (castPtr @_ @(FixedArray 4 CFloat) p)
-      case (v) of
+      case ((v0, v1, v2, v3)) of
         (e0, e1, e2, e3) -> do
           poke (pFloat32 :: Ptr CFloat) (CFloat (e0))
           poke (pFloat32 `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
           poke (pFloat32 `plusPtr` 8 :: Ptr CFloat) (CFloat (e2))
           poke (pFloat32 `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
-    Int32 v -> lift $ do
+    Int32 v0 v1 v2 v3 -> lift $ do
       let pInt32 = lowerArrayPtr (castPtr @_ @(FixedArray 4 Int32) p)
-      case (v) of
+      case ((v0, v1, v2, v3)) of
         (e0, e1, e2, e3) -> do
           poke (pInt32 :: Ptr Int32) (e0)
           poke (pInt32 `plusPtr` 4 :: Ptr Int32) (e1)
           poke (pInt32 `plusPtr` 8 :: Ptr Int32) (e2)
           poke (pInt32 `plusPtr` 12 :: Ptr Int32) (e3)
-    Uint32 v -> lift $ do
+    Uint32 v0 v1 v2 v3 -> lift $ do
       let pUint32 = lowerArrayPtr (castPtr @_ @(FixedArray 4 Word32) p)
-      case (v) of
+      case ((v0, v1, v2, v3)) of
         (e0, e1, e2, e3) -> do
           poke (pUint32 :: Ptr Word32) (e0)
           poke (pUint32 `plusPtr` 4 :: Ptr Word32) (e1)
@@ -11478,7 +11494,7 @@ instance ToCStruct ClearColorValue where
   cStructAlignment = 4
 
 instance Zero ClearColorValue where
-  zero = Float32 (zero, zero, zero, zero)
+  zero = Float32 zero zero zero zero
 
 
 data ClearValue

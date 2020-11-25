@@ -1,4 +1,135 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_NV_coverage_reduction_mode - device extension
+--
+-- == VK_NV_coverage_reduction_mode
+--
+-- [__Name String__]
+--     @VK_NV_coverage_reduction_mode@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     251
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_NV_framebuffer_mixed_samples@
+--
+-- [__Contact__]
+--
+--     -   Kedarnath Thangudu
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_coverage_reduction_mode:%20&body=@kthangudu%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2019-01-29
+--
+-- [__Contributors__]
+--
+--     -   Kedarnath Thangudu, NVIDIA
+--
+--     -   Jeff Bolz, NVIDIA
+--
+-- == Description
+--
+-- When using a framebuffer with mixed samples, a per-fragment coverage
+-- reduction operation is performed which generates color sample coverage
+-- from the pixel coverage. This extension defines the following modes to
+-- control how this reduction is performed.
+--
+-- -   Merge: When there are more samples in the pixel coverage than color
+--     samples, there is an implementation dependent association of each
+--     pixel coverage sample to a color sample. In the merge mode, the
+--     color sample coverage is computed such that only if any associated
+--     sample in the pixel coverage is covered, the color sample is
+--     covered. This is the default mode.
+--
+-- -   Truncate: When there are more raster samples (N) than color
+--     samples(M), there is one to one association of the first M raster
+--     samples to the M color samples; other raster samples are ignored.
+--
+-- When the number of raster samples is equal to the color samples, there
+-- is a one to one mapping between them in either of the above modes.
+--
+-- The new command
+-- 'getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' can be
+-- used to query the various raster, color, depth\/stencil sample count and
+-- reduction mode combinations that are supported by the implementation.
+-- This extension would allow an implementation to support the behavior of
+-- both @VK_NV_framebuffer_mixed_samples@ and
+-- @VK_AMD_mixed_attachment_samples@ extensions simultaneously.
+--
+-- == New Commands
+--
+-- -   'getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
+--
+-- == New Structures
+--
+-- -   'FramebufferMixedSamplesCombinationNV'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceCoverageReductionModeFeaturesNV'
+--
+-- -   Extending
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
+--
+--     -   'PipelineCoverageReductionStateCreateInfoNV'
+--
+-- == New Enums
+--
+-- -   'CoverageReductionModeNV'
+--
+-- == New Bitmasks
+--
+-- -   'PipelineCoverageReductionStateCreateFlagsNV'
+--
+-- == New Enum Constants
+--
+-- -   'NV_COVERAGE_REDUCTION_MODE_EXTENSION_NAME'
+--
+-- -   'NV_COVERAGE_REDUCTION_MODE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FRAMEBUFFER_MIXED_SAMPLES_COMBINATION_NV'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COVERAGE_REDUCTION_MODE_FEATURES_NV'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_REDUCTION_STATE_CREATE_INFO_NV'
+--
+-- == Version History
+--
+-- -   Revision 1, 2019-01-29 (Kedarnath Thangudu)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'CoverageReductionModeNV', 'FramebufferMixedSamplesCombinationNV',
+-- 'PhysicalDeviceCoverageReductionModeFeaturesNV',
+-- 'PipelineCoverageReductionStateCreateFlagsNV',
+-- 'PipelineCoverageReductionStateCreateInfoNV',
+-- 'getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_coverage_reduction_mode  ( getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV
                                                         , PhysicalDeviceCoverageReductionModeFeaturesNV(..)
                                                         , PipelineCoverageReductionStateCreateInfoNV(..)
@@ -14,6 +145,8 @@ module Vulkan.Extensions.VK_NV_coverage_reduction_mode  ( getPhysicalDeviceSuppo
                                                         , pattern NV_COVERAGE_REDUCTION_MODE_EXTENSION_NAME
                                                         ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -25,16 +158,9 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -54,8 +180,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -414,17 +540,27 @@ newtype PipelineCoverageReductionStateCreateFlagsNV = PipelineCoverageReductionS
 
 
 
+conNamePipelineCoverageReductionStateCreateFlagsNV :: String
+conNamePipelineCoverageReductionStateCreateFlagsNV = "PipelineCoverageReductionStateCreateFlagsNV"
+
+enumPrefixPipelineCoverageReductionStateCreateFlagsNV :: String
+enumPrefixPipelineCoverageReductionStateCreateFlagsNV = ""
+
+showTablePipelineCoverageReductionStateCreateFlagsNV :: [(PipelineCoverageReductionStateCreateFlagsNV, String)]
+showTablePipelineCoverageReductionStateCreateFlagsNV = []
+
 instance Show PipelineCoverageReductionStateCreateFlagsNV where
-  showsPrec p = \case
-    PipelineCoverageReductionStateCreateFlagsNV x -> showParen (p >= 11) (showString "PipelineCoverageReductionStateCreateFlagsNV 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineCoverageReductionStateCreateFlagsNV
+                            showTablePipelineCoverageReductionStateCreateFlagsNV
+                            conNamePipelineCoverageReductionStateCreateFlagsNV
+                            (\(PipelineCoverageReductionStateCreateFlagsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCoverageReductionStateCreateFlagsNV where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCoverageReductionStateCreateFlagsNV")
-                       v <- step readPrec
-                       pure (PipelineCoverageReductionStateCreateFlagsNV v)))
+  readPrec = enumReadPrec enumPrefixPipelineCoverageReductionStateCreateFlagsNV
+                          showTablePipelineCoverageReductionStateCreateFlagsNV
+                          conNamePipelineCoverageReductionStateCreateFlagsNV
+                          PipelineCoverageReductionStateCreateFlagsNV
 
 
 -- | VkCoverageReductionModeNV - Specify the coverage reduction mode
@@ -440,7 +576,7 @@ newtype CoverageReductionModeNV = CoverageReductionModeNV Int32
 -- be associated with an implementation-dependent subset of samples in the
 -- pixel coverage. If any of those associated samples are covered, the
 -- color sample is covered.
-pattern COVERAGE_REDUCTION_MODE_MERGE_NV = CoverageReductionModeNV 0
+pattern COVERAGE_REDUCTION_MODE_MERGE_NV    = CoverageReductionModeNV 0
 -- | 'COVERAGE_REDUCTION_MODE_TRUNCATE_NV' specifies that for color samples
 -- present in the color attachments, a color sample is covered if the pixel
 -- coverage sample with the same
@@ -450,20 +586,28 @@ pattern COVERAGE_REDUCTION_MODE_TRUNCATE_NV = CoverageReductionModeNV 1
 {-# complete COVERAGE_REDUCTION_MODE_MERGE_NV,
              COVERAGE_REDUCTION_MODE_TRUNCATE_NV :: CoverageReductionModeNV #-}
 
+conNameCoverageReductionModeNV :: String
+conNameCoverageReductionModeNV = "CoverageReductionModeNV"
+
+enumPrefixCoverageReductionModeNV :: String
+enumPrefixCoverageReductionModeNV = "COVERAGE_REDUCTION_MODE_"
+
+showTableCoverageReductionModeNV :: [(CoverageReductionModeNV, String)]
+showTableCoverageReductionModeNV =
+  [(COVERAGE_REDUCTION_MODE_MERGE_NV, "MERGE_NV"), (COVERAGE_REDUCTION_MODE_TRUNCATE_NV, "TRUNCATE_NV")]
+
 instance Show CoverageReductionModeNV where
-  showsPrec p = \case
-    COVERAGE_REDUCTION_MODE_MERGE_NV -> showString "COVERAGE_REDUCTION_MODE_MERGE_NV"
-    COVERAGE_REDUCTION_MODE_TRUNCATE_NV -> showString "COVERAGE_REDUCTION_MODE_TRUNCATE_NV"
-    CoverageReductionModeNV x -> showParen (p >= 11) (showString "CoverageReductionModeNV " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixCoverageReductionModeNV
+                            showTableCoverageReductionModeNV
+                            conNameCoverageReductionModeNV
+                            (\(CoverageReductionModeNV x) -> x)
+                            (showsPrec 11)
 
 instance Read CoverageReductionModeNV where
-  readPrec = parens (choose [("COVERAGE_REDUCTION_MODE_MERGE_NV", pure COVERAGE_REDUCTION_MODE_MERGE_NV)
-                            , ("COVERAGE_REDUCTION_MODE_TRUNCATE_NV", pure COVERAGE_REDUCTION_MODE_TRUNCATE_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CoverageReductionModeNV")
-                       v <- step readPrec
-                       pure (CoverageReductionModeNV v)))
+  readPrec = enumReadPrec enumPrefixCoverageReductionModeNV
+                          showTableCoverageReductionModeNV
+                          conNameCoverageReductionModeNV
+                          CoverageReductionModeNV
 
 
 type NV_COVERAGE_REDUCTION_MODE_SPEC_VERSION = 1

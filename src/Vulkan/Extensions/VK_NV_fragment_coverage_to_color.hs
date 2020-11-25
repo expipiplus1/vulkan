@@ -1,4 +1,95 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_NV_fragment_coverage_to_color - device extension
+--
+-- == VK_NV_fragment_coverage_to_color
+--
+-- [__Name String__]
+--     @VK_NV_fragment_coverage_to_color@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     150
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_fragment_coverage_to_color:%20&body=@jeffbolznv%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2017-05-21
+--
+-- [__Contributors__]
+--
+--     -   Jeff Bolz, NVIDIA
+--
+-- == Description
+--
+-- This extension allows the fragment coverage value, represented as an
+-- integer bitmask, to be substituted for a color output being written to a
+-- single-component color attachment with integer components (e.g.
+-- 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'). The functionality provided
+-- by this extension is different from simply writing the
+-- 'Vulkan.Core10.FundamentalTypes.SampleMask' fragment shader output, in
+-- that the coverage value written to the framebuffer is taken after
+-- stencil test and depth test, as well as after fragment operations such
+-- as alpha-to-coverage.
+--
+-- This functionality may be useful for deferred rendering algorithms,
+-- where the second pass needs to know which samples belong to which
+-- original fragments.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
+--
+--     -   'PipelineCoverageToColorStateCreateInfoNV'
+--
+-- == New Bitmasks
+--
+-- -   'PipelineCoverageToColorStateCreateFlagsNV'
+--
+-- == New Enum Constants
+--
+-- -   'NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME'
+--
+-- -   'NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV'
+--
+-- == Version History
+--
+-- -   Revision 1, 2017-05-21 (Jeff Bolz)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'PipelineCoverageToColorStateCreateFlagsNV',
+-- 'PipelineCoverageToColorStateCreateInfoNV'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_fragment_coverage_to_color  ( PipelineCoverageToColorStateCreateInfoNV(..)
                                                            , PipelineCoverageToColorStateCreateFlagsNV(..)
                                                            , NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION
@@ -7,18 +98,13 @@ module Vulkan.Extensions.VK_NV_fragment_coverage_to_color  ( PipelineCoverageToC
                                                            , pattern NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME
                                                            ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
@@ -30,8 +116,8 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -170,17 +256,27 @@ newtype PipelineCoverageToColorStateCreateFlagsNV = PipelineCoverageToColorState
 
 
 
+conNamePipelineCoverageToColorStateCreateFlagsNV :: String
+conNamePipelineCoverageToColorStateCreateFlagsNV = "PipelineCoverageToColorStateCreateFlagsNV"
+
+enumPrefixPipelineCoverageToColorStateCreateFlagsNV :: String
+enumPrefixPipelineCoverageToColorStateCreateFlagsNV = ""
+
+showTablePipelineCoverageToColorStateCreateFlagsNV :: [(PipelineCoverageToColorStateCreateFlagsNV, String)]
+showTablePipelineCoverageToColorStateCreateFlagsNV = []
+
 instance Show PipelineCoverageToColorStateCreateFlagsNV where
-  showsPrec p = \case
-    PipelineCoverageToColorStateCreateFlagsNV x -> showParen (p >= 11) (showString "PipelineCoverageToColorStateCreateFlagsNV 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineCoverageToColorStateCreateFlagsNV
+                            showTablePipelineCoverageToColorStateCreateFlagsNV
+                            conNamePipelineCoverageToColorStateCreateFlagsNV
+                            (\(PipelineCoverageToColorStateCreateFlagsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCoverageToColorStateCreateFlagsNV where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCoverageToColorStateCreateFlagsNV")
-                       v <- step readPrec
-                       pure (PipelineCoverageToColorStateCreateFlagsNV v)))
+  readPrec = enumReadPrec enumPrefixPipelineCoverageToColorStateCreateFlagsNV
+                          showTablePipelineCoverageToColorStateCreateFlagsNV
+                          conNamePipelineCoverageToColorStateCreateFlagsNV
+                          PipelineCoverageToColorStateCreateFlagsNV
 
 
 type NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION = 1

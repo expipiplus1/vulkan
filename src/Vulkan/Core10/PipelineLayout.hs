@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineLayout"
 module Vulkan.Core10.PipelineLayout  ( createPipelineLayout
                                      , withPipelineLayout
                                      , destroyPipelineLayout
@@ -138,8 +139,8 @@ createPipelineLayout device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyPipelineLayout' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withPipelineLayout :: forall io r . MonadIO io => Device -> PipelineLayoutCreateInfo -> Maybe AllocationCallbacks -> (io PipelineLayout -> (PipelineLayout -> io ()) -> r) -> r
 withPipelineLayout device pCreateInfo pAllocator b =
@@ -615,12 +616,44 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
 --     set
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02381# The total
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03571# The total
+--     number of bindings in descriptor set layouts created without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set with a @descriptorType@ of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     accessible to any given shader stage across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructurePropertiesKHR'::@maxPerStageDescriptorAccelerationStructures@
+--
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03572# The total
+--     number of bindings with a @descriptorType@ of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     to any given shader stage across all elements of @pSetLayouts@
+--     /must/ be less than or equal to
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructurePropertiesKHR'::@maxPerStageDescriptorUpdateAfterBindAccelerationStructures@
+--
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03573# The total
+--     number of bindings in descriptor set layouts created without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set with a @descriptorType@ of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     accessible across all shader stages and across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructurePropertiesKHR'::@maxDescriptorSetAccelerationStructures@
+--
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03574# The total
 --     number of bindings with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@maxDescriptorSetAccelerationStructures@
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructurePropertiesKHR'::@maxDescriptorSetUpdateAfterBindAccelerationStructures@
+--
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02381# The total
+--     number of bindings with a @descriptorType@ of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV'
+--     accessible across all shader stages and across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
+--     'Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV'::@maxDescriptorSetAccelerationStructures@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pImmutableSamplers-03566# The total
 --     number of @pImmutableSamplers@ created with @flags@ containing
@@ -694,7 +727,7 @@ instance ToCStruct PipelineLayoutCreateInfo where
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorSetLayout))) (pPSetLayouts')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (pushConstantRanges)) :: Word32))
     pPPushConstantRanges' <- ContT $ allocaBytesAligned @PushConstantRange ((Data.Vector.length (pushConstantRanges)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPushConstantRanges' `plusPtr` (12 * (i)) :: Ptr PushConstantRange) (e) . ($ ())) (pushConstantRanges)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPPushConstantRanges' `plusPtr` (12 * (i)) :: Ptr PushConstantRange) (e)) (pushConstantRanges)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr PushConstantRange))) (pPPushConstantRanges')
     lift $ f
   cStructSize = 48
@@ -706,7 +739,7 @@ instance ToCStruct PipelineLayoutCreateInfo where
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSetLayouts' `plusPtr` (8 * (i)) :: Ptr DescriptorSetLayout) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorSetLayout))) (pPSetLayouts')
     pPPushConstantRanges' <- ContT $ allocaBytesAligned @PushConstantRange ((Data.Vector.length (mempty)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPushConstantRanges' `plusPtr` (12 * (i)) :: Ptr PushConstantRange) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPPushConstantRanges' `plusPtr` (12 * (i)) :: Ptr PushConstantRange) (e)) (mempty)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr PushConstantRange))) (pPPushConstantRanges')
     lift $ f
 

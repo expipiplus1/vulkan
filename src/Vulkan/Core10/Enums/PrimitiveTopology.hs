@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PrimitiveTopology"
 module Vulkan.Core10.Enums.PrimitiveTopology  (PrimitiveTopology( PRIMITIVE_TOPOLOGY_POINT_LIST
                                                                 , PRIMITIVE_TOPOLOGY_LINE_LIST
                                                                 , PRIMITIVE_TOPOLOGY_LINE_STRIP
@@ -13,19 +14,13 @@ module Vulkan.Core10.Enums.PrimitiveTopology  (PrimitiveTopology( PRIMITIVE_TOPO
                                                                 , ..
                                                                 )) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkPrimitiveTopology - Supported primitive topologies
 --
@@ -70,21 +65,21 @@ newtype PrimitiveTopology = PrimitiveTopology Int32
 
 -- | 'PRIMITIVE_TOPOLOGY_POINT_LIST' specifies a series of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-point-lists separate point primitives>.
-pattern PRIMITIVE_TOPOLOGY_POINT_LIST = PrimitiveTopology 0
+pattern PRIMITIVE_TOPOLOGY_POINT_LIST                    = PrimitiveTopology 0
 -- | 'PRIMITIVE_TOPOLOGY_LINE_LIST' specifies a series of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-line-lists separate line primitives>.
-pattern PRIMITIVE_TOPOLOGY_LINE_LIST = PrimitiveTopology 1
+pattern PRIMITIVE_TOPOLOGY_LINE_LIST                     = PrimitiveTopology 1
 -- | 'PRIMITIVE_TOPOLOGY_LINE_STRIP' specifies a series of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-line-strips connected line primitives>
 -- with consecutive lines sharing a vertex.
-pattern PRIMITIVE_TOPOLOGY_LINE_STRIP = PrimitiveTopology 2
+pattern PRIMITIVE_TOPOLOGY_LINE_STRIP                    = PrimitiveTopology 2
 -- | 'PRIMITIVE_TOPOLOGY_TRIANGLE_LIST' specifies a series of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-triangle-lists separate triangle primitives>.
-pattern PRIMITIVE_TOPOLOGY_TRIANGLE_LIST = PrimitiveTopology 3
+pattern PRIMITIVE_TOPOLOGY_TRIANGLE_LIST                 = PrimitiveTopology 3
 -- | 'PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP' specifies a series of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-triangle-strips connected triangle primitives>
 -- with consecutive triangles sharing an edge.
-pattern PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP = PrimitiveTopology 4
+pattern PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP                = PrimitiveTopology 4
 -- | 'PRIMITIVE_TOPOLOGY_TRIANGLE_FAN' specifies a series of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-triangle-fans connected triangle primitives>
 -- with all triangles sharing a common vertex. If the
@@ -93,24 +88,24 @@ pattern PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP = PrimitiveTopology 4
 -- is 'Vulkan.Core10.FundamentalTypes.FALSE', then triangle fans are not
 -- supported by the implementation, and 'PRIMITIVE_TOPOLOGY_TRIANGLE_FAN'
 -- /must/ not be used.
-pattern PRIMITIVE_TOPOLOGY_TRIANGLE_FAN = PrimitiveTopology 5
+pattern PRIMITIVE_TOPOLOGY_TRIANGLE_FAN                  = PrimitiveTopology 5
 -- | 'PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY' specifies a series of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-line-lists-with-adjacency separate line primitives with adjacency>.
-pattern PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY = PrimitiveTopology 6
+pattern PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY      = PrimitiveTopology 6
 -- | 'PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY' specifies a series of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-line-strips-with-adjacency connected line primitives with adjacency>,
 -- with consecutive primitives sharing three vertices.
-pattern PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY = PrimitiveTopology 7
+pattern PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY     = PrimitiveTopology 7
 -- | 'PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY' specifies a series of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-triangle-lists-with-adjacency separate triangle primitives with adjacency>.
-pattern PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY = PrimitiveTopology 8
+pattern PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY  = PrimitiveTopology 8
 -- | 'PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY' specifies
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-triangle-strips-with-adjacency connected triangle primitives with adjacency>,
 -- with consecutive triangles sharing an edge.
 pattern PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY = PrimitiveTopology 9
 -- | 'PRIMITIVE_TOPOLOGY_PATCH_LIST' specifies
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-patch-lists separate patch primitives>.
-pattern PRIMITIVE_TOPOLOGY_PATCH_LIST = PrimitiveTopology 10
+pattern PRIMITIVE_TOPOLOGY_PATCH_LIST                    = PrimitiveTopology 10
 {-# complete PRIMITIVE_TOPOLOGY_POINT_LIST,
              PRIMITIVE_TOPOLOGY_LINE_LIST,
              PRIMITIVE_TOPOLOGY_LINE_STRIP,
@@ -123,36 +118,35 @@ pattern PRIMITIVE_TOPOLOGY_PATCH_LIST = PrimitiveTopology 10
              PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY,
              PRIMITIVE_TOPOLOGY_PATCH_LIST :: PrimitiveTopology #-}
 
+conNamePrimitiveTopology :: String
+conNamePrimitiveTopology = "PrimitiveTopology"
+
+enumPrefixPrimitiveTopology :: String
+enumPrefixPrimitiveTopology = "PRIMITIVE_TOPOLOGY_"
+
+showTablePrimitiveTopology :: [(PrimitiveTopology, String)]
+showTablePrimitiveTopology =
+  [ (PRIMITIVE_TOPOLOGY_POINT_LIST                   , "POINT_LIST")
+  , (PRIMITIVE_TOPOLOGY_LINE_LIST                    , "LINE_LIST")
+  , (PRIMITIVE_TOPOLOGY_LINE_STRIP                   , "LINE_STRIP")
+  , (PRIMITIVE_TOPOLOGY_TRIANGLE_LIST                , "TRIANGLE_LIST")
+  , (PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP               , "TRIANGLE_STRIP")
+  , (PRIMITIVE_TOPOLOGY_TRIANGLE_FAN                 , "TRIANGLE_FAN")
+  , (PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY     , "LINE_LIST_WITH_ADJACENCY")
+  , (PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY    , "LINE_STRIP_WITH_ADJACENCY")
+  , (PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY , "TRIANGLE_LIST_WITH_ADJACENCY")
+  , (PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY, "TRIANGLE_STRIP_WITH_ADJACENCY")
+  , (PRIMITIVE_TOPOLOGY_PATCH_LIST                   , "PATCH_LIST")
+  ]
+
 instance Show PrimitiveTopology where
-  showsPrec p = \case
-    PRIMITIVE_TOPOLOGY_POINT_LIST -> showString "PRIMITIVE_TOPOLOGY_POINT_LIST"
-    PRIMITIVE_TOPOLOGY_LINE_LIST -> showString "PRIMITIVE_TOPOLOGY_LINE_LIST"
-    PRIMITIVE_TOPOLOGY_LINE_STRIP -> showString "PRIMITIVE_TOPOLOGY_LINE_STRIP"
-    PRIMITIVE_TOPOLOGY_TRIANGLE_LIST -> showString "PRIMITIVE_TOPOLOGY_TRIANGLE_LIST"
-    PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP -> showString "PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP"
-    PRIMITIVE_TOPOLOGY_TRIANGLE_FAN -> showString "PRIMITIVE_TOPOLOGY_TRIANGLE_FAN"
-    PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY -> showString "PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY"
-    PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY -> showString "PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY"
-    PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY -> showString "PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY"
-    PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY -> showString "PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY"
-    PRIMITIVE_TOPOLOGY_PATCH_LIST -> showString "PRIMITIVE_TOPOLOGY_PATCH_LIST"
-    PrimitiveTopology x -> showParen (p >= 11) (showString "PrimitiveTopology " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPrimitiveTopology
+                            showTablePrimitiveTopology
+                            conNamePrimitiveTopology
+                            (\(PrimitiveTopology x) -> x)
+                            (showsPrec 11)
 
 instance Read PrimitiveTopology where
-  readPrec = parens (choose [("PRIMITIVE_TOPOLOGY_POINT_LIST", pure PRIMITIVE_TOPOLOGY_POINT_LIST)
-                            , ("PRIMITIVE_TOPOLOGY_LINE_LIST", pure PRIMITIVE_TOPOLOGY_LINE_LIST)
-                            , ("PRIMITIVE_TOPOLOGY_LINE_STRIP", pure PRIMITIVE_TOPOLOGY_LINE_STRIP)
-                            , ("PRIMITIVE_TOPOLOGY_TRIANGLE_LIST", pure PRIMITIVE_TOPOLOGY_TRIANGLE_LIST)
-                            , ("PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP", pure PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP)
-                            , ("PRIMITIVE_TOPOLOGY_TRIANGLE_FAN", pure PRIMITIVE_TOPOLOGY_TRIANGLE_FAN)
-                            , ("PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY", pure PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY)
-                            , ("PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY", pure PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY)
-                            , ("PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY", pure PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY)
-                            , ("PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY", pure PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY)
-                            , ("PRIMITIVE_TOPOLOGY_PATCH_LIST", pure PRIMITIVE_TOPOLOGY_PATCH_LIST)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PrimitiveTopology")
-                       v <- step readPrec
-                       pure (PrimitiveTopology v)))
+  readPrec =
+    enumReadPrec enumPrefixPrimitiveTopology showTablePrimitiveTopology conNamePrimitiveTopology PrimitiveTopology
 

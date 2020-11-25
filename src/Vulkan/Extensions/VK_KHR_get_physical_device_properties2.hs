@@ -1,4 +1,221 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_get_physical_device_properties2 - instance extension
+--
+-- == VK_KHR_get_physical_device_properties2
+--
+-- [__Name String__]
+--     @VK_KHR_get_physical_device_properties2@
+--
+-- [__Extension Type__]
+--     Instance extension
+--
+-- [__Registered Extension Number__]
+--     60
+--
+-- [__Revision__]
+--     2
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_get_physical_device_properties2:%20&body=@jeffbolznv%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2017-09-05
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.1 Core
+--
+-- [__Contributors__]
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Ian Elliott, Google
+--
+-- == Description
+--
+-- This extension provides new entry points to query device features,
+-- device properties, and format properties in a way that can be easily
+-- extended by other extensions, without introducing any further entry
+-- points. The Vulkan 1.0 feature\/limit\/formatproperty structures do not
+-- include @sType@\/@pNext@ members. This extension wraps them in new
+-- structures with @sType@\/@pNext@ members, so an application can query a
+-- chain of feature\/limit\/formatproperty structures by constructing the
+-- chain and letting the implementation fill them in. A new command is
+-- added for each @vkGetPhysicalDevice*@ command in core Vulkan 1.0. The
+-- new feature structure (and a @pNext@ chain of extending structures) can
+-- also be passed in to device creation to enable features.
+--
+-- This extension also allows applications to use the physical-device
+-- components of device extensions before
+-- 'Vulkan.Core10.Device.createDevice' is called.
+--
+-- == Promotion to Vulkan 1.1
+--
+-- All functionality in this extension is included in core Vulkan 1.1, with
+-- the KHR suffix omitted. The original type, enum and command names are
+-- still available as aliases of the core functionality.
+--
+-- == New Commands
+--
+-- -   'getPhysicalDeviceFeatures2KHR'
+--
+-- -   'getPhysicalDeviceFormatProperties2KHR'
+--
+-- -   'getPhysicalDeviceImageFormatProperties2KHR'
+--
+-- -   'getPhysicalDeviceMemoryProperties2KHR'
+--
+-- -   'getPhysicalDeviceProperties2KHR'
+--
+-- -   'getPhysicalDeviceQueueFamilyProperties2KHR'
+--
+-- -   'getPhysicalDeviceSparseImageFormatProperties2KHR'
+--
+-- == New Structures
+--
+-- -   'FormatProperties2KHR'
+--
+-- -   'ImageFormatProperties2KHR'
+--
+-- -   'PhysicalDeviceImageFormatInfo2KHR'
+--
+-- -   'PhysicalDeviceMemoryProperties2KHR'
+--
+-- -   'PhysicalDeviceProperties2KHR'
+--
+-- -   'PhysicalDeviceSparseImageFormatInfo2KHR'
+--
+-- -   'QueueFamilyProperties2KHR'
+--
+-- -   'SparseImageFormatProperties2KHR'
+--
+-- -   Extending 'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceFeatures2KHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME'
+--
+-- -   'KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_FORMAT_PROPERTIES_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2_KHR'
+--
+--     -   'STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2_KHR'
+--
+-- == Examples
+--
+-- >     // Get features with a hypothetical future extension.
+-- >     VkHypotheticalExtensionFeaturesKHR hypotheticalFeatures =
+-- >     {
+-- >         VK_STRUCTURE_TYPE_HYPOTHETICAL_FEATURES_KHR,                            // sType
+-- >         NULL,                                                                   // pNext
+-- >     };
+-- >
+-- >     VkPhysicalDeviceFeatures2KHR features =
+-- >     {
+-- >         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR,                       // sType
+-- >         &hypotheticalFeatures,                                                  // pNext
+-- >     };
+-- >
+-- >     // After this call, features and hypotheticalFeatures have been filled out.
+-- >     vkGetPhysicalDeviceFeatures2KHR(physicalDevice, &features);
+-- >
+-- >     // Properties/limits can be chained and queried similarly.
+-- >
+-- >     // Enable some features:
+-- >     VkHypotheticalExtensionFeaturesKHR enabledHypotheticalFeatures =
+-- >     {
+-- >         VK_STRUCTURE_TYPE_HYPOTHETICAL_FEATURES_KHR,                            // sType
+-- >         NULL,                                                                   // pNext
+-- >     };
+-- >
+-- >     VkPhysicalDeviceFeatures2KHR enabledFeatures =
+-- >     {
+-- >         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR,                       // sType
+-- >         &enabledHypotheticalFeatures,                                           // pNext
+-- >     };
+-- >
+-- >     enabledFeatures.features.xyz = VK_TRUE;
+-- >     enabledHypotheticalFeatures.abc = VK_TRUE;
+-- >
+-- >     VkDeviceCreateInfo deviceCreateInfo =
+-- >     {
+-- >         VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,                                   // sType
+-- >         &enabledFeatures,                                                       // pNext
+-- >         ...
+-- >         NULL,                                                                   // pEnabledFeatures
+-- >     }
+-- >
+-- >     VkDevice device;
+-- >     vkCreateDevice(physicalDevice, &deviceCreateInfo, NULL, &device);
+--
+-- == Version History
+--
+-- -   Revision 1, 2016-09-12 (Jeff Bolz)
+--
+--     -   Internal revisions
+--
+-- -   Revision 2, 2016-11-02 (Ian Elliott)
+--
+--     -   Added ability for applications to use the physical-device
+--         components of device extensions before vkCreateDevice is called.
+--
+-- = See Also
+--
+-- 'FormatProperties2KHR', 'ImageFormatProperties2KHR',
+-- 'PhysicalDeviceFeatures2KHR', 'PhysicalDeviceImageFormatInfo2KHR',
+-- 'PhysicalDeviceMemoryProperties2KHR', 'PhysicalDeviceProperties2KHR',
+-- 'PhysicalDeviceSparseImageFormatInfo2KHR', 'QueueFamilyProperties2KHR',
+-- 'SparseImageFormatProperties2KHR', 'getPhysicalDeviceFeatures2KHR',
+-- 'getPhysicalDeviceFormatProperties2KHR',
+-- 'getPhysicalDeviceImageFormatProperties2KHR',
+-- 'getPhysicalDeviceMemoryProperties2KHR',
+-- 'getPhysicalDeviceProperties2KHR',
+-- 'getPhysicalDeviceQueueFamilyProperties2KHR',
+-- 'getPhysicalDeviceSparseImageFormatProperties2KHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_get_physical_device_properties2  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR
                                                                  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2_KHR
                                                                  , pattern STRUCTURE_TYPE_FORMAT_PROPERTIES_2_KHR

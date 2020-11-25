@@ -22,7 +22,6 @@ import           GHC.Conc                       ( numCapabilities )
 
 import           Documentation
 import           Documentation.RunAsciiDoctor
-import           Spec.Name
 
 -- | Creat a function which can be used to query for documentation
 -- Might take a few seconds to run, as vulkan has lots of documentation.
@@ -68,15 +67,12 @@ loadDocumentation
   -- ^ The asciidoc .txt file to load
   -> ExceptT Text IO [Documentation]
 loadDocumentation extensions vkDocs doc = do
-  let isValid = \case
-        TopLevel (CName n) ->
-          "vk" `T.isPrefixOf` T.toLower n || "pfn_" `T.isPrefixOf` T.toLower n
-        Nested p _ -> isValid (TopLevel p)
   docbook <- ExceptT $ manTxtToDocbook extensions vkDocs doc
+  let name = takeBaseName doc
   withExceptT (("Error while parsing documentation for" <+> show doc) <+>)
     . ExceptT
     . pure
-    $ docBookToDocumentation isValid docbook
+    $ docBookToDocumentation docbook (T.pack name)
 
 ----------------------------------------------------------------
 -- Utils

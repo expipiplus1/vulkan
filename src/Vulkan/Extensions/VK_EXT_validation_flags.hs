@@ -1,4 +1,109 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_validation_flags - instance extension
+--
+-- == VK_EXT_validation_flags
+--
+-- [__Name String__]
+--     @VK_EXT_validation_flags@
+--
+-- [__Extension Type__]
+--     Instance extension
+--
+-- [__Registered Extension Number__]
+--     62
+--
+-- [__Revision__]
+--     2
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Deprecation state__]
+--
+--     -   /Deprecated/ by @VK_EXT_validation_features@ extension
+--
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+--
+-- [__Contact__]
+--
+--     -   Tobin Ehlis
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_flags:%20&body=@tobine%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2019-08-19
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Tobin Ehlis, Google
+--
+--     -   Courtney Goeltzenleuchter, Google
+--
+-- == Description
+--
+-- This extension provides the 'ValidationFlagsEXT' struct that can be
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure passed
+-- as the @pCreateInfo@ parameter of
+-- 'Vulkan.Core10.DeviceInitialization.createInstance'. The structure
+-- contains an array of 'ValidationCheckEXT' values that will be disabled
+-- by the validation layers.
+--
+-- == Deprecation by @VK_EXT_validation_features@
+--
+-- Functionality in this extension is subsumed into the
+-- @VK_EXT_validation_features@ extension.
+--
+-- == New Structures
+--
+-- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':
+--
+--     -   'ValidationFlagsEXT'
+--
+-- == New Enums
+--
+-- -   'ValidationCheckEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_VALIDATION_FLAGS_EXTENSION_NAME'
+--
+-- -   'EXT_VALIDATION_FLAGS_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VALIDATION_FLAGS_EXT'
+--
+-- == Version History
+--
+-- -   Revision 2, 2019-08-19 (Mark Lobodzinski)
+--
+--     -   Marked as deprecated
+--
+-- -   Revision 1, 2016-08-26 (Courtney Goeltzenleuchter)
+--
+--     -   Initial draft
+--
+-- = See Also
+--
+-- 'ValidationCheckEXT', 'ValidationFlagsEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_flags Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_validation_flags  ( ValidationFlagsEXT(..)
                                                   , ValidationCheckEXT( VALIDATION_CHECK_ALL_EXT
                                                                       , VALIDATION_CHECK_SHADERS_EXT
@@ -10,18 +115,12 @@ module Vulkan.Extensions.VK_EXT_validation_flags  ( ValidationFlagsEXT(..)
                                                   , pattern EXT_VALIDATION_FLAGS_EXTENSION_NAME
                                                   ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -36,8 +135,8 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -116,27 +215,32 @@ newtype ValidationCheckEXT = ValidationCheckEXT Int32
 
 -- | 'VALIDATION_CHECK_ALL_EXT' specifies that all validation checks are
 -- disabled.
-pattern VALIDATION_CHECK_ALL_EXT = ValidationCheckEXT 0
+pattern VALIDATION_CHECK_ALL_EXT     = ValidationCheckEXT 0
 -- | 'VALIDATION_CHECK_SHADERS_EXT' specifies that shader validation is
 -- disabled.
 pattern VALIDATION_CHECK_SHADERS_EXT = ValidationCheckEXT 1
 {-# complete VALIDATION_CHECK_ALL_EXT,
              VALIDATION_CHECK_SHADERS_EXT :: ValidationCheckEXT #-}
 
+conNameValidationCheckEXT :: String
+conNameValidationCheckEXT = "ValidationCheckEXT"
+
+enumPrefixValidationCheckEXT :: String
+enumPrefixValidationCheckEXT = "VALIDATION_CHECK_"
+
+showTableValidationCheckEXT :: [(ValidationCheckEXT, String)]
+showTableValidationCheckEXT = [(VALIDATION_CHECK_ALL_EXT, "ALL_EXT"), (VALIDATION_CHECK_SHADERS_EXT, "SHADERS_EXT")]
+
 instance Show ValidationCheckEXT where
-  showsPrec p = \case
-    VALIDATION_CHECK_ALL_EXT -> showString "VALIDATION_CHECK_ALL_EXT"
-    VALIDATION_CHECK_SHADERS_EXT -> showString "VALIDATION_CHECK_SHADERS_EXT"
-    ValidationCheckEXT x -> showParen (p >= 11) (showString "ValidationCheckEXT " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixValidationCheckEXT
+                            showTableValidationCheckEXT
+                            conNameValidationCheckEXT
+                            (\(ValidationCheckEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read ValidationCheckEXT where
-  readPrec = parens (choose [("VALIDATION_CHECK_ALL_EXT", pure VALIDATION_CHECK_ALL_EXT)
-                            , ("VALIDATION_CHECK_SHADERS_EXT", pure VALIDATION_CHECK_SHADERS_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ValidationCheckEXT")
-                       v <- step readPrec
-                       pure (ValidationCheckEXT v)))
+  readPrec =
+    enumReadPrec enumPrefixValidationCheckEXT showTableValidationCheckEXT conNameValidationCheckEXT ValidationCheckEXT
 
 
 type EXT_VALIDATION_FLAGS_SPEC_VERSION = 2

@@ -717,7 +717,7 @@ getLenRef lengths = do
             .   Pure AlwaysInline
             .   ValueDoc
             $   "fromIntegral $"
-            <+> pretty (mkMemberName member)
+            <+> pretty (mkMemberName structName member)
             <+> parens (structValue <+> "::" <+> structTyDoc)
     NamedConstantLength n :<| _ ->
       pure . Pure AlwaysInline . ValueDoc . pretty . mkPatternName $ n

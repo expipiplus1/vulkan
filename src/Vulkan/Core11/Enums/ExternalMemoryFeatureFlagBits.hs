@@ -1,28 +1,26 @@
 {-# language CPP #-}
-module Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits  ( ExternalMemoryFeatureFlagBits( EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
+-- No documentation found for Chapter "ExternalMemoryFeatureFlagBits"
+module Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits  ( ExternalMemoryFeatureFlags
+                                                          , ExternalMemoryFeatureFlagBits( EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
                                                                                          , EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
                                                                                          , EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
                                                                                          , ..
                                                                                          )
-                                                          , ExternalMemoryFeatureFlags
                                                           ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ExternalMemoryFeatureFlags = ExternalMemoryFeatureFlagBits
+
 -- | VkExternalMemoryFeatureFlagBits - Bitmask specifying features of an
 -- external memory handle type
 --
@@ -60,27 +58,34 @@ newtype ExternalMemoryFeatureFlagBits = ExternalMemoryFeatureFlagBits Flags
 pattern EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT = ExternalMemoryFeatureFlagBits 0x00000001
 -- | 'EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT' specifies that handles of this
 -- type /can/ be exported from Vulkan memory objects.
-pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT = ExternalMemoryFeatureFlagBits 0x00000002
+pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT     = ExternalMemoryFeatureFlagBits 0x00000002
 -- | 'EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT' specifies that handles of this
 -- type /can/ be imported as Vulkan memory objects.
-pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT = ExternalMemoryFeatureFlagBits 0x00000004
+pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT     = ExternalMemoryFeatureFlagBits 0x00000004
 
-type ExternalMemoryFeatureFlags = ExternalMemoryFeatureFlagBits
+conNameExternalMemoryFeatureFlagBits :: String
+conNameExternalMemoryFeatureFlagBits = "ExternalMemoryFeatureFlagBits"
+
+enumPrefixExternalMemoryFeatureFlagBits :: String
+enumPrefixExternalMemoryFeatureFlagBits = "EXTERNAL_MEMORY_FEATURE_"
+
+showTableExternalMemoryFeatureFlagBits :: [(ExternalMemoryFeatureFlagBits, String)]
+showTableExternalMemoryFeatureFlagBits =
+  [ (EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT, "DEDICATED_ONLY_BIT")
+  , (EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT    , "EXPORTABLE_BIT")
+  , (EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT    , "IMPORTABLE_BIT")
+  ]
 
 instance Show ExternalMemoryFeatureFlagBits where
-  showsPrec p = \case
-    EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT -> showString "EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT"
-    EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT -> showString "EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT"
-    EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT -> showString "EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT"
-    ExternalMemoryFeatureFlagBits x -> showParen (p >= 11) (showString "ExternalMemoryFeatureFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixExternalMemoryFeatureFlagBits
+                            showTableExternalMemoryFeatureFlagBits
+                            conNameExternalMemoryFeatureFlagBits
+                            (\(ExternalMemoryFeatureFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ExternalMemoryFeatureFlagBits where
-  readPrec = parens (choose [("EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT", pure EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT)
-                            , ("EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT", pure EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT)
-                            , ("EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT", pure EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ExternalMemoryFeatureFlagBits")
-                       v <- step readPrec
-                       pure (ExternalMemoryFeatureFlagBits v)))
+  readPrec = enumReadPrec enumPrefixExternalMemoryFeatureFlagBits
+                          showTableExternalMemoryFeatureFlagBits
+                          conNameExternalMemoryFeatureFlagBits
+                          ExternalMemoryFeatureFlagBits
 

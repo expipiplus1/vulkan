@@ -1,30 +1,28 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.QueueFlagBits  ( QueueFlagBits( QUEUE_GRAPHICS_BIT
+-- No documentation found for Chapter "QueueFlagBits"
+module Vulkan.Core10.Enums.QueueFlagBits  ( QueueFlags
+                                          , QueueFlagBits( QUEUE_GRAPHICS_BIT
                                                          , QUEUE_COMPUTE_BIT
                                                          , QUEUE_TRANSFER_BIT
                                                          , QUEUE_SPARSE_BINDING_BIT
                                                          , QUEUE_PROTECTED_BIT
                                                          , ..
                                                          )
-                                          , QueueFlags
                                           ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type QueueFlags = QueueFlagBits
+
 -- | VkQueueFlagBits - Bitmask specifying capabilities of queues in a queue
 -- family
 --
@@ -82,36 +80,38 @@ newtype QueueFlagBits = QueueFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_GRAPHICS_BIT"
-pattern QUEUE_GRAPHICS_BIT = QueueFlagBits 0x00000001
+pattern QUEUE_GRAPHICS_BIT       = QueueFlagBits 0x00000001
 -- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_COMPUTE_BIT"
-pattern QUEUE_COMPUTE_BIT = QueueFlagBits 0x00000002
+pattern QUEUE_COMPUTE_BIT        = QueueFlagBits 0x00000002
 -- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_TRANSFER_BIT"
-pattern QUEUE_TRANSFER_BIT = QueueFlagBits 0x00000004
+pattern QUEUE_TRANSFER_BIT       = QueueFlagBits 0x00000004
 -- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_SPARSE_BINDING_BIT"
 pattern QUEUE_SPARSE_BINDING_BIT = QueueFlagBits 0x00000008
 -- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_PROTECTED_BIT"
-pattern QUEUE_PROTECTED_BIT = QueueFlagBits 0x00000010
+pattern QUEUE_PROTECTED_BIT      = QueueFlagBits 0x00000010
 
-type QueueFlags = QueueFlagBits
+conNameQueueFlagBits :: String
+conNameQueueFlagBits = "QueueFlagBits"
+
+enumPrefixQueueFlagBits :: String
+enumPrefixQueueFlagBits = "QUEUE_"
+
+showTableQueueFlagBits :: [(QueueFlagBits, String)]
+showTableQueueFlagBits =
+  [ (QUEUE_GRAPHICS_BIT      , "GRAPHICS_BIT")
+  , (QUEUE_COMPUTE_BIT       , "COMPUTE_BIT")
+  , (QUEUE_TRANSFER_BIT      , "TRANSFER_BIT")
+  , (QUEUE_SPARSE_BINDING_BIT, "SPARSE_BINDING_BIT")
+  , (QUEUE_PROTECTED_BIT     , "PROTECTED_BIT")
+  ]
 
 instance Show QueueFlagBits where
-  showsPrec p = \case
-    QUEUE_GRAPHICS_BIT -> showString "QUEUE_GRAPHICS_BIT"
-    QUEUE_COMPUTE_BIT -> showString "QUEUE_COMPUTE_BIT"
-    QUEUE_TRANSFER_BIT -> showString "QUEUE_TRANSFER_BIT"
-    QUEUE_SPARSE_BINDING_BIT -> showString "QUEUE_SPARSE_BINDING_BIT"
-    QUEUE_PROTECTED_BIT -> showString "QUEUE_PROTECTED_BIT"
-    QueueFlagBits x -> showParen (p >= 11) (showString "QueueFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixQueueFlagBits
+                            showTableQueueFlagBits
+                            conNameQueueFlagBits
+                            (\(QueueFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read QueueFlagBits where
-  readPrec = parens (choose [("QUEUE_GRAPHICS_BIT", pure QUEUE_GRAPHICS_BIT)
-                            , ("QUEUE_COMPUTE_BIT", pure QUEUE_COMPUTE_BIT)
-                            , ("QUEUE_TRANSFER_BIT", pure QUEUE_TRANSFER_BIT)
-                            , ("QUEUE_SPARSE_BINDING_BIT", pure QUEUE_SPARSE_BINDING_BIT)
-                            , ("QUEUE_PROTECTED_BIT", pure QUEUE_PROTECTED_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "QueueFlagBits")
-                       v <- step readPrec
-                       pure (QueueFlagBits v)))
+  readPrec = enumReadPrec enumPrefixQueueFlagBits showTableQueueFlagBits conNameQueueFlagBits QueueFlagBits
 

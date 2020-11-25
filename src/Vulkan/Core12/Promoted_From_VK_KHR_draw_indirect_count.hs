@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_draw_indirect_count"
 module Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count  ( cmdDrawIndirectCount
                                                                , cmdDrawIndexedIndirectCount
                                                                ) where

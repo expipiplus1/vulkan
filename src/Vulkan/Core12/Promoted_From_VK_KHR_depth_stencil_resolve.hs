@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_depth_stencil_resolve"
 module Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve  ( PhysicalDeviceDepthStencilResolveProperties(..)
                                                                  , SubpassDescriptionDepthStencilResolve(..)
                                                                  , StructureType(..)
@@ -224,19 +225,23 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --     one of them /must/ be
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'
 --
+-- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-04588#
+--     If the 'Vulkan.Core10.Enums.Format.Format' of
+--     @pDepthStencilResolveAttachment@ has a depth component,
+--     @depthResolveMode@ /must/ be a valid
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' value
+--
+-- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-04589#
+--     If the 'Vulkan.Core10.Enums.Format.Format' of
+--     @pDepthStencilResolveAttachment@ has a stencil component,
+--     @stencilResolveMode@ /must/ be a valid
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' value
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-sType-sType# @sType@
 --     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE'
---
--- -   #VUID-VkSubpassDescriptionDepthStencilResolve-depthResolveMode-parameter#
---     @depthResolveMode@ /must/ be a valid
---     'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' value
---
--- -   #VUID-VkSubpassDescriptionDepthStencilResolve-stencilResolveMode-parameter#
---     @stencilResolveMode@ /must/ be a valid
---     'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' value
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-parameter#
 --     If @pDepthStencilResolveAttachment@ is not @NULL@,

@@ -3,20 +3,27 @@
 - Regenerate source for `vulkan` and `VulkanMemoryAllocator`
   - Clean submodules and regenerate documentation first to ensure it's up to
     date.
+  - `./scripts/regenerate.sh` will do this for you
 - If there are any changes commit those before proceeding
 
 ## Versions
 
-- Bump version on `vulkan` in `package.yaml`
-- Bump version on `VulkanMemoryAllocator`
-- Bump version of `vulkan` dependency in `VulkanMemoryAllocator`
+- Bump versions
+  - Bump version on `vulkan` in `package.yaml`
+  - Bump version on `VulkanMemoryAllocator`
+  - Bump version on `utils`
+- Bump dependency versions
+  - Bump version bounds of `vulkan` dependency in `VulkanMemoryAllocator`
+  - Bump version bounds of `vulkan` dependency in `utils`
 - Run hpack in
   - `.`
   - `./VulkanMemoryAllocator`
+  - `./utils`
 
 - Make sure changelogs are up to date
   - `./changelog.md`
   - `./VulkanMemoryAllocator/changelog.md`
+  - `./utils/changelog.md`
 
 ## vulkan
 
@@ -39,8 +46,7 @@
 
 ## Tag git revision
 
-- `git tag vXXX`
-- `git push --tags`
+This is done automatically on merge to the main branch
 
 ## gh-pages documentation
 

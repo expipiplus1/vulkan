@@ -1,26 +1,24 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.RenderPassCreateFlagBits  ( RenderPassCreateFlagBits( RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM
+-- No documentation found for Chapter "RenderPassCreateFlagBits"
+module Vulkan.Core10.Enums.RenderPassCreateFlagBits  ( RenderPassCreateFlags
+                                                     , RenderPassCreateFlagBits( RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM
                                                                                , ..
                                                                                )
-                                                     , RenderPassCreateFlags
                                                      ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type RenderPassCreateFlags = RenderPassCreateFlagBits
+
 -- | VkRenderPassCreateFlagBits - Bitmask specifying additional properties of
 -- a renderpass
 --
@@ -35,18 +33,25 @@ newtype RenderPassCreateFlagBits = RenderPassCreateFlagBits Flags
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
 pattern RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM = RenderPassCreateFlagBits 0x00000002
 
-type RenderPassCreateFlags = RenderPassCreateFlagBits
+conNameRenderPassCreateFlagBits :: String
+conNameRenderPassCreateFlagBits = "RenderPassCreateFlagBits"
+
+enumPrefixRenderPassCreateFlagBits :: String
+enumPrefixRenderPassCreateFlagBits = "RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM"
+
+showTableRenderPassCreateFlagBits :: [(RenderPassCreateFlagBits, String)]
+showTableRenderPassCreateFlagBits = [(RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM, "")]
 
 instance Show RenderPassCreateFlagBits where
-  showsPrec p = \case
-    RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM -> showString "RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM"
-    RenderPassCreateFlagBits x -> showParen (p >= 11) (showString "RenderPassCreateFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixRenderPassCreateFlagBits
+                            showTableRenderPassCreateFlagBits
+                            conNameRenderPassCreateFlagBits
+                            (\(RenderPassCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read RenderPassCreateFlagBits where
-  readPrec = parens (choose [("RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM", pure RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "RenderPassCreateFlagBits")
-                       v <- step readPrec
-                       pure (RenderPassCreateFlagBits v)))
+  readPrec = enumReadPrec enumPrefixRenderPassCreateFlagBits
+                          showTableRenderPassCreateFlagBits
+                          conNameRenderPassCreateFlagBits
+                          RenderPassCreateFlagBits
 

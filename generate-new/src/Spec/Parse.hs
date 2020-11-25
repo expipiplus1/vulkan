@@ -699,16 +699,18 @@ parseUnions = onTypes "union" parseStruct
 parseStruct :: Node -> P (StructOrUnion a WithoutSize WithoutChildren)
 parseStruct n = do
   sName <- nameAttr "struct" n
-  context (unCName sName) $ do
-    sMembers <-
-      fmap fromList
-      . traverseV (parseStructMember sName)
-      $ [ m | Element m <- contents n, name m == "member" ]
-    let sSize       = ()
-        sAlignment  = ()
-        sExtendedBy = ()
-    sExtends <- listAttr (fmap CName . decode) "structextends" n
-    pure Struct { .. }
+  case find (\(Struct n _ _ _ _ _) -> n == sName) bespokeStructsAndUnions of
+    Just s  -> pure s
+    Nothing -> context (unCName sName) $ do
+      sMembers <-
+        fmap fromList
+        . traverseV (parseStructMember sName)
+        $ [ m | Element m <- contents n, name m == "member" ]
+      let sSize       = ()
+          sAlignment  = ()
+          sExtendedBy = ()
+      sExtends <- listAttr (fmap CName . decode) "structextends" n
+      pure Struct { .. }
  where
 
   parseStructMember :: CName -> Node -> P (StructMember' WithoutSize)
@@ -719,7 +721,8 @@ parseStruct n = do
     smIsOptional <- case bespokeOptionality sName smName of
       Just o  -> pure o
       Nothing -> boolListAttr "optional" m
-    smLengths <- lenListAttr "len" m
+    let listAttrName = if hasAttr "altlen" m then "altlen" else "len"
+    smLengths <- lenListAttr listAttrName m
     smValues  <- listAttr decode "values" m
     let smOffset = ()
     pure StructMember { .. }
@@ -758,7 +761,8 @@ parseCommands es =
     let typeString = allNonCommentText m
     pType       <- parseCType typeString
     pIsOptional <- boolListAttr "optional" m
-    pLengths    <- lenListAttr "len" m
+    let listAttrName = if hasAttr "altlen" m then "altlen" else "len"
+    pLengths    <- lenListAttr listAttrName m
     pure Parameter { .. }
 
 ----------------------------------------------------------------

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_external_fence"
 module Vulkan.Core11.Promoted_From_VK_KHR_external_fence  ( ExportFenceCreateInfo(..)
                                                           , StructureType(..)
                                                           , FenceImportFlagBits(..)

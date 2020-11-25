@@ -1,12 +1,111 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_display_surface_counter - instance extension
+--
+-- == VK_EXT_display_surface_counter
+--
+-- [__Name String__]
+--     @VK_EXT_display_surface_counter@
+--
+-- [__Extension Type__]
+--     Instance extension
+--
+-- [__Registered Extension Number__]
+--     91
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_display@
+--
+-- [__Contact__]
+--
+--     -   James Jones
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_display_surface_counter:%20&body=@cubanismo%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2016-12-13
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Pierre Boudier, NVIDIA
+--
+--     -   James Jones, NVIDIA
+--
+--     -   Damien Leone, NVIDIA
+--
+--     -   Pierre-Loup Griffais, Valve
+--
+--     -   Daniel Vetter, Intel
+--
+-- == Description
+--
+-- This extension defines a vertical blanking period counter associated
+-- with display surfaces. It provides a mechanism to query support for such
+-- a counter from a 'Vulkan.Extensions.Handles.SurfaceKHR' object.
+--
+-- == New Commands
+--
+-- -   'getPhysicalDeviceSurfaceCapabilities2EXT'
+--
+-- == New Structures
+--
+-- -   'SurfaceCapabilities2EXT'
+--
+-- == New Enums
+--
+-- -   'SurfaceCounterFlagBitsEXT'
+--
+-- == New Bitmasks
+--
+-- -   'SurfaceCounterFlagsEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME'
+--
+-- -   'EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT'
+--
+-- == Version History
+--
+-- -   Revision 1, 2016-12-13 (James Jones)
+--
+--     -   Initial draft
+--
+-- = See Also
+--
+-- 'SurfaceCapabilities2EXT', 'SurfaceCounterFlagBitsEXT',
+-- 'SurfaceCounterFlagsEXT', 'getPhysicalDeviceSurfaceCapabilities2EXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_surface_counter Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurfaceCapabilities2EXT
                                                          , pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT
                                                          , pattern SURFACE_COUNTER_VBLANK_EXT
                                                          , SurfaceCapabilities2EXT(..)
+                                                         , SurfaceCounterFlagsEXT
                                                          , SurfaceCounterFlagBitsEXT( SURFACE_COUNTER_VBLANK_BIT_EXT
                                                                                     , ..
                                                                                     )
-                                                         , SurfaceCounterFlagsEXT
                                                          , EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION
                                                          , pattern EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION
                                                          , EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME
@@ -18,6 +117,8 @@ module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurf
                                                          , SurfaceTransformFlagsKHR
                                                          ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -26,15 +127,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -52,8 +146,8 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagsKHR)
@@ -293,6 +387,8 @@ instance Zero SurfaceCapabilities2EXT where
            zero
 
 
+type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
+
 -- | VkSurfaceCounterFlagBitsEXT - Surface-relative counter types
 --
 -- = See Also
@@ -307,20 +403,27 @@ newtype SurfaceCounterFlagBitsEXT = SurfaceCounterFlagBitsEXT Flags
 -- with the surface.
 pattern SURFACE_COUNTER_VBLANK_BIT_EXT = SurfaceCounterFlagBitsEXT 0x00000001
 
-type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
+conNameSurfaceCounterFlagBitsEXT :: String
+conNameSurfaceCounterFlagBitsEXT = "SurfaceCounterFlagBitsEXT"
+
+enumPrefixSurfaceCounterFlagBitsEXT :: String
+enumPrefixSurfaceCounterFlagBitsEXT = "SURFACE_COUNTER_VBLANK_BIT_EXT"
+
+showTableSurfaceCounterFlagBitsEXT :: [(SurfaceCounterFlagBitsEXT, String)]
+showTableSurfaceCounterFlagBitsEXT = [(SURFACE_COUNTER_VBLANK_BIT_EXT, "")]
 
 instance Show SurfaceCounterFlagBitsEXT where
-  showsPrec p = \case
-    SURFACE_COUNTER_VBLANK_BIT_EXT -> showString "SURFACE_COUNTER_VBLANK_BIT_EXT"
-    SurfaceCounterFlagBitsEXT x -> showParen (p >= 11) (showString "SurfaceCounterFlagBitsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixSurfaceCounterFlagBitsEXT
+                            showTableSurfaceCounterFlagBitsEXT
+                            conNameSurfaceCounterFlagBitsEXT
+                            (\(SurfaceCounterFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read SurfaceCounterFlagBitsEXT where
-  readPrec = parens (choose [("SURFACE_COUNTER_VBLANK_BIT_EXT", pure SURFACE_COUNTER_VBLANK_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SurfaceCounterFlagBitsEXT")
-                       v <- step readPrec
-                       pure (SurfaceCounterFlagBitsEXT v)))
+  readPrec = enumReadPrec enumPrefixSurfaceCounterFlagBitsEXT
+                          showTableSurfaceCounterFlagBitsEXT
+                          conNameSurfaceCounterFlagBitsEXT
+                          SurfaceCounterFlagBitsEXT
 
 
 type EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION = 1

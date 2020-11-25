@@ -1,4 +1,156 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_copy_commands2 - device extension
+--
+-- == VK_KHR_copy_commands2
+--
+-- [__Name String__]
+--     @VK_KHR_copy_commands2@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     338
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Jeff Leger
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_copy_commands2:%20&body=@jackohound%20 >
+--
+-- == Other Extension Metadata
+--
+-- [Last Modified Date]
+--     2020-07-06
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   None
+--
+-- [Contributors]
+--
+--     -   Jeff Leger, Qualcomm
+--
+--     -   Tobias Hector, AMD
+--
+--     -   Jan-Harald Fredriksen, ARM
+--
+--     -   Tom Olson, ARM
+--
+-- == Description
+--
+-- This extension provides extensible versions of the Vulkan buffer and
+-- image copy commands. The new commands are functionally identical to the
+-- core commands, except that their copy parameters are specified using
+-- extensible structures that can be used to pass extension-specific
+-- information.
+--
+-- The following extensible copy commands are introduced with this
+-- extension: 'cmdCopyBuffer2KHR', 'cmdCopyImage2KHR',
+-- 'cmdCopyBufferToImage2KHR', 'cmdCopyImageToBuffer2KHR',
+-- 'cmdBlitImage2KHR', and 'cmdResolveImage2KHR'. Each command
+-- contain@*Info2KHR@ structure parameter that includes @sType@\/@pNext@
+-- members. Lower level structures that describe each region to be copied
+-- are also extended with @sType@\/@pNext@ members.
+--
+-- == New Commands
+--
+-- -   'cmdBlitImage2KHR'
+--
+-- -   'cmdCopyBuffer2KHR'
+--
+-- -   'cmdCopyBufferToImage2KHR'
+--
+-- -   'cmdCopyImage2KHR'
+--
+-- -   'cmdCopyImageToBuffer2KHR'
+--
+-- -   'cmdResolveImage2KHR'
+--
+-- == New Structures
+--
+-- -   'BlitImageInfo2KHR'
+--
+-- -   'BufferCopy2KHR'
+--
+-- -   'BufferImageCopy2KHR'
+--
+-- -   'CopyBufferInfo2KHR'
+--
+-- -   'CopyBufferToImageInfo2KHR'
+--
+-- -   'CopyImageInfo2KHR'
+--
+-- -   'CopyImageToBufferInfo2KHR'
+--
+-- -   'ImageBlit2KHR'
+--
+-- -   'ImageCopy2KHR'
+--
+-- -   'ImageResolve2KHR'
+--
+-- -   'ResolveImageInfo2KHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_COPY_COMMANDS_2_EXTENSION_NAME'
+--
+-- -   'KHR_COPY_COMMANDS_2_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BLIT_IMAGE_INFO_2_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_COPY_2_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_BUFFER_INFO_2_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_IMAGE_INFO_2_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_BLIT_2_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_COPY_2_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2_KHR'
+--
+-- == Version History
+--
+-- -   Revision 1, 2020-07-06 (Jeff Leger)
+--
+--     -   Internal revisions
+--
+-- = See Also
+--
+-- 'BlitImageInfo2KHR', 'BufferCopy2KHR', 'BufferImageCopy2KHR',
+-- 'CopyBufferInfo2KHR', 'CopyBufferToImageInfo2KHR', 'CopyImageInfo2KHR',
+-- 'CopyImageToBufferInfo2KHR', 'ImageBlit2KHR', 'ImageCopy2KHR',
+-- 'ImageResolve2KHR', 'ResolveImageInfo2KHR', 'cmdBlitImage2KHR',
+-- 'cmdCopyBuffer2KHR', 'cmdCopyBufferToImage2KHR', 'cmdCopyImage2KHR',
+-- 'cmdCopyImageToBuffer2KHR', 'cmdResolveImage2KHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_copy_commands2  ( cmdCopyBuffer2KHR
                                                 , cmdCopyImage2KHR
                                                 , cmdBlitImage2KHR
@@ -1314,7 +1466,7 @@ instance ToCStruct CopyBufferInfo2KHR where
     lift $ poke ((p `plusPtr` 24 :: Ptr Buffer)) (dstBuffer)
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
     pPRegions' <- ContT $ allocaBytesAligned @BufferCopy2KHR ((Data.Vector.length (regions)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (40 * (i)) :: Ptr BufferCopy2KHR) (e) . ($ ())) (regions)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (40 * (i)) :: Ptr BufferCopy2KHR) (e)) (regions)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferCopy2KHR))) (pPRegions')
     lift $ f
   cStructSize = 48
@@ -1325,7 +1477,7 @@ instance ToCStruct CopyBufferInfo2KHR where
     lift $ poke ((p `plusPtr` 16 :: Ptr Buffer)) (zero)
     lift $ poke ((p `plusPtr` 24 :: Ptr Buffer)) (zero)
     pPRegions' <- ContT $ allocaBytesAligned @BufferCopy2KHR ((Data.Vector.length (mempty)) * 40) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (40 * (i)) :: Ptr BufferCopy2KHR) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (40 * (i)) :: Ptr BufferCopy2KHR) (e)) (mempty)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferCopy2KHR))) (pPRegions')
     lift $ f
 
@@ -1735,7 +1887,7 @@ instance ToCStruct CopyImageInfo2KHR where
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
     pPRegions' <- ContT $ allocaBytesAligned @ImageCopy2KHR ((Data.Vector.length (regions)) * 88) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageCopy2KHR) (e) . ($ ())) (regions)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageCopy2KHR) (e)) (regions)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageCopy2KHR))) (pPRegions')
     lift $ f
   cStructSize = 56
@@ -1748,7 +1900,7 @@ instance ToCStruct CopyImageInfo2KHR where
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (zero)
     pPRegions' <- ContT $ allocaBytesAligned @ImageCopy2KHR ((Data.Vector.length (mempty)) * 88) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageCopy2KHR) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageCopy2KHR) (e)) (mempty)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageCopy2KHR))) (pPRegions')
     lift $ f
 
@@ -3014,7 +3166,7 @@ instance ToCStruct ResolveImageInfo2KHR where
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
     pPRegions' <- ContT $ allocaBytesAligned @ImageResolve2KHR ((Data.Vector.length (regions)) * 88) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageResolve2KHR) (e) . ($ ())) (regions)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageResolve2KHR) (e)) (regions)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageResolve2KHR))) (pPRegions')
     lift $ f
   cStructSize = 56
@@ -3027,7 +3179,7 @@ instance ToCStruct ResolveImageInfo2KHR where
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (zero)
     pPRegions' <- ContT $ allocaBytesAligned @ImageResolve2KHR ((Data.Vector.length (mempty)) * 88) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageResolve2KHR) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageResolve2KHR) (e)) (mempty)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageResolve2KHR))) (pPRegions')
     lift $ f
 

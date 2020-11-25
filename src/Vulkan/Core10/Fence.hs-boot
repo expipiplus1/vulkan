@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Fence"
 module Vulkan.Core10.Fence  (FenceCreateInfo) where
 
 import Data.Kind (Type)

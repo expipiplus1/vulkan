@@ -1,11 +1,12 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.ImageCreateFlagBits  ( ImageCreateFlagBits
-                                                , ImageCreateFlags
+-- No documentation found for Chapter "ImageCreateFlagBits"
+module Vulkan.Core10.Enums.ImageCreateFlagBits  ( ImageCreateFlags
+                                                , ImageCreateFlagBits
                                                 ) where
 
 
 
-data ImageCreateFlagBits
-
 type ImageCreateFlags = ImageCreateFlagBits
+
+data ImageCreateFlagBits
 

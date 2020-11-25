@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Core12"
 module Vulkan.Core12  ( PhysicalDeviceVulkan11Features
                       , PhysicalDeviceVulkan11Properties
                       , PhysicalDeviceVulkan12Features

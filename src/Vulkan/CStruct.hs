@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "CStruct"
 module Vulkan.CStruct  ( ToCStruct(..)
                        , FromCStruct(..)
                        ) where

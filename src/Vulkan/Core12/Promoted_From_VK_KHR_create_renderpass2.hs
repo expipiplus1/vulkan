@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_create_renderpass2"
 module Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2  ( createRenderPass2
                                                               , cmdBeginRenderPass2
                                                               , cmdUseRenderPass2
@@ -1953,7 +1954,7 @@ instance (Extendss RenderPassCreateInfo2 es, PokeChain es) => ToCStruct (RenderP
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (SubpassDescription2 _)))) (pPSubpasses')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (dependencies)) :: Word32))
     pPDependencies' <- ContT $ allocaBytesAligned @SubpassDependency2 ((Data.Vector.length (dependencies)) * 48) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDependencies' `plusPtr` (48 * (i)) :: Ptr SubpassDependency2) (e) . ($ ())) (dependencies)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDependencies' `plusPtr` (48 * (i)) :: Ptr SubpassDependency2) (e)) (dependencies)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr SubpassDependency2))) (pPDependencies')
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (correlatedViewMasks)) :: Word32))
     pPCorrelatedViewMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (correlatedViewMasks)) * 4) 4
@@ -1973,7 +1974,7 @@ instance (Extendss RenderPassCreateInfo2 es, PokeChain es) => ToCStruct (RenderP
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubpasses' `plusPtr` (88 * (i)) :: Ptr (SubpassDescription2 _))) (e) . ($ ())) (mempty)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (SubpassDescription2 _)))) (pPSubpasses')
     pPDependencies' <- ContT $ allocaBytesAligned @SubpassDependency2 ((Data.Vector.length (mempty)) * 48) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDependencies' `plusPtr` (48 * (i)) :: Ptr SubpassDependency2) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDependencies' `plusPtr` (48 * (i)) :: Ptr SubpassDependency2) (e)) (mempty)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr SubpassDependency2))) (pPDependencies')
     pPCorrelatedViewMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (mempty)) * 4) 4
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCorrelatedViewMasks' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)

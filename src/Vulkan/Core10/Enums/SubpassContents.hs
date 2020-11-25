@@ -1,22 +1,17 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SubpassContents"
 module Vulkan.Core10.Enums.SubpassContents  (SubpassContents( SUBPASS_CONTENTS_INLINE
                                                             , SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
                                                             , ..
                                                             )) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkSubpassContents - Specify how commands in the first subpass of a
 -- render pass are provided
@@ -32,7 +27,7 @@ newtype SubpassContents = SubpassContents Int32
 -- | 'SUBPASS_CONTENTS_INLINE' specifies that the contents of the subpass
 -- will be recorded inline in the primary command buffer, and secondary
 -- command buffers /must/ not be executed within the subpass.
-pattern SUBPASS_CONTENTS_INLINE = SubpassContents 0
+pattern SUBPASS_CONTENTS_INLINE                    = SubpassContents 0
 -- | 'SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS' specifies that the contents
 -- are recorded in secondary command buffers that will be called from the
 -- primary command buffer, and
@@ -44,18 +39,23 @@ pattern SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = SubpassContents 1
 {-# complete SUBPASS_CONTENTS_INLINE,
              SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS :: SubpassContents #-}
 
+conNameSubpassContents :: String
+conNameSubpassContents = "SubpassContents"
+
+enumPrefixSubpassContents :: String
+enumPrefixSubpassContents = "SUBPASS_CONTENTS_"
+
+showTableSubpassContents :: [(SubpassContents, String)]
+showTableSubpassContents =
+  [(SUBPASS_CONTENTS_INLINE, "INLINE"), (SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS, "SECONDARY_COMMAND_BUFFERS")]
+
 instance Show SubpassContents where
-  showsPrec p = \case
-    SUBPASS_CONTENTS_INLINE -> showString "SUBPASS_CONTENTS_INLINE"
-    SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS -> showString "SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"
-    SubpassContents x -> showParen (p >= 11) (showString "SubpassContents " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixSubpassContents
+                            showTableSubpassContents
+                            conNameSubpassContents
+                            (\(SubpassContents x) -> x)
+                            (showsPrec 11)
 
 instance Read SubpassContents where
-  readPrec = parens (choose [("SUBPASS_CONTENTS_INLINE", pure SUBPASS_CONTENTS_INLINE)
-                            , ("SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS", pure SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SubpassContents")
-                       v <- step readPrec
-                       pure (SubpassContents v)))
+  readPrec = enumReadPrec enumPrefixSubpassContents showTableSubpassContents conNameSubpassContents SubpassContents
 

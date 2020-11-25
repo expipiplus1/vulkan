@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_descriptor_update_template"
 module Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template  ( createDescriptorUpdateTemplate
                                                                       , withDescriptorUpdateTemplate
                                                                       , destroyDescriptorUpdateTemplate
@@ -162,8 +163,8 @@ createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT 
 --
 -- To ensure that 'destroyDescriptorUpdateTemplate' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withDescriptorUpdateTemplate :: forall io r . MonadIO io => Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> (io DescriptorUpdateTemplate -> (DescriptorUpdateTemplate -> io ()) -> r) -> r
 withDescriptorUpdateTemplate device pCreateInfo pAllocator b =
@@ -386,8 +387,8 @@ updateDescriptorSetWithTemplate :: forall io
                                    -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
                                    -- 'Vulkan.Core10.Handles.BufferView' structures or
                                    -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR' or
-                                   -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureNV' handles
-                                   -- used to write the descriptors.
+                                   -- 'Vulkan.Extensions.Handles.AccelerationStructureNV' handles used to
+                                   -- write the descriptors.
                                    ("data" ::: Ptr ())
                                 -> io ()
 updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate data' = liftIO $ do
@@ -662,7 +663,7 @@ instance ToCStruct DescriptorUpdateTemplateCreateInfo where
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorUpdateTemplateCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (descriptorUpdateEntries)) :: Word32))
     pPDescriptorUpdateEntries' <- ContT $ allocaBytesAligned @DescriptorUpdateTemplateEntry ((Data.Vector.length (descriptorUpdateEntries)) * 32) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorUpdateEntries' `plusPtr` (32 * (i)) :: Ptr DescriptorUpdateTemplateEntry) (e) . ($ ())) (descriptorUpdateEntries)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorUpdateEntries' `plusPtr` (32 * (i)) :: Ptr DescriptorUpdateTemplateEntry) (e)) (descriptorUpdateEntries)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorUpdateTemplateEntry))) (pPDescriptorUpdateEntries')
     lift $ poke ((p `plusPtr` 32 :: Ptr DescriptorUpdateTemplateType)) (templateType)
     lift $ poke ((p `plusPtr` 40 :: Ptr DescriptorSetLayout)) (descriptorSetLayout)
@@ -676,7 +677,7 @@ instance ToCStruct DescriptorUpdateTemplateCreateInfo where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pPDescriptorUpdateEntries' <- ContT $ allocaBytesAligned @DescriptorUpdateTemplateEntry ((Data.Vector.length (mempty)) * 32) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorUpdateEntries' `plusPtr` (32 * (i)) :: Ptr DescriptorUpdateTemplateEntry) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorUpdateEntries' `plusPtr` (32 * (i)) :: Ptr DescriptorUpdateTemplateEntry) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorUpdateTemplateEntry))) (pPDescriptorUpdateEntries')
     lift $ poke ((p `plusPtr` 32 :: Ptr DescriptorUpdateTemplateType)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr DescriptorSetLayout)) (zero)

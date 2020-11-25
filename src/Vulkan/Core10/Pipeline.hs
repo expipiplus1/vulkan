@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Pipeline"
 module Vulkan.Core10.Pipeline  ( createGraphicsPipelines
                                , withGraphicsPipelines
                                , createComputePipelines
@@ -384,8 +385,8 @@ createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . ev
 --
 -- To ensure that 'destroyPipeline' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withGraphicsPipelines :: forall io r . MonadIO io => Device -> PipelineCache -> Vector (SomeStruct GraphicsPipelineCreateInfo) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
 withGraphicsPipelines device pipelineCache pCreateInfos pAllocator b =
@@ -513,8 +514,8 @@ createComputePipelines device pipelineCache createInfos allocator = liftIO . eva
 --
 -- To ensure that 'destroyPipeline' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withComputePipelines :: forall io r . MonadIO io => Device -> PipelineCache -> Vector (SomeStruct ComputePipelineCreateInfo) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
 withComputePipelines device pipelineCache pCreateInfos pAllocator b =
@@ -873,7 +874,7 @@ instance ToCStruct SpecializationInfo where
   pokeCStruct p SpecializationInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (mapEntries)) :: Word32))
     pPMapEntries' <- ContT $ allocaBytesAligned @SpecializationMapEntry ((Data.Vector.length (mapEntries)) * 16) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMapEntries' `plusPtr` (16 * (i)) :: Ptr SpecializationMapEntry) (e) . ($ ())) (mapEntries)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPMapEntries' `plusPtr` (16 * (i)) :: Ptr SpecializationMapEntry) (e)) (mapEntries)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr SpecializationMapEntry))) (pPMapEntries')
     lift $ poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (dataSize))
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (data')
@@ -882,7 +883,7 @@ instance ToCStruct SpecializationInfo where
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     pPMapEntries' <- ContT $ allocaBytesAligned @SpecializationMapEntry ((Data.Vector.length (mempty)) * 16) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMapEntries' `plusPtr` (16 * (i)) :: Ptr SpecializationMapEntry) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPMapEntries' `plusPtr` (16 * (i)) :: Ptr SpecializationMapEntry) (e)) (mempty)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr SpecializationMapEntry))) (pPMapEntries')
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (zero)
     lift $ f
@@ -1146,7 +1147,7 @@ instance Zero SpecializationInfo where
 -- 'ComputePipelineCreateInfo', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PipelineShaderStageCreateFlags',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
 -- 'Vulkan.Core10.Handles.ShaderModule',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits',
@@ -1324,6 +1325,10 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 -- -   #VUID-VkComputePipelineCreateInfo-flags-03370# @flags@ /must/ not
 --     include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
+--
+-- -   #VUID-VkComputePipelineCreateInfo-flags-03576# @flags@ /must/ not
+--     include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --
 -- -   #VUID-VkComputePipelineCreateInfo-flags-02874# @flags@ /must/ not
 --     include
@@ -1734,11 +1739,11 @@ instance (Extendss PipelineVertexInputStateCreateInfo es, PokeChain es) => ToCSt
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineVertexInputStateCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (vertexBindingDescriptions)) :: Word32))
     pPVertexBindingDescriptions' <- ContT $ allocaBytesAligned @VertexInputBindingDescription ((Data.Vector.length (vertexBindingDescriptions)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVertexBindingDescriptions' `plusPtr` (12 * (i)) :: Ptr VertexInputBindingDescription) (e) . ($ ())) (vertexBindingDescriptions)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexBindingDescriptions' `plusPtr` (12 * (i)) :: Ptr VertexInputBindingDescription) (e)) (vertexBindingDescriptions)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr VertexInputBindingDescription))) (pPVertexBindingDescriptions')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (vertexAttributeDescriptions)) :: Word32))
     pPVertexAttributeDescriptions' <- ContT $ allocaBytesAligned @VertexInputAttributeDescription ((Data.Vector.length (vertexAttributeDescriptions)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVertexAttributeDescriptions' `plusPtr` (16 * (i)) :: Ptr VertexInputAttributeDescription) (e) . ($ ())) (vertexAttributeDescriptions)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexAttributeDescriptions' `plusPtr` (16 * (i)) :: Ptr VertexInputAttributeDescription) (e)) (vertexAttributeDescriptions)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr VertexInputAttributeDescription))) (pPVertexAttributeDescriptions')
     lift $ f
   cStructSize = 48
@@ -1748,10 +1753,10 @@ instance (Extendss PipelineVertexInputStateCreateInfo es, PokeChain es) => ToCSt
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     pPVertexBindingDescriptions' <- ContT $ allocaBytesAligned @VertexInputBindingDescription ((Data.Vector.length (mempty)) * 12) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVertexBindingDescriptions' `plusPtr` (12 * (i)) :: Ptr VertexInputBindingDescription) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexBindingDescriptions' `plusPtr` (12 * (i)) :: Ptr VertexInputBindingDescription) (e)) (mempty)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr VertexInputBindingDescription))) (pPVertexBindingDescriptions')
     pPVertexAttributeDescriptions' <- ContT $ allocaBytesAligned @VertexInputAttributeDescription ((Data.Vector.length (mempty)) * 16) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVertexAttributeDescriptions' `plusPtr` (16 * (i)) :: Ptr VertexInputAttributeDescription) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexAttributeDescriptions' `plusPtr` (16 * (i)) :: Ptr VertexInputAttributeDescription) (e)) (mempty)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr VertexInputAttributeDescription))) (pPVertexAttributeDescriptions')
     lift $ f
 
@@ -2151,7 +2156,7 @@ instance (Extendss PipelineViewportStateCreateInfo es, PokeChain es) => ToCStruc
       then pure nullPtr
       else do
         pPViewports <- ContT $ allocaBytesAligned @Viewport (((Data.Vector.length (viewports))) * 24) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e) . ($ ())) ((viewports))
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e)) ((viewports))
         pure $ pPViewports
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Viewport))) pViewports''
     let pScissorsLength = Data.Vector.length $ (scissors)
@@ -2968,7 +2973,7 @@ instance (Extendss PipelineColorBlendStateCreateInfo es, PokeChain es) => ToCStr
     lift $ poke ((p `plusPtr` 24 :: Ptr LogicOp)) (logicOp)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32))
     pPAttachments' <- ContT $ allocaBytesAligned @PipelineColorBlendAttachmentState ((Data.Vector.length (attachments)) * 32) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e) . ($ ())) (attachments)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e)) (attachments)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState))) (pPAttachments')
     let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     lift $ case (blendConstants) of
@@ -2987,7 +2992,7 @@ instance (Extendss PipelineColorBlendStateCreateInfo es, PokeChain es) => ToCStr
     lift $ poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ poke ((p `plusPtr` 24 :: Ptr LogicOp)) (zero)
     pPAttachments' <- ContT $ allocaBytesAligned @PipelineColorBlendAttachmentState ((Data.Vector.length (mempty)) * 32) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e)) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState))) (pPAttachments')
     let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     lift $ case ((zero, zero, zero, zero)) of
@@ -3056,6 +3061,7 @@ instance es ~ '[] => Zero (PipelineColorBlendStateCreateInfo es) where
 -- 'Vulkan.Core10.Enums.DynamicState.DynamicState',
 -- 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags.PipelineDynamicStateCreateFlags',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineDynamicStateCreateInfo = PipelineDynamicStateCreateInfo
   { -- | @flags@ is reserved for future use.
@@ -3893,6 +3899,10 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
 --
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-03577# @flags@ /must/ not
+--     include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
+--
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-03378# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature is not enabled, there /must/ be no element of the
@@ -4115,6 +4125,11 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV'::shadingRate
 --     /must/ not be equal to
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV'.
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-03578# All
+--     elements of the @pDynamicStates@ member of @pDynamicState@ /must/
+--     not be
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR'
 --
 -- == Valid Usage (Implicit)
 --

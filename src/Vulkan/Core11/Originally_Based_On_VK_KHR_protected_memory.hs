@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Originally_Based_On_VK_KHR_protected_memory"
 module Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory  ( getDeviceQueue2
                                                                   , ProtectedSubmitInfo(..)
                                                                   , PhysicalDeviceProtectedMemoryFeatures(..)

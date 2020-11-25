@@ -1,22 +1,17 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PointClippingBehavior"
 module Vulkan.Core11.Enums.PointClippingBehavior  (PointClippingBehavior( POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
                                                                         , POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
                                                                         , ..
                                                                         )) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkPointClippingBehavior - Enum specifying the point clipping behavior
 --
@@ -30,7 +25,7 @@ newtype PointClippingBehavior = PointClippingBehavior Int32
 -- | 'POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES' specifies that the primitive
 -- is discarded if the vertex lies outside any clip plane, including the
 -- planes bounding the view volume.
-pattern POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = PointClippingBehavior 0
+pattern POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES       = PointClippingBehavior 0
 -- | 'POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY' specifies that the
 -- primitive is discarded only if the vertex lies outside any user clip
 -- plane.
@@ -38,18 +33,28 @@ pattern POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = PointClippingBehavior 1
 {-# complete POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES,
              POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY :: PointClippingBehavior #-}
 
+conNamePointClippingBehavior :: String
+conNamePointClippingBehavior = "PointClippingBehavior"
+
+enumPrefixPointClippingBehavior :: String
+enumPrefixPointClippingBehavior = "POINT_CLIPPING_BEHAVIOR_"
+
+showTablePointClippingBehavior :: [(PointClippingBehavior, String)]
+showTablePointClippingBehavior =
+  [ (POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES      , "ALL_CLIP_PLANES")
+  , (POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY, "USER_CLIP_PLANES_ONLY")
+  ]
+
 instance Show PointClippingBehavior where
-  showsPrec p = \case
-    POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES -> showString "POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES"
-    POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY -> showString "POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY"
-    PointClippingBehavior x -> showParen (p >= 11) (showString "PointClippingBehavior " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPointClippingBehavior
+                            showTablePointClippingBehavior
+                            conNamePointClippingBehavior
+                            (\(PointClippingBehavior x) -> x)
+                            (showsPrec 11)
 
 instance Read PointClippingBehavior where
-  readPrec = parens (choose [("POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES", pure POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES)
-                            , ("POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY", pure POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PointClippingBehavior")
-                       v <- step readPrec
-                       pure (PointClippingBehavior v)))
+  readPrec = enumReadPrec enumPrefixPointClippingBehavior
+                          showTablePointClippingBehavior
+                          conNamePointClippingBehavior
+                          PointClippingBehavior
 

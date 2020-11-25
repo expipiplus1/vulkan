@@ -1,4 +1,114 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_NN_vi_surface - instance extension
+--
+-- == VK_NN_vi_surface
+--
+-- [__Name String__]
+--     @VK_NN_vi_surface@
+--
+-- [__Extension Type__]
+--     Instance extension
+--
+-- [__Registered Extension Number__]
+--     63
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Mathias Heyer <<data:image/png;base64, GitLab>>mheyer
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2016-12-02
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Mathias Heyer, NVIDIA
+--
+--     -   Michael Chock, NVIDIA
+--
+--     -   Yasuhiro Yoshioka, Nintendo
+--
+--     -   Daniel Koch, NVIDIA
+--
+-- == Description
+--
+-- The @VK_NN_vi_surface@ extension is an instance extension. It provides a
+-- mechanism to create a 'Vulkan.Extensions.Handles.SurfaceKHR' object
+-- (defined by the @VK_KHR_surface@ extension) associated with an
+-- @nn@::@vi@::@Layer@.
+--
+-- == New Commands
+--
+-- -   'createViSurfaceNN'
+--
+-- == New Structures
+--
+-- -   'ViSurfaceCreateInfoNN'
+--
+-- == New Bitmasks
+--
+-- -   'ViSurfaceCreateFlagsNN'
+--
+-- == New Enum Constants
+--
+-- -   'NN_VI_SURFACE_EXTENSION_NAME'
+--
+-- -   'NN_VI_SURFACE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN'
+--
+-- == Issues
+--
+-- 1) Does VI need a way to query for compatibility between a particular
+-- physical device (and queue family?) and a specific VI display?
+--
+-- __RESOLVED__: No. It is currently always assumed that the device and
+-- display will always be compatible.
+--
+-- 2) 'ViSurfaceCreateInfoNN'::@pWindow@ is intended to store an
+-- @nn@::@vi@::@NativeWindowHandle@, but its declared type is a bare
+-- @void@* to store the window handle. Why the discrepancy?
+--
+-- __RESOLVED__: It is for C compatibility. The definition for the VI
+-- native window handle type is defined inside the @nn@::@vi@ C++
+-- namespace. This prevents its use in C source files.
+-- @nn@::@vi@::@NativeWindowHandle@ is always defined to be @void@*, so
+-- this extension uses @void@* to match.
+--
+-- == Version History
+--
+-- -   Revision 1, 2016-12-2 (Michael Chock)
+--
+--     -   Initial draft.
+--
+-- = See Also
+--
+-- 'ViSurfaceCreateFlagsNN', 'ViSurfaceCreateInfoNN', 'createViSurfaceNN'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NN_vi_surface Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NN_vi_surface  ( createViSurfaceNN
                                            , ViSurfaceCreateInfoNN(..)
                                            , ViSurfaceCreateFlagsNN(..)
@@ -9,6 +119,8 @@ module Vulkan.Extensions.VK_NN_vi_surface  ( createViSurfaceNN
                                            , SurfaceKHR(..)
                                            ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -20,15 +132,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -46,7 +151,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -237,17 +342,27 @@ newtype ViSurfaceCreateFlagsNN = ViSurfaceCreateFlagsNN Flags
 
 
 
+conNameViSurfaceCreateFlagsNN :: String
+conNameViSurfaceCreateFlagsNN = "ViSurfaceCreateFlagsNN"
+
+enumPrefixViSurfaceCreateFlagsNN :: String
+enumPrefixViSurfaceCreateFlagsNN = ""
+
+showTableViSurfaceCreateFlagsNN :: [(ViSurfaceCreateFlagsNN, String)]
+showTableViSurfaceCreateFlagsNN = []
+
 instance Show ViSurfaceCreateFlagsNN where
-  showsPrec p = \case
-    ViSurfaceCreateFlagsNN x -> showParen (p >= 11) (showString "ViSurfaceCreateFlagsNN 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixViSurfaceCreateFlagsNN
+                            showTableViSurfaceCreateFlagsNN
+                            conNameViSurfaceCreateFlagsNN
+                            (\(ViSurfaceCreateFlagsNN x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ViSurfaceCreateFlagsNN where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ViSurfaceCreateFlagsNN")
-                       v <- step readPrec
-                       pure (ViSurfaceCreateFlagsNN v)))
+  readPrec = enumReadPrec enumPrefixViSurfaceCreateFlagsNN
+                          showTableViSurfaceCreateFlagsNN
+                          conNameViSurfaceCreateFlagsNN
+                          ViSurfaceCreateFlagsNN
 
 
 type NN_VI_SURFACE_SPEC_VERSION = 1

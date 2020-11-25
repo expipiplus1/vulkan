@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Image"
 module Vulkan.Core10.Image  ( ImageCreateInfo
                             , SubresourceLayout
                             ) where

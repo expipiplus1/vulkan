@@ -1,4 +1,204 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_fragment_shading_rate - device extension
+--
+-- == VK_KHR_fragment_shading_rate
+--
+-- [__Name String__]
+--     @VK_KHR_fragment_shading_rate@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     227
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_create_renderpass2@
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Tobias Hector
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_fragment_shading_rate:%20&body=@tobski%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2020-05-06
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_fragment_shading_rate.html SPV_KHR_fragment_shading_rate>.
+--
+-- [__Contributors__]
+--
+--     -   Tobias Hector, AMD
+--
+--     -   Guennadi Riguer, AMD
+--
+--     -   Matthaeus Chajdas, AMD
+--
+--     -   Pat Brown, Nvidia
+--
+--     -   Matthew Netsch, Qualcomm
+--
+--     -   Slawomir Grajewski, Intel
+--
+--     -   Jan-Harald Fredriksen, Arm
+--
+--     -   Jeff Bolz, Nvidia
+--
+--     -   Contributors to the VK_NV_shading_rate_image specification
+--
+--     -   Contributors to the VK_EXT_fragment_density_map specification
+--
+-- == Description
+--
+-- This extension adds the ability to change the rate at which fragments
+-- are shaded. Rather than the usual single fragment invocation for each
+-- pixel covered by a primitive, multiple pixels can be shaded by a single
+-- fragment shader invocation.
+--
+-- Up to three methods are available to the application to change the
+-- fragment shading rate:
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline>,
+--     which allows the specification of a rate per-draw.
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive>,
+--     which allows the specification of a rate per primitive, specified
+--     during shading.
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment>,
+--     which allows the specification of a rate per-region of the
+--     framebuffer, specified in a specialized image attachment.
+--
+-- Additionally, these rates can all be specified and combined in order to
+-- adjust the overall detail in the image at each point.
+--
+-- This functionality can be used to focus shading efforts where higher
+-- levels of detail are needed in some parts of a scene compared to others.
+-- This can be particularly useful in high resolution rendering, or for XR
+-- contexts.
+--
+-- This extension also adds support for the @SPV_KHR_fragment_shading_rate@
+-- extension which enables setting the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive fragment shading rate>,
+-- and allows querying the final shading rate from a fragment shader.
+--
+-- == New Commands
+--
+-- -   'cmdSetFragmentShadingRateKHR'
+--
+-- -   'getPhysicalDeviceFragmentShadingRatesKHR'
+--
+-- == New Structures
+--
+-- -   'PhysicalDeviceFragmentShadingRateKHR'
+--
+-- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+--
+--     -   'PipelineFragmentShadingRateStateCreateInfoKHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceFragmentShadingRateFeaturesKHR'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
+--
+--     -   'PhysicalDeviceFragmentShadingRatePropertiesKHR'
+--
+-- -   Extending
+--     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2':
+--
+--     -   'FragmentShadingRateAttachmentInfoKHR'
+--
+-- == New Enums
+--
+-- -   'FragmentShadingRateCombinerOpKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME'
+--
+-- -   'KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':
+--
+--     -   'ACCESS_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.ImageLayout.ImageLayout':
+--
+--     -   'IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits':
+--
+--     -   'IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
+--
+--     -   'PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR'
+--
+-- == Version History
+--
+-- -   Revision 1, 2020-05-06 (Tobias Hector)
+--
+--     -   Initial revision
+--
+-- = See Also
+--
+-- 'FragmentShadingRateAttachmentInfoKHR',
+-- 'FragmentShadingRateCombinerOpKHR',
+-- 'PhysicalDeviceFragmentShadingRateFeaturesKHR',
+-- 'PhysicalDeviceFragmentShadingRateKHR',
+-- 'PhysicalDeviceFragmentShadingRatePropertiesKHR',
+-- 'PipelineFragmentShadingRateStateCreateInfoKHR',
+-- 'cmdSetFragmentShadingRateKHR',
+-- 'getPhysicalDeviceFragmentShadingRatesKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_fragment_shading_rate  ( cmdSetFragmentShadingRateKHR
                                                        , getPhysicalDeviceFragmentShadingRatesKHR
                                                        , pattern IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR
@@ -24,6 +224,8 @@ module Vulkan.Extensions.VK_KHR_fragment_shading_rate  ( cmdSetFragmentShadingRa
                                                        ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -36,15 +238,7 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -62,8 +256,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -1161,45 +1355,52 @@ newtype FragmentShadingRateCombinerOpKHR = FragmentShadingRateCombinerOpKHR Int3
 
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = Axy.
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR = FragmentShadingRateCombinerOpKHR 0
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR    = FragmentShadingRateCombinerOpKHR 0
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = Bxy.
 pattern FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR = FragmentShadingRateCombinerOpKHR 1
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = min(Axy,Bxy).
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR = FragmentShadingRateCombinerOpKHR 2
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR     = FragmentShadingRateCombinerOpKHR 2
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = max(Axy,Bxy).
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR = FragmentShadingRateCombinerOpKHR 3
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR     = FragmentShadingRateCombinerOpKHR 3
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR' combiner operation of
 -- combine(Axy,Bxy) = Axy*Bxy.
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR = FragmentShadingRateCombinerOpKHR 4
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR     = FragmentShadingRateCombinerOpKHR 4
 {-# complete FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR :: FragmentShadingRateCombinerOpKHR #-}
 
+conNameFragmentShadingRateCombinerOpKHR :: String
+conNameFragmentShadingRateCombinerOpKHR = "FragmentShadingRateCombinerOpKHR"
+
+enumPrefixFragmentShadingRateCombinerOpKHR :: String
+enumPrefixFragmentShadingRateCombinerOpKHR = "FRAGMENT_SHADING_RATE_COMBINER_OP_"
+
+showTableFragmentShadingRateCombinerOpKHR :: [(FragmentShadingRateCombinerOpKHR, String)]
+showTableFragmentShadingRateCombinerOpKHR =
+  [ (FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR   , "KEEP_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR, "REPLACE_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR    , "MIN_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR    , "MAX_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR    , "MUL_KHR")
+  ]
+
 instance Show FragmentShadingRateCombinerOpKHR where
-  showsPrec p = \case
-    FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR"
-    FragmentShadingRateCombinerOpKHR x -> showParen (p >= 11) (showString "FragmentShadingRateCombinerOpKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixFragmentShadingRateCombinerOpKHR
+                            showTableFragmentShadingRateCombinerOpKHR
+                            conNameFragmentShadingRateCombinerOpKHR
+                            (\(FragmentShadingRateCombinerOpKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read FragmentShadingRateCombinerOpKHR where
-  readPrec = parens (choose [("FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "FragmentShadingRateCombinerOpKHR")
-                       v <- step readPrec
-                       pure (FragmentShadingRateCombinerOpKHR v)))
+  readPrec = enumReadPrec enumPrefixFragmentShadingRateCombinerOpKHR
+                          showTableFragmentShadingRateCombinerOpKHR
+                          conNameFragmentShadingRateCombinerOpKHR
+                          FragmentShadingRateCombinerOpKHR
 
 
 type KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION = 1

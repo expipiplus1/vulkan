@@ -1,11 +1,12 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.CullModeFlagBits  ( CullModeFlagBits
-                                             , CullModeFlags
+-- No documentation found for Chapter "CullModeFlagBits"
+module Vulkan.Core10.Enums.CullModeFlagBits  ( CullModeFlags
+                                             , CullModeFlagBits
                                              ) where
 
 
 
-data CullModeFlagBits
-
 type CullModeFlags = CullModeFlagBits
+
+data CullModeFlagBits
 

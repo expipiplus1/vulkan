@@ -1,8 +1,10 @@
+{-# LANGUAGE NamedFieldPuns #-}
 {-# language QuasiQuotes #-}
 {-# language TemplateHaskellQuotes #-}
 module Bespoke
   ( forbiddenConstants
   , assignBespokeModules
+  , bespokeStructsAndUnions
   , bespokeElements
   , bespokeSizes
   , bespokeOptionality
@@ -116,6 +118,7 @@ bespokeSchemes spec =
     <> difficultLengths
     <> [bitfields]
     <> [accelerationStructureGeometry]
+    <> [buildingAccelerationStructures]
 
 baseInOut :: BespokeScheme
 baseInOut = BespokeScheme $ \case
@@ -423,69 +426,76 @@ difficultLengths =
       _ -> Nothing
     _ -> const Nothing
   , BespokeScheme $ \case
-    "VkAccelerationStructureVersionKHR" -> \case
-      p
-        | "versionData" <- name p
-        , Ptr Const (TypeName "uint8_t") <- type' p
-        , -- TODO, This should be a "MultipleLength" or something
-          V.Singleton (NamedLength (CName len)) <- lengths p
-        , len == "2*VK_UUID_SIZE"
-        -> Just . Custom $ CustomScheme
-          { csName       = "Acceleration structure version"
-          , csZero       = Just "mempty"
-          , csZeroIsZero = True
-          , csType       = pure $ ConT ''ByteString
-          , csDirectPoke = APoke $ \bsRef -> do
-            assertCorrectLength <- unitStmt $ do
-              RenderParams {..} <- input
-              ValueDoc bs       <- use bsRef
-              tellQualImport 'BS.length
-              let
-                err =
-                  "AccelerationStructureVersionKHR::versionData must be "
-                    <> len
-                    <> " bytes"
-                uuidSizeDoc = mkPatternName "VK_UUID_SIZE"
-                cond =
-                  parens
-                    $   "Data.ByteString.length"
-                    <+> bs
-                    <+> "== 2 *"
-                    <+> pretty uuidSizeDoc
-              tellImport uuidSizeDoc
-              throwErrDoc err cond
-            stmt (Just (ConT ''Ptr :@ ConT ''Word8)) (Just "versionData") $ do
-              after assertCorrectLength
-              ValueDoc bs <- use bsRef
-              tellImportWithAll ''ContT
-              tellImport 'BS.unsafeUseAsCString
-              tellImport 'castPtr
-              tellImport ''Word8
-              tellImport ''CChar
-              pure
-                .   ContTAction
-                .   ValueDoc
-                $   "fmap (castPtr @CChar @Word8) . ContT $ unsafeUseAsCString"
-                <+> bs
-          , csPeek       = \addrRef ->
-            stmt (Just (ConT ''ByteString)) (Just "versionData") $ do
-              RenderParams {..} <- input
-              let uuidSizeDoc = mkPatternName "VK_UUID_SIZE"
-                  bytes       = "2 *" <+> pretty uuidSizeDoc
-              tellImport uuidSizeDoc
-              ptr <- use =<< storablePeek
-                "versionData"
-                addrRef
-                (Ptr Const (Ptr Const (TypeName "uint8_t")))
-              tellImport 'castPtr
-              tellImport ''Word8
-              tellImport ''CChar
-              let castPtr = "castPtr @Word8 @CChar" <+> ptr
-              tellImport 'BS.packCStringLen
-              pure . IOAction . ValueDoc $ "packCStringLen" <+> tupled
-                [castPtr, bytes]
-          }
-      _ -> Nothing
+    structName
+      | -- Handle before and after 1.2.162
+        structName
+        `elem` [ "VkAccelerationStructureVersionInfoKHR"
+               , "VkAccelerationStructureVersionKHR"
+               ]
+      -> \case
+        p
+          | memberName <- name p
+          , memberName `elem` ["pVersionData", "versionData"]
+          , Ptr Const (TypeName "uint8_t") <- type' p
+          , -- TODO, This should be a "MultipleLength" or something
+            V.Singleton (NamedLength (CName len)) <- lengths p
+          , len == "2*VK_UUID_SIZE"
+          -> Just . Custom $ CustomScheme
+            { csName       = "Acceleration structure version"
+            , csZero       = Just "mempty"
+            , csZeroIsZero = True
+            , csType       = pure $ ConT ''ByteString
+            , csDirectPoke = APoke $ \bsRef -> do
+              assertCorrectLength <- unitStmt $ do
+                RenderParams {..} <- input
+                ValueDoc bs       <- use bsRef
+                tellQualImport 'BS.length
+                let
+                  err =
+                    "AccelerationStructureVersionKHR::versionData must be "
+                      <> len
+                      <> " bytes"
+                  uuidSizeDoc = mkPatternName "VK_UUID_SIZE"
+                  cond =
+                    parens
+                      $   "Data.ByteString.length"
+                      <+> bs
+                      <+> "== 2 *"
+                      <+> pretty uuidSizeDoc
+                tellImport uuidSizeDoc
+                throwErrDoc err cond
+              stmt (Just (ConT ''Ptr :@ ConT ''Word8)) (Just "versionData") $ do
+                after assertCorrectLength
+                ValueDoc bs <- use bsRef
+                tellImportWithAll ''ContT
+                tellImport 'BS.unsafeUseAsCString
+                tellImport 'castPtr
+                tellImport ''Word8
+                tellImport ''CChar
+                pure
+                  .   ContTAction
+                  .   ValueDoc
+                  $ "fmap (castPtr @CChar @Word8) . ContT $ unsafeUseAsCString"
+                  <+> bs
+            , csPeek       = \addrRef ->
+              stmt (Just (ConT ''ByteString)) (Just "versionData") $ do
+                RenderParams {..} <- input
+                let uuidSizeDoc = mkPatternName "VK_UUID_SIZE"
+                    bytes       = "2 *" <+> pretty uuidSizeDoc
+                tellImport uuidSizeDoc
+                ptr <- use =<< storablePeek
+                  "versionData"
+                  addrRef
+                  (Ptr Const (Ptr Const (TypeName "uint8_t")))
+                tellImport 'castPtr
+                tellImport ''Word8
+                tellImport ''CChar
+                let castPtr = "castPtr @Word8 @CChar" <+> ptr
+                tellImport 'BS.packCStringLen
+                pure . IOAction . ValueDoc $ "packCStringLen" <+> tupled
+                  [castPtr, bytes]
+            }
+        _ -> Nothing
     _ -> const Nothing
   ]
 
@@ -579,6 +589,15 @@ bitfields = BespokeScheme $ \case
 accelerationStructureGeometry :: BespokeScheme
 accelerationStructureGeometry = BespokeScheme $ \case
   "VkAccelerationStructureBuildGeometryInfoKHR" -> \case
+    (p :: a) | "ppGeometries" <- name p, Ptr Const (Ptr Const _) <- type' p ->
+      Just $ ElidedUnivalued "nullPtr"
+    _ -> Nothing
+  _ -> const Nothing
+
+-- TODO: Select this when compiling an older spec
+_accelerationStructureGeometryPre1_2_162 :: BespokeScheme
+_accelerationStructureGeometryPre1_2_162 = BespokeScheme $ \case
+  "VkAccelerationStructureBuildGeometryInfoKHR" -> \case
     (p :: a)
       | "geometryArrayOfPointers" <- name p
       -> Just . ElidedCustom $ CustomSchemeElided
@@ -593,9 +612,6 @@ accelerationStructureGeometry = BespokeScheme $ \case
         , csePeek       = Nothing -- TODO assert it's VK_FALSE here
         }
       | "geometryCount" <- name p
-      -- -> Just $ ElidedLength (TypeName "uint32_t")
-      --                        mempty
-      --                        (fromList [_])
       -> Just . ElidedCustom $ CustomSchemeElided
         { cseName       = "geometryCount"
         , cseDirectPoke = elidedLengthPoke @_ @a (name p)
@@ -627,12 +643,73 @@ accelerationStructureGeometry = BespokeScheme $ \case
     _ -> Nothing
   _ -> const Nothing
 
+-- TODO: These should have length annotations which check that they match their
+-- siblings
+buildingAccelerationStructures :: BespokeScheme
+buildingAccelerationStructures = BespokeScheme $ \case
+  commandName
+    | commandName
+      `elem` [ "vkCmdBuildAccelerationStructuresKHR"
+             , "vkBuildAccelerationStructuresKHR"
+             ]
+    -> \case
+      (p :: a)
+        | "ppBuildRangeInfos" <- name p, Ptr Const (Ptr Const elemTy) <- type' p
+        -> Just $ Vector NotNullable (Vector NotNullable (Normal elemTy))
+      _ -> Nothing
+  "vkCmdBuildAccelerationStructuresIndirectKHR" -> \case
+    (p :: a)
+      | "ppMaxPrimitiveCounts" <- name p, Ptr Const (Ptr Const elemTy) <- type'
+        p
+      -> Just $ Vector NotNullable (Vector NotNullable (Normal elemTy))
+    _ -> Nothing
+
+  _ -> const Nothing
+
 structChainVar :: String
 structChainVar = "es"
 
 ----------------------------------------------------------------
 -- Things which are easier to write by hand
 ----------------------------------------------------------------
+
+-- | These override the description in the spec, make sure they're correct!
+bespokeStructsAndUnions :: [StructOrUnion a WithoutSize WithoutChildren]
+bespokeStructsAndUnions =
+  [ Struct
+      { sName       = "VkTransformMatrixKHR"
+      , sMembers    = V.fromList
+                        [ StructMember
+                          { smName       = "matrixRow0"
+                          , smType = Array NonConst (NumericArraySize 4) Float
+                          , smValues     = mempty
+                          , smLengths    = mempty
+                          , smIsOptional = mempty
+                          , smOffset     = ()
+                          }
+                        , StructMember
+                          { smName       = "matrixRow1"
+                          , smType = Array NonConst (NumericArraySize 4) Float
+                          , smValues     = mempty
+                          , smLengths    = mempty
+                          , smIsOptional = mempty
+                          , smOffset     = ()
+                          }
+                        , StructMember
+                          { smName       = "matrixRow2"
+                          , smType = Array NonConst (NumericArraySize 4) Float
+                          , smValues     = mempty
+                          , smLengths    = mempty
+                          , smIsOptional = mempty
+                          , smOffset     = ()
+                          }
+                        ]
+      , sSize       = ()
+      , sAlignment  = ()
+      , sExtends    = mempty
+      , sExtendedBy = mempty
+      }
+  ]
 
 bespokeSizes :: [(CName, (Int, Int))]
 bespokeSizes =

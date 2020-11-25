@@ -109,7 +109,7 @@ executables:
       - unliftio
       - vector
       - vulkan
-      - vulkan-utils
+      - vulkan-utils >= 0.3
 
   hlsl:
     main: Main.hs
@@ -131,7 +131,7 @@ executables:
       - unliftio
       - vector
       - vulkan
-      - vulkan-utils
+      - vulkan-utils >= 0.3
       - file-embed
       - extra
       - filepath

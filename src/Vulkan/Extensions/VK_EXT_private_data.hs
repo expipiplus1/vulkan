@@ -1,4 +1,141 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_private_data - device extension
+--
+-- == VK_EXT_private_data
+--
+-- [__Name String__]
+--     @VK_EXT_private_data@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     296
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Matthew Rusch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_private_data:%20&body=@mattruschnv%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2020-03-25
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Matthew Rusch, NVIDIA
+--
+--     -   Nuno Subtil, NVIDIA
+--
+--     -   Piers Daniell, NVIDIA
+--
+--     -   Jeff Bolz, NVIDIA
+--
+-- == Description
+--
+-- The \'VK_EXT_private_data\' extension is a device extension which
+-- enables attaching arbitrary payloads to Vulkan objects. It introduces
+-- the idea of private data slots as a means of storing a 64-bit unsigned
+-- integer of application defined data. Private data slots can be created
+-- or destroyed any time an associated device is available. Private data
+-- slots can be reserved at device creation time, and limiting use to the
+-- amount reserved will allow the extension to exhibit better performance
+-- characteristics.
+--
+-- == New Object Types
+--
+-- -   'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
+--
+-- == New Commands
+--
+-- -   'createPrivateDataSlotEXT'
+--
+-- -   'destroyPrivateDataSlotEXT'
+--
+-- -   'getPrivateDataEXT'
+--
+-- -   'setPrivateDataEXT'
+--
+-- == New Structures
+--
+-- -   'PrivateDataSlotCreateInfoEXT'
+--
+-- -   Extending 'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'DevicePrivateDataCreateInfoEXT'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDevicePrivateDataFeaturesEXT'
+--
+-- == New Enums
+--
+-- -   'PrivateDataSlotCreateFlagBitsEXT'
+--
+-- == New Bitmasks
+--
+-- -   'PrivateDataSlotCreateFlagsEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_PRIVATE_DATA_EXTENSION_NAME'
+--
+-- -   'EXT_PRIVATE_DATA_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
+--
+--     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO_EXT'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES_EXT'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO_EXT'
+--
+-- == Examples
+--
+-- -   In progress
+--
+-- == Version History
+--
+-- -   Revision 1, 2020-01-15 (Matthew Rusch)
+--
+--     -   Initial draft
+--
+-- = See Also
+--
+-- 'DevicePrivateDataCreateInfoEXT',
+-- 'PhysicalDevicePrivateDataFeaturesEXT',
+-- 'PrivateDataSlotCreateFlagBitsEXT', 'PrivateDataSlotCreateFlagsEXT',
+-- 'PrivateDataSlotCreateInfoEXT',
+-- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT',
+-- 'createPrivateDataSlotEXT', 'destroyPrivateDataSlotEXT',
+-- 'getPrivateDataEXT', 'setPrivateDataEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_private_data  ( createPrivateDataSlotEXT
                                               , withPrivateDataSlotEXT
                                               , destroyPrivateDataSlotEXT
@@ -7,8 +144,8 @@ module Vulkan.Extensions.VK_EXT_private_data  ( createPrivateDataSlotEXT
                                               , DevicePrivateDataCreateInfoEXT(..)
                                               , PrivateDataSlotCreateInfoEXT(..)
                                               , PhysicalDevicePrivateDataFeaturesEXT(..)
-                                              , PrivateDataSlotCreateFlagBitsEXT(..)
                                               , PrivateDataSlotCreateFlagsEXT
+                                              , PrivateDataSlotCreateFlagBitsEXT(..)
                                               , EXT_PRIVATE_DATA_SPEC_VERSION
                                               , pattern EXT_PRIVATE_DATA_SPEC_VERSION
                                               , EXT_PRIVATE_DATA_EXTENSION_NAME
@@ -16,6 +153,8 @@ module Vulkan.Extensions.VK_EXT_private_data  ( createPrivateDataSlotEXT
                                               , PrivateDataSlotEXT(..)
                                               ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -27,15 +166,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -53,9 +185,9 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
@@ -170,8 +302,8 @@ createPrivateDataSlotEXT device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyPrivateDataSlotEXT' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withPrivateDataSlotEXT :: forall io r . MonadIO io => Device -> PrivateDataSlotCreateInfoEXT -> Maybe AllocationCallbacks -> (io PrivateDataSlotEXT -> (PrivateDataSlotEXT -> io ()) -> r) -> r
 withPrivateDataSlotEXT device pCreateInfo pAllocator b =
@@ -557,6 +689,8 @@ instance Zero PhysicalDevicePrivateDataFeaturesEXT where
            zero
 
 
+type PrivateDataSlotCreateFlagsEXT = PrivateDataSlotCreateFlagBitsEXT
+
 -- | VkPrivateDataSlotCreateFlagBitsEXT - Bitmask specifying additional
 -- parameters for private data slot creation
 --
@@ -568,19 +702,27 @@ newtype PrivateDataSlotCreateFlagBitsEXT = PrivateDataSlotCreateFlagBitsEXT Flag
 
 
 
-type PrivateDataSlotCreateFlagsEXT = PrivateDataSlotCreateFlagBitsEXT
+conNamePrivateDataSlotCreateFlagBitsEXT :: String
+conNamePrivateDataSlotCreateFlagBitsEXT = "PrivateDataSlotCreateFlagBitsEXT"
+
+enumPrefixPrivateDataSlotCreateFlagBitsEXT :: String
+enumPrefixPrivateDataSlotCreateFlagBitsEXT = ""
+
+showTablePrivateDataSlotCreateFlagBitsEXT :: [(PrivateDataSlotCreateFlagBitsEXT, String)]
+showTablePrivateDataSlotCreateFlagBitsEXT = []
 
 instance Show PrivateDataSlotCreateFlagBitsEXT where
-  showsPrec p = \case
-    PrivateDataSlotCreateFlagBitsEXT x -> showParen (p >= 11) (showString "PrivateDataSlotCreateFlagBitsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPrivateDataSlotCreateFlagBitsEXT
+                            showTablePrivateDataSlotCreateFlagBitsEXT
+                            conNamePrivateDataSlotCreateFlagBitsEXT
+                            (\(PrivateDataSlotCreateFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PrivateDataSlotCreateFlagBitsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PrivateDataSlotCreateFlagBitsEXT")
-                       v <- step readPrec
-                       pure (PrivateDataSlotCreateFlagBitsEXT v)))
+  readPrec = enumReadPrec enumPrefixPrivateDataSlotCreateFlagBitsEXT
+                          showTablePrivateDataSlotCreateFlagBitsEXT
+                          conNamePrivateDataSlotCreateFlagBitsEXT
+                          PrivateDataSlotCreateFlagBitsEXT
 
 
 type EXT_PRIVATE_DATA_SPEC_VERSION = 1

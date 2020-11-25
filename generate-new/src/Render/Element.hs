@@ -39,6 +39,7 @@ module Render.Element
   , tellImportWith
   , tellNotReexportable
   , tellLanguageExtension
+  , tellCanFormat
   , wrapSymbol
   , exportDoc
   , renderExport
@@ -101,6 +102,8 @@ data RenderElement = RenderElement
   , reExplicitModule    :: Maybe ModName
   , reReexportable      :: All
   , reExtensions        :: Set LanguageExtension
+  , reCanFormat         :: All
+    -- Is this 'safe' to format with a code formatter
   }
 
 data Export = Export
@@ -150,6 +153,7 @@ instance Semigroup RenderElement where
     , reExplicitModule    = reExplicitModule r1 <|> reExplicitModule r2
     , reReexportable      = reReexportable r1 <> reReexportable r2
     , reExtensions        = reExtensions r1 <> reExtensions r2
+    , reCanFormat         = reCanFormat r1 <> reCanFormat r2
     }
 
 lineMaybe :: Maybe (Doc ()) -> Maybe (Doc ()) -> Maybe (Doc ())
@@ -221,7 +225,11 @@ data RenderParams = RenderParams
       --  ^ Parent union or enum name
       -> CName
       -> HName
-  , mkMemberName                :: CName -> HName
+  , mkMemberName
+      :: CName
+      --  ^ Parent struct name
+      -> CName
+      -> HName
   , mkFunName                   :: CName -> HName
   , mkParamName                 :: CName -> HName
   , mkPatternName               :: CName -> HName
@@ -343,6 +351,7 @@ emptyRenderElement n = RenderElement { reName              = n
                                      , reExplicitModule    = Nothing
                                      , reReexportable      = mempty
                                      , reExtensions        = mempty
+                                     , reCanFormat         = All False
                                      }
 
 -- | Prevent any exports from being in the module export list
@@ -372,6 +381,9 @@ tellDataExport e = do
 tellInternal :: MemberWithError (State RenderElement) r => Export -> Sem r ()
 tellInternal e =
   modify' (\r -> r { reInternal = reInternal r <> V.singleton e })
+
+tellCanFormat :: MemberWithError (State RenderElement) r => Sem r ()
+tellCanFormat = modify' (\r -> r { reCanFormat = All True })
 
 tellDoc :: MemberWithError (State RenderElement) r => Doc () -> Sem r ()
 tellDoc d =

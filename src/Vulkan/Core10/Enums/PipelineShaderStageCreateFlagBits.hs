@@ -1,27 +1,25 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits  ( PipelineShaderStageCreateFlagBits( PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT
+-- No documentation found for Chapter "PipelineShaderStageCreateFlagBits"
+module Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits  ( PipelineShaderStageCreateFlags
+                                                              , PipelineShaderStageCreateFlagBits( PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT
                                                                                                  , PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT
                                                                                                  , ..
                                                                                                  )
-                                                              , PipelineShaderStageCreateFlags
                                                               ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type PipelineShaderStageCreateFlags = PipelineShaderStageCreateFlagBits
+
 -- | VkPipelineShaderStageCreateFlagBits - Bitmask controlling how a pipeline
 -- shader stage is created
 --
@@ -52,27 +50,35 @@ newtype PipelineShaderStageCreateFlagBits = PipelineShaderStageCreateFlagBits Fl
 -- | 'PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT' specifies
 -- that the subgroup sizes /must/ be launched with all invocations active
 -- in the compute stage.
-pattern PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT = PipelineShaderStageCreateFlagBits 0x00000002
+pattern PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT      = PipelineShaderStageCreateFlagBits 0x00000002
 -- | 'PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
 -- specifies that the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-sgs SubgroupSize>
 -- /may/ vary in the shader stage.
 pattern PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT = PipelineShaderStageCreateFlagBits 0x00000001
 
-type PipelineShaderStageCreateFlags = PipelineShaderStageCreateFlagBits
+conNamePipelineShaderStageCreateFlagBits :: String
+conNamePipelineShaderStageCreateFlagBits = "PipelineShaderStageCreateFlagBits"
+
+enumPrefixPipelineShaderStageCreateFlagBits :: String
+enumPrefixPipelineShaderStageCreateFlagBits = "PIPELINE_SHADER_STAGE_CREATE_"
+
+showTablePipelineShaderStageCreateFlagBits :: [(PipelineShaderStageCreateFlagBits, String)]
+showTablePipelineShaderStageCreateFlagBits =
+  [ (PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT     , "REQUIRE_FULL_SUBGROUPS_BIT_EXT")
+  , (PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT, "ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT")
+  ]
 
 instance Show PipelineShaderStageCreateFlagBits where
-  showsPrec p = \case
-    PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT -> showString "PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT"
-    PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT -> showString "PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT"
-    PipelineShaderStageCreateFlagBits x -> showParen (p >= 11) (showString "PipelineShaderStageCreateFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineShaderStageCreateFlagBits
+                            showTablePipelineShaderStageCreateFlagBits
+                            conNamePipelineShaderStageCreateFlagBits
+                            (\(PipelineShaderStageCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineShaderStageCreateFlagBits where
-  readPrec = parens (choose [("PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT", pure PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT)
-                            , ("PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT", pure PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineShaderStageCreateFlagBits")
-                       v <- step readPrec
-                       pure (PipelineShaderStageCreateFlagBits v)))
+  readPrec = enumReadPrec enumPrefixPipelineShaderStageCreateFlagBits
+                          showTablePipelineShaderStageCreateFlagBits
+                          conNamePipelineShaderStageCreateFlagBits
+                          PipelineShaderStageCreateFlagBits
 

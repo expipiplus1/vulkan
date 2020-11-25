@@ -1,20 +1,16 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DescriptorPoolResetFlags"
 module Vulkan.Core10.Enums.DescriptorPoolResetFlags  (DescriptorPoolResetFlags(..)) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 -- | VkDescriptorPoolResetFlags - Reserved for future use
@@ -32,15 +28,25 @@ newtype DescriptorPoolResetFlags = DescriptorPoolResetFlags Flags
 
 
 
+conNameDescriptorPoolResetFlags :: String
+conNameDescriptorPoolResetFlags = "DescriptorPoolResetFlags"
+
+enumPrefixDescriptorPoolResetFlags :: String
+enumPrefixDescriptorPoolResetFlags = ""
+
+showTableDescriptorPoolResetFlags :: [(DescriptorPoolResetFlags, String)]
+showTableDescriptorPoolResetFlags = []
+
 instance Show DescriptorPoolResetFlags where
-  showsPrec p = \case
-    DescriptorPoolResetFlags x -> showParen (p >= 11) (showString "DescriptorPoolResetFlags 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDescriptorPoolResetFlags
+                            showTableDescriptorPoolResetFlags
+                            conNameDescriptorPoolResetFlags
+                            (\(DescriptorPoolResetFlags x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DescriptorPoolResetFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DescriptorPoolResetFlags")
-                       v <- step readPrec
-                       pure (DescriptorPoolResetFlags v)))
+  readPrec = enumReadPrec enumPrefixDescriptorPoolResetFlags
+                          showTableDescriptorPoolResetFlags
+                          conNameDescriptorPoolResetFlags
+                          DescriptorPoolResetFlags
 

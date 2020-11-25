@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Extensions"
 module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_AMD_buffer_marker
                           , module Vulkan.Extensions.VK_AMD_device_coherent_memory
@@ -105,6 +106,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_INTEL_shader_integer_functions2
                           , module Vulkan.Extensions.VK_KHR_16bit_storage
                           , module Vulkan.Extensions.VK_KHR_8bit_storage
+                          , module Vulkan.Extensions.VK_KHR_acceleration_structure
                           , module Vulkan.Extensions.VK_KHR_android_surface
                           , module Vulkan.Extensions.VK_KHR_bind_memory2
                           , module Vulkan.Extensions.VK_KHR_buffer_device_address
@@ -149,7 +151,8 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_KHR_pipeline_library
                           , module Vulkan.Extensions.VK_KHR_portability_subset
                           , module Vulkan.Extensions.VK_KHR_push_descriptor
-                          , module Vulkan.Extensions.VK_KHR_ray_tracing
+                          , module Vulkan.Extensions.VK_KHR_ray_query
+                          , module Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
                           , module Vulkan.Extensions.VK_KHR_relaxed_block_layout
                           , module Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
                           , module Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion
@@ -326,6 +329,7 @@ import Vulkan.Extensions.VK_INTEL_performance_query
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2
 import Vulkan.Extensions.VK_KHR_16bit_storage
 import Vulkan.Extensions.VK_KHR_8bit_storage
+import Vulkan.Extensions.VK_KHR_acceleration_structure
 import Vulkan.Extensions.VK_KHR_android_surface
 import Vulkan.Extensions.VK_KHR_bind_memory2
 import Vulkan.Extensions.VK_KHR_buffer_device_address
@@ -370,7 +374,8 @@ import Vulkan.Extensions.VK_KHR_pipeline_executable_properties
 import Vulkan.Extensions.VK_KHR_pipeline_library
 import Vulkan.Extensions.VK_KHR_portability_subset
 import Vulkan.Extensions.VK_KHR_push_descriptor
-import Vulkan.Extensions.VK_KHR_ray_tracing
+import Vulkan.Extensions.VK_KHR_ray_query
+import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import Vulkan.Extensions.VK_KHR_relaxed_block_layout
 import Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
 import Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion

@@ -1,4 +1,127 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_validation_cache - device extension
+--
+-- == VK_EXT_validation_cache
+--
+-- [__Name String__]
+--     @VK_EXT_validation_cache@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     161
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Cort Stratton
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_cache:%20&body=@cdwfs%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2017-08-29
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Cort Stratton, Google
+--
+--     -   Chris Forbes, Google
+--
+-- == Description
+--
+-- This extension provides a mechanism for caching the results of
+-- potentially expensive internal validation operations across multiple
+-- runs of a Vulkan application. At the core is the
+-- 'Vulkan.Extensions.Handles.ValidationCacheEXT' object type, which is
+-- managed similarly to the existing 'Vulkan.Core10.Handles.PipelineCache'.
+--
+-- The new struct 'ShaderModuleValidationCacheCreateInfoEXT' can be
+-- included in the @pNext@ chain at
+-- 'Vulkan.Core10.Shader.createShaderModule' time. It contains a
+-- 'Vulkan.Extensions.Handles.ValidationCacheEXT' to use when validating
+-- the 'Vulkan.Core10.Handles.ShaderModule'.
+--
+-- == New Object Types
+--
+-- -   'Vulkan.Extensions.Handles.ValidationCacheEXT'
+--
+-- == New Commands
+--
+-- -   'createValidationCacheEXT'
+--
+-- -   'destroyValidationCacheEXT'
+--
+-- -   'getValidationCacheDataEXT'
+--
+-- -   'mergeValidationCachesEXT'
+--
+-- == New Structures
+--
+-- -   'ValidationCacheCreateInfoEXT'
+--
+-- -   Extending 'Vulkan.Core10.Shader.ShaderModuleCreateInfo':
+--
+--     -   'ShaderModuleValidationCacheCreateInfoEXT'
+--
+-- == New Enums
+--
+-- -   'ValidationCacheHeaderVersionEXT'
+--
+-- == New Bitmasks
+--
+-- -   'ValidationCacheCreateFlagsEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_VALIDATION_CACHE_EXTENSION_NAME'
+--
+-- -   'EXT_VALIDATION_CACHE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
+--
+--     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_VALIDATION_CACHE_EXT'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT'
+--
+-- == Version History
+--
+-- -   Revision 1, 2017-08-29 (Cort Stratton)
+--
+--     -   Initial draft
+--
+-- = See Also
+--
+-- 'ShaderModuleValidationCacheCreateInfoEXT',
+-- 'ValidationCacheCreateFlagsEXT', 'ValidationCacheCreateInfoEXT',
+-- 'Vulkan.Extensions.Handles.ValidationCacheEXT',
+-- 'ValidationCacheHeaderVersionEXT', 'createValidationCacheEXT',
+-- 'destroyValidationCacheEXT', 'getValidationCacheDataEXT',
+-- 'mergeValidationCachesEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_validation_cache  ( createValidationCacheEXT
                                                   , withValidationCacheEXT
                                                   , destroyValidationCacheEXT
@@ -17,6 +140,8 @@ module Vulkan.Extensions.VK_EXT_validation_cache  ( createValidationCacheEXT
                                                   , ValidationCacheEXT(..)
                                                   ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -29,16 +154,9 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCStringLen)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -64,9 +182,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -201,8 +319,8 @@ createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyValidationCacheEXT' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withValidationCacheEXT :: forall io r . MonadIO io => Device -> ValidationCacheCreateInfoEXT -> Maybe AllocationCallbacks -> (io ValidationCacheEXT -> (ValidationCacheEXT -> io ()) -> r) -> r
 withValidationCacheEXT device pCreateInfo pAllocator b =
@@ -667,17 +785,27 @@ newtype ValidationCacheCreateFlagsEXT = ValidationCacheCreateFlagsEXT Flags
 
 
 
+conNameValidationCacheCreateFlagsEXT :: String
+conNameValidationCacheCreateFlagsEXT = "ValidationCacheCreateFlagsEXT"
+
+enumPrefixValidationCacheCreateFlagsEXT :: String
+enumPrefixValidationCacheCreateFlagsEXT = ""
+
+showTableValidationCacheCreateFlagsEXT :: [(ValidationCacheCreateFlagsEXT, String)]
+showTableValidationCacheCreateFlagsEXT = []
+
 instance Show ValidationCacheCreateFlagsEXT where
-  showsPrec p = \case
-    ValidationCacheCreateFlagsEXT x -> showParen (p >= 11) (showString "ValidationCacheCreateFlagsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixValidationCacheCreateFlagsEXT
+                            showTableValidationCacheCreateFlagsEXT
+                            conNameValidationCacheCreateFlagsEXT
+                            (\(ValidationCacheCreateFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ValidationCacheCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ValidationCacheCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (ValidationCacheCreateFlagsEXT v)))
+  readPrec = enumReadPrec enumPrefixValidationCacheCreateFlagsEXT
+                          showTableValidationCacheCreateFlagsEXT
+                          conNameValidationCacheCreateFlagsEXT
+                          ValidationCacheCreateFlagsEXT
 
 
 -- | VkValidationCacheHeaderVersionEXT - Encode validation cache version
@@ -694,18 +822,27 @@ newtype ValidationCacheHeaderVersionEXT = ValidationCacheHeaderVersionEXT Int32
 pattern VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = ValidationCacheHeaderVersionEXT 1
 {-# complete VALIDATION_CACHE_HEADER_VERSION_ONE_EXT :: ValidationCacheHeaderVersionEXT #-}
 
+conNameValidationCacheHeaderVersionEXT :: String
+conNameValidationCacheHeaderVersionEXT = "ValidationCacheHeaderVersionEXT"
+
+enumPrefixValidationCacheHeaderVersionEXT :: String
+enumPrefixValidationCacheHeaderVersionEXT = "VALIDATION_CACHE_HEADER_VERSION_ONE_EXT"
+
+showTableValidationCacheHeaderVersionEXT :: [(ValidationCacheHeaderVersionEXT, String)]
+showTableValidationCacheHeaderVersionEXT = [(VALIDATION_CACHE_HEADER_VERSION_ONE_EXT, "")]
+
 instance Show ValidationCacheHeaderVersionEXT where
-  showsPrec p = \case
-    VALIDATION_CACHE_HEADER_VERSION_ONE_EXT -> showString "VALIDATION_CACHE_HEADER_VERSION_ONE_EXT"
-    ValidationCacheHeaderVersionEXT x -> showParen (p >= 11) (showString "ValidationCacheHeaderVersionEXT " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixValidationCacheHeaderVersionEXT
+                            showTableValidationCacheHeaderVersionEXT
+                            conNameValidationCacheHeaderVersionEXT
+                            (\(ValidationCacheHeaderVersionEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read ValidationCacheHeaderVersionEXT where
-  readPrec = parens (choose [("VALIDATION_CACHE_HEADER_VERSION_ONE_EXT", pure VALIDATION_CACHE_HEADER_VERSION_ONE_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ValidationCacheHeaderVersionEXT")
-                       v <- step readPrec
-                       pure (ValidationCacheHeaderVersionEXT v)))
+  readPrec = enumReadPrec enumPrefixValidationCacheHeaderVersionEXT
+                          showTableValidationCacheHeaderVersionEXT
+                          conNameValidationCacheHeaderVersionEXT
+                          ValidationCacheHeaderVersionEXT
 
 
 type EXT_VALIDATION_CACHE_SPEC_VERSION = 1

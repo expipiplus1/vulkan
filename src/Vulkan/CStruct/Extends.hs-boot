@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Extends"
 module Vulkan.CStruct.Extends  ( BaseInStructure
                                , BaseOutStructure
                                , Extendss

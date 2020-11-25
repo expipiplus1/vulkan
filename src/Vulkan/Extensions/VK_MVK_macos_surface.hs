@@ -1,4 +1,115 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_MVK_macos_surface - instance extension
+--
+-- == VK_MVK_macos_surface
+--
+-- [__Name String__]
+--     @VK_MVK_macos_surface@
+--
+-- [__Extension Type__]
+--     Instance extension
+--
+-- [__Registered Extension Number__]
+--     124
+--
+-- [__Revision__]
+--     3
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Deprecation state__]
+--
+--     -   /Deprecated/ by @VK_EXT_metal_surface@ extension
+--
+-- [__Contact__]
+--
+--     -   Bill Hollings
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_MVK_macos_surface:%20&body=@billhollings%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2020-07-31
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Bill Hollings, The Brenwill Workshop Ltd.
+--
+-- == Description
+--
+-- The @VK_MVK_macos_surface@ extension is an instance extension. It
+-- provides a mechanism to create a 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- object (defined by the @VK_KHR_surface@ extension) based on an @NSView@,
+-- the native surface type of macOS, which is underpinned by a
+-- 'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer', to support
+-- rendering to the surface using Apple’s Metal framework.
+--
+-- == Deprecation by @VK_EXT_metal_surface@
+--
+-- The @VK_MVK_macos_surface@ extension is considered deprecated and has
+-- been superseded by the @VK_EXT_metal_surface@ extension.
+--
+-- == New Commands
+--
+-- -   'createMacOSSurfaceMVK'
+--
+-- == New Structures
+--
+-- -   'MacOSSurfaceCreateInfoMVK'
+--
+-- == New Bitmasks
+--
+-- -   'MacOSSurfaceCreateFlagsMVK'
+--
+-- == New Enum Constants
+--
+-- -   'MVK_MACOS_SURFACE_EXTENSION_NAME'
+--
+-- -   'MVK_MACOS_SURFACE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK'
+--
+-- == Version History
+--
+-- -   Revision 1, 2017-02-15 (Bill Hollings)
+--
+--     -   Initial draft.
+--
+-- -   Revision 2, 2017-02-24 (Bill Hollings)
+--
+--     -   Minor syntax fix to emphasize firm requirement for @NSView@ to
+--         be backed by a
+--         'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
+--
+-- -   Revision 3, 2020-07-31 (Bill Hollings)
+--
+--     -   Update documentation on requirements for @NSView@.
+--
+--     -   Mark as deprecated by @VK_EXT_metal_surface@.
+--
+-- = See Also
+--
+-- 'MacOSSurfaceCreateFlagsMVK', 'MacOSSurfaceCreateInfoMVK',
+-- 'createMacOSSurfaceMVK'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_macos_surface Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_MVK_macos_surface  ( createMacOSSurfaceMVK
                                                , MacOSSurfaceCreateInfoMVK(..)
                                                , MacOSSurfaceCreateFlagsMVK(..)
@@ -9,6 +120,8 @@ module Vulkan.Extensions.VK_MVK_macos_surface  ( createMacOSSurfaceMVK
                                                , SurfaceKHR(..)
                                                ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -20,15 +133,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -46,7 +152,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -263,17 +369,27 @@ newtype MacOSSurfaceCreateFlagsMVK = MacOSSurfaceCreateFlagsMVK Flags
 
 
 
+conNameMacOSSurfaceCreateFlagsMVK :: String
+conNameMacOSSurfaceCreateFlagsMVK = "MacOSSurfaceCreateFlagsMVK"
+
+enumPrefixMacOSSurfaceCreateFlagsMVK :: String
+enumPrefixMacOSSurfaceCreateFlagsMVK = ""
+
+showTableMacOSSurfaceCreateFlagsMVK :: [(MacOSSurfaceCreateFlagsMVK, String)]
+showTableMacOSSurfaceCreateFlagsMVK = []
+
 instance Show MacOSSurfaceCreateFlagsMVK where
-  showsPrec p = \case
-    MacOSSurfaceCreateFlagsMVK x -> showParen (p >= 11) (showString "MacOSSurfaceCreateFlagsMVK 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixMacOSSurfaceCreateFlagsMVK
+                            showTableMacOSSurfaceCreateFlagsMVK
+                            conNameMacOSSurfaceCreateFlagsMVK
+                            (\(MacOSSurfaceCreateFlagsMVK x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read MacOSSurfaceCreateFlagsMVK where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "MacOSSurfaceCreateFlagsMVK")
-                       v <- step readPrec
-                       pure (MacOSSurfaceCreateFlagsMVK v)))
+  readPrec = enumReadPrec enumPrefixMacOSSurfaceCreateFlagsMVK
+                          showTableMacOSSurfaceCreateFlagsMVK
+                          conNameMacOSSurfaceCreateFlagsMVK
+                          MacOSSurfaceCreateFlagsMVK
 
 
 type MVK_MACOS_SURFACE_SPEC_VERSION = 3

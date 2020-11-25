@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Fence"
 module Vulkan.Core10.Fence  ( createFence
                             , withFence
                             , destroyFence
@@ -159,8 +160,8 @@ createFence device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyFence' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withFence :: forall a io r . (Extendss FenceCreateInfo a, PokeChain a, MonadIO io) => Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> (io Fence -> (Fence -> io ()) -> r) -> r
 withFence device pCreateInfo pAllocator b =

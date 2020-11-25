@@ -1,11 +1,12 @@
 {-# language CPP #-}
-module Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits  ( ExternalMemoryFeatureFlagBits
-                                                          , ExternalMemoryFeatureFlags
+-- No documentation found for Chapter "ExternalMemoryFeatureFlagBits"
+module Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits  ( ExternalMemoryFeatureFlags
+                                                          , ExternalMemoryFeatureFlagBits
                                                           ) where
 
 
 
-data ExternalMemoryFeatureFlagBits
-
 type ExternalMemoryFeatureFlags = ExternalMemoryFeatureFlagBits
+
+data ExternalMemoryFeatureFlagBits
 

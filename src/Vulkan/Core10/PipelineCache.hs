@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineCache"
 module Vulkan.Core10.PipelineCache  ( createPipelineCache
                                     , withPipelineCache
                                     , destroyPipelineCache
@@ -96,7 +97,7 @@ foreign import ccall
 --
 -- Once created, a pipeline cache /can/ be passed to the
 -- 'Vulkan.Core10.Pipeline.createGraphicsPipelines'
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.createRayTracingPipelinesKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.createRayTracingPipelinesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV', and
 -- 'Vulkan.Core10.Pipeline.createComputePipelines' commands. If the
 -- pipeline cache passed into these commands is not
@@ -184,8 +185,8 @@ createPipelineCache device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyPipelineCache' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withPipelineCache :: forall io r . MonadIO io => Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> (io PipelineCache -> (PipelineCache -> io ()) -> r) -> r
 withPipelineCache device pCreateInfo pAllocator b =

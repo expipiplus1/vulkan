@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c641a1d3b72c0ffdef54bfcca0660561a30596c0e2e2e2f46676e51ffe52da17
+-- hash: 07469fd86a282e5431bb11f41a2b513268d1238cb7897b4d75f8a5ecda9438f5
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -102,7 +102,7 @@ executable hlsl
     , unliftio
     , vector
     , vulkan
-    , vulkan-utils
+    , vulkan-utils >=0.3
   if os(windows)
     ghc-options: -optl-mconsole
   if impl(ghc < 8.10.0)
@@ -238,7 +238,7 @@ executable timeline-semaphore
     , unliftio
     , vector
     , vulkan
-    , vulkan-utils
+    , vulkan-utils >=0.3
   if os(windows)
     ghc-options: -optl-mconsole
   default-language: Haskell2010

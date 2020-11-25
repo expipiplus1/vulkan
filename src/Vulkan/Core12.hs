@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Core12"
 module Vulkan.Core12  ( pattern API_VERSION_1_2
                       , PhysicalDeviceVulkan11Features(..)
                       , PhysicalDeviceVulkan11Properties(..)
@@ -129,22 +130,22 @@ pattern API_VERSION_1_2 = MAKE_VERSION 1 2 0
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
   { -- | #features-storageBuffer16BitAccess# @storageBuffer16BitAccess@ specifies
-    -- whether objects in the @StorageBuffer@ or @PhysicalStorageBuffer@
-    -- storage class with the @Block@ decoration /can/ have 16-bit integer and
-    -- 16-bit floating-point members. If this feature is not enabled, 16-bit
-    -- integer or 16-bit floating-point members /must/ not be used in such
-    -- objects. This also specifies whether shader modules /can/ declare the
-    -- @StorageBuffer16BitAccess@ capability.
+    -- whether objects in the @StorageBuffer@, @ShaderRecordBufferKHR@, or
+    -- @PhysicalStorageBuffer@ storage class with the @Block@ decoration /can/
+    -- have 16-bit integer and 16-bit floating-point members. If this feature
+    -- is not enabled, 16-bit integer or 16-bit floating-point members /must/
+    -- not be used in such objects. This also specifies whether shader modules
+    -- /can/ declare the @StorageBuffer16BitAccess@ capability.
     storageBuffer16BitAccess :: Bool
   , -- | #features-uniformAndStorageBuffer16BitAccess#
     -- @uniformAndStorageBuffer16BitAccess@ specifies whether objects in the
     -- @Uniform@ storage class with the @Block@ decoration and in the
-    -- @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the same
-    -- decoration /can/ have 16-bit integer and 16-bit floating-point members.
-    -- If this feature is not enabled, 16-bit integer or 16-bit floating-point
-    -- members /must/ not be used in such objects. This also specifies whether
-    -- shader modules /can/ declare the @UniformAndStorageBuffer16BitAccess@
-    -- capability.
+    -- @StorageBuffer@, @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@
+    -- storage class with the same decoration /can/ have 16-bit integer and
+    -- 16-bit floating-point members. If this feature is not enabled, 16-bit
+    -- integer or 16-bit floating-point members /must/ not be used in such
+    -- objects. This also specifies whether shader modules /can/ declare the
+    -- @UniformAndStorageBuffer16BitAccess@ capability.
     uniformAndStorageBuffer16BitAccess :: Bool
   , -- | #features-storagePushConstant16# @storagePushConstant16@ specifies
     -- whether objects in the @PushConstant@ storage class /can/ have 16-bit
@@ -519,21 +520,22 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     not be used.
 --
 -- -   #features-storageBuffer8BitAccess# @storageBuffer8BitAccess@
---     indicates whether objects in the @StorageBuffer@ or
---     @PhysicalStorageBuffer@ storage class with the @Block@ decoration
---     /can/ have 8-bit integer members. If this feature is not enabled,
---     8-bit integer members /must/ not be used in such objects. This also
---     indicates whether shader modules /can/ declare the
---     @StorageBuffer8BitAccess@ capability.
+--     indicates whether objects in the @StorageBuffer@,
+--     @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@ storage class
+--     with the @Block@ decoration /can/ have 8-bit integer members. If
+--     this feature is not enabled, 8-bit integer members /must/ not be
+--     used in such objects. This also indicates whether shader modules
+--     /can/ declare the @StorageBuffer8BitAccess@ capability.
 --
 -- -   #features-uniformAndStorageBuffer8BitAccess#
 --     @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
 --     @Uniform@ storage class with the @Block@ decoration and in the
---     @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the
---     same decoration /can/ have 8-bit integer members. If this feature is
---     not enabled, 8-bit integer members /must/ not be used in such
---     objects. This also indicates whether shader modules /can/ declare
---     the @UniformAndStorageBuffer8BitAccess@ capability.
+--     @StorageBuffer@, @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@
+--     storage class with the same decoration /can/ have 8-bit integer
+--     members. If this feature is not enabled, 8-bit integer members
+--     /must/ not be used in such objects. This also indicates whether
+--     shader modules /can/ declare the @UniformAndStorageBuffer8BitAccess@
+--     capability.
 --
 -- -   #features-storagePushConstant8# @storagePushConstant8@ indicates
 --     whether objects in the @PushConstant@ storage class /can/ have 8-bit
@@ -847,11 +849,11 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- -   #features-bufferDeviceAddressMultiDevice#
 --     @bufferDeviceAddressMultiDevice@ indicates that the implementation
---     supports the @bufferDeviceAddress@ and @rayTracing@ features for
---     logical devices created with multiple physical devices. If this
---     feature is not supported, buffer and acceleration structure
---     addresses /must/ not be queried on a logical device created with
---     more than one physical device.
+--     supports the @bufferDeviceAddress@ , @rayTracingPipeline@ and
+--     @rayQuery@ features for logical devices created with multiple
+--     physical devices. If this feature is not supported, buffer and
+--     acceleration structure addresses /must/ not be queried on a logical
+--     device created with more than one physical device.
 --
 -- -   #features-vulkanMemoryModel# @vulkanMemoryModel@ indicates whether
 --     the Vulkan Memory Model is supported, as defined in

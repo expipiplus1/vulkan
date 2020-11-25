@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "AllocationCallbacks"
 module Vulkan.Core10.AllocationCallbacks  (AllocationCallbacks(..)) where
 
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -50,7 +51,7 @@ import Vulkan.Zero (Zero(..))
 -- 'Vulkan.Core10.FuncPointers.PFN_vkInternalFreeNotification',
 -- 'Vulkan.Core10.FuncPointers.PFN_vkReallocationFunction',
 -- 'Vulkan.Core10.Memory.allocateMemory',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.createAccelerationStructureKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.createAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.createAccelerationStructureNV',
 -- 'Vulkan.Extensions.VK_KHR_android_surface.createAndroidSurfaceKHR',
 -- 'Vulkan.Core10.Buffer.createBuffer',
@@ -84,7 +85,7 @@ import Vulkan.Zero (Zero(..))
 -- 'Vulkan.Core10.PipelineLayout.createPipelineLayout',
 -- 'Vulkan.Extensions.VK_EXT_private_data.createPrivateDataSlotEXT',
 -- 'Vulkan.Core10.Query.createQueryPool',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.createRayTracingPipelinesKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.createRayTracingPipelinesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV',
 -- 'Vulkan.Core10.Pass.createRenderPass',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.createRenderPass2',
@@ -103,7 +104,7 @@ import Vulkan.Zero (Zero(..))
 -- 'Vulkan.Extensions.VK_KHR_win32_surface.createWin32SurfaceKHR',
 -- 'Vulkan.Extensions.VK_KHR_xcb_surface.createXcbSurfaceKHR',
 -- 'Vulkan.Extensions.VK_KHR_xlib_surface.createXlibSurfaceKHR',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.destroyAccelerationStructureKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.destroyAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.destroyAccelerationStructureNV',
 -- 'Vulkan.Core10.Buffer.destroyBuffer',
 -- 'Vulkan.Core10.BufferView.destroyBufferView',

@@ -352,7 +352,7 @@ draw = do
                 { renderPass  = fRenderPass
                 , framebuffer = fFramebuffers imageIndex
                 , renderArea  = Rect2D zero fImageExtent
-                , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
+                , clearValues = [Color (Float32 0.1 0.1 0.1 1)]
                 }
           cmdSetViewport'
             0

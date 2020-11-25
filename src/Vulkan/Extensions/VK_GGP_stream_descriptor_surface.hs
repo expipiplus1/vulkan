@@ -1,4 +1,122 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_GGP_stream_descriptor_surface - instance extension
+--
+-- == VK_GGP_stream_descriptor_surface
+--
+-- [__Name String__]
+--     @VK_GGP_stream_descriptor_surface@
+--
+-- [__Extension Type__]
+--     Instance extension
+--
+-- [__Registered Extension Number__]
+--     50
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Jean-Francois Roy
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_GGP_stream_descriptor_surface:%20&body=@jfroy%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2019-01-28
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Jean-Francois Roy, Google
+--
+--     -   Brad Grantham, Google
+--
+--     -   Connor Smith, Google
+--
+--     -   Cort Stratton, Google
+--
+--     -   Hai Nguyen, Google
+--
+--     -   Ian Elliott, Google
+--
+--     -   Jesse Hall, Google
+--
+--     -   Jim Ray, Google
+--
+--     -   Katherine Wu, Google
+--
+--     -   Kaye Mason, Google
+--
+--     -   Kuangye Guo, Google
+--
+--     -   Mark Segal, Google
+--
+--     -   Nicholas Vining, Google
+--
+--     -   Paul Lalonde, Google
+--
+--     -   Richard O’Grady, Google
+--
+-- == Description
+--
+-- The @VK_GGP_stream_descriptor_surface@ extension is an instance
+-- extension. It provides a mechanism to create a
+-- 'Vulkan.Extensions.Handles.SurfaceKHR' object (defined by the
+-- @VK_KHR_surface@ extension) that refers to a Google Games Platform
+-- 'GgpStreamDescriptor'.
+--
+-- == New Commands
+--
+-- -   'createStreamDescriptorSurfaceGGP'
+--
+-- == New Structures
+--
+-- -   'StreamDescriptorSurfaceCreateInfoGGP'
+--
+-- == New Bitmasks
+--
+-- -   'StreamDescriptorSurfaceCreateFlagsGGP'
+--
+-- == New Enum Constants
+--
+-- -   'GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME'
+--
+-- -   'GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP'
+--
+-- == Version History
+--
+-- -   Revision 1, 2018-11-26 (Jean-Francois Roy)
+--
+--     -   Initial revision.
+--
+-- = See Also
+--
+-- 'StreamDescriptorSurfaceCreateFlagsGGP',
+-- 'StreamDescriptorSurfaceCreateInfoGGP',
+-- 'createStreamDescriptorSurfaceGGP'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GGP_stream_descriptor_surface Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_GGP_stream_descriptor_surface  ( createStreamDescriptorSurfaceGGP
                                                            , StreamDescriptorSurfaceCreateInfoGGP(..)
                                                            , StreamDescriptorSurfaceCreateFlagsGGP(..)
@@ -10,6 +128,8 @@ module Vulkan.Extensions.VK_GGP_stream_descriptor_surface  ( createStreamDescrip
                                                            , SurfaceKHR(..)
                                                            ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -21,15 +141,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -47,8 +160,8 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -230,17 +343,27 @@ newtype StreamDescriptorSurfaceCreateFlagsGGP = StreamDescriptorSurfaceCreateFla
 
 
 
+conNameStreamDescriptorSurfaceCreateFlagsGGP :: String
+conNameStreamDescriptorSurfaceCreateFlagsGGP = "StreamDescriptorSurfaceCreateFlagsGGP"
+
+enumPrefixStreamDescriptorSurfaceCreateFlagsGGP :: String
+enumPrefixStreamDescriptorSurfaceCreateFlagsGGP = ""
+
+showTableStreamDescriptorSurfaceCreateFlagsGGP :: [(StreamDescriptorSurfaceCreateFlagsGGP, String)]
+showTableStreamDescriptorSurfaceCreateFlagsGGP = []
+
 instance Show StreamDescriptorSurfaceCreateFlagsGGP where
-  showsPrec p = \case
-    StreamDescriptorSurfaceCreateFlagsGGP x -> showParen (p >= 11) (showString "StreamDescriptorSurfaceCreateFlagsGGP 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixStreamDescriptorSurfaceCreateFlagsGGP
+                            showTableStreamDescriptorSurfaceCreateFlagsGGP
+                            conNameStreamDescriptorSurfaceCreateFlagsGGP
+                            (\(StreamDescriptorSurfaceCreateFlagsGGP x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read StreamDescriptorSurfaceCreateFlagsGGP where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "StreamDescriptorSurfaceCreateFlagsGGP")
-                       v <- step readPrec
-                       pure (StreamDescriptorSurfaceCreateFlagsGGP v)))
+  readPrec = enumReadPrec enumPrefixStreamDescriptorSurfaceCreateFlagsGGP
+                          showTableStreamDescriptorSurfaceCreateFlagsGGP
+                          conNameStreamDescriptorSurfaceCreateFlagsGGP
+                          StreamDescriptorSurfaceCreateFlagsGGP
 
 
 type GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION = 1

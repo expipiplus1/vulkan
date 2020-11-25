@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [0.3.10] - 2020-11-24
+
+- Documentation fixes
+
 ## [0.3.9] - 2020-11-15
 
 - Derive `FiniteBits` for bitmasks

@@ -91,6 +91,51 @@ The docbook documentation will be in `docs/docbook`.
 
 During development unfinished bits not to forget are listed here.
 
+### 1.2.162
+
+- [x] optionalness on VkWriteDescriptorSetAccelerationStructureKHR->pAccelerationStructures
+- [x] VkAccelerationStructureVersionKHR
+- [x] VkAccelerationStructureInstanceKHR
+- [x] VkAccelerationStructureBuildGeometryInfoKHR
+- [x] VkAccelerationStructureBuildGeometryInfoKHR->pGeometries (esp optionalness)
+- [x] VkAccelerationStructureBuildGeometryInfoKHR->ppGeometries (esp optionalness)
+  - [x] (this maps to the same name as pGeometries!)
+  - This has been removed from the Haskell bindings
+- [x] VkAccelerationStructureCreateInfoKHR->offset
+- [x] VkAccelerationStructureVersionInfoKHR->pVersionData
+- [x] vkCmdBuildAccelerationStructuresIndirectKHR,
+  - The `Ptr Word32` type has leaked through, this should be `Vector (Vector Word32)`
+  - [x] Fix this non-critical issue
+  - [ ] It's correct now, but it doesn't check the length of the array
+- [x] vkCmdBuildAccelerationStructuresKHR, vkBuildAccelerationStructuresKHR
+  - [x] This is still incorrect as one can't pass multiple
+    `AccelerationStructureBuildRangeInfoKHR`'s per
+    `AccelerationStructureBuildGeometryInfoKHR`. It's no more broken than
+    before though.
+  - [ ] Fixed, although there's no length checking
+- [x] vkGetAccelerationStructureBuildSizesKHR
+  - [ ] It's correct, but it doesn't check the length of the
+    `maxPrimitiveCount` array like it would with a sibling array of same length
+- [x] pNext is now optional, this breaks the Zero instances
+
+Optional TODOs:
+
+- [x] cmdTraceRaysKHR is not using the storable instance of StridedDeviceAddressRegionKHR
+  - same for destroyAccelerationStructureKHR not using allocation callbacks
+  - These are due to the `indirectStruct` case of the `normal` poker
+  - This is no problem, commands have to allocate structs on the stack anyway
+- [x] likewise for `pokeCStruct` of `RayTracingPipelineCreateInfoKHR{..}`
+  - This one is because we're not looking past pointers when checking for
+    direct dependents
+  - Fixed
+- [x] Documentation on bracketing functions still mentions the "first"
+  argument, this should be chagned to "last"
+- [ ] AccelerationStructureGeometryAabbsDataKHR could use a simple poke for its
+  DeviceOrHostAddressConstKHR (is this true for the union in
+  AccelerationStructureGeometryKHR too)
+- [x] Now is the time to remove the top level tuple from TransformMatrixKHR
+
+
 # VMA TODOs
 
 ## TODO

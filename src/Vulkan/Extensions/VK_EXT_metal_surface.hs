@@ -1,4 +1,96 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_metal_surface - instance extension
+--
+-- == VK_EXT_metal_surface
+--
+-- [__Name String__]
+--     @VK_EXT_metal_surface@
+--
+-- [__Extension Type__]
+--     Instance extension
+--
+-- [__Registered Extension Number__]
+--     218
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Dzmitry Malyshau
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_metal_surface:%20&body=@kvark%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2018-10-01
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Dzmitry Malyshau, Mozilla Corp.
+--
+-- == Description
+--
+-- The @VK_EXT_metal_surface@ extension is an instance extension. It
+-- provides a mechanism to create a 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- object (defined by the @VK_KHR_surface@ extension) from 'CAMetalLayer',
+-- which is the native rendering surface of Apple’s Metal framework.
+--
+-- == New Base Types
+--
+-- -   'CAMetalLayer'
+--
+-- == New Commands
+--
+-- -   'createMetalSurfaceEXT'
+--
+-- == New Structures
+--
+-- -   'MetalSurfaceCreateInfoEXT'
+--
+-- == New Bitmasks
+--
+-- -   'MetalSurfaceCreateFlagsEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_METAL_SURFACE_EXTENSION_NAME'
+--
+-- -   'EXT_METAL_SURFACE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT'
+--
+-- == Version History
+--
+-- -   Revision 1, 2018-10-01 (Dzmitry Malyshau)
+--
+--     -   Initial version
+--
+-- = See Also
+--
+-- 'CAMetalLayer', 'MetalSurfaceCreateFlagsEXT',
+-- 'MetalSurfaceCreateInfoEXT', 'createMetalSurfaceEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_metal_surface Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_metal_surface  ( createMetalSurfaceEXT
                                                , MetalSurfaceCreateInfoEXT(..)
                                                , MetalSurfaceCreateFlagsEXT(..)
@@ -10,6 +102,8 @@ module Vulkan.Extensions.VK_EXT_metal_surface  ( createMetalSurfaceEXT
                                                , SurfaceKHR(..)
                                                ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -21,15 +115,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -47,7 +134,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -221,17 +308,27 @@ newtype MetalSurfaceCreateFlagsEXT = MetalSurfaceCreateFlagsEXT Flags
 
 
 
+conNameMetalSurfaceCreateFlagsEXT :: String
+conNameMetalSurfaceCreateFlagsEXT = "MetalSurfaceCreateFlagsEXT"
+
+enumPrefixMetalSurfaceCreateFlagsEXT :: String
+enumPrefixMetalSurfaceCreateFlagsEXT = ""
+
+showTableMetalSurfaceCreateFlagsEXT :: [(MetalSurfaceCreateFlagsEXT, String)]
+showTableMetalSurfaceCreateFlagsEXT = []
+
 instance Show MetalSurfaceCreateFlagsEXT where
-  showsPrec p = \case
-    MetalSurfaceCreateFlagsEXT x -> showParen (p >= 11) (showString "MetalSurfaceCreateFlagsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixMetalSurfaceCreateFlagsEXT
+                            showTableMetalSurfaceCreateFlagsEXT
+                            conNameMetalSurfaceCreateFlagsEXT
+                            (\(MetalSurfaceCreateFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read MetalSurfaceCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "MetalSurfaceCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (MetalSurfaceCreateFlagsEXT v)))
+  readPrec = enumReadPrec enumPrefixMetalSurfaceCreateFlagsEXT
+                          showTableMetalSurfaceCreateFlagsEXT
+                          conNameMetalSurfaceCreateFlagsEXT
+                          MetalSurfaceCreateFlagsEXT
 
 
 type EXT_METAL_SURFACE_SPEC_VERSION = 1

@@ -1,22 +1,17 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SamplerMipmapMode"
 module Vulkan.Core10.Enums.SamplerMipmapMode  (SamplerMipmapMode( SAMPLER_MIPMAP_MODE_NEAREST
                                                                 , SAMPLER_MIPMAP_MODE_LINEAR
                                                                 , ..
                                                                 )) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkSamplerMipmapMode - Specify mipmap mode used for texture lookups
 --
@@ -34,22 +29,27 @@ newtype SamplerMipmapMode = SamplerMipmapMode Int32
 -- | 'SAMPLER_MIPMAP_MODE_NEAREST' specifies nearest filtering.
 pattern SAMPLER_MIPMAP_MODE_NEAREST = SamplerMipmapMode 0
 -- | 'SAMPLER_MIPMAP_MODE_LINEAR' specifies linear filtering.
-pattern SAMPLER_MIPMAP_MODE_LINEAR = SamplerMipmapMode 1
+pattern SAMPLER_MIPMAP_MODE_LINEAR  = SamplerMipmapMode 1
 {-# complete SAMPLER_MIPMAP_MODE_NEAREST,
              SAMPLER_MIPMAP_MODE_LINEAR :: SamplerMipmapMode #-}
 
+conNameSamplerMipmapMode :: String
+conNameSamplerMipmapMode = "SamplerMipmapMode"
+
+enumPrefixSamplerMipmapMode :: String
+enumPrefixSamplerMipmapMode = "SAMPLER_MIPMAP_MODE_"
+
+showTableSamplerMipmapMode :: [(SamplerMipmapMode, String)]
+showTableSamplerMipmapMode = [(SAMPLER_MIPMAP_MODE_NEAREST, "NEAREST"), (SAMPLER_MIPMAP_MODE_LINEAR, "LINEAR")]
+
 instance Show SamplerMipmapMode where
-  showsPrec p = \case
-    SAMPLER_MIPMAP_MODE_NEAREST -> showString "SAMPLER_MIPMAP_MODE_NEAREST"
-    SAMPLER_MIPMAP_MODE_LINEAR -> showString "SAMPLER_MIPMAP_MODE_LINEAR"
-    SamplerMipmapMode x -> showParen (p >= 11) (showString "SamplerMipmapMode " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixSamplerMipmapMode
+                            showTableSamplerMipmapMode
+                            conNameSamplerMipmapMode
+                            (\(SamplerMipmapMode x) -> x)
+                            (showsPrec 11)
 
 instance Read SamplerMipmapMode where
-  readPrec = parens (choose [("SAMPLER_MIPMAP_MODE_NEAREST", pure SAMPLER_MIPMAP_MODE_NEAREST)
-                            , ("SAMPLER_MIPMAP_MODE_LINEAR", pure SAMPLER_MIPMAP_MODE_LINEAR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SamplerMipmapMode")
-                       v <- step readPrec
-                       pure (SamplerMipmapMode v)))
+  readPrec =
+    enumReadPrec enumPrefixSamplerMipmapMode showTableSamplerMipmapMode conNameSamplerMipmapMode SamplerMipmapMode
 

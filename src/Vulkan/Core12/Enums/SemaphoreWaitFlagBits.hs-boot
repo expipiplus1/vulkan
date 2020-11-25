@@ -1,11 +1,12 @@
 {-# language CPP #-}
-module Vulkan.Core12.Enums.SemaphoreWaitFlagBits  ( SemaphoreWaitFlagBits
-                                                  , SemaphoreWaitFlags
+-- No documentation found for Chapter "SemaphoreWaitFlagBits"
+module Vulkan.Core12.Enums.SemaphoreWaitFlagBits  ( SemaphoreWaitFlags
+                                                  , SemaphoreWaitFlagBits
                                                   ) where
 
 
 
-data SemaphoreWaitFlagBits
-
 type SemaphoreWaitFlags = SemaphoreWaitFlagBits
+
+data SemaphoreWaitFlagBits
 

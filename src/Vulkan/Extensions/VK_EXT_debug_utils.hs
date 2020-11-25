@@ -1,4 +1,491 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_debug_utils - instance extension
+--
+-- == VK_EXT_debug_utils
+--
+-- [__Name String__]
+--     @VK_EXT_debug_utils@
+--
+-- [__Extension Type__]
+--     Instance extension
+--
+-- [__Registered Extension Number__]
+--     129
+--
+-- [__Revision__]
+--     2
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+--
+-- [__Contact__]
+--
+--     -   Mark Young
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_utils:%20&body=@marky-lunarg%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2020-04-03
+--
+-- [__Revision__]
+--     2
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Dependencies__]
+--
+--     -   This extension is written against version 1.0 of the Vulkan API.
+--
+--     -   Requires 'Vulkan.Core10.Enums.ObjectType.ObjectType'
+--
+-- [__Contributors__]
+--
+--     -   Mark Young, LunarG
+--
+--     -   Baldur Karlsson
+--
+--     -   Ian Elliott, Google
+--
+--     -   Courtney Goeltzenleuchter, Google
+--
+--     -   Karl Schultz, LunarG
+--
+--     -   Mark Lobodzinski, LunarG
+--
+--     -   Mike Schuchardt, LunarG
+--
+--     -   Jaakko Konttinen, AMD
+--
+--     -   Dan Ginsburg, Valve Software
+--
+--     -   Rolando Olivares, Epic Games
+--
+--     -   Dan Baker, Oxide Games
+--
+--     -   Kyle Spagnoli, NVIDIA
+--
+--     -   Jon Ashburn, LunarG
+--
+--     -   Piers Daniell, NVIDIA
+--
+-- == Description
+--
+-- Due to the nature of the Vulkan interface, there is very little error
+-- information available to the developer and application. By using the
+-- @VK_EXT_debug_utils@ extension, developers /can/ obtain more
+-- information. When combined with validation layers, even more detailed
+-- feedback on the application’s use of Vulkan will be provided.
+--
+-- This extension provides the following capabilities:
+--
+-- -   The ability to create a debug messenger which will pass along debug
+--     messages to an application supplied callback.
+--
+-- -   The ability to identify specific Vulkan objects using a name or tag
+--     to improve tracking.
+--
+-- -   The ability to identify specific sections within a
+--     'Vulkan.Core10.Handles.Queue' or
+--     'Vulkan.Core10.Handles.CommandBuffer' using labels to aid
+--     organization and offline analysis in external tools.
+--
+-- The main difference between this extension and @VK_EXT_debug_report@ and
+-- @VK_EXT_debug_marker@ is that those extensions use
+-- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT' to
+-- identify objects. This extension uses the core
+-- 'Vulkan.Core10.Enums.ObjectType.ObjectType' in place of
+-- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'. The
+-- primary reason for this move is that no future object type handle
+-- enumeration values will be added to
+-- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT' since
+-- the creation of 'Vulkan.Core10.Enums.ObjectType.ObjectType'.
+--
+-- In addition, this extension combines the functionality of both
+-- @VK_EXT_debug_report@ and @VK_EXT_debug_marker@ by allowing object name
+-- and debug markers (now called labels) to be returned to the
+-- application’s callback function. This should assist in clarifying the
+-- details of a debug message including: what objects are involved and
+-- potentially which location within a 'Vulkan.Core10.Handles.Queue' or
+-- 'Vulkan.Core10.Handles.CommandBuffer' the message occurred.
+--
+-- == New Object Types
+--
+-- -   'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT'
+--
+-- == New Commands
+--
+-- -   'cmdBeginDebugUtilsLabelEXT'
+--
+-- -   'cmdEndDebugUtilsLabelEXT'
+--
+-- -   'cmdInsertDebugUtilsLabelEXT'
+--
+-- -   'createDebugUtilsMessengerEXT'
+--
+-- -   'destroyDebugUtilsMessengerEXT'
+--
+-- -   'queueBeginDebugUtilsLabelEXT'
+--
+-- -   'queueEndDebugUtilsLabelEXT'
+--
+-- -   'queueInsertDebugUtilsLabelEXT'
+--
+-- -   'setDebugUtilsObjectNameEXT'
+--
+-- -   'setDebugUtilsObjectTagEXT'
+--
+-- -   'submitDebugUtilsMessageEXT'
+--
+-- == New Structures
+--
+-- -   'DebugUtilsLabelEXT'
+--
+-- -   'DebugUtilsMessengerCallbackDataEXT'
+--
+-- -   'DebugUtilsObjectNameInfoEXT'
+--
+-- -   'DebugUtilsObjectTagInfoEXT'
+--
+-- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':
+--
+--     -   'DebugUtilsMessengerCreateInfoEXT'
+--
+-- == New Function Pointers
+--
+-- -   'PFN_vkDebugUtilsMessengerCallbackEXT'
+--
+-- == New Enums
+--
+-- -   'DebugUtilsMessageSeverityFlagBitsEXT'
+--
+-- -   'DebugUtilsMessageTypeFlagBitsEXT'
+--
+-- == New Bitmasks
+--
+-- -   'DebugUtilsMessageSeverityFlagsEXT'
+--
+-- -   'DebugUtilsMessageTypeFlagsEXT'
+--
+-- -   'DebugUtilsMessengerCallbackDataFlagsEXT'
+--
+-- -   'DebugUtilsMessengerCreateFlagsEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_DEBUG_UTILS_EXTENSION_NAME'
+--
+-- -   'EXT_DEBUG_UTILS_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
+--
+--     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT'
+--
+-- == Examples
+--
+-- __Example 1__
+--
+-- @VK_EXT_debug_utils@ allows an application to register multiple
+-- callbacks with any Vulkan component wishing to report debug information.
+-- Some callbacks may log the information to a file, others may cause a
+-- debug break point or other application defined behavior. An application
+-- /can/ register callbacks even when no validation layers are enabled, but
+-- they will only be called for loader and, if implemented, driver events.
+--
+-- To capture events that occur while creating or destroying an instance an
+-- application /can/ link a 'DebugUtilsMessengerCreateInfoEXT' structure to
+-- the @pNext@ element of the
+-- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure given
+-- to 'Vulkan.Core10.DeviceInitialization.createInstance'. This callback is
+-- only valid for the duration of the
+-- 'Vulkan.Core10.DeviceInitialization.createInstance' and the
+-- 'Vulkan.Core10.DeviceInitialization.destroyInstance' call. Use
+-- 'createDebugUtilsMessengerEXT' to create persistent callback objects.
+--
+-- Example uses: Create three callback objects. One will log errors and
+-- warnings to the debug console using Windows @OutputDebugString@. The
+-- second will cause the debugger to break at that callback when an error
+-- happens and the third will log warnings to stdout.
+--
+-- >     extern VkInstance instance;
+-- >     VkResult res;
+-- >     VkDebugUtilsMessengerEXT cb1, cb2, cb3;
+-- >
+-- >     // Must call extension functions through a function pointer:
+-- >     PFN_vkCreateDebugUtilsMessengerEXT pfnCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetDeviceProcAddr(device, "vkCreateDebugUtilsMessengerEXT");
+-- >     PFN_vkDestroyDebugUtilsMessengerEXT pfnDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetDeviceProcAddr(device, "vkDestroyDebugUtilsMessengerEXT");
+-- >
+-- >     VkDebugUtilsMessengeCreateInfoEXT callback1 = {
+-- >             VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,  // sType
+-- >             NULL,                                                     // pNext
+-- >             0,                                                        // flags
+-- >             VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |           // messageSeverity
+-- >             VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
+-- >             VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |             // messageType
+-- >             VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
+-- >             myOutputDebugString,                                      // pfnUserCallback
+-- >             NULL                                                      // pUserData
+-- >     };
+-- >     res = pfnCreateDebugUtilsMessengerEXT(instance, &callback1, NULL, &cb1);
+-- >     if (res != VK_SUCCESS) {
+-- >        // Do error handling for VK_ERROR_OUT_OF_MEMORY
+-- >     }
+-- >
+-- >     callback1.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+-- >     callback1.pfnCallback = myDebugBreak;
+-- >     callback1.pUserData = NULL;
+-- >     res = pfnCreateDebugUtilsMessengerEXT(instance, &callback1, NULL, &cb2);
+-- >     if (res != VK_SUCCESS) {
+-- >        // Do error handling for VK_ERROR_OUT_OF_MEMORY
+-- >     }
+-- >
+-- >     VkDebugUtilsMessengerCreateInfoEXT callback3 = {
+-- >             VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,  // sType
+-- >             NULL,                                                     // pNext
+-- >             0,                                                        // flags
+-- >             VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,          // messageSeverity
+-- >             VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |             // messageType
+-- >             VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
+-- >             mystdOutLogger,                                           // pfnUserCallback
+-- >             NULL                                                      // pUserData
+-- >     };
+-- >     res = pfnCreateDebugUtilsMessengerEXT(instance, &callback3, NULL, &cb3);
+-- >     if (res != VK_SUCCESS) {
+-- >        // Do error handling for VK_ERROR_OUT_OF_MEMORY
+-- >     }
+-- >
+-- >     ...
+-- >
+-- >     // Remove callbacks when cleaning up
+-- >     pfnDestroyDebugUtilsMessengerEXT(instance, cb1, NULL);
+-- >     pfnDestroyDebugUtilsMessengerEXT(instance, cb2, NULL);
+-- >     pfnDestroyDebugUtilsMessengerEXT(instance, cb3, NULL);
+--
+-- __Example 2__
+--
+-- Associate a name with an image, for easier debugging in external tools
+-- or with validation layers that can print a friendly name when referring
+-- to objects in error messages.
+--
+-- >     extern VkDevice device;
+-- >     extern VkImage image;
+-- >
+-- >     // Must call extension functions through a function pointer:
+-- >     PFN_vkSetDebugUtilsObjectNameEXT pfnSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetDeviceProcAddr(device, "vkSetDebugUtilsObjectNameEXT");
+-- >
+-- >     // Set a name on the image
+-- >     const VkDebugUtilsObjectNameInfoEXT imageNameInfo =
+-- >     {
+-- >         VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT, // sType
+-- >         NULL,                                               // pNext
+-- >         VK_OBJECT_TYPE_IMAGE,                               // objectType
+-- >         (uint64_t)image,                                    // object
+-- >         "Brick Diffuse Texture",                            // pObjectName
+-- >     };
+-- >
+-- >     pfnSetDebugUtilsObjectNameEXT(device, &imageNameInfo);
+-- >
+-- >     // A subsequent error might print:
+-- >     //   Image 'Brick Diffuse Texture' (0xc0dec0dedeadbeef) is used in a
+-- >     //   command buffer with no memory bound to it.
+--
+-- __Example 3__
+--
+-- Annotating regions of a workload with naming information so that offline
+-- analysis tools can display a more usable visualization of the commands
+-- submitted.
+--
+-- >     extern VkDevice device;
+-- >     extern VkCommandBuffer commandBuffer;
+-- >
+-- >     // Must call extension functions through a function pointer:
+-- >     PFN_vkQueueBeginDebugUtilsLabelEXT pfnQueueBeginDebugUtilsLabelEXT = (PFN_vkQueueBeginDebugUtilsLabelEXT)vkGetDeviceProcAddr(device, "vkQueueBeginDebugUtilsLabelEXT");
+-- >     PFN_vkQueueEndDebugUtilsLabelEXT pfnQueueEndDebugUtilsLabelEXT = (PFN_vkQueueEndDebugUtilsLabelEXT)vkGetDeviceProcAddr(device, "vkQueueEndDebugUtilsLabelEXT");
+-- >     PFN_vkCmdBeginDebugUtilsLabelEXT pfnCmdBeginDebugUtilsLabelEXT = (PFN_vkCmdBeginDebugUtilsLabelEXT)vkGetDeviceProcAddr(device, "vkCmdBeginDebugUtilsLabelEXT");
+-- >     PFN_vkCmdEndDebugUtilsLabelEXT pfnCmdEndDebugUtilsLabelEXT = (PFN_vkCmdEndDebugUtilsLabelEXT)vkGetDeviceProcAddr(device, "vkCmdEndDebugUtilsLabelEXT");
+-- >     PFN_vkCmdInsertDebugUtilsLabelEXT pfnCmdInsertDebugUtilsLabelEXT = (PFN_vkCmdInsertDebugUtilsLabelEXT)vkGetDeviceProcAddr(device, "vkCmdInsertDebugUtilsLabelEXT");
+-- >
+-- >     // Describe the area being rendered
+-- >     const VkDebugUtilsLabelEXT houseLabel =
+-- >     {
+-- >         VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT, // sType
+-- >         NULL,                                    // pNext
+-- >         "Brick House",                           // pLabelName
+-- >         { 1.0f, 0.0f, 0.0f, 1.0f },              // color
+-- >     };
+-- >
+-- >     // Start an annotated group of calls under the 'Brick House' name
+-- >     pfnCmdBeginDebugUtilsLabelEXT(commandBuffer, &houseLabel);
+-- >     {
+-- >         // A mutable structure for each part being rendered
+-- >         VkDebugUtilsLabelEXT housePartLabel =
+-- >         {
+-- >             VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT, // sType
+-- >             NULL,                                    // pNext
+-- >             NULL,                                    // pLabelName
+-- >             { 0.0f, 0.0f, 0.0f, 0.0f },              // color
+-- >         };
+-- >
+-- >         // Set the name and insert the marker
+-- >         housePartLabel.pLabelName = "Walls";
+-- >         pfnCmdInsertDebugUtilsLabelEXT(commandBuffer, &housePartLabel);
+-- >
+-- >         // Insert the drawcall for the walls
+-- >         vkCmdDrawIndexed(commandBuffer, 1000, 1, 0, 0, 0);
+-- >
+-- >         // Insert a recursive region for two sets of windows
+-- >         housePartLabel.pLabelName = "Windows";
+-- >         pfnCmdBeginDebugUtilsLabelEXT(commandBuffer, &housePartLabel);
+-- >         {
+-- >             vkCmdDrawIndexed(commandBuffer, 75, 6, 1000, 0, 0);
+-- >             vkCmdDrawIndexed(commandBuffer, 100, 2, 1450, 0, 0);
+-- >         }
+-- >         pfnCmdEndDebugUtilsLabelEXT(commandBuffer);
+-- >
+-- >         housePartLabel.pLabelName = "Front Door";
+-- >         pfnCmdInsertDebugUtilsLabelEXT(commandBuffer, &housePartLabel);
+-- >
+-- >         vkCmdDrawIndexed(commandBuffer, 350, 1, 1650, 0, 0);
+-- >
+-- >         housePartLabel.pLabelName = "Roof";
+-- >         pfnCmdInsertDebugUtilsLabelEXT(commandBuffer, &housePartLabel);
+-- >
+-- >         vkCmdDrawIndexed(commandBuffer, 500, 1, 2000, 0, 0);
+-- >     }
+-- >     // End the house annotation started above
+-- >     pfnCmdEndDebugUtilsLabelEXT(commandBuffer);
+-- >
+-- >     // Do other work
+-- >
+-- >     vkEndCommandBuffer(commandBuffer);
+-- >
+-- >     // Describe the queue being used
+-- >     const VkDebugUtilsLabelEXT queueLabel =
+-- >     {
+-- >         VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT, // sType
+-- >         NULL,                                    // pNext
+-- >         "Main Render Work",                      // pLabelName
+-- >         { 0.0f, 1.0f, 0.0f, 1.0f },              // color
+-- >     };
+-- >
+-- >     // Identify the queue label region
+-- >     pfnQueueBeginDebugUtilsLabelEXT(queue, &queueLabel);
+-- >
+-- >     // Submit the work for the main render thread
+-- >     const VkCommandBuffer cmd_bufs[] = {commandBuffer};
+-- >     VkSubmitInfo submit_info = {.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+-- >                                 .pNext = NULL,
+-- >                                 .waitSemaphoreCount = 0,
+-- >                                 .pWaitSemaphores = NULL,
+-- >                                 .pWaitDstStageMask = NULL,
+-- >                                 .commandBufferCount = 1,
+-- >                                 .pCommandBuffers = cmd_bufs,
+-- >                                 .signalSemaphoreCount = 0,
+-- >                                 .pSignalSemaphores = NULL};
+-- >     vkQueueSubmit(queue, 1, &submit_info, fence);
+-- >
+-- >     // End the queue label region
+-- >     pfnQueueEndDebugUtilsLabelEXT(queue);
+--
+-- == Issues
+--
+-- 1) Should we just name this extension @VK_EXT_debug_report2@
+--
+-- __RESOLVED__: No. There is enough additional changes to the structures
+-- to break backwards compatibility. So, a new name was decided that would
+-- not indicate any interaction with the previous extension.
+--
+-- 2) Will validation layers immediately support all the new features.
+--
+-- __RESOLVED__: Not immediately. As one can imagine, there is a lot of
+-- work involved with converting the validation layer logging over to the
+-- new functionality. Basic logging, as seen in the origin
+-- @VK_EXT_debug_report@ extension will be made available immediately.
+-- However, adding the labels and object names will take time. Since the
+-- priority for Khronos at this time is to continue focusing on Valid Usage
+-- statements, it may take a while before the new functionality is fully
+-- exposed.
+--
+-- 3) If the validation layers won’t expose the new functionality
+-- immediately, then what’s the point of this extension?
+--
+-- __RESOLVED__: We needed a replacement for @VK_EXT_debug_report@ because
+-- the 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
+-- enumeration will no longer be updated and any new objects will need to
+-- be debugged using the new functionality provided by this extension.
+--
+-- 4) Should this extension be split into two separate parts (1 extension
+-- that is an instance extension providing the callback functionality, and
+-- another device extension providing the general debug marker and
+-- annotation functionality)?
+--
+-- __RESOLVED__: No, the functionality for this extension is too closely
+-- related. If we did split up the extension, where would the structures
+-- and enums live, and how would you define that the device behavior in the
+-- instance extension is really only valid if the device extension is
+-- enabled, and the functionality is passed in. It’s cleaner to just define
+-- this all as an instance extension, plus it allows the application to
+-- enable all debug functionality provided with one enable string during
+-- 'Vulkan.Core10.DeviceInitialization.createInstance'.
+--
+-- == Version History
+--
+-- -   Revision 1, 2017-09-14 (Mark Young and all listed Contributors)
+--
+--     -   Initial draft, based on @VK_EXT_debug_report@ and
+--         @VK_EXT_debug_marker@ in addition to previous feedback supplied
+--         from various companies including Valve, Epic, and Oxide games.
+--
+-- -   Revision 2, 2020-04-03 (Mark Young and Piers Daniell)
+--
+--     -   Updated to allow either @NULL@ or an empty string to be passed
+--         in for @pObjectName@ in 'DebugUtilsObjectNameInfoEXT', because
+--         the loader and various drivers support @NULL@ already.
+--
+-- = See Also
+--
+-- 'PFN_vkDebugUtilsMessengerCallbackEXT', 'DebugUtilsLabelEXT',
+-- 'DebugUtilsMessageSeverityFlagBitsEXT',
+-- 'DebugUtilsMessageSeverityFlagsEXT', 'DebugUtilsMessageTypeFlagBitsEXT',
+-- 'DebugUtilsMessageTypeFlagsEXT', 'DebugUtilsMessengerCallbackDataEXT',
+-- 'DebugUtilsMessengerCallbackDataFlagsEXT',
+-- 'DebugUtilsMessengerCreateFlagsEXT', 'DebugUtilsMessengerCreateInfoEXT',
+-- 'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
+-- 'DebugUtilsObjectNameInfoEXT', 'DebugUtilsObjectTagInfoEXT',
+-- 'cmdBeginDebugUtilsLabelEXT', 'cmdEndDebugUtilsLabelEXT',
+-- 'cmdInsertDebugUtilsLabelEXT', 'createDebugUtilsMessengerEXT',
+-- 'destroyDebugUtilsMessengerEXT', 'queueBeginDebugUtilsLabelEXT',
+-- 'queueEndDebugUtilsLabelEXT', 'queueInsertDebugUtilsLabelEXT',
+-- 'setDebugUtilsObjectNameEXT', 'setDebugUtilsObjectTagEXT',
+-- 'submitDebugUtilsMessageEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameEXT
                                              , setDebugUtilsObjectTagEXT
                                              , queueBeginDebugUtilsLabelEXT
@@ -19,19 +506,19 @@ module Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameEXT
                                              , DebugUtilsMessengerCallbackDataEXT(..)
                                              , DebugUtilsMessengerCreateFlagsEXT(..)
                                              , DebugUtilsMessengerCallbackDataFlagsEXT(..)
+                                             , DebugUtilsMessageSeverityFlagsEXT
                                              , DebugUtilsMessageSeverityFlagBitsEXT( DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
                                                                                    , DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
                                                                                    , DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
                                                                                    , DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
                                                                                    , ..
                                                                                    )
-                                             , DebugUtilsMessageSeverityFlagsEXT
+                                             , DebugUtilsMessageTypeFlagsEXT
                                              , DebugUtilsMessageTypeFlagBitsEXT( DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
                                                                                , DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
                                                                                , DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
                                                                                , ..
                                                                                )
-                                             , DebugUtilsMessageTypeFlagsEXT
                                              , PFN_vkDebugUtilsMessengerCallbackEXT
                                              , FN_vkDebugUtilsMessengerCallbackEXT
                                              , EXT_DEBUG_UTILS_SPEC_VERSION
@@ -42,6 +529,8 @@ module Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameEXT
                                              ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -54,15 +543,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
@@ -91,9 +573,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -716,8 +1198,8 @@ createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT
 --
 -- To ensure that 'destroyDebugUtilsMessengerEXT' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withDebugUtilsMessengerEXT :: forall io r . MonadIO io => Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> (io DebugUtilsMessengerEXT -> (DebugUtilsMessengerEXT -> io ()) -> r) -> r
 withDebugUtilsMessengerEXT instance' pCreateInfo pAllocator b =
@@ -1492,17 +1974,27 @@ newtype DebugUtilsMessengerCreateFlagsEXT = DebugUtilsMessengerCreateFlagsEXT Fl
 
 
 
+conNameDebugUtilsMessengerCreateFlagsEXT :: String
+conNameDebugUtilsMessengerCreateFlagsEXT = "DebugUtilsMessengerCreateFlagsEXT"
+
+enumPrefixDebugUtilsMessengerCreateFlagsEXT :: String
+enumPrefixDebugUtilsMessengerCreateFlagsEXT = ""
+
+showTableDebugUtilsMessengerCreateFlagsEXT :: [(DebugUtilsMessengerCreateFlagsEXT, String)]
+showTableDebugUtilsMessengerCreateFlagsEXT = []
+
 instance Show DebugUtilsMessengerCreateFlagsEXT where
-  showsPrec p = \case
-    DebugUtilsMessengerCreateFlagsEXT x -> showParen (p >= 11) (showString "DebugUtilsMessengerCreateFlagsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessengerCreateFlagsEXT
+                            showTableDebugUtilsMessengerCreateFlagsEXT
+                            conNameDebugUtilsMessengerCreateFlagsEXT
+                            (\(DebugUtilsMessengerCreateFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessengerCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DebugUtilsMessengerCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (DebugUtilsMessengerCreateFlagsEXT v)))
+  readPrec = enumReadPrec enumPrefixDebugUtilsMessengerCreateFlagsEXT
+                          showTableDebugUtilsMessengerCreateFlagsEXT
+                          conNameDebugUtilsMessengerCreateFlagsEXT
+                          DebugUtilsMessengerCreateFlagsEXT
 
 
 -- | VkDebugUtilsMessengerCallbackDataFlagsEXT - Reserved for future use
@@ -1520,18 +2012,30 @@ newtype DebugUtilsMessengerCallbackDataFlagsEXT = DebugUtilsMessengerCallbackDat
 
 
 
+conNameDebugUtilsMessengerCallbackDataFlagsEXT :: String
+conNameDebugUtilsMessengerCallbackDataFlagsEXT = "DebugUtilsMessengerCallbackDataFlagsEXT"
+
+enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT :: String
+enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT = ""
+
+showTableDebugUtilsMessengerCallbackDataFlagsEXT :: [(DebugUtilsMessengerCallbackDataFlagsEXT, String)]
+showTableDebugUtilsMessengerCallbackDataFlagsEXT = []
+
 instance Show DebugUtilsMessengerCallbackDataFlagsEXT where
-  showsPrec p = \case
-    DebugUtilsMessengerCallbackDataFlagsEXT x -> showParen (p >= 11) (showString "DebugUtilsMessengerCallbackDataFlagsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT
+                            showTableDebugUtilsMessengerCallbackDataFlagsEXT
+                            conNameDebugUtilsMessengerCallbackDataFlagsEXT
+                            (\(DebugUtilsMessengerCallbackDataFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessengerCallbackDataFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DebugUtilsMessengerCallbackDataFlagsEXT")
-                       v <- step readPrec
-                       pure (DebugUtilsMessengerCallbackDataFlagsEXT v)))
+  readPrec = enumReadPrec enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT
+                          showTableDebugUtilsMessengerCallbackDataFlagsEXT
+                          conNameDebugUtilsMessengerCallbackDataFlagsEXT
+                          DebugUtilsMessengerCallbackDataFlagsEXT
 
+
+type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
 
 -- | VkDebugUtilsMessageSeverityFlagBitsEXT - Bitmask specifying which
 -- severities of events cause a debug messenger callback
@@ -1549,7 +2053,7 @@ pattern DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = DebugUtilsMessageSeverity
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT' specifies an informational
 -- message such as resource details that may be handy when debugging an
 -- application.
-pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00000010
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT    = DebugUtilsMessageSeverityFlagBitsEXT 0x00000010
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT' specifies use of Vulkan
 -- that /may/ expose an app bug. Such cases may not be immediately harmful,
 -- such as a fragment shader outputting to a location with no attachment.
@@ -1560,29 +2064,37 @@ pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = DebugUtilsMessageSeverityFla
 pattern DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00000100
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT' specifies that the
 -- application has violated a valid usage condition of the specification.
-pattern DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00001000
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT   = DebugUtilsMessageSeverityFlagBitsEXT 0x00001000
 
-type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
+conNameDebugUtilsMessageSeverityFlagBitsEXT :: String
+conNameDebugUtilsMessageSeverityFlagBitsEXT = "DebugUtilsMessageSeverityFlagBitsEXT"
+
+enumPrefixDebugUtilsMessageSeverityFlagBitsEXT :: String
+enumPrefixDebugUtilsMessageSeverityFlagBitsEXT = "DEBUG_UTILS_MESSAGE_SEVERITY_"
+
+showTableDebugUtilsMessageSeverityFlagBitsEXT :: [(DebugUtilsMessageSeverityFlagBitsEXT, String)]
+showTableDebugUtilsMessageSeverityFlagBitsEXT =
+  [ (DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT, "VERBOSE_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT   , "INFO_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT, "WARNING_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT  , "ERROR_BIT_EXT")
+  ]
 
 instance Show DebugUtilsMessageSeverityFlagBitsEXT where
-  showsPrec p = \case
-    DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT"
-    DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT"
-    DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT"
-    DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT"
-    DebugUtilsMessageSeverityFlagBitsEXT x -> showParen (p >= 11) (showString "DebugUtilsMessageSeverityFlagBitsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
+                            showTableDebugUtilsMessageSeverityFlagBitsEXT
+                            conNameDebugUtilsMessageSeverityFlagBitsEXT
+                            (\(DebugUtilsMessageSeverityFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessageSeverityFlagBitsEXT where
-  readPrec = parens (choose [("DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT", pure DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
-                            , ("DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT", pure DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
-                            , ("DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT", pure DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
-                            , ("DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT", pure DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DebugUtilsMessageSeverityFlagBitsEXT")
-                       v <- step readPrec
-                       pure (DebugUtilsMessageSeverityFlagBitsEXT v)))
+  readPrec = enumReadPrec enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
+                          showTableDebugUtilsMessageSeverityFlagBitsEXT
+                          conNameDebugUtilsMessageSeverityFlagBitsEXT
+                          DebugUtilsMessageSeverityFlagBitsEXT
 
+
+type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
 
 -- | VkDebugUtilsMessageTypeFlagBitsEXT - Bitmask specifying which types of
 -- events cause a debug messenger callback
@@ -1596,11 +2108,11 @@ newtype DebugUtilsMessageTypeFlagBitsEXT = DebugUtilsMessageTypeFlagBitsEXT Flag
 -- | 'DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT' specifies that some general
 -- event has occurred. This is typically a non-specification,
 -- non-performance event.
-pattern DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x00000001
+pattern DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT     = DebugUtilsMessageTypeFlagBitsEXT 0x00000001
 -- | 'DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT' specifies that something
 -- has occurred during validation against the Vulkan specification that may
 -- indicate invalid behavior.
-pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x00000002
+pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT  = DebugUtilsMessageTypeFlagBitsEXT 0x00000002
 -- | 'DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT' specifies a potentially
 -- non-optimal use of Vulkan, e.g. using
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdClearColorImage' when setting
@@ -1609,24 +2121,31 @@ pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = DebugUtilsMessageTypeFlagB
 -- have worked.
 pattern DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x00000004
 
-type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
+conNameDebugUtilsMessageTypeFlagBitsEXT :: String
+conNameDebugUtilsMessageTypeFlagBitsEXT = "DebugUtilsMessageTypeFlagBitsEXT"
+
+enumPrefixDebugUtilsMessageTypeFlagBitsEXT :: String
+enumPrefixDebugUtilsMessageTypeFlagBitsEXT = "DEBUG_UTILS_MESSAGE_TYPE_"
+
+showTableDebugUtilsMessageTypeFlagBitsEXT :: [(DebugUtilsMessageTypeFlagBitsEXT, String)]
+showTableDebugUtilsMessageTypeFlagBitsEXT =
+  [ (DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT    , "GENERAL_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT , "VALIDATION_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT, "PERFORMANCE_BIT_EXT")
+  ]
 
 instance Show DebugUtilsMessageTypeFlagBitsEXT where
-  showsPrec p = \case
-    DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT"
-    DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT"
-    DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT"
-    DebugUtilsMessageTypeFlagBitsEXT x -> showParen (p >= 11) (showString "DebugUtilsMessageTypeFlagBitsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageTypeFlagBitsEXT
+                            showTableDebugUtilsMessageTypeFlagBitsEXT
+                            conNameDebugUtilsMessageTypeFlagBitsEXT
+                            (\(DebugUtilsMessageTypeFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessageTypeFlagBitsEXT where
-  readPrec = parens (choose [("DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT", pure DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT)
-                            , ("DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT", pure DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT)
-                            , ("DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT", pure DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DebugUtilsMessageTypeFlagBitsEXT")
-                       v <- step readPrec
-                       pure (DebugUtilsMessageTypeFlagBitsEXT v)))
+  readPrec = enumReadPrec enumPrefixDebugUtilsMessageTypeFlagBitsEXT
+                          showTableDebugUtilsMessageTypeFlagBitsEXT
+                          conNameDebugUtilsMessageTypeFlagBitsEXT
+                          DebugUtilsMessageTypeFlagBitsEXT
 
 
 type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr DebugUtilsMessengerCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO Bool32

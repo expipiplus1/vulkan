@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ExtensionDiscovery"
 module Vulkan.Core10.ExtensionDiscovery  (ExtensionProperties) where
 
 import Data.Kind (Type)

@@ -1,29 +1,27 @@
 {-# language CPP #-}
-module Vulkan.Core12.Enums.DescriptorBindingFlagBits  ( DescriptorBindingFlagBits( DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT
+-- No documentation found for Chapter "DescriptorBindingFlagBits"
+module Vulkan.Core12.Enums.DescriptorBindingFlagBits  ( DescriptorBindingFlags
+                                                      , DescriptorBindingFlagBits( DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT
                                                                                  , DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT
                                                                                  , DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT
                                                                                  , DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT
                                                                                  , ..
                                                                                  )
-                                                      , DescriptorBindingFlags
                                                       ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type DescriptorBindingFlags = DescriptorBindingFlagBits
+
 -- | VkDescriptorBindingFlagBits - Bitmask specifying descriptor set layout
 -- binding properties
 --
@@ -59,7 +57,7 @@ newtype DescriptorBindingFlagBits = DescriptorBindingFlagBits Flags
 -- concurrently by two threads. Descriptors with this flag set /can/ be
 -- updated concurrently with the set being bound to a command buffer in
 -- another thread, but not concurrently with the set being reset or freed.
-pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT = DescriptorBindingFlagBits 0x00000001
+pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT           = DescriptorBindingFlagBits 0x00000001
 -- | 'DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT' indicates that
 -- descriptors in this binding /can/ be updated after a command buffer has
 -- bound this descriptor set, or while a command buffer that uses this
@@ -76,7 +74,7 @@ pattern DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = DescriptorBindingFl
 -- descriptors at the time the descriptors are consumed. A descriptor is
 -- dynamically used if any shader invocation executes an instruction that
 -- performs any memory access using the descriptor.
-pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = DescriptorBindingFlagBits 0x00000004
+pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT             = DescriptorBindingFlagBits 0x00000004
 -- | 'DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT' indicates that this
 -- descriptor binding has a variable size that will be specified when a
 -- descriptor set is allocated using this layout. The value of
@@ -91,26 +89,32 @@ pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = DescriptorBindingFlagBits 0x000
 -- the binding, thus it counts against the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxInlineUniformBlockSize maxInlineUniformBlockSize>
 -- limit instead. .
-pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT = DescriptorBindingFlagBits 0x00000008
+pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT   = DescriptorBindingFlagBits 0x00000008
 
-type DescriptorBindingFlags = DescriptorBindingFlagBits
+conNameDescriptorBindingFlagBits :: String
+conNameDescriptorBindingFlagBits = "DescriptorBindingFlagBits"
+
+enumPrefixDescriptorBindingFlagBits :: String
+enumPrefixDescriptorBindingFlagBits = "DESCRIPTOR_BINDING_"
+
+showTableDescriptorBindingFlagBits :: [(DescriptorBindingFlagBits, String)]
+showTableDescriptorBindingFlagBits =
+  [ (DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT          , "UPDATE_AFTER_BIND_BIT")
+  , (DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT, "UPDATE_UNUSED_WHILE_PENDING_BIT")
+  , (DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT            , "PARTIALLY_BOUND_BIT")
+  , (DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT  , "VARIABLE_DESCRIPTOR_COUNT_BIT")
+  ]
 
 instance Show DescriptorBindingFlagBits where
-  showsPrec p = \case
-    DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT -> showString "DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT"
-    DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT -> showString "DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT"
-    DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT -> showString "DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT"
-    DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT -> showString "DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT"
-    DescriptorBindingFlagBits x -> showParen (p >= 11) (showString "DescriptorBindingFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDescriptorBindingFlagBits
+                            showTableDescriptorBindingFlagBits
+                            conNameDescriptorBindingFlagBits
+                            (\(DescriptorBindingFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DescriptorBindingFlagBits where
-  readPrec = parens (choose [("DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT", pure DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT)
-                            , ("DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT", pure DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT)
-                            , ("DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT", pure DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT)
-                            , ("DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT", pure DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DescriptorBindingFlagBits")
-                       v <- step readPrec
-                       pure (DescriptorBindingFlagBits v)))
+  readPrec = enumReadPrec enumPrefixDescriptorBindingFlagBits
+                          showTableDescriptorBindingFlagBits
+                          conNameDescriptorBindingFlagBits
+                          DescriptorBindingFlagBits
 

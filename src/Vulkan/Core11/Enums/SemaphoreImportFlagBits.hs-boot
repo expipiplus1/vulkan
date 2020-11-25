@@ -1,11 +1,12 @@
 {-# language CPP #-}
-module Vulkan.Core11.Enums.SemaphoreImportFlagBits  ( SemaphoreImportFlagBits
-                                                    , SemaphoreImportFlags
+-- No documentation found for Chapter "SemaphoreImportFlagBits"
+module Vulkan.Core11.Enums.SemaphoreImportFlagBits  ( SemaphoreImportFlags
+                                                    , SemaphoreImportFlagBits
                                                     ) where
 
 
 
-data SemaphoreImportFlagBits
-
 type SemaphoreImportFlags = SemaphoreImportFlagBits
+
+data SemaphoreImportFlagBits
 

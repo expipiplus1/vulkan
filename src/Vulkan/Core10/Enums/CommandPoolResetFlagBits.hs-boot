@@ -1,11 +1,12 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.CommandPoolResetFlagBits  ( CommandPoolResetFlagBits
-                                                     , CommandPoolResetFlags
+-- No documentation found for Chapter "CommandPoolResetFlagBits"
+module Vulkan.Core10.Enums.CommandPoolResetFlagBits  ( CommandPoolResetFlags
+                                                     , CommandPoolResetFlagBits
                                                      ) where
 
 
 
-data CommandPoolResetFlagBits
-
 type CommandPoolResetFlags = CommandPoolResetFlagBits
+
+data CommandPoolResetFlagBits
 

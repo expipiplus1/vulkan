@@ -83,6 +83,8 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cdBracket "SamplerYcbcrConversion"
     , cdBracket "ValidationCacheEXT"
     , cdBracket "AccelerationStructureKHR"
+    , cdBracket "AccelerationStructureNV"
+      --  ^ TODO: remove when generating from a pre 1.2.162 spec
     , cdBracket "SwapchainKHR"
     , cdBracket "DebugReportCallbackEXT"
     , cdBracket "DebugUtilsMessengerEXT"

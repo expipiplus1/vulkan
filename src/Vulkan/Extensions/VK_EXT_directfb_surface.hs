@@ -1,4 +1,96 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_directfb_surface - instance extension
+--
+-- == VK_EXT_directfb_surface
+--
+-- [__Name String__]
+--     @VK_EXT_directfb_surface@
+--
+-- [__Extension Type__]
+--     Instance extension
+--
+-- [__Registered Extension Number__]
+--     347
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Nicolas Caramelli
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_directfb_surface:%20&body=@caramelli%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2020-06-16
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Nicolas Caramelli
+--
+-- == Description
+--
+-- The @VK_EXT_directfb_surface@ extension is an instance extension. It
+-- provides a mechanism to create a 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- object (defined by the @VK_KHR_surface@ extension) that refers to a
+-- DirectFB 'IDirectFBSurface', as well as a query to determine support for
+-- rendering via DirectFB.
+--
+-- == New Commands
+--
+-- -   'createDirectFBSurfaceEXT'
+--
+-- -   'getPhysicalDeviceDirectFBPresentationSupportEXT'
+--
+-- == New Structures
+--
+-- -   'DirectFBSurfaceCreateInfoEXT'
+--
+-- == New Bitmasks
+--
+-- -   'DirectFBSurfaceCreateFlagsEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_DIRECTFB_SURFACE_EXTENSION_NAME'
+--
+-- -   'EXT_DIRECTFB_SURFACE_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT'
+--
+-- == Version History
+--
+-- -   Revision 1, 2020-06-16 (Nicolas Caramelli)
+--
+--     -   Initial version
+--
+-- = See Also
+--
+-- 'DirectFBSurfaceCreateFlagsEXT', 'DirectFBSurfaceCreateInfoEXT',
+-- 'createDirectFBSurfaceEXT',
+-- 'getPhysicalDeviceDirectFBPresentationSupportEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_directfb_surface  ( createDirectFBSurfaceEXT
                                                   , getPhysicalDeviceDirectFBPresentationSupportEXT
                                                   , DirectFBSurfaceCreateInfoEXT(..)
@@ -12,6 +104,8 @@ module Vulkan.Extensions.VK_EXT_directfb_surface  ( createDirectFBSurfaceEXT
                                                   , SurfaceKHR(..)
                                                   ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -23,15 +117,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -49,8 +136,8 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
@@ -293,17 +380,27 @@ newtype DirectFBSurfaceCreateFlagsEXT = DirectFBSurfaceCreateFlagsEXT Flags
 
 
 
+conNameDirectFBSurfaceCreateFlagsEXT :: String
+conNameDirectFBSurfaceCreateFlagsEXT = "DirectFBSurfaceCreateFlagsEXT"
+
+enumPrefixDirectFBSurfaceCreateFlagsEXT :: String
+enumPrefixDirectFBSurfaceCreateFlagsEXT = ""
+
+showTableDirectFBSurfaceCreateFlagsEXT :: [(DirectFBSurfaceCreateFlagsEXT, String)]
+showTableDirectFBSurfaceCreateFlagsEXT = []
+
 instance Show DirectFBSurfaceCreateFlagsEXT where
-  showsPrec p = \case
-    DirectFBSurfaceCreateFlagsEXT x -> showParen (p >= 11) (showString "DirectFBSurfaceCreateFlagsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDirectFBSurfaceCreateFlagsEXT
+                            showTableDirectFBSurfaceCreateFlagsEXT
+                            conNameDirectFBSurfaceCreateFlagsEXT
+                            (\(DirectFBSurfaceCreateFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DirectFBSurfaceCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DirectFBSurfaceCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (DirectFBSurfaceCreateFlagsEXT v)))
+  readPrec = enumReadPrec enumPrefixDirectFBSurfaceCreateFlagsEXT
+                          showTableDirectFBSurfaceCreateFlagsEXT
+                          conNameDirectFBSurfaceCreateFlagsEXT
+                          DirectFBSurfaceCreateFlagsEXT
 
 
 type EXT_DIRECTFB_SURFACE_SPEC_VERSION = 1

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DescriptorSet"
 module Vulkan.Core10.DescriptorSet  ( createDescriptorSetLayout
                                     , withDescriptorSetLayout
                                     , destroyDescriptorSetLayout
@@ -119,7 +120,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (WriteDescriptorSetAccelerationStructureKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (WriteDescriptorSetAccelerationStructureKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (WriteDescriptorSetAccelerationStructureNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (WriteDescriptorSetInlineUniformBlockEXT)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_DESCRIPTOR_SET))
@@ -213,8 +215,8 @@ createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyDescriptorSetLayout' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withDescriptorSetLayout :: forall a io r . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> (io DescriptorSetLayout -> (DescriptorSetLayout -> io ()) -> r) -> r
 withDescriptorSetLayout device pCreateInfo pAllocator b =
@@ -380,8 +382,8 @@ createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyDescriptorPool' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withDescriptorPool :: forall a io r . (Extendss DescriptorPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> (io DescriptorPool -> (DescriptorPool -> io ()) -> r) -> r
 withDescriptorPool device pCreateInfo pAllocator b =
@@ -676,8 +678,8 @@ allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
 --
 -- To ensure that 'freeDescriptorSets' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withDescriptorSets :: forall a io r . (Extendss DescriptorSetAllocateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> (io (Vector DescriptorSet) -> (Vector DescriptorSet -> io ()) -> r) -> r
 withDescriptorSets device pAllocateInfo b =
@@ -1122,16 +1124,23 @@ instance Zero DescriptorImageInfo where
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
 -- in which case the source data for the descriptor writes is taken from
 -- the
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
+-- structure in the @pNext@ chain of 'WriteDescriptorSet', or if
+-- @descriptorType@ is
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
+-- in which case the source data for the descriptor writes is taken from
+-- the
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
 -- structure in the @pNext@ chain of 'WriteDescriptorSet', as specified
 -- below.
 --
 -- If the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
--- feature is enabled, the buffer, imageView, or bufferView /can/ be
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE'. Loads from a null descriptor
--- return zero values and stores and atomics to a null descriptor are
--- discarded.
+-- feature is enabled, the buffer, acceleration structure, imageView, or
+-- bufferView /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'. Loads from
+-- a null descriptor return zero values and stores and atomics to a null
+-- descriptor are discarded. A null acceleration structure descriptor
+-- results in the miss shader being invoked.
 --
 -- If the @dstBinding@ has fewer than @descriptorCount@ array elements
 -- remaining starting from @dstArrayElement@, then the remainder will be
@@ -1276,7 +1285,15 @@ instance Zero DescriptorImageInfo where
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
 --     the @pNext@ chain /must/ include a
---     'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
+--     structure whose @accelerationStructureCount@ member equals
+--     @descriptorCount@
+--
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-03817# If @descriptorType@
+--     is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
+--     the @pNext@ chain /must/ include a
+--     'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
 --     structure whose @accelerationStructureCount@ member equals
 --     @descriptorCount@
 --
@@ -1481,7 +1498,8 @@ instance Zero DescriptorImageInfo where
 -- -   #VUID-VkWriteDescriptorSet-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR',
+--     'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV',
 --     or
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
 --
@@ -1528,7 +1546,7 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     -- 'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
     -- structure in the @pNext@ chain , or a value matching the
     -- @accelerationStructureCount@ of a
-    -- 'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
+    -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
     -- structure in the @pNext@ chain ). If the descriptor binding identified
     -- by @dstSet@ and @dstBinding@ has a descriptor type of
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
@@ -1566,6 +1584,7 @@ instance Extensible WriteDescriptorSet where
   getNext WriteDescriptorSet{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends WriteDescriptorSet e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @WriteDescriptorSetAccelerationStructureNV = Just f
     | Just Refl <- eqT @e @WriteDescriptorSetAccelerationStructureKHR = Just f
     | Just Refl <- eqT @e @WriteDescriptorSetInlineUniformBlockEXT = Just f
     | otherwise = Nothing
@@ -1594,14 +1613,14 @@ instance (Extendss WriteDescriptorSet es, PokeChain es) => ToCStruct (WriteDescr
       then pure nullPtr
       else do
         pPImageInfo <- ContT $ allocaBytesAligned @DescriptorImageInfo (((Data.Vector.length (imageInfo))) * 24) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPImageInfo `plusPtr` (24 * (i)) :: Ptr DescriptorImageInfo) (e) . ($ ())) ((imageInfo))
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPImageInfo `plusPtr` (24 * (i)) :: Ptr DescriptorImageInfo) (e)) ((imageInfo))
         pure $ pPImageInfo
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr DescriptorImageInfo))) pImageInfo''
     pBufferInfo'' <- if Data.Vector.null (bufferInfo)
       then pure nullPtr
       else do
         pPBufferInfo <- ContT $ allocaBytesAligned @DescriptorBufferInfo (((Data.Vector.length (bufferInfo))) * 24) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBufferInfo `plusPtr` (24 * (i)) :: Ptr DescriptorBufferInfo) (e) . ($ ())) ((bufferInfo))
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferInfo `plusPtr` (24 * (i)) :: Ptr DescriptorBufferInfo) (e)) ((bufferInfo))
         pure $ pPBufferInfo
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr DescriptorBufferInfo))) pBufferInfo''
     pTexelBufferView'' <- if Data.Vector.null (texelBufferView)
@@ -2386,7 +2405,7 @@ instance (Extendss DescriptorPoolCreateInfo es, PokeChain es) => ToCStruct (Desc
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (maxSets)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (poolSizes)) :: Word32))
     pPPoolSizes' <- ContT $ allocaBytesAligned @DescriptorPoolSize ((Data.Vector.length (poolSizes)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPoolSizes' `plusPtr` (8 * (i)) :: Ptr DescriptorPoolSize) (e) . ($ ())) (poolSizes)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPPoolSizes' `plusPtr` (8 * (i)) :: Ptr DescriptorPoolSize) (e)) (poolSizes)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorPoolSize))) (pPPoolSizes')
     lift $ f
   cStructSize = 40
@@ -2397,7 +2416,7 @@ instance (Extendss DescriptorPoolCreateInfo es, PokeChain es) => ToCStruct (Desc
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
     pPPoolSizes' <- ContT $ allocaBytesAligned @DescriptorPoolSize ((Data.Vector.length (mempty)) * 8) 4
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPoolSizes' `plusPtr` (8 * (i)) :: Ptr DescriptorPoolSize) (e) . ($ ())) (mempty)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPPoolSizes' `plusPtr` (8 * (i)) :: Ptr DescriptorPoolSize) (e)) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorPoolSize))) (pPPoolSizes')
     lift $ f
 

@@ -1,7 +1,9 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Handles"
 module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , ValidationCacheEXT(..)
                                   , AccelerationStructureKHR(..)
+                                  , AccelerationStructureNV(..)
                                   , PerformanceConfigurationINTEL(..)
                                   , DeferredOperationKHR(..)
                                   , PrivateDataSlotEXT(..)
@@ -46,6 +48,7 @@ import Vulkan.Core10.APIConstants (HasObjectType(..))
 import Vulkan.Core10.APIConstants (IsHandle)
 import Vulkan.Zero (Zero)
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEFERRED_OPERATION_KHR))
@@ -123,23 +126,16 @@ instance Show ValidationCacheEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureBuildGeometryInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureDeviceAddressInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureMemoryRequirementsInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.BindAccelerationStructureMemoryInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureToMemoryInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.CopyMemoryToAccelerationStructureInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR',
--- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV',
--- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdCopyAccelerationStructureNV',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.cmdWriteAccelerationStructuresPropertiesKHR',
--- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.createAccelerationStructureKHR',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.destroyAccelerationStructureKHR',
--- 'Vulkan.Extensions.VK_NV_ray_tracing.destroyAccelerationStructureNV',
--- 'Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureHandleNV',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.writeAccelerationStructuresPropertiesKHR'
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureBuildGeometryInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureDeviceAddressInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyAccelerationStructureInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyAccelerationStructureToMemoryInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyMemoryToAccelerationStructureInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.createAccelerationStructureKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.destroyAccelerationStructureKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.writeAccelerationStructuresPropertiesKHR'
 newtype AccelerationStructureKHR = AccelerationStructureKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -147,6 +143,29 @@ instance HasObjectType AccelerationStructureKHR where
   objectTypeAndHandle (AccelerationStructureKHR h) = (OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR, h)
 instance Show AccelerationStructureKHR where
   showsPrec p (AccelerationStructureKHR x) = showParen (p >= 11) (showString "AccelerationStructureKHR 0x" . showHex x)
+
+
+-- | VkAccelerationStructureNV - Opaque handle to an acceleration structure
+-- object
+--
+-- = See Also
+--
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsInfoNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdCopyAccelerationStructureNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.createAccelerationStructureNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.destroyAccelerationStructureNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureHandleNV'
+newtype AccelerationStructureNV = AccelerationStructureNV Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType AccelerationStructureNV where
+  objectTypeAndHandle (AccelerationStructureNV h) = (OBJECT_TYPE_ACCELERATION_STRUCTURE_NV, h)
+instance Show AccelerationStructureNV where
+  showsPrec p (AccelerationStructureNV x) = showParen (p >= 11) (showString "AccelerationStructureNV 0x" . showHex x)
 
 
 -- | VkPerformanceConfigurationINTEL - Device configuration for performance
@@ -175,8 +194,12 @@ instance Show PerformanceConfigurationINTEL where
 --
 -- = See Also
 --
--- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.buildAccelerationStructuresKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.copyAccelerationStructureKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.copyAccelerationStructureToMemoryKHR',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.copyMemoryToAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.createDeferredOperationKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.createRayTracingPipelinesKHR',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.deferredOperationJoinKHR',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.destroyDeferredOperationKHR',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.getDeferredOperationMaxConcurrencyKHR',

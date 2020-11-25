@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_EXT_descriptor_indexing"
 module Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing  ( PhysicalDeviceDescriptorIndexingFeatures(..)
                                                                , PhysicalDeviceDescriptorIndexingProperties(..)
                                                                , DescriptorSetLayoutBindingFlagsCreateInfo(..)
@@ -805,6 +806,16 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockFeaturesEXT'::@descriptorBindingInlineUniformBlockUpdateAfterBind@
 --     is not enabled, all bindings with descriptor type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     /must/ not use
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
+--
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingAccelerationStructureUpdateAfterBind-03570#
+--     If
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructureFeaturesKHR'::@descriptorBindingAccelerationStructureUpdateAfterBind@
+--     is not enabled, all bindings with descriptor type
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV'
 --     /must/ not use
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --

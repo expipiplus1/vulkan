@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ImageView"
 module Vulkan.Core10.ImageView  ( createImageView
                                 , withImageView
                                 , destroyImageView
@@ -159,8 +160,8 @@ createImageView device createInfo allocator = liftIO . evalContT $ do
 --
 -- To ensure that 'destroyImageView' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
 --
 withImageView :: forall a io r . (Extendss ImageViewCreateInfo a, PokeChain a, MonadIO io) => Device -> ImageViewCreateInfo a -> Maybe AllocationCallbacks -> (io ImageView -> (ImageView -> io ()) -> r) -> r
 withImageView device pCreateInfo pAllocator b =

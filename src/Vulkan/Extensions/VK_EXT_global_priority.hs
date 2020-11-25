@@ -1,4 +1,124 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_global_priority - device extension
+--
+-- == VK_EXT_global_priority
+--
+-- [__Name String__]
+--     @VK_EXT_global_priority@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     175
+--
+-- [__Revision__]
+--     2
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Andres Rodriguez
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_global_priority:%20&body=@lostgoat%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2017-10-06
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Andres Rodriguez, Valve
+--
+--     -   Pierre-Loup Griffais, Valve
+--
+--     -   Dan Ginsburg, Valve
+--
+--     -   Mitch Singer, AMD
+--
+-- == Description
+--
+-- In Vulkan, users can specify device-scope queue priorities. In some
+-- cases it may be useful to extend this concept to a system-wide scope.
+-- This extension provides a mechanism for caller’s to set their
+-- system-wide priority. The default queue priority is
+-- 'QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT'.
+--
+-- The driver implementation will attempt to skew hardware resource
+-- allocation in favour of the higher-priority task. Therefore,
+-- higher-priority work may retain similar latency and throughput
+-- characteristics even if the system is congested with lower priority
+-- work.
+--
+-- The global priority level of a queue shall take precedence over the
+-- per-process queue priority
+-- ('Vulkan.Core10.Device.DeviceQueueCreateInfo'::@pQueuePriorities@).
+--
+-- Abuse of this feature may result in starving the rest of the system from
+-- hardware resources. Therefore, the driver implementation may deny
+-- requests to acquire a priority above the default priority
+-- ('QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT') if the caller does not have
+-- sufficient privileges. In this scenario
+-- 'Vulkan.Core10.Enums.Result.ERROR_NOT_PERMITTED_EXT' is returned.
+--
+-- The driver implementation may fail the queue allocation request if
+-- resources required to complete the operation have been exhausted (either
+-- by the same process or a different process). In this scenario
+-- 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED' is returned.
+--
+-- == New Structures
+--
+-- -   Extending 'Vulkan.Core10.Device.DeviceQueueCreateInfo':
+--
+--     -   'DeviceQueueGlobalPriorityCreateInfoEXT'
+--
+-- == New Enums
+--
+-- -   'QueueGlobalPriorityEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_GLOBAL_PRIORITY_EXTENSION_NAME'
+--
+-- -   'EXT_GLOBAL_PRIORITY_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.Result.Result':
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_NOT_PERMITTED_EXT'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT'
+--
+-- == Version History
+--
+-- -   Revision 2, 2017-11-03 (Andres Rodriguez)
+--
+--     -   Fixed VkQueueGlobalPriorityEXT missing _EXT suffix
+--
+-- -   Revision 1, 2017-10-06 (Andres Rodriguez)
+--
+--     -   First version.
+--
+-- = See Also
+--
+-- 'DeviceQueueGlobalPriorityCreateInfoEXT', 'QueueGlobalPriorityEXT'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_global_priority  ( DeviceQueueGlobalPriorityCreateInfoEXT(..)
                                                  , QueueGlobalPriorityEXT( QUEUE_GLOBAL_PRIORITY_LOW_EXT
                                                                          , QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT
@@ -12,18 +132,12 @@ module Vulkan.Extensions.VK_EXT_global_priority  ( DeviceQueueGlobalPriorityCrea
                                                  , pattern EXT_GLOBAL_PRIORITY_EXTENSION_NAME
                                                  ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -34,7 +148,7 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -121,11 +235,11 @@ newtype QueueGlobalPriorityEXT = QueueGlobalPriorityEXT Int32
 
 -- | 'QUEUE_GLOBAL_PRIORITY_LOW_EXT' is below the system default. Useful for
 -- non-interactive tasks.
-pattern QUEUE_GLOBAL_PRIORITY_LOW_EXT = QueueGlobalPriorityEXT 128
+pattern QUEUE_GLOBAL_PRIORITY_LOW_EXT      = QueueGlobalPriorityEXT 128
 -- | 'QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT' is the system default priority.
-pattern QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT = QueueGlobalPriorityEXT 256
+pattern QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT   = QueueGlobalPriorityEXT 256
 -- | 'QUEUE_GLOBAL_PRIORITY_HIGH_EXT' is above the system default.
-pattern QUEUE_GLOBAL_PRIORITY_HIGH_EXT = QueueGlobalPriorityEXT 512
+pattern QUEUE_GLOBAL_PRIORITY_HIGH_EXT     = QueueGlobalPriorityEXT 512
 -- | 'QUEUE_GLOBAL_PRIORITY_REALTIME_EXT' is the highest priority. Useful for
 -- critical tasks.
 pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = QueueGlobalPriorityEXT 1024
@@ -134,24 +248,32 @@ pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = QueueGlobalPriorityEXT 1024
              QUEUE_GLOBAL_PRIORITY_HIGH_EXT,
              QUEUE_GLOBAL_PRIORITY_REALTIME_EXT :: QueueGlobalPriorityEXT #-}
 
+conNameQueueGlobalPriorityEXT :: String
+conNameQueueGlobalPriorityEXT = "QueueGlobalPriorityEXT"
+
+enumPrefixQueueGlobalPriorityEXT :: String
+enumPrefixQueueGlobalPriorityEXT = "QUEUE_GLOBAL_PRIORITY_"
+
+showTableQueueGlobalPriorityEXT :: [(QueueGlobalPriorityEXT, String)]
+showTableQueueGlobalPriorityEXT =
+  [ (QUEUE_GLOBAL_PRIORITY_LOW_EXT     , "LOW_EXT")
+  , (QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT  , "MEDIUM_EXT")
+  , (QUEUE_GLOBAL_PRIORITY_HIGH_EXT    , "HIGH_EXT")
+  , (QUEUE_GLOBAL_PRIORITY_REALTIME_EXT, "REALTIME_EXT")
+  ]
+
 instance Show QueueGlobalPriorityEXT where
-  showsPrec p = \case
-    QUEUE_GLOBAL_PRIORITY_LOW_EXT -> showString "QUEUE_GLOBAL_PRIORITY_LOW_EXT"
-    QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT -> showString "QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT"
-    QUEUE_GLOBAL_PRIORITY_HIGH_EXT -> showString "QUEUE_GLOBAL_PRIORITY_HIGH_EXT"
-    QUEUE_GLOBAL_PRIORITY_REALTIME_EXT -> showString "QUEUE_GLOBAL_PRIORITY_REALTIME_EXT"
-    QueueGlobalPriorityEXT x -> showParen (p >= 11) (showString "QueueGlobalPriorityEXT " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixQueueGlobalPriorityEXT
+                            showTableQueueGlobalPriorityEXT
+                            conNameQueueGlobalPriorityEXT
+                            (\(QueueGlobalPriorityEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read QueueGlobalPriorityEXT where
-  readPrec = parens (choose [("QUEUE_GLOBAL_PRIORITY_LOW_EXT", pure QUEUE_GLOBAL_PRIORITY_LOW_EXT)
-                            , ("QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT", pure QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT)
-                            , ("QUEUE_GLOBAL_PRIORITY_HIGH_EXT", pure QUEUE_GLOBAL_PRIORITY_HIGH_EXT)
-                            , ("QUEUE_GLOBAL_PRIORITY_REALTIME_EXT", pure QUEUE_GLOBAL_PRIORITY_REALTIME_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "QueueGlobalPriorityEXT")
-                       v <- step readPrec
-                       pure (QueueGlobalPriorityEXT v)))
+  readPrec = enumReadPrec enumPrefixQueueGlobalPriorityEXT
+                          showTableQueueGlobalPriorityEXT
+                          conNameQueueGlobalPriorityEXT
+                          QueueGlobalPriorityEXT
 
 
 type EXT_GLOBAL_PRIORITY_SPEC_VERSION = 2
