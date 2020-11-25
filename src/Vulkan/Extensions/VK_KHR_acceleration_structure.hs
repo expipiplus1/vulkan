@@ -3190,7 +3190,7 @@ cmdBuildAccelerationStructuresKHR commandBuffer infos buildRangeInfos = liftIO .
   pPpBuildRangeInfos <- ContT $ allocaBytesAligned @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8) 8
   Data.Vector.imapM_ (\i e -> do
     pPpBuildRangeInfos' <- ContT $ allocaBytesAligned @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i)) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e)) (e)
+    lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i')) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e')) (e)
     lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
   lift $ vkCmdBuildAccelerationStructuresKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos)
   pure $ ()
@@ -3819,7 +3819,7 @@ cmdBuildAccelerationStructuresIndirectKHR commandBuffer infos indirectDeviceAddr
   pPpMaxPrimitiveCounts <- ContT $ allocaBytesAligned @(Ptr Word32) ((Data.Vector.length (maxPrimitiveCounts)) * 8) 8
   Data.Vector.imapM_ (\i e -> do
     pPpMaxPrimitiveCounts' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (e)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPpMaxPrimitiveCounts' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (e)
+    lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpMaxPrimitiveCounts' `plusPtr` (4 * (i')) :: Ptr Word32) (e')) (e)
     lift $ poke (pPpMaxPrimitiveCounts `plusPtr` (8 * (i)) :: Ptr (Ptr Word32)) (pPpMaxPrimitiveCounts')) (maxPrimitiveCounts)
   lift $ vkCmdBuildAccelerationStructuresIndirectKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPIndirectDeviceAddresses) (pPIndirectStrides) (pPpMaxPrimitiveCounts)
   pure $ ()
@@ -4284,7 +4284,7 @@ buildAccelerationStructuresKHR device deferredOperation infos buildRangeInfos = 
   pPpBuildRangeInfos <- ContT $ allocaBytesAligned @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8) 8
   Data.Vector.imapM_ (\i e -> do
     pPpBuildRangeInfos' <- ContT $ allocaBytesAligned @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i)) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e)) (e)
+    lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i')) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e')) (e)
     lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
   r <- lift $ vkBuildAccelerationStructuresKHR' (deviceHandle (device)) (deferredOperation) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -6154,8 +6154,8 @@ instance ToCStruct AccelerationStructureVersionInfoKHR where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ unless (Data.ByteString.length (versionData) == 2 * UUID_SIZE) $
       throwIO $ IOError Nothing InvalidArgument "" "AccelerationStructureVersionKHR::versionData must be 2*VK_UUID_SIZE bytes" Nothing Nothing
-    versionData <- fmap (castPtr @CChar @Word8) . ContT $ unsafeUseAsCString (versionData)
-    lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr Word8))) versionData
+    versionData' <- fmap (castPtr @CChar @Word8) . ContT $ unsafeUseAsCString (versionData)
+    lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr Word8))) versionData'
     lift $ f
   cStructSize = 24
   cStructAlignment = 8

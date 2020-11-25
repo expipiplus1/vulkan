@@ -3,6 +3,7 @@
 ## WIP
 
 - Expose SPIR-V Extensions and Capabilities in `Vulkan.SPIRVRequirements`
+- Squash some warnings
 
 ## [3.7] - 2020-11-24
 - Bump API version to v1.2.162

@@ -144,8 +144,8 @@ data WithChildren = WithChildren | WithoutChildren
 
 type family ChildrenType (su :: StructOrUnionType) (a :: WithChildren) where
   ChildrenType AStruct 'WithChildren    = Vector CName
-  ChildrenType t       'WithoutChildren = ()
-  ChildrenType AUnion  c                = ()
+  ChildrenType _       'WithoutChildren = ()
+  ChildrenType AUnion  _                = ()
 
 data StructOrUnion (t :: StructOrUnionType) (s :: WithSize) (c :: WithChildren)
   = Struct
