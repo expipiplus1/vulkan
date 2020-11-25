@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Vulkan.Extensions.VK_KHR_dedicated_allocation</title><link href="linuwial.css" rel="stylesheet" type="text/css" title="Linuwial" /><link rel="stylesheet" type="text/css" href="quick-jump.css" /><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700" /><script src="haddock-bundle.min.js" async="async" type="text/javascript"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { processClass: "mathjax", ignoreClass: ".*" } });</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body><div id="package-header"><span class="caption">vulkan-3.7: Bindings to the Vulkan graphics API.</span><ul class="links" id="page-menu"><li><a href="src/Vulkan.Extensions.VK_KHR_dedicated_allocation.html">Source</a></li><li><a href="https://hackage.haskell.org/package/vulkan-3.7">Contents</a></li><li><a href="doc-index.html">Index</a></li></ul></div><div id="content"><div id="module-header"><table class="info"><tr><th>Safe Haskell</th><td>None</td></tr><tr><th>Language</th><td>Haskell2010</td></tr></table><p class="caption">Vulkan.Extensions.VK_KHR_dedicated_allocation</p></div><div id="description"><p class="caption">Description</p><div class="doc"><h1>Name</h1><p>VK_KHR_dedicated_allocation - device extension</p><h2>VK_KHR_dedicated_allocation</h2><dl><dt><strong>Name String</strong></dt><dd><code>VK_KHR_dedicated_allocation</code></dd></dl><dl><dt><strong>Extension Type</strong></dt><dd>Device extension</dd><dt><strong>Registered Extension Number</strong></dt><dd>128</dd><dt><strong>Revision</strong></dt><dd>3</dd><dt><strong>Extension and Version Dependencies</strong></dt><dd><ul><li>Requires Vulkan 1.0</li><li>Requires <code>VK_KHR_get_memory_requirements2</code></li></ul></dd><dt><strong>Deprecation state</strong></dt><dd><ul><li><em>Promoted</em> to
+    <a href="https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li></ul></dd><dt><strong>Contact</strong></dt><dd><ul><li>James Jones
+    <a href="https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_dedicated_allocation:%20&amp;body=@cubanismo%20">https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_dedicated_allocation:%20&amp;body=@cubanismo%20</a></li></ul></dd></dl><h2>Other Extension Metadata</h2><dl><dt><strong>Last Modified Date</strong></dt><dd>2017-09-05</dd></dl><dl><dt><strong>IP Status</strong></dt><dd>No known IP claims.</dd><dt><strong>Interactions and External Dependencies</strong></dt><dd><ul><li>Promoted to Vulkan 1.1 Core</li></ul></dd><dt><strong>Contributors</strong></dt><dd><ul><li>Jeff Bolz, NVIDIA</li><li>Jason Ekstrand, Intel</li></ul></dd></dl><h2>Description</h2><p>This extension enables resources to be bound to a dedicated allocation,
+ rather than suballocated. For any particular resource, applications
+ <em>can</em> query whether a dedicated allocation is recommended, in which case
+ using a dedicated allocation <em>may</em> improve the performance of access to
+ that resource. Normal device memory allocations must support multiple
+ resources per allocation, memory aliasing and sparse binding, which
+ could interfere with some optimizations. Applications should query the
+ implementation for when a dedicated allocation <em>may</em> be beneficial by
+ adding a <code><a href="Vulkan-Extensions-VK_KHR_dedicated_allocation.html#t:MemoryDedicatedRequirementsKHR" title="Vulkan.Extensions.VK_KHR_dedicated_allocation">MemoryDedicatedRequirementsKHR</a></code> structure to the <code>pNext</code> chain
+ of the
+ <code><a href="Vulkan-Core11-Promoted_From_VK_KHR_get_memory_requirements2.html#v:MemoryRequirements2" title="Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2">MemoryRequirements2</a></code>
+ structure passed as the <code>pMemoryRequirements</code> parameter of a call to
+ <code><a href="Vulkan-Core11-Promoted_From_VK_KHR_get_memory_requirements2.html#v:getBufferMemoryRequirements2" title="Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2">getBufferMemoryRequirements2</a></code>
+ or
+ <code><a href="Vulkan-Core11-Promoted_From_VK_KHR_get_memory_requirements2.html#v:getImageMemoryRequirements2" title="Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2">getImageMemoryRequirements2</a></code>.
+ Certain external handle types and external images or buffers <em>may</em> also
+ depend on dedicated allocations on implementations that associate image
+ or buffer metadata with OS-level memory objects.</p><p>This extension adds a two small structures to memory requirements
+ querying and memory allocation: a new structure that flags whether an
+ image/buffer should have a dedicated allocation, and a structure
+ indicating the image or buffer that an allocation will be bound to.</p><h2>Promotion to Vulkan 1.1</h2><p>All functionality in this extension is included in core Vulkan 1.1, with
+ the KHR suffix omitted. The original type, enum and command names are
+ still available as aliases of the core functionality.</p><h2>New Structures</h2><ul><li><p>Extending <code><a href="Vulkan-Core10-Memory.html#v:MemoryAllocateInfo" title="Vulkan.Core10.Memory">MemoryAllocateInfo</a></code>:</p><ul><li><code><a href="Vulkan-Extensions-VK_KHR_dedicated_allocation.html#t:MemoryDedicatedAllocateInfoKHR" title="Vulkan.Extensions.VK_KHR_dedicated_allocation">MemoryDedicatedAllocateInfoKHR</a></code></li></ul></li></ul><ul><li><p>Extending
+     <code><a href="Vulkan-Core11-Promoted_From_VK_KHR_get_memory_requirements2.html#v:MemoryRequirements2" title="Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2">MemoryRequirements2</a></code>:</p><ul><li><code><a href="Vulkan-Extensions-VK_KHR_dedicated_allocation.html#t:MemoryDedicatedRequirementsKHR" title="Vulkan.Extensions.VK_KHR_dedicated_allocation">MemoryDedicatedRequirementsKHR</a></code></li></ul></li></ul><h2>New Enum Constants</h2><ul><li><code><a href="Vulkan-Extensions-VK_KHR_dedicated_allocation.html#t:KHR_DEDICATED_ALLOCATION_EXTENSION_NAME" title="Vulkan.Extensions.VK_KHR_dedicated_allocation">KHR_DEDICATED_ALLOCATION_EXTENSION_NAME</a></code></li></ul><ul><li><code><a href="Vulkan-Extensions-VK_KHR_dedicated_allocation.html#t:KHR_DEDICATED_ALLOCATION_SPEC_VERSION" title="Vulkan.Extensions.VK_KHR_dedicated_allocation">KHR_DEDICATED_ALLOCATION_SPEC_VERSION</a></code></li><li><p>Extending <code><a href="Vulkan-Core10-Enums-StructureType.html#t:StructureType" title="Vulkan.Core10.Enums.StructureType">StructureType</a></code>:</p><ul><li><code><a href="Vulkan-Extensions-VK_KHR_dedicated_allocation.html#v:STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR" title="Vulkan.Extensions.VK_KHR_dedicated_allocation">STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR</a></code></li><li><code><a href="Vulkan-Extensions-VK_KHR_dedicated_allocation.html#v:STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR" title="Vulkan.Extensions.VK_KHR_dedicated_allocation">STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR</a></code></li></ul></li></ul><h2>Examples</h2><pre>    // Create an image with a dedicated allocation based on the
+    // implementation's preference
+
+    VkImageCreateInfo imageCreateInfo =
+    {
+        // Image creation parameters
+    };
+
+    VkImage image;
+    VkResult result = vkCreateImage(
+        device,
+        &amp;imageCreateInfo,
+        NULL,                               // pAllocator
+        &amp;image);
+
+    VkMemoryDedicatedRequirementsKHR dedicatedRequirements =
+    {
+        VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR,
+        NULL,                               // pNext
+    };
+
+    VkMemoryRequirements2 memoryRequirements =
+    {
+        VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
+        &amp;dedicatedRequirements,             // pNext
+    };
+
+    const VkImageMemoryRequirementsInfo2 imageRequirementsInfo =
+    {
+        VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
+        NULL,                               // pNext
+        image
+    };
+
+    vkGetImageMemoryRequirements2(
+        device,
+        &amp;imageRequirementsInfo,
+        &amp;memoryRequirements);
+
+    if (dedicatedRequirements.prefersDedicatedAllocation) {
+        // Allocate memory with VkMemoryDedicatedAllocateInfoKHR::image
+        // pointing to the image we are allocating the memory for
+
+        VkMemoryDedicatedAllocateInfoKHR dedicatedInfo =
+        {
+            VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR,   // sType
+            NULL,                                                   // pNext
+            image,                                                  // image
+            VK_NULL_HANDLE,                                         // buffer
+        };
+
+        VkMemoryAllocateInfo memoryAllocateInfo =
+        {
+            VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,                 // sType
+            &amp;dedicatedInfo,                                         // pNext
+            memoryRequirements.size,                                // allocationSize
+            FindMemoryTypeIndex(memoryRequirements.memoryTypeBits), // memoryTypeIndex
+        };
+
+        VkDeviceMemory memory;
+        vkAllocateMemory(
+            device,
+            &amp;memoryAllocateInfo,
+            NULL,                       // pAllocator
+            &amp;memory);
+
+        // Bind the image to the memory
+
+        vkBindImageMemory(
+            device,
+            image,
+            memory,
+            0);
+    } else {
+        // Take the normal memory sub-allocation path
+    }</pre><h2>Version History</h2><ul><li><p>Revision 1, 2017-02-27 (James Jones)</p><ul><li>Copy content from VK_NV_dedicated_allocation</li><li>Add some references to external object interactions to the
+    overview.</li></ul></li></ul><ul><li><p>Revision 2, 2017-03-27 (Jason Ekstrand)</p><ul><li>Rework the extension to be query-based</li></ul></li><li><p>Revision 3, 2017-07-31 (Jason Ekstrand)</p><ul><li>Clarify that memory objects created with
+    VkMemoryDedicatedAllocateInfoKHR can only have the specified
+    resource bound and no others.</li></ul></li></ul><h1>See Also</h1><p><code><a href="Vulkan-Extensions-VK_KHR_dedicated_allocation.html#t:MemoryDedicatedAllocateInfoKHR" title="Vulkan.Extensions.VK_KHR_dedicated_allocation">MemoryDedicatedAllocateInfoKHR</a></code>, <code><a href="Vulkan-Extensions-VK_KHR_dedicated_allocation.html#t:MemoryDedicatedRequirementsKHR" title="Vulkan.Extensions.VK_KHR_dedicated_allocation">MemoryDedicatedRequirementsKHR</a></code></p><h1>Document Notes</h1><p>For more information, see the
+ <a href="https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation">Vulkan Specification</a></p><p>This page is a generated document. Fixes and changes should be made to
+ the generator scripts, not directly.</p></div></div><div id="interface"><h1>Documentation</h1><div class="top"><p class="src"><span class="keyword">pattern</span> <a id="v:STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR" class="def">STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR</a> :: <a href="Vulkan-Core10-Enums-StructureType.html#t:StructureType" title="Vulkan.Core10.Enums.StructureType">StructureType</a> <a href="src/Vulkan.Extensions.VK_KHR_dedicated_allocation.html#STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR" class="link">Source</a> <a href="#v:STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR" class="selflink">#</a></p></div><div class="top"><p class="src"><span class="keyword">pattern</span> <a id="v:STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR" class="def">STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR</a> :: <a href="Vulkan-Core10-Enums-StructureType.html#t:StructureType" title="Vulkan.Core10.Enums.StructureType">StructureType</a> <a href="src/Vulkan.Extensions.VK_KHR_dedicated_allocation.html#STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR" class="link">Source</a> <a href="#v:STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR" class="selflink">#</a></p></div><div class="top"><p class="src"><span class="keyword">type</span> <a id="t:MemoryDedicatedRequirementsKHR" class="def">MemoryDedicatedRequirementsKHR</a> = <a href="Vulkan-Core11-Promoted_From_VK_KHR_dedicated_allocation.html#t:MemoryDedicatedRequirements" title="Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation">MemoryDedicatedRequirements</a> <a href="src/Vulkan.Extensions.VK_KHR_dedicated_allocation.html#MemoryDedicatedRequirementsKHR" class="link">Source</a> <a href="#t:MemoryDedicatedRequirementsKHR" class="selflink">#</a></p></div><div class="top"><p class="src"><span class="keyword">type</span> <a id="t:MemoryDedicatedAllocateInfoKHR" class="def">MemoryDedicatedAllocateInfoKHR</a> = <a href="Vulkan-Core11-Promoted_From_VK_KHR_dedicated_allocation.html#t:MemoryDedicatedAllocateInfo" title="Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation">MemoryDedicatedAllocateInfo</a> <a href="src/Vulkan.Extensions.VK_KHR_dedicated_allocation.html#MemoryDedicatedAllocateInfoKHR" class="link">Source</a> <a href="#t:MemoryDedicatedAllocateInfoKHR" class="selflink">#</a></p></div><div class="top"><p class="src"><span class="keyword">type</span> <a id="t:KHR_DEDICATED_ALLOCATION_SPEC_VERSION" class="def">KHR_DEDICATED_ALLOCATION_SPEC_VERSION</a> = 3 <a href="src/Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_SPEC_VERSION" class="link">Source</a> <a href="#t:KHR_DEDICATED_ALLOCATION_SPEC_VERSION" class="selflink">#</a></p></div><div class="top"><p class="src"><span class="keyword">pattern</span> <a id="v:KHR_DEDICATED_ALLOCATION_SPEC_VERSION" class="def">KHR_DEDICATED_ALLOCATION_SPEC_VERSION</a> :: <span class="keyword">forall</span> a. <a href="https://hackage.haskell.org/package/base-4.13.0.0/docs/Prelude.html#t:Integral" title="Prelude">Integral</a> a =&gt; a <a href="src/Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_SPEC_VERSION" class="link">Source</a> <a href="#v:KHR_DEDICATED_ALLOCATION_SPEC_VERSION" class="selflink">#</a></p></div><div class="top"><p class="src"><span class="keyword">type</span> <a id="t:KHR_DEDICATED_ALLOCATION_EXTENSION_NAME" class="def">KHR_DEDICATED_ALLOCATION_EXTENSION_NAME</a> = &quot;VK_KHR_dedicated_allocation&quot; <a href="src/Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_EXTENSION_NAME" class="link">Source</a> <a href="#t:KHR_DEDICATED_ALLOCATION_EXTENSION_NAME" class="selflink">#</a></p></div><div class="top"><p class="src"><span class="keyword">pattern</span> <a id="v:KHR_DEDICATED_ALLOCATION_EXTENSION_NAME" class="def">KHR_DEDICATED_ALLOCATION_EXTENSION_NAME</a> :: <span class="keyword">forall</span> a. (<a href="https://hackage.haskell.org/package/base-4.13.0.0/docs/Data-Eq.html#t:Eq" title="Data.Eq">Eq</a> a, <a href="https://hackage.haskell.org/package/base-4.13.0.0/docs/Data-String.html#t:IsString" title="Data.String">IsString</a> a) =&gt; a <a href="src/Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_EXTENSION_NAME" class="link">Source</a> <a href="#v:KHR_DEDICATED_ALLOCATION_EXTENSION_NAME" class="selflink">#</a></p></div></div></div><div id="footer"><p>Produced by <a href="http://www.haskell.org/haddock/">Haddock</a> version 2.23.0</p></div></body></html>

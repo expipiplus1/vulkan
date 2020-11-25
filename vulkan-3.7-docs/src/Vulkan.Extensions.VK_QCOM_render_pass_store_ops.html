@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- VK_QCOM_render_pass_store_ops - device extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- == VK_QCOM_render_pass_store_ops</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- [__Name String__]</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--     @VK_QCOM_render_pass_store_ops@</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- [__Extension Type__]</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--     Device extension</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- [__Registered Extension Number__]</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--     302</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- [__Revision__]</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--     2</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- [__Extension and Version Dependencies__]</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--     -   Requires Vulkan 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- [__Contact__]</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--     -   Bill Licea-Kane</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--         &lt;https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_QCOM_render_pass_store_ops:%20&amp;body=@wwlk%20 &gt;</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- == Other Extension Metadata</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- [__Last Modified Date__]</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--     2020-03-25</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- [__Contributors__]</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--     -   Bill Licea-Kane, Qualcomm Technologies, Inc.</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- == Description</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- Renderpass attachments /can/ be read-only for the duration of a</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- renderpass.</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- Examples include input attachments and depth attachments where depth</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- tests are enabled but depth writes are not enabled.</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- In such cases, there /can/ be no contents generated for an attachment</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- within the render area.</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- This extension adds a new</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp'</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_QCOM'</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- which specifies that the contents within the render area /may/ not be</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- written to memory, but that the prior contents of the attachment in</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- memory are preserved. However, if any contents were generated within the</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- render area during rendering, the contents of the attachment will be</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- undefined inside the render area.</span><span>
+</span><span id="line-57"></span><span class="hs-comment">--</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- The 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp'</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_STORE' /may/</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- force an implementation to assume that the attachment was written and</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- force an implementation to flush data to memory or to a higher level</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- cache. The 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp'</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_QCOM'</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- /may/ allow an implementation to assume that the attachment was not</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- written and allow an implementation to avoid such a flush..</span><span>
+</span><span id="line-68"></span><span class="hs-comment">--</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- == New Enum Constants</span><span>
+</span><span id="line-70"></span><span class="hs-comment">--</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- -   'QCOM_render_pass_store_ops_EXTENSION_NAME'</span><span>
+</span><span id="line-72"></span><span class="hs-comment">--</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- -   'QCOM_render_pass_store_ops_SPEC_VERSION'</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp':</span><span>
+</span><span id="line-76"></span><span class="hs-comment">--</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_QCOM'</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- == Version History</span><span>
+</span><span id="line-80"></span><span class="hs-comment">--</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- -   Revision 1, 2019-12-20 (wwlk)</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--     -   Initial version</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- -   Revision 2, 2020-03-25 (wwlk)</span><span>
+</span><span id="line-86"></span><span class="hs-comment">--</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--     -   Minor renaming</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- No cross-references are available</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_store_ops Vulkan Specification&gt;</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-100"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_QCOM_render_pass_store_ops</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_store_ops.html#QCOM_render_pass_store_ops_SPEC_VERSION"><span class="hs-identifier">QCOM_render_pass_store_ops_SPEC_VERSION</span></a></span><span>
+</span><span id="line-101"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_store_ops.html#QCOM_render_pass_store_ops_SPEC_VERSION"><span class="hs-identifier">QCOM_render_pass_store_ops_SPEC_VERSION</span></a></span><span>
+</span><span id="line-102"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_store_ops.html#QCOM_render_pass_store_ops_EXTENSION_NAME"><span class="hs-identifier">QCOM_render_pass_store_ops_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-103"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_store_ops.html#QCOM_render_pass_store_ops_EXTENSION_NAME"><span class="hs-identifier">QCOM_render_pass_store_ops_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-104"></span><span>                                                        </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-105"></span><span>
+</span><span id="line-106"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-107"></span><span>
+</span><span id="line-108"></span><span class="hs-keyword">type</span><span> </span><span id="QCOM_render_pass_store_ops_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_store_ops.html#QCOM_render_pass_store_ops_SPEC_VERSION"><span class="hs-identifier hs-var">QCOM_render_pass_store_ops_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">2</span></span><span>
+</span><span id="line-109"></span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_QCOM_render_pass_store_ops_SPEC_VERSION&quot;</span><span>
+</span><span id="line-111"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_store_ops.html#QCOM_render_pass_store_ops_SPEC_VERSION"><span class="hs-identifier hs-type">QCOM_render_pass_store_ops_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680084689"><span class="annot"><a href="#local-6989586621680084689"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680084689"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680084689"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-112"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bQCOM_render_pass_store_ops_SPEC_VERSION"><span id="%24mQCOM_render_pass_store_ops_SPEC_VERSION"><span id="QCOM_render_pass_store_ops_SPEC_VERSION"><span class="annot"><span class="annottext">$bQCOM_render_pass_store_ops_SPEC_VERSION :: a
+$mQCOM_render_pass_store_ops_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_QCOM_render_pass_store_ops.html#%24bQCOM_render_pass_store_ops_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">QCOM_render_pass_store_ops_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">2</span></span><span>
+</span><span id="line-113"></span><span>
+</span><span id="line-114"></span><span>
+</span><span id="line-115"></span><span class="hs-keyword">type</span><span> </span><span id="QCOM_render_pass_store_ops_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_store_ops.html#QCOM_render_pass_store_ops_EXTENSION_NAME"><span class="hs-identifier hs-var">QCOM_render_pass_store_ops_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_QCOM_render_pass_store_ops&quot;</span></span><span>
+</span><span id="line-116"></span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_QCOM_render_pass_store_ops_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-118"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_store_ops.html#QCOM_render_pass_store_ops_EXTENSION_NAME"><span class="hs-identifier hs-type">QCOM_render_pass_store_ops_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680084685"><span class="annot"><a href="#local-6989586621680084685"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680084685"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680084685"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680084685"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-119"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bQCOM_render_pass_store_ops_EXTENSION_NAME"><span id="%24mQCOM_render_pass_store_ops_EXTENSION_NAME"><span id="QCOM_render_pass_store_ops_EXTENSION_NAME"><span class="annot"><span class="annottext">$bQCOM_render_pass_store_ops_EXTENSION_NAME :: a
+$mQCOM_render_pass_store_ops_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_QCOM_render_pass_store_ops.html#%24bQCOM_render_pass_store_ops_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">QCOM_render_pass_store_ops_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_QCOM_render_pass_store_ops&quot;</span></span><span>
+</span><span id="line-120"></span><span>
+</span><span id="line-121"></span></pre></body></html>

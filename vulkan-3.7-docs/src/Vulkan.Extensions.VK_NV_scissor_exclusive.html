@@ -1,0 +1,1094 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- VK_NV_scissor_exclusive - device extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- == VK_NV_scissor_exclusive</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- [__Name String__]</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--     @VK_NV_scissor_exclusive@</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- [__Extension Type__]</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--     Device extension</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- [__Registered Extension Number__]</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--     206</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- [__Revision__]</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--     1</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- [__Extension and Version Dependencies__]</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--     -   Requires Vulkan 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--     -   Requires @VK_KHR_get_physical_device_properties2@</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- [__Contact__]</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--     -   Pat Brown</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--         &lt;https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_scissor_exclusive:%20&amp;body=@nvpbrown%20 &gt;</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- == Other Extension Metadata</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- [__Last Modified Date__]</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--     2018-07-31</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- [__IP Status__]</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--     No known IP claims.</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- [__Interactions and External Dependencies__]</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--     None</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- [__Contributors__]</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--     -   Pat Brown, NVIDIA</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--     -   Jeff Bolz, NVIDIA</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--     -   Piers Daniell, NVIDIA</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--     -   Daniel Koch, NVIDIA</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- == Description</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- This extension adds support for an exclusive scissor test to Vulkan. The</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- exclusive scissor test behaves like the scissor test, except that the</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- exclusive scissor test fails for pixels inside the corresponding</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- rectangle and passes for pixels outside the rectangle. If the same</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- rectangle is used for both the scissor and exclusive scissor tests, the</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- exclusive scissor test will pass if and only if the scissor test fails.</span><span>
+</span><span id="line-60"></span><span class="hs-comment">--</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- == New Commands</span><span>
+</span><span id="line-62"></span><span class="hs-comment">--</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- -   'cmdSetExclusiveScissorNV'</span><span>
+</span><span id="line-64"></span><span class="hs-comment">--</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- == New Structures</span><span>
+</span><span id="line-66"></span><span class="hs-comment">--</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-68"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--     'Vulkan.Core10.Device.DeviceCreateInfo':</span><span>
+</span><span id="line-70"></span><span class="hs-comment">--</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--     -   'PhysicalDeviceExclusiveScissorFeaturesNV'</span><span>
+</span><span id="line-72"></span><span class="hs-comment">--</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo':</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--     -   'PipelineViewportExclusiveScissorStateCreateInfoNV'</span><span>
+</span><span id="line-76"></span><span class="hs-comment">--</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- == New Enum Constants</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- -   'NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME'</span><span>
+</span><span id="line-80"></span><span class="hs-comment">--</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- -   'NV_SCISSOR_EXCLUSIVE_SPEC_VERSION'</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'</span><span>
+</span><span id="line-86"></span><span class="hs-comment">--</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--</span><span>
+</span><span id="line-89"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV'</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--</span><span>
+</span><span id="line-91"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV'</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- == Issues</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- 1) For the scissor test, the viewport state must be created with a</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- matching number of scissor and viewport rectangles. Should we have the</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- same requirement for exclusive scissors?</span><span>
+</span><span id="line-98"></span><span class="hs-comment">--</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- __RESOLVED__: For exclusive scissors, we relax this requirement and</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- allow an exclusive scissor rectangle count that is either zero or equal</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- to the number of viewport rectangles. If you pass in an exclusive</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- scissor count of zero, the exclusive scissor test is treated as</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- disabled.</span><span>
+</span><span id="line-104"></span><span class="hs-comment">--</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- == Version History</span><span>
+</span><span id="line-106"></span><span class="hs-comment">--</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- -   Revision 1, 2018-07-31 (Pat Brown)</span><span>
+</span><span id="line-108"></span><span class="hs-comment">--</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--     -   Internal revisions</span><span>
+</span><span id="line-110"></span><span class="hs-comment">--</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-112"></span><span class="hs-comment">--</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- 'PhysicalDeviceExclusiveScissorFeaturesNV',</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- 'PipelineViewportExclusiveScissorStateCreateInfoNV',</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- 'cmdSetExclusiveScissorNV'</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-118"></span><span class="hs-comment">--</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_scissor_exclusive Vulkan Specification&gt;</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-124"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_NV_scissor_exclusive</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#cmdSetExclusiveScissorNV"><span class="hs-identifier">cmdSetExclusiveScissorNV</span></a></span><span>
+</span><span id="line-125"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier">PhysicalDeviceExclusiveScissorFeaturesNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-126"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="hs-identifier">PipelineViewportExclusiveScissorStateCreateInfoNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-127"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#NV_SCISSOR_EXCLUSIVE_SPEC_VERSION"><span class="hs-identifier">NV_SCISSOR_EXCLUSIVE_SPEC_VERSION</span></a></span><span>
+</span><span id="line-128"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#NV_SCISSOR_EXCLUSIVE_SPEC_VERSION"><span class="hs-identifier">NV_SCISSOR_EXCLUSIVE_SPEC_VERSION</span></a></span><span>
+</span><span id="line-129"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"><span class="hs-identifier">NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-130"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"><span class="hs-identifier">NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-131"></span><span>                                                  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-132"></span><span>
+</span><span id="line-133"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-134"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-135"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-136"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-137"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-139"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-140"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-141"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-142"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">generateM</span></span><span class="hs-special">)</span><span>
+</span><span id="line-143"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">imapM_</span></span><span class="hs-special">)</span><span>
+</span><span id="line-144"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">length</span></span><span class="hs-special">)</span><span>
+</span><span id="line-145"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-146"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-147"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-148"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-149"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-150"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-151"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-152"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-153"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-154"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-155"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-156"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-157"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-158"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-159"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-160"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Vector</span></span><span class="hs-special">)</span><span>
+</span><span id="line-161"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Utils.html"><span class="hs-identifier">Vulkan.CStruct.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#advancePtrBytes"><span class="hs-identifier">advancePtrBytes</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-162"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-163"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-164"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.NamedType.html"><span class="hs-identifier">Vulkan.NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator">(:::)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-165"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-166"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer"><span class="hs-identifier">CommandBuffer</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-167"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer"><span class="hs-identifier">CommandBuffer</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-168"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer_T"><span class="hs-identifier">CommandBuffer_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-169"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#pVkCmdSetExclusiveScissorNV"><span class="hs-identifier">pVkCmdSetExclusiveScissorNV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-170"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-171"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-172"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier">Rect2D</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-173"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-174"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-175"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-176"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-177"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-178"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV"><span class="hs-identifier">STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-179"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkCmdSetExclusiveScissorNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#mkVkCmdSetExclusiveScissorNV"><span class="hs-identifier hs-var">mkVkCmdSetExclusiveScissorNV</span></a></span></span><span>
+</span><span id="line-184"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer_T"><span class="hs-identifier hs-type">CommandBuffer_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer_T"><span class="hs-identifier hs-type">CommandBuffer_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-185"></span><span>
+</span><span id="line-186"></span><span class="hs-comment">-- | vkCmdSetExclusiveScissorNV - Set the dynamic exclusive scissor</span><span>
+</span><span id="line-187"></span><span class="hs-comment">-- rectangles on a command buffer</span><span>
+</span><span id="line-188"></span><span class="hs-comment">--</span><span>
+</span><span id="line-189"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-190"></span><span class="hs-comment">--</span><span>
+</span><span id="line-191"></span><span class="hs-comment">-- The scissor rectangles taken from element i of @pExclusiveScissors@</span><span>
+</span><span id="line-192"></span><span class="hs-comment">-- replace the current state for the scissor index @firstExclusiveScissor@</span><span>
+</span><span id="line-193"></span><span class="hs-comment">-- + i, for i in [0, @exclusiveScissorCount@).</span><span>
+</span><span id="line-194"></span><span class="hs-comment">--</span><span>
+</span><span id="line-195"></span><span class="hs-comment">-- This command sets the state for a given draw when the graphics pipeline</span><span>
+</span><span id="line-196"></span><span class="hs-comment">-- is created with</span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'</span><span>
+</span><span id="line-198"></span><span class="hs-comment">-- set in</span><span>
+</span><span id="line-199"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.</span><span>
+</span><span id="line-200"></span><span class="hs-comment">--</span><span>
+</span><span id="line-201"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-202"></span><span class="hs-comment">--</span><span>
+</span><span id="line-203"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-None-02031# The</span><span>
+</span><span id="line-204"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-exclusiveScissor exclusive scissor&gt;</span><span>
+</span><span id="line-205"></span><span class="hs-comment">--     feature /must/ be enabled</span><span>
+</span><span id="line-206"></span><span class="hs-comment">--</span><span>
+</span><span id="line-207"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-firstExclusiveScissor-02034# The</span><span>
+</span><span id="line-208"></span><span class="hs-comment">--     sum of @firstExclusiveScissor@ and @exclusiveScissorCount@ /must/ be</span><span>
+</span><span id="line-209"></span><span class="hs-comment">--     between @1@ and</span><span>
+</span><span id="line-210"></span><span class="hs-comment">--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@,</span><span>
+</span><span id="line-211"></span><span class="hs-comment">--     inclusive</span><span>
+</span><span id="line-212"></span><span class="hs-comment">--</span><span>
+</span><span id="line-213"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-firstExclusiveScissor-02035# If the</span><span>
+</span><span id="line-214"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports&gt;</span><span>
+</span><span id="line-215"></span><span class="hs-comment">--     feature is not enabled, @firstExclusiveScissor@ /must/ be @0@</span><span>
+</span><span id="line-216"></span><span class="hs-comment">--</span><span>
+</span><span id="line-217"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-exclusiveScissorCount-02036# If the</span><span>
+</span><span id="line-218"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports&gt;</span><span>
+</span><span id="line-219"></span><span class="hs-comment">--     feature is not enabled, @exclusiveScissorCount@ /must/ be @1@</span><span>
+</span><span id="line-220"></span><span class="hs-comment">--</span><span>
+</span><span id="line-221"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-x-02037# The @x@ and @y@ members of</span><span>
+</span><span id="line-222"></span><span class="hs-comment">--     @offset@ in each member of @pExclusiveScissors@ /must/ be greater</span><span>
+</span><span id="line-223"></span><span class="hs-comment">--     than or equal to @0@</span><span>
+</span><span id="line-224"></span><span class="hs-comment">--</span><span>
+</span><span id="line-225"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-offset-02038# Evaluation of</span><span>
+</span><span id="line-226"></span><span class="hs-comment">--     (@offset.x@ + @extent.width@) for each member of</span><span>
+</span><span id="line-227"></span><span class="hs-comment">--     @pExclusiveScissors@ /must/ not cause a signed integer addition</span><span>
+</span><span id="line-228"></span><span class="hs-comment">--     overflow</span><span>
+</span><span id="line-229"></span><span class="hs-comment">--</span><span>
+</span><span id="line-230"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-offset-02039# Evaluation of</span><span>
+</span><span id="line-231"></span><span class="hs-comment">--     (@offset.y@ + @extent.height@) for each member of</span><span>
+</span><span id="line-232"></span><span class="hs-comment">--     @pExclusiveScissors@ /must/ not cause a signed integer addition</span><span>
+</span><span id="line-233"></span><span class="hs-comment">--     overflow</span><span>
+</span><span id="line-234"></span><span class="hs-comment">--</span><span>
+</span><span id="line-235"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-236"></span><span class="hs-comment">--</span><span>
+</span><span id="line-237"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-commandBuffer-parameter#</span><span>
+</span><span id="line-238"></span><span class="hs-comment">--     @commandBuffer@ /must/ be a valid</span><span>
+</span><span id="line-239"></span><span class="hs-comment">--     'Vulkan.Core10.Handles.CommandBuffer' handle</span><span>
+</span><span id="line-240"></span><span class="hs-comment">--</span><span>
+</span><span id="line-241"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-pExclusiveScissors-parameter#</span><span>
+</span><span id="line-242"></span><span class="hs-comment">--     @pExclusiveScissors@ /must/ be a valid pointer to an array of</span><span>
+</span><span id="line-243"></span><span class="hs-comment">--     @exclusiveScissorCount@ 'Vulkan.Core10.FundamentalTypes.Rect2D'</span><span>
+</span><span id="line-244"></span><span class="hs-comment">--     structures</span><span>
+</span><span id="line-245"></span><span class="hs-comment">--</span><span>
+</span><span id="line-246"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-commandBuffer-recording#</span><span>
+</span><span id="line-247"></span><span class="hs-comment">--     @commandBuffer@ /must/ be in the</span><span>
+</span><span id="line-248"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state&gt;</span><span>
+</span><span id="line-249"></span><span class="hs-comment">--</span><span>
+</span><span id="line-250"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-commandBuffer-cmdpool# The</span><span>
+</span><span id="line-251"></span><span class="hs-comment">--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was</span><span>
+</span><span id="line-252"></span><span class="hs-comment">--     allocated from /must/ support graphics operations</span><span>
+</span><span id="line-253"></span><span class="hs-comment">--</span><span>
+</span><span id="line-254"></span><span class="hs-comment">-- -   #VUID-vkCmdSetExclusiveScissorNV-exclusiveScissorCount-arraylength#</span><span>
+</span><span id="line-255"></span><span class="hs-comment">--     @exclusiveScissorCount@ /must/ be greater than @0@</span><span>
+</span><span id="line-256"></span><span class="hs-comment">--</span><span>
+</span><span id="line-257"></span><span class="hs-comment">-- == Host Synchronization</span><span>
+</span><span id="line-258"></span><span class="hs-comment">--</span><span>
+</span><span id="line-259"></span><span class="hs-comment">-- -   Host access to @commandBuffer@ /must/ be externally synchronized</span><span>
+</span><span id="line-260"></span><span class="hs-comment">--</span><span>
+</span><span id="line-261"></span><span class="hs-comment">-- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that</span><span>
+</span><span id="line-262"></span><span class="hs-comment">--     @commandBuffer@ was allocated from /must/ be externally synchronized</span><span>
+</span><span id="line-263"></span><span class="hs-comment">--</span><span>
+</span><span id="line-264"></span><span class="hs-comment">-- == Command Properties</span><span>
+</span><span id="line-265"></span><span class="hs-comment">--</span><span>
+</span><span id="line-266"></span><span class="hs-comment">-- \'</span><span>
+</span><span id="line-267"></span><span class="hs-comment">--</span><span>
+</span><span id="line-268"></span><span class="hs-comment">-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-269"></span><span class="hs-comment">-- | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels&gt; | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope&gt; | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types&gt; | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type&gt; |</span><span>
+</span><span id="line-270"></span><span class="hs-comment">-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+</span><span>
+</span><span id="line-271"></span><span class="hs-comment">-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |</span><span>
+</span><span id="line-272"></span><span class="hs-comment">-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |</span><span>
+</span><span id="line-273"></span><span class="hs-comment">-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-274"></span><span class="hs-comment">--</span><span>
+</span><span id="line-275"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-276"></span><span class="hs-comment">--</span><span>
+</span><span id="line-277"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.CommandBuffer',</span><span>
+</span><span id="line-278"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Rect2D'</span><span>
+</span><span id="line-279"></span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#cmdSetExclusiveScissorNV"><span class="hs-identifier hs-type">cmdSetExclusiveScissorNV</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680139751"><span class="annot"><a href="#local-6989586621680139751"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-280"></span><span>                          </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680139751"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-281"></span><span>                         </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @commandBuffer@ is the command buffer into which the command will be</span><span>
+</span><span id="line-282"></span><span>                            </span><span class="hs-comment">-- recorded.</span><span>
+</span><span id="line-283"></span><span>                            </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer"><span class="hs-identifier hs-type">CommandBuffer</span></a></span><span>
+</span><span id="line-284"></span><span>                         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @firstExclusiveScissor@ is the index of the first exclusive scissor</span><span>
+</span><span id="line-285"></span><span>                            </span><span class="hs-comment">-- rectangle whose state is updated by the command.</span><span>
+</span><span id="line-286"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;firstExclusiveScissor&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-287"></span><span>                         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @pExclusiveScissors@ is a pointer to an array of</span><span>
+</span><span id="line-288"></span><span>                            </span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures defining exclusive</span><span>
+</span><span id="line-289"></span><span>                            </span><span class="hs-comment">-- scissor rectangles.</span><span>
+</span><span id="line-290"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;exclusiveScissors&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Vector</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-291"></span><span>                         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680139751"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-292"></span><span id="cmdSetExclusiveScissorNV"><span class="annot"><span class="annottext">cmdSetExclusiveScissorNV :: CommandBuffer
+-&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+-&gt; (&quot;exclusiveScissors&quot; ::: Vector Rect2D)
+-&gt; io ()
+</span><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#cmdSetExclusiveScissorNV"><span class="hs-identifier hs-var hs-var">cmdSetExclusiveScissorNV</span></a></span></span><span> </span><span id="local-6989586621680139750"><span class="annot"><span class="annottext">commandBuffer :: CommandBuffer
+</span><a href="#local-6989586621680139750"><span class="hs-identifier hs-var">commandBuffer</span></a></span></span><span> </span><span id="local-6989586621680139749"><span class="annot"><span class="annottext">firstExclusiveScissor :: &quot;firstExclusiveScissor&quot; ::: Word32
+</span><a href="#local-6989586621680139749"><span class="hs-identifier hs-var">firstExclusiveScissor</span></a></span></span><span> </span><span id="local-6989586621680139748"><span class="annot"><span class="annottext">exclusiveScissors :: &quot;exclusiveScissors&quot; ::: Vector Rect2D
+</span><a href="#local-6989586621680139748"><span class="hs-identifier hs-var">exclusiveScissors</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; io ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; io ())
+-&gt; (ContT () IO () -&gt; IO ()) -&gt; ContT () IO () -&gt; io ()
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT () IO () -&gt; IO ()
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT () IO () -&gt; io ()) -&gt; ContT () IO () -&gt; io ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-293"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680139746"><span class="annot"><span class="annottext">vkCmdSetExclusiveScissorNVPtr :: FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+   -&gt; IO ())
+</span><a href="#local-6989586621680139746"><span class="hs-identifier hs-var hs-var">vkCmdSetExclusiveScissorNVPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr CommandBuffer_T
+      -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+      -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+      -&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+      -&gt; IO ())
+</span><a href="Vulkan.Dynamic.html#pVkCmdSetExclusiveScissorNV"><span class="hs-identifier hs-var hs-var">pVkCmdSetExclusiveScissorNV</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ACommandBuffer"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer
+</span><a href="#local-6989586621680139750"><span class="hs-identifier hs-var">commandBuffer</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer"><span class="hs-identifier hs-type">CommandBuffer</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-294"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT () IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT () IO ()) -&gt; IO () -&gt; ContT () IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+   -&gt; IO ())
+</span><a href="#local-6989586621680139746"><span class="hs-identifier hs-var">vkCmdSetExclusiveScissorNVPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+   -&gt; IO ())
+-&gt; FunPtr
+     (Ptr CommandBuffer_T
+      -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+      -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+      -&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+      -&gt; IO ())
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+   -&gt; IO ())
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-295"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkCmdSetExclusiveScissorNV is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-296"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680139741"><span class="annot"><span class="annottext">vkCmdSetExclusiveScissorNV' :: Ptr CommandBuffer_T
+-&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+-&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+-&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+-&gt; IO ()
+</span><a href="#local-6989586621680139741"><span class="hs-identifier hs-var hs-var">vkCmdSetExclusiveScissorNV'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+   -&gt; IO ())
+-&gt; Ptr CommandBuffer_T
+-&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+-&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+-&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+-&gt; IO ()
+</span><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#mkVkCmdSetExclusiveScissorNV"><span class="hs-identifier hs-var">mkVkCmdSetExclusiveScissorNV</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+   -&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+   -&gt; IO ())
+</span><a href="#local-6989586621680139746"><span class="hs-identifier hs-var">vkCmdSetExclusiveScissorNVPtr</span></a></span><span>
+</span><span id="line-297"></span><span>  </span><span id="local-6989586621680139740"><span class="annot"><span class="annottext">&quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+</span><a href="#local-6989586621680139740"><span class="hs-identifier hs-var">pPExclusiveScissors</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO ()) -&gt; IO ())
+-&gt; ContT () IO (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO ()) -&gt; IO ())
+ -&gt; ContT () IO (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D))
+-&gt; (((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO ()) -&gt; IO ())
+-&gt; ContT () IO (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int -&gt; ((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO ()) -&gt; IO ()
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;exclusiveScissors&quot; ::: Vector Rect2D) -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;exclusiveScissors&quot; ::: Vector Rect2D
+</span><a href="#local-6989586621680139748"><span class="hs-identifier hs-var">exclusiveScissors</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-number">4</span></span><span>
+</span><span id="line-298"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT () IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT () IO ()) -&gt; IO () -&gt; ContT () IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(Int -&gt; Rect2D -&gt; IO ())
+-&gt; (&quot;exclusiveScissors&quot; ::: Vector Rect2D) -&gt; IO ()
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(Int -&gt; a -&gt; m b) -&gt; Vector a -&gt; m ()
+</span><span class="hs-identifier hs-var">Data.Vector.imapM_</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680139737"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680139737"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680139736"><span class="annot"><span class="annottext">e :: Rect2D
+</span><a href="#local-6989586621680139736"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; Rect2D -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+</span><a href="#local-6989586621680139740"><span class="hs-identifier hs-var">pPExclusiveScissors</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+-&gt; Int -&gt; &quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680139737"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Rect2D
+</span><a href="#local-6989586621680139736"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;exclusiveScissors&quot; ::: Vector Rect2D
+</span><a href="#local-6989586621680139748"><span class="hs-identifier hs-var">exclusiveScissors</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-299"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT () IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT () IO ()) -&gt; IO () -&gt; ContT () IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBuffer_T
+-&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+-&gt; (&quot;firstExclusiveScissor&quot; ::: Word32)
+-&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+-&gt; IO ()
+</span><a href="#local-6989586621680139741"><span class="hs-identifier hs-var">vkCmdSetExclusiveScissorNV'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer -&gt; Ptr CommandBuffer_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AcommandBufferHandle%3ACommandBuffer"><span class="hs-identifier hs-var hs-var">commandBufferHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer
+</span><a href="#local-6989586621680139750"><span class="hs-identifier hs-var">commandBuffer</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;firstExclusiveScissor&quot; ::: Word32
+</span><a href="#local-6989586621680139749"><span class="hs-identifier hs-var">firstExclusiveScissor</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; &quot;firstExclusiveScissor&quot; ::: Word32
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;exclusiveScissors&quot; ::: Vector Rect2D) -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="annot"><span class="annottext">((&quot;exclusiveScissors&quot; ::: Vector Rect2D) -&gt; Int)
+-&gt; (&quot;exclusiveScissors&quot; ::: Vector Rect2D) -&gt; Int
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;exclusiveScissors&quot; ::: Vector Rect2D
+</span><a href="#local-6989586621680139748"><span class="hs-identifier hs-var">exclusiveScissors</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+</span><a href="#local-6989586621680139740"><span class="hs-identifier hs-var">pPExclusiveScissors</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-300"></span><span>  </span><span class="annot"><span class="annottext">() -&gt; ContT () IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(() -&gt; ContT () IO ()) -&gt; () -&gt; ContT () IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-301"></span><span>
+</span><span id="line-302"></span><span>
+</span><span id="line-303"></span><span class="hs-comment">-- | VkPhysicalDeviceExclusiveScissorFeaturesNV - Structure describing</span><span>
+</span><span id="line-304"></span><span class="hs-comment">-- exclusive scissor features that can be supported by an implementation</span><span>
+</span><span id="line-305"></span><span class="hs-comment">--</span><span>
+</span><span id="line-306"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-307"></span><span class="hs-comment">--</span><span>
+</span><span id="line-308"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceExclusiveScissorFeaturesNV' structure</span><span>
+</span><span id="line-309"></span><span class="hs-comment">-- describe the following features:</span><span>
+</span><span id="line-310"></span><span class="hs-comment">--</span><span>
+</span><span id="line-311"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-312"></span><span class="hs-comment">--</span><span>
+</span><span id="line-313"></span><span class="hs-comment">-- See</span><span>
+</span><span id="line-314"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-exclusive-scissor Exclusive Scissor Test&gt;</span><span>
+</span><span id="line-315"></span><span class="hs-comment">-- for more information.</span><span>
+</span><span id="line-316"></span><span class="hs-comment">--</span><span>
+</span><span id="line-317"></span><span class="hs-comment">-- If the 'PhysicalDeviceExclusiveScissorFeaturesNV' structure is included</span><span>
+</span><span id="line-318"></span><span class="hs-comment">-- in the @pNext@ chain of</span><span>
+</span><span id="line-319"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',</span><span>
+</span><span id="line-320"></span><span class="hs-comment">-- it is filled with values indicating whether the feature is supported.</span><span>
+</span><span id="line-321"></span><span class="hs-comment">-- 'PhysicalDeviceExclusiveScissorFeaturesNV' /can/ also be included in the</span><span>
+</span><span id="line-322"></span><span class="hs-comment">-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the</span><span>
+</span><span id="line-323"></span><span class="hs-comment">-- feature.</span><span>
+</span><span id="line-324"></span><span class="hs-comment">--</span><span>
+</span><span id="line-325"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-326"></span><span class="hs-comment">--</span><span>
+</span><span id="line-327"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-328"></span><span class="hs-comment">--</span><span>
+</span><span id="line-329"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-330"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-331"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceExclusiveScissorFeaturesNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier hs-var">PhysicalDeviceExclusiveScissorFeaturesNV</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceExclusiveScissorFeaturesNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier hs-var">PhysicalDeviceExclusiveScissorFeaturesNV</span></a></span></span><span>
+</span><span id="line-332"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | #features-exclusiveScissor# @exclusiveScissor@ indicates that the</span><span>
+</span><span id="line-333"></span><span>    </span><span class="hs-comment">-- implementation supports the exclusive scissor test.</span><span>
+</span><span id="line-334"></span><span>    </span><span id="%24sel%3AexclusiveScissor%3APhysicalDeviceExclusiveScissorFeaturesNV"><span class="annot"><span class="annottext">PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#%24sel%3AexclusiveScissor%3APhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier hs-var hs-var">exclusiveScissor</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-335"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680139729"><span id="local-6989586621680139731"><span class="annot"><span class="annottext">PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Bool
+(PhysicalDeviceExclusiveScissorFeaturesNV
+ -&gt; PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Bool)
+-&gt; (PhysicalDeviceExclusiveScissorFeaturesNV
+    -&gt; PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Bool)
+-&gt; Eq PhysicalDeviceExclusiveScissorFeaturesNV
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Bool
+$c/= :: PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Bool
+== :: PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Bool
+$c== :: PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceExclusiveScissorFeaturesNV</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680139722"><span id="local-6989586621680139724"><span id="local-6989586621680139726"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceExclusiveScissorFeaturesNV</span></a></span></span></span></span><span>
+</span><span id="line-340"></span><span>
+</span><span id="line-341"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680139717"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceExclusiveScissorFeaturesNV</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-342"></span><span>  </span><span id="local-6989586621680139712"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; (Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680139710"><span class="annot"><span class="annottext">x :: PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139710"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680139709"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; IO b
+</span><a href="#local-6989586621680139709"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680139708"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139708"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; PhysicalDeviceExclusiveScissorFeaturesNV -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139708"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139710"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; IO b
+</span><a href="#local-6989586621680139709"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139708"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-343"></span><span>  </span><span id="local-6989586621680139706"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; PhysicalDeviceExclusiveScissorFeaturesNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680139706"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680139705"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139705"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680139704"><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceExclusiveScissorFeaturesNV</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680139703"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680139703"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-344"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139705"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-345"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139705"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-346"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139705"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680139704"><span class="hs-identifier hs-var">exclusiveScissor</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-347"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680139703"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-348"></span><span>  </span><span id="local-6989586621680139702"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-349"></span><span>  </span><span id="local-6989586621680139700"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-350"></span><span>  </span><span id="local-6989586621680139698"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680139696"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139696"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680139695"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680139695"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-351"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139696"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-352"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139696"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-353"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139696"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-354"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680139695"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-355"></span><span>
+</span><span id="line-356"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceExclusiveScissorFeaturesNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-357"></span><span>  </span><span id="local-6989586621680139691"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; IO PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680139689"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139689"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-358"></span><span>    </span><span id="local-6989586621680139688"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680139688"><span class="hs-identifier hs-var">exclusiveScissor</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139689"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-359"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; IO PhysicalDeviceExclusiveScissorFeaturesNV
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceExclusiveScissorFeaturesNV
+ -&gt; IO PhysicalDeviceExclusiveScissorFeaturesNV)
+-&gt; PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; IO PhysicalDeviceExclusiveScissorFeaturesNV
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier hs-var">PhysicalDeviceExclusiveScissorFeaturesNV</span></a></span><span>
+</span><span id="line-360"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680139688"><span class="hs-identifier hs-var">exclusiveScissor</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-361"></span><span>
+</span><span id="line-362"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680139678"><span id="local-6989586621680139680"><span id="local-6989586621680139682"><span id="local-6989586621680139684"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceExclusiveScissorFeaturesNV</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-363"></span><span>  </span><span id="local-6989586621680139674"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceExclusiveScissorFeaturesNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-364"></span><span>  </span><span id="local-6989586621680139672"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceExclusiveScissorFeaturesNV -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceExclusiveScissorFeaturesNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-365"></span><span>  </span><span id="local-6989586621680139670"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; IO PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139670"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; IO PhysicalDeviceExclusiveScissorFeaturesNV
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-366"></span><span>  </span><span id="local-6989586621680139669"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; PhysicalDeviceExclusiveScissorFeaturesNV -&gt; IO ()
+</span><a href="#local-6989586621680139669"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680139668"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139668"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680139667"><span class="annot"><span class="annottext">poked :: PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139667"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+-&gt; PhysicalDeviceExclusiveScissorFeaturesNV -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139668"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139667"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-367"></span><span>
+</span><span id="line-368"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceExclusiveScissorFeaturesNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-369"></span><span>  </span><span id="local-6989586621680139664"><span class="annot"><span class="annottext">zero :: PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="#local-6989586621680139664"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceExclusiveScissorFeaturesNV
+</span><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PhysicalDeviceExclusiveScissorFeaturesNV"><span class="hs-identifier hs-var">PhysicalDeviceExclusiveScissorFeaturesNV</span></a></span><span>
+</span><span id="line-370"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-371"></span><span>
+</span><span id="line-372"></span><span>
+</span><span id="line-373"></span><span class="hs-comment">-- | VkPipelineViewportExclusiveScissorStateCreateInfoNV - Structure</span><span>
+</span><span id="line-374"></span><span class="hs-comment">-- specifying parameters controlling exclusive scissor testing</span><span>
+</span><span id="line-375"></span><span class="hs-comment">--</span><span>
+</span><span id="line-376"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-377"></span><span class="hs-comment">--</span><span>
+</span><span id="line-378"></span><span class="hs-comment">-- If the</span><span>
+</span><span id="line-379"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'</span><span>
+</span><span id="line-380"></span><span class="hs-comment">-- dynamic state is enabled for a pipeline, the @pExclusiveScissors@ member</span><span>
+</span><span id="line-381"></span><span class="hs-comment">-- is ignored.</span><span>
+</span><span id="line-382"></span><span class="hs-comment">--</span><span>
+</span><span id="line-383"></span><span class="hs-comment">-- When this structure is included in the @pNext@ chain of</span><span>
+</span><span id="line-384"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it defines</span><span>
+</span><span id="line-385"></span><span class="hs-comment">-- parameters of the exclusive scissor test. If this structure is not</span><span>
+</span><span id="line-386"></span><span class="hs-comment">-- included in the @pNext@ chain, it is equivalent to specifying this</span><span>
+</span><span id="line-387"></span><span class="hs-comment">-- structure with a @exclusiveScissorCount@ of @0@.</span><span>
+</span><span id="line-388"></span><span class="hs-comment">--</span><span>
+</span><span id="line-389"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-390"></span><span class="hs-comment">--</span><span>
+</span><span id="line-391"></span><span class="hs-comment">-- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02027#</span><span>
+</span><span id="line-392"></span><span class="hs-comment">--     If the</span><span>
+</span><span id="line-393"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports&gt;</span><span>
+</span><span id="line-394"></span><span class="hs-comment">--     feature is not enabled, @exclusiveScissorCount@ /must/ be @0@ or @1@</span><span>
+</span><span id="line-395"></span><span class="hs-comment">--</span><span>
+</span><span id="line-396"></span><span class="hs-comment">-- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02028#</span><span>
+</span><span id="line-397"></span><span class="hs-comment">--     @exclusiveScissorCount@ /must/ be less than or equal to</span><span>
+</span><span id="line-398"></span><span class="hs-comment">--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@</span><span>
+</span><span id="line-399"></span><span class="hs-comment">--</span><span>
+</span><span id="line-400"></span><span class="hs-comment">-- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02029#</span><span>
+</span><span id="line-401"></span><span class="hs-comment">--     @exclusiveScissorCount@ /must/ be @0@ or greater than or equal to</span><span>
+</span><span id="line-402"></span><span class="hs-comment">--     the @viewportCount@ member of</span><span>
+</span><span id="line-403"></span><span class="hs-comment">--     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'</span><span>
+</span><span id="line-404"></span><span class="hs-comment">--</span><span>
+</span><span id="line-405"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-406"></span><span class="hs-comment">--</span><span>
+</span><span id="line-407"></span><span class="hs-comment">-- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-sType-sType#</span><span>
+</span><span id="line-408"></span><span class="hs-comment">--     @sType@ /must/ be</span><span>
+</span><span id="line-409"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV'</span><span>
+</span><span id="line-410"></span><span class="hs-comment">--</span><span>
+</span><span id="line-411"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-412"></span><span class="hs-comment">--</span><span>
+</span><span id="line-413"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Rect2D',</span><span>
+</span><span id="line-414"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-415"></span><span class="hs-keyword">data</span><span> </span><span id="PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="hs-identifier hs-var">PipelineViewportExclusiveScissorStateCreateInfoNV</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="hs-identifier hs-var">PipelineViewportExclusiveScissorStateCreateInfoNV</span></a></span></span><span>
+</span><span id="line-416"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @pExclusiveScissors@ is a pointer to an array of</span><span>
+</span><span id="line-417"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures defining exclusive</span><span>
+</span><span id="line-418"></span><span>    </span><span class="hs-comment">-- scissor rectangles.</span><span>
+</span><span id="line-419"></span><span>    </span><span id="%24sel%3AexclusiveScissors%3APipelineViewportExclusiveScissorStateCreateInfoNV"><span class="annot"><span class="annottext">PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; &quot;exclusiveScissors&quot; ::: Vector Rect2D
+</span><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#%24sel%3AexclusiveScissors%3APipelineViewportExclusiveScissorStateCreateInfoNV"><span class="hs-identifier hs-var hs-var">exclusiveScissors</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Vector</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-420"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PipelineViewportExclusiveScissorStateCreateInfoNV</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680139656"><span id="local-6989586621680139658"><span id="local-6989586621680139660"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="hs-identifier hs-type">PipelineViewportExclusiveScissorStateCreateInfoNV</span></a></span></span></span></span><span>
+</span><span id="line-425"></span><span>
+</span><span id="line-426"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680139652"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="hs-identifier hs-type">PipelineViewportExclusiveScissorStateCreateInfoNV</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-427"></span><span>  </span><span id="local-6989586621680139648"><span class="annot"><span class="annottext">withCStruct :: PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; (Ptr PipelineViewportExclusiveScissorStateCreateInfoNV -&gt; IO b)
+-&gt; IO b
+</span><a href="#local-6989586621680139648"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680139647"><span class="annot"><span class="annottext">x :: PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139647"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680139646"><span class="annot"><span class="annottext">f :: Ptr PipelineViewportExclusiveScissorStateCreateInfoNV -&gt; IO b
+</span><a href="#local-6989586621680139646"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PipelineViewportExclusiveScissorStateCreateInfoNV -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PipelineViewportExclusiveScissorStateCreateInfoNV -&gt; IO b)
+ -&gt; IO b)
+-&gt; (Ptr PipelineViewportExclusiveScissorStateCreateInfoNV -&gt; IO b)
+-&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680139645"><span class="annot"><span class="annottext">p :: Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139645"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; IO b
+-&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139645"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139647"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV -&gt; IO b
+</span><a href="#local-6989586621680139646"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139645"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-428"></span><span>  </span><span id="local-6989586621680139644"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; IO b
+-&gt; IO b
+</span><a href="#local-6989586621680139644"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680139643"><span class="annot"><span class="annottext">p :: Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139643"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680139642"><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="hs-identifier hs-type">PipelineViewportExclusiveScissorStateCreateInfoNV</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680139641"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680139641"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ContT b IO b -&gt; IO b
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO b -&gt; IO b) -&gt; ContT b IO b -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-429"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139643"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-430"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139643"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-431"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (&quot;firstExclusiveScissor&quot; ::: Word32)
+-&gt; (&quot;firstExclusiveScissor&quot; ::: Word32) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139643"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; Int -&gt; Ptr (&quot;firstExclusiveScissor&quot; ::: Word32)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; &quot;firstExclusiveScissor&quot; ::: Word32
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;exclusiveScissors&quot; ::: Vector Rect2D) -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="annot"><span class="annottext">((&quot;exclusiveScissors&quot; ::: Vector Rect2D) -&gt; Int)
+-&gt; (&quot;exclusiveScissors&quot; ::: Vector Rect2D) -&gt; Int
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;exclusiveScissors&quot; ::: Vector Rect2D
+</span><a href="#local-6989586621680139642"><span class="hs-identifier hs-var">exclusiveScissors</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-432"></span><span>    </span><span id="local-6989586621680139640"><span class="annot"><span class="annottext">&quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+</span><a href="#local-6989586621680139640"><span class="hs-identifier hs-var">pPExclusiveScissors'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO b) -&gt; IO b)
+ -&gt; ContT b IO (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D))
+-&gt; (((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int -&gt; ((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;exclusiveScissors&quot; ::: Vector Rect2D) -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;exclusiveScissors&quot; ::: Vector Rect2D
+</span><a href="#local-6989586621680139642"><span class="hs-identifier hs-var">exclusiveScissors</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-number">4</span></span><span>
+</span><span id="line-433"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(Int -&gt; Rect2D -&gt; IO ())
+-&gt; (&quot;exclusiveScissors&quot; ::: Vector Rect2D) -&gt; IO ()
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(Int -&gt; a -&gt; m b) -&gt; Vector a -&gt; m ()
+</span><span class="hs-identifier hs-var">Data.Vector.imapM_</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680139639"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680139639"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680139638"><span class="annot"><span class="annottext">e :: Rect2D
+</span><a href="#local-6989586621680139638"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; Rect2D -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+</span><a href="#local-6989586621680139640"><span class="hs-identifier hs-var">pPExclusiveScissors'</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+-&gt; Int -&gt; &quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680139639"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Rect2D
+</span><a href="#local-6989586621680139638"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;exclusiveScissors&quot; ::: Vector Rect2D
+</span><a href="#local-6989586621680139642"><span class="hs-identifier hs-var">exclusiveScissors</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-434"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+-&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139643"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; Int -&gt; Ptr (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+</span><a href="#local-6989586621680139640"><span class="hs-identifier hs-var">pPExclusiveScissors'</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-435"></span><span>    </span><span class="annot"><span class="annottext">IO b -&gt; ContT b IO b
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; ContT b IO b) -&gt; IO b -&gt; ContT b IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680139641"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-436"></span><span>  </span><span id="local-6989586621680139637"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680139637"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-437"></span><span>  </span><span id="local-6989586621680139636"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680139636"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-438"></span><span>  </span><span id="local-6989586621680139635"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680139635"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680139634"><span class="annot"><span class="annottext">p :: Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139634"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680139633"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680139633"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ContT b IO b -&gt; IO b
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO b -&gt; IO b) -&gt; ContT b IO b -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-439"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139634"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-440"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139634"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-441"></span><span>    </span><span id="local-6989586621680139632"><span class="annot"><span class="annottext">&quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+</span><a href="#local-6989586621680139632"><span class="hs-identifier hs-var">pPExclusiveScissors'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO b) -&gt; IO b)
+ -&gt; ContT b IO (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D))
+-&gt; (((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int -&gt; ((&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector Any -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector Any
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-number">4</span></span><span>
+</span><span id="line-442"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(Int -&gt; Rect2D -&gt; IO ())
+-&gt; (&quot;exclusiveScissors&quot; ::: Vector Rect2D) -&gt; IO ()
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(Int -&gt; a -&gt; m b) -&gt; Vector a -&gt; m ()
+</span><span class="hs-identifier hs-var">Data.Vector.imapM_</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680139631"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680139631"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680139630"><span class="annot"><span class="annottext">e :: Rect2D
+</span><a href="#local-6989586621680139630"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; Rect2D -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+</span><a href="#local-6989586621680139632"><span class="hs-identifier hs-var">pPExclusiveScissors'</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+-&gt; Int -&gt; &quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680139631"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Rect2D
+</span><a href="#local-6989586621680139630"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;exclusiveScissors&quot; ::: Vector Rect2D
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span>
+</span><span id="line-443"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+-&gt; (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139634"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; Int -&gt; Ptr (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+</span><a href="#local-6989586621680139632"><span class="hs-identifier hs-var">pPExclusiveScissors'</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-444"></span><span>    </span><span class="annot"><span class="annottext">IO b -&gt; ContT b IO b
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; ContT b IO b) -&gt; IO b -&gt; ContT b IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680139633"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-445"></span><span>
+</span><span id="line-446"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="hs-identifier hs-type">PipelineViewportExclusiveScissorStateCreateInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-447"></span><span>  </span><span id="local-6989586621680139628"><span class="annot"><span class="annottext">peekCStruct :: Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; IO PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139628"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680139627"><span class="annot"><span class="annottext">p :: Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139627"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-448"></span><span>    </span><span id="local-6989586621680139626"><span class="annot"><span class="annottext">&quot;firstExclusiveScissor&quot; ::: Word32
+</span><a href="#local-6989586621680139626"><span class="hs-identifier hs-var">exclusiveScissorCount</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (&quot;firstExclusiveScissor&quot; ::: Word32)
+-&gt; IO (&quot;firstExclusiveScissor&quot; ::: Word32)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139627"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; Int -&gt; Ptr (&quot;firstExclusiveScissor&quot; ::: Word32)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-449"></span><span>    </span><span id="local-6989586621680139625"><span class="annot"><span class="annottext">&quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+</span><a href="#local-6989586621680139625"><span class="hs-identifier hs-var">pExclusiveScissors</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+-&gt; IO (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139627"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; Int -&gt; Ptr (&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-450"></span><span>    </span><span id="local-6989586621680139624"><span class="annot"><span class="annottext">&quot;exclusiveScissors&quot; ::: Vector Rect2D
+</span><a href="#local-6989586621680139624"><span class="hs-identifier hs-var">pExclusiveScissors'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; (Int -&gt; IO Rect2D) -&gt; IO (&quot;exclusiveScissors&quot; ::: Vector Rect2D)
+forall (m :: * -&gt; *) a.
+Monad m =&gt;
+Int -&gt; (Int -&gt; m a) -&gt; m (Vector a)
+</span><span class="hs-identifier hs-var">generateM</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;firstExclusiveScissor&quot; ::: Word32) -&gt; Int
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">&quot;firstExclusiveScissor&quot; ::: Word32
+</span><a href="#local-6989586621680139626"><span class="hs-identifier hs-var">exclusiveScissorCount</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680139623"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680139623"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(&quot;pExclusiveScissors&quot; ::: Ptr Rect2D) -&gt; IO Rect2D
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+</span><a href="#local-6989586621680139625"><span class="hs-identifier hs-var">pExclusiveScissors</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pExclusiveScissors&quot; ::: Ptr Rect2D)
+-&gt; Int -&gt; &quot;pExclusiveScissors&quot; ::: Ptr Rect2D
+forall a. Ptr a -&gt; Int -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#advancePtrBytes"><span class="hs-operator hs-var">`advancePtrBytes`</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680139623"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-451"></span><span>    </span><span class="annot"><span class="annottext">PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; IO PipelineViewportExclusiveScissorStateCreateInfoNV
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PipelineViewportExclusiveScissorStateCreateInfoNV
+ -&gt; IO PipelineViewportExclusiveScissorStateCreateInfoNV)
+-&gt; PipelineViewportExclusiveScissorStateCreateInfoNV
+-&gt; IO PipelineViewportExclusiveScissorStateCreateInfoNV
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;exclusiveScissors&quot; ::: Vector Rect2D)
+-&gt; PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="hs-identifier hs-var">PipelineViewportExclusiveScissorStateCreateInfoNV</span></a></span><span>
+</span><span id="line-452"></span><span>             </span><span class="annot"><span class="annottext">&quot;exclusiveScissors&quot; ::: Vector Rect2D
+</span><a href="#local-6989586621680139624"><span class="hs-identifier hs-var">pExclusiveScissors'</span></a></span><span>
+</span><span id="line-453"></span><span>
+</span><span id="line-454"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="hs-identifier hs-type">PipelineViewportExclusiveScissorStateCreateInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-455"></span><span>  </span><span id="local-6989586621680139621"><span class="annot"><span class="annottext">zero :: PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="#local-6989586621680139621"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;exclusiveScissors&quot; ::: Vector Rect2D)
+-&gt; PipelineViewportExclusiveScissorStateCreateInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#PipelineViewportExclusiveScissorStateCreateInfoNV"><span class="hs-identifier hs-var">PipelineViewportExclusiveScissorStateCreateInfoNV</span></a></span><span>
+</span><span id="line-456"></span><span>           </span><span class="annot"><span class="annottext">&quot;exclusiveScissors&quot; ::: Vector Rect2D
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span>
+</span><span id="line-457"></span><span>
+</span><span id="line-458"></span><span>
+</span><span id="line-459"></span><span class="hs-keyword">type</span><span> </span><span id="NV_SCISSOR_EXCLUSIVE_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#NV_SCISSOR_EXCLUSIVE_SPEC_VERSION"><span class="hs-identifier hs-var">NV_SCISSOR_EXCLUSIVE_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-460"></span><span>
+</span><span id="line-461"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NV_SCISSOR_EXCLUSIVE_SPEC_VERSION&quot;</span><span>
+</span><span id="line-462"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#NV_SCISSOR_EXCLUSIVE_SPEC_VERSION"><span class="hs-identifier hs-type">NV_SCISSOR_EXCLUSIVE_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680139784"><span class="annot"><a href="#local-6989586621680139784"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680139784"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680139784"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-463"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNV_SCISSOR_EXCLUSIVE_SPEC_VERSION"><span id="%24mNV_SCISSOR_EXCLUSIVE_SPEC_VERSION"><span id="NV_SCISSOR_EXCLUSIVE_SPEC_VERSION"><span class="annot"><span class="annottext">$bNV_SCISSOR_EXCLUSIVE_SPEC_VERSION :: a
+$mNV_SCISSOR_EXCLUSIVE_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#%24bNV_SCISSOR_EXCLUSIVE_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">NV_SCISSOR_EXCLUSIVE_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-464"></span><span>
+</span><span id="line-465"></span><span>
+</span><span id="line-466"></span><span class="hs-keyword">type</span><span> </span><span id="NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"><span class="hs-identifier hs-var">NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NV_scissor_exclusive&quot;</span></span><span>
+</span><span id="line-467"></span><span>
+</span><span id="line-468"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-469"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"><span class="hs-identifier hs-type">NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680139780"><span class="annot"><a href="#local-6989586621680139780"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680139780"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680139780"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680139780"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-470"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"><span id="%24mNV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"><span id="NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"><span class="annot"><span class="annottext">$bNV_SCISSOR_EXCLUSIVE_EXTENSION_NAME :: a
+$mNV_SCISSOR_EXCLUSIVE_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NV_scissor_exclusive.html#%24bNV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NV_scissor_exclusive&quot;</span></span><span>
+</span><span id="line-471"></span><span>
+</span><span id="line-472"></span></pre></body></html>

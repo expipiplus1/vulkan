@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;QueryControlFlagBits&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.QueryControlFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlags"><span class="hs-identifier">QueryControlFlags</span></a></span><span>
+</span><span id="line-4"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlagBits"><span class="hs-identifier">QueryControlFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QUERY_CONTROL_PRECISE_BIT"><span class="hs-identifier">QUERY_CONTROL_PRECISE_BIT</span></a></span><span>
+</span><span id="line-5"></span><span>                                                                       </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-6"></span><span>                                                                       </span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span>                                                 </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">type</span><span> </span><span id="QueryControlFlags"><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlags"><span class="hs-identifier hs-var">QueryControlFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlagBits"><span class="hs-identifier hs-type">QueryControlFlagBits</span></a></span><span>
+</span><span id="line-21"></span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- | VkQueryControlFlagBits - Bitmask specifying constraints on a query</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'QueryControlFlags'</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">newtype</span><span> </span><span id="QueryControlFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlagBits"><span class="hs-identifier hs-var">QueryControlFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="QueryControlFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlagBits"><span class="hs-identifier hs-var">QueryControlFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680114327"><span id="local-6989586621680114329"><span class="annot"><span class="annottext">QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+(QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool)
+-&gt; (QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool)
+-&gt; Eq QueryControlFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+$c/= :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+== :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+$c== :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680114311"><span id="local-6989586621680114313"><span id="local-6989586621680114315"><span id="local-6989586621680114317"><span id="local-6989586621680114319"><span id="local-6989586621680114321"><span id="local-6989586621680114323"><span class="annot"><span class="annottext">Eq QueryControlFlagBits
+Eq QueryControlFlagBits =&gt;
+(QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Ordering)
+-&gt; (QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool)
+-&gt; (QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool)
+-&gt; (QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool)
+-&gt; (QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool)
+-&gt; (QueryControlFlagBits
+    -&gt; QueryControlFlagBits -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits
+    -&gt; QueryControlFlagBits -&gt; QueryControlFlagBits)
+-&gt; Ord QueryControlFlagBits
+QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Ordering
+QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+$cmin :: QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+max :: QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+$cmax :: QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+&gt;= :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+$c&gt;= :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+&gt; :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+$c&gt; :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+&lt;= :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+$c&lt;= :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+&lt; :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+$c&lt; :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Bool
+compare :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Ordering
+$ccompare :: QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; Ordering
+$cp1Ord :: Eq QueryControlFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680114294"><span id="local-6989586621680114296"><span id="local-6989586621680114298"><span id="local-6989586621680114300"><span id="local-6989586621680114302"><span id="local-6989586621680114304"><span id="local-6989586621680114306"><span id="local-6989586621680114308"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO QueryControlFlagBits
+Ptr b -&gt; Int -&gt; QueryControlFlagBits -&gt; IO ()
+Ptr QueryControlFlagBits -&gt; IO QueryControlFlagBits
+Ptr QueryControlFlagBits -&gt; Int -&gt; IO QueryControlFlagBits
+Ptr QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits -&gt; IO ()
+Ptr QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; IO ()
+QueryControlFlagBits -&gt; Int
+(QueryControlFlagBits -&gt; Int)
+-&gt; (QueryControlFlagBits -&gt; Int)
+-&gt; (Ptr QueryControlFlagBits -&gt; Int -&gt; IO QueryControlFlagBits)
+-&gt; (Ptr QueryControlFlagBits
+    -&gt; Int -&gt; QueryControlFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO QueryControlFlagBits)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; QueryControlFlagBits -&gt; IO ())
+-&gt; (Ptr QueryControlFlagBits -&gt; IO QueryControlFlagBits)
+-&gt; (Ptr QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; IO ())
+-&gt; Storable QueryControlFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO QueryControlFlagBits
+forall b. Ptr b -&gt; Int -&gt; QueryControlFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; IO ()
+$cpoke :: Ptr QueryControlFlagBits -&gt; QueryControlFlagBits -&gt; IO ()
+peek :: Ptr QueryControlFlagBits -&gt; IO QueryControlFlagBits
+$cpeek :: Ptr QueryControlFlagBits -&gt; IO QueryControlFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; QueryControlFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; QueryControlFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO QueryControlFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO QueryControlFlagBits
+pokeElemOff :: Ptr QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits -&gt; IO ()
+peekElemOff :: Ptr QueryControlFlagBits -&gt; Int -&gt; IO QueryControlFlagBits
+$cpeekElemOff :: Ptr QueryControlFlagBits -&gt; Int -&gt; IO QueryControlFlagBits
+alignment :: QueryControlFlagBits -&gt; Int
+$calignment :: QueryControlFlagBits -&gt; Int
+sizeOf :: QueryControlFlagBits -&gt; Int
+$csizeOf :: QueryControlFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680114291"><span class="annot"><span class="annottext">QueryControlFlagBits
+QueryControlFlagBits -&gt; Zero QueryControlFlagBits
+forall a. a -&gt; Zero a
+zero :: QueryControlFlagBits
+$czero :: QueryControlFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680114245"><span id="local-6989586621680114247"><span id="local-6989586621680114249"><span id="local-6989586621680114251"><span id="local-6989586621680114253"><span id="local-6989586621680114255"><span id="local-6989586621680114257"><span id="local-6989586621680114259"><span id="local-6989586621680114261"><span id="local-6989586621680114263"><span id="local-6989586621680114265"><span id="local-6989586621680114267"><span id="local-6989586621680114269"><span id="local-6989586621680114271"><span id="local-6989586621680114273"><span id="local-6989586621680114275"><span id="local-6989586621680114277"><span id="local-6989586621680114279"><span id="local-6989586621680114281"><span id="local-6989586621680114283"><span id="local-6989586621680114285"><span id="local-6989586621680114287"><span class="annot"><span class="annottext">Eq QueryControlFlagBits
+QueryControlFlagBits
+Eq QueryControlFlagBits =&gt;
+(QueryControlFlagBits
+ -&gt; QueryControlFlagBits -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits
+    -&gt; QueryControlFlagBits -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits
+    -&gt; QueryControlFlagBits -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits)
+-&gt; QueryControlFlagBits
+-&gt; (Int -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; Bool)
+-&gt; (QueryControlFlagBits -&gt; Maybe Int)
+-&gt; (QueryControlFlagBits -&gt; Int)
+-&gt; (QueryControlFlagBits -&gt; Bool)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits)
+-&gt; (QueryControlFlagBits -&gt; Int)
+-&gt; Bits QueryControlFlagBits
+Int -&gt; QueryControlFlagBits
+QueryControlFlagBits -&gt; Bool
+QueryControlFlagBits -&gt; Int
+QueryControlFlagBits -&gt; Maybe Int
+QueryControlFlagBits -&gt; QueryControlFlagBits
+QueryControlFlagBits -&gt; Int -&gt; Bool
+QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: QueryControlFlagBits -&gt; Int
+$cpopCount :: QueryControlFlagBits -&gt; Int
+rotateR :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+$crotateR :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+rotateL :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+$crotateL :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+unsafeShiftR :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+$cunsafeShiftR :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+shiftR :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+$cshiftR :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+unsafeShiftL :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+$cunsafeShiftL :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+shiftL :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+$cshiftL :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+isSigned :: QueryControlFlagBits -&gt; Bool
+$cisSigned :: QueryControlFlagBits -&gt; Bool
+bitSize :: QueryControlFlagBits -&gt; Int
+$cbitSize :: QueryControlFlagBits -&gt; Int
+bitSizeMaybe :: QueryControlFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: QueryControlFlagBits -&gt; Maybe Int
+testBit :: QueryControlFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: QueryControlFlagBits -&gt; Int -&gt; Bool
+complementBit :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+$ccomplementBit :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+clearBit :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+$cclearBit :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+setBit :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+$csetBit :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+bit :: Int -&gt; QueryControlFlagBits
+$cbit :: Int -&gt; QueryControlFlagBits
+zeroBits :: QueryControlFlagBits
+$czeroBits :: QueryControlFlagBits
+rotate :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+$crotate :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+shift :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+$cshift :: QueryControlFlagBits -&gt; Int -&gt; QueryControlFlagBits
+complement :: QueryControlFlagBits -&gt; QueryControlFlagBits
+$ccomplement :: QueryControlFlagBits -&gt; QueryControlFlagBits
+xor :: QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+$cxor :: QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+.|. :: QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+$c.|. :: QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+.&amp;. :: QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+$c.&amp;. :: QueryControlFlagBits
+-&gt; QueryControlFlagBits -&gt; QueryControlFlagBits
+$cp1Bits :: Eq QueryControlFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680114237"><span id="local-6989586621680114239"><span id="local-6989586621680114241"><span class="annot"><span class="annottext">Bits QueryControlFlagBits
+Bits QueryControlFlagBits =&gt;
+(QueryControlFlagBits -&gt; Int)
+-&gt; (QueryControlFlagBits -&gt; Int)
+-&gt; (QueryControlFlagBits -&gt; Int)
+-&gt; FiniteBits QueryControlFlagBits
+QueryControlFlagBits -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: QueryControlFlagBits -&gt; Int
+$ccountTrailingZeros :: QueryControlFlagBits -&gt; Int
+countLeadingZeros :: QueryControlFlagBits -&gt; Int
+$ccountLeadingZeros :: QueryControlFlagBits -&gt; Int
+finiteBitSize :: QueryControlFlagBits -&gt; Int
+$cfiniteBitSize :: QueryControlFlagBits -&gt; Int
+$cp1FiniteBits :: Bits QueryControlFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- | 'QUERY_CONTROL_PRECISE_BIT' specifies the precision of</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-occlusion occlusion queries&gt;.</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bQUERY_CONTROL_PRECISE_BIT"><span id="%24mQUERY_CONTROL_PRECISE_BIT"><span id="QUERY_CONTROL_PRECISE_BIT"><span class="annot"><span class="annottext">$bQUERY_CONTROL_PRECISE_BIT :: QueryControlFlagBits
+$mQUERY_CONTROL_PRECISE_BIT :: forall r. QueryControlFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#%24bQUERY_CONTROL_PRECISE_BIT"><span class="hs-identifier hs-var hs-var hs-var">QUERY_CONTROL_PRECISE_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlagBits"><span class="hs-identifier hs-type">QueryControlFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#conNameQueryControlFlagBits"><span class="hs-identifier hs-type">conNameQueryControlFlagBits</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-35"></span><span id="conNameQueryControlFlagBits"><span class="annot"><span class="annottext">conNameQueryControlFlagBits :: String
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#conNameQueryControlFlagBits"><span class="hs-identifier hs-var hs-var">conNameQueryControlFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;QueryControlFlagBits&quot;</span></span><span>
+</span><span id="line-36"></span><span>
+</span><span id="line-37"></span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#enumPrefixQueryControlFlagBits"><span class="hs-identifier hs-type">enumPrefixQueryControlFlagBits</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-38"></span><span id="enumPrefixQueryControlFlagBits"><span class="annot"><span class="annottext">enumPrefixQueryControlFlagBits :: String
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#enumPrefixQueryControlFlagBits"><span class="hs-identifier hs-var hs-var">enumPrefixQueryControlFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;QUERY_CONTROL_PRECISE_BIT&quot;</span></span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#showTableQueryControlFlagBits"><span class="hs-identifier hs-type">showTableQueryControlFlagBits</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlagBits"><span class="hs-identifier hs-type">QueryControlFlagBits</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-41"></span><span id="showTableQueryControlFlagBits"><span class="annot"><span class="annottext">showTableQueryControlFlagBits :: [(QueryControlFlagBits, String)]
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#showTableQueryControlFlagBits"><span class="hs-identifier hs-var hs-var">showTableQueryControlFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="annottext">QueryControlFlagBits
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QUERY_CONTROL_PRECISE_BIT"><span class="hs-identifier hs-var">QUERY_CONTROL_PRECISE_BIT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680114226"><span id="local-6989586621680114228"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlagBits"><span class="hs-identifier hs-type">QueryControlFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-44"></span><span>  </span><span id="local-6989586621680114224"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; QueryControlFlagBits -&gt; ShowS
+</span><a href="#local-6989586621680114224"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(QueryControlFlagBits, String)]
+-&gt; String
+-&gt; (QueryControlFlagBits -&gt; Flags)
+-&gt; (Flags -&gt; ShowS)
+-&gt; Int
+-&gt; QueryControlFlagBits
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#enumPrefixQueryControlFlagBits"><span class="hs-identifier hs-var">enumPrefixQueryControlFlagBits</span></a></span><span>
+</span><span id="line-45"></span><span>                            </span><span class="annot"><span class="annottext">[(QueryControlFlagBits, String)]
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#showTableQueryControlFlagBits"><span class="hs-identifier hs-var">showTableQueryControlFlagBits</span></a></span><span>
+</span><span id="line-46"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#conNameQueryControlFlagBits"><span class="hs-identifier hs-var">conNameQueryControlFlagBits</span></a></span><span>
+</span><span id="line-47"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlagBits"><span class="hs-identifier hs-type">QueryControlFlagBits</span></a></span><span> </span><span id="local-6989586621680114223"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680114223"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680114223"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680114222"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680114222"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680114222"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span>
+</span><span id="line-50"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680114214"><span id="local-6989586621680114217"><span id="local-6989586621680114219"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlagBits"><span class="hs-identifier hs-type">QueryControlFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-51"></span><span>  </span><span id="local-6989586621680114212"><span class="annot"><span class="annottext">readPrec :: ReadPrec QueryControlFlagBits
+</span><a href="#local-6989586621680114212"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(QueryControlFlagBits, String)]
+-&gt; String
+-&gt; (Flags -&gt; QueryControlFlagBits)
+-&gt; ReadPrec QueryControlFlagBits
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#enumPrefixQueryControlFlagBits"><span class="hs-identifier hs-var">enumPrefixQueryControlFlagBits</span></a></span><span>
+</span><span id="line-52"></span><span>                          </span><span class="annot"><span class="annottext">[(QueryControlFlagBits, String)]
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#showTableQueryControlFlagBits"><span class="hs-identifier hs-var">showTableQueryControlFlagBits</span></a></span><span>
+</span><span id="line-53"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#conNameQueryControlFlagBits"><span class="hs-identifier hs-var">conNameQueryControlFlagBits</span></a></span><span>
+</span><span id="line-54"></span><span>                          </span><span class="annot"><span class="annottext">Flags -&gt; QueryControlFlagBits
+</span><a href="Vulkan.Core10.Enums.QueryControlFlagBits.html#QueryControlFlagBits"><span class="hs-identifier hs-var">QueryControlFlagBits</span></a></span><span>
+</span><span id="line-55"></span><span>
+</span><span id="line-56"></span></pre></body></html>

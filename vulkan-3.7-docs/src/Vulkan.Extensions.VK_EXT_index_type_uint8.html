@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- VK_EXT_index_type_uint8 - device extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- == VK_EXT_index_type_uint8</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- [__Name String__]</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--     @VK_EXT_index_type_uint8@</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- [__Extension Type__]</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--     Device extension</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- [__Registered Extension Number__]</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--     266</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- [__Revision__]</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--     1</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- [__Extension and Version Dependencies__]</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--     -   Requires Vulkan 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- [__Contact__]</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--     -   Piers Daniell</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--         &lt;https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_index_type_uint8:%20&amp;body=@pdaniell-nv%20 &gt;</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- == Other Extension Metadata</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- [__Last Modified Date__]</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--     2019-05-02</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- [__IP Status__]</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--     No known IP claims.</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- [__Contributors__]</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--     -   Jeff Bolz, NVIDIA</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- == Description</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- This extension allows @uint8_t@ indices to be used with</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- == New Structures</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--     'Vulkan.Core10.Device.DeviceCreateInfo':</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--     -   'PhysicalDeviceIndexTypeUint8FeaturesEXT'</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- == New Enum Constants</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- -   'EXT_INDEX_TYPE_UINT8_EXTENSION_NAME'</span><span>
+</span><span id="line-57"></span><span class="hs-comment">--</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- -   'EXT_INDEX_TYPE_UINT8_SPEC_VERSION'</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.IndexType.IndexType':</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--</span><span>
+</span><span id="line-62"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT'</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':</span><span>
+</span><span id="line-65"></span><span class="hs-comment">--</span><span>
+</span><span id="line-66"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT'</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- == Version History</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- -   Revision 1, 2019-05-02 (Piers Daniell)</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--</span><span>
+</span><span id="line-72"></span><span class="hs-comment">--     -   Internal revisions</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- 'PhysicalDeviceIndexTypeUint8FeaturesEXT'</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_index_type_uint8 Vulkan Specification&gt;</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-85"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_EXT_index_type_uint8</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier">PhysicalDeviceIndexTypeUint8FeaturesEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#EXT_INDEX_TYPE_UINT8_SPEC_VERSION"><span class="hs-identifier">EXT_INDEX_TYPE_UINT8_SPEC_VERSION</span></a></span><span>
+</span><span id="line-87"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#EXT_INDEX_TYPE_UINT8_SPEC_VERSION"><span class="hs-identifier">EXT_INDEX_TYPE_UINT8_SPEC_VERSION</span></a></span><span>
+</span><span id="line-88"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#EXT_INDEX_TYPE_UINT8_EXTENSION_NAME"><span class="hs-identifier">EXT_INDEX_TYPE_UINT8_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-89"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#EXT_INDEX_TYPE_UINT8_EXTENSION_NAME"><span class="hs-identifier">EXT_INDEX_TYPE_UINT8_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-90"></span><span>                                                  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-91"></span><span>
+</span><span id="line-92"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-94"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-95"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-96"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-97"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-98"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-99"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-100"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-101"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-102"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-103"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-104"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-105"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-106"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-107"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-108"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-109"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-110"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-111"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-112"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-113"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- | VkPhysicalDeviceIndexTypeUint8FeaturesEXT - Structure describing whether</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- uint8 index type can be used</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-118"></span><span class="hs-comment">--</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceIndexTypeUint8FeaturesEXT' structure</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- describe the following features:</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-123"></span><span class="hs-comment">--</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- If the 'PhysicalDeviceIndexTypeUint8FeaturesEXT' structure is included</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- in the @pNext@ chain of</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- it is filled with values indicating whether the feature is supported.</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- 'PhysicalDeviceIndexTypeUint8FeaturesEXT' /can/ also be included in the</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- features.</span><span>
+</span><span id="line-131"></span><span class="hs-comment">--</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-133"></span><span class="hs-comment">--</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-135"></span><span class="hs-comment">--</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-138"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceIndexTypeUint8FeaturesEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceIndexTypeUint8FeaturesEXT</span></a></span></span><span>
+</span><span id="line-139"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | #features-indexTypeUint8# @indexTypeUint8@ indicates that</span><span>
+</span><span id="line-140"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT' can be used with</span><span>
+</span><span id="line-141"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.</span><span>
+</span><span id="line-142"></span><span>    </span><span id="%24sel%3AindexTypeUint8%3APhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="annot"><span class="annottext">PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#%24sel%3AindexTypeUint8%3APhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier hs-var hs-var">indexTypeUint8</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-143"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680097476"><span id="local-6989586621680097478"><span class="annot"><span class="annottext">PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Bool
+(PhysicalDeviceIndexTypeUint8FeaturesEXT
+ -&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Bool)
+-&gt; (PhysicalDeviceIndexTypeUint8FeaturesEXT
+    -&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Bool)
+-&gt; Eq PhysicalDeviceIndexTypeUint8FeaturesEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Bool
+$c/= :: PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Bool
+== :: PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Bool
+$c== :: PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceIndexTypeUint8FeaturesEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680097469"><span id="local-6989586621680097471"><span id="local-6989586621680097473"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceIndexTypeUint8FeaturesEXT</span></a></span></span></span></span><span>
+</span><span id="line-148"></span><span>
+</span><span id="line-149"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680097464"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceIndexTypeUint8FeaturesEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-150"></span><span>  </span><span id="local-6989586621680097459"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; (Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680097457"><span class="annot"><span class="annottext">x :: PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097457"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680097456"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; IO b
+</span><a href="#local-6989586621680097456"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680097455"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097455"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097455"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097457"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; IO b
+</span><a href="#local-6989586621680097456"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097455"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-151"></span><span>  </span><span id="local-6989586621680097453"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680097453"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680097452"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097452"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680097451"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceIndexTypeUint8FeaturesEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680097450"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680097450"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-152"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097452"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-153"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097452"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-154"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097452"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680097451"><span class="hs-identifier hs-var">indexTypeUint8</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-155"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680097450"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-156"></span><span>  </span><span id="local-6989586621680097449"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-157"></span><span>  </span><span id="local-6989586621680097447"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-158"></span><span>  </span><span id="local-6989586621680097445"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680097443"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097443"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680097442"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680097442"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-159"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097443"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-160"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097443"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-161"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097443"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-162"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680097442"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-163"></span><span>
+</span><span id="line-164"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceIndexTypeUint8FeaturesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-165"></span><span>  </span><span id="local-6989586621680097438"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; IO PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680097436"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097436"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-166"></span><span>    </span><span id="local-6989586621680097435"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680097435"><span class="hs-identifier hs-var">indexTypeUint8</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097436"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-167"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; IO PhysicalDeviceIndexTypeUint8FeaturesEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceIndexTypeUint8FeaturesEXT
+ -&gt; IO PhysicalDeviceIndexTypeUint8FeaturesEXT)
+-&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; IO PhysicalDeviceIndexTypeUint8FeaturesEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceIndexTypeUint8FeaturesEXT</span></a></span><span>
+</span><span id="line-168"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680097435"><span class="hs-identifier hs-var">indexTypeUint8</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-169"></span><span>
+</span><span id="line-170"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680097425"><span id="local-6989586621680097427"><span id="local-6989586621680097429"><span id="local-6989586621680097431"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceIndexTypeUint8FeaturesEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-171"></span><span>  </span><span id="local-6989586621680097421"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-172"></span><span>  </span><span id="local-6989586621680097419"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-173"></span><span>  </span><span id="local-6989586621680097417"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; IO PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097417"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; IO PhysicalDeviceIndexTypeUint8FeaturesEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-174"></span><span>  </span><span id="local-6989586621680097416"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; IO ()
+</span><a href="#local-6989586621680097416"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680097415"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097415"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680097414"><span class="annot"><span class="annottext">poked :: PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097414"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+-&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097415"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097414"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-175"></span><span>
+</span><span id="line-176"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceIndexTypeUint8FeaturesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-177"></span><span>  </span><span id="local-6989586621680097411"><span class="annot"><span class="annottext">zero :: PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="#local-6989586621680097411"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceIndexTypeUint8FeaturesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#PhysicalDeviceIndexTypeUint8FeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceIndexTypeUint8FeaturesEXT</span></a></span><span>
+</span><span id="line-178"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-179"></span><span>
+</span><span id="line-180"></span><span>
+</span><span id="line-181"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_INDEX_TYPE_UINT8_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#EXT_INDEX_TYPE_UINT8_SPEC_VERSION"><span class="hs-identifier hs-var">EXT_INDEX_TYPE_UINT8_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-182"></span><span>
+</span><span id="line-183"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_INDEX_TYPE_UINT8_SPEC_VERSION&quot;</span><span>
+</span><span id="line-184"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#EXT_INDEX_TYPE_UINT8_SPEC_VERSION"><span class="hs-identifier hs-type">EXT_INDEX_TYPE_UINT8_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680097500"><span class="annot"><a href="#local-6989586621680097500"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680097500"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680097500"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-185"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_INDEX_TYPE_UINT8_SPEC_VERSION"><span id="%24mEXT_INDEX_TYPE_UINT8_SPEC_VERSION"><span id="EXT_INDEX_TYPE_UINT8_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXT_INDEX_TYPE_UINT8_SPEC_VERSION :: a
+$mEXT_INDEX_TYPE_UINT8_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#%24bEXT_INDEX_TYPE_UINT8_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXT_INDEX_TYPE_UINT8_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-186"></span><span>
+</span><span id="line-187"></span><span>
+</span><span id="line-188"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_INDEX_TYPE_UINT8_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#EXT_INDEX_TYPE_UINT8_EXTENSION_NAME"><span class="hs-identifier hs-var">EXT_INDEX_TYPE_UINT8_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_index_type_uint8&quot;</span></span><span>
+</span><span id="line-189"></span><span>
+</span><span id="line-190"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_INDEX_TYPE_UINT8_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-191"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#EXT_INDEX_TYPE_UINT8_EXTENSION_NAME"><span class="hs-identifier hs-type">EXT_INDEX_TYPE_UINT8_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680097496"><span class="annot"><a href="#local-6989586621680097496"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680097496"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680097496"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680097496"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-192"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_INDEX_TYPE_UINT8_EXTENSION_NAME"><span id="%24mEXT_INDEX_TYPE_UINT8_EXTENSION_NAME"><span id="EXT_INDEX_TYPE_UINT8_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXT_INDEX_TYPE_UINT8_EXTENSION_NAME :: a
+$mEXT_INDEX_TYPE_UINT8_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_index_type_uint8.html#%24bEXT_INDEX_TYPE_UINT8_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXT_INDEX_TYPE_UINT8_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_index_type_uint8&quot;</span></span><span>
+</span><span id="line-193"></span><span>
+</span><span id="line-194"></span></pre></body></html>
