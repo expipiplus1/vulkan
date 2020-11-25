@@ -595,8 +595,8 @@ accelerationStructureGeometry = BespokeScheme $ \case
   _ -> const Nothing
 
 -- TODO: Select this when compiling an older spec
-accelerationStructureGeometryPre1_2_162 :: BespokeScheme
-accelerationStructureGeometryPre1_2_162 = BespokeScheme $ \case
+_accelerationStructureGeometryPre1_2_162 :: BespokeScheme
+_accelerationStructureGeometryPre1_2_162 = BespokeScheme $ \case
   "VkAccelerationStructureBuildGeometryInfoKHR" -> \case
     (p :: a)
       | "geometryArrayOfPointers" <- name p
