@@ -3,19 +3,30 @@
 --
 -- VK_EXT_texture_compression_astc_hdr - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_texture_compression_astc_hdr
 --
--- 67
+-- [__Name String__]
+--     @VK_EXT_texture_compression_astc_hdr@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     67
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Jan-Harald Fredriksen
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_texture_compression_astc_hdr:%20&body=@janharaldfredriksen-arm%20 >
 --
 -- == Other Extension Metadata
 --

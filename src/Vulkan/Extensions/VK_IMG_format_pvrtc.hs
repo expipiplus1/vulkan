@@ -3,17 +3,27 @@
 --
 -- VK_IMG_format_pvrtc - device extension
 --
--- = Registered Extension Number
+-- == VK_IMG_format_pvrtc
 --
--- 55
+-- [__Name String__]
+--     @VK_IMG_format_pvrtc@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     55
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Stuart Smith
 --
 -- == Other Extension Metadata
 --

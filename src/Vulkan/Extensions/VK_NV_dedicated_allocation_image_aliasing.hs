@@ -3,19 +3,30 @@
 --
 -- VK_NV_dedicated_allocation_image_aliasing - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_dedicated_allocation_image_aliasing
 --
--- 241
+-- [__Name String__]
+--     @VK_NV_dedicated_allocation_image_aliasing@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     241
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_dedicated_allocation@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_dedicated_allocation@
+--
+-- [__Contact__]
+--
+--     -   Nuno Subtil
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_dedicated_allocation_image_aliasing:%20&body=@nsubtil%20 >
 --
 -- == Other Extension Metadata
 --

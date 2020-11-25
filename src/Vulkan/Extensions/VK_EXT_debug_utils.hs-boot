@@ -3,21 +3,32 @@
 --
 -- VK_EXT_debug_utils - instance extension
 --
--- = Registered Extension Number
+-- == VK_EXT_debug_utils
 --
--- 129
+-- [__Name String__]
+--     @VK_EXT_debug_utils@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     129
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Special Use
+--     -   Requires Vulkan 1.0
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+--
+-- [__Contact__]
+--
+--     -   Mark Young
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_utils:%20&body=@marky-lunarg%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,17 +3,28 @@
 --
 -- VK_KHR_shader_non_semantic_info - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_shader_non_semantic_info
 --
--- 294
+-- [__Name String__]
+--     @VK_KHR_shader_non_semantic_info@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     294
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Baldur Karlsson
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_non_semantic_info:%20&body=@baldurk%20 >
 --
 -- == Other Extension Metadata
 --
@@ -26,7 +37,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/KHR\/SPV_KHR_non_semantic_info.html[@SPV_KHR_non_semantic_info@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_non_semantic_info.html SPV_KHR_non_semantic_info>
 --
 -- [__Contributors__]
 --

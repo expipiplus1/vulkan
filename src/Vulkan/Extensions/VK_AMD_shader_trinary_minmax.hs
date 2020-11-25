@@ -3,17 +3,28 @@
 --
 -- VK_AMD_shader_trinary_minmax - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_shader_trinary_minmax
 --
--- 21
+-- [__Name String__]
+--     @VK_AMD_shader_trinary_minmax@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     21
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Qun Lin
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_trinary_minmax:%20&body=@linqun%20 >
 --
 -- == Other Extension Metadata
 --
@@ -26,7 +37,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/AMD\/SPV_AMD_shader_trinary_minmax.html[@SPV_AMD_shader_trinary_minmax@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_trinary_minmax.html SPV_AMD_shader_trinary_minmax>
 --
 -- [__Contributors__]
 --
@@ -45,7 +56,7 @@
 -- This extension adds support for the following SPIR-V extension in
 -- Vulkan:
 --
--- -   {spirv}\/AMD\/SPV_AMD_shader_trinary_minmax.html[@SPV_AMD_shader_trinary_minmax@]
+-- -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_trinary_minmax.html SPV_AMD_shader_trinary_minmax>
 --
 -- == New Enum Constants
 --

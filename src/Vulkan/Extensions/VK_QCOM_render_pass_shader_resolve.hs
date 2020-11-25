@@ -3,17 +3,28 @@
 --
 -- VK_QCOM_render_pass_shader_resolve - device extension
 --
--- = Registered Extension Number
+-- == VK_QCOM_render_pass_shader_resolve
 --
--- 172
+-- [__Name String__]
+--     @VK_QCOM_render_pass_shader_resolve@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 4
+-- [__Registered Extension Number__]
+--     172
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     4
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Bill Licea-Kane
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_QCOM_render_pass_shader_resolve:%20&body=@wwlk%20 >
 --
 -- == Other Extension Metadata
 --

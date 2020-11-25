@@ -3,24 +3,35 @@
 --
 -- VK_KHR_external_fence_capabilities - instance extension
 --
--- = Registered Extension Number
+-- == VK_KHR_external_fence_capabilities
 --
--- 113
+-- [__Name String__]
+--     @VK_KHR_external_fence_capabilities@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     113
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- = Deprecation state
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- [__Contact__]
+--
+--     -   Jesse Hall
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_fence_capabilities:%20&body=@critsec%20 >
 --
 -- == Other Extension Metadata
 --

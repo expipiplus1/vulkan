@@ -3,17 +3,28 @@
 --
 -- VK_AMD_pipeline_compiler_control - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_pipeline_compiler_control
 --
--- 184
+-- [__Name String__]
+--     @VK_AMD_pipeline_compiler_control@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     184
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Matthaeus G. Chajdas
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_pipeline_compiler_control:%20&body=@anteru%20 >
 --
 -- == Other Extension Metadata
 --

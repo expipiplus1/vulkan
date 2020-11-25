@@ -3,17 +3,28 @@
 --
 -- VK_NV_sample_mask_override_coverage - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_sample_mask_override_coverage
 --
--- 95
+-- [__Name String__]
+--     @VK_NV_sample_mask_override_coverage@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     95
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Piers Daniell
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_sample_mask_override_coverage:%20&body=@pdaniell-nv%20 >
 --
 -- == Other Extension Metadata
 --
@@ -26,7 +37,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/NV\/SPV_NV_sample_mask_override_coverage.html[@SPV_NV_sample_mask_override_coverage@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_sample_mask_override_coverage.html SPV_NV_sample_mask_override_coverage>
 --
 --     -   This extension provides API support for
 --         <https://www.khronos.org/registry/OpenGL/extensions/NV/NV_sample_mask_override_coverage.txt GL_NV_sample_mask_override_coverage>

@@ -3,21 +3,32 @@
 --
 -- VK_EXT_inline_uniform_block - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_inline_uniform_block
 --
--- 139
+-- [__Name String__]
+--     @VK_EXT_inline_uniform_block@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     139
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- -   Requires @VK_KHR_maintenance1@
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+--     -   Requires @VK_KHR_maintenance1@
+--
+-- [__Contact__]
+--
+--     -   Daniel Rakos
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_inline_uniform_block:%20&body=@aqnuep%20 >
 --
 -- == Other Extension Metadata
 --

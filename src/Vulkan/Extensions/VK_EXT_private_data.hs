@@ -3,17 +3,28 @@
 --
 -- VK_EXT_private_data - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_private_data
 --
--- 296
+-- [__Name String__]
+--     @VK_EXT_private_data@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     296
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Matthew Rusch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_private_data:%20&body=@mattruschnv%20 >
 --
 -- == Other Extension Metadata
 --

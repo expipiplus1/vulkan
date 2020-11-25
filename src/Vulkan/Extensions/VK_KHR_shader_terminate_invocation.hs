@@ -3,48 +3,59 @@
 --
 -- VK_KHR_shader_terminate_invocation - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_shader_terminate_invocation
 --
--- 216
+-- [__Name String__]
+--     @VK_KHR_shader_terminate_invocation@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     216
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
---     [__Last Modified Date__]
---         2020-08-11
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
---     [__IP Status__]
---         No known IP claims.
+-- [__Contact__]
 --
---     [__Interactions and External Dependencies__]
+--     -   Jesse Hall
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_terminate_invocation:%20&body=@critsec%20 >
 --
---         -   Requires the
---             {spirv}\/KHR\/SPV_KHR_terminate_invocation.html[@SPV_KHR_terminate_invocation@]
---             SPIR-V extension.
+-- [__Last Modified Date__]
+--     2020-08-11
 --
---     [__Contributors__]
+-- [__IP Status__]
+--     No known IP claims.
 --
---         -   Alan Baker, Google
+-- [__Interactions and External Dependencies__]
 --
---         -   Jeff Bolz, NVIDIA
+--     -   Requires the
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_terminate_invocation.html SPV_KHR_terminate_invocation>
+--         SPIR-V extension.
 --
---         -   Jesse Hall, Google
+-- [__Contributors__]
 --
---         -   Ralph Potter, Samsung
+--     -   Alan Baker, Google
 --
---         -   Tom Olson, Arm
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Jesse Hall, Google
+--
+--     -   Ralph Potter, Samsung
+--
+--     -   Tom Olson, Arm
 --
 -- == Description
 --
 -- This extension adds Vulkan support for the
--- {spirv}\/KHR\/SPV_KHR_terminate_invocation.html[@SPV_KHR_terminate_invocation@]
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_terminate_invocation.html SPV_KHR_terminate_invocation>
 -- SPIR-V extension. That SPIR-V extension provides a new instruction,
 -- @OpTerminateInvocation@, which causes a shader invocation to immediately
 -- terminate and sets the coverage of shaded samples to @0@; only

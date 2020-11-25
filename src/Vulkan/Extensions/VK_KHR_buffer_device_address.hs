@@ -3,24 +3,35 @@
 --
 -- VK_KHR_buffer_device_address - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_buffer_device_address
 --
--- 258
+-- [__Name String__]
+--     @VK_KHR_buffer_device_address@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     258
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- = Deprecation state
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_buffer_device_address:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --
@@ -35,7 +46,7 @@
 --     -   Promoted to Vulkan 1.2 Core
 --
 --     -   This extension requires
---         {spirv}\/KHR\/SPV_KHR_physical_storage_buffer.html[@SPV_KHR_physical_storage_buffer@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_physical_storage_buffer.html SPV_KHR_physical_storage_buffer>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_buffer_reference.txt GL_EXT_buffer_reference>
@@ -65,7 +76,7 @@
 -- memory via the @PhysicalStorageBuffer@ storage class in the
 -- <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_buffer_reference.txt GL_EXT_buffer_reference>
 -- GLSL extension and
--- {spirv}\/KHR\/SPV_KHR_physical_storage_buffer.html[@SPV_KHR_physical_storage_buffer@]
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_physical_storage_buffer.html SPV_KHR_physical_storage_buffer>
 -- SPIR-V extension.
 --
 -- Another way to describe this extension is that it adds \"pointers to

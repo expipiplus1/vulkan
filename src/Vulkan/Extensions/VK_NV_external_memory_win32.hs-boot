@@ -3,23 +3,34 @@
 --
 -- VK_NV_external_memory_win32 - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_external_memory_win32
 --
--- 58
+-- [__Name String__]
+--     @VK_NV_external_memory_win32@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     58
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_NV_external_memory@
+--     -   Requires Vulkan 1.0
 --
--- = Deprecation state
+--     -   Requires @VK_NV_external_memory@
 --
--- -   /Deprecated/ by @VK_KHR_external_memory_win32@ extension
+-- [__Deprecation state__]
+--
+--     -   /Deprecated/ by @VK_KHR_external_memory_win32@ extension
+--
+-- [__Contact__]
+--
+--     -   James Jones
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_external_memory_win32:%20&body=@cubanismo%20 >
 --
 -- == Other Extension Metadata
 --

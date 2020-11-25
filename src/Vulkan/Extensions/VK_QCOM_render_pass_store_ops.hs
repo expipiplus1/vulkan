@@ -3,17 +3,28 @@
 --
 -- VK_QCOM_render_pass_store_ops - device extension
 --
--- = Registered Extension Number
+-- == VK_QCOM_render_pass_store_ops
 --
--- 302
+-- [__Name String__]
+--     @VK_QCOM_render_pass_store_ops@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     302
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Bill Licea-Kane
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_QCOM_render_pass_store_ops:%20&body=@wwlk%20 >
 --
 -- == Other Extension Metadata
 --

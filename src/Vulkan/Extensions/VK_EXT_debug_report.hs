@@ -3,23 +3,36 @@
 --
 -- VK_EXT_debug_report - instance extension
 --
--- = Registered Extension Number
+-- == VK_EXT_debug_report
 --
--- 12
+-- [__Name String__]
+--     @VK_EXT_debug_report@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 9
+-- [__Registered Extension Number__]
+--     12
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     9
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Deprecated/ by @VK_EXT_debug_utils@ extension == Special Use
+-- [__Deprecation state__]
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+--     -   /Deprecated/ by @VK_EXT_debug_utils@ extension
+--
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+--
+-- [__Contact__]
+--
+--     -   Courtney Goeltzenleuchter
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_report:%20&body=@courtney-g%20 >
 --
 -- == Other Extension Metadata
 --

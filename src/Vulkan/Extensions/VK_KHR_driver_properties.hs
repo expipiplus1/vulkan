@@ -3,24 +3,35 @@
 --
 -- VK_KHR_driver_properties - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_driver_properties
 --
--- 197
+-- [__Name String__]
+--     @VK_KHR_driver_properties@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     197
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- = Deprecation state
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Daniel Rakos
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_driver_properties:%20&body=@drakos-amd%20 >
 --
 -- == Other Extension Metadata
 --

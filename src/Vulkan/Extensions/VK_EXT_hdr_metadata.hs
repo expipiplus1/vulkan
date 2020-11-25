@@ -3,19 +3,30 @@
 --
 -- VK_EXT_hdr_metadata - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_hdr_metadata
 --
--- 106
+-- [__Name String__]
+--     @VK_EXT_hdr_metadata@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     106
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_swapchain@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_swapchain@
+--
+-- [__Contact__]
+--
+--     -   Courtney Goeltzenleuchter
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_hdr_metadata:%20&body=@courtney-g%20 >
 --
 -- == Other Extension Metadata
 --

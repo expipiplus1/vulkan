@@ -3,19 +3,30 @@
 --
 -- VK_EXT_pci_bus_info - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_pci_bus_info
 --
--- 213
+-- [__Name String__]
+--     @VK_EXT_pci_bus_info@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     213
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Matthaeus G. Chajdas
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_pci_bus_info:%20&body=@anteru%20 >
 --
 -- == Other Extension Metadata
 --

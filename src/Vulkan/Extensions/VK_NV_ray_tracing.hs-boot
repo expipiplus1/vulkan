@@ -3,21 +3,32 @@
 --
 -- VK_NV_ray_tracing - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_ray_tracing
 --
--- 166
+-- [__Name String__]
+--     @VK_NV_ray_tracing@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 3
+-- [__Registered Extension Number__]
+--     166
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     3
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- -   Requires @VK_KHR_get_memory_requirements2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+--     -   Requires @VK_KHR_get_memory_requirements2@
+--
+-- [__Contact__]
+--
+--     -   Eric Werness
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_ray_tracing:%20&body=@ewerness%20 >
 --
 -- == Other Extension Metadata
 --
@@ -27,7 +38,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/NV\/SPV_NV_ray_tracing.html[@SPV_NV_ray_tracing@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_ray_tracing.html SPV_NV_ray_tracing>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_ray_tracing.txt GL_NV_ray_tracing>

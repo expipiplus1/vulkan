@@ -3,26 +3,37 @@
 --
 -- VK_EXT_buffer_device_address - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_buffer_device_address
 --
--- 245
+-- [__Name String__]
+--     @VK_EXT_buffer_device_address@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     245
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- = Deprecation state
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
--- -   /Deprecated/ by @VK_KHR_buffer_device_address@ extension
+-- [__Deprecation state__]
 --
---     -   Which in turn was /promoted/ to
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--     -   /Deprecated/ by @VK_KHR_buffer_device_address@ extension
+--
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_buffer_device_address:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --
@@ -35,7 +46,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/EXT\/SPV_EXT_physical_storage_buffer.html[@SPV_EXT_physical_storage_buffer@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_physical_storage_buffer.html SPV_EXT_physical_storage_buffer>
 --
 -- [__Contributors__]
 --
@@ -56,7 +67,7 @@
 -- memory via the @PhysicalStorageBufferEXT@ storage class in the
 -- <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_buffer_reference.txt GL_EXT_buffer_reference>
 -- GLSL extension and
--- {spirv}\/EXT\/SPV_EXT_physical_storage_buffer.html[@SPV_EXT_physical_storage_buffer@]
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_physical_storage_buffer.html SPV_EXT_physical_storage_buffer>
 -- SPIR-V extension.
 --
 -- It also allows buffer device addresses to be provided by a trace replay

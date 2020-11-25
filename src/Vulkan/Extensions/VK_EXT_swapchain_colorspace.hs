@@ -3,19 +3,30 @@
 --
 -- VK_EXT_swapchain_colorspace - instance extension
 --
--- = Registered Extension Number
+-- == VK_EXT_swapchain_colorspace
 --
--- 105
+-- [__Name String__]
+--     @VK_EXT_swapchain_colorspace@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 4
+-- [__Registered Extension Number__]
+--     105
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     4
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Courtney Goeltzenleuchter
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_swapchain_colorspace:%20&body=@courtney-g%20 >
 --
 -- == Other Extension Metadata
 --

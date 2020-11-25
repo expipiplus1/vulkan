@@ -3,23 +3,34 @@
 --
 -- VK_EXT_line_rasterization - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_line_rasterization
 --
--- 260
+-- [__Name String__]
+--     @VK_EXT_line_rasterization@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     260
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- = Special Use
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse CAD support>
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse CAD support>
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_line_rasterization:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,19 +3,30 @@
 --
 -- VK_NV_shading_rate_image - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_shading_rate_image
 --
--- 165
+-- [__Name String__]
+--     @VK_NV_shading_rate_image@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 3
+-- [__Registered Extension Number__]
+--     165
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     3
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Pat Brown
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_shading_rate_image:%20&body=@nvpbrown%20 >
 --
 -- == Other Extension Metadata
 --
@@ -25,7 +36,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/NV\/SPV_NV_shading_rate.html[@SPV_NV_shading_rate@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shading_rate.html SPV_NV_shading_rate>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_shading_rate_image.txt GL_NV_shading_rate_image>
@@ -66,10 +77,10 @@
 --
 -- In addition to the API support controlling rasterization, this extension
 -- also adds Vulkan support for the
--- {spirv}\/NV\/SPV_NV_shading_rate.html[@SPV_NV_shading_rate@] extension
--- to SPIR-V. That extension provides two fragment shader variable
--- decorations that allow fragment shaders to determine the shading rate
--- used for processing the fragment:
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shading_rate.html SPV_NV_shading_rate>
+-- extension to SPIR-V. That extension provides two fragment shader
+-- variable decorations that allow fragment shaders to determine the
+-- shading rate used for processing the fragment:
 --
 -- -   @FragmentSizeNV@, which indicates the width and height of the set of
 --     pixels processed by the fragment shader.

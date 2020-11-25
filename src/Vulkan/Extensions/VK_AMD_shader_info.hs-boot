@@ -3,21 +3,32 @@
 --
 -- VK_AMD_shader_info - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_shader_info
 --
--- 43
+-- [__Name String__]
+--     @VK_AMD_shader_info@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     43
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Special Use
+--     -   Requires Vulkan 1.0
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+--
+-- [__Contact__]
+--
+--     -   Jaakko Konttinen
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_info:%20&body=@jaakkoamd%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,21 +3,32 @@
 --
 -- VK_GGP_frame_token - device extension
 --
--- = Registered Extension Number
+-- == VK_GGP_frame_token
 --
--- 192
+-- [__Name String__]
+--     @VK_GGP_frame_token@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     192
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_swapchain@
+--     -   Requires Vulkan 1.0
 --
--- -   Requires @VK_GGP_stream_descriptor_surface@
+--     -   Requires @VK_KHR_swapchain@
+--
+--     -   Requires @VK_GGP_stream_descriptor_surface@
+--
+-- [__Contact__]
+--
+--     -   Jean-Francois Roy
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_GGP_frame_token:%20&body=@jfroy%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,19 +3,30 @@
 --
 -- VK_EXT_shader_image_atomic_int64 - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_shader_image_atomic_int64
 --
--- 235
+-- [__Name String__]
+--     @VK_EXT_shader_image_atomic_int64@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     235
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Tobias Hector
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_image_atomic_int64:%20&body=@tobski%20 >
 --
 -- == Other Extension Metadata
 --
@@ -40,7 +51,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires the
---         {spirv}\/KHR\/SPV_EXT_shader_image_atomic_int64.html[@SPV_EXT_shader_image_int64@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_EXT_shader_image_atomic_int64.html SPV_EXT_shader_image_int64>
 --         SPIR-V extension.
 --
 --     -   This extension requires the

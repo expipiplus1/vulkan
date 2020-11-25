@@ -3,19 +3,30 @@
 --
 -- VK_NVX_multiview_per_view_attributes - device extension
 --
--- = Registered Extension Number
+-- == VK_NVX_multiview_per_view_attributes
 --
--- 98
+-- [__Name String__]
+--     @VK_NVX_multiview_per_view_attributes@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     98
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_multiview@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_multiview@
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NVX_multiview_per_view_attributes:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --
@@ -28,7 +39,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/NV\/SPV_NVX_multiview_per_view_attributes.html[@SPV_NVX_multiview_per_view_attributes@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NVX_multiview_per_view_attributes.html SPV_NVX_multiview_per_view_attributes>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nvx/GL_NVX_multiview_per_view_attributes.txt GL_NVX_multiview_per_view_attributes>

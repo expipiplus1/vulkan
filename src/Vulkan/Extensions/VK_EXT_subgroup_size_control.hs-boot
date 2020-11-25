@@ -3,17 +3,28 @@
 --
 -- VK_EXT_subgroup_size_control - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_subgroup_size_control
 --
--- 226
+-- [__Name String__]
+--     @VK_EXT_subgroup_size_control@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     226
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.1
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.1
+--
+-- [__Contact__]
+--
+--     -   Neil Henning
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_subgroup_size_control:%20&body=@sheredom%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,24 +3,35 @@
 --
 -- VK_AMD_gpu_shader_half_float - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_gpu_shader_half_float
 --
--- 37
+-- [__Name String__]
+--     @VK_AMD_gpu_shader_half_float@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     37
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Deprecated/ by @VK_KHR_shader_float16_int8@ extension
+-- [__Deprecation state__]
 --
---     -   Which in turn was /promoted/ to
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--     -   /Deprecated/ by @VK_KHR_shader_float16_int8@ extension
+--
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Dominik Witczak
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_gpu_shader_half_float:%20&body=@dominikwitczakamd%20 >
 --
 -- == Other Extension Metadata
 --
@@ -33,7 +44,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/AMD\/SPV_AMD_gpu_shader_half_float.html[@SPV_AMD_gpu_shader_half_float@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_gpu_shader_half_float.html SPV_AMD_gpu_shader_half_float>
 --
 -- [__Contributors__]
 --

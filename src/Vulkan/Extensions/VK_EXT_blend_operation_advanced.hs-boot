@@ -3,17 +3,28 @@
 --
 -- VK_EXT_blend_operation_advanced - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_blend_operation_advanced
 --
--- 149
+-- [__Name String__]
+--     @VK_EXT_blend_operation_advanced@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     149
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_blend_operation_advanced:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --

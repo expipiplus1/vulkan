@@ -3,19 +3,30 @@
 --
 -- VK_EXT_direct_mode_display - instance extension
 --
--- = Registered Extension Number
+-- == VK_EXT_direct_mode_display
 --
--- 89
+-- [__Name String__]
+--     @VK_EXT_direct_mode_display@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     89
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_display@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_display@
+--
+-- [__Contact__]
+--
+--     -   James Jones
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_direct_mode_display:%20&body=@cubanismo%20 >
 --
 -- == Other Extension Metadata
 --

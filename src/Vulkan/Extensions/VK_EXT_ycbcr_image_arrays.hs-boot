@@ -3,19 +3,30 @@
 --
 -- VK_EXT_ycbcr_image_arrays - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_ycbcr_image_arrays
 --
--- 253
+-- [__Name String__]
+--     @VK_EXT_ycbcr_image_arrays@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     253
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_sampler_ycbcr_conversion@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_sampler_ycbcr_conversion@
+--
+-- [__Contact__]
+--
+--     -   Piers Daniell
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_ycbcr_image_arrays:%20&body=@pdaniell-nv%20 >
 --
 -- == Other Extension Metadata
 --

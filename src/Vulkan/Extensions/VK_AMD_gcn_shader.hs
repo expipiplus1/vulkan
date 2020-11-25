@@ -3,17 +3,28 @@
 --
 -- VK_AMD_gcn_shader - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_gcn_shader
 --
--- 26
+-- [__Name String__]
+--     @VK_AMD_gcn_shader@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     26
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Dominik Witczak
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_gcn_shader:%20&body=@dominikwitczakamd%20 >
 --
 -- == Other Extension Metadata
 --
@@ -26,7 +37,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/AMD\/SPV_AMD_gcn_shader.html[@SPV_AMD_gcn_shader@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_gcn_shader.html SPV_AMD_gcn_shader>
 --
 -- [__Contributors__]
 --
@@ -43,7 +54,7 @@
 -- This extension adds support for the following SPIR-V extension in
 -- Vulkan:
 --
--- -   {spirv}\/AMD\/SPV_AMD_gcn_shader.html[@SPV_AMD_gcn_shader@]
+-- -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_gcn_shader.html SPV_AMD_gcn_shader>
 --
 -- == New Enum Constants
 --

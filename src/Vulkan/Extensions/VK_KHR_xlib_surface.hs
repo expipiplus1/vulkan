@@ -3,19 +3,33 @@
 --
 -- VK_KHR_xlib_surface - instance extension
 --
--- = Registered Extension Number
+-- == VK_KHR_xlib_surface
 --
--- 5
+-- [__Name String__]
+--     @VK_KHR_xlib_surface@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 6
+-- [__Registered Extension Number__]
+--     5
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     6
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Jesse Hall
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_xlib_surface:%20&body=@critsec%20 >
+--
+--     -   Ian Elliott
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_xlib_surface:%20&body=@ianelliottus%20 >
 --
 -- == Other Extension Metadata
 --

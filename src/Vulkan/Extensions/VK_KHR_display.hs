@@ -3,19 +3,33 @@
 --
 -- VK_KHR_display - instance extension
 --
--- = Registered Extension Number
+-- == VK_KHR_display
 --
--- 3
+-- [__Name String__]
+--     @VK_KHR_display@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 23
+-- [__Registered Extension Number__]
+--     3
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     23
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   James Jones
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_display:%20&body=@cubanismo%20 >
+--
+--     -   Norbert Nopper
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_display:%20&body=@FslNopper%20 >
 --
 -- == Other Extension Metadata
 --

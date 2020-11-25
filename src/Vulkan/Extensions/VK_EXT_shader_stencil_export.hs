@@ -3,17 +3,28 @@
 --
 -- VK_EXT_shader_stencil_export - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_shader_stencil_export
 --
--- 141
+-- [__Name String__]
+--     @VK_EXT_shader_stencil_export@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     141
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Dominik Witczak
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_stencil_export:%20&body=@dominikwitczakamd%20 >
 --
 -- == Other Extension Metadata
 --
@@ -26,7 +37,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/EXT\/SPV_EXT_shader_stencil_export.html[@SPV_EXT_shader_stencil_export@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_stencil_export.html SPV_EXT_shader_stencil_export>
 --
 --     -   This extension provides API support for
 --         <https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_stencil_export.txt GL_ARB_shader_stencil_export>

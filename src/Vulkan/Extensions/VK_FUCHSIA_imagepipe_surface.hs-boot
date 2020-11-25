@@ -3,19 +3,30 @@
 --
 -- VK_FUCHSIA_imagepipe_surface - instance extension
 --
--- = Registered Extension Number
+-- == VK_FUCHSIA_imagepipe_surface
 --
--- 215
+-- [__Name String__]
+--     @VK_FUCHSIA_imagepipe_surface@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     215
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Craig Stout
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_FUCHSIA_imagepipe_surface:%20&body=@cdotstout%20 >
 --
 -- == Other Extension Metadata
 --

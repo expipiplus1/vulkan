@@ -3,21 +3,32 @@
 --
 -- VK_INTEL_performance_query - device extension
 --
--- = Registered Extension Number
+-- == VK_INTEL_performance_query
 --
--- 211
+-- [__Name String__]
+--     @VK_INTEL_performance_query@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     211
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Special Use
+--     -   Requires Vulkan 1.0
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+--
+-- [__Contact__]
+--
+--     -   Lionel Landwerlin
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_INTEL_performance_query:%20&body=@llandwerlin%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,22 +3,33 @@
 --
 -- VK_KHR_get_physical_device_properties2 - instance extension
 --
--- = Registered Extension Number
+-- == VK_KHR_get_physical_device_properties2
 --
--- 60
+-- [__Name String__]
+--     @VK_KHR_get_physical_device_properties2@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     60
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_get_physical_device_properties2:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --

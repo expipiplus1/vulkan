@@ -3,19 +3,30 @@
 --
 -- VK_EXT_shader_atomic_float - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_shader_atomic_float
 --
--- 261
+-- [__Name String__]
+--     @VK_EXT_shader_atomic_float@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     261
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Vikram Kushwaha
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_atomic_float:%20&body=@vkushwaha-nv%20 >
 --
 -- == Other Extension Metadata
 --
@@ -28,7 +39,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/EXT\/SPV_EXT_shader_atomic_float_add.html[@SPV_EXT_shader_atomic_float_add@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_atomic_float_add.html SPV_EXT_shader_atomic_float_add>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/tree/master/extensions/ext/GLSL_EXT_shader_atomic_float.txt GL_EXT_shader_atomic_float>

@@ -3,21 +3,32 @@
 --
 -- VK_KHR_ray_tracing_pipeline - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_ray_tracing_pipeline
 --
--- 348
+-- [__Name String__]
+--     @VK_KHR_ray_tracing_pipeline@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     348
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.1
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_spirv_1_4@
+--     -   Requires Vulkan 1.1
 --
--- -   Requires @VK_KHR_acceleration_structure@
+--     -   Requires @VK_KHR_spirv_1_4@
+--
+--     -   Requires @VK_KHR_acceleration_structure@
+--
+-- [__Contact__]
+--
+--     -   Daniel Koch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_ray_tracing_pipeline:%20&body=@dgkoch%20 >
 --
 -- == Other Extension Metadata
 --

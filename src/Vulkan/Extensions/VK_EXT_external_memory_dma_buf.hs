@@ -3,19 +3,30 @@
 --
 -- VK_EXT_external_memory_dma_buf - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_external_memory_dma_buf
 --
--- 126
+-- [__Name String__]
+--     @VK_EXT_external_memory_dma_buf@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     126
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_external_memory_fd@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_external_memory_fd@
+--
+-- [__Contact__]
+--
+--     -   Chad Versace
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_external_memory_dma_buf:%20&body=@chadversary%20 >
 --
 -- == Other Extension Metadata
 --

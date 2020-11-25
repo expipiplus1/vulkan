@@ -3,22 +3,33 @@
 --
 -- VK_KHR_shader_subgroup_extended_types - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_shader_subgroup_extended_types
 --
--- 176
+-- [__Name String__]
+--     @VK_KHR_shader_subgroup_extended_types@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     176
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.1
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.1
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Neil Henning
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_subgroup_extended_types:%20&body=@sheredom%20 >
 --
 -- == Other Extension Metadata
 --

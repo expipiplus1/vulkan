@@ -3,17 +3,28 @@
 --
 -- VK_GOOGLE_decorate_string - device extension
 --
--- = Registered Extension Number
+-- == VK_GOOGLE_decorate_string
 --
--- 225
+-- [__Name String__]
+--     @VK_GOOGLE_decorate_string@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     225
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Hai Nguyen
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_GOOGLE_decorate_string:%20&body=@chaoticbob%20 >
 --
 -- == Other Extension Metadata
 --
@@ -26,7 +37,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/GOOGLE\/SPV_GOOGLE_decorate_string.html[@SPV_GOOGLE_decorate_string@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/GOOGLE/SPV_GOOGLE_decorate_string.html SPV_GOOGLE_decorate_string>
 --
 -- [__Contributors__]
 --

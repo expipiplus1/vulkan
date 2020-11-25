@@ -3,19 +3,30 @@
 --
 -- VK_EXT_fragment_density_map2 - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_fragment_density_map2
 --
--- 333
+-- [__Name String__]
+--     @VK_EXT_fragment_density_map2@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     333
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_EXT_fragment_density_map@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_EXT_fragment_density_map@
+--
+-- [__Contact__]
+--
+--     -   Matthew Netsch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_fragment_density_map2:%20&body=@mnetsch%20 >
 --
 -- == Other Extension Metadata
 --

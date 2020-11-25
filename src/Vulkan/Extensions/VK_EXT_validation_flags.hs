@@ -3,24 +3,36 @@
 --
 -- VK_EXT_validation_flags - instance extension
 --
--- = Registered Extension Number
+-- == VK_EXT_validation_flags
 --
--- 62
+-- [__Name String__]
+--     @VK_EXT_validation_flags@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     62
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Deprecated/ by @VK_EXT_validation_features@ extension == Special
---     Use
+-- [__Deprecation state__]
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+--     -   /Deprecated/ by @VK_EXT_validation_features@ extension
+--
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+--
+-- [__Contact__]
+--
+--     -   Tobin Ehlis
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_flags:%20&body=@tobine%20 >
 --
 -- == Other Extension Metadata
 --

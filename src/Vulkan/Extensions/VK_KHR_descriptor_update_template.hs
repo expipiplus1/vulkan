@@ -3,22 +3,33 @@
 --
 -- VK_KHR_descriptor_update_template - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_descriptor_update_template
 --
--- 86
+-- [__Name String__]
+--     @VK_KHR_descriptor_update_template@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     86
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- [__Contact__]
+--
+--     -   Markus Tavenrath
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_descriptor_update_template:%20&body=@mtavenrath%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,19 +3,30 @@
 --
 -- VK_EXT_vertex_attribute_divisor - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_vertex_attribute_divisor
 --
--- 191
+-- [__Name String__]
+--     @VK_EXT_vertex_attribute_divisor@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 3
+-- [__Registered Extension Number__]
+--     191
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     3
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Vikram Kushwaha
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_vertex_attribute_divisor:%20&body=@vkushwaha%20 >
 --
 -- == Other Extension Metadata
 --

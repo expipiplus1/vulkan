@@ -3,19 +3,30 @@
 --
 -- VK_KHR_android_surface - instance extension
 --
--- = Registered Extension Number
+-- == VK_KHR_android_surface
 --
--- 9
+-- [__Name String__]
+--     @VK_KHR_android_surface@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 6
+-- [__Registered Extension Number__]
+--     9
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     6
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Jesse Hall
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_android_surface:%20&body=@critsec%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,19 +3,30 @@
 --
 -- VK_EXT_metal_surface - instance extension
 --
--- = Registered Extension Number
+-- == VK_EXT_metal_surface
 --
--- 218
+-- [__Name String__]
+--     @VK_EXT_metal_surface@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     218
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Dzmitry Malyshau
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_metal_surface:%20&body=@kvark%20 >
 --
 -- == Other Extension Metadata
 --

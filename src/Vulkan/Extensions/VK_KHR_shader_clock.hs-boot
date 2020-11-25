@@ -3,19 +3,30 @@
 --
 -- VK_KHR_shader_clock - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_shader_clock
 --
--- 182
+-- [__Name String__]
+--     @VK_KHR_shader_clock@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     182
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Aaron Hagan
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_clock:%20&body=@ahagan%20 >
 --
 -- == Other Extension Metadata
 --
@@ -28,7 +39,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/KHR\/SPV_KHR_shader_clock.html[@SPV_KHR_shader_clock@].
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html SPV_KHR_shader_clock>.
 --
 --     -   This extension provides API support for
 --         <https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_clock.txt ARB_shader_clock>

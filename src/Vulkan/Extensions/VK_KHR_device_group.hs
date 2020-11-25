@@ -3,24 +3,35 @@
 --
 -- VK_KHR_device_group - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_device_group
 --
--- 61
+-- [__Name String__]
+--     @VK_KHR_device_group@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 4
+-- [__Registered Extension Number__]
+--     61
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     4
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_device_group_creation@
+--     -   Requires Vulkan 1.0
 --
--- = Deprecation state
+--     -   Requires @VK_KHR_device_group_creation@
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_device_group:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --

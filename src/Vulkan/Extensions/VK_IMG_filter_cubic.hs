@@ -3,17 +3,28 @@
 --
 -- VK_IMG_filter_cubic - device extension
 --
--- = Registered Extension Number
+-- == VK_IMG_filter_cubic
 --
--- 16
+-- [__Name String__]
+--     @VK_IMG_filter_cubic@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     16
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Tobias Hector
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_IMG_filter_cubic:%20&body=@tobski%20 >
 --
 -- == Other Extension Metadata
 --

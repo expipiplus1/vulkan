@@ -3,17 +3,28 @@
 --
 -- VK_NV_clip_space_w_scaling - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_clip_space_w_scaling
 --
--- 88
+-- [__Name String__]
+--     @VK_NV_clip_space_w_scaling@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     88
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Eric Werness
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_clip_space_w_scaling:%20&body=@ewerness-nv%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,23 +3,34 @@
 --
 -- VK_KHR_shared_presentable_image - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_shared_presentable_image
 --
--- 112
+-- [__Name String__]
+--     @VK_KHR_shared_presentable_image@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     112
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_swapchain@
+--     -   Requires Vulkan 1.0
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_swapchain@
 --
--- -   Requires @VK_KHR_get_surface_capabilities2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+--     -   Requires @VK_KHR_get_surface_capabilities2@
+--
+-- [__Contact__]
+--
+--     -   Alon Or-bach
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shared_presentable_image:%20&body=@alonorbach%20 >
 --
 -- == Other Extension Metadata
 --

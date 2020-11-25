@@ -3,21 +3,32 @@
 --
 -- VK_NV_glsl_shader - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_glsl_shader
 --
--- 13
+-- [__Name String__]
+--     @VK_NV_glsl_shader@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     13
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Deprecated/ without replacement
+-- [__Deprecation state__]
+--
+--     -   /Deprecated/ without replacement
+--
+-- [__Contact__]
+--
+--     -   Piers Daniell
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_glsl_shader:%20&body=@pdaniell-nv%20 >
 --
 -- == Other Extension Metadata
 --

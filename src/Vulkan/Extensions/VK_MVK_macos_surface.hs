@@ -3,23 +3,34 @@
 --
 -- VK_MVK_macos_surface - instance extension
 --
--- = Registered Extension Number
+-- == VK_MVK_macos_surface
 --
--- 124
+-- [__Name String__]
+--     @VK_MVK_macos_surface@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 3
+-- [__Registered Extension Number__]
+--     124
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     3
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires Vulkan 1.0
 --
--- = Deprecation state
+--     -   Requires @VK_KHR_surface@
 --
--- -   /Deprecated/ by @VK_EXT_metal_surface@ extension
+-- [__Deprecation state__]
+--
+--     -   /Deprecated/ by @VK_EXT_metal_surface@ extension
+--
+-- [__Contact__]
+--
+--     -   Bill Hollings
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_MVK_macos_surface:%20&body=@billhollings%20 >
 --
 -- == Other Extension Metadata
 --

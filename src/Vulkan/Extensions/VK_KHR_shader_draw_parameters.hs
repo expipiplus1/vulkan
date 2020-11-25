@@ -3,22 +3,33 @@
 --
 -- VK_KHR_shader_draw_parameters - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_shader_draw_parameters
 --
--- 64
+-- [__Name String__]
+--     @VK_KHR_shader_draw_parameters@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     64
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- [__Contact__]
+--
+--     -   Daniel Koch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_draw_parameters:%20&body=@dgkoch%20 >
 --
 -- == Other Extension Metadata
 --
@@ -31,7 +42,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/KHR\/SPV_KHR_shader_draw_parameters.html[@SPV_KHR_shader_draw_parameters@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_draw_parameters.html SPV_KHR_shader_draw_parameters>
 --
 --     -   This extension provides API support for
 --         <https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_draw_parameters.txt GL_ARB_shader_draw_parameters>

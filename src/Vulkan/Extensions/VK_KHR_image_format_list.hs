@@ -3,22 +3,33 @@
 --
 -- VK_KHR_image_format_list - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_image_format_list
 --
--- 148
+-- [__Name String__]
+--     @VK_KHR_image_format_list@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     148
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Jason Ekstrand
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_image_format_list:%20&body=@jekstrand%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,19 +3,30 @@
 --
 -- VK_EXT_headless_surface - instance extension
 --
--- = Registered Extension Number
+-- == VK_EXT_headless_surface
 --
--- 257
+-- [__Name String__]
+--     @VK_EXT_headless_surface@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     257
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Lisa Wu
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_headless_surface:%20&body=@chengtianww%20 >
 --
 -- == Other Extension Metadata
 --

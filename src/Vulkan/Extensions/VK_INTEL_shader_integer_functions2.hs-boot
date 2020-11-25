@@ -3,19 +3,30 @@
 --
 -- VK_INTEL_shader_integer_functions2 - device extension
 --
--- = Registered Extension Number
+-- == VK_INTEL_shader_integer_functions2
 --
--- 210
+-- [__Name String__]
+--     @VK_INTEL_shader_integer_functions2@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     210
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Ian Romanick
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_INTEL_shader_integer_functions2:%20&body=@ianromanick%20 >
 --
 -- == Other Extension Metadata
 --
@@ -38,7 +49,7 @@
 -- pre-existing counterparts in the Kernel environment.
 --
 -- The added integer functions are defined by the
--- {spirv}\/INTEL\/SPV_INTEL_shader_integer_functions2.html[@SPV_INTEL_shader_integer_functions@]
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/INTEL/SPV_INTEL_shader_integer_functions2.html SPV_INTEL_shader_integer_functions>
 -- SPIR-V extension and can be used with the
 -- GL_INTEL_shader_integer_functions2 GLSL extension.
 --

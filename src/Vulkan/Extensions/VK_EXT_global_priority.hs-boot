@@ -3,17 +3,28 @@
 --
 -- VK_EXT_global_priority - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_global_priority
 --
--- 175
+-- [__Name String__]
+--     @VK_EXT_global_priority@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     175
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Andres Rodriguez
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_global_priority:%20&body=@lostgoat%20 >
 --
 -- == Other Extension Metadata
 --

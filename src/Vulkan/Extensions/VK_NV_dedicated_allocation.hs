@@ -3,24 +3,35 @@
 --
 -- VK_NV_dedicated_allocation - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_dedicated_allocation
 --
--- 27
+-- [__Name String__]
+--     @VK_NV_dedicated_allocation@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     27
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Deprecated/ by @VK_KHR_dedicated_allocation@ extension
+-- [__Deprecation state__]
 --
---     -   Which in turn was /promoted/ to
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--     -   /Deprecated/ by @VK_KHR_dedicated_allocation@ extension
+--
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_dedicated_allocation:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --

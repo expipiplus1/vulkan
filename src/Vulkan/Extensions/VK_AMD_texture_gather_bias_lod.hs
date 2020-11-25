@@ -3,19 +3,30 @@
 --
 -- VK_AMD_texture_gather_bias_lod - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_texture_gather_bias_lod
 --
--- 42
+-- [__Name String__]
+--     @VK_AMD_texture_gather_bias_lod@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     42
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Rex Xu
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_texture_gather_bias_lod:%20&body=@amdrexu%20 >
 --
 -- == Other Extension Metadata
 --
@@ -28,7 +39,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/AMD\/SPV_AMD_texture_gather_bias_lod.html[@SPV_AMD_texture_gather_bias_lod@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_texture_gather_bias_lod.html SPV_AMD_texture_gather_bias_lod>
 --
 -- [__Contributors__]
 --

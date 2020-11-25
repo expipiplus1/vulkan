@@ -3,19 +3,30 @@
 --
 -- VK_AMD_shader_core_properties - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_shader_core_properties
 --
--- 186
+-- [__Name String__]
+--     @VK_AMD_shader_core_properties@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     186
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Martin Dinkov
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_core_properties:%20&body=@mdinkov%20 >
 --
 -- == Other Extension Metadata
 --

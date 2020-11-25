@@ -3,19 +3,30 @@
 --
 -- VK_NV_compute_shader_derivatives - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_compute_shader_derivatives
 --
--- 202
+-- [__Name String__]
+--     @VK_NV_compute_shader_derivatives@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     202
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Pat Brown
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_compute_shader_derivatives:%20&body=@nvpbrown%20 >
 --
 -- == Other Extension Metadata
 --
@@ -28,7 +39,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/NV\/SPV_NV_compute_shader_derivatives.html[@SPV_NV_compute_shader_derivatives@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_compute_shader_derivatives.html SPV_NV_compute_shader_derivatives>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_compute_shader_derivatives.txt GL_NV_compute_shader_derivatives>
@@ -40,7 +51,7 @@
 -- == Description
 --
 -- This extension adds Vulkan support for the
--- {spirv}\/NV\/SPV_NV_compute_shader_derivatives.html[@SPV_NV_compute_shader_derivatives@]
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_compute_shader_derivatives.html SPV_NV_compute_shader_derivatives>
 -- SPIR-V extension.
 --
 -- The SPIR-V extension provides two new execution modes, both of which

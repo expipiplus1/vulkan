@@ -3,21 +3,32 @@
 --
 -- VK_QCOM_rotated_copy_commands - device extension
 --
--- = Registered Extension Number
+-- == VK_QCOM_rotated_copy_commands
 --
--- 334
+-- [__Name String__]
+--     @VK_QCOM_rotated_copy_commands@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 0
+-- [__Registered Extension Number__]
+--     334
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     0
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_swapchain@
+--     -   Requires Vulkan 1.0
 --
--- -   Requires @VK_KHR_copy_commands2@
+--     -   Requires @VK_KHR_swapchain@
+--
+--     -   Requires @VK_KHR_copy_commands2@
+--
+-- [__Contact__]
+--
+--     -   Jeff Leger
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_QCOM_rotated_copy_commands:%20&body=@jackohound%20 >
 --
 -- == Other Extension Metadata
 --

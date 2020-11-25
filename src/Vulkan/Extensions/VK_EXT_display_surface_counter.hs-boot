@@ -3,19 +3,30 @@
 --
 -- VK_EXT_display_surface_counter - instance extension
 --
--- = Registered Extension Number
+-- == VK_EXT_display_surface_counter
 --
--- 91
+-- [__Name String__]
+--     @VK_EXT_display_surface_counter@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     91
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_display@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_display@
+--
+-- [__Contact__]
+--
+--     -   James Jones
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_display_surface_counter:%20&body=@cubanismo%20 >
 --
 -- == Other Extension Metadata
 --

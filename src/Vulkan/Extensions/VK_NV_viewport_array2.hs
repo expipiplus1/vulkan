@@ -3,17 +3,28 @@
 --
 -- VK_NV_viewport_array2 - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_viewport_array2
 --
--- 97
+-- [__Name String__]
+--     @VK_NV_viewport_array2@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     97
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Daniel Koch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_viewport_array2:%20&body=@dgkoch%20 >
 --
 -- == Other Extension Metadata
 --
@@ -23,7 +34,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/NV\/SPV_NV_viewport_array2.html[@SPV_NV_viewport_array2@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_viewport_array2.html SPV_NV_viewport_array2>
 --
 --     -   This extension provides API support for
 --         <https://www.khronos.org/registry/OpenGL/extensions/NV/NV_viewport_array2.txt GL_NV_viewport_array2>

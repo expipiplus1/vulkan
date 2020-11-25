@@ -3,24 +3,35 @@
 --
 -- VK_AMD_draw_indirect_count - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_draw_indirect_count
 --
--- 34
+-- [__Name String__]
+--     @VK_AMD_draw_indirect_count@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     34
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Promoted/ to @VK_KHR_draw_indirect_count@ extension
+-- [__Deprecation state__]
 --
---     -   Which in turn was /promoted/ to
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--     -   /Promoted/ to @VK_KHR_draw_indirect_count@ extension
+--
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Daniel Rakos
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_draw_indirect_count:%20&body=@drakos-amd%20 >
 --
 -- == Other Extension Metadata
 --

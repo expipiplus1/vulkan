@@ -3,24 +3,35 @@
 --
 -- VK_AMD_negative_viewport_height - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_negative_viewport_height
 --
--- 36
+-- [__Name String__]
+--     @VK_AMD_negative_viewport_height@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     36
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Obsoleted/ by @VK_KHR_maintenance1@ extension
+-- [__Deprecation state__]
 --
---     -   Which in turn was /promoted/ to
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--     -   /Obsoleted/ by @VK_KHR_maintenance1@ extension
+--
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- [__Contact__]
+--
+--     -   Matthaeus G. Chajdas
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_negative_viewport_height:%20&body=@anteru%20 >
 --
 -- == Other Extension Metadata
 --

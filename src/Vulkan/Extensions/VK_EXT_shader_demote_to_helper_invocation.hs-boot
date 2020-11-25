@@ -3,19 +3,30 @@
 --
 -- VK_EXT_shader_demote_to_helper_invocation - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_shader_demote_to_helper_invocation
 --
--- 277
+-- [__Name String__]
+--     @VK_EXT_shader_demote_to_helper_invocation@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     277
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_demote_to_helper_invocation:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --
@@ -28,7 +39,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/EXT\/SPV_EXT_demote_to_helper_invocation.html[@SPV_EXT_demote_to_helper_invocation@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html SPV_EXT_demote_to_helper_invocation>
 --
 -- [__Contributors__]
 --
@@ -37,7 +48,7 @@
 -- == Description
 --
 -- This extension adds Vulkan support for the
--- {spirv}\/EXT\/SPV_EXT_demote_to_helper_invocation.html[@SPV_EXT_demote_to_helper_invocation@]
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html SPV_EXT_demote_to_helper_invocation>
 -- SPIR-V extension. That SPIR-V extension provides a new instruction
 -- @OpDemoteToHelperInvocationEXT@ allowing shaders to \"demote\" a
 -- fragment shader invocation to behave like a helper invocation for its

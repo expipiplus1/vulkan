@@ -3,17 +3,28 @@
 --
 -- VK_NVX_image_view_handle - device extension
 --
--- = Registered Extension Number
+-- == VK_NVX_image_view_handle
 --
--- 31
+-- [__Name String__]
+--     @VK_NVX_image_view_handle@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     31
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Eric Werness
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NVX_image_view_handle:%20&body=@ewerness%20 >
 --
 -- == Other Extension Metadata
 --

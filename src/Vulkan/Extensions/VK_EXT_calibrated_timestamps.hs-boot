@@ -3,17 +3,28 @@
 --
 -- VK_EXT_calibrated_timestamps - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_calibrated_timestamps
 --
--- 185
+-- [__Name String__]
+--     @VK_EXT_calibrated_timestamps@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     185
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Daniel Rakos
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_calibrated_timestamps:%20&body=@drakos-amd%20 >
 --
 -- == Other Extension Metadata
 --

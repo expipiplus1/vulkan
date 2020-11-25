@@ -3,23 +3,34 @@
 --
 -- VK_KHR_pipeline_executable_properties - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_pipeline_executable_properties
 --
--- 270
+-- [__Name String__]
+--     @VK_KHR_pipeline_executable_properties@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     270
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- = Special Use
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+--
+-- [__Contact__]
+--
+--     -   Jason Ekstrand
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_pipeline_executable_properties:%20&body=@jekstrand%20 >
 --
 -- == Other Extension Metadata
 --

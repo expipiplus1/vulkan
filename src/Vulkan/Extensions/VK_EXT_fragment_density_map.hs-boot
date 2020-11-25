@@ -3,19 +3,30 @@
 --
 -- VK_EXT_fragment_density_map - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_fragment_density_map
 --
--- 219
+-- [__Name String__]
+--     @VK_EXT_fragment_density_map@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     219
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Matthew Netsch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_fragment_density_map:%20&body=@mnetsch%20 >
 --
 -- == Other Extension Metadata
 --
@@ -25,7 +36,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/EXT\/SPV_EXT_fragment_invocation_density.html[@SPV_EXT_fragment_invocation_density@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_fragment_invocation_density.html SPV_EXT_fragment_invocation_density>
 --
 -- [__Contributors__]
 --

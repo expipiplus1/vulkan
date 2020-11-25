@@ -3,46 +3,58 @@
 --
 -- VK_KHR_portability_subset - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_portability_subset
 --
--- 164
+-- [__Name String__]
+--     @VK_KHR_portability_subset@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     164
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- -   __This is a /provisional/ extension and /must/ be used with caution.
---     See the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#boilerplate-provisional-header description>
---     of provisional header files for enablement and stability details.__
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
---     [__Last Modified Date__]
---         2020-07-21
+--     -   __This is a /provisional/ extension and /must/ be used with
+--         caution. See the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#boilerplate-provisional-header description>
+--         of provisional header files for enablement and stability
+--         details.__
 --
---     [__IP Status__]
---         No known IP claims.
+-- [__Contact__]
 --
---     [__Contributors__]
+--     -   Bill Hollings
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_portability_subset:%20&body=@billhollings%20 >
 --
---         -   Bill Hollings, The Brenwill Workshop Ltd.
+-- [__Last Modified Date__]
+--     2020-07-21
 --
---         -   Daniel Koch, NVIDIA
+-- [__IP Status__]
+--     No known IP claims.
 --
---         -   Dzmitry Malyshau, Mozilla
+-- [__Contributors__]
 --
---         -   Chip Davis, CodeWeavers
+--     -   Bill Hollings, The Brenwill Workshop Ltd.
 --
---         -   Dan Ginsburg, Valve
+--     -   Daniel Koch, NVIDIA
 --
---         -   Mike Weiblen, LunarG
+--     -   Dzmitry Malyshau, Mozilla
 --
---         -   Neil Trevett, NVIDIA
+--     -   Chip Davis, CodeWeavers
+--
+--     -   Dan Ginsburg, Valve
+--
+--     -   Mike Weiblen, LunarG
+--
+--     -   Neil Trevett, NVIDIA
 --
 -- This extension allows a non-conformant Vulkan implementation to be built
 -- on top of another non-Vulkan graphics API, and identifies differences

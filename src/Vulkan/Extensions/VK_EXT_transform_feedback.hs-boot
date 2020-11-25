@@ -3,27 +3,38 @@
 --
 -- VK_EXT_transform_feedback - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_transform_feedback
 --
--- 29
+-- [__Name String__]
+--     @VK_EXT_transform_feedback@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     29
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- = Special Uses
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse OpenGL \/ ES support>
+-- [__Special Uses__]
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse D3D support>
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse OpenGL \/ ES support>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse D3D support>
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+--
+-- [__Contact__]
+--
+--     -   Piers Daniell
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_transform_feedback:%20&body=@pdaniell-nv%20 >
 --
 -- == Other Extension Metadata
 --

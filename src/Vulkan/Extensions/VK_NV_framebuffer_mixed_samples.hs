@@ -3,17 +3,28 @@
 --
 -- VK_NV_framebuffer_mixed_samples - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_framebuffer_mixed_samples
 --
--- 153
+-- [__Name String__]
+--     @VK_NV_framebuffer_mixed_samples@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     153
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_framebuffer_mixed_samples:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,24 +3,35 @@
 --
 -- VK_KHR_spirv_1_4 - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_spirv_1_4
 --
--- 237
+-- [__Name String__]
+--     @VK_KHR_spirv_1_4@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     237
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.1
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_shader_float_controls@
+--     -   Requires Vulkan 1.1
 --
--- = Deprecation state
+--     -   Requires @VK_KHR_shader_float_controls@
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Jesse Hall
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_spirv_1_4:%20&body=@critsec%20 >
 --
 -- == Other Extension Metadata
 --

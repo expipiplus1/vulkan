@@ -3,19 +3,30 @@
 --
 -- VK_NV_corner_sampled_image - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_corner_sampled_image
 --
--- 51
+-- [__Name String__]
+--     @VK_NV_corner_sampled_image@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     51
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Daniel Koch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_corner_sampled_image:%20&body=@dgkoch%20 >
 --
 -- == Other Extension Metadata
 --

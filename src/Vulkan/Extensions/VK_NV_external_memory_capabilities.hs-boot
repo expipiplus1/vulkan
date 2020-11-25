@@ -3,24 +3,35 @@
 --
 -- VK_NV_external_memory_capabilities - instance extension
 --
--- = Registered Extension Number
+-- == VK_NV_external_memory_capabilities
 --
--- 56
+-- [__Name String__]
+--     @VK_NV_external_memory_capabilities@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     56
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Deprecated/ by @VK_KHR_external_memory_capabilities@ extension
+-- [__Deprecation state__]
 --
---     -   Which in turn was /promoted/ to
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--     -   /Deprecated/ by @VK_KHR_external_memory_capabilities@ extension
+--
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- [__Contact__]
+--
+--     -   James Jones
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_external_memory_capabilities:%20&body=@cubanismo%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,25 +3,36 @@
 --
 -- VK_EXT_full_screen_exclusive - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_full_screen_exclusive
 --
--- 256
+-- [__Name String__]
+--     @VK_EXT_full_screen_exclusive@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 4
+-- [__Registered Extension Number__]
+--     256
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     4
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
--- -   Requires @VK_KHR_get_surface_capabilities2@
+--     -   Requires @VK_KHR_surface@
 --
--- -   Requires @VK_KHR_swapchain@
+--     -   Requires @VK_KHR_get_surface_capabilities2@
+--
+--     -   Requires @VK_KHR_swapchain@
+--
+-- [__Contact__]
+--
+--     -   James Jones
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_full_screen_exclusive:%20&body=@cubanismo%20 >
 --
 -- == Other Extension Metadata
 --

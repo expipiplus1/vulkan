@@ -3,17 +3,28 @@
 --
 -- VK_EXT_depth_range_unrestricted - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_depth_range_unrestricted
 --
--- 14
+-- [__Name String__]
+--     @VK_EXT_depth_range_unrestricted@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     14
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Piers Daniell
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_depth_range_unrestricted:%20&body=@pdaniell-nv%20 >
 --
 -- == Other Extension Metadata
 --

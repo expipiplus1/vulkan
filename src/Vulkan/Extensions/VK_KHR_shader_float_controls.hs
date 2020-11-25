@@ -3,24 +3,35 @@
 --
 -- VK_KHR_shader_float_controls - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_shader_float_controls
 --
--- 198
+-- [__Name String__]
+--     @VK_KHR_shader_float_controls@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 4
+-- [__Registered Extension Number__]
+--     198
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     4
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- = Deprecation state
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Alexander Galazin
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_float_controls:%20&body=@alegal-arm%20 >
 --
 -- == Other Extension Metadata
 --
@@ -32,7 +43,7 @@
 --     -   Promoted to Vulkan 1.2 Core
 --
 --     -   This extension requires
---         {spirv}\/KHR\/SPV_KHR_float_controls.html[@SPV_KHR_float_controls@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_float_controls.html SPV_KHR_float_controls>
 --
 -- [__IP Status__]
 --     No known IP claims.

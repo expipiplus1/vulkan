@@ -3,19 +3,30 @@
 --
 -- VK_KHR_external_fence_fd - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_external_fence_fd
 --
--- 116
+-- [__Name String__]
+--     @VK_KHR_external_fence_fd@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     116
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_external_fence@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_external_fence@
+--
+-- [__Contact__]
+--
+--     -   Jesse Hall
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_fence_fd:%20&body=@critsec%20 >
 --
 -- == Other Extension Metadata
 --

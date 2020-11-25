@@ -3,17 +3,28 @@
 --
 -- VK_NV_device_generated_commands - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_device_generated_commands
 --
--- 278
+-- [__Name String__]
+--     @VK_NV_device_generated_commands@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 3
+-- [__Registered Extension Number__]
+--     278
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     3
 --
--- -   Requires Vulkan 1.1
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.1
+--
+-- [__Contact__]
+--
+--     -   Christoph Kubisch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_device_generated_commands:%20&body=@pixeljetstream%20 >
 --
 -- == Other Extension Metadata
 --

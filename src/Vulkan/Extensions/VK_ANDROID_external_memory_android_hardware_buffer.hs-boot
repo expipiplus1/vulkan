@@ -3,25 +3,36 @@
 --
 -- VK_ANDROID_external_memory_android_hardware_buffer - device extension
 --
--- = Registered Extension Number
+-- == VK_ANDROID_external_memory_android_hardware_buffer
 --
--- 130
+-- [__Name String__]
+--     @VK_ANDROID_external_memory_android_hardware_buffer@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 3
+-- [__Registered Extension Number__]
+--     130
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     3
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_sampler_ycbcr_conversion@
+--     -   Requires Vulkan 1.0
 --
--- -   Requires @VK_KHR_external_memory@
+--     -   Requires @VK_KHR_sampler_ycbcr_conversion@
 --
--- -   Requires @VK_EXT_queue_family_foreign@
+--     -   Requires @VK_KHR_external_memory@
 --
--- -   Requires @VK_KHR_dedicated_allocation@
+--     -   Requires @VK_EXT_queue_family_foreign@
+--
+--     -   Requires @VK_KHR_dedicated_allocation@
+--
+-- [__Contact__]
+--
+--     -   Jesse Hall
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_ANDROID_external_memory_android_hardware_buffer:%20&body=@critsec%20 >
 --
 -- == Other Extension Metadata
 --

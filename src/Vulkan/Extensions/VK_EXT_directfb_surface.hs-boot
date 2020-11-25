@@ -3,19 +3,30 @@
 --
 -- VK_EXT_directfb_surface - instance extension
 --
--- = Registered Extension Number
+-- == VK_EXT_directfb_surface
 --
--- 347
+-- [__Name String__]
+--     @VK_EXT_directfb_surface@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     347
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Nicolas Caramelli
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_directfb_surface:%20&body=@caramelli%20 >
 --
 -- == Other Extension Metadata
 --

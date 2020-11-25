@@ -3,22 +3,33 @@
 --
 -- VK_EXT_separate_stencil_usage - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_separate_stencil_usage
 --
--- 247
+-- [__Name String__]
+--     @VK_EXT_separate_stencil_usage@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     247
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Daniel Rakos
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_separate_stencil_usage:%20&body=@drakos-amd%20 >
 --
 -- == Other Extension Metadata
 --

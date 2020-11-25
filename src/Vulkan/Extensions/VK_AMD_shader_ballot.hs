@@ -3,17 +3,28 @@
 --
 -- VK_AMD_shader_ballot - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_shader_ballot
 --
--- 38
+-- [__Name String__]
+--     @VK_AMD_shader_ballot@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     38
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Dominik Witczak
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_ballot:%20&body=@dominikwitczakamd%20 >
 --
 -- == Other Extension Metadata
 --
@@ -26,7 +37,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/AMD\/SPV_AMD_shader_ballot.html[@SPV_AMD_shader_ballot@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_ballot.html SPV_AMD_shader_ballot>
 --
 -- [__Contributors__]
 --
@@ -47,7 +58,7 @@
 -- This extension adds support for the following SPIR-V extension in
 -- Vulkan:
 --
--- -   {spirv}\/AMD\/SPV_AMD_shader_ballot.html[@SPV_AMD_shader_ballot@]
+-- -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_ballot.html SPV_AMD_shader_ballot>
 --
 -- == New Enum Constants
 --

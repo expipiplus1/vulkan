@@ -3,19 +3,30 @@
 --
 -- VK_NV_device_diagnostics_config - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_device_diagnostics_config
 --
--- 301
+-- [__Name String__]
+--     @VK_NV_device_diagnostics_config@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     301
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Kedarnath Thangudu
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_device_diagnostics_config:%20&body=@kthangudu%20 >
 --
 -- == Other Extension Metadata
 --

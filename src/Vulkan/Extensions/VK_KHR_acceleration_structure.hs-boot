@@ -3,23 +3,34 @@
 --
 -- VK_KHR_acceleration_structure - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_acceleration_structure
 --
--- 151
+-- [__Name String__]
+--     @VK_KHR_acceleration_structure@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 11
+-- [__Registered Extension Number__]
+--     151
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     11
 --
--- -   Requires Vulkan 1.1
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_EXT_descriptor_indexing@
+--     -   Requires Vulkan 1.1
 --
--- -   Requires @VK_KHR_buffer_device_address@
+--     -   Requires @VK_EXT_descriptor_indexing@
 --
--- -   Requires @VK_KHR_deferred_host_operations@
+--     -   Requires @VK_KHR_buffer_device_address@
+--
+--     -   Requires @VK_KHR_deferred_host_operations@
+--
+-- [__Contact__]
+--
+--     -   Daniel Koch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_acceleration_structure:%20&body=@dgkoch%20 >
 --
 -- == Other Extension Metadata
 --

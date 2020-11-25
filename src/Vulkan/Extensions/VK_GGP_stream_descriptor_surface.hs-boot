@@ -3,19 +3,30 @@
 --
 -- VK_GGP_stream_descriptor_surface - instance extension
 --
--- = Registered Extension Number
+-- == VK_GGP_stream_descriptor_surface
 --
--- 50
+-- [__Name String__]
+--     @VK_GGP_stream_descriptor_surface@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     50
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Jean-Francois Roy
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_GGP_stream_descriptor_surface:%20&body=@jfroy%20 >
 --
 -- == Other Extension Metadata
 --

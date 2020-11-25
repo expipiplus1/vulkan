@@ -3,17 +3,28 @@
 --
 -- VK_KHR_copy_commands2 - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_copy_commands2
 --
--- 338
+-- [__Name String__]
+--     @VK_KHR_copy_commands2@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     338
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Jeff Leger
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_copy_commands2:%20&body=@jackohound%20 >
 --
 -- == Other Extension Metadata
 --

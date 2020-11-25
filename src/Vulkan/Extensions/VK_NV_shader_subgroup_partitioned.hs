@@ -3,17 +3,28 @@
 --
 -- VK_NV_shader_subgroup_partitioned - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_shader_subgroup_partitioned
 --
--- 199
+-- [__Name String__]
+--     @VK_NV_shader_subgroup_partitioned@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     199
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.1
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.1
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_shader_subgroup_partitioned:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --
@@ -23,7 +34,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/NV\/SPV_NV_shader_subgroup_partitioned.html[@SPV_NV_shader_subgroup_partitioned@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_subgroup_partitioned.html SPV_NV_shader_subgroup_partitioned>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GL_NV_shader_subgroup_partitioned.txt GL_NV_shader_subgroup_partitioned>
@@ -41,7 +52,7 @@
 -- via the
 -- <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GL_NV_shader_subgroup_partitioned.txt GL_NV_shader_subgroup_partitioned>
 -- GLSL extension and
--- {spirv}\/NV\/SPV_NV_shader_subgroup_partitioned.html[@SPV_NV_shader_subgroup_partitioned@]
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_subgroup_partitioned.html SPV_NV_shader_subgroup_partitioned>
 -- SPIR-V extension. Support for these new operations is advertised via the
 -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_PARTITIONED_BIT_NV'
 -- bit.

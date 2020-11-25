@@ -3,19 +3,30 @@
 --
 -- VK_GOOGLE_display_timing - device extension
 --
--- = Registered Extension Number
+-- == VK_GOOGLE_display_timing
 --
--- 93
+-- [__Name String__]
+--     @VK_GOOGLE_display_timing@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     93
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_swapchain@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_swapchain@
+--
+-- [__Contact__]
+--
+--     -   Ian Elliott
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_GOOGLE_display_timing:%20&body=@ianelliottus%20 >
 --
 -- == Other Extension Metadata
 --

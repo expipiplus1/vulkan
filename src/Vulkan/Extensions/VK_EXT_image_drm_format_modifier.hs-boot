@@ -3,25 +3,36 @@
 --
 -- VK_EXT_image_drm_format_modifier - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_image_drm_format_modifier
 --
--- 159
+-- [__Name String__]
+--     @VK_EXT_image_drm_format_modifier@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     159
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_bind_memory2@
+--     -   Requires Vulkan 1.0
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_bind_memory2@
 --
--- -   Requires @VK_KHR_image_format_list@
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
--- -   Requires @VK_KHR_sampler_ycbcr_conversion@
+--     -   Requires @VK_KHR_image_format_list@
+--
+--     -   Requires @VK_KHR_sampler_ycbcr_conversion@
+--
+-- [__Contact__]
+--
+--     -   Chad Versace
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_image_drm_format_modifier:%20&body=@chadversary%20 >
 --
 -- == Other Extension Metadata
 --

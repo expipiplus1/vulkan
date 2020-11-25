@@ -3,19 +3,30 @@
 --
 -- VK_KHR_incremental_present - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_incremental_present
 --
--- 85
+-- [__Name String__]
+--     @VK_KHR_incremental_present@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     85
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_swapchain@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_swapchain@
+--
+-- [__Contact__]
+--
+--     -   Ian Elliott
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_incremental_present:%20&body=@ianelliottus%20 >
 --
 -- == Other Extension Metadata
 --

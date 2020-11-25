@@ -3,19 +3,30 @@
 --
 -- VK_KHR_surface_protected_capabilities - instance extension
 --
--- = Registered Extension Number
+-- == VK_KHR_surface_protected_capabilities
 --
--- 240
+-- [__Name String__]
+--     @VK_KHR_surface_protected_capabilities@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     240
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.1
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_surface_capabilities2@
+--     -   Requires Vulkan 1.1
+--
+--     -   Requires @VK_KHR_get_surface_capabilities2@
+--
+-- [__Contact__]
+--
+--     -   Sandeep Shinde
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_surface_protected_capabilities:%20&body=@sashinde%20 >
 --
 -- == Other Extension Metadata
 --

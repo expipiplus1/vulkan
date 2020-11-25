@@ -3,19 +3,29 @@
 --
 -- VK_NN_vi_surface - instance extension
 --
--- = Registered Extension Number
+-- == VK_NN_vi_surface
 --
--- 63
+-- [__Name String__]
+--     @VK_NN_vi_surface@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     63
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Mathias Heyer <<data:image/png;base64, GitLab>>mheyer
 --
 -- == Other Extension Metadata
 --

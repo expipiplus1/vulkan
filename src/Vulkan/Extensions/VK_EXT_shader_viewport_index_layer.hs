@@ -3,22 +3,33 @@
 --
 -- VK_EXT_shader_viewport_index_layer - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_shader_viewport_index_layer
 --
--- 163
+-- [__Name String__]
+--     @VK_EXT_shader_viewport_index_layer@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     163
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Daniel Koch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_viewport_index_layer:%20&body=@dgkoch%20 >
 --
 -- == Other Extension Metadata
 --
@@ -30,7 +41,7 @@
 --     -   Promoted to Vulkan 1.2 Core
 --
 --     -   This extension requires
---         {spirv}\/EXT\/SPV_EXT_shader_viewport_index_layer.html[@SPV_EXT_shader_viewport_index_layer@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_viewport_index_layer.html SPV_EXT_shader_viewport_index_layer>
 --
 --     -   This extension provides API support for
 --         <https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_viewport_layer_array.txt GL_ARB_shader_viewport_layer_array>,

@@ -3,17 +3,28 @@
 --
 -- VK_NV_shader_sm_builtins - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_shader_sm_builtins
 --
--- 155
+-- [__Name String__]
+--     @VK_NV_shader_sm_builtins@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     155
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.1
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.1
+--
+-- [__Contact__]
+--
+--     -   Daniel Koch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_shader_sm_builtins:%20&body=@dgkoch%20 >
 --
 -- == Other Extension Metadata
 --
@@ -23,7 +34,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/NV\/SPV_NV_shader_sm_builtins.html[@SPV_NV_shader_sm_builtins@].
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_sm_builtins.html SPV_NV_shader_sm_builtins>.
 --
 --     -   This extension enables
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_shader_sm_builtins.txt GL_NV_shader_sm_builtins>

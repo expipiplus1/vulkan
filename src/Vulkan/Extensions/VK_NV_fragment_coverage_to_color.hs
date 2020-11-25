@@ -3,17 +3,28 @@
 --
 -- VK_NV_fragment_coverage_to_color - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_fragment_coverage_to_color
 --
--- 150
+-- [__Name String__]
+--     @VK_NV_fragment_coverage_to_color@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     150
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_fragment_coverage_to_color:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --

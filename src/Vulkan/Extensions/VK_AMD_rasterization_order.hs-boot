@@ -3,17 +3,28 @@
 --
 -- VK_AMD_rasterization_order - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_rasterization_order
 --
--- 19
+-- [__Name String__]
+--     @VK_AMD_rasterization_order@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     19
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Daniel Rakos
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_rasterization_order:%20&body=@drakos-amd%20 >
 --
 -- == Other Extension Metadata
 --

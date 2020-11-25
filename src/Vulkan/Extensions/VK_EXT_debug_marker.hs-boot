@@ -3,25 +3,38 @@
 --
 -- VK_EXT_debug_marker - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_debug_marker
 --
--- 23
+-- [__Name String__]
+--     @VK_EXT_debug_marker@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 4
+-- [__Registered Extension Number__]
+--     23
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     4
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_EXT_debug_report@
+--     -   Requires Vulkan 1.0
 --
--- = Deprecation state
+--     -   Requires @VK_EXT_debug_report@
 --
--- -   /Promoted/ to @VK_EXT_debug_utils@ extension == Special Use
+-- [__Deprecation state__]
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+--     -   /Promoted/ to @VK_EXT_debug_utils@ extension
+--
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+--
+-- [__Contact__]
+--
+--     -   Baldur Karlsson
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_marker:%20&body=@baldurk%20 >
 --
 -- == Other Extension Metadata
 --

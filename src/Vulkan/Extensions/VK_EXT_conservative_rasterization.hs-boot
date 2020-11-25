@@ -3,19 +3,30 @@
 --
 -- VK_EXT_conservative_rasterization - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_conservative_rasterization
 --
--- 102
+-- [__Name String__]
+--     @VK_EXT_conservative_rasterization@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     102
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Piers Daniell
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_conservative_rasterization:%20&body=@pdaniell-nv%20 >
 --
 -- == Other Extension Metadata
 --
@@ -25,13 +36,13 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/EXT\/SPV_EXT_fragment_fully_covered.html[@SPV_EXT_fragment_fully_covered@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_fragment_fully_covered.html SPV_EXT_fragment_fully_covered>
 --         if the
 --         'PhysicalDeviceConservativeRasterizationPropertiesEXT'::@fullyCoveredFragmentShaderInputVariable@
 --         feature is used.
 --
 --     -   This extension requires
---         {spirv}\/KHR\/SPV_KHR_post_depth_coverage.html[@SPV_KHR_post_depth_coverage@]if
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_post_depth_coverage.html SPV_KHR_post_depth_coverage>if
 --         the
 --         'PhysicalDeviceConservativeRasterizationPropertiesEXT'::@conservativeRasterizationPostDepthCoverage@
 --         feature is used.

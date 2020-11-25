@@ -3,21 +3,32 @@
 --
 -- VK_QCOM_render_pass_transform - device extension
 --
--- = Registered Extension Number
+-- == VK_QCOM_render_pass_transform
 --
--- 283
+-- [__Name String__]
+--     @VK_QCOM_render_pass_transform@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     283
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_swapchain@
+--     -   Requires Vulkan 1.0
 --
--- -   Requires @VK_KHR_surface@
+--     -   Requires @VK_KHR_swapchain@
+--
+--     -   Requires @VK_KHR_surface@
+--
+-- [__Contact__]
+--
+--     -   Jeff Leger
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_QCOM_render_pass_transform:%20&body=@jackohound%20 >
 --
 -- == Other Extension Metadata
 --

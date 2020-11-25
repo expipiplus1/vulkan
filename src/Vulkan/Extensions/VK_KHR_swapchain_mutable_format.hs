@@ -3,23 +3,34 @@
 --
 -- VK_KHR_swapchain_mutable_format - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_swapchain_mutable_format
 --
--- 201
+-- [__Name String__]
+--     @VK_KHR_swapchain_mutable_format@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     201
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_swapchain@
+--     -   Requires Vulkan 1.0
 --
--- -   Requires @VK_KHR_maintenance2@
+--     -   Requires @VK_KHR_swapchain@
 --
--- -   Requires @VK_KHR_image_format_list@
+--     -   Requires @VK_KHR_maintenance2@
+--
+--     -   Requires @VK_KHR_image_format_list@
+--
+-- [__Contact__]
+--
+--     -   Daniel Rakos
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_swapchain_mutable_format:%20&body=@drakos-arm%20 >
 --
 -- == Other Extension Metadata
 --

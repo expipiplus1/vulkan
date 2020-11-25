@@ -3,22 +3,33 @@
 --
 -- VK_KHR_vulkan_memory_model - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_vulkan_memory_model
 --
--- 212
+-- [__Name String__]
+--     @VK_KHR_vulkan_memory_model@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 3
+-- [__Registered Extension Number__]
+--     212
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     3
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_vulkan_memory_model:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --
@@ -33,7 +44,7 @@
 --     -   Promoted to Vulkan 1.2 Core
 --
 --     -   This extension requires
---         {spirv}\/KHR\/SPV_KHR_vulkan_memory_model.html[@SPV_KHR_vulkan_memory_model@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_vulkan_memory_model.html SPV_KHR_vulkan_memory_model>
 --
 -- [__Contributors__]
 --

@@ -3,19 +3,30 @@
 --
 -- VK_NV_shader_image_footprint - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_shader_image_footprint
 --
--- 205
+-- [__Name String__]
+--     @VK_NV_shader_image_footprint@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     205
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
+-- [__Contact__]
+--
+--     -   Pat Brown
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_shader_image_footprint:%20&body=@nvpbrown%20 >
 --
 -- == Other Extension Metadata
 --
@@ -28,7 +39,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/NV\/SPV_NV_shader_image_footprint.html[@SPV_NV_shader_image_footprint@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_image_footprint.html SPV_NV_shader_image_footprint>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_shader_texture_footprint.txt GL_NV_shader_texture_footprint>
@@ -46,7 +57,7 @@
 -- == Description
 --
 -- This extension adds Vulkan support for the
--- {spirv}\/NV\/SPV_NV_shader_image_footprint.html[@SPV_NV_shader_image_footprint@]
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_image_footprint.html SPV_NV_shader_image_footprint>
 -- SPIR-V extension. That SPIR-V extension provides a new instruction
 -- @OpImageSampleFootprintNV@ allowing shaders to determine the set of
 -- texels that would be accessed by an equivalent filtered texture lookup.

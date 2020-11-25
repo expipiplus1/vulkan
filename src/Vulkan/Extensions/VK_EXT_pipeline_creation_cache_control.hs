@@ -3,17 +3,28 @@
 --
 -- VK_EXT_pipeline_creation_cache_control - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_pipeline_creation_cache_control
 --
--- 298
+-- [__Name String__]
+--     @VK_EXT_pipeline_creation_cache_control@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 3
+-- [__Registered Extension Number__]
+--     298
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     3
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Gregory Grebe
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_pipeline_creation_cache_control:%20&body=@grgrebe_amd%20 >
 --
 -- == Other Extension Metadata
 --

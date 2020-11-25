@@ -3,22 +3,33 @@
 --
 -- VK_KHR_relaxed_block_layout - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_relaxed_block_layout
 --
--- 145
+-- [__Name String__]
+--     @VK_KHR_relaxed_block_layout@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     145
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Deprecation state
+--     -   Requires Vulkan 1.0
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
+--
+-- [__Contact__]
+--
+--     -   John Kessenich
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_relaxed_block_layout:%20&body=@johnkslang%20 >
 --
 -- == Other Extension Metadata
 --

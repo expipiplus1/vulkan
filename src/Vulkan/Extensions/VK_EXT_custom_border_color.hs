@@ -3,17 +3,28 @@
 --
 -- VK_EXT_custom_border_color - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_custom_border_color
 --
--- 288
+-- [__Name String__]
+--     @VK_EXT_custom_border_color@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 12
+-- [__Registered Extension Number__]
+--     288
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     12
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Liam Middlebrook
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_custom_border_color:%20&body=@liam-middlebrook%20 >
 --
 -- == Other Extension Metadata
 --

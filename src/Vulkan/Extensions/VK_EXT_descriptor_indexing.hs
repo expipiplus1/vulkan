@@ -3,26 +3,37 @@
 --
 -- VK_EXT_descriptor_indexing - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_descriptor_indexing
 --
--- 162
+-- [__Name String__]
+--     @VK_EXT_descriptor_indexing@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     162
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires Vulkan 1.0
 --
--- -   Requires @VK_KHR_maintenance3@
+--     -   Requires @VK_KHR_get_physical_device_properties2@
 --
--- = Deprecation state
+--     -   Requires @VK_KHR_maintenance3@
 --
--- -   /Promoted/ to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
+--
+-- [__Contact__]
+--
+--     -   Jeff Bolz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_descriptor_indexing:%20&body=@jeffbolznv%20 >
 --
 -- == Other Extension Metadata
 --

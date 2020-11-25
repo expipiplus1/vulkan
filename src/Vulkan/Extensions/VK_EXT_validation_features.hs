@@ -3,21 +3,32 @@
 --
 -- VK_EXT_validation_features - instance extension
 --
--- = Registered Extension Number
+-- == VK_EXT_validation_features
 --
--- 248
+-- [__Name String__]
+--     @VK_EXT_validation_features@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 4
+-- [__Registered Extension Number__]
+--     248
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     4
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Special Use
+--     -   Requires Vulkan 1.0
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
+--
+-- [__Contact__]
+--
+--     -   Karl Schultz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_features:%20&body=@karl-lunarg%20 >
 --
 -- == Other Extension Metadata
 --

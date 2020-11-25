@@ -3,17 +3,28 @@
 --
 -- VK_NV_representative_fragment_test - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_representative_fragment_test
 --
--- 167
+-- [__Name String__]
+--     @VK_NV_representative_fragment_test@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     167
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Kedarnath Thangudu
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_representative_fragment_test:%20&body=@kthangudu%20 >
 --
 -- == Other Extension Metadata
 --

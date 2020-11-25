@@ -3,17 +3,28 @@
 --
 -- VK_AMD_memory_overallocation_behavior - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_memory_overallocation_behavior
 --
--- 190
+-- [__Name String__]
+--     @VK_AMD_memory_overallocation_behavior@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     190
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Martin Dinkov
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_memory_overallocation_behavior:%20&body=@mdinkov%20 >
 --
 -- == Other Extension Metadata
 --

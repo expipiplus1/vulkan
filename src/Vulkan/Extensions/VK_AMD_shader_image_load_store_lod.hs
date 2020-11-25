@@ -3,17 +3,28 @@
 --
 -- VK_AMD_shader_image_load_store_lod - device extension
 --
--- = Registered Extension Number
+-- == VK_AMD_shader_image_load_store_lod
 --
--- 47
+-- [__Name String__]
+--     @VK_AMD_shader_image_load_store_lod@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     47
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Dominik Witczak
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_image_load_store_lod:%20&body=@dominikwitczakamd%20 >
 --
 -- == Other Extension Metadata
 --
@@ -23,7 +34,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/AMD\/SPV_AMD_shader_image_load_store_lod.html[@SPV_AMD_shader_image_load_store_lod@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_image_load_store_lod.html SPV_AMD_shader_image_load_store_lod>
 --
 --     -   This extension provides API support for
 --         <https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_shader_image_load_store_lod.txt GL_AMD_shader_image_load_store_lod>
@@ -44,7 +55,7 @@
 -- This extension adds support for the following SPIR-V extension in
 -- Vulkan:
 --
--- -   {spirv}\/AMD\/SPV_AMD_shader_image_load_store_lod.html[@SPV_AMD_shader_image_load_store_lod@]
+-- -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_image_load_store_lod.html SPV_AMD_shader_image_load_store_lod>
 --
 -- == New Enum Constants
 --

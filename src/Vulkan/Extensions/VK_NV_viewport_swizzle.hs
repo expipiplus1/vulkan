@@ -3,17 +3,28 @@
 --
 -- VK_NV_viewport_swizzle - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_viewport_swizzle
 --
--- 99
+-- [__Name String__]
+--     @VK_NV_viewport_swizzle@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     99
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Piers Daniell
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_viewport_swizzle:%20&body=@pdaniell-nv%20 >
 --
 -- == Other Extension Metadata
 --

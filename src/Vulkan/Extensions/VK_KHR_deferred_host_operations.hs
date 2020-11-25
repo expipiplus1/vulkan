@@ -3,17 +3,28 @@
 --
 -- VK_KHR_deferred_host_operations - device extension
 --
--- = Registered Extension Number
+-- == VK_KHR_deferred_host_operations
 --
--- 269
+-- [__Name String__]
+--     @VK_KHR_deferred_host_operations@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 4
+-- [__Registered Extension Number__]
+--     269
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     4
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Josh Barczak
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_deferred_host_operations:%20&body=@jbarczak%20 >
 --
 -- == Other Extension Metadata
 --

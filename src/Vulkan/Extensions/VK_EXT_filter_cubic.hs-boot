@@ -3,17 +3,28 @@
 --
 -- VK_EXT_filter_cubic - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_filter_cubic
 --
--- 171
+-- [__Name String__]
+--     @VK_EXT_filter_cubic@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 3
+-- [__Registered Extension Number__]
+--     171
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     3
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Bill Licea-Kane
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_filter_cubic:%20&body=@wwlk%20 >
 --
 -- == Other Extension Metadata
 --

@@ -3,21 +3,32 @@
 --
 -- VK_EXT_pipeline_creation_feedback - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_pipeline_creation_feedback
 --
--- 193
+-- [__Name String__]
+--     @VK_EXT_pipeline_creation_feedback@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     193
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- = Special Use
+--     -   Requires Vulkan 1.0
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+-- [__Special Use__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
+--
+-- [__Contact__]
+--
+--     -   Jean-Francois Roy
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_pipeline_creation_feedback:%20&body=@jfroy%20 >
 --
 -- == Other Extension Metadata
 --

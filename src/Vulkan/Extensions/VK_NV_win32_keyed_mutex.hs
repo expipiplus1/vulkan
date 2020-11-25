@@ -3,23 +3,34 @@
 --
 -- VK_NV_win32_keyed_mutex - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_win32_keyed_mutex
 --
--- 59
+-- [__Name String__]
+--     @VK_NV_win32_keyed_mutex@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 2
+-- [__Registered Extension Number__]
+--     59
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     2
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
 --
--- -   Requires @VK_NV_external_memory_win32@
+--     -   Requires Vulkan 1.0
 --
--- = Deprecation state
+--     -   Requires @VK_NV_external_memory_win32@
 --
--- -   /Promoted/ to @VK_KHR_win32_keyed_mutex@ extension
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to @VK_KHR_win32_keyed_mutex@ extension
+--
+-- [__Contact__]
+--
+--     -   Carsten Rohde
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_win32_keyed_mutex:%20&body=@crohde%20 >
 --
 -- == Other Extension Metadata
 --

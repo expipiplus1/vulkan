@@ -3,17 +3,28 @@
 --
 -- VK_NV_geometry_shader_passthrough - device extension
 --
--- = Registered Extension Number
+-- == VK_NV_geometry_shader_passthrough
 --
--- 96
+-- [__Name String__]
+--     @VK_NV_geometry_shader_passthrough@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     96
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Daniel Koch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_geometry_shader_passthrough:%20&body=@dgkoch%20 >
 --
 -- == Other Extension Metadata
 --
@@ -23,7 +34,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/NV\/SPV_NV_geometry_shader_passthrough.html[@SPV_NV_geometry_shader_passthrough@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_geometry_shader_passthrough.html SPV_NV_geometry_shader_passthrough>
 --
 --     -   This extension provides API support for
 --         <https://www.khronos.org/registry/OpenGL/extensions/NV/NV_geometry_shader_passthrough.txt GL_NV_geometry_shader_passthrough>

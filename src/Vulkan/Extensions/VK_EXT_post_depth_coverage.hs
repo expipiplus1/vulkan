@@ -3,17 +3,28 @@
 --
 -- VK_EXT_post_depth_coverage - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_post_depth_coverage
 --
--- 156
+-- [__Name String__]
+--     @VK_EXT_post_depth_coverage@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     156
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Daniel Koch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_post_depth_coverage:%20&body=@dgkoch%20 >
 --
 -- == Other Extension Metadata
 --
@@ -23,7 +34,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         {spirv}\/KHR\/SPV_KHR_post_depth_coverage.html[@SPV_KHR_post_depth_coverage@]
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_post_depth_coverage.html SPV_KHR_post_depth_coverage>
 --
 --     -   This extension provides API support for
 --         <https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_post_depth_coverage.txt GL_ARB_post_depth_coverage>

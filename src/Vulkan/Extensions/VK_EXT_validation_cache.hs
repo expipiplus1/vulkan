@@ -3,17 +3,28 @@
 --
 -- VK_EXT_validation_cache - device extension
 --
--- = Registered Extension Number
+-- == VK_EXT_validation_cache
 --
--- 161
+-- [__Name String__]
+--     @VK_EXT_validation_cache@
 --
--- = Revision
+-- [__Extension Type__]
+--     Device extension
 --
--- 1
+-- [__Registered Extension Number__]
+--     161
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     1
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Cort Stratton
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_cache:%20&body=@cdwfs%20 >
 --
 -- == Other Extension Metadata
 --

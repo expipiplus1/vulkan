@@ -3,17 +3,31 @@
 --
 -- VK_KHR_surface - instance extension
 --
--- = Registered Extension Number
+-- == VK_KHR_surface
 --
--- 1
+-- [__Name String__]
+--     @VK_KHR_surface@
 --
--- = Revision
+-- [__Extension Type__]
+--     Instance extension
 --
--- 25
+-- [__Registered Extension Number__]
+--     1
 --
--- = Extension and Version Dependencies
+-- [__Revision__]
+--     25
 --
--- -   Requires Vulkan 1.0
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   James Jones
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_surface:%20&body=@cubanismo%20 >
+--
+--     -   Ian Elliott
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_surface:%20&body=@ianelliottus%20 >
 --
 -- == Other Extension Metadata
 --
