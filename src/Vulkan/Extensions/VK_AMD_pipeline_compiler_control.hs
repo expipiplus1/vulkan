@@ -102,26 +102,21 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_AMD_pipeline_compiler_control  ( PipelineCompilerControlCreateInfoAMD(..)
-                                                           , PipelineCompilerControlFlagBitsAMD(..)
                                                            , PipelineCompilerControlFlagsAMD
+                                                           , PipelineCompilerControlFlagBitsAMD(..)
                                                            , AMD_PIPELINE_COMPILER_CONTROL_SPEC_VERSION
                                                            , pattern AMD_PIPELINE_COMPILER_CONTROL_SPEC_VERSION
                                                            , AMD_PIPELINE_COMPILER_CONTROL_EXTENSION_NAME
                                                            , pattern AMD_PIPELINE_COMPILER_CONTROL_EXTENSION_NAME
                                                            ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
@@ -133,7 +128,7 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
@@ -198,6 +193,8 @@ instance Zero PipelineCompilerControlCreateInfoAMD where
            zero
 
 
+type PipelineCompilerControlFlagsAMD = PipelineCompilerControlFlagBitsAMD
+
 -- | VkPipelineCompilerControlFlagBitsAMD - Enum specifying available
 -- compilation control flags
 --
@@ -209,19 +206,27 @@ newtype PipelineCompilerControlFlagBitsAMD = PipelineCompilerControlFlagBitsAMD 
 
 
 
-type PipelineCompilerControlFlagsAMD = PipelineCompilerControlFlagBitsAMD
+conNamePipelineCompilerControlFlagBitsAMD :: String
+conNamePipelineCompilerControlFlagBitsAMD = "PipelineCompilerControlFlagBitsAMD"
+
+enumPrefixPipelineCompilerControlFlagBitsAMD :: String
+enumPrefixPipelineCompilerControlFlagBitsAMD = ""
+
+showTablePipelineCompilerControlFlagBitsAMD :: [(PipelineCompilerControlFlagBitsAMD, String)]
+showTablePipelineCompilerControlFlagBitsAMD = []
 
 instance Show PipelineCompilerControlFlagBitsAMD where
-  showsPrec p = \case
-    PipelineCompilerControlFlagBitsAMD x -> showParen (p >= 11) (showString "PipelineCompilerControlFlagBitsAMD 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineCompilerControlFlagBitsAMD
+                            showTablePipelineCompilerControlFlagBitsAMD
+                            conNamePipelineCompilerControlFlagBitsAMD
+                            (\(PipelineCompilerControlFlagBitsAMD x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCompilerControlFlagBitsAMD where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCompilerControlFlagBitsAMD")
-                       v <- step readPrec
-                       pure (PipelineCompilerControlFlagBitsAMD v)))
+  readPrec = enumReadPrec enumPrefixPipelineCompilerControlFlagBitsAMD
+                          showTablePipelineCompilerControlFlagBitsAMD
+                          conNamePipelineCompilerControlFlagBitsAMD
+                          PipelineCompilerControlFlagBitsAMD
 
 
 type AMD_PIPELINE_COMPILER_CONTROL_SPEC_VERSION = 1

@@ -165,19 +165,14 @@ module Vulkan.Extensions.VK_EXT_conservative_rasterization  ( PhysicalDeviceCons
                                                             , pattern EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME
                                                             ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
@@ -192,7 +187,7 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -474,17 +469,28 @@ newtype PipelineRasterizationConservativeStateCreateFlagsEXT = PipelineRasteriza
 
 
 
+conNamePipelineRasterizationConservativeStateCreateFlagsEXT :: String
+conNamePipelineRasterizationConservativeStateCreateFlagsEXT = "PipelineRasterizationConservativeStateCreateFlagsEXT"
+
+enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT :: String
+enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT = ""
+
+showTablePipelineRasterizationConservativeStateCreateFlagsEXT
+  :: [(PipelineRasterizationConservativeStateCreateFlagsEXT, String)]
+showTablePipelineRasterizationConservativeStateCreateFlagsEXT = []
+
 instance Show PipelineRasterizationConservativeStateCreateFlagsEXT where
-  showsPrec p = \case
-    PipelineRasterizationConservativeStateCreateFlagsEXT x -> showParen (p >= 11) (showString "PipelineRasterizationConservativeStateCreateFlagsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT
+                            showTablePipelineRasterizationConservativeStateCreateFlagsEXT
+                            conNamePipelineRasterizationConservativeStateCreateFlagsEXT
+                            (\(PipelineRasterizationConservativeStateCreateFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineRasterizationConservativeStateCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineRasterizationConservativeStateCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (PipelineRasterizationConservativeStateCreateFlagsEXT v)))
+  readPrec = enumReadPrec enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT
+                          showTablePipelineRasterizationConservativeStateCreateFlagsEXT
+                          conNamePipelineRasterizationConservativeStateCreateFlagsEXT
+                          PipelineRasterizationConservativeStateCreateFlagsEXT
 
 
 -- | VkConservativeRasterizationModeEXT - Specify the conservative
@@ -499,10 +505,10 @@ newtype ConservativeRasterizationModeEXT = ConservativeRasterizationModeEXT Int3
 -- | 'CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT' specifies that
 -- conservative rasterization is disabled and rasterization proceeds as
 -- normal.
-pattern CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT = ConservativeRasterizationModeEXT 0
+pattern CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT      = ConservativeRasterizationModeEXT 0
 -- | 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT' specifies that
 -- conservative rasterization is enabled in overestimation mode.
-pattern CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT = ConservativeRasterizationModeEXT 1
+pattern CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT  = ConservativeRasterizationModeEXT 1
 -- | 'CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' specifies that
 -- conservative rasterization is enabled in underestimation mode.
 pattern CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = ConservativeRasterizationModeEXT 2
@@ -510,22 +516,31 @@ pattern CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = ConservativeRasteriz
              CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT,
              CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT :: ConservativeRasterizationModeEXT #-}
 
+conNameConservativeRasterizationModeEXT :: String
+conNameConservativeRasterizationModeEXT = "ConservativeRasterizationModeEXT"
+
+enumPrefixConservativeRasterizationModeEXT :: String
+enumPrefixConservativeRasterizationModeEXT = "CONSERVATIVE_RASTERIZATION_MODE_"
+
+showTableConservativeRasterizationModeEXT :: [(ConservativeRasterizationModeEXT, String)]
+showTableConservativeRasterizationModeEXT =
+  [ (CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT     , "DISABLED_EXT")
+  , (CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT , "OVERESTIMATE_EXT")
+  , (CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT, "UNDERESTIMATE_EXT")
+  ]
+
 instance Show ConservativeRasterizationModeEXT where
-  showsPrec p = \case
-    CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT -> showString "CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT"
-    CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT -> showString "CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT"
-    CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT -> showString "CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT"
-    ConservativeRasterizationModeEXT x -> showParen (p >= 11) (showString "ConservativeRasterizationModeEXT " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixConservativeRasterizationModeEXT
+                            showTableConservativeRasterizationModeEXT
+                            conNameConservativeRasterizationModeEXT
+                            (\(ConservativeRasterizationModeEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read ConservativeRasterizationModeEXT where
-  readPrec = parens (choose [("CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT", pure CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT)
-                            , ("CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT", pure CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT)
-                            , ("CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT", pure CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ConservativeRasterizationModeEXT")
-                       v <- step readPrec
-                       pure (ConservativeRasterizationModeEXT v)))
+  readPrec = enumReadPrec enumPrefixConservativeRasterizationModeEXT
+                          showTableConservativeRasterizationModeEXT
+                          conNameConservativeRasterizationModeEXT
+                          ConservativeRasterizationModeEXT
 
 
 type EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION = 1

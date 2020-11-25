@@ -281,6 +281,8 @@ module Vulkan.Extensions.VK_EXT_full_screen_exclusive  ( getPhysicalDeviceSurfac
                                                        , DeviceGroupPresentModeFlagsKHR
                                                        ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -292,15 +294,7 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -318,8 +312,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -870,18 +864,18 @@ newtype FullScreenExclusiveEXT = FullScreenExclusiveEXT Int32
 -- | 'FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT' indicates the implementation
 -- /should/ determine the appropriate full-screen method by whatever means
 -- it deems appropriate.
-pattern FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT = FullScreenExclusiveEXT 0
+pattern FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT                = FullScreenExclusiveEXT 0
 -- | 'FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT' indicates the implementation /may/
 -- use full-screen exclusive mechanisms when available. Such mechanisms
 -- /may/ result in better performance and\/or the availability of different
 -- presentation capabilities, but /may/ require a more disruptive
 -- transition during swapchain initialization, first presentation and\/or
 -- destruction.
-pattern FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT = FullScreenExclusiveEXT 1
+pattern FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT                = FullScreenExclusiveEXT 1
 -- | 'FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT' indicates the implementation
 -- /should/ avoid using full-screen mechanisms which rely on disruptive
 -- transitions.
-pattern FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT = FullScreenExclusiveEXT 2
+pattern FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT             = FullScreenExclusiveEXT 2
 -- | 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT' indicates the
 -- application will manage full-screen exclusive mode by using the
 -- 'acquireFullScreenExclusiveModeEXT' and
@@ -892,24 +886,32 @@ pattern FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT = FullScreenExclusiveEX
              FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT,
              FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT :: FullScreenExclusiveEXT #-}
 
+conNameFullScreenExclusiveEXT :: String
+conNameFullScreenExclusiveEXT = "FullScreenExclusiveEXT"
+
+enumPrefixFullScreenExclusiveEXT :: String
+enumPrefixFullScreenExclusiveEXT = "FULL_SCREEN_EXCLUSIVE_"
+
+showTableFullScreenExclusiveEXT :: [(FullScreenExclusiveEXT, String)]
+showTableFullScreenExclusiveEXT =
+  [ (FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT               , "DEFAULT_EXT")
+  , (FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT               , "ALLOWED_EXT")
+  , (FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT            , "DISALLOWED_EXT")
+  , (FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT, "APPLICATION_CONTROLLED_EXT")
+  ]
+
 instance Show FullScreenExclusiveEXT where
-  showsPrec p = \case
-    FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT -> showString "FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT"
-    FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT -> showString "FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT"
-    FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT -> showString "FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT"
-    FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT -> showString "FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT"
-    FullScreenExclusiveEXT x -> showParen (p >= 11) (showString "FullScreenExclusiveEXT " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixFullScreenExclusiveEXT
+                            showTableFullScreenExclusiveEXT
+                            conNameFullScreenExclusiveEXT
+                            (\(FullScreenExclusiveEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read FullScreenExclusiveEXT where
-  readPrec = parens (choose [("FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT", pure FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT)
-                            , ("FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT", pure FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT)
-                            , ("FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT", pure FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT)
-                            , ("FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT", pure FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "FullScreenExclusiveEXT")
-                       v <- step readPrec
-                       pure (FullScreenExclusiveEXT v)))
+  readPrec = enumReadPrec enumPrefixFullScreenExclusiveEXT
+                          showTableFullScreenExclusiveEXT
+                          conNameFullScreenExclusiveEXT
+                          FullScreenExclusiveEXT
 
 
 type EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION = 4

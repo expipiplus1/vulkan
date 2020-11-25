@@ -1171,18 +1171,19 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         , DeviceOrHostAddressKHR(..)
                                                         , DeviceOrHostAddressConstKHR(..)
                                                         , AccelerationStructureGeometryDataKHR(..)
+                                                        , GeometryInstanceFlagsKHR
                                                         , GeometryInstanceFlagBitsKHR( GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR
                                                                                      , ..
                                                                                      )
-                                                        , GeometryInstanceFlagsKHR
+                                                        , GeometryFlagsKHR
                                                         , GeometryFlagBitsKHR( GEOMETRY_OPAQUE_BIT_KHR
                                                                              , GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR
                                                                              , ..
                                                                              )
-                                                        , GeometryFlagsKHR
+                                                        , BuildAccelerationStructureFlagsKHR
                                                         , BuildAccelerationStructureFlagBitsKHR( BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR
                                                                                                , BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR
                                                                                                , BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR
@@ -1190,11 +1191,10 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                                                                , BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR
                                                                                                , ..
                                                                                                )
-                                                        , BuildAccelerationStructureFlagsKHR
+                                                        , AccelerationStructureCreateFlagsKHR
                                                         , AccelerationStructureCreateFlagBitsKHR( ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR
                                                                                                 , ..
                                                                                                 )
-                                                        , AccelerationStructureCreateFlagsKHR
                                                         , CopyAccelerationStructureModeKHR( COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR
                                                                                           , COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR
                                                                                           , COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR
@@ -1234,6 +1234,8 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -1250,16 +1252,9 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import qualified Data.ByteString (length)
 import Data.ByteString (packCStringLen)
 import Data.ByteString.Unsafe (unsafeUseAsCString)
@@ -1293,10 +1288,10 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.Word (Word8)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -6584,6 +6579,8 @@ instance Zero AccelerationStructureGeometryDataKHR where
   zero = Triangles zero
 
 
+type GeometryInstanceFlagsKHR = GeometryInstanceFlagBitsKHR
+
 -- | VkGeometryInstanceFlagBitsKHR - Instance flag bits
 --
 -- = Description
@@ -6600,7 +6597,7 @@ newtype GeometryInstanceFlagBitsKHR = GeometryInstanceFlagBitsKHR Flags
 
 -- | 'GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR' disables face
 -- culling for this instance.
-pattern GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000001
+pattern GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR    = GeometryInstanceFlagBitsKHR 0x00000001
 -- | 'GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR' indicates
 -- that the front face of the triangle for culling purposes is the face
 -- that is counter clockwise in object space relative to the ray origin.
@@ -6611,34 +6608,42 @@ pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR = GeometryInst
 -- though 'GEOMETRY_OPAQUE_BIT_KHR' were specified on all geometries
 -- referenced by this instance. This behavior /can/ be overridden by the
 -- SPIR-V @NoOpaqueKHR@ ray flag.
-pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000004
+pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                    = GeometryInstanceFlagBitsKHR 0x00000004
 -- | 'GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR' causes this instance to act
 -- as though 'GEOMETRY_OPAQUE_BIT_KHR' were not specified on all geometries
 -- referenced by this instance. This behavior /can/ be overridden by the
 -- SPIR-V @OpaqueKHR@ ray flag.
-pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000008
+pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR                 = GeometryInstanceFlagBitsKHR 0x00000008
 
-type GeometryInstanceFlagsKHR = GeometryInstanceFlagBitsKHR
+conNameGeometryInstanceFlagBitsKHR :: String
+conNameGeometryInstanceFlagBitsKHR = "GeometryInstanceFlagBitsKHR"
+
+enumPrefixGeometryInstanceFlagBitsKHR :: String
+enumPrefixGeometryInstanceFlagBitsKHR = "GEOMETRY_INSTANCE_"
+
+showTableGeometryInstanceFlagBitsKHR :: [(GeometryInstanceFlagBitsKHR, String)]
+showTableGeometryInstanceFlagBitsKHR =
+  [ (GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR   , "TRIANGLE_FACING_CULL_DISABLE_BIT_KHR")
+  , (GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR, "TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR")
+  , (GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                   , "FORCE_OPAQUE_BIT_KHR")
+  , (GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR                , "FORCE_NO_OPAQUE_BIT_KHR")
+  ]
 
 instance Show GeometryInstanceFlagBitsKHR where
-  showsPrec p = \case
-    GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR -> showString "GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR"
-    GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR -> showString "GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR"
-    GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR -> showString "GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR"
-    GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR -> showString "GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR"
-    GeometryInstanceFlagBitsKHR x -> showParen (p >= 11) (showString "GeometryInstanceFlagBitsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixGeometryInstanceFlagBitsKHR
+                            showTableGeometryInstanceFlagBitsKHR
+                            conNameGeometryInstanceFlagBitsKHR
+                            (\(GeometryInstanceFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read GeometryInstanceFlagBitsKHR where
-  readPrec = parens (choose [("GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR", pure GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR)
-                            , ("GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR", pure GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR)
-                            , ("GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR", pure GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR)
-                            , ("GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR", pure GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "GeometryInstanceFlagBitsKHR")
-                       v <- step readPrec
-                       pure (GeometryInstanceFlagBitsKHR v)))
+  readPrec = enumReadPrec enumPrefixGeometryInstanceFlagBitsKHR
+                          showTableGeometryInstanceFlagBitsKHR
+                          conNameGeometryInstanceFlagBitsKHR
+                          GeometryInstanceFlagBitsKHR
 
+
+type GeometryFlagsKHR = GeometryFlagBitsKHR
 
 -- | VkGeometryFlagBitsKHR - Bitmask specifying additional parameters for a
 -- geometry
@@ -6651,30 +6656,40 @@ newtype GeometryFlagBitsKHR = GeometryFlagBitsKHR Flags
 
 -- | 'GEOMETRY_OPAQUE_BIT_KHR' indicates that this geometry does not invoke
 -- the any-hit shaders even if present in a hit group.
-pattern GEOMETRY_OPAQUE_BIT_KHR = GeometryFlagBitsKHR 0x00000001
+pattern GEOMETRY_OPAQUE_BIT_KHR                          = GeometryFlagBitsKHR 0x00000001
 -- | 'GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR' indicates that the
 -- implementation /must/ only call the any-hit shader a single time for
 -- each primitive in this geometry. If this bit is absent an implementation
 -- /may/ invoke the any-hit shader more than once for this geometry.
 pattern GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR = GeometryFlagBitsKHR 0x00000002
 
-type GeometryFlagsKHR = GeometryFlagBitsKHR
+conNameGeometryFlagBitsKHR :: String
+conNameGeometryFlagBitsKHR = "GeometryFlagBitsKHR"
+
+enumPrefixGeometryFlagBitsKHR :: String
+enumPrefixGeometryFlagBitsKHR = "GEOMETRY_"
+
+showTableGeometryFlagBitsKHR :: [(GeometryFlagBitsKHR, String)]
+showTableGeometryFlagBitsKHR =
+  [ (GEOMETRY_OPAQUE_BIT_KHR                         , "OPAQUE_BIT_KHR")
+  , (GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR, "NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR")
+  ]
 
 instance Show GeometryFlagBitsKHR where
-  showsPrec p = \case
-    GEOMETRY_OPAQUE_BIT_KHR -> showString "GEOMETRY_OPAQUE_BIT_KHR"
-    GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR -> showString "GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR"
-    GeometryFlagBitsKHR x -> showParen (p >= 11) (showString "GeometryFlagBitsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixGeometryFlagBitsKHR
+                            showTableGeometryFlagBitsKHR
+                            conNameGeometryFlagBitsKHR
+                            (\(GeometryFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read GeometryFlagBitsKHR where
-  readPrec = parens (choose [("GEOMETRY_OPAQUE_BIT_KHR", pure GEOMETRY_OPAQUE_BIT_KHR)
-                            , ("GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR", pure GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "GeometryFlagBitsKHR")
-                       v <- step readPrec
-                       pure (GeometryFlagBitsKHR v)))
+  readPrec = enumReadPrec enumPrefixGeometryFlagBitsKHR
+                          showTableGeometryFlagBitsKHR
+                          conNameGeometryFlagBitsKHR
+                          GeometryFlagBitsKHR
 
+
+type BuildAccelerationStructureFlagsKHR = BuildAccelerationStructureFlagBitsKHR
 
 -- | VkBuildAccelerationStructureFlagBitsKHR - Bitmask specifying additional
 -- parameters for acceleration structure builds
@@ -6699,13 +6714,13 @@ newtype BuildAccelerationStructureFlagBitsKHR = BuildAccelerationStructureFlagBi
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' in
 -- 'cmdBuildAccelerationStructuresKHR' or
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV' .
-pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000001
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR      = BuildAccelerationStructureFlagBitsKHR 0x00000001
 -- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' indicates that
 -- the specified acceleration structure /can/ act as the source for a copy
 -- acceleration structure command with @mode@ of
 -- 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' to produce a compacted
 -- acceleration structure.
-pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000002
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR  = BuildAccelerationStructureFlagBitsKHR 0x00000002
 -- | 'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR' indicates that
 -- the given acceleration structure build /should/ prioritize trace
 -- performance over build time.
@@ -6718,31 +6733,38 @@ pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR = BuildAccelerati
 -- acceleration structure /should/ minimize the size of the scratch memory
 -- and the final result build, potentially at the expense of build time or
 -- trace performance.
-pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000010
+pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR        = BuildAccelerationStructureFlagBitsKHR 0x00000010
 
-type BuildAccelerationStructureFlagsKHR = BuildAccelerationStructureFlagBitsKHR
+conNameBuildAccelerationStructureFlagBitsKHR :: String
+conNameBuildAccelerationStructureFlagBitsKHR = "BuildAccelerationStructureFlagBitsKHR"
+
+enumPrefixBuildAccelerationStructureFlagBitsKHR :: String
+enumPrefixBuildAccelerationStructureFlagBitsKHR = "BUILD_ACCELERATION_STRUCTURE_"
+
+showTableBuildAccelerationStructureFlagBitsKHR :: [(BuildAccelerationStructureFlagBitsKHR, String)]
+showTableBuildAccelerationStructureFlagBitsKHR =
+  [ (BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR     , "ALLOW_UPDATE_BIT_KHR")
+  , (BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR , "ALLOW_COMPACTION_BIT_KHR")
+  , (BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR, "PREFER_FAST_TRACE_BIT_KHR")
+  , (BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR, "PREFER_FAST_BUILD_BIT_KHR")
+  , (BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR       , "LOW_MEMORY_BIT_KHR")
+  ]
 
 instance Show BuildAccelerationStructureFlagBitsKHR where
-  showsPrec p = \case
-    BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR -> showString "BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR"
-    BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR -> showString "BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR"
-    BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR -> showString "BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR"
-    BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR -> showString "BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR"
-    BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR -> showString "BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR"
-    BuildAccelerationStructureFlagBitsKHR x -> showParen (p >= 11) (showString "BuildAccelerationStructureFlagBitsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixBuildAccelerationStructureFlagBitsKHR
+                            showTableBuildAccelerationStructureFlagBitsKHR
+                            conNameBuildAccelerationStructureFlagBitsKHR
+                            (\(BuildAccelerationStructureFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read BuildAccelerationStructureFlagBitsKHR where
-  readPrec = parens (choose [("BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR", pure BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR)
-                            , ("BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR", pure BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR)
-                            , ("BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR", pure BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR)
-                            , ("BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR", pure BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR)
-                            , ("BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR", pure BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "BuildAccelerationStructureFlagBitsKHR")
-                       v <- step readPrec
-                       pure (BuildAccelerationStructureFlagBitsKHR v)))
+  readPrec = enumReadPrec enumPrefixBuildAccelerationStructureFlagBitsKHR
+                          showTableBuildAccelerationStructureFlagBitsKHR
+                          conNameBuildAccelerationStructureFlagBitsKHR
+                          BuildAccelerationStructureFlagBitsKHR
 
+
+type AccelerationStructureCreateFlagsKHR = AccelerationStructureCreateFlagBitsKHR
 
 -- | VkAccelerationStructureCreateFlagBitsKHR - Bitmask specifying additional
 -- creation parameters for acceleration structure
@@ -6756,22 +6778,32 @@ newtype AccelerationStructureCreateFlagBitsKHR = AccelerationStructureCreateFlag
 -- | 'ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR'
 -- specifies that the acceleration structure’s address /can/ be saved and
 -- reused on a subsequent run.
-pattern ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR = AccelerationStructureCreateFlagBitsKHR 0x00000001
+pattern ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR =
+  AccelerationStructureCreateFlagBitsKHR 0x00000001
 
-type AccelerationStructureCreateFlagsKHR = AccelerationStructureCreateFlagBitsKHR
+conNameAccelerationStructureCreateFlagBitsKHR :: String
+conNameAccelerationStructureCreateFlagBitsKHR = "AccelerationStructureCreateFlagBitsKHR"
+
+enumPrefixAccelerationStructureCreateFlagBitsKHR :: String
+enumPrefixAccelerationStructureCreateFlagBitsKHR =
+  "ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR"
+
+showTableAccelerationStructureCreateFlagBitsKHR :: [(AccelerationStructureCreateFlagBitsKHR, String)]
+showTableAccelerationStructureCreateFlagBitsKHR =
+  [(ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR, "")]
 
 instance Show AccelerationStructureCreateFlagBitsKHR where
-  showsPrec p = \case
-    ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR -> showString "ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR"
-    AccelerationStructureCreateFlagBitsKHR x -> showParen (p >= 11) (showString "AccelerationStructureCreateFlagBitsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixAccelerationStructureCreateFlagBitsKHR
+                            showTableAccelerationStructureCreateFlagBitsKHR
+                            conNameAccelerationStructureCreateFlagBitsKHR
+                            (\(AccelerationStructureCreateFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read AccelerationStructureCreateFlagBitsKHR where
-  readPrec = parens (choose [("ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR", pure ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AccelerationStructureCreateFlagBitsKHR")
-                       v <- step readPrec
-                       pure (AccelerationStructureCreateFlagBitsKHR v)))
+  readPrec = enumReadPrec enumPrefixAccelerationStructureCreateFlagBitsKHR
+                          showTableAccelerationStructureCreateFlagBitsKHR
+                          conNameAccelerationStructureCreateFlagBitsKHR
+                          AccelerationStructureCreateFlagBitsKHR
 
 
 -- | VkCopyAccelerationStructureModeKHR - Acceleration structure copy mode
@@ -6789,18 +6821,18 @@ newtype CopyAccelerationStructureModeKHR = CopyAccelerationStructureModeKHR Int3
 -- the acceleration structure specified in @src@ into the one specified by
 -- @dst@. The @dst@ acceleration structure /must/ have been created with
 -- the same parameters as @src@.
-pattern COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR = CopyAccelerationStructureModeKHR 0
+pattern COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR       = CopyAccelerationStructureModeKHR 0
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' creates a more compact
 -- version of an acceleration structure @src@ into @dst@. The acceleration
 -- structure @dst@ /must/ have been created with a size at least as large
 -- as that returned by 'cmdWriteAccelerationStructuresPropertiesKHR' or
 -- 'writeAccelerationStructuresPropertiesKHR' after the build of the
 -- acceleration structure specified by @src@.
-pattern COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR = CopyAccelerationStructureModeKHR 1
+pattern COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR     = CopyAccelerationStructureModeKHR 1
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR' serializes the
 -- acceleration structure to a semi-opaque format which can be reloaded on
 -- a compatible implementation.
-pattern COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR = CopyAccelerationStructureModeKHR 2
+pattern COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR   = CopyAccelerationStructureModeKHR 2
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR' deserializes the
 -- semi-opaque serialization format in the buffer to the acceleration
 -- structure.
@@ -6810,24 +6842,32 @@ pattern COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR = CopyAccelerationStruc
              COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR,
              COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR :: CopyAccelerationStructureModeKHR #-}
 
+conNameCopyAccelerationStructureModeKHR :: String
+conNameCopyAccelerationStructureModeKHR = "CopyAccelerationStructureModeKHR"
+
+enumPrefixCopyAccelerationStructureModeKHR :: String
+enumPrefixCopyAccelerationStructureModeKHR = "COPY_ACCELERATION_STRUCTURE_MODE_"
+
+showTableCopyAccelerationStructureModeKHR :: [(CopyAccelerationStructureModeKHR, String)]
+showTableCopyAccelerationStructureModeKHR =
+  [ (COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR      , "CLONE_KHR")
+  , (COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR    , "COMPACT_KHR")
+  , (COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR  , "SERIALIZE_KHR")
+  , (COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR, "DESERIALIZE_KHR")
+  ]
+
 instance Show CopyAccelerationStructureModeKHR where
-  showsPrec p = \case
-    COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR -> showString "COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR"
-    COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR -> showString "COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR"
-    COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR -> showString "COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR"
-    COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR -> showString "COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR"
-    CopyAccelerationStructureModeKHR x -> showParen (p >= 11) (showString "CopyAccelerationStructureModeKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixCopyAccelerationStructureModeKHR
+                            showTableCopyAccelerationStructureModeKHR
+                            conNameCopyAccelerationStructureModeKHR
+                            (\(CopyAccelerationStructureModeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read CopyAccelerationStructureModeKHR where
-  readPrec = parens (choose [("COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR", pure COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR)
-                            , ("COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR", pure COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR)
-                            , ("COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR", pure COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR)
-                            , ("COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR", pure COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CopyAccelerationStructureModeKHR")
-                       v <- step readPrec
-                       pure (CopyAccelerationStructureModeKHR v)))
+  readPrec = enumReadPrec enumPrefixCopyAccelerationStructureModeKHR
+                          showTableCopyAccelerationStructureModeKHR
+                          conNameCopyAccelerationStructureModeKHR
+                          CopyAccelerationStructureModeKHR
 
 
 -- | VkBuildAccelerationStructureModeKHR - Enum specifying the type of build
@@ -6842,7 +6882,7 @@ newtype BuildAccelerationStructureModeKHR = BuildAccelerationStructureModeKHR In
 -- | 'BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR' specifies that the
 -- destination acceleration structure will be built using the specified
 -- geometries.
-pattern BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR = BuildAccelerationStructureModeKHR 0
+pattern BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR  = BuildAccelerationStructureModeKHR 0
 -- | 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR' specifies that the
 -- destination acceleration structure will be built using data in a source
 -- acceleration structure, updated by the specified geometries.
@@ -6850,20 +6890,30 @@ pattern BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR = BuildAccelerationStructur
 {-# complete BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR,
              BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR :: BuildAccelerationStructureModeKHR #-}
 
+conNameBuildAccelerationStructureModeKHR :: String
+conNameBuildAccelerationStructureModeKHR = "BuildAccelerationStructureModeKHR"
+
+enumPrefixBuildAccelerationStructureModeKHR :: String
+enumPrefixBuildAccelerationStructureModeKHR = "BUILD_ACCELERATION_STRUCTURE_MODE_"
+
+showTableBuildAccelerationStructureModeKHR :: [(BuildAccelerationStructureModeKHR, String)]
+showTableBuildAccelerationStructureModeKHR =
+  [ (BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR , "BUILD_KHR")
+  , (BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR, "UPDATE_KHR")
+  ]
+
 instance Show BuildAccelerationStructureModeKHR where
-  showsPrec p = \case
-    BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR -> showString "BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR"
-    BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR -> showString "BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR"
-    BuildAccelerationStructureModeKHR x -> showParen (p >= 11) (showString "BuildAccelerationStructureModeKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixBuildAccelerationStructureModeKHR
+                            showTableBuildAccelerationStructureModeKHR
+                            conNameBuildAccelerationStructureModeKHR
+                            (\(BuildAccelerationStructureModeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read BuildAccelerationStructureModeKHR where
-  readPrec = parens (choose [("BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR", pure BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR)
-                            , ("BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR", pure BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "BuildAccelerationStructureModeKHR")
-                       v <- step readPrec
-                       pure (BuildAccelerationStructureModeKHR v)))
+  readPrec = enumReadPrec enumPrefixBuildAccelerationStructureModeKHR
+                          showTableBuildAccelerationStructureModeKHR
+                          conNameBuildAccelerationStructureModeKHR
+                          BuildAccelerationStructureModeKHR
 
 
 -- | VkAccelerationStructureTypeKHR - Type of acceleration structure
@@ -6878,34 +6928,43 @@ newtype AccelerationStructureTypeKHR = AccelerationStructureTypeKHR Int32
 -- | 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' is a top-level acceleration
 -- structure containing instance data referring to bottom-level
 -- acceleration structures.
-pattern ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR = AccelerationStructureTypeKHR 0
+pattern ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR    = AccelerationStructureTypeKHR 0
 -- | 'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR' is a bottom-level
 -- acceleration structure containing the AABBs or geometry to be
 -- intersected.
 pattern ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR = AccelerationStructureTypeKHR 1
 -- | 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' is an acceleration structure
 -- whose type is determined at build time used for special circumstances.
-pattern ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR = AccelerationStructureTypeKHR 2
+pattern ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR      = AccelerationStructureTypeKHR 2
 {-# complete ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR,
              ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR,
              ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR :: AccelerationStructureTypeKHR #-}
 
+conNameAccelerationStructureTypeKHR :: String
+conNameAccelerationStructureTypeKHR = "AccelerationStructureTypeKHR"
+
+enumPrefixAccelerationStructureTypeKHR :: String
+enumPrefixAccelerationStructureTypeKHR = "ACCELERATION_STRUCTURE_TYPE_"
+
+showTableAccelerationStructureTypeKHR :: [(AccelerationStructureTypeKHR, String)]
+showTableAccelerationStructureTypeKHR =
+  [ (ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR   , "TOP_LEVEL_KHR")
+  , (ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR, "BOTTOM_LEVEL_KHR")
+  , (ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR     , "GENERIC_KHR")
+  ]
+
 instance Show AccelerationStructureTypeKHR where
-  showsPrec p = \case
-    ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR -> showString "ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR"
-    ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR -> showString "ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR"
-    ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR -> showString "ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR"
-    AccelerationStructureTypeKHR x -> showParen (p >= 11) (showString "AccelerationStructureTypeKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixAccelerationStructureTypeKHR
+                            showTableAccelerationStructureTypeKHR
+                            conNameAccelerationStructureTypeKHR
+                            (\(AccelerationStructureTypeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read AccelerationStructureTypeKHR where
-  readPrec = parens (choose [("ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR", pure ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR)
-                            , ("ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR", pure ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR)
-                            , ("ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR", pure ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AccelerationStructureTypeKHR")
-                       v <- step readPrec
-                       pure (AccelerationStructureTypeKHR v)))
+  readPrec = enumReadPrec enumPrefixAccelerationStructureTypeKHR
+                          showTableAccelerationStructureTypeKHR
+                          conNameAccelerationStructureTypeKHR
+                          AccelerationStructureTypeKHR
 
 
 -- | VkGeometryTypeKHR - Enum specifying which type of geometry is provided
@@ -6922,7 +6981,7 @@ newtype GeometryTypeKHR = GeometryTypeKHR Int32
 pattern GEOMETRY_TYPE_TRIANGLES_KHR = GeometryTypeKHR 0
 -- | 'GEOMETRY_TYPE_AABBS_KHR' specifies a geometry type consisting of
 -- axis-aligned bounding boxes.
-pattern GEOMETRY_TYPE_AABBS_KHR = GeometryTypeKHR 1
+pattern GEOMETRY_TYPE_AABBS_KHR     = GeometryTypeKHR 1
 -- | 'GEOMETRY_TYPE_INSTANCES_KHR' specifies a geometry type consisting of
 -- acceleration structure instances.
 pattern GEOMETRY_TYPE_INSTANCES_KHR = GeometryTypeKHR 2
@@ -6930,22 +6989,28 @@ pattern GEOMETRY_TYPE_INSTANCES_KHR = GeometryTypeKHR 2
              GEOMETRY_TYPE_AABBS_KHR,
              GEOMETRY_TYPE_INSTANCES_KHR :: GeometryTypeKHR #-}
 
+conNameGeometryTypeKHR :: String
+conNameGeometryTypeKHR = "GeometryTypeKHR"
+
+enumPrefixGeometryTypeKHR :: String
+enumPrefixGeometryTypeKHR = "GEOMETRY_TYPE_"
+
+showTableGeometryTypeKHR :: [(GeometryTypeKHR, String)]
+showTableGeometryTypeKHR =
+  [ (GEOMETRY_TYPE_TRIANGLES_KHR, "TRIANGLES_KHR")
+  , (GEOMETRY_TYPE_AABBS_KHR    , "AABBS_KHR")
+  , (GEOMETRY_TYPE_INSTANCES_KHR, "INSTANCES_KHR")
+  ]
+
 instance Show GeometryTypeKHR where
-  showsPrec p = \case
-    GEOMETRY_TYPE_TRIANGLES_KHR -> showString "GEOMETRY_TYPE_TRIANGLES_KHR"
-    GEOMETRY_TYPE_AABBS_KHR -> showString "GEOMETRY_TYPE_AABBS_KHR"
-    GEOMETRY_TYPE_INSTANCES_KHR -> showString "GEOMETRY_TYPE_INSTANCES_KHR"
-    GeometryTypeKHR x -> showParen (p >= 11) (showString "GeometryTypeKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixGeometryTypeKHR
+                            showTableGeometryTypeKHR
+                            conNameGeometryTypeKHR
+                            (\(GeometryTypeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read GeometryTypeKHR where
-  readPrec = parens (choose [("GEOMETRY_TYPE_TRIANGLES_KHR", pure GEOMETRY_TYPE_TRIANGLES_KHR)
-                            , ("GEOMETRY_TYPE_AABBS_KHR", pure GEOMETRY_TYPE_AABBS_KHR)
-                            , ("GEOMETRY_TYPE_INSTANCES_KHR", pure GEOMETRY_TYPE_INSTANCES_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "GeometryTypeKHR")
-                       v <- step readPrec
-                       pure (GeometryTypeKHR v)))
+  readPrec = enumReadPrec enumPrefixGeometryTypeKHR showTableGeometryTypeKHR conNameGeometryTypeKHR GeometryTypeKHR
 
 
 -- | VkAccelerationStructureBuildTypeKHR - Acceleration structure build type
@@ -6958,10 +7023,10 @@ newtype AccelerationStructureBuildTypeKHR = AccelerationStructureBuildTypeKHR In
 
 -- | 'ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR' requests the memory
 -- requirement for operations performed by the host.
-pattern ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR = AccelerationStructureBuildTypeKHR 0
+pattern ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR           = AccelerationStructureBuildTypeKHR 0
 -- | 'ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR' requests the memory
 -- requirement for operations performed by the device.
-pattern ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR = AccelerationStructureBuildTypeKHR 1
+pattern ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR         = AccelerationStructureBuildTypeKHR 1
 -- | 'ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR' requests the
 -- memory requirement for operations performed by either the host, or the
 -- device.
@@ -6970,22 +7035,31 @@ pattern ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR = AccelerationStruc
              ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR,
              ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR :: AccelerationStructureBuildTypeKHR #-}
 
+conNameAccelerationStructureBuildTypeKHR :: String
+conNameAccelerationStructureBuildTypeKHR = "AccelerationStructureBuildTypeKHR"
+
+enumPrefixAccelerationStructureBuildTypeKHR :: String
+enumPrefixAccelerationStructureBuildTypeKHR = "ACCELERATION_STRUCTURE_BUILD_TYPE_"
+
+showTableAccelerationStructureBuildTypeKHR :: [(AccelerationStructureBuildTypeKHR, String)]
+showTableAccelerationStructureBuildTypeKHR =
+  [ (ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR          , "HOST_KHR")
+  , (ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR        , "DEVICE_KHR")
+  , (ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR, "HOST_OR_DEVICE_KHR")
+  ]
+
 instance Show AccelerationStructureBuildTypeKHR where
-  showsPrec p = \case
-    ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR -> showString "ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR"
-    ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR -> showString "ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR"
-    ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR -> showString "ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR"
-    AccelerationStructureBuildTypeKHR x -> showParen (p >= 11) (showString "AccelerationStructureBuildTypeKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixAccelerationStructureBuildTypeKHR
+                            showTableAccelerationStructureBuildTypeKHR
+                            conNameAccelerationStructureBuildTypeKHR
+                            (\(AccelerationStructureBuildTypeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read AccelerationStructureBuildTypeKHR where
-  readPrec = parens (choose [("ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR", pure ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR)
-                            , ("ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR", pure ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR)
-                            , ("ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR", pure ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AccelerationStructureBuildTypeKHR")
-                       v <- step readPrec
-                       pure (AccelerationStructureBuildTypeKHR v)))
+  readPrec = enumReadPrec enumPrefixAccelerationStructureBuildTypeKHR
+                          showTableAccelerationStructureBuildTypeKHR
+                          conNameAccelerationStructureBuildTypeKHR
+                          AccelerationStructureBuildTypeKHR
 
 
 -- | VkAccelerationStructureCompatibilityKHR - Acceleration structure
@@ -6999,7 +7073,7 @@ newtype AccelerationStructureCompatibilityKHR = AccelerationStructureCompatibili
 
 -- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR' when the
 -- @pVersion@ version acceleration structure is compatibile with @device@.
-pattern ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR = AccelerationStructureCompatibilityKHR 0
+pattern ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR   = AccelerationStructureCompatibilityKHR 0
 -- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR' when the
 -- @pVersion@ version acceleration structure is not compatibile with
 -- @device@.
@@ -7007,20 +7081,30 @@ pattern ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR = AccelerationStru
 {-# complete ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR,
              ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR :: AccelerationStructureCompatibilityKHR #-}
 
+conNameAccelerationStructureCompatibilityKHR :: String
+conNameAccelerationStructureCompatibilityKHR = "AccelerationStructureCompatibilityKHR"
+
+enumPrefixAccelerationStructureCompatibilityKHR :: String
+enumPrefixAccelerationStructureCompatibilityKHR = "ACCELERATION_STRUCTURE_COMPATIBILITY_"
+
+showTableAccelerationStructureCompatibilityKHR :: [(AccelerationStructureCompatibilityKHR, String)]
+showTableAccelerationStructureCompatibilityKHR =
+  [ (ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR  , "COMPATIBLE_KHR")
+  , (ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR, "INCOMPATIBLE_KHR")
+  ]
+
 instance Show AccelerationStructureCompatibilityKHR where
-  showsPrec p = \case
-    ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR -> showString "ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR"
-    ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR -> showString "ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR"
-    AccelerationStructureCompatibilityKHR x -> showParen (p >= 11) (showString "AccelerationStructureCompatibilityKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixAccelerationStructureCompatibilityKHR
+                            showTableAccelerationStructureCompatibilityKHR
+                            conNameAccelerationStructureCompatibilityKHR
+                            (\(AccelerationStructureCompatibilityKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read AccelerationStructureCompatibilityKHR where
-  readPrec = parens (choose [("ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR", pure ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR)
-                            , ("ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR", pure ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AccelerationStructureCompatibilityKHR")
-                       v <- step readPrec
-                       pure (AccelerationStructureCompatibilityKHR v)))
+  readPrec = enumReadPrec enumPrefixAccelerationStructureCompatibilityKHR
+                          showTableAccelerationStructureCompatibilityKHR
+                          conNameAccelerationStructureCompatibilityKHR
+                          AccelerationStructureCompatibilityKHR
 
 
 type KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 11

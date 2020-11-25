@@ -112,6 +112,8 @@ module Vulkan.Extensions.VK_EXT_headless_surface  ( createHeadlessSurfaceEXT
                                                   , SurfaceKHR(..)
                                                   ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -123,15 +125,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -149,7 +144,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -315,17 +310,27 @@ newtype HeadlessSurfaceCreateFlagsEXT = HeadlessSurfaceCreateFlagsEXT Flags
 
 
 
+conNameHeadlessSurfaceCreateFlagsEXT :: String
+conNameHeadlessSurfaceCreateFlagsEXT = "HeadlessSurfaceCreateFlagsEXT"
+
+enumPrefixHeadlessSurfaceCreateFlagsEXT :: String
+enumPrefixHeadlessSurfaceCreateFlagsEXT = ""
+
+showTableHeadlessSurfaceCreateFlagsEXT :: [(HeadlessSurfaceCreateFlagsEXT, String)]
+showTableHeadlessSurfaceCreateFlagsEXT = []
+
 instance Show HeadlessSurfaceCreateFlagsEXT where
-  showsPrec p = \case
-    HeadlessSurfaceCreateFlagsEXT x -> showParen (p >= 11) (showString "HeadlessSurfaceCreateFlagsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixHeadlessSurfaceCreateFlagsEXT
+                            showTableHeadlessSurfaceCreateFlagsEXT
+                            conNameHeadlessSurfaceCreateFlagsEXT
+                            (\(HeadlessSurfaceCreateFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read HeadlessSurfaceCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "HeadlessSurfaceCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (HeadlessSurfaceCreateFlagsEXT v)))
+  readPrec = enumReadPrec enumPrefixHeadlessSurfaceCreateFlagsEXT
+                          showTableHeadlessSurfaceCreateFlagsEXT
+                          conNameHeadlessSurfaceCreateFlagsEXT
+                          HeadlessSurfaceCreateFlagsEXT
 
 
 type EXT_HEADLESS_SURFACE_SPEC_VERSION = 1

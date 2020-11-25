@@ -308,8 +308,8 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_debug_report  ( DebugReportCallbackCreateInfoEXT
-                                              , DebugReportFlagBitsEXT
                                               , DebugReportFlagsEXT
+                                              , DebugReportFlagBitsEXT
                                               , DebugReportObjectTypeEXT
                                               ) where
 
@@ -324,9 +324,9 @@ instance Show DebugReportCallbackCreateInfoEXT
 instance FromCStruct DebugReportCallbackCreateInfoEXT
 
 
-data DebugReportFlagBitsEXT
-
 type DebugReportFlagsEXT = DebugReportFlagBitsEXT
+
+data DebugReportFlagBitsEXT
 
 
 data DebugReportObjectTypeEXT

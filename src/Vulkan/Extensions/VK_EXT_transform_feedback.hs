@@ -250,6 +250,8 @@ module Vulkan.Extensions.VK_EXT_transform_feedback  ( cmdBindTransformFeedbackBu
                                                     , pattern EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME
                                                     ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -257,15 +259,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
@@ -286,8 +281,8 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -2013,17 +2008,27 @@ newtype PipelineRasterizationStateStreamCreateFlagsEXT = PipelineRasterizationSt
 
 
 
+conNamePipelineRasterizationStateStreamCreateFlagsEXT :: String
+conNamePipelineRasterizationStateStreamCreateFlagsEXT = "PipelineRasterizationStateStreamCreateFlagsEXT"
+
+enumPrefixPipelineRasterizationStateStreamCreateFlagsEXT :: String
+enumPrefixPipelineRasterizationStateStreamCreateFlagsEXT = ""
+
+showTablePipelineRasterizationStateStreamCreateFlagsEXT :: [(PipelineRasterizationStateStreamCreateFlagsEXT, String)]
+showTablePipelineRasterizationStateStreamCreateFlagsEXT = []
+
 instance Show PipelineRasterizationStateStreamCreateFlagsEXT where
-  showsPrec p = \case
-    PipelineRasterizationStateStreamCreateFlagsEXT x -> showParen (p >= 11) (showString "PipelineRasterizationStateStreamCreateFlagsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineRasterizationStateStreamCreateFlagsEXT
+                            showTablePipelineRasterizationStateStreamCreateFlagsEXT
+                            conNamePipelineRasterizationStateStreamCreateFlagsEXT
+                            (\(PipelineRasterizationStateStreamCreateFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineRasterizationStateStreamCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineRasterizationStateStreamCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (PipelineRasterizationStateStreamCreateFlagsEXT v)))
+  readPrec = enumReadPrec enumPrefixPipelineRasterizationStateStreamCreateFlagsEXT
+                          showTablePipelineRasterizationStateStreamCreateFlagsEXT
+                          conNamePipelineRasterizationStateStreamCreateFlagsEXT
+                          PipelineRasterizationStateStreamCreateFlagsEXT
 
 
 type EXT_TRANSFORM_FEEDBACK_SPEC_VERSION = 1

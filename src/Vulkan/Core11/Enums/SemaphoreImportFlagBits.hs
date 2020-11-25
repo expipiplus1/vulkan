@@ -1,27 +1,24 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SemaphoreImportFlagBits"
-module Vulkan.Core11.Enums.SemaphoreImportFlagBits  ( SemaphoreImportFlagBits( SEMAPHORE_IMPORT_TEMPORARY_BIT
+module Vulkan.Core11.Enums.SemaphoreImportFlagBits  ( SemaphoreImportFlags
+                                                    , SemaphoreImportFlagBits( SEMAPHORE_IMPORT_TEMPORARY_BIT
                                                                              , ..
                                                                              )
-                                                    , SemaphoreImportFlags
                                                     ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type SemaphoreImportFlags = SemaphoreImportFlagBits
+
 -- | VkSemaphoreImportFlagBits - Bitmask specifying additional parameters of
 -- semaphore payload import
 --
@@ -41,18 +38,25 @@ newtype SemaphoreImportFlagBits = SemaphoreImportFlagBits Flags
 -- regardless of the permanence of @handleType@.
 pattern SEMAPHORE_IMPORT_TEMPORARY_BIT = SemaphoreImportFlagBits 0x00000001
 
-type SemaphoreImportFlags = SemaphoreImportFlagBits
+conNameSemaphoreImportFlagBits :: String
+conNameSemaphoreImportFlagBits = "SemaphoreImportFlagBits"
+
+enumPrefixSemaphoreImportFlagBits :: String
+enumPrefixSemaphoreImportFlagBits = "SEMAPHORE_IMPORT_TEMPORARY_BIT"
+
+showTableSemaphoreImportFlagBits :: [(SemaphoreImportFlagBits, String)]
+showTableSemaphoreImportFlagBits = [(SEMAPHORE_IMPORT_TEMPORARY_BIT, "")]
 
 instance Show SemaphoreImportFlagBits where
-  showsPrec p = \case
-    SEMAPHORE_IMPORT_TEMPORARY_BIT -> showString "SEMAPHORE_IMPORT_TEMPORARY_BIT"
-    SemaphoreImportFlagBits x -> showParen (p >= 11) (showString "SemaphoreImportFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixSemaphoreImportFlagBits
+                            showTableSemaphoreImportFlagBits
+                            conNameSemaphoreImportFlagBits
+                            (\(SemaphoreImportFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read SemaphoreImportFlagBits where
-  readPrec = parens (choose [("SEMAPHORE_IMPORT_TEMPORARY_BIT", pure SEMAPHORE_IMPORT_TEMPORARY_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SemaphoreImportFlagBits")
-                       v <- step readPrec
-                       pure (SemaphoreImportFlagBits v)))
+  readPrec = enumReadPrec enumPrefixSemaphoreImportFlagBits
+                          showTableSemaphoreImportFlagBits
+                          conNameSemaphoreImportFlagBits
+                          SemaphoreImportFlagBits
 

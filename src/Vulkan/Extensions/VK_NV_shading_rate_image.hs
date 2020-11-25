@@ -310,6 +310,8 @@ module Vulkan.Extensions.VK_NV_shading_rate_image  ( cmdBindShadingRateImageNV
                                                    , pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME
                                                    ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -317,15 +319,7 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -345,8 +339,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -1329,17 +1323,17 @@ newtype ShadingRatePaletteEntryNV = ShadingRatePaletteEntryNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV = ShadingRatePaletteEntryNV 0
+pattern SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV              = ShadingRatePaletteEntryNV 0
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV = ShadingRatePaletteEntryNV 1
+pattern SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV    = ShadingRatePaletteEntryNV 1
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV = ShadingRatePaletteEntryNV 2
+pattern SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV     = ShadingRatePaletteEntryNV 2
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV = ShadingRatePaletteEntryNV 3
+pattern SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV     = ShadingRatePaletteEntryNV 3
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV = ShadingRatePaletteEntryNV 4
+pattern SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV     = ShadingRatePaletteEntryNV 4
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV"
-pattern SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV = ShadingRatePaletteEntryNV 5
+pattern SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV      = ShadingRatePaletteEntryNV 5
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV"
 pattern SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV = ShadingRatePaletteEntryNV 6
 -- No documentation found for Nested "VkShadingRatePaletteEntryNV" "VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV"
@@ -1365,40 +1359,40 @@ pattern SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV = ShadingRateP
              SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV,
              SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV :: ShadingRatePaletteEntryNV #-}
 
+conNameShadingRatePaletteEntryNV :: String
+conNameShadingRatePaletteEntryNV = "ShadingRatePaletteEntryNV"
+
+enumPrefixShadingRatePaletteEntryNV :: String
+enumPrefixShadingRatePaletteEntryNV = "SHADING_RATE_PALETTE_ENTRY_"
+
+showTableShadingRatePaletteEntryNV :: [(ShadingRatePaletteEntryNV, String)]
+showTableShadingRatePaletteEntryNV =
+  [ (SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV             , "NO_INVOCATIONS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV   , "16_INVOCATIONS_PER_PIXEL_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV    , "8_INVOCATIONS_PER_PIXEL_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV    , "4_INVOCATIONS_PER_PIXEL_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV    , "2_INVOCATIONS_PER_PIXEL_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV     , "1_INVOCATION_PER_PIXEL_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV, "1_INVOCATION_PER_2X1_PIXELS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV, "1_INVOCATION_PER_1X2_PIXELS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X2_PIXELS_NV, "1_INVOCATION_PER_2X2_PIXELS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_PIXELS_NV, "1_INVOCATION_PER_4X2_PIXELS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV, "1_INVOCATION_PER_2X4_PIXELS_NV")
+  , (SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV, "1_INVOCATION_PER_4X4_PIXELS_NV")
+  ]
+
 instance Show ShadingRatePaletteEntryNV where
-  showsPrec p = \case
-    SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV"
-    SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV -> showString "SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV"
-    SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV -> showString "SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV"
-    SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV -> showString "SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV"
-    SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV -> showString "SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X2_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X2_PIXELS_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_PIXELS_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV"
-    SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV -> showString "SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV"
-    ShadingRatePaletteEntryNV x -> showParen (p >= 11) (showString "ShadingRatePaletteEntryNV " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixShadingRatePaletteEntryNV
+                            showTableShadingRatePaletteEntryNV
+                            conNameShadingRatePaletteEntryNV
+                            (\(ShadingRatePaletteEntryNV x) -> x)
+                            (showsPrec 11)
 
 instance Read ShadingRatePaletteEntryNV where
-  readPrec = parens (choose [("SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV", pure SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV", pure SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV", pure SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV", pure SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV", pure SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X2_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X2_PIXELS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_PIXELS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV)
-                            , ("SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV", pure SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ShadingRatePaletteEntryNV")
-                       v <- step readPrec
-                       pure (ShadingRatePaletteEntryNV v)))
+  readPrec = enumReadPrec enumPrefixShadingRatePaletteEntryNV
+                          showTableShadingRatePaletteEntryNV
+                          conNameShadingRatePaletteEntryNV
+                          ShadingRatePaletteEntryNV
 
 
 -- | VkCoarseSampleOrderTypeNV - Shading rate image sample ordering types
@@ -1412,18 +1406,18 @@ newtype CoarseSampleOrderTypeNV = CoarseSampleOrderTypeNV Int32
 
 -- | 'COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV' specifies that coverage samples
 -- will be ordered in an implementation-dependent manner.
-pattern COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV = CoarseSampleOrderTypeNV 0
+pattern COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV      = CoarseSampleOrderTypeNV 0
 -- | 'COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV' specifies that coverage samples
 -- will be ordered according to the array of custom orderings provided in
 -- either the @pCustomSampleOrders@ member of
 -- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV' or the
 -- @pCustomSampleOrders@ member of 'cmdSetCoarseSampleOrderNV'.
-pattern COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV = CoarseSampleOrderTypeNV 1
+pattern COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV       = CoarseSampleOrderTypeNV 1
 -- | 'COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV' specifies that coverage
 -- samples will be ordered sequentially, sorted first by pixel coordinate
 -- (in row-major order) and then by
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>.
-pattern COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV = CoarseSampleOrderTypeNV 2
+pattern COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV  = CoarseSampleOrderTypeNV 2
 -- | 'COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV' specifies that coverage
 -- samples will be ordered sequentially, sorted first by
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
@@ -1434,24 +1428,32 @@ pattern COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV = CoarseSampleOrderTypeNV 3
              COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV,
              COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV :: CoarseSampleOrderTypeNV #-}
 
+conNameCoarseSampleOrderTypeNV :: String
+conNameCoarseSampleOrderTypeNV = "CoarseSampleOrderTypeNV"
+
+enumPrefixCoarseSampleOrderTypeNV :: String
+enumPrefixCoarseSampleOrderTypeNV = "COARSE_SAMPLE_ORDER_TYPE_"
+
+showTableCoarseSampleOrderTypeNV :: [(CoarseSampleOrderTypeNV, String)]
+showTableCoarseSampleOrderTypeNV =
+  [ (COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV     , "DEFAULT_NV")
+  , (COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV      , "CUSTOM_NV")
+  , (COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV , "PIXEL_MAJOR_NV")
+  , (COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV, "SAMPLE_MAJOR_NV")
+  ]
+
 instance Show CoarseSampleOrderTypeNV where
-  showsPrec p = \case
-    COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV -> showString "COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV"
-    COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV -> showString "COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV"
-    COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV -> showString "COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV"
-    COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV -> showString "COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV"
-    CoarseSampleOrderTypeNV x -> showParen (p >= 11) (showString "CoarseSampleOrderTypeNV " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixCoarseSampleOrderTypeNV
+                            showTableCoarseSampleOrderTypeNV
+                            conNameCoarseSampleOrderTypeNV
+                            (\(CoarseSampleOrderTypeNV x) -> x)
+                            (showsPrec 11)
 
 instance Read CoarseSampleOrderTypeNV where
-  readPrec = parens (choose [("COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV", pure COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV)
-                            , ("COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV", pure COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV)
-                            , ("COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV", pure COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV)
-                            , ("COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV", pure COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CoarseSampleOrderTypeNV")
-                       v <- step readPrec
-                       pure (CoarseSampleOrderTypeNV v)))
+  readPrec = enumReadPrec enumPrefixCoarseSampleOrderTypeNV
+                          showTableCoarseSampleOrderTypeNV
+                          conNameCoarseSampleOrderTypeNV
+                          CoarseSampleOrderTypeNV
 
 
 type NV_SHADING_RATE_IMAGE_SPEC_VERSION = 3

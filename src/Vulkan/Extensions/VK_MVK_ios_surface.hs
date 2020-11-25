@@ -120,6 +120,8 @@ module Vulkan.Extensions.VK_MVK_ios_surface  ( createIOSSurfaceMVK
                                              , SurfaceKHR(..)
                                              ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -131,15 +133,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -157,7 +152,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -370,17 +365,27 @@ newtype IOSSurfaceCreateFlagsMVK = IOSSurfaceCreateFlagsMVK Flags
 
 
 
+conNameIOSSurfaceCreateFlagsMVK :: String
+conNameIOSSurfaceCreateFlagsMVK = "IOSSurfaceCreateFlagsMVK"
+
+enumPrefixIOSSurfaceCreateFlagsMVK :: String
+enumPrefixIOSSurfaceCreateFlagsMVK = ""
+
+showTableIOSSurfaceCreateFlagsMVK :: [(IOSSurfaceCreateFlagsMVK, String)]
+showTableIOSSurfaceCreateFlagsMVK = []
+
 instance Show IOSSurfaceCreateFlagsMVK where
-  showsPrec p = \case
-    IOSSurfaceCreateFlagsMVK x -> showParen (p >= 11) (showString "IOSSurfaceCreateFlagsMVK 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixIOSSurfaceCreateFlagsMVK
+                            showTableIOSSurfaceCreateFlagsMVK
+                            conNameIOSSurfaceCreateFlagsMVK
+                            (\(IOSSurfaceCreateFlagsMVK x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read IOSSurfaceCreateFlagsMVK where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "IOSSurfaceCreateFlagsMVK")
-                       v <- step readPrec
-                       pure (IOSSurfaceCreateFlagsMVK v)))
+  readPrec = enumReadPrec enumPrefixIOSSurfaceCreateFlagsMVK
+                          showTableIOSSurfaceCreateFlagsMVK
+                          conNameIOSSurfaceCreateFlagsMVK
+                          IOSSurfaceCreateFlagsMVK
 
 
 type MVK_IOS_SURFACE_SPEC_VERSION = 3

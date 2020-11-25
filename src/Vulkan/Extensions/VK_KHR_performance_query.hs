@@ -519,13 +519,13 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
                                                                                  , PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR
                                                                                  , ..
                                                                                  )
+                                                   , PerformanceCounterDescriptionFlagsKHR
                                                    , PerformanceCounterDescriptionFlagBitsKHR( PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR
                                                                                              , PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR
                                                                                              , ..
                                                                                              )
-                                                   , PerformanceCounterDescriptionFlagsKHR
-                                                   , AcquireProfilingLockFlagBitsKHR(..)
                                                    , AcquireProfilingLockFlagsKHR
+                                                   , AcquireProfilingLockFlagBitsKHR(..)
                                                    , KHR_PERFORMANCE_QUERY_SPEC_VERSION
                                                    , pattern KHR_PERFORMANCE_QUERY_SPEC_VERSION
                                                    , KHR_PERFORMANCE_QUERY_EXTENSION_NAME
@@ -533,6 +533,8 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
                                                    ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -545,16 +547,9 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -584,10 +579,10 @@ import Data.Int (Int64)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.Word (Word8)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -1425,30 +1420,39 @@ pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR = PerformanceCounterScopeKH
 -- scope is zero or more complete render passes. The performance query
 -- containing the performance counter /must/ begin and end outside a render
 -- pass instance.
-pattern PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR = PerformanceCounterScopeKHR 1
+pattern PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR    = PerformanceCounterScopeKHR 1
 -- | 'PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR' - the performance counter scope
 -- is zero or more commands.
-pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR = PerformanceCounterScopeKHR 2
+pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR        = PerformanceCounterScopeKHR 2
 {-# complete PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR,
              PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR,
              PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR :: PerformanceCounterScopeKHR #-}
 
+conNamePerformanceCounterScopeKHR :: String
+conNamePerformanceCounterScopeKHR = "PerformanceCounterScopeKHR"
+
+enumPrefixPerformanceCounterScopeKHR :: String
+enumPrefixPerformanceCounterScopeKHR = "PERFORMANCE_COUNTER_SCOPE_"
+
+showTablePerformanceCounterScopeKHR :: [(PerformanceCounterScopeKHR, String)]
+showTablePerformanceCounterScopeKHR =
+  [ (PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR, "COMMAND_BUFFER_KHR")
+  , (PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR   , "RENDER_PASS_KHR")
+  , (PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR       , "COMMAND_KHR")
+  ]
+
 instance Show PerformanceCounterScopeKHR where
-  showsPrec p = \case
-    PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR -> showString "PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR"
-    PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR -> showString "PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR"
-    PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR -> showString "PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR"
-    PerformanceCounterScopeKHR x -> showParen (p >= 11) (showString "PerformanceCounterScopeKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterScopeKHR
+                            showTablePerformanceCounterScopeKHR
+                            conNamePerformanceCounterScopeKHR
+                            (\(PerformanceCounterScopeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceCounterScopeKHR where
-  readPrec = parens (choose [("PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR", pure PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR)
-                            , ("PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR", pure PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR)
-                            , ("PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR", pure PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceCounterScopeKHR")
-                       v <- step readPrec
-                       pure (PerformanceCounterScopeKHR v)))
+  readPrec = enumReadPrec enumPrefixPerformanceCounterScopeKHR
+                          showTablePerformanceCounterScopeKHR
+                          conNamePerformanceCounterScopeKHR
+                          PerformanceCounterScopeKHR
 
 
 -- | VkPerformanceCounterUnitKHR - Supported counter unit types
@@ -1461,37 +1465,37 @@ newtype PerformanceCounterUnitKHR = PerformanceCounterUnitKHR Int32
 
 -- | 'PERFORMANCE_COUNTER_UNIT_GENERIC_KHR' - the performance counter unit is
 -- a generic data point.
-pattern PERFORMANCE_COUNTER_UNIT_GENERIC_KHR = PerformanceCounterUnitKHR 0
+pattern PERFORMANCE_COUNTER_UNIT_GENERIC_KHR          = PerformanceCounterUnitKHR 0
 -- | 'PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR' - the performance counter unit
 -- is a percentage (%).
-pattern PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR = PerformanceCounterUnitKHR 1
+pattern PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR       = PerformanceCounterUnitKHR 1
 -- | 'PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR' - the performance counter
 -- unit is a value of nanoseconds (ns).
-pattern PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR = PerformanceCounterUnitKHR 2
+pattern PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR      = PerformanceCounterUnitKHR 2
 -- | 'PERFORMANCE_COUNTER_UNIT_BYTES_KHR' - the performance counter unit is a
 -- value of bytes.
-pattern PERFORMANCE_COUNTER_UNIT_BYTES_KHR = PerformanceCounterUnitKHR 3
+pattern PERFORMANCE_COUNTER_UNIT_BYTES_KHR            = PerformanceCounterUnitKHR 3
 -- | 'PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR' - the performance
 -- counter unit is a value of bytes\/s.
 pattern PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR = PerformanceCounterUnitKHR 4
 -- | 'PERFORMANCE_COUNTER_UNIT_KELVIN_KHR' - the performance counter unit is
 -- a temperature reported in Kelvin.
-pattern PERFORMANCE_COUNTER_UNIT_KELVIN_KHR = PerformanceCounterUnitKHR 5
+pattern PERFORMANCE_COUNTER_UNIT_KELVIN_KHR           = PerformanceCounterUnitKHR 5
 -- | 'PERFORMANCE_COUNTER_UNIT_WATTS_KHR' - the performance counter unit is a
 -- value of watts (W).
-pattern PERFORMANCE_COUNTER_UNIT_WATTS_KHR = PerformanceCounterUnitKHR 6
+pattern PERFORMANCE_COUNTER_UNIT_WATTS_KHR            = PerformanceCounterUnitKHR 6
 -- | 'PERFORMANCE_COUNTER_UNIT_VOLTS_KHR' - the performance counter unit is a
 -- value of volts (V).
-pattern PERFORMANCE_COUNTER_UNIT_VOLTS_KHR = PerformanceCounterUnitKHR 7
+pattern PERFORMANCE_COUNTER_UNIT_VOLTS_KHR            = PerformanceCounterUnitKHR 7
 -- | 'PERFORMANCE_COUNTER_UNIT_AMPS_KHR' - the performance counter unit is a
 -- value of amps (A).
-pattern PERFORMANCE_COUNTER_UNIT_AMPS_KHR = PerformanceCounterUnitKHR 8
+pattern PERFORMANCE_COUNTER_UNIT_AMPS_KHR             = PerformanceCounterUnitKHR 8
 -- | 'PERFORMANCE_COUNTER_UNIT_HERTZ_KHR' - the performance counter unit is a
 -- value of hertz (Hz).
-pattern PERFORMANCE_COUNTER_UNIT_HERTZ_KHR = PerformanceCounterUnitKHR 9
+pattern PERFORMANCE_COUNTER_UNIT_HERTZ_KHR            = PerformanceCounterUnitKHR 9
 -- | 'PERFORMANCE_COUNTER_UNIT_CYCLES_KHR' - the performance counter unit is
 -- a value of cycles.
-pattern PERFORMANCE_COUNTER_UNIT_CYCLES_KHR = PerformanceCounterUnitKHR 10
+pattern PERFORMANCE_COUNTER_UNIT_CYCLES_KHR           = PerformanceCounterUnitKHR 10
 {-# complete PERFORMANCE_COUNTER_UNIT_GENERIC_KHR,
              PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR,
              PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR,
@@ -1504,38 +1508,39 @@ pattern PERFORMANCE_COUNTER_UNIT_CYCLES_KHR = PerformanceCounterUnitKHR 10
              PERFORMANCE_COUNTER_UNIT_HERTZ_KHR,
              PERFORMANCE_COUNTER_UNIT_CYCLES_KHR :: PerformanceCounterUnitKHR #-}
 
+conNamePerformanceCounterUnitKHR :: String
+conNamePerformanceCounterUnitKHR = "PerformanceCounterUnitKHR"
+
+enumPrefixPerformanceCounterUnitKHR :: String
+enumPrefixPerformanceCounterUnitKHR = "PERFORMANCE_COUNTER_UNIT_"
+
+showTablePerformanceCounterUnitKHR :: [(PerformanceCounterUnitKHR, String)]
+showTablePerformanceCounterUnitKHR =
+  [ (PERFORMANCE_COUNTER_UNIT_GENERIC_KHR         , "GENERIC_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR      , "PERCENTAGE_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR     , "NANOSECONDS_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_BYTES_KHR           , "BYTES_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR, "BYTES_PER_SECOND_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_KELVIN_KHR          , "KELVIN_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_WATTS_KHR           , "WATTS_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_VOLTS_KHR           , "VOLTS_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_AMPS_KHR            , "AMPS_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_HERTZ_KHR           , "HERTZ_KHR")
+  , (PERFORMANCE_COUNTER_UNIT_CYCLES_KHR          , "CYCLES_KHR")
+  ]
+
 instance Show PerformanceCounterUnitKHR where
-  showsPrec p = \case
-    PERFORMANCE_COUNTER_UNIT_GENERIC_KHR -> showString "PERFORMANCE_COUNTER_UNIT_GENERIC_KHR"
-    PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR -> showString "PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR"
-    PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR -> showString "PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR"
-    PERFORMANCE_COUNTER_UNIT_BYTES_KHR -> showString "PERFORMANCE_COUNTER_UNIT_BYTES_KHR"
-    PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR -> showString "PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR"
-    PERFORMANCE_COUNTER_UNIT_KELVIN_KHR -> showString "PERFORMANCE_COUNTER_UNIT_KELVIN_KHR"
-    PERFORMANCE_COUNTER_UNIT_WATTS_KHR -> showString "PERFORMANCE_COUNTER_UNIT_WATTS_KHR"
-    PERFORMANCE_COUNTER_UNIT_VOLTS_KHR -> showString "PERFORMANCE_COUNTER_UNIT_VOLTS_KHR"
-    PERFORMANCE_COUNTER_UNIT_AMPS_KHR -> showString "PERFORMANCE_COUNTER_UNIT_AMPS_KHR"
-    PERFORMANCE_COUNTER_UNIT_HERTZ_KHR -> showString "PERFORMANCE_COUNTER_UNIT_HERTZ_KHR"
-    PERFORMANCE_COUNTER_UNIT_CYCLES_KHR -> showString "PERFORMANCE_COUNTER_UNIT_CYCLES_KHR"
-    PerformanceCounterUnitKHR x -> showParen (p >= 11) (showString "PerformanceCounterUnitKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterUnitKHR
+                            showTablePerformanceCounterUnitKHR
+                            conNamePerformanceCounterUnitKHR
+                            (\(PerformanceCounterUnitKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceCounterUnitKHR where
-  readPrec = parens (choose [("PERFORMANCE_COUNTER_UNIT_GENERIC_KHR", pure PERFORMANCE_COUNTER_UNIT_GENERIC_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR", pure PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR", pure PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_BYTES_KHR", pure PERFORMANCE_COUNTER_UNIT_BYTES_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR", pure PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_KELVIN_KHR", pure PERFORMANCE_COUNTER_UNIT_KELVIN_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_WATTS_KHR", pure PERFORMANCE_COUNTER_UNIT_WATTS_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_VOLTS_KHR", pure PERFORMANCE_COUNTER_UNIT_VOLTS_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_AMPS_KHR", pure PERFORMANCE_COUNTER_UNIT_AMPS_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_HERTZ_KHR", pure PERFORMANCE_COUNTER_UNIT_HERTZ_KHR)
-                            , ("PERFORMANCE_COUNTER_UNIT_CYCLES_KHR", pure PERFORMANCE_COUNTER_UNIT_CYCLES_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceCounterUnitKHR")
-                       v <- step readPrec
-                       pure (PerformanceCounterUnitKHR v)))
+  readPrec = enumReadPrec enumPrefixPerformanceCounterUnitKHR
+                          showTablePerformanceCounterUnitKHR
+                          conNamePerformanceCounterUnitKHR
+                          PerformanceCounterUnitKHR
 
 
 -- | VkPerformanceCounterStorageKHR - Supported counter storage types
@@ -1548,16 +1553,16 @@ newtype PerformanceCounterStorageKHR = PerformanceCounterStorageKHR Int32
 
 -- | 'PERFORMANCE_COUNTER_STORAGE_INT32_KHR' - the performance counter
 -- storage is a 32-bit signed integer.
-pattern PERFORMANCE_COUNTER_STORAGE_INT32_KHR = PerformanceCounterStorageKHR 0
+pattern PERFORMANCE_COUNTER_STORAGE_INT32_KHR   = PerformanceCounterStorageKHR 0
 -- | 'PERFORMANCE_COUNTER_STORAGE_INT64_KHR' - the performance counter
 -- storage is a 64-bit signed integer.
-pattern PERFORMANCE_COUNTER_STORAGE_INT64_KHR = PerformanceCounterStorageKHR 1
+pattern PERFORMANCE_COUNTER_STORAGE_INT64_KHR   = PerformanceCounterStorageKHR 1
 -- | 'PERFORMANCE_COUNTER_STORAGE_UINT32_KHR' - the performance counter
 -- storage is a 32-bit unsigned integer.
-pattern PERFORMANCE_COUNTER_STORAGE_UINT32_KHR = PerformanceCounterStorageKHR 2
+pattern PERFORMANCE_COUNTER_STORAGE_UINT32_KHR  = PerformanceCounterStorageKHR 2
 -- | 'PERFORMANCE_COUNTER_STORAGE_UINT64_KHR' - the performance counter
 -- storage is a 64-bit unsigned integer.
-pattern PERFORMANCE_COUNTER_STORAGE_UINT64_KHR = PerformanceCounterStorageKHR 3
+pattern PERFORMANCE_COUNTER_STORAGE_UINT64_KHR  = PerformanceCounterStorageKHR 3
 -- | 'PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR' - the performance counter
 -- storage is a 32-bit floating-point.
 pattern PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR = PerformanceCounterStorageKHR 4
@@ -1571,29 +1576,37 @@ pattern PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR = PerformanceCounterStorageKHR 5
              PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR,
              PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR :: PerformanceCounterStorageKHR #-}
 
+conNamePerformanceCounterStorageKHR :: String
+conNamePerformanceCounterStorageKHR = "PerformanceCounterStorageKHR"
+
+enumPrefixPerformanceCounterStorageKHR :: String
+enumPrefixPerformanceCounterStorageKHR = "PERFORMANCE_COUNTER_STORAGE_"
+
+showTablePerformanceCounterStorageKHR :: [(PerformanceCounterStorageKHR, String)]
+showTablePerformanceCounterStorageKHR =
+  [ (PERFORMANCE_COUNTER_STORAGE_INT32_KHR  , "INT32_KHR")
+  , (PERFORMANCE_COUNTER_STORAGE_INT64_KHR  , "INT64_KHR")
+  , (PERFORMANCE_COUNTER_STORAGE_UINT32_KHR , "UINT32_KHR")
+  , (PERFORMANCE_COUNTER_STORAGE_UINT64_KHR , "UINT64_KHR")
+  , (PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR, "FLOAT32_KHR")
+  , (PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR, "FLOAT64_KHR")
+  ]
+
 instance Show PerformanceCounterStorageKHR where
-  showsPrec p = \case
-    PERFORMANCE_COUNTER_STORAGE_INT32_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_INT32_KHR"
-    PERFORMANCE_COUNTER_STORAGE_INT64_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_INT64_KHR"
-    PERFORMANCE_COUNTER_STORAGE_UINT32_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_UINT32_KHR"
-    PERFORMANCE_COUNTER_STORAGE_UINT64_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_UINT64_KHR"
-    PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR"
-    PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR -> showString "PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR"
-    PerformanceCounterStorageKHR x -> showParen (p >= 11) (showString "PerformanceCounterStorageKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterStorageKHR
+                            showTablePerformanceCounterStorageKHR
+                            conNamePerformanceCounterStorageKHR
+                            (\(PerformanceCounterStorageKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceCounterStorageKHR where
-  readPrec = parens (choose [("PERFORMANCE_COUNTER_STORAGE_INT32_KHR", pure PERFORMANCE_COUNTER_STORAGE_INT32_KHR)
-                            , ("PERFORMANCE_COUNTER_STORAGE_INT64_KHR", pure PERFORMANCE_COUNTER_STORAGE_INT64_KHR)
-                            , ("PERFORMANCE_COUNTER_STORAGE_UINT32_KHR", pure PERFORMANCE_COUNTER_STORAGE_UINT32_KHR)
-                            , ("PERFORMANCE_COUNTER_STORAGE_UINT64_KHR", pure PERFORMANCE_COUNTER_STORAGE_UINT64_KHR)
-                            , ("PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR", pure PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR)
-                            , ("PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR", pure PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceCounterStorageKHR")
-                       v <- step readPrec
-                       pure (PerformanceCounterStorageKHR v)))
+  readPrec = enumReadPrec enumPrefixPerformanceCounterStorageKHR
+                          showTablePerformanceCounterStorageKHR
+                          conNamePerformanceCounterStorageKHR
+                          PerformanceCounterStorageKHR
 
+
+type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBitsKHR
 
 -- | VkPerformanceCounterDescriptionFlagBitsKHR - Bitmask specifying usage
 -- behavior for a counter
@@ -1607,29 +1620,41 @@ newtype PerformanceCounterDescriptionFlagBitsKHR = PerformanceCounterDescription
 -- | 'PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR'
 -- specifies that recording the counter /may/ have a noticeable performance
 -- impact.
-pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000001
+pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR =
+  PerformanceCounterDescriptionFlagBitsKHR 0x00000001
 -- | 'PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR'
 -- specifies that concurrently recording the counter while other submitted
 -- command buffers are running /may/ impact the accuracy of the recording.
-pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000002
+pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR =
+  PerformanceCounterDescriptionFlagBitsKHR 0x00000002
 
-type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBitsKHR
+conNamePerformanceCounterDescriptionFlagBitsKHR :: String
+conNamePerformanceCounterDescriptionFlagBitsKHR = "PerformanceCounterDescriptionFlagBitsKHR"
+
+enumPrefixPerformanceCounterDescriptionFlagBitsKHR :: String
+enumPrefixPerformanceCounterDescriptionFlagBitsKHR = "PERFORMANCE_COUNTER_DESCRIPTION_"
+
+showTablePerformanceCounterDescriptionFlagBitsKHR :: [(PerformanceCounterDescriptionFlagBitsKHR, String)]
+showTablePerformanceCounterDescriptionFlagBitsKHR =
+  [ (PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR, "PERFORMANCE_IMPACTING_BIT_KHR")
+  , (PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR, "CONCURRENTLY_IMPACTED_BIT_KHR")
+  ]
 
 instance Show PerformanceCounterDescriptionFlagBitsKHR where
-  showsPrec p = \case
-    PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR -> showString "PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR"
-    PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR -> showString "PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR"
-    PerformanceCounterDescriptionFlagBitsKHR x -> showParen (p >= 11) (showString "PerformanceCounterDescriptionFlagBitsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceCounterDescriptionFlagBitsKHR
+                            showTablePerformanceCounterDescriptionFlagBitsKHR
+                            conNamePerformanceCounterDescriptionFlagBitsKHR
+                            (\(PerformanceCounterDescriptionFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PerformanceCounterDescriptionFlagBitsKHR where
-  readPrec = parens (choose [("PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR", pure PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR)
-                            , ("PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR", pure PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceCounterDescriptionFlagBitsKHR")
-                       v <- step readPrec
-                       pure (PerformanceCounterDescriptionFlagBitsKHR v)))
+  readPrec = enumReadPrec enumPrefixPerformanceCounterDescriptionFlagBitsKHR
+                          showTablePerformanceCounterDescriptionFlagBitsKHR
+                          conNamePerformanceCounterDescriptionFlagBitsKHR
+                          PerformanceCounterDescriptionFlagBitsKHR
 
+
+type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
 
 -- | VkAcquireProfilingLockFlagBitsKHR - Reserved for future use
 --
@@ -1641,19 +1666,27 @@ newtype AcquireProfilingLockFlagBitsKHR = AcquireProfilingLockFlagBitsKHR Flags
 
 
 
-type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
+conNameAcquireProfilingLockFlagBitsKHR :: String
+conNameAcquireProfilingLockFlagBitsKHR = "AcquireProfilingLockFlagBitsKHR"
+
+enumPrefixAcquireProfilingLockFlagBitsKHR :: String
+enumPrefixAcquireProfilingLockFlagBitsKHR = ""
+
+showTableAcquireProfilingLockFlagBitsKHR :: [(AcquireProfilingLockFlagBitsKHR, String)]
+showTableAcquireProfilingLockFlagBitsKHR = []
 
 instance Show AcquireProfilingLockFlagBitsKHR where
-  showsPrec p = \case
-    AcquireProfilingLockFlagBitsKHR x -> showParen (p >= 11) (showString "AcquireProfilingLockFlagBitsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixAcquireProfilingLockFlagBitsKHR
+                            showTableAcquireProfilingLockFlagBitsKHR
+                            conNameAcquireProfilingLockFlagBitsKHR
+                            (\(AcquireProfilingLockFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read AcquireProfilingLockFlagBitsKHR where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AcquireProfilingLockFlagBitsKHR")
-                       v <- step readPrec
-                       pure (AcquireProfilingLockFlagBitsKHR v)))
+  readPrec = enumReadPrec enumPrefixAcquireProfilingLockFlagBitsKHR
+                          showTableAcquireProfilingLockFlagBitsKHR
+                          conNameAcquireProfilingLockFlagBitsKHR
+                          AcquireProfilingLockFlagBitsKHR
 
 
 type KHR_PERFORMANCE_QUERY_SPEC_VERSION = 1

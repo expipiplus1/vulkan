@@ -2,30 +2,30 @@ module VK.AssignModules
   ( assignModules
   ) where
 
-import           Relude                  hiding ( runState
-                                                , execState
-                                                , evalState
-                                                , State
-                                                , modify'
-                                                , ask
-                                                , get
-                                                , put
-                                                , gets
-                                                )
+import           Algebra.Graph.AdjacencyIntMap
+                                         hiding ( empty )
+import qualified Data.IntMap.Strict            as IntMap
+import qualified Data.IntSet                   as Set
+import qualified Data.List.Extra               as List
+import qualified Data.Map                      as Map
+import qualified Data.Set
+import qualified Data.Text.Extra               as T
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector.Extra             as V
 import           Data.Version
-import qualified Data.List.Extra               as List
-import qualified Data.Map                      as Map
-import qualified Data.IntMap.Strict            as IntMap
-import qualified Data.IntSet                   as Set
-import qualified Data.Set
-import qualified Data.Text.Extra               as T
 import           Polysemy
 import           Polysemy.Input
 import           Polysemy.State
-import           Algebra.Graph.AdjacencyIntMap
-                                         hiding ( empty )
+import           Relude                  hiding ( State
+                                                , ask
+                                                , evalState
+                                                , execState
+                                                , get
+                                                , gets
+                                                , modify'
+                                                , put
+                                                , runState
+                                                )
 
 import           Error
 import           Haskell
@@ -34,6 +34,7 @@ import           Render.SpecInfo
 import           Spec.Types
 import           VkModulePrefix
 
+import           Data.Char                      ( isUpper )
 import           VK.Render
 
 -- | Assign all render elements a module
@@ -320,11 +321,19 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
       ((i `postIntSet` closedRel) `Set.difference` allCoreExports)
 
 
+-- | This will try to ignore the "Bits" elements of flags and only return them
+-- if they are the only definition.
+--
+-- The reason is that initially this library exported the "Bits" synonym for
+-- flags last and the modules were named accordingly. Now they're exported
+-- first, but we don't want to change the module names
 firstTypeName :: HasErr r => RenderElement -> Sem r Text
 firstTypeName re =
-  case V.mapMaybe getTyConName (exportName <$> reExports re) of
-    V.Empty   -> throw "Unable to get type name from RenderElement"
-    x V.:<| _ -> pure x
+  let ns     = mapMaybe getTyConName (V.toList (exportName <$> reExports re))
+      noBits = filter (("Bits" `T.isSuffixOf`) . stripVendor) ns
+  in  case noBits <> ns of
+        []    -> throw "Unable to get type name from RenderElement"
+        x : _ -> pure x
 
 export :: Member (State S) r => ModName -> Int -> Sem r ()
 export m i = modify' (IntMap.alter ins i)
@@ -409,8 +418,9 @@ buildRelation elements = do
         Nothing -> pure 0 -- throw $ "Unable to find " <> show n <> " in any vertex"
         Just i  -> pure i
 
-  es <- concat
-    <$> forV numbered (\(n, x) -> forV (elementImports x) (fmap (n, ) . lookup))
+  es <- concat <$> forV
+    numbered
+    (\(n, x) -> forV (elementImports x) (fmap (n, ) . lookup))
 
   let relation = vertices (fst <$> toList numbered) `overlay` edges es
 
@@ -419,7 +429,7 @@ buildRelation elements = do
 getTyConName :: HName -> Maybe Text
 getTyConName = \case
   TyConName n -> Just n
-  _ -> Nothing
+  _           -> Nothing
 
 removeParens :: Text -> Text
 removeParens t =
@@ -465,3 +475,11 @@ unexportedNames Spec {..} = do
        ]
     <> apiVersions
 
+
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+stripVendor :: Text -> Text
+stripVendor = T.dropWhileEnd isUpper

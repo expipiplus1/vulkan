@@ -70,6 +70,7 @@ module VulkanMemoryAllocator  ( createAllocator
                               , PFN_vmaFreeDeviceMemoryFunction
                               , FN_vmaFreeDeviceMemoryFunction
                               , DeviceMemoryCallbacks(..)
+                              , AllocatorCreateFlags
                               , AllocatorCreateFlagBits( ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT
                                                        , ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT
                                                        , ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT
@@ -78,12 +79,11 @@ module VulkanMemoryAllocator  ( createAllocator
                                                        , ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
                                                        , ..
                                                        )
-                              , AllocatorCreateFlags
                               , VulkanFunctions(..)
+                              , RecordFlags
                               , RecordFlagBits( RECORD_FLUSH_AFTER_CALL_BIT
                                               , ..
                                               )
-                              , RecordFlags
                               , RecordSettings(..)
                               , AllocatorCreateInfo(..)
                               , AllocatorInfo(..)
@@ -100,6 +100,7 @@ module VulkanMemoryAllocator  ( createAllocator
                                            , MEMORY_USAGE_GPU_LAZILY_ALLOCATED
                                            , ..
                                            )
+                              , AllocationCreateFlags
                               , AllocationCreateFlagBits( ALLOCATION_CREATE_DEDICATED_MEMORY_BIT
                                                         , ALLOCATION_CREATE_NEVER_ALLOCATE_BIT
                                                         , ALLOCATION_CREATE_MAPPED_BIT
@@ -118,24 +119,23 @@ module VulkanMemoryAllocator  ( createAllocator
                                                         , ALLOCATION_CREATE_STRATEGY_MASK
                                                         , ..
                                                         )
-                              , AllocationCreateFlags
                               , AllocationCreateInfo(..)
+                              , PoolCreateFlags
                               , PoolCreateFlagBits( POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT
                                                   , POOL_CREATE_LINEAR_ALGORITHM_BIT
                                                   , POOL_CREATE_BUDDY_ALGORITHM_BIT
                                                   , POOL_CREATE_ALGORITHM_MASK
                                                   , ..
                                                   )
-                              , PoolCreateFlags
                               , PoolCreateInfo(..)
                               , PoolStats(..)
                               , Allocation(..)
                               , AllocationInfo(..)
                               , DefragmentationContext(..)
+                              , DefragmentationFlags
                               , DefragmentationFlagBits( DEFRAGMENTATION_FLAG_INCREMENTAL
                                                        , ..
                                                        )
-                              , DefragmentationFlags
                               , DefragmentationInfo2(..)
                               , DefragmentationPassMoveInfo(..)
                               , DefragmentationPassInfo(..)
@@ -172,6 +172,8 @@ import Vulkan (PhysicalDeviceProperties)
 import Vulkan (PhysicalDevice_T)
 import Vulkan (Result)
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
@@ -188,16 +190,10 @@ import GHC.Base (when)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
@@ -248,9 +244,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -2583,6 +2579,8 @@ instance Zero DeviceMemoryCallbacks where
            zero
 
 
+type AllocatorCreateFlags = AllocatorCreateFlagBits
+
 -- | Flags for created 'Allocator'.
 newtype AllocatorCreateFlagBits = AllocatorCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2593,7 +2591,7 @@ newtype AllocatorCreateFlagBits = AllocatorCreateFlagBits Flags
 --
 -- Using this flag may increase performance because internal mutexes are
 -- not used.
-pattern ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT = AllocatorCreateFlagBits 0x00000001
+pattern ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT    = AllocatorCreateFlagBits 0x00000001
 -- | Enables usage of VK_KHR_dedicated_allocation extension.
 --
 -- The flag works only if /VmaAllocatorCreateInfo::vulkanApiVersion/
@@ -2620,7 +2618,7 @@ pattern ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT = AllocatorCreateFlagBits 0
 --
 -- vkBindBufferMemory(): Binding memory to buffer 0x2d but
 -- vkGetBufferMemoryRequirements() has not been called on that buffer.
-pattern ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT = AllocatorCreateFlagBits 0x00000002
+pattern ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT   = AllocatorCreateFlagBits 0x00000002
 -- | Enables usage of VK_KHR_bind_memory2 extension.
 --
 -- The flag works only if /VmaAllocatorCreateInfo::vulkanApiVersion/
@@ -2636,7 +2634,7 @@ pattern ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT = AllocatorCreateFlagBits 
 -- @vkBindImageMemory2KHR@, which allow to pass a chain of @pNext@
 -- structures while binding. This flag is required if you use @pNext@
 -- parameter in 'bindBufferMemory2' or 'bindImageMemory2'.
-pattern ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT = AllocatorCreateFlagBits 0x00000004
+pattern ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT           = AllocatorCreateFlagBits 0x00000004
 -- | Enables usage of VK_EXT_memory_budget extension.
 --
 -- You may set this flag only if you found out that this device extension
@@ -2649,7 +2647,7 @@ pattern ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT = AllocatorCreateFlagBits 0x000000
 -- The extension provides query for current memory usage and budget, which
 -- will probably be more accurate than an estimation used by the library
 -- otherwise.
-pattern ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT = AllocatorCreateFlagBits 0x00000008
+pattern ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT          = AllocatorCreateFlagBits 0x00000008
 -- | Enables usage of VK_AMD_device_coherent_memory extension.
 --
 -- You may set this flag only if you:
@@ -2696,32 +2694,36 @@ pattern ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT = AllocatorCreateFlagBit
 --
 -- For more information, see documentation chapter /Enabling buffer device
 -- address/.
-pattern ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT = AllocatorCreateFlagBits 0x00000020
+pattern ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT      = AllocatorCreateFlagBits 0x00000020
 
-type AllocatorCreateFlags = AllocatorCreateFlagBits
+conNameAllocatorCreateFlagBits :: String
+conNameAllocatorCreateFlagBits = "AllocatorCreateFlagBits"
+
+enumPrefixAllocatorCreateFlagBits :: String
+enumPrefixAllocatorCreateFlagBits = "ALLOCATOR_CREATE_"
+
+showTableAllocatorCreateFlagBits :: [(AllocatorCreateFlagBits, String)]
+showTableAllocatorCreateFlagBits =
+  [ (ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT   , "EXTERNALLY_SYNCHRONIZED_BIT")
+  , (ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT  , "KHR_DEDICATED_ALLOCATION_BIT")
+  , (ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT          , "KHR_BIND_MEMORY2_BIT")
+  , (ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT         , "EXT_MEMORY_BUDGET_BIT")
+  , (ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT, "AMD_DEVICE_COHERENT_MEMORY_BIT")
+  , (ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT     , "BUFFER_DEVICE_ADDRESS_BIT")
+  ]
 
 instance Show AllocatorCreateFlagBits where
-  showsPrec p = \case
-    ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT -> showString "ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT"
-    ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT -> showString "ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT"
-    ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT -> showString "ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT"
-    ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT -> showString "ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT"
-    ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT -> showString "ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT"
-    ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT -> showString "ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT"
-    AllocatorCreateFlagBits x -> showParen (p >= 11) (showString "AllocatorCreateFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixAllocatorCreateFlagBits
+                            showTableAllocatorCreateFlagBits
+                            conNameAllocatorCreateFlagBits
+                            (\(AllocatorCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read AllocatorCreateFlagBits where
-  readPrec = parens (choose [("ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT", pure ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT)
-                            , ("ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT", pure ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT)
-                            , ("ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT", pure ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT)
-                            , ("ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT", pure ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT)
-                            , ("ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT", pure ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT)
-                            , ("ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT", pure ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AllocatorCreateFlagBits")
-                       v <- step readPrec
-                       pure (AllocatorCreateFlagBits v)))
+  readPrec = enumReadPrec enumPrefixAllocatorCreateFlagBits
+                          showTableAllocatorCreateFlagBits
+                          conNameAllocatorCreateFlagBits
+                          AllocatorCreateFlagBits
 
 
 -- | VmaVulkanFunctions
@@ -2870,6 +2872,8 @@ instance Zero VulkanFunctions where
            zero
 
 
+type RecordFlags = RecordFlagBits
+
 -- | Flags to be used in /VmaRecordSettings::flags/.
 newtype RecordFlagBits = RecordFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2880,20 +2884,24 @@ newtype RecordFlagBits = RecordFlagBits Flags
 -- recording file truncated. It may degrade performance though.
 pattern RECORD_FLUSH_AFTER_CALL_BIT = RecordFlagBits 0x00000001
 
-type RecordFlags = RecordFlagBits
+conNameRecordFlagBits :: String
+conNameRecordFlagBits = "RecordFlagBits"
+
+enumPrefixRecordFlagBits :: String
+enumPrefixRecordFlagBits = "RECORD_FLUSH_AFTER_CALL_BIT"
+
+showTableRecordFlagBits :: [(RecordFlagBits, String)]
+showTableRecordFlagBits = [(RECORD_FLUSH_AFTER_CALL_BIT, "")]
 
 instance Show RecordFlagBits where
-  showsPrec p = \case
-    RECORD_FLUSH_AFTER_CALL_BIT -> showString "RECORD_FLUSH_AFTER_CALL_BIT"
-    RecordFlagBits x -> showParen (p >= 11) (showString "RecordFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixRecordFlagBits
+                            showTableRecordFlagBits
+                            conNameRecordFlagBits
+                            (\(RecordFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read RecordFlagBits where
-  readPrec = parens (choose [("RECORD_FLUSH_AFTER_CALL_BIT", pure RECORD_FLUSH_AFTER_CALL_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "RecordFlagBits")
-                       v <- step readPrec
-                       pure (RecordFlagBits v)))
+  readPrec = enumReadPrec enumPrefixRecordFlagBits showTableRecordFlagBits conNameRecordFlagBits RecordFlagBits
 
 
 -- | VmaRecordSettings
@@ -3482,7 +3490,7 @@ newtype MemoryUsage = MemoryUsage Int32
 
 -- | No intended memory usage specified. Use other members of
 -- 'AllocationCreateInfo' to specify your requirements.
-pattern MEMORY_USAGE_UNKNOWN = MemoryUsage 0
+pattern MEMORY_USAGE_UNKNOWN              = MemoryUsage 0
 -- | Memory will be used on device only, so fast access from the device is
 -- preferred. It usually means device-local GPU (video) memory. No need to
 -- be mappable on host. It is roughly equivalent of
@@ -3501,7 +3509,7 @@ pattern MEMORY_USAGE_UNKNOWN = MemoryUsage 0
 -- Allocation may still end up in @HOST_VISIBLE@ memory on some
 -- implementations. In such case, you are free to map it. You can use
 -- 'ALLOCATION_CREATE_MAPPED_BIT' with this usage type.
-pattern MEMORY_USAGE_GPU_ONLY = MemoryUsage 1
+pattern MEMORY_USAGE_GPU_ONLY             = MemoryUsage 1
 -- | Memory will be mappable on host. It usually means CPU (system) memory.
 -- Guarantees to be @HOST_VISIBLE@ and @HOST_COHERENT@. CPU access is
 -- typically uncached. Writes may be write-combined. Resources created in
@@ -3509,7 +3517,7 @@ pattern MEMORY_USAGE_GPU_ONLY = MemoryUsage 1
 -- be slow. It is roughly equivalent of @D3D12_HEAP_TYPE_UPLOAD@.
 --
 -- Usage: Staging copy of resources used as transfer source.
-pattern MEMORY_USAGE_CPU_ONLY = MemoryUsage 2
+pattern MEMORY_USAGE_CPU_ONLY             = MemoryUsage 2
 -- | Memory that is both mappable on host (guarantees to be @HOST_VISIBLE@)
 -- and preferably fast to access by GPU. CPU access is typically uncached.
 -- Writes may be write-combined.
@@ -3517,7 +3525,7 @@ pattern MEMORY_USAGE_CPU_ONLY = MemoryUsage 2
 -- Usage: Resources written frequently by host (dynamic), read by device.
 -- E.g. textures (with LINEAR layout), vertex buffers, uniform buffers
 -- updated every frame or every draw call.
-pattern MEMORY_USAGE_CPU_TO_GPU = MemoryUsage 3
+pattern MEMORY_USAGE_CPU_TO_GPU           = MemoryUsage 3
 -- | Memory mappable on host (guarantees to be @HOST_VISIBLE@) and cached. It
 -- is roughly equivalent of @D3D12_HEAP_TYPE_READBACK@.
 --
@@ -3530,14 +3538,14 @@ pattern MEMORY_USAGE_CPU_TO_GPU = MemoryUsage 3
 -- -   Any resources read or accessed randomly on host, e.g. CPU-side copy
 --     of vertex buffer used as source of transfer, but also used for
 --     collision detection.
-pattern MEMORY_USAGE_GPU_TO_CPU = MemoryUsage 4
+pattern MEMORY_USAGE_GPU_TO_CPU           = MemoryUsage 4
 -- | CPU memory - memory that is preferably not @DEVICE_LOCAL@, but also not
 -- guaranteed to be @HOST_VISIBLE@.
 --
 -- Usage: Staging copy of resources moved from GPU memory to CPU memory as
 -- part of custom paging\/residency mechanism, to be moved back to GPU
 -- memory when needed.
-pattern MEMORY_USAGE_CPU_COPY = MemoryUsage 5
+pattern MEMORY_USAGE_CPU_COPY             = MemoryUsage 5
 -- | Lazily allocated GPU memory having
 -- @VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT@. Exists mostly on mobile
 -- platforms. Using it on desktop PC or other GPUs with no such memory type
@@ -3558,31 +3566,32 @@ pattern MEMORY_USAGE_GPU_LAZILY_ALLOCATED = MemoryUsage 6
              MEMORY_USAGE_CPU_COPY,
              MEMORY_USAGE_GPU_LAZILY_ALLOCATED :: MemoryUsage #-}
 
+conNameMemoryUsage :: String
+conNameMemoryUsage = "MemoryUsage"
+
+enumPrefixMemoryUsage :: String
+enumPrefixMemoryUsage = "MEMORY_USAGE_"
+
+showTableMemoryUsage :: [(MemoryUsage, String)]
+showTableMemoryUsage =
+  [ (MEMORY_USAGE_UNKNOWN             , "UNKNOWN")
+  , (MEMORY_USAGE_GPU_ONLY            , "GPU_ONLY")
+  , (MEMORY_USAGE_CPU_ONLY            , "CPU_ONLY")
+  , (MEMORY_USAGE_CPU_TO_GPU          , "CPU_TO_GPU")
+  , (MEMORY_USAGE_GPU_TO_CPU          , "GPU_TO_CPU")
+  , (MEMORY_USAGE_CPU_COPY            , "CPU_COPY")
+  , (MEMORY_USAGE_GPU_LAZILY_ALLOCATED, "GPU_LAZILY_ALLOCATED")
+  ]
+
 instance Show MemoryUsage where
-  showsPrec p = \case
-    MEMORY_USAGE_UNKNOWN -> showString "MEMORY_USAGE_UNKNOWN"
-    MEMORY_USAGE_GPU_ONLY -> showString "MEMORY_USAGE_GPU_ONLY"
-    MEMORY_USAGE_CPU_ONLY -> showString "MEMORY_USAGE_CPU_ONLY"
-    MEMORY_USAGE_CPU_TO_GPU -> showString "MEMORY_USAGE_CPU_TO_GPU"
-    MEMORY_USAGE_GPU_TO_CPU -> showString "MEMORY_USAGE_GPU_TO_CPU"
-    MEMORY_USAGE_CPU_COPY -> showString "MEMORY_USAGE_CPU_COPY"
-    MEMORY_USAGE_GPU_LAZILY_ALLOCATED -> showString "MEMORY_USAGE_GPU_LAZILY_ALLOCATED"
-    MemoryUsage x -> showParen (p >= 11) (showString "MemoryUsage " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixMemoryUsage showTableMemoryUsage conNameMemoryUsage (\(MemoryUsage x) -> x) (showsPrec 11)
 
 instance Read MemoryUsage where
-  readPrec = parens (choose [("MEMORY_USAGE_UNKNOWN", pure MEMORY_USAGE_UNKNOWN)
-                            , ("MEMORY_USAGE_GPU_ONLY", pure MEMORY_USAGE_GPU_ONLY)
-                            , ("MEMORY_USAGE_CPU_ONLY", pure MEMORY_USAGE_CPU_ONLY)
-                            , ("MEMORY_USAGE_CPU_TO_GPU", pure MEMORY_USAGE_CPU_TO_GPU)
-                            , ("MEMORY_USAGE_GPU_TO_CPU", pure MEMORY_USAGE_GPU_TO_CPU)
-                            , ("MEMORY_USAGE_CPU_COPY", pure MEMORY_USAGE_CPU_COPY)
-                            , ("MEMORY_USAGE_GPU_LAZILY_ALLOCATED", pure MEMORY_USAGE_GPU_LAZILY_ALLOCATED)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "MemoryUsage")
-                       v <- step readPrec
-                       pure (MemoryUsage v)))
+  readPrec = enumReadPrec enumPrefixMemoryUsage showTableMemoryUsage conNameMemoryUsage MemoryUsage
 
+
+type AllocationCreateFlags = AllocationCreateFlagBits
 
 -- | Flags to be passed as /VmaAllocationCreateInfo::flags/.
 newtype AllocationCreateFlagBits = AllocationCreateFlagBits Flags
@@ -3595,7 +3604,7 @@ newtype AllocationCreateFlagBits = AllocationCreateFlagBits Flags
 --
 -- You should not use this flag if /VmaAllocationCreateInfo::pool/ is not
 -- null.
-pattern ALLOCATION_CREATE_DEDICATED_MEMORY_BIT = AllocationCreateFlagBits 0x00000001
+pattern ALLOCATION_CREATE_DEDICATED_MEMORY_BIT           = AllocationCreateFlagBits 0x00000001
 -- | Set this flag to only try to allocate from existing @VkDeviceMemory@
 -- blocks and never create new such block.
 --
@@ -3608,7 +3617,7 @@ pattern ALLOCATION_CREATE_DEDICATED_MEMORY_BIT = AllocationCreateFlagBits 0x0000
 --
 -- If /VmaAllocationCreateInfo::pool/ is not null, this flag is implied and
 -- ignored.
-pattern ALLOCATION_CREATE_NEVER_ALLOCATE_BIT = AllocationCreateFlagBits 0x00000002
+pattern ALLOCATION_CREATE_NEVER_ALLOCATE_BIT             = AllocationCreateFlagBits 0x00000002
 -- | Set this flag to use a memory that will be persistently mapped and
 -- retrieve pointer to it.
 --
@@ -3623,7 +3632,7 @@ pattern ALLOCATION_CREATE_NEVER_ALLOCATE_BIT = AllocationCreateFlagBits 0x000000
 --
 -- You should not use this flag together with
 -- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT'.
-pattern ALLOCATION_CREATE_MAPPED_BIT = AllocationCreateFlagBits 0x00000004
+pattern ALLOCATION_CREATE_MAPPED_BIT                     = AllocationCreateFlagBits 0x00000004
 -- | Allocation created with this flag can become lost as a result of another
 -- allocation with 'ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT' flag, so you
 -- must check it before use.
@@ -3636,100 +3645,94 @@ pattern ALLOCATION_CREATE_MAPPED_BIT = AllocationCreateFlagBits 0x00000004
 --
 -- You should not use this flag together with
 -- 'ALLOCATION_CREATE_MAPPED_BIT'.
-pattern ALLOCATION_CREATE_CAN_BECOME_LOST_BIT = AllocationCreateFlagBits 0x00000008
+pattern ALLOCATION_CREATE_CAN_BECOME_LOST_BIT            = AllocationCreateFlagBits 0x00000008
 -- | While creating allocation using this flag, other allocations that were
 -- created with flag 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' can become
 -- lost.
 --
 -- For details about supporting lost allocations, see Lost Allocations
 -- chapter of User Guide on Main Page.
-pattern ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT = AllocationCreateFlagBits 0x00000010
+pattern ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT        = AllocationCreateFlagBits 0x00000010
 -- | Set this flag to treat /VmaAllocationCreateInfo::pUserData/ as pointer
 -- to a null-terminated string. Instead of copying pointer value, a local
 -- copy of the string is made and stored in allocation\'s @pUserData@. The
 -- string is automatically freed together with the allocation. It is also
 -- used in 'buildStatsString'.
-pattern ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT = AllocationCreateFlagBits 0x00000020
+pattern ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT      = AllocationCreateFlagBits 0x00000020
 -- | Allocation will be created from upper stack in a double stack pool.
 --
 -- This flag is only allowed for custom pools created with
 -- 'POOL_CREATE_LINEAR_ALGORITHM_BIT' flag.
-pattern ALLOCATION_CREATE_UPPER_ADDRESS_BIT = AllocationCreateFlagBits 0x00000040
+pattern ALLOCATION_CREATE_UPPER_ADDRESS_BIT              = AllocationCreateFlagBits 0x00000040
 -- | Create both buffer\/image and allocation, but don\'t bind them together.
 -- It is useful when you want to bind yourself to do some more advanced
 -- binding, e.g. using some extensions. The flag is meaningful only with
 -- functions that bind by default: 'createBuffer', 'createImage'. Otherwise
 -- it is ignored.
-pattern ALLOCATION_CREATE_DONT_BIND_BIT = AllocationCreateFlagBits 0x00000080
+pattern ALLOCATION_CREATE_DONT_BIND_BIT                  = AllocationCreateFlagBits 0x00000080
 -- | Create allocation only if additional device memory required for it, if
 -- any, won\'t exceed memory budget. Otherwise return
 -- @VK_ERROR_OUT_OF_DEVICE_MEMORY@.
-pattern ALLOCATION_CREATE_WITHIN_BUDGET_BIT = AllocationCreateFlagBits 0x00000100
+pattern ALLOCATION_CREATE_WITHIN_BUDGET_BIT              = AllocationCreateFlagBits 0x00000100
 -- | Allocation strategy that chooses smallest possible free range for the
 -- allocation.
-pattern ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT = AllocationCreateFlagBits 0x00010000
+pattern ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT          = AllocationCreateFlagBits 0x00010000
 -- | Allocation strategy that chooses biggest possible free range for the
 -- allocation.
-pattern ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT = AllocationCreateFlagBits 0x00020000
+pattern ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT         = AllocationCreateFlagBits 0x00020000
 -- | Allocation strategy that chooses first suitable free range for the
 -- allocation.
 --
 -- \"First\" doesn\'t necessarily means the one with smallest offset in
 -- memory, but rather the one that is easiest and fastest to find.
-pattern ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT = AllocationCreateFlagBits 0x00040000
+pattern ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT         = AllocationCreateFlagBits 0x00040000
 -- | Allocation strategy that tries to minimize memory usage.
-pattern ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT = AllocationCreateFlagBits 0x00010000
+pattern ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT        = AllocationCreateFlagBits 0x00010000
 -- | Allocation strategy that tries to minimize allocation time.
-pattern ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT = AllocationCreateFlagBits 0x00040000
+pattern ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT          = AllocationCreateFlagBits 0x00040000
 -- | Allocation strategy that tries to minimize memory fragmentation.
 pattern ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT = AllocationCreateFlagBits 0x00020000
 -- | A bit mask to extract only @STRATEGY@ bits from entire set of flags.
-pattern ALLOCATION_CREATE_STRATEGY_MASK = AllocationCreateFlagBits 0x00070000
+pattern ALLOCATION_CREATE_STRATEGY_MASK                  = AllocationCreateFlagBits 0x00070000
 
-type AllocationCreateFlags = AllocationCreateFlagBits
+conNameAllocationCreateFlagBits :: String
+conNameAllocationCreateFlagBits = "AllocationCreateFlagBits"
+
+enumPrefixAllocationCreateFlagBits :: String
+enumPrefixAllocationCreateFlagBits = "ALLOCATION_CREATE_"
+
+showTableAllocationCreateFlagBits :: [(AllocationCreateFlagBits, String)]
+showTableAllocationCreateFlagBits =
+  [ (ALLOCATION_CREATE_DEDICATED_MEMORY_BIT          , "DEDICATED_MEMORY_BIT")
+  , (ALLOCATION_CREATE_NEVER_ALLOCATE_BIT            , "NEVER_ALLOCATE_BIT")
+  , (ALLOCATION_CREATE_MAPPED_BIT                    , "MAPPED_BIT")
+  , (ALLOCATION_CREATE_CAN_BECOME_LOST_BIT           , "CAN_BECOME_LOST_BIT")
+  , (ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT       , "CAN_MAKE_OTHER_LOST_BIT")
+  , (ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT     , "USER_DATA_COPY_STRING_BIT")
+  , (ALLOCATION_CREATE_UPPER_ADDRESS_BIT             , "UPPER_ADDRESS_BIT")
+  , (ALLOCATION_CREATE_DONT_BIND_BIT                 , "DONT_BIND_BIT")
+  , (ALLOCATION_CREATE_WITHIN_BUDGET_BIT             , "WITHIN_BUDGET_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT         , "STRATEGY_BEST_FIT_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT        , "STRATEGY_WORST_FIT_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT        , "STRATEGY_FIRST_FIT_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT       , "STRATEGY_MIN_MEMORY_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT         , "STRATEGY_MIN_TIME_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT, "STRATEGY_MIN_FRAGMENTATION_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_MASK                 , "STRATEGY_MASK")
+  ]
 
 instance Show AllocationCreateFlagBits where
-  showsPrec p = \case
-    ALLOCATION_CREATE_DEDICATED_MEMORY_BIT -> showString "ALLOCATION_CREATE_DEDICATED_MEMORY_BIT"
-    ALLOCATION_CREATE_NEVER_ALLOCATE_BIT -> showString "ALLOCATION_CREATE_NEVER_ALLOCATE_BIT"
-    ALLOCATION_CREATE_MAPPED_BIT -> showString "ALLOCATION_CREATE_MAPPED_BIT"
-    ALLOCATION_CREATE_CAN_BECOME_LOST_BIT -> showString "ALLOCATION_CREATE_CAN_BECOME_LOST_BIT"
-    ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT -> showString "ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT"
-    ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT -> showString "ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT"
-    ALLOCATION_CREATE_UPPER_ADDRESS_BIT -> showString "ALLOCATION_CREATE_UPPER_ADDRESS_BIT"
-    ALLOCATION_CREATE_DONT_BIND_BIT -> showString "ALLOCATION_CREATE_DONT_BIND_BIT"
-    ALLOCATION_CREATE_WITHIN_BUDGET_BIT -> showString "ALLOCATION_CREATE_WITHIN_BUDGET_BIT"
-    ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT -> showString "ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT"
-    ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT -> showString "ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT"
-    ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT -> showString "ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT"
-    ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT -> showString "ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT"
-    ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT -> showString "ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT"
-    ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT -> showString "ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT"
-    ALLOCATION_CREATE_STRATEGY_MASK -> showString "ALLOCATION_CREATE_STRATEGY_MASK"
-    AllocationCreateFlagBits x -> showParen (p >= 11) (showString "AllocationCreateFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixAllocationCreateFlagBits
+                            showTableAllocationCreateFlagBits
+                            conNameAllocationCreateFlagBits
+                            (\(AllocationCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read AllocationCreateFlagBits where
-  readPrec = parens (choose [("ALLOCATION_CREATE_DEDICATED_MEMORY_BIT", pure ALLOCATION_CREATE_DEDICATED_MEMORY_BIT)
-                            , ("ALLOCATION_CREATE_NEVER_ALLOCATE_BIT", pure ALLOCATION_CREATE_NEVER_ALLOCATE_BIT)
-                            , ("ALLOCATION_CREATE_MAPPED_BIT", pure ALLOCATION_CREATE_MAPPED_BIT)
-                            , ("ALLOCATION_CREATE_CAN_BECOME_LOST_BIT", pure ALLOCATION_CREATE_CAN_BECOME_LOST_BIT)
-                            , ("ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT", pure ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT)
-                            , ("ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT", pure ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT)
-                            , ("ALLOCATION_CREATE_UPPER_ADDRESS_BIT", pure ALLOCATION_CREATE_UPPER_ADDRESS_BIT)
-                            , ("ALLOCATION_CREATE_DONT_BIND_BIT", pure ALLOCATION_CREATE_DONT_BIND_BIT)
-                            , ("ALLOCATION_CREATE_WITHIN_BUDGET_BIT", pure ALLOCATION_CREATE_WITHIN_BUDGET_BIT)
-                            , ("ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT", pure ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT)
-                            , ("ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT", pure ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT)
-                            , ("ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT", pure ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT)
-                            , ("ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT", pure ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT)
-                            , ("ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT", pure ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT)
-                            , ("ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT", pure ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT)
-                            , ("ALLOCATION_CREATE_STRATEGY_MASK", pure ALLOCATION_CREATE_STRATEGY_MASK)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AllocationCreateFlagBits")
-                       v <- step readPrec
-                       pure (AllocationCreateFlagBits v)))
+  readPrec = enumReadPrec enumPrefixAllocationCreateFlagBits
+                          showTableAllocationCreateFlagBits
+                          conNameAllocationCreateFlagBits
+                          AllocationCreateFlagBits
 
 
 -- | VmaAllocationCreateInfo
@@ -3845,6 +3848,8 @@ instance Zero AllocationCreateInfo where
            zero
 
 
+type PoolCreateFlags = PoolCreateFlagBits
+
 -- | Flags to be passed as /VmaPoolCreateInfo::flags/.
 newtype PoolCreateFlagBits = PoolCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -3885,7 +3890,7 @@ pattern POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT = PoolCreateFlagBits 0x0
 -- /VmaPoolCreateInfo::maxBlockCount/ == 1 (or 0 for default).
 --
 -- For more details, see /Linear allocation algorithm/.
-pattern POOL_CREATE_LINEAR_ALGORITHM_BIT = PoolCreateFlagBits 0x00000004
+pattern POOL_CREATE_LINEAR_ALGORITHM_BIT                = PoolCreateFlagBits 0x00000004
 -- | Enables alternative, buddy allocation algorithm in this pool.
 --
 -- It operates on a tree of blocks, each having size that is a power of two
@@ -3895,30 +3900,34 @@ pattern POOL_CREATE_LINEAR_ALGORITHM_BIT = PoolCreateFlagBits 0x00000004
 -- fragmentation).
 --
 -- For more details, see /Buddy allocation algorithm/.
-pattern POOL_CREATE_BUDDY_ALGORITHM_BIT = PoolCreateFlagBits 0x00000008
+pattern POOL_CREATE_BUDDY_ALGORITHM_BIT                 = PoolCreateFlagBits 0x00000008
 -- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
-pattern POOL_CREATE_ALGORITHM_MASK = PoolCreateFlagBits 0x0000000c
+pattern POOL_CREATE_ALGORITHM_MASK                      = PoolCreateFlagBits 0x0000000c
 
-type PoolCreateFlags = PoolCreateFlagBits
+conNamePoolCreateFlagBits :: String
+conNamePoolCreateFlagBits = "PoolCreateFlagBits"
+
+enumPrefixPoolCreateFlagBits :: String
+enumPrefixPoolCreateFlagBits = "POOL_CREATE_"
+
+showTablePoolCreateFlagBits :: [(PoolCreateFlagBits, String)]
+showTablePoolCreateFlagBits =
+  [ (POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT, "IGNORE_BUFFER_IMAGE_GRANULARITY_BIT")
+  , (POOL_CREATE_LINEAR_ALGORITHM_BIT               , "LINEAR_ALGORITHM_BIT")
+  , (POOL_CREATE_BUDDY_ALGORITHM_BIT                , "BUDDY_ALGORITHM_BIT")
+  , (POOL_CREATE_ALGORITHM_MASK                     , "ALGORITHM_MASK")
+  ]
 
 instance Show PoolCreateFlagBits where
-  showsPrec p = \case
-    POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT -> showString "POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT"
-    POOL_CREATE_LINEAR_ALGORITHM_BIT -> showString "POOL_CREATE_LINEAR_ALGORITHM_BIT"
-    POOL_CREATE_BUDDY_ALGORITHM_BIT -> showString "POOL_CREATE_BUDDY_ALGORITHM_BIT"
-    POOL_CREATE_ALGORITHM_MASK -> showString "POOL_CREATE_ALGORITHM_MASK"
-    PoolCreateFlagBits x -> showParen (p >= 11) (showString "PoolCreateFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPoolCreateFlagBits
+                            showTablePoolCreateFlagBits
+                            conNamePoolCreateFlagBits
+                            (\(PoolCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PoolCreateFlagBits where
-  readPrec = parens (choose [("POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT", pure POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT)
-                            , ("POOL_CREATE_LINEAR_ALGORITHM_BIT", pure POOL_CREATE_LINEAR_ALGORITHM_BIT)
-                            , ("POOL_CREATE_BUDDY_ALGORITHM_BIT", pure POOL_CREATE_BUDDY_ALGORITHM_BIT)
-                            , ("POOL_CREATE_ALGORITHM_MASK", pure POOL_CREATE_ALGORITHM_MASK)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PoolCreateFlagBits")
-                       v <- step readPrec
-                       pure (PoolCreateFlagBits v)))
+  readPrec =
+    enumReadPrec enumPrefixPoolCreateFlagBits showTablePoolCreateFlagBits conNamePoolCreateFlagBits PoolCreateFlagBits
 
 
 -- | VmaPoolCreateInfo
@@ -4258,6 +4267,8 @@ instance Show DefragmentationContext where
   showsPrec p (DefragmentationContext x) = showParen (p >= 11) (showString "DefragmentationContext 0x" . showHex x)
 
 
+type DefragmentationFlags = DefragmentationFlagBits
+
 -- | Flags to be used in 'defragmentationBegin'. None at the moment. Reserved
 -- for future use.
 newtype DefragmentationFlagBits = DefragmentationFlagBits Flags
@@ -4266,20 +4277,27 @@ newtype DefragmentationFlagBits = DefragmentationFlagBits Flags
 
 pattern DEFRAGMENTATION_FLAG_INCREMENTAL = DefragmentationFlagBits 0x00000001
 
-type DefragmentationFlags = DefragmentationFlagBits
+conNameDefragmentationFlagBits :: String
+conNameDefragmentationFlagBits = "DefragmentationFlagBits"
+
+enumPrefixDefragmentationFlagBits :: String
+enumPrefixDefragmentationFlagBits = "DEFRAGMENTATION_FLAG_INCREMENTAL"
+
+showTableDefragmentationFlagBits :: [(DefragmentationFlagBits, String)]
+showTableDefragmentationFlagBits = [(DEFRAGMENTATION_FLAG_INCREMENTAL, "")]
 
 instance Show DefragmentationFlagBits where
-  showsPrec p = \case
-    DEFRAGMENTATION_FLAG_INCREMENTAL -> showString "DEFRAGMENTATION_FLAG_INCREMENTAL"
-    DefragmentationFlagBits x -> showParen (p >= 11) (showString "DefragmentationFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDefragmentationFlagBits
+                            showTableDefragmentationFlagBits
+                            conNameDefragmentationFlagBits
+                            (\(DefragmentationFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DefragmentationFlagBits where
-  readPrec = parens (choose [("DEFRAGMENTATION_FLAG_INCREMENTAL", pure DEFRAGMENTATION_FLAG_INCREMENTAL)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DefragmentationFlagBits")
-                       v <- step readPrec
-                       pure (DefragmentationFlagBits v)))
+  readPrec = enumReadPrec enumPrefixDefragmentationFlagBits
+                          showTableDefragmentationFlagBits
+                          conNameDefragmentationFlagBits
+                          DefragmentationFlagBits
 
 
 -- | VmaDefragmentationInfo2

@@ -1,28 +1,25 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SamplerCreateFlagBits"
-module Vulkan.Core10.Enums.SamplerCreateFlagBits  ( SamplerCreateFlagBits( SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
+module Vulkan.Core10.Enums.SamplerCreateFlagBits  ( SamplerCreateFlags
+                                                  , SamplerCreateFlagBits( SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
                                                                          , SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
                                                                          , ..
                                                                          )
-                                                  , SamplerCreateFlags
                                                   ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type SamplerCreateFlags = SamplerCreateFlagBits
+
 -- | VkSamplerCreateFlagBits - Bitmask specifying additional parameters of
 -- sampler
 --
@@ -51,22 +48,30 @@ pattern SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT = SamplerCreateF
 -- specifies that the sampler will read from an image created with @flags@
 -- containing
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'.
-pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT = SamplerCreateFlagBits 0x00000001
+pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT                       = SamplerCreateFlagBits 0x00000001
 
-type SamplerCreateFlags = SamplerCreateFlagBits
+conNameSamplerCreateFlagBits :: String
+conNameSamplerCreateFlagBits = "SamplerCreateFlagBits"
+
+enumPrefixSamplerCreateFlagBits :: String
+enumPrefixSamplerCreateFlagBits = "SAMPLER_CREATE_SUBSAMPLED_"
+
+showTableSamplerCreateFlagBits :: [(SamplerCreateFlagBits, String)]
+showTableSamplerCreateFlagBits =
+  [ (SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT, "COARSE_RECONSTRUCTION_BIT_EXT")
+  , (SAMPLER_CREATE_SUBSAMPLED_BIT_EXT                      , "BIT_EXT")
+  ]
 
 instance Show SamplerCreateFlagBits where
-  showsPrec p = \case
-    SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT -> showString "SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"
-    SAMPLER_CREATE_SUBSAMPLED_BIT_EXT -> showString "SAMPLER_CREATE_SUBSAMPLED_BIT_EXT"
-    SamplerCreateFlagBits x -> showParen (p >= 11) (showString "SamplerCreateFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixSamplerCreateFlagBits
+                            showTableSamplerCreateFlagBits
+                            conNameSamplerCreateFlagBits
+                            (\(SamplerCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read SamplerCreateFlagBits where
-  readPrec = parens (choose [("SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT", pure SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT)
-                            , ("SAMPLER_CREATE_SUBSAMPLED_BIT_EXT", pure SAMPLER_CREATE_SUBSAMPLED_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SamplerCreateFlagBits")
-                       v <- step readPrec
-                       pure (SamplerCreateFlagBits v)))
+  readPrec = enumReadPrec enumPrefixSamplerCreateFlagBits
+                          showTableSamplerCreateFlagBits
+                          conNameSamplerCreateFlagBits
+                          SamplerCreateFlagBits
 

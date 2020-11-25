@@ -553,16 +553,16 @@ module Vulkan.Extensions.VK_NV_device_generated_commands  ( cmdExecuteGeneratedC
                                                           , IndirectCommandsLayoutCreateInfoNV(..)
                                                           , GeneratedCommandsInfoNV(..)
                                                           , GeneratedCommandsMemoryRequirementsInfoNV(..)
+                                                          , IndirectCommandsLayoutUsageFlagsNV
                                                           , IndirectCommandsLayoutUsageFlagBitsNV( INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV
                                                                                                  , INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV
                                                                                                  , INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV
                                                                                                  , ..
                                                                                                  )
-                                                          , IndirectCommandsLayoutUsageFlagsNV
+                                                          , IndirectStateFlagsNV
                                                           , IndirectStateFlagBitsNV( INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV
                                                                                    , ..
                                                                                    )
-                                                          , IndirectStateFlagsNV
                                                           , IndirectCommandsTokenTypeNV( INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV
                                                                                        , INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV
                                                                                        , INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV
@@ -580,6 +580,8 @@ module Vulkan.Extensions.VK_NV_device_generated_commands  ( cmdExecuteGeneratedC
                                                           , IndirectCommandsLayoutNV(..)
                                                           ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -593,16 +595,9 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -624,8 +619,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -3189,6 +3184,8 @@ instance Zero GeneratedCommandsMemoryRequirementsInfoNV where
            zero
 
 
+type IndirectCommandsLayoutUsageFlagsNV = IndirectCommandsLayoutUsageFlagBitsNV
+
 -- | VkIndirectCommandsLayoutUsageFlagBitsNV - Bitmask specifying allowed
 -- usage of an indirect commands layout
 --
@@ -3208,32 +3205,41 @@ pattern INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV = IndirectComm
 -- the input data for the sequences is not implicitly indexed from
 -- 0..sequencesUsed but a user provided 'Vulkan.Core10.Handles.Buffer'
 -- encoding the index is provided.
-pattern INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV = IndirectCommandsLayoutUsageFlagBitsNV 0x00000002
+pattern INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV   = IndirectCommandsLayoutUsageFlagBitsNV 0x00000002
 -- | 'INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV' specifies
 -- that the processing of sequences /can/ happen at an
 -- implementation-dependent order, which is not: guaranteed to be coherent
 -- using the same input data.
 pattern INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV = IndirectCommandsLayoutUsageFlagBitsNV 0x00000004
 
-type IndirectCommandsLayoutUsageFlagsNV = IndirectCommandsLayoutUsageFlagBitsNV
+conNameIndirectCommandsLayoutUsageFlagBitsNV :: String
+conNameIndirectCommandsLayoutUsageFlagBitsNV = "IndirectCommandsLayoutUsageFlagBitsNV"
+
+enumPrefixIndirectCommandsLayoutUsageFlagBitsNV :: String
+enumPrefixIndirectCommandsLayoutUsageFlagBitsNV = "INDIRECT_COMMANDS_LAYOUT_USAGE_"
+
+showTableIndirectCommandsLayoutUsageFlagBitsNV :: [(IndirectCommandsLayoutUsageFlagBitsNV, String)]
+showTableIndirectCommandsLayoutUsageFlagBitsNV =
+  [ (INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV, "EXPLICIT_PREPROCESS_BIT_NV")
+  , (INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV  , "INDEXED_SEQUENCES_BIT_NV")
+  , (INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV, "UNORDERED_SEQUENCES_BIT_NV")
+  ]
 
 instance Show IndirectCommandsLayoutUsageFlagBitsNV where
-  showsPrec p = \case
-    INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV -> showString "INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV"
-    INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV -> showString "INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV"
-    INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV -> showString "INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV"
-    IndirectCommandsLayoutUsageFlagBitsNV x -> showParen (p >= 11) (showString "IndirectCommandsLayoutUsageFlagBitsNV 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixIndirectCommandsLayoutUsageFlagBitsNV
+                            showTableIndirectCommandsLayoutUsageFlagBitsNV
+                            conNameIndirectCommandsLayoutUsageFlagBitsNV
+                            (\(IndirectCommandsLayoutUsageFlagBitsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read IndirectCommandsLayoutUsageFlagBitsNV where
-  readPrec = parens (choose [("INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV", pure INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV)
-                            , ("INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV", pure INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV)
-                            , ("INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV", pure INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "IndirectCommandsLayoutUsageFlagBitsNV")
-                       v <- step readPrec
-                       pure (IndirectCommandsLayoutUsageFlagBitsNV v)))
+  readPrec = enumReadPrec enumPrefixIndirectCommandsLayoutUsageFlagBitsNV
+                          showTableIndirectCommandsLayoutUsageFlagBitsNV
+                          conNameIndirectCommandsLayoutUsageFlagBitsNV
+                          IndirectCommandsLayoutUsageFlagBitsNV
 
+
+type IndirectStateFlagsNV = IndirectStateFlagBitsNV
 
 -- | VkIndirectStateFlagBitsNV - Bitmask specifiying state that can be
 -- altered on the device
@@ -3249,20 +3255,27 @@ newtype IndirectStateFlagBitsNV = IndirectStateFlagBitsNV Flags
 -- subsequent draw operations.
 pattern INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV = IndirectStateFlagBitsNV 0x00000001
 
-type IndirectStateFlagsNV = IndirectStateFlagBitsNV
+conNameIndirectStateFlagBitsNV :: String
+conNameIndirectStateFlagBitsNV = "IndirectStateFlagBitsNV"
+
+enumPrefixIndirectStateFlagBitsNV :: String
+enumPrefixIndirectStateFlagBitsNV = "INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV"
+
+showTableIndirectStateFlagBitsNV :: [(IndirectStateFlagBitsNV, String)]
+showTableIndirectStateFlagBitsNV = [(INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV, "")]
 
 instance Show IndirectStateFlagBitsNV where
-  showsPrec p = \case
-    INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV -> showString "INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV"
-    IndirectStateFlagBitsNV x -> showParen (p >= 11) (showString "IndirectStateFlagBitsNV 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixIndirectStateFlagBitsNV
+                            showTableIndirectStateFlagBitsNV
+                            conNameIndirectStateFlagBitsNV
+                            (\(IndirectStateFlagBitsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read IndirectStateFlagBitsNV where
-  readPrec = parens (choose [("INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV", pure INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "IndirectStateFlagBitsNV")
-                       v <- step readPrec
-                       pure (IndirectStateFlagBitsNV v)))
+  readPrec = enumReadPrec enumPrefixIndirectStateFlagBitsNV
+                          showTableIndirectStateFlagBitsNV
+                          conNameIndirectStateFlagBitsNV
+                          IndirectStateFlagBitsNV
 
 
 -- | VkIndirectCommandsTokenTypeNV - Enum specifying token commands
@@ -3300,21 +3313,21 @@ newtype IndirectCommandsTokenTypeNV = IndirectCommandsTokenTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV = IndirectCommandsTokenTypeNV 0
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV  = IndirectCommandsTokenTypeNV 0
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV = IndirectCommandsTokenTypeNV 1
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV   = IndirectCommandsTokenTypeNV 1
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV = IndirectCommandsTokenTypeNV 2
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV  = IndirectCommandsTokenTypeNV 2
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV"
 pattern INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV = IndirectCommandsTokenTypeNV 3
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV"
 pattern INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV = IndirectCommandsTokenTypeNV 4
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV = IndirectCommandsTokenTypeNV 5
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV  = IndirectCommandsTokenTypeNV 5
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV = IndirectCommandsTokenTypeNV 6
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV          = IndirectCommandsTokenTypeNV 6
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV = IndirectCommandsTokenTypeNV 7
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV    = IndirectCommandsTokenTypeNV 7
 {-# complete INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV,
              INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV,
              INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV,
@@ -3324,32 +3337,36 @@ pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV = IndirectCommandsTokenTypeNV
              INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV,
              INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV :: IndirectCommandsTokenTypeNV #-}
 
+conNameIndirectCommandsTokenTypeNV :: String
+conNameIndirectCommandsTokenTypeNV = "IndirectCommandsTokenTypeNV"
+
+enumPrefixIndirectCommandsTokenTypeNV :: String
+enumPrefixIndirectCommandsTokenTypeNV = "INDIRECT_COMMANDS_TOKEN_TYPE_"
+
+showTableIndirectCommandsTokenTypeNV :: [(IndirectCommandsTokenTypeNV, String)]
+showTableIndirectCommandsTokenTypeNV =
+  [ (INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV , "SHADER_GROUP_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV  , "STATE_FLAGS_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV , "INDEX_BUFFER_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV, "VERTEX_BUFFER_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV, "PUSH_CONSTANT_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV , "DRAW_INDEXED_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV         , "DRAW_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV   , "DRAW_TASKS_NV")
+  ]
+
 instance Show IndirectCommandsTokenTypeNV where
-  showsPrec p = \case
-    INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV"
-    INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV"
-    INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV"
-    INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV"
-    INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV"
-    INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV"
-    INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV"
-    INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV"
-    IndirectCommandsTokenTypeNV x -> showParen (p >= 11) (showString "IndirectCommandsTokenTypeNV " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixIndirectCommandsTokenTypeNV
+                            showTableIndirectCommandsTokenTypeNV
+                            conNameIndirectCommandsTokenTypeNV
+                            (\(IndirectCommandsTokenTypeNV x) -> x)
+                            (showsPrec 11)
 
 instance Read IndirectCommandsTokenTypeNV where
-  readPrec = parens (choose [("INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV", pure INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV)
-                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV", pure INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV)
-                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV", pure INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV)
-                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV", pure INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV)
-                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV", pure INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV)
-                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV", pure INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV)
-                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV", pure INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV)
-                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV", pure INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "IndirectCommandsTokenTypeNV")
-                       v <- step readPrec
-                       pure (IndirectCommandsTokenTypeNV v)))
+  readPrec = enumReadPrec enumPrefixIndirectCommandsTokenTypeNV
+                          showTableIndirectCommandsTokenTypeNV
+                          conNameIndirectCommandsTokenTypeNV
+                          IndirectCommandsTokenTypeNV
 
 
 type NV_DEVICE_GENERATED_COMMANDS_SPEC_VERSION = 3

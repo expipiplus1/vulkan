@@ -19,18 +19,12 @@ module Vulkan.Core10.FundamentalTypes  ( boolToBool32
                                        , Result(..)
                                        ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Data.Bool (bool)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -40,9 +34,9 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -537,24 +531,24 @@ newtype Bool32 = Bool32 Int32
 -- No documentation found for Nested "VkBool32" "VK_FALSE"
 pattern FALSE = Bool32 0
 -- No documentation found for Nested "VkBool32" "VK_TRUE"
-pattern TRUE = Bool32 1
+pattern TRUE  = Bool32 1
 {-# complete FALSE,
              TRUE :: Bool32 #-}
 
+conNameBool32 :: String
+conNameBool32 = "Bool32"
+
+enumPrefixBool32 :: String
+enumPrefixBool32 = ""
+
+showTableBool32 :: [(Bool32, String)]
+showTableBool32 = [(FALSE, "FALSE"), (TRUE, "TRUE")]
+
 instance Show Bool32 where
-  showsPrec p = \case
-    FALSE -> showString "FALSE"
-    TRUE -> showString "TRUE"
-    Bool32 x -> showParen (p >= 11) (showString "Bool32 " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixBool32 showTableBool32 conNameBool32 (\(Bool32 x) -> x) (showsPrec 11)
 
 instance Read Bool32 where
-  readPrec = parens (choose [("FALSE", pure FALSE)
-                            , ("TRUE", pure TRUE)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "Bool32")
-                       v <- step readPrec
-                       pure (Bool32 v)))
+  readPrec = enumReadPrec enumPrefixBool32 showTableBool32 conNameBool32 Bool32
 
 
 -- | VkSampleMask - Mask of sample coverage information

@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "QueryResultFlagBits"
-module Vulkan.Core10.Enums.QueryResultFlagBits  ( QueryResultFlagBits
-                                                , QueryResultFlags
+module Vulkan.Core10.Enums.QueryResultFlagBits  ( QueryResultFlags
+                                                , QueryResultFlagBits
                                                 ) where
 
 
 
-data QueryResultFlagBits
-
 type QueryResultFlags = QueryResultFlagBits
+
+data QueryResultFlagBits
 

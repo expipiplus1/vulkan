@@ -166,16 +166,18 @@ module Vulkan.Extensions.VK_EXT_conditional_rendering  ( cmdBeginConditionalRend
                                                        , ConditionalRenderingBeginInfoEXT(..)
                                                        , CommandBufferInheritanceConditionalRenderingInfoEXT(..)
                                                        , PhysicalDeviceConditionalRenderingFeaturesEXT(..)
+                                                       , ConditionalRenderingFlagsEXT
                                                        , ConditionalRenderingFlagBitsEXT( CONDITIONAL_RENDERING_INVERTED_BIT_EXT
                                                                                         , ..
                                                                                         )
-                                                       , ConditionalRenderingFlagsEXT
                                                        , EXT_CONDITIONAL_RENDERING_SPEC_VERSION
                                                        , pattern EXT_CONDITIONAL_RENDERING_SPEC_VERSION
                                                        , EXT_CONDITIONAL_RENDERING_EXTENSION_NAME
                                                        , pattern EXT_CONDITIONAL_RENDERING_EXTENSION_NAME
                                                        ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -183,15 +185,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -209,7 +204,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
@@ -650,6 +645,8 @@ instance Zero PhysicalDeviceConditionalRenderingFeaturesEXT where
            zero
 
 
+type ConditionalRenderingFlagsEXT = ConditionalRenderingFlagBitsEXT
+
 -- | VkConditionalRenderingFlagBitsEXT - Specify the behavior of conditional
 -- rendering
 --
@@ -666,20 +663,27 @@ newtype ConditionalRenderingFlagBitsEXT = ConditionalRenderingFlagBitsEXT Flags
 -- discarded.
 pattern CONDITIONAL_RENDERING_INVERTED_BIT_EXT = ConditionalRenderingFlagBitsEXT 0x00000001
 
-type ConditionalRenderingFlagsEXT = ConditionalRenderingFlagBitsEXT
+conNameConditionalRenderingFlagBitsEXT :: String
+conNameConditionalRenderingFlagBitsEXT = "ConditionalRenderingFlagBitsEXT"
+
+enumPrefixConditionalRenderingFlagBitsEXT :: String
+enumPrefixConditionalRenderingFlagBitsEXT = "CONDITIONAL_RENDERING_INVERTED_BIT_EXT"
+
+showTableConditionalRenderingFlagBitsEXT :: [(ConditionalRenderingFlagBitsEXT, String)]
+showTableConditionalRenderingFlagBitsEXT = [(CONDITIONAL_RENDERING_INVERTED_BIT_EXT, "")]
 
 instance Show ConditionalRenderingFlagBitsEXT where
-  showsPrec p = \case
-    CONDITIONAL_RENDERING_INVERTED_BIT_EXT -> showString "CONDITIONAL_RENDERING_INVERTED_BIT_EXT"
-    ConditionalRenderingFlagBitsEXT x -> showParen (p >= 11) (showString "ConditionalRenderingFlagBitsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixConditionalRenderingFlagBitsEXT
+                            showTableConditionalRenderingFlagBitsEXT
+                            conNameConditionalRenderingFlagBitsEXT
+                            (\(ConditionalRenderingFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ConditionalRenderingFlagBitsEXT where
-  readPrec = parens (choose [("CONDITIONAL_RENDERING_INVERTED_BIT_EXT", pure CONDITIONAL_RENDERING_INVERTED_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ConditionalRenderingFlagBitsEXT")
-                       v <- step readPrec
-                       pure (ConditionalRenderingFlagBitsEXT v)))
+  readPrec = enumReadPrec enumPrefixConditionalRenderingFlagBitsEXT
+                          showTableConditionalRenderingFlagBitsEXT
+                          conNameConditionalRenderingFlagBitsEXT
+                          ConditionalRenderingFlagBitsEXT
 
 
 type EXT_CONDITIONAL_RENDERING_SPEC_VERSION = 2

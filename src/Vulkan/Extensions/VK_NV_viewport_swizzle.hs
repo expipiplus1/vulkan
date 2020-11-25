@@ -282,19 +282,14 @@ module Vulkan.Extensions.VK_NV_viewport_swizzle  ( ViewportSwizzleNV(..)
                                                  , pattern NV_VIEWPORT_SWIZZLE_EXTENSION_NAME
                                                  ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -312,8 +307,8 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -487,17 +482,27 @@ newtype PipelineViewportSwizzleStateCreateFlagsNV = PipelineViewportSwizzleState
 
 
 
+conNamePipelineViewportSwizzleStateCreateFlagsNV :: String
+conNamePipelineViewportSwizzleStateCreateFlagsNV = "PipelineViewportSwizzleStateCreateFlagsNV"
+
+enumPrefixPipelineViewportSwizzleStateCreateFlagsNV :: String
+enumPrefixPipelineViewportSwizzleStateCreateFlagsNV = ""
+
+showTablePipelineViewportSwizzleStateCreateFlagsNV :: [(PipelineViewportSwizzleStateCreateFlagsNV, String)]
+showTablePipelineViewportSwizzleStateCreateFlagsNV = []
+
 instance Show PipelineViewportSwizzleStateCreateFlagsNV where
-  showsPrec p = \case
-    PipelineViewportSwizzleStateCreateFlagsNV x -> showParen (p >= 11) (showString "PipelineViewportSwizzleStateCreateFlagsNV 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineViewportSwizzleStateCreateFlagsNV
+                            showTablePipelineViewportSwizzleStateCreateFlagsNV
+                            conNamePipelineViewportSwizzleStateCreateFlagsNV
+                            (\(PipelineViewportSwizzleStateCreateFlagsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineViewportSwizzleStateCreateFlagsNV where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineViewportSwizzleStateCreateFlagsNV")
-                       v <- step readPrec
-                       pure (PipelineViewportSwizzleStateCreateFlagsNV v)))
+  readPrec = enumReadPrec enumPrefixPipelineViewportSwizzleStateCreateFlagsNV
+                          showTablePipelineViewportSwizzleStateCreateFlagsNV
+                          conNamePipelineViewportSwizzleStateCreateFlagsNV
+                          PipelineViewportSwizzleStateCreateFlagsNV
 
 
 -- | VkViewportCoordinateSwizzleNV - Specify how a viewport coordinate is
@@ -539,32 +544,36 @@ pattern VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV = ViewportCoordinateSwizzleNV 
              VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV,
              VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV :: ViewportCoordinateSwizzleNV #-}
 
+conNameViewportCoordinateSwizzleNV :: String
+conNameViewportCoordinateSwizzleNV = "ViewportCoordinateSwizzleNV"
+
+enumPrefixViewportCoordinateSwizzleNV :: String
+enumPrefixViewportCoordinateSwizzleNV = "VIEWPORT_COORDINATE_SWIZZLE_"
+
+showTableViewportCoordinateSwizzleNV :: [(ViewportCoordinateSwizzleNV, String)]
+showTableViewportCoordinateSwizzleNV =
+  [ (VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV, "POSITIVE_X_NV")
+  , (VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV, "NEGATIVE_X_NV")
+  , (VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV, "POSITIVE_Y_NV")
+  , (VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV, "NEGATIVE_Y_NV")
+  , (VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV, "POSITIVE_Z_NV")
+  , (VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV, "NEGATIVE_Z_NV")
+  , (VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV, "POSITIVE_W_NV")
+  , (VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV, "NEGATIVE_W_NV")
+  ]
+
 instance Show ViewportCoordinateSwizzleNV where
-  showsPrec p = \case
-    VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV"
-    VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV"
-    VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV"
-    VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV"
-    VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV"
-    VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV"
-    VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV"
-    VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV"
-    ViewportCoordinateSwizzleNV x -> showParen (p >= 11) (showString "ViewportCoordinateSwizzleNV " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixViewportCoordinateSwizzleNV
+                            showTableViewportCoordinateSwizzleNV
+                            conNameViewportCoordinateSwizzleNV
+                            (\(ViewportCoordinateSwizzleNV x) -> x)
+                            (showsPrec 11)
 
 instance Read ViewportCoordinateSwizzleNV where
-  readPrec = parens (choose [("VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV", pure VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV)
-                            , ("VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV", pure VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV)
-                            , ("VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV", pure VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV)
-                            , ("VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV", pure VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV)
-                            , ("VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV", pure VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV)
-                            , ("VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV", pure VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV)
-                            , ("VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV", pure VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV)
-                            , ("VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV", pure VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ViewportCoordinateSwizzleNV")
-                       v <- step readPrec
-                       pure (ViewportCoordinateSwizzleNV v)))
+  readPrec = enumReadPrec enumPrefixViewportCoordinateSwizzleNV
+                          showTableViewportCoordinateSwizzleNV
+                          conNameViewportCoordinateSwizzleNV
+                          ViewportCoordinateSwizzleNV
 
 
 type NV_VIEWPORT_SWIZZLE_SPEC_VERSION = 1

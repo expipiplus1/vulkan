@@ -1,27 +1,24 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "AttachmentDescriptionFlagBits"
-module Vulkan.Core10.Enums.AttachmentDescriptionFlagBits  ( AttachmentDescriptionFlagBits( ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
+module Vulkan.Core10.Enums.AttachmentDescriptionFlagBits  ( AttachmentDescriptionFlags
+                                                          , AttachmentDescriptionFlagBits( ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
                                                                                          , ..
                                                                                          )
-                                                          , AttachmentDescriptionFlags
                                                           ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type AttachmentDescriptionFlags = AttachmentDescriptionFlagBits
+
 -- | VkAttachmentDescriptionFlagBits - Bitmask specifying additional
 -- properties of an attachment
 --
@@ -35,18 +32,25 @@ newtype AttachmentDescriptionFlagBits = AttachmentDescriptionFlagBits Flags
 -- aliases the same device memory as other attachments.
 pattern ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = AttachmentDescriptionFlagBits 0x00000001
 
-type AttachmentDescriptionFlags = AttachmentDescriptionFlagBits
+conNameAttachmentDescriptionFlagBits :: String
+conNameAttachmentDescriptionFlagBits = "AttachmentDescriptionFlagBits"
+
+enumPrefixAttachmentDescriptionFlagBits :: String
+enumPrefixAttachmentDescriptionFlagBits = "ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"
+
+showTableAttachmentDescriptionFlagBits :: [(AttachmentDescriptionFlagBits, String)]
+showTableAttachmentDescriptionFlagBits = [(ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT, "")]
 
 instance Show AttachmentDescriptionFlagBits where
-  showsPrec p = \case
-    ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT -> showString "ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"
-    AttachmentDescriptionFlagBits x -> showParen (p >= 11) (showString "AttachmentDescriptionFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixAttachmentDescriptionFlagBits
+                            showTableAttachmentDescriptionFlagBits
+                            conNameAttachmentDescriptionFlagBits
+                            (\(AttachmentDescriptionFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read AttachmentDescriptionFlagBits where
-  readPrec = parens (choose [("ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT", pure ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AttachmentDescriptionFlagBits")
-                       v <- step readPrec
-                       pure (AttachmentDescriptionFlagBits v)))
+  readPrec = enumReadPrec enumPrefixAttachmentDescriptionFlagBits
+                          showTableAttachmentDescriptionFlagBits
+                          conNameAttachmentDescriptionFlagBits
+                          AttachmentDescriptionFlagBits
 

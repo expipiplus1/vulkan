@@ -1,27 +1,24 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DeviceQueueCreateFlagBits"
-module Vulkan.Core10.Enums.DeviceQueueCreateFlagBits  ( DeviceQueueCreateFlagBits( DEVICE_QUEUE_CREATE_PROTECTED_BIT
+module Vulkan.Core10.Enums.DeviceQueueCreateFlagBits  ( DeviceQueueCreateFlags
+                                                      , DeviceQueueCreateFlagBits( DEVICE_QUEUE_CREATE_PROTECTED_BIT
                                                                                  , ..
                                                                                  )
-                                                      , DeviceQueueCreateFlags
                                                       ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type DeviceQueueCreateFlags = DeviceQueueCreateFlagBits
+
 -- | VkDeviceQueueCreateFlagBits - Bitmask specifying behavior of the queue
 --
 -- = See Also
@@ -34,18 +31,25 @@ newtype DeviceQueueCreateFlagBits = DeviceQueueCreateFlagBits Flags
 -- protected-capable queue.
 pattern DEVICE_QUEUE_CREATE_PROTECTED_BIT = DeviceQueueCreateFlagBits 0x00000001
 
-type DeviceQueueCreateFlags = DeviceQueueCreateFlagBits
+conNameDeviceQueueCreateFlagBits :: String
+conNameDeviceQueueCreateFlagBits = "DeviceQueueCreateFlagBits"
+
+enumPrefixDeviceQueueCreateFlagBits :: String
+enumPrefixDeviceQueueCreateFlagBits = "DEVICE_QUEUE_CREATE_PROTECTED_BIT"
+
+showTableDeviceQueueCreateFlagBits :: [(DeviceQueueCreateFlagBits, String)]
+showTableDeviceQueueCreateFlagBits = [(DEVICE_QUEUE_CREATE_PROTECTED_BIT, "")]
 
 instance Show DeviceQueueCreateFlagBits where
-  showsPrec p = \case
-    DEVICE_QUEUE_CREATE_PROTECTED_BIT -> showString "DEVICE_QUEUE_CREATE_PROTECTED_BIT"
-    DeviceQueueCreateFlagBits x -> showParen (p >= 11) (showString "DeviceQueueCreateFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDeviceQueueCreateFlagBits
+                            showTableDeviceQueueCreateFlagBits
+                            conNameDeviceQueueCreateFlagBits
+                            (\(DeviceQueueCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DeviceQueueCreateFlagBits where
-  readPrec = parens (choose [("DEVICE_QUEUE_CREATE_PROTECTED_BIT", pure DEVICE_QUEUE_CREATE_PROTECTED_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DeviceQueueCreateFlagBits")
-                       v <- step readPrec
-                       pure (DeviceQueueCreateFlagBits v)))
+  readPrec = enumReadPrec enumPrefixDeviceQueueCreateFlagBits
+                          showTableDeviceQueueCreateFlagBits
+                          conNameDeviceQueueCreateFlagBits
+                          DeviceQueueCreateFlagBits
 

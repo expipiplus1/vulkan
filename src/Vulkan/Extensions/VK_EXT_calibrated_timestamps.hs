@@ -179,6 +179,8 @@ module Vulkan.Extensions.VK_EXT_calibrated_timestamps  ( getPhysicalDeviceCalibr
                                                        , pattern EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME
                                                        ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -190,15 +192,7 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -218,9 +212,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -490,19 +484,19 @@ newtype TimeDomainEXT = TimeDomainEXT Int32
 -- to be incrementing according to the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-timestampPeriod timestampPeriod>
 -- of the device.
-pattern TIME_DOMAIN_DEVICE_EXT = TimeDomainEXT 0
+pattern TIME_DOMAIN_DEVICE_EXT                    = TimeDomainEXT 0
 -- | 'TIME_DOMAIN_CLOCK_MONOTONIC_EXT' specifies the CLOCK_MONOTONIC time
 -- domain available on POSIX platforms. Timestamp values in this time
 -- domain are in units of nanoseconds and are comparable with platform
 -- timestamp values captured using the POSIX clock_gettime API as computed
 -- by this example:
-pattern TIME_DOMAIN_CLOCK_MONOTONIC_EXT = TimeDomainEXT 1
+pattern TIME_DOMAIN_CLOCK_MONOTONIC_EXT           = TimeDomainEXT 1
 -- | 'TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT' specifies the CLOCK_MONOTONIC_RAW
 -- time domain available on POSIX platforms. Timestamp values in this time
 -- domain are in units of nanoseconds and are comparable with platform
 -- timestamp values captured using the POSIX clock_gettime API as computed
 -- by this example:
-pattern TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT = TimeDomainEXT 2
+pattern TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT       = TimeDomainEXT 2
 -- | 'TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT' specifies the performance
 -- counter (QPC) time domain available on Windows. Timestamp values in this
 -- time domain are in the same units as those provided by the Windows
@@ -514,24 +508,29 @@ pattern TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT = TimeDomainEXT 3
              TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT,
              TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT :: TimeDomainEXT #-}
 
+conNameTimeDomainEXT :: String
+conNameTimeDomainEXT = "TimeDomainEXT"
+
+enumPrefixTimeDomainEXT :: String
+enumPrefixTimeDomainEXT = "TIME_DOMAIN_"
+
+showTableTimeDomainEXT :: [(TimeDomainEXT, String)]
+showTableTimeDomainEXT =
+  [ (TIME_DOMAIN_DEVICE_EXT                   , "DEVICE_EXT")
+  , (TIME_DOMAIN_CLOCK_MONOTONIC_EXT          , "CLOCK_MONOTONIC_EXT")
+  , (TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT      , "CLOCK_MONOTONIC_RAW_EXT")
+  , (TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT, "QUERY_PERFORMANCE_COUNTER_EXT")
+  ]
+
 instance Show TimeDomainEXT where
-  showsPrec p = \case
-    TIME_DOMAIN_DEVICE_EXT -> showString "TIME_DOMAIN_DEVICE_EXT"
-    TIME_DOMAIN_CLOCK_MONOTONIC_EXT -> showString "TIME_DOMAIN_CLOCK_MONOTONIC_EXT"
-    TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT -> showString "TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT"
-    TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT -> showString "TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT"
-    TimeDomainEXT x -> showParen (p >= 11) (showString "TimeDomainEXT " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixTimeDomainEXT
+                            showTableTimeDomainEXT
+                            conNameTimeDomainEXT
+                            (\(TimeDomainEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read TimeDomainEXT where
-  readPrec = parens (choose [("TIME_DOMAIN_DEVICE_EXT", pure TIME_DOMAIN_DEVICE_EXT)
-                            , ("TIME_DOMAIN_CLOCK_MONOTONIC_EXT", pure TIME_DOMAIN_CLOCK_MONOTONIC_EXT)
-                            , ("TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT", pure TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT)
-                            , ("TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT", pure TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "TimeDomainEXT")
-                       v <- step readPrec
-                       pure (TimeDomainEXT v)))
+  readPrec = enumReadPrec enumPrefixTimeDomainEXT showTableTimeDomainEXT conNameTimeDomainEXT TimeDomainEXT
 
 
 type EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 1

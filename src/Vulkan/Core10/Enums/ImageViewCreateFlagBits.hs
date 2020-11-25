@@ -1,28 +1,25 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ImageViewCreateFlagBits"
-module Vulkan.Core10.Enums.ImageViewCreateFlagBits  ( ImageViewCreateFlagBits( IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
+module Vulkan.Core10.Enums.ImageViewCreateFlagBits  ( ImageViewCreateFlags
+                                                    , ImageViewCreateFlagBits( IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
                                                                              , IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
                                                                              , ..
                                                                              )
-                                                    , ImageViewCreateFlags
                                                     ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ImageViewCreateFlags = ImageViewCreateFlagBits
+
 -- | VkImageViewCreateFlagBits - Bitmask specifying additional parameters of
 -- an image view
 --
@@ -40,22 +37,30 @@ pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT = ImageViewCreat
 -- | 'IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT' specifies that
 -- the fragment density map will be read by device during
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
-pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT = ImageViewCreateFlagBits 0x00000001
+pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT  = ImageViewCreateFlagBits 0x00000001
 
-type ImageViewCreateFlags = ImageViewCreateFlagBits
+conNameImageViewCreateFlagBits :: String
+conNameImageViewCreateFlagBits = "ImageViewCreateFlagBits"
+
+enumPrefixImageViewCreateFlagBits :: String
+enumPrefixImageViewCreateFlagBits = "IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_D"
+
+showTableImageViewCreateFlagBits :: [(ImageViewCreateFlagBits, String)]
+showTableImageViewCreateFlagBits =
+  [ (IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT, "EFERRED_BIT_EXT")
+  , (IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT , "YNAMIC_BIT_EXT")
+  ]
 
 instance Show ImageViewCreateFlagBits where
-  showsPrec p = \case
-    IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT -> showString "IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT"
-    IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT -> showString "IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT"
-    ImageViewCreateFlagBits x -> showParen (p >= 11) (showString "ImageViewCreateFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixImageViewCreateFlagBits
+                            showTableImageViewCreateFlagBits
+                            conNameImageViewCreateFlagBits
+                            (\(ImageViewCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ImageViewCreateFlagBits where
-  readPrec = parens (choose [("IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT", pure IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT)
-                            , ("IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT", pure IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ImageViewCreateFlagBits")
-                       v <- step readPrec
-                       pure (ImageViewCreateFlagBits v)))
+  readPrec = enumReadPrec enumPrefixImageViewCreateFlagBits
+                          showTableImageViewCreateFlagBits
+                          conNameImageViewCreateFlagBits
+                          ImageViewCreateFlagBits
 

@@ -361,6 +361,8 @@ module Vulkan.Extensions.VK_INTEL_performance_query  ( initializePerformanceApiI
                                                      , PerformanceConfigurationINTEL(..)
                                                      ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -373,15 +375,7 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
@@ -404,9 +398,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -1483,21 +1477,33 @@ newtype PerformanceConfigurationTypeINTEL = PerformanceConfigurationTypeINTEL In
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkPerformanceConfigurationTypeINTEL" "VK_PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL"
-pattern PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL = PerformanceConfigurationTypeINTEL 0
+pattern PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL =
+  PerformanceConfigurationTypeINTEL 0
 {-# complete PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL :: PerformanceConfigurationTypeINTEL #-}
 
+conNamePerformanceConfigurationTypeINTEL :: String
+conNamePerformanceConfigurationTypeINTEL = "PerformanceConfigurationTypeINTEL"
+
+enumPrefixPerformanceConfigurationTypeINTEL :: String
+enumPrefixPerformanceConfigurationTypeINTEL =
+  "PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL"
+
+showTablePerformanceConfigurationTypeINTEL :: [(PerformanceConfigurationTypeINTEL, String)]
+showTablePerformanceConfigurationTypeINTEL =
+  [(PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL, "")]
+
 instance Show PerformanceConfigurationTypeINTEL where
-  showsPrec p = \case
-    PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL -> showString "PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL"
-    PerformanceConfigurationTypeINTEL x -> showParen (p >= 11) (showString "PerformanceConfigurationTypeINTEL " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceConfigurationTypeINTEL
+                            showTablePerformanceConfigurationTypeINTEL
+                            conNamePerformanceConfigurationTypeINTEL
+                            (\(PerformanceConfigurationTypeINTEL x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceConfigurationTypeINTEL where
-  readPrec = parens (choose [("PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL", pure PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceConfigurationTypeINTEL")
-                       v <- step readPrec
-                       pure (PerformanceConfigurationTypeINTEL v)))
+  readPrec = enumReadPrec enumPrefixPerformanceConfigurationTypeINTEL
+                          showTablePerformanceConfigurationTypeINTEL
+                          conNamePerformanceConfigurationTypeINTEL
+                          PerformanceConfigurationTypeINTEL
 
 
 -- | VkQueryPoolSamplingModeINTEL - Enum specifying how performance queries
@@ -1516,18 +1522,27 @@ newtype QueryPoolSamplingModeINTEL = QueryPoolSamplingModeINTEL Int32
 pattern QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL = QueryPoolSamplingModeINTEL 0
 {-# complete QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL :: QueryPoolSamplingModeINTEL #-}
 
+conNameQueryPoolSamplingModeINTEL :: String
+conNameQueryPoolSamplingModeINTEL = "QueryPoolSamplingModeINTEL"
+
+enumPrefixQueryPoolSamplingModeINTEL :: String
+enumPrefixQueryPoolSamplingModeINTEL = "QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL"
+
+showTableQueryPoolSamplingModeINTEL :: [(QueryPoolSamplingModeINTEL, String)]
+showTableQueryPoolSamplingModeINTEL = [(QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL, "")]
+
 instance Show QueryPoolSamplingModeINTEL where
-  showsPrec p = \case
-    QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL -> showString "QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL"
-    QueryPoolSamplingModeINTEL x -> showParen (p >= 11) (showString "QueryPoolSamplingModeINTEL " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixQueryPoolSamplingModeINTEL
+                            showTableQueryPoolSamplingModeINTEL
+                            conNameQueryPoolSamplingModeINTEL
+                            (\(QueryPoolSamplingModeINTEL x) -> x)
+                            (showsPrec 11)
 
 instance Read QueryPoolSamplingModeINTEL where
-  readPrec = parens (choose [("QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL", pure QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "QueryPoolSamplingModeINTEL")
-                       v <- step readPrec
-                       pure (QueryPoolSamplingModeINTEL v)))
+  readPrec = enumReadPrec enumPrefixQueryPoolSamplingModeINTEL
+                          showTableQueryPoolSamplingModeINTEL
+                          conNameQueryPoolSamplingModeINTEL
+                          QueryPoolSamplingModeINTEL
 
 
 -- | VkPerformanceOverrideTypeINTEL - Performance override type
@@ -1540,7 +1555,7 @@ newtype PerformanceOverrideTypeINTEL = PerformanceOverrideTypeINTEL Int32
 
 -- | 'PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL' turns all rendering
 -- operations into noop.
-pattern PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL = PerformanceOverrideTypeINTEL 0
+pattern PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL    = PerformanceOverrideTypeINTEL 0
 -- | 'PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL' stalls the stream of
 -- commands until all previously emitted commands have completed and all
 -- caches been flushed and invalidated.
@@ -1548,20 +1563,30 @@ pattern PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL = PerformanceOverrideTy
 {-# complete PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL,
              PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL :: PerformanceOverrideTypeINTEL #-}
 
+conNamePerformanceOverrideTypeINTEL :: String
+conNamePerformanceOverrideTypeINTEL = "PerformanceOverrideTypeINTEL"
+
+enumPrefixPerformanceOverrideTypeINTEL :: String
+enumPrefixPerformanceOverrideTypeINTEL = "PERFORMANCE_OVERRIDE_TYPE_"
+
+showTablePerformanceOverrideTypeINTEL :: [(PerformanceOverrideTypeINTEL, String)]
+showTablePerformanceOverrideTypeINTEL =
+  [ (PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL   , "NULL_HARDWARE_INTEL")
+  , (PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL, "FLUSH_GPU_CACHES_INTEL")
+  ]
+
 instance Show PerformanceOverrideTypeINTEL where
-  showsPrec p = \case
-    PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL -> showString "PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL"
-    PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL -> showString "PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL"
-    PerformanceOverrideTypeINTEL x -> showParen (p >= 11) (showString "PerformanceOverrideTypeINTEL " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceOverrideTypeINTEL
+                            showTablePerformanceOverrideTypeINTEL
+                            conNamePerformanceOverrideTypeINTEL
+                            (\(PerformanceOverrideTypeINTEL x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceOverrideTypeINTEL where
-  readPrec = parens (choose [("PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL", pure PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL)
-                            , ("PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL", pure PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceOverrideTypeINTEL")
-                       v <- step readPrec
-                       pure (PerformanceOverrideTypeINTEL v)))
+  readPrec = enumReadPrec enumPrefixPerformanceOverrideTypeINTEL
+                          showTablePerformanceOverrideTypeINTEL
+                          conNamePerformanceOverrideTypeINTEL
+                          PerformanceOverrideTypeINTEL
 
 
 -- | VkPerformanceParameterTypeINTEL - Parameters that can be queried
@@ -1574,7 +1599,7 @@ newtype PerformanceParameterTypeINTEL = PerformanceParameterTypeINTEL Int32
 
 -- | 'PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL' has a boolean
 -- result which tells whether hardware counters can be captured.
-pattern PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL = PerformanceParameterTypeINTEL 0
+pattern PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL    = PerformanceParameterTypeINTEL 0
 -- | 'PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL' has a 32
 -- bits integer result which tells how many bits can be written into the
 -- 'PerformanceValueINTEL' value.
@@ -1582,20 +1607,30 @@ pattern PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL = PerformanceP
 {-# complete PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL,
              PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL :: PerformanceParameterTypeINTEL #-}
 
+conNamePerformanceParameterTypeINTEL :: String
+conNamePerformanceParameterTypeINTEL = "PerformanceParameterTypeINTEL"
+
+enumPrefixPerformanceParameterTypeINTEL :: String
+enumPrefixPerformanceParameterTypeINTEL = "PERFORMANCE_PARAMETER_TYPE_"
+
+showTablePerformanceParameterTypeINTEL :: [(PerformanceParameterTypeINTEL, String)]
+showTablePerformanceParameterTypeINTEL =
+  [ (PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL   , "HW_COUNTERS_SUPPORTED_INTEL")
+  , (PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL, "STREAM_MARKER_VALID_BITS_INTEL")
+  ]
+
 instance Show PerformanceParameterTypeINTEL where
-  showsPrec p = \case
-    PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL -> showString "PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL"
-    PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL -> showString "PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL"
-    PerformanceParameterTypeINTEL x -> showParen (p >= 11) (showString "PerformanceParameterTypeINTEL " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceParameterTypeINTEL
+                            showTablePerformanceParameterTypeINTEL
+                            conNamePerformanceParameterTypeINTEL
+                            (\(PerformanceParameterTypeINTEL x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceParameterTypeINTEL where
-  readPrec = parens (choose [("PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL", pure PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL)
-                            , ("PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL", pure PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceParameterTypeINTEL")
-                       v <- step readPrec
-                       pure (PerformanceParameterTypeINTEL v)))
+  readPrec = enumReadPrec enumPrefixPerformanceParameterTypeINTEL
+                          showTablePerformanceParameterTypeINTEL
+                          conNamePerformanceParameterTypeINTEL
+                          PerformanceParameterTypeINTEL
 
 
 -- | VkPerformanceValueTypeINTEL - Type of the parameters that can be queried
@@ -1611,9 +1646,9 @@ pattern PERFORMANCE_VALUE_TYPE_UINT32_INTEL = PerformanceValueTypeINTEL 0
 -- No documentation found for Nested "VkPerformanceValueTypeINTEL" "VK_PERFORMANCE_VALUE_TYPE_UINT64_INTEL"
 pattern PERFORMANCE_VALUE_TYPE_UINT64_INTEL = PerformanceValueTypeINTEL 1
 -- No documentation found for Nested "VkPerformanceValueTypeINTEL" "VK_PERFORMANCE_VALUE_TYPE_FLOAT_INTEL"
-pattern PERFORMANCE_VALUE_TYPE_FLOAT_INTEL = PerformanceValueTypeINTEL 2
+pattern PERFORMANCE_VALUE_TYPE_FLOAT_INTEL  = PerformanceValueTypeINTEL 2
 -- No documentation found for Nested "VkPerformanceValueTypeINTEL" "VK_PERFORMANCE_VALUE_TYPE_BOOL_INTEL"
-pattern PERFORMANCE_VALUE_TYPE_BOOL_INTEL = PerformanceValueTypeINTEL 3
+pattern PERFORMANCE_VALUE_TYPE_BOOL_INTEL   = PerformanceValueTypeINTEL 3
 -- No documentation found for Nested "VkPerformanceValueTypeINTEL" "VK_PERFORMANCE_VALUE_TYPE_STRING_INTEL"
 pattern PERFORMANCE_VALUE_TYPE_STRING_INTEL = PerformanceValueTypeINTEL 4
 {-# complete PERFORMANCE_VALUE_TYPE_UINT32_INTEL,
@@ -1622,26 +1657,33 @@ pattern PERFORMANCE_VALUE_TYPE_STRING_INTEL = PerformanceValueTypeINTEL 4
              PERFORMANCE_VALUE_TYPE_BOOL_INTEL,
              PERFORMANCE_VALUE_TYPE_STRING_INTEL :: PerformanceValueTypeINTEL #-}
 
+conNamePerformanceValueTypeINTEL :: String
+conNamePerformanceValueTypeINTEL = "PerformanceValueTypeINTEL"
+
+enumPrefixPerformanceValueTypeINTEL :: String
+enumPrefixPerformanceValueTypeINTEL = "PERFORMANCE_VALUE_TYPE_"
+
+showTablePerformanceValueTypeINTEL :: [(PerformanceValueTypeINTEL, String)]
+showTablePerformanceValueTypeINTEL =
+  [ (PERFORMANCE_VALUE_TYPE_UINT32_INTEL, "UINT32_INTEL")
+  , (PERFORMANCE_VALUE_TYPE_UINT64_INTEL, "UINT64_INTEL")
+  , (PERFORMANCE_VALUE_TYPE_FLOAT_INTEL , "FLOAT_INTEL")
+  , (PERFORMANCE_VALUE_TYPE_BOOL_INTEL  , "BOOL_INTEL")
+  , (PERFORMANCE_VALUE_TYPE_STRING_INTEL, "STRING_INTEL")
+  ]
+
 instance Show PerformanceValueTypeINTEL where
-  showsPrec p = \case
-    PERFORMANCE_VALUE_TYPE_UINT32_INTEL -> showString "PERFORMANCE_VALUE_TYPE_UINT32_INTEL"
-    PERFORMANCE_VALUE_TYPE_UINT64_INTEL -> showString "PERFORMANCE_VALUE_TYPE_UINT64_INTEL"
-    PERFORMANCE_VALUE_TYPE_FLOAT_INTEL -> showString "PERFORMANCE_VALUE_TYPE_FLOAT_INTEL"
-    PERFORMANCE_VALUE_TYPE_BOOL_INTEL -> showString "PERFORMANCE_VALUE_TYPE_BOOL_INTEL"
-    PERFORMANCE_VALUE_TYPE_STRING_INTEL -> showString "PERFORMANCE_VALUE_TYPE_STRING_INTEL"
-    PerformanceValueTypeINTEL x -> showParen (p >= 11) (showString "PerformanceValueTypeINTEL " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPerformanceValueTypeINTEL
+                            showTablePerformanceValueTypeINTEL
+                            conNamePerformanceValueTypeINTEL
+                            (\(PerformanceValueTypeINTEL x) -> x)
+                            (showsPrec 11)
 
 instance Read PerformanceValueTypeINTEL where
-  readPrec = parens (choose [("PERFORMANCE_VALUE_TYPE_UINT32_INTEL", pure PERFORMANCE_VALUE_TYPE_UINT32_INTEL)
-                            , ("PERFORMANCE_VALUE_TYPE_UINT64_INTEL", pure PERFORMANCE_VALUE_TYPE_UINT64_INTEL)
-                            , ("PERFORMANCE_VALUE_TYPE_FLOAT_INTEL", pure PERFORMANCE_VALUE_TYPE_FLOAT_INTEL)
-                            , ("PERFORMANCE_VALUE_TYPE_BOOL_INTEL", pure PERFORMANCE_VALUE_TYPE_BOOL_INTEL)
-                            , ("PERFORMANCE_VALUE_TYPE_STRING_INTEL", pure PERFORMANCE_VALUE_TYPE_STRING_INTEL)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PerformanceValueTypeINTEL")
-                       v <- step readPrec
-                       pure (PerformanceValueTypeINTEL v)))
+  readPrec = enumReadPrec enumPrefixPerformanceValueTypeINTEL
+                          showTablePerformanceValueTypeINTEL
+                          conNamePerformanceValueTypeINTEL
+                          PerformanceValueTypeINTEL
 
 
 -- No documentation found for TopLevel "VkQueryPoolCreateInfoINTEL"

@@ -137,8 +137,8 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_external_memory_capabilities  ( ExternalImageFormatPropertiesNV
-                                                             , ExternalMemoryHandleTypeFlagBitsNV
                                                              , ExternalMemoryHandleTypeFlagsNV
+                                                             , ExternalMemoryHandleTypeFlagBitsNV
                                                              ) where
 
 import Data.Kind (Type)
@@ -152,7 +152,7 @@ instance Show ExternalImageFormatPropertiesNV
 instance FromCStruct ExternalImageFormatPropertiesNV
 
 
-data ExternalMemoryHandleTypeFlagBitsNV
-
 type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
+
+data ExternalMemoryHandleTypeFlagBitsNV
 

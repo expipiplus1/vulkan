@@ -5,19 +5,13 @@ module Vulkan.Core11.Enums.SamplerYcbcrRange  (SamplerYcbcrRange( SAMPLER_YCBCR_
                                                                 , ..
                                                                 )) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkSamplerYcbcrRange - Range of encoded values in a color space
 --
@@ -45,7 +39,7 @@ newtype SamplerYcbcrRange = SamplerYcbcrRange Int32
 -- | 'SAMPLER_YCBCR_RANGE_ITU_FULL' specifies that the full range of the
 -- encoded values are valid and interpreted according to the ITU “full
 -- range” quantization rules.
-pattern SAMPLER_YCBCR_RANGE_ITU_FULL = SamplerYcbcrRange 0
+pattern SAMPLER_YCBCR_RANGE_ITU_FULL   = SamplerYcbcrRange 0
 -- | 'SAMPLER_YCBCR_RANGE_ITU_NARROW' specifies that headroom and foot room
 -- are reserved in the numerical range of encoded values, and the remaining
 -- values are expanded according to the ITU “narrow range” quantization
@@ -54,18 +48,23 @@ pattern SAMPLER_YCBCR_RANGE_ITU_NARROW = SamplerYcbcrRange 1
 {-# complete SAMPLER_YCBCR_RANGE_ITU_FULL,
              SAMPLER_YCBCR_RANGE_ITU_NARROW :: SamplerYcbcrRange #-}
 
+conNameSamplerYcbcrRange :: String
+conNameSamplerYcbcrRange = "SamplerYcbcrRange"
+
+enumPrefixSamplerYcbcrRange :: String
+enumPrefixSamplerYcbcrRange = "SAMPLER_YCBCR_RANGE_ITU_"
+
+showTableSamplerYcbcrRange :: [(SamplerYcbcrRange, String)]
+showTableSamplerYcbcrRange = [(SAMPLER_YCBCR_RANGE_ITU_FULL, "FULL"), (SAMPLER_YCBCR_RANGE_ITU_NARROW, "NARROW")]
+
 instance Show SamplerYcbcrRange where
-  showsPrec p = \case
-    SAMPLER_YCBCR_RANGE_ITU_FULL -> showString "SAMPLER_YCBCR_RANGE_ITU_FULL"
-    SAMPLER_YCBCR_RANGE_ITU_NARROW -> showString "SAMPLER_YCBCR_RANGE_ITU_NARROW"
-    SamplerYcbcrRange x -> showParen (p >= 11) (showString "SamplerYcbcrRange " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixSamplerYcbcrRange
+                            showTableSamplerYcbcrRange
+                            conNameSamplerYcbcrRange
+                            (\(SamplerYcbcrRange x) -> x)
+                            (showsPrec 11)
 
 instance Read SamplerYcbcrRange where
-  readPrec = parens (choose [("SAMPLER_YCBCR_RANGE_ITU_FULL", pure SAMPLER_YCBCR_RANGE_ITU_FULL)
-                            , ("SAMPLER_YCBCR_RANGE_ITU_NARROW", pure SAMPLER_YCBCR_RANGE_ITU_NARROW)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SamplerYcbcrRange")
-                       v <- step readPrec
-                       pure (SamplerYcbcrRange v)))
+  readPrec =
+    enumReadPrec enumPrefixSamplerYcbcrRange showTableSamplerYcbcrRange conNameSamplerYcbcrRange SamplerYcbcrRange
 

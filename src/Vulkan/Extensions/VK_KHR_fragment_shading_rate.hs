@@ -224,6 +224,8 @@ module Vulkan.Extensions.VK_KHR_fragment_shading_rate  ( cmdSetFragmentShadingRa
                                                        ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -236,15 +238,7 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -262,8 +256,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -1361,45 +1355,52 @@ newtype FragmentShadingRateCombinerOpKHR = FragmentShadingRateCombinerOpKHR Int3
 
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = Axy.
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR = FragmentShadingRateCombinerOpKHR 0
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR    = FragmentShadingRateCombinerOpKHR 0
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = Bxy.
 pattern FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR = FragmentShadingRateCombinerOpKHR 1
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = min(Axy,Bxy).
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR = FragmentShadingRateCombinerOpKHR 2
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR     = FragmentShadingRateCombinerOpKHR 2
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = max(Axy,Bxy).
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR = FragmentShadingRateCombinerOpKHR 3
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR     = FragmentShadingRateCombinerOpKHR 3
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR' combiner operation of
 -- combine(Axy,Bxy) = Axy*Bxy.
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR = FragmentShadingRateCombinerOpKHR 4
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR     = FragmentShadingRateCombinerOpKHR 4
 {-# complete FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR :: FragmentShadingRateCombinerOpKHR #-}
 
+conNameFragmentShadingRateCombinerOpKHR :: String
+conNameFragmentShadingRateCombinerOpKHR = "FragmentShadingRateCombinerOpKHR"
+
+enumPrefixFragmentShadingRateCombinerOpKHR :: String
+enumPrefixFragmentShadingRateCombinerOpKHR = "FRAGMENT_SHADING_RATE_COMBINER_OP_"
+
+showTableFragmentShadingRateCombinerOpKHR :: [(FragmentShadingRateCombinerOpKHR, String)]
+showTableFragmentShadingRateCombinerOpKHR =
+  [ (FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR   , "KEEP_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR, "REPLACE_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR    , "MIN_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR    , "MAX_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR    , "MUL_KHR")
+  ]
+
 instance Show FragmentShadingRateCombinerOpKHR where
-  showsPrec p = \case
-    FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR"
-    FragmentShadingRateCombinerOpKHR x -> showParen (p >= 11) (showString "FragmentShadingRateCombinerOpKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixFragmentShadingRateCombinerOpKHR
+                            showTableFragmentShadingRateCombinerOpKHR
+                            conNameFragmentShadingRateCombinerOpKHR
+                            (\(FragmentShadingRateCombinerOpKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read FragmentShadingRateCombinerOpKHR where
-  readPrec = parens (choose [("FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "FragmentShadingRateCombinerOpKHR")
-                       v <- step readPrec
-                       pure (FragmentShadingRateCombinerOpKHR v)))
+  readPrec = enumReadPrec enumPrefixFragmentShadingRateCombinerOpKHR
+                          showTableFragmentShadingRateCombinerOpKHR
+                          conNameFragmentShadingRateCombinerOpKHR
+                          FragmentShadingRateCombinerOpKHR
 
 
 type KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION = 1

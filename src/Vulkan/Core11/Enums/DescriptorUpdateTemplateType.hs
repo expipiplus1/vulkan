@@ -5,19 +5,13 @@ module Vulkan.Core11.Enums.DescriptorUpdateTemplateType  (DescriptorUpdateTempla
                                                                                       , ..
                                                                                       )) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkDescriptorUpdateTemplateType - Indicates the valid usage of the
 -- descriptor update template
@@ -30,7 +24,7 @@ newtype DescriptorUpdateTemplateType = DescriptorUpdateTemplateType Int32
 
 -- | 'DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET' specifies that the
 -- descriptor update template will be used for descriptor set updates only.
-pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = DescriptorUpdateTemplateType 0
+pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET       = DescriptorUpdateTemplateType 0
 -- | 'DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR' specifies that
 -- the descriptor update template will be used for push descriptor updates
 -- only.
@@ -38,18 +32,28 @@ pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = DescriptorUpdateT
 {-# complete DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET,
              DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR :: DescriptorUpdateTemplateType #-}
 
+conNameDescriptorUpdateTemplateType :: String
+conNameDescriptorUpdateTemplateType = "DescriptorUpdateTemplateType"
+
+enumPrefixDescriptorUpdateTemplateType :: String
+enumPrefixDescriptorUpdateTemplateType = "DESCRIPTOR_UPDATE_TEMPLATE_TYPE_"
+
+showTableDescriptorUpdateTemplateType :: [(DescriptorUpdateTemplateType, String)]
+showTableDescriptorUpdateTemplateType =
+  [ (DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET      , "DESCRIPTOR_SET")
+  , (DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR, "PUSH_DESCRIPTORS_KHR")
+  ]
+
 instance Show DescriptorUpdateTemplateType where
-  showsPrec p = \case
-    DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET -> showString "DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET"
-    DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR -> showString "DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR"
-    DescriptorUpdateTemplateType x -> showParen (p >= 11) (showString "DescriptorUpdateTemplateType " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixDescriptorUpdateTemplateType
+                            showTableDescriptorUpdateTemplateType
+                            conNameDescriptorUpdateTemplateType
+                            (\(DescriptorUpdateTemplateType x) -> x)
+                            (showsPrec 11)
 
 instance Read DescriptorUpdateTemplateType where
-  readPrec = parens (choose [("DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET", pure DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET)
-                            , ("DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR", pure DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DescriptorUpdateTemplateType")
-                       v <- step readPrec
-                       pure (DescriptorUpdateTemplateType v)))
+  readPrec = enumReadPrec enumPrefixDescriptorUpdateTemplateType
+                          showTableDescriptorUpdateTemplateType
+                          conNameDescriptorUpdateTemplateType
+                          DescriptorUpdateTemplateType
 

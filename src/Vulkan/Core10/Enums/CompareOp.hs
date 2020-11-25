@@ -11,19 +11,13 @@ module Vulkan.Core10.Enums.CompareOp  (CompareOp( COMPARE_OP_NEVER
                                                 , ..
                                                 )) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkCompareOp - Stencil comparison function
 --
@@ -38,21 +32,21 @@ newtype CompareOp = CompareOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'COMPARE_OP_NEVER' specifies that the test evaluates to false.
-pattern COMPARE_OP_NEVER = CompareOp 0
+pattern COMPARE_OP_NEVER            = CompareOp 0
 -- | 'COMPARE_OP_LESS' specifies that the test evaluates A \< B.
-pattern COMPARE_OP_LESS = CompareOp 1
+pattern COMPARE_OP_LESS             = CompareOp 1
 -- | 'COMPARE_OP_EQUAL' specifies that the test evaluates A = B.
-pattern COMPARE_OP_EQUAL = CompareOp 2
+pattern COMPARE_OP_EQUAL            = CompareOp 2
 -- | 'COMPARE_OP_LESS_OR_EQUAL' specifies that the test evaluates A ≤ B.
-pattern COMPARE_OP_LESS_OR_EQUAL = CompareOp 3
+pattern COMPARE_OP_LESS_OR_EQUAL    = CompareOp 3
 -- | 'COMPARE_OP_GREATER' specifies that the test evaluates A > B.
-pattern COMPARE_OP_GREATER = CompareOp 4
+pattern COMPARE_OP_GREATER          = CompareOp 4
 -- | 'COMPARE_OP_NOT_EQUAL' specifies that the test evaluates A ≠ B.
-pattern COMPARE_OP_NOT_EQUAL = CompareOp 5
+pattern COMPARE_OP_NOT_EQUAL        = CompareOp 5
 -- | 'COMPARE_OP_GREATER_OR_EQUAL' specifies that the test evaluates A ≥ B.
 pattern COMPARE_OP_GREATER_OR_EQUAL = CompareOp 6
 -- | 'COMPARE_OP_ALWAYS' specifies that the test evaluates to true.
-pattern COMPARE_OP_ALWAYS = CompareOp 7
+pattern COMPARE_OP_ALWAYS           = CompareOp 7
 {-# complete COMPARE_OP_NEVER,
              COMPARE_OP_LESS,
              COMPARE_OP_EQUAL,
@@ -62,30 +56,28 @@ pattern COMPARE_OP_ALWAYS = CompareOp 7
              COMPARE_OP_GREATER_OR_EQUAL,
              COMPARE_OP_ALWAYS :: CompareOp #-}
 
+conNameCompareOp :: String
+conNameCompareOp = "CompareOp"
+
+enumPrefixCompareOp :: String
+enumPrefixCompareOp = "COMPARE_OP_"
+
+showTableCompareOp :: [(CompareOp, String)]
+showTableCompareOp =
+  [ (COMPARE_OP_NEVER           , "NEVER")
+  , (COMPARE_OP_LESS            , "LESS")
+  , (COMPARE_OP_EQUAL           , "EQUAL")
+  , (COMPARE_OP_LESS_OR_EQUAL   , "LESS_OR_EQUAL")
+  , (COMPARE_OP_GREATER         , "GREATER")
+  , (COMPARE_OP_NOT_EQUAL       , "NOT_EQUAL")
+  , (COMPARE_OP_GREATER_OR_EQUAL, "GREATER_OR_EQUAL")
+  , (COMPARE_OP_ALWAYS          , "ALWAYS")
+  ]
+
 instance Show CompareOp where
-  showsPrec p = \case
-    COMPARE_OP_NEVER -> showString "COMPARE_OP_NEVER"
-    COMPARE_OP_LESS -> showString "COMPARE_OP_LESS"
-    COMPARE_OP_EQUAL -> showString "COMPARE_OP_EQUAL"
-    COMPARE_OP_LESS_OR_EQUAL -> showString "COMPARE_OP_LESS_OR_EQUAL"
-    COMPARE_OP_GREATER -> showString "COMPARE_OP_GREATER"
-    COMPARE_OP_NOT_EQUAL -> showString "COMPARE_OP_NOT_EQUAL"
-    COMPARE_OP_GREATER_OR_EQUAL -> showString "COMPARE_OP_GREATER_OR_EQUAL"
-    COMPARE_OP_ALWAYS -> showString "COMPARE_OP_ALWAYS"
-    CompareOp x -> showParen (p >= 11) (showString "CompareOp " . showsPrec 11 x)
+  showsPrec =
+    enumShowsPrec enumPrefixCompareOp showTableCompareOp conNameCompareOp (\(CompareOp x) -> x) (showsPrec 11)
 
 instance Read CompareOp where
-  readPrec = parens (choose [("COMPARE_OP_NEVER", pure COMPARE_OP_NEVER)
-                            , ("COMPARE_OP_LESS", pure COMPARE_OP_LESS)
-                            , ("COMPARE_OP_EQUAL", pure COMPARE_OP_EQUAL)
-                            , ("COMPARE_OP_LESS_OR_EQUAL", pure COMPARE_OP_LESS_OR_EQUAL)
-                            , ("COMPARE_OP_GREATER", pure COMPARE_OP_GREATER)
-                            , ("COMPARE_OP_NOT_EQUAL", pure COMPARE_OP_NOT_EQUAL)
-                            , ("COMPARE_OP_GREATER_OR_EQUAL", pure COMPARE_OP_GREATER_OR_EQUAL)
-                            , ("COMPARE_OP_ALWAYS", pure COMPARE_OP_ALWAYS)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CompareOp")
-                       v <- step readPrec
-                       pure (CompareOp v)))
+  readPrec = enumReadPrec enumPrefixCompareOp showTableCompareOp conNameCompareOp CompareOp
 

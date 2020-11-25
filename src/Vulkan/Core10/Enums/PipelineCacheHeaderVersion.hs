@@ -4,19 +4,13 @@ module Vulkan.Core10.Enums.PipelineCacheHeaderVersion  (PipelineCacheHeaderVersi
                                                                                   , ..
                                                                                   )) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
 -- | VkPipelineCacheHeaderVersion - Encode pipeline cache version
 --
@@ -33,16 +27,25 @@ newtype PipelineCacheHeaderVersion = PipelineCacheHeaderVersion Int32
 pattern PIPELINE_CACHE_HEADER_VERSION_ONE = PipelineCacheHeaderVersion 1
 {-# complete PIPELINE_CACHE_HEADER_VERSION_ONE :: PipelineCacheHeaderVersion #-}
 
+conNamePipelineCacheHeaderVersion :: String
+conNamePipelineCacheHeaderVersion = "PipelineCacheHeaderVersion"
+
+enumPrefixPipelineCacheHeaderVersion :: String
+enumPrefixPipelineCacheHeaderVersion = "PIPELINE_CACHE_HEADER_VERSION_ONE"
+
+showTablePipelineCacheHeaderVersion :: [(PipelineCacheHeaderVersion, String)]
+showTablePipelineCacheHeaderVersion = [(PIPELINE_CACHE_HEADER_VERSION_ONE, "")]
+
 instance Show PipelineCacheHeaderVersion where
-  showsPrec p = \case
-    PIPELINE_CACHE_HEADER_VERSION_ONE -> showString "PIPELINE_CACHE_HEADER_VERSION_ONE"
-    PipelineCacheHeaderVersion x -> showParen (p >= 11) (showString "PipelineCacheHeaderVersion " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPipelineCacheHeaderVersion
+                            showTablePipelineCacheHeaderVersion
+                            conNamePipelineCacheHeaderVersion
+                            (\(PipelineCacheHeaderVersion x) -> x)
+                            (showsPrec 11)
 
 instance Read PipelineCacheHeaderVersion where
-  readPrec = parens (choose [("PIPELINE_CACHE_HEADER_VERSION_ONE", pure PIPELINE_CACHE_HEADER_VERSION_ONE)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCacheHeaderVersion")
-                       v <- step readPrec
-                       pure (PipelineCacheHeaderVersion v)))
+  readPrec = enumReadPrec enumPrefixPipelineCacheHeaderVersion
+                          showTablePipelineCacheHeaderVersion
+                          conNamePipelineCacheHeaderVersion
+                          PipelineCacheHeaderVersion
 

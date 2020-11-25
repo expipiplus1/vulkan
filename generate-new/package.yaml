@@ -82,6 +82,7 @@ dependencies:
   - async-pool
   - base
   - bytestring
+  - brittany
   - casing
   - containers
   - data-default

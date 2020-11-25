@@ -175,18 +175,12 @@ module Vulkan.Extensions.VK_AMD_rasterization_order  ( PipelineRasterizationStat
                                                      , pattern AMD_RASTERIZATION_ORDER_EXTENSION_NAME
                                                      ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -197,7 +191,7 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -279,7 +273,7 @@ newtype RasterizationOrderAMD = RasterizationOrderAMD Int32
 -- | 'RASTERIZATION_ORDER_STRICT_AMD' specifies that operations for each
 -- primitive in a subpass /must/ occur in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
-pattern RASTERIZATION_ORDER_STRICT_AMD = RasterizationOrderAMD 0
+pattern RASTERIZATION_ORDER_STRICT_AMD  = RasterizationOrderAMD 0
 -- | 'RASTERIZATION_ORDER_RELAXED_AMD' specifies that operations for each
 -- primitive in a subpass /may/ not occur in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
@@ -287,20 +281,28 @@ pattern RASTERIZATION_ORDER_RELAXED_AMD = RasterizationOrderAMD 1
 {-# complete RASTERIZATION_ORDER_STRICT_AMD,
              RASTERIZATION_ORDER_RELAXED_AMD :: RasterizationOrderAMD #-}
 
+conNameRasterizationOrderAMD :: String
+conNameRasterizationOrderAMD = "RasterizationOrderAMD"
+
+enumPrefixRasterizationOrderAMD :: String
+enumPrefixRasterizationOrderAMD = "RASTERIZATION_ORDER_"
+
+showTableRasterizationOrderAMD :: [(RasterizationOrderAMD, String)]
+showTableRasterizationOrderAMD =
+  [(RASTERIZATION_ORDER_STRICT_AMD, "STRICT_AMD"), (RASTERIZATION_ORDER_RELAXED_AMD, "RELAXED_AMD")]
+
 instance Show RasterizationOrderAMD where
-  showsPrec p = \case
-    RASTERIZATION_ORDER_STRICT_AMD -> showString "RASTERIZATION_ORDER_STRICT_AMD"
-    RASTERIZATION_ORDER_RELAXED_AMD -> showString "RASTERIZATION_ORDER_RELAXED_AMD"
-    RasterizationOrderAMD x -> showParen (p >= 11) (showString "RasterizationOrderAMD " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixRasterizationOrderAMD
+                            showTableRasterizationOrderAMD
+                            conNameRasterizationOrderAMD
+                            (\(RasterizationOrderAMD x) -> x)
+                            (showsPrec 11)
 
 instance Read RasterizationOrderAMD where
-  readPrec = parens (choose [("RASTERIZATION_ORDER_STRICT_AMD", pure RASTERIZATION_ORDER_STRICT_AMD)
-                            , ("RASTERIZATION_ORDER_RELAXED_AMD", pure RASTERIZATION_ORDER_RELAXED_AMD)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "RasterizationOrderAMD")
-                       v <- step readPrec
-                       pure (RasterizationOrderAMD v)))
+  readPrec = enumReadPrec enumPrefixRasterizationOrderAMD
+                          showTableRasterizationOrderAMD
+                          conNameRasterizationOrderAMD
+                          RasterizationOrderAMD
 
 
 type AMD_RASTERIZATION_ORDER_SPEC_VERSION = 1

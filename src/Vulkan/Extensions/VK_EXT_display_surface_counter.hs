@@ -102,10 +102,10 @@ module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurf
                                                          , pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT
                                                          , pattern SURFACE_COUNTER_VBLANK_EXT
                                                          , SurfaceCapabilities2EXT(..)
+                                                         , SurfaceCounterFlagsEXT
                                                          , SurfaceCounterFlagBitsEXT( SURFACE_COUNTER_VBLANK_BIT_EXT
                                                                                     , ..
                                                                                     )
-                                                         , SurfaceCounterFlagsEXT
                                                          , EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION
                                                          , pattern EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION
                                                          , EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME
@@ -117,6 +117,8 @@ module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurf
                                                          , SurfaceTransformFlagsKHR
                                                          ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -125,15 +127,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -151,8 +146,8 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagsKHR)
@@ -392,6 +387,8 @@ instance Zero SurfaceCapabilities2EXT where
            zero
 
 
+type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
+
 -- | VkSurfaceCounterFlagBitsEXT - Surface-relative counter types
 --
 -- = See Also
@@ -406,20 +403,27 @@ newtype SurfaceCounterFlagBitsEXT = SurfaceCounterFlagBitsEXT Flags
 -- with the surface.
 pattern SURFACE_COUNTER_VBLANK_BIT_EXT = SurfaceCounterFlagBitsEXT 0x00000001
 
-type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
+conNameSurfaceCounterFlagBitsEXT :: String
+conNameSurfaceCounterFlagBitsEXT = "SurfaceCounterFlagBitsEXT"
+
+enumPrefixSurfaceCounterFlagBitsEXT :: String
+enumPrefixSurfaceCounterFlagBitsEXT = "SURFACE_COUNTER_VBLANK_BIT_EXT"
+
+showTableSurfaceCounterFlagBitsEXT :: [(SurfaceCounterFlagBitsEXT, String)]
+showTableSurfaceCounterFlagBitsEXT = [(SURFACE_COUNTER_VBLANK_BIT_EXT, "")]
 
 instance Show SurfaceCounterFlagBitsEXT where
-  showsPrec p = \case
-    SURFACE_COUNTER_VBLANK_BIT_EXT -> showString "SURFACE_COUNTER_VBLANK_BIT_EXT"
-    SurfaceCounterFlagBitsEXT x -> showParen (p >= 11) (showString "SurfaceCounterFlagBitsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixSurfaceCounterFlagBitsEXT
+                            showTableSurfaceCounterFlagBitsEXT
+                            conNameSurfaceCounterFlagBitsEXT
+                            (\(SurfaceCounterFlagBitsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read SurfaceCounterFlagBitsEXT where
-  readPrec = parens (choose [("SURFACE_COUNTER_VBLANK_BIT_EXT", pure SURFACE_COUNTER_VBLANK_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SurfaceCounterFlagBitsEXT")
-                       v <- step readPrec
-                       pure (SurfaceCounterFlagBitsEXT v)))
+  readPrec = enumReadPrec enumPrefixSurfaceCounterFlagBitsEXT
+                          showTableSurfaceCounterFlagBitsEXT
+                          conNameSurfaceCounterFlagBitsEXT
+                          SurfaceCounterFlagBitsEXT
 
 
 type EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION = 1

@@ -167,6 +167,8 @@ module Vulkan.Extensions.VK_AMD_shader_info  ( getShaderInfoAMD
                                              ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -179,15 +181,7 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCStringLen)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -209,9 +203,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -557,10 +551,10 @@ newtype ShaderInfoTypeAMD = ShaderInfoTypeAMD Int32
 
 -- | 'SHADER_INFO_TYPE_STATISTICS_AMD' specifies that device resources used
 -- by a shader will be queried.
-pattern SHADER_INFO_TYPE_STATISTICS_AMD = ShaderInfoTypeAMD 0
+pattern SHADER_INFO_TYPE_STATISTICS_AMD  = ShaderInfoTypeAMD 0
 -- | 'SHADER_INFO_TYPE_BINARY_AMD' specifies that implementation-specific
 -- information will be queried.
-pattern SHADER_INFO_TYPE_BINARY_AMD = ShaderInfoTypeAMD 1
+pattern SHADER_INFO_TYPE_BINARY_AMD      = ShaderInfoTypeAMD 1
 -- | 'SHADER_INFO_TYPE_DISASSEMBLY_AMD' specifies that human-readable
 -- dissassembly of a shader.
 pattern SHADER_INFO_TYPE_DISASSEMBLY_AMD = ShaderInfoTypeAMD 2
@@ -568,22 +562,29 @@ pattern SHADER_INFO_TYPE_DISASSEMBLY_AMD = ShaderInfoTypeAMD 2
              SHADER_INFO_TYPE_BINARY_AMD,
              SHADER_INFO_TYPE_DISASSEMBLY_AMD :: ShaderInfoTypeAMD #-}
 
+conNameShaderInfoTypeAMD :: String
+conNameShaderInfoTypeAMD = "ShaderInfoTypeAMD"
+
+enumPrefixShaderInfoTypeAMD :: String
+enumPrefixShaderInfoTypeAMD = "SHADER_INFO_TYPE_"
+
+showTableShaderInfoTypeAMD :: [(ShaderInfoTypeAMD, String)]
+showTableShaderInfoTypeAMD =
+  [ (SHADER_INFO_TYPE_STATISTICS_AMD , "STATISTICS_AMD")
+  , (SHADER_INFO_TYPE_BINARY_AMD     , "BINARY_AMD")
+  , (SHADER_INFO_TYPE_DISASSEMBLY_AMD, "DISASSEMBLY_AMD")
+  ]
+
 instance Show ShaderInfoTypeAMD where
-  showsPrec p = \case
-    SHADER_INFO_TYPE_STATISTICS_AMD -> showString "SHADER_INFO_TYPE_STATISTICS_AMD"
-    SHADER_INFO_TYPE_BINARY_AMD -> showString "SHADER_INFO_TYPE_BINARY_AMD"
-    SHADER_INFO_TYPE_DISASSEMBLY_AMD -> showString "SHADER_INFO_TYPE_DISASSEMBLY_AMD"
-    ShaderInfoTypeAMD x -> showParen (p >= 11) (showString "ShaderInfoTypeAMD " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixShaderInfoTypeAMD
+                            showTableShaderInfoTypeAMD
+                            conNameShaderInfoTypeAMD
+                            (\(ShaderInfoTypeAMD x) -> x)
+                            (showsPrec 11)
 
 instance Read ShaderInfoTypeAMD where
-  readPrec = parens (choose [("SHADER_INFO_TYPE_STATISTICS_AMD", pure SHADER_INFO_TYPE_STATISTICS_AMD)
-                            , ("SHADER_INFO_TYPE_BINARY_AMD", pure SHADER_INFO_TYPE_BINARY_AMD)
-                            , ("SHADER_INFO_TYPE_DISASSEMBLY_AMD", pure SHADER_INFO_TYPE_DISASSEMBLY_AMD)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ShaderInfoTypeAMD")
-                       v <- step readPrec
-                       pure (ShaderInfoTypeAMD v)))
+  readPrec =
+    enumReadPrec enumPrefixShaderInfoTypeAMD showTableShaderInfoTypeAMD conNameShaderInfoTypeAMD ShaderInfoTypeAMD
 
 
 type AMD_SHADER_INFO_SPEC_VERSION = 1

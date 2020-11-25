@@ -115,18 +115,12 @@ module Vulkan.Extensions.VK_EXT_validation_flags  ( ValidationFlagsEXT(..)
                                                   , pattern EXT_VALIDATION_FLAGS_EXTENSION_NAME
                                                   ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -141,8 +135,8 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -221,27 +215,32 @@ newtype ValidationCheckEXT = ValidationCheckEXT Int32
 
 -- | 'VALIDATION_CHECK_ALL_EXT' specifies that all validation checks are
 -- disabled.
-pattern VALIDATION_CHECK_ALL_EXT = ValidationCheckEXT 0
+pattern VALIDATION_CHECK_ALL_EXT     = ValidationCheckEXT 0
 -- | 'VALIDATION_CHECK_SHADERS_EXT' specifies that shader validation is
 -- disabled.
 pattern VALIDATION_CHECK_SHADERS_EXT = ValidationCheckEXT 1
 {-# complete VALIDATION_CHECK_ALL_EXT,
              VALIDATION_CHECK_SHADERS_EXT :: ValidationCheckEXT #-}
 
+conNameValidationCheckEXT :: String
+conNameValidationCheckEXT = "ValidationCheckEXT"
+
+enumPrefixValidationCheckEXT :: String
+enumPrefixValidationCheckEXT = "VALIDATION_CHECK_"
+
+showTableValidationCheckEXT :: [(ValidationCheckEXT, String)]
+showTableValidationCheckEXT = [(VALIDATION_CHECK_ALL_EXT, "ALL_EXT"), (VALIDATION_CHECK_SHADERS_EXT, "SHADERS_EXT")]
+
 instance Show ValidationCheckEXT where
-  showsPrec p = \case
-    VALIDATION_CHECK_ALL_EXT -> showString "VALIDATION_CHECK_ALL_EXT"
-    VALIDATION_CHECK_SHADERS_EXT -> showString "VALIDATION_CHECK_SHADERS_EXT"
-    ValidationCheckEXT x -> showParen (p >= 11) (showString "ValidationCheckEXT " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixValidationCheckEXT
+                            showTableValidationCheckEXT
+                            conNameValidationCheckEXT
+                            (\(ValidationCheckEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read ValidationCheckEXT where
-  readPrec = parens (choose [("VALIDATION_CHECK_ALL_EXT", pure VALIDATION_CHECK_ALL_EXT)
-                            , ("VALIDATION_CHECK_SHADERS_EXT", pure VALIDATION_CHECK_SHADERS_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ValidationCheckEXT")
-                       v <- step readPrec
-                       pure (ValidationCheckEXT v)))
+  readPrec =
+    enumReadPrec enumPrefixValidationCheckEXT showTableValidationCheckEXT conNameValidationCheckEXT ValidationCheckEXT
 
 
 type EXT_VALIDATION_FLAGS_SPEC_VERSION = 2

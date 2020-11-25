@@ -528,13 +528,13 @@ module Vulkan.Extensions.VK_KHR_display  ( getPhysicalDeviceDisplayPropertiesKHR
                                          , DisplaySurfaceCreateInfoKHR(..)
                                          , DisplayModeCreateFlagsKHR(..)
                                          , DisplaySurfaceCreateFlagsKHR(..)
+                                         , DisplayPlaneAlphaFlagsKHR
                                          , DisplayPlaneAlphaFlagBitsKHR( DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR
                                                                        , DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR
                                                                        , DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR
                                                                        , DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR
                                                                        , ..
                                                                        )
-                                         , DisplayPlaneAlphaFlagsKHR
                                          , KHR_DISPLAY_SPEC_VERSION
                                          , pattern KHR_DISPLAY_SPEC_VERSION
                                          , KHR_DISPLAY_EXTENSION_NAME
@@ -546,6 +546,8 @@ module Vulkan.Extensions.VK_KHR_display  ( getPhysicalDeviceDisplayPropertiesKHR
                                          , SurfaceTransformFlagsKHR
                                          ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -557,15 +559,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
@@ -589,8 +584,8 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -1883,17 +1878,27 @@ newtype DisplayModeCreateFlagsKHR = DisplayModeCreateFlagsKHR Flags
 
 
 
+conNameDisplayModeCreateFlagsKHR :: String
+conNameDisplayModeCreateFlagsKHR = "DisplayModeCreateFlagsKHR"
+
+enumPrefixDisplayModeCreateFlagsKHR :: String
+enumPrefixDisplayModeCreateFlagsKHR = ""
+
+showTableDisplayModeCreateFlagsKHR :: [(DisplayModeCreateFlagsKHR, String)]
+showTableDisplayModeCreateFlagsKHR = []
+
 instance Show DisplayModeCreateFlagsKHR where
-  showsPrec p = \case
-    DisplayModeCreateFlagsKHR x -> showParen (p >= 11) (showString "DisplayModeCreateFlagsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDisplayModeCreateFlagsKHR
+                            showTableDisplayModeCreateFlagsKHR
+                            conNameDisplayModeCreateFlagsKHR
+                            (\(DisplayModeCreateFlagsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DisplayModeCreateFlagsKHR where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DisplayModeCreateFlagsKHR")
-                       v <- step readPrec
-                       pure (DisplayModeCreateFlagsKHR v)))
+  readPrec = enumReadPrec enumPrefixDisplayModeCreateFlagsKHR
+                          showTableDisplayModeCreateFlagsKHR
+                          conNameDisplayModeCreateFlagsKHR
+                          DisplayModeCreateFlagsKHR
 
 
 -- | VkDisplaySurfaceCreateFlagsKHR - Reserved for future use
@@ -1911,18 +1916,30 @@ newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR Flags
 
 
 
+conNameDisplaySurfaceCreateFlagsKHR :: String
+conNameDisplaySurfaceCreateFlagsKHR = "DisplaySurfaceCreateFlagsKHR"
+
+enumPrefixDisplaySurfaceCreateFlagsKHR :: String
+enumPrefixDisplaySurfaceCreateFlagsKHR = ""
+
+showTableDisplaySurfaceCreateFlagsKHR :: [(DisplaySurfaceCreateFlagsKHR, String)]
+showTableDisplaySurfaceCreateFlagsKHR = []
+
 instance Show DisplaySurfaceCreateFlagsKHR where
-  showsPrec p = \case
-    DisplaySurfaceCreateFlagsKHR x -> showParen (p >= 11) (showString "DisplaySurfaceCreateFlagsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDisplaySurfaceCreateFlagsKHR
+                            showTableDisplaySurfaceCreateFlagsKHR
+                            conNameDisplaySurfaceCreateFlagsKHR
+                            (\(DisplaySurfaceCreateFlagsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DisplaySurfaceCreateFlagsKHR where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DisplaySurfaceCreateFlagsKHR")
-                       v <- step readPrec
-                       pure (DisplaySurfaceCreateFlagsKHR v)))
+  readPrec = enumReadPrec enumPrefixDisplaySurfaceCreateFlagsKHR
+                          showTableDisplaySurfaceCreateFlagsKHR
+                          conNameDisplaySurfaceCreateFlagsKHR
+                          DisplaySurfaceCreateFlagsKHR
 
+
+type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
 
 -- | VkDisplayPlaneAlphaFlagBitsKHR - Alpha blending type
 --
@@ -1934,43 +1951,49 @@ newtype DisplayPlaneAlphaFlagBitsKHR = DisplayPlaneAlphaFlagBitsKHR Flags
 
 -- | 'DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR' specifies that the source image
 -- will be treated as opaque.
-pattern DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000001
+pattern DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR                  = DisplayPlaneAlphaFlagBitsKHR 0x00000001
 -- | 'DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR' specifies that a global alpha value
 -- /must/ be specified that will be applied to all pixels in the source
 -- image.
-pattern DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000002
+pattern DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR                  = DisplayPlaneAlphaFlagBitsKHR 0x00000002
 -- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR' specifies that the alpha value
 -- will be determined by the alpha channel of the source image’s pixels. If
 -- the source format contains no alpha values, no blending will be applied.
 -- The source alpha values are not premultiplied into the source image’s
 -- other color channels.
-pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000004
+pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR               = DisplayPlaneAlphaFlagBitsKHR 0x00000004
 -- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR' is equivalent to
 -- 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR', except the source alpha values
 -- are assumed to be premultiplied into the source image’s other color
 -- channels.
 pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000008
 
-type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
+conNameDisplayPlaneAlphaFlagBitsKHR :: String
+conNameDisplayPlaneAlphaFlagBitsKHR = "DisplayPlaneAlphaFlagBitsKHR"
+
+enumPrefixDisplayPlaneAlphaFlagBitsKHR :: String
+enumPrefixDisplayPlaneAlphaFlagBitsKHR = "DISPLAY_PLANE_ALPHA_"
+
+showTableDisplayPlaneAlphaFlagBitsKHR :: [(DisplayPlaneAlphaFlagBitsKHR, String)]
+showTableDisplayPlaneAlphaFlagBitsKHR =
+  [ (DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR                 , "OPAQUE_BIT_KHR")
+  , (DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR                 , "GLOBAL_BIT_KHR")
+  , (DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR              , "PER_PIXEL_BIT_KHR")
+  , (DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR, "PER_PIXEL_PREMULTIPLIED_BIT_KHR")
+  ]
 
 instance Show DisplayPlaneAlphaFlagBitsKHR where
-  showsPrec p = \case
-    DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR -> showString "DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR"
-    DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR -> showString "DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR"
-    DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR -> showString "DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR"
-    DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR -> showString "DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR"
-    DisplayPlaneAlphaFlagBitsKHR x -> showParen (p >= 11) (showString "DisplayPlaneAlphaFlagBitsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDisplayPlaneAlphaFlagBitsKHR
+                            showTableDisplayPlaneAlphaFlagBitsKHR
+                            conNameDisplayPlaneAlphaFlagBitsKHR
+                            (\(DisplayPlaneAlphaFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DisplayPlaneAlphaFlagBitsKHR where
-  readPrec = parens (choose [("DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR", pure DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR)
-                            , ("DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR", pure DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR)
-                            , ("DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR", pure DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR)
-                            , ("DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR", pure DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DisplayPlaneAlphaFlagBitsKHR")
-                       v <- step readPrec
-                       pure (DisplayPlaneAlphaFlagBitsKHR v)))
+  readPrec = enumReadPrec enumPrefixDisplayPlaneAlphaFlagBitsKHR
+                          showTableDisplayPlaneAlphaFlagBitsKHR
+                          conNameDisplayPlaneAlphaFlagBitsKHR
+                          DisplayPlaneAlphaFlagBitsKHR
 
 
 type KHR_DISPLAY_SPEC_VERSION = 23

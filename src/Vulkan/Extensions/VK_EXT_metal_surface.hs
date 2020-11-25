@@ -102,6 +102,8 @@ module Vulkan.Extensions.VK_EXT_metal_surface  ( createMetalSurfaceEXT
                                                , SurfaceKHR(..)
                                                ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -113,15 +115,8 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
@@ -139,7 +134,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
@@ -313,17 +308,27 @@ newtype MetalSurfaceCreateFlagsEXT = MetalSurfaceCreateFlagsEXT Flags
 
 
 
+conNameMetalSurfaceCreateFlagsEXT :: String
+conNameMetalSurfaceCreateFlagsEXT = "MetalSurfaceCreateFlagsEXT"
+
+enumPrefixMetalSurfaceCreateFlagsEXT :: String
+enumPrefixMetalSurfaceCreateFlagsEXT = ""
+
+showTableMetalSurfaceCreateFlagsEXT :: [(MetalSurfaceCreateFlagsEXT, String)]
+showTableMetalSurfaceCreateFlagsEXT = []
+
 instance Show MetalSurfaceCreateFlagsEXT where
-  showsPrec p = \case
-    MetalSurfaceCreateFlagsEXT x -> showParen (p >= 11) (showString "MetalSurfaceCreateFlagsEXT 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixMetalSurfaceCreateFlagsEXT
+                            showTableMetalSurfaceCreateFlagsEXT
+                            conNameMetalSurfaceCreateFlagsEXT
+                            (\(MetalSurfaceCreateFlagsEXT x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read MetalSurfaceCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "MetalSurfaceCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (MetalSurfaceCreateFlagsEXT v)))
+  readPrec = enumReadPrec enumPrefixMetalSurfaceCreateFlagsEXT
+                          showTableMetalSurfaceCreateFlagsEXT
+                          conNameMetalSurfaceCreateFlagsEXT
+                          MetalSurfaceCreateFlagsEXT
 
 
 type EXT_METAL_SURFACE_SPEC_VERSION = 1

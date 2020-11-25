@@ -1,28 +1,25 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ExternalSemaphoreFeatureFlagBits"
-module Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits  ( ExternalSemaphoreFeatureFlagBits( EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT
+module Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits  ( ExternalSemaphoreFeatureFlags
+                                                             , ExternalSemaphoreFeatureFlagBits( EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT
                                                                                                , EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT
                                                                                                , ..
                                                                                                )
-                                                             , ExternalSemaphoreFeatureFlags
                                                              ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type ExternalSemaphoreFeatureFlags = ExternalSemaphoreFeatureFlagBits
+
 -- | VkExternalSemaphoreFeatureFlagBits - Bitfield describing features of an
 -- external semaphore handle type
 --
@@ -39,20 +36,28 @@ pattern EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT = ExternalSemaphoreFeatureFlag
 -- this type /can/ be imported as Vulkan semaphore objects.
 pattern EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT = ExternalSemaphoreFeatureFlagBits 0x00000002
 
-type ExternalSemaphoreFeatureFlags = ExternalSemaphoreFeatureFlagBits
+conNameExternalSemaphoreFeatureFlagBits :: String
+conNameExternalSemaphoreFeatureFlagBits = "ExternalSemaphoreFeatureFlagBits"
+
+enumPrefixExternalSemaphoreFeatureFlagBits :: String
+enumPrefixExternalSemaphoreFeatureFlagBits = "EXTERNAL_SEMAPHORE_FEATURE_"
+
+showTableExternalSemaphoreFeatureFlagBits :: [(ExternalSemaphoreFeatureFlagBits, String)]
+showTableExternalSemaphoreFeatureFlagBits =
+  [ (EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT, "EXPORTABLE_BIT")
+  , (EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT, "IMPORTABLE_BIT")
+  ]
 
 instance Show ExternalSemaphoreFeatureFlagBits where
-  showsPrec p = \case
-    EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT -> showString "EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT"
-    EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT -> showString "EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT"
-    ExternalSemaphoreFeatureFlagBits x -> showParen (p >= 11) (showString "ExternalSemaphoreFeatureFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixExternalSemaphoreFeatureFlagBits
+                            showTableExternalSemaphoreFeatureFlagBits
+                            conNameExternalSemaphoreFeatureFlagBits
+                            (\(ExternalSemaphoreFeatureFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read ExternalSemaphoreFeatureFlagBits where
-  readPrec = parens (choose [("EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT", pure EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT)
-                            , ("EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT", pure EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ExternalSemaphoreFeatureFlagBits")
-                       v <- step readPrec
-                       pure (ExternalSemaphoreFeatureFlagBits v)))
+  readPrec = enumReadPrec enumPrefixExternalSemaphoreFeatureFlagBits
+                          showTableExternalSemaphoreFeatureFlagBits
+                          conNameExternalSemaphoreFeatureFlagBits
+                          ExternalSemaphoreFeatureFlagBits
 

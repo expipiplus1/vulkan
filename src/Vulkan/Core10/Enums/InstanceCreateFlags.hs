@@ -2,20 +2,15 @@
 -- No documentation found for Chapter "InstanceCreateFlags"
 module Vulkan.Core10.Enums.InstanceCreateFlags  (InstanceCreateFlags(..)) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 -- | VkInstanceCreateFlags - Reserved for future use
@@ -33,15 +28,25 @@ newtype InstanceCreateFlags = InstanceCreateFlags Flags
 
 
 
+conNameInstanceCreateFlags :: String
+conNameInstanceCreateFlags = "InstanceCreateFlags"
+
+enumPrefixInstanceCreateFlags :: String
+enumPrefixInstanceCreateFlags = ""
+
+showTableInstanceCreateFlags :: [(InstanceCreateFlags, String)]
+showTableInstanceCreateFlags = []
+
 instance Show InstanceCreateFlags where
-  showsPrec p = \case
-    InstanceCreateFlags x -> showParen (p >= 11) (showString "InstanceCreateFlags 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixInstanceCreateFlags
+                            showTableInstanceCreateFlags
+                            conNameInstanceCreateFlags
+                            (\(InstanceCreateFlags x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read InstanceCreateFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "InstanceCreateFlags")
-                       v <- step readPrec
-                       pure (InstanceCreateFlags v)))
+  readPrec = enumReadPrec enumPrefixInstanceCreateFlags
+                          showTableInstanceCreateFlags
+                          conNameInstanceCreateFlags
+                          InstanceCreateFlags
 

@@ -1,12 +1,12 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "MemoryAllocateFlagBits"
-module Vulkan.Core11.Enums.MemoryAllocateFlagBits  ( MemoryAllocateFlagBits
-                                                   , MemoryAllocateFlags
+module Vulkan.Core11.Enums.MemoryAllocateFlagBits  ( MemoryAllocateFlags
+                                                   , MemoryAllocateFlagBits
                                                    ) where
 
 
 
-data MemoryAllocateFlagBits
-
 type MemoryAllocateFlags = MemoryAllocateFlagBits
+
+data MemoryAllocateFlagBits
 

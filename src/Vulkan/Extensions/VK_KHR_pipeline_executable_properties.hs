@@ -200,6 +200,8 @@ module Vulkan.Extensions.VK_KHR_pipeline_executable_properties  ( getPipelineExe
                                                                 ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -212,15 +214,7 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -246,9 +240,9 @@ import Data.Int (Int64)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -1099,15 +1093,15 @@ newtype PipelineExecutableStatisticFormatKHR = PipelineExecutableStatisticFormat
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' or
 -- 'Vulkan.Core10.FundamentalTypes.FALSE' and /should/ be read from the
 -- @b32@ field of 'PipelineExecutableStatisticValueKHR'.
-pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR = PipelineExecutableStatisticFormatKHR 0
+pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR  = PipelineExecutableStatisticFormatKHR 0
 -- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR' specifies that the
 -- statistic is returned as a signed 64-bit integer and /should/ be read
 -- from the @i64@ field of 'PipelineExecutableStatisticValueKHR'.
-pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR = PipelineExecutableStatisticFormatKHR 1
+pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR   = PipelineExecutableStatisticFormatKHR 1
 -- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR' specifies that the
 -- statistic is returned as an unsigned 64-bit integer and /should/ be read
 -- from the @u64@ field of 'PipelineExecutableStatisticValueKHR'.
-pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR = PipelineExecutableStatisticFormatKHR 2
+pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR  = PipelineExecutableStatisticFormatKHR 2
 -- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR' specifies that the
 -- statistic is returned as a 64-bit floating-point value and /should/ be
 -- read from the @f64@ field of 'PipelineExecutableStatisticValueKHR'.
@@ -1117,24 +1111,32 @@ pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR = PipelineExecutableSta
              PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR,
              PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR :: PipelineExecutableStatisticFormatKHR #-}
 
+conNamePipelineExecutableStatisticFormatKHR :: String
+conNamePipelineExecutableStatisticFormatKHR = "PipelineExecutableStatisticFormatKHR"
+
+enumPrefixPipelineExecutableStatisticFormatKHR :: String
+enumPrefixPipelineExecutableStatisticFormatKHR = "PIPELINE_EXECUTABLE_STATISTIC_FORMAT_"
+
+showTablePipelineExecutableStatisticFormatKHR :: [(PipelineExecutableStatisticFormatKHR, String)]
+showTablePipelineExecutableStatisticFormatKHR =
+  [ (PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR , "BOOL32_KHR")
+  , (PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR  , "INT64_KHR")
+  , (PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR , "UINT64_KHR")
+  , (PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR, "FLOAT64_KHR")
+  ]
+
 instance Show PipelineExecutableStatisticFormatKHR where
-  showsPrec p = \case
-    PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR -> showString "PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR"
-    PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR -> showString "PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR"
-    PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR -> showString "PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR"
-    PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR -> showString "PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR"
-    PipelineExecutableStatisticFormatKHR x -> showParen (p >= 11) (showString "PipelineExecutableStatisticFormatKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPipelineExecutableStatisticFormatKHR
+                            showTablePipelineExecutableStatisticFormatKHR
+                            conNamePipelineExecutableStatisticFormatKHR
+                            (\(PipelineExecutableStatisticFormatKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PipelineExecutableStatisticFormatKHR where
-  readPrec = parens (choose [("PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR", pure PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR)
-                            , ("PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR", pure PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR)
-                            , ("PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR", pure PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR)
-                            , ("PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR", pure PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineExecutableStatisticFormatKHR")
-                       v <- step readPrec
-                       pure (PipelineExecutableStatisticFormatKHR v)))
+  readPrec = enumReadPrec enumPrefixPipelineExecutableStatisticFormatKHR
+                          showTablePipelineExecutableStatisticFormatKHR
+                          conNamePipelineExecutableStatisticFormatKHR
+                          PipelineExecutableStatisticFormatKHR
 
 
 type KHR_PIPELINE_EXECUTABLE_PROPERTIES_SPEC_VERSION = 1

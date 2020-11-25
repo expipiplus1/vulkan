@@ -1,28 +1,25 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DescriptorPoolCreateFlagBits"
-module Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits  ( DescriptorPoolCreateFlagBits( DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
+module Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits  ( DescriptorPoolCreateFlags
+                                                         , DescriptorPoolCreateFlagBits( DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
                                                                                        , DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT
                                                                                        , ..
                                                                                        )
-                                                         , DescriptorPoolCreateFlags
                                                          ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type DescriptorPoolCreateFlags = DescriptorPoolCreateFlagBits
+
 -- | VkDescriptorPoolCreateFlagBits - Bitmask specifying certain supported
 -- operations on a descriptor pool
 --
@@ -50,22 +47,30 @@ pattern DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = DescriptorPoolCreateFla
 -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 -- bit from a pool that has 'DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 -- set.
-pattern DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT = DescriptorPoolCreateFlagBits 0x00000002
+pattern DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT   = DescriptorPoolCreateFlagBits 0x00000002
 
-type DescriptorPoolCreateFlags = DescriptorPoolCreateFlagBits
+conNameDescriptorPoolCreateFlagBits :: String
+conNameDescriptorPoolCreateFlagBits = "DescriptorPoolCreateFlagBits"
+
+enumPrefixDescriptorPoolCreateFlagBits :: String
+enumPrefixDescriptorPoolCreateFlagBits = "DESCRIPTOR_POOL_CREATE_"
+
+showTableDescriptorPoolCreateFlagBits :: [(DescriptorPoolCreateFlagBits, String)]
+showTableDescriptorPoolCreateFlagBits =
+  [ (DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT, "FREE_DESCRIPTOR_SET_BIT")
+  , (DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT  , "UPDATE_AFTER_BIND_BIT")
+  ]
 
 instance Show DescriptorPoolCreateFlagBits where
-  showsPrec p = \case
-    DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT -> showString "DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT"
-    DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT -> showString "DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT"
-    DescriptorPoolCreateFlagBits x -> showParen (p >= 11) (showString "DescriptorPoolCreateFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDescriptorPoolCreateFlagBits
+                            showTableDescriptorPoolCreateFlagBits
+                            conNameDescriptorPoolCreateFlagBits
+                            (\(DescriptorPoolCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DescriptorPoolCreateFlagBits where
-  readPrec = parens (choose [("DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT", pure DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
-                            , ("DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT", pure DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DescriptorPoolCreateFlagBits")
-                       v <- step readPrec
-                       pure (DescriptorPoolCreateFlagBits v)))
+  readPrec = enumReadPrec enumPrefixDescriptorPoolCreateFlagBits
+                          showTableDescriptorPoolCreateFlagBits
+                          conNameDescriptorPoolCreateFlagBits
+                          DescriptorPoolCreateFlagBits
 

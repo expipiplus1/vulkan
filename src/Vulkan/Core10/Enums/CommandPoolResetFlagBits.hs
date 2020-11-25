@@ -1,27 +1,24 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "CommandPoolResetFlagBits"
-module Vulkan.Core10.Enums.CommandPoolResetFlagBits  ( CommandPoolResetFlagBits( COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+module Vulkan.Core10.Enums.CommandPoolResetFlagBits  ( CommandPoolResetFlags
+                                                     , CommandPoolResetFlagBits( COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
                                                                                , ..
                                                                                )
-                                                     , CommandPoolResetFlags
                                                      ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type CommandPoolResetFlags = CommandPoolResetFlagBits
+
 -- | VkCommandPoolResetFlagBits - Bitmask controlling behavior of a command
 -- pool reset
 --
@@ -36,18 +33,25 @@ newtype CommandPoolResetFlagBits = CommandPoolResetFlagBits Flags
 -- the system.
 pattern COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = CommandPoolResetFlagBits 0x00000001
 
-type CommandPoolResetFlags = CommandPoolResetFlagBits
+conNameCommandPoolResetFlagBits :: String
+conNameCommandPoolResetFlagBits = "CommandPoolResetFlagBits"
+
+enumPrefixCommandPoolResetFlagBits :: String
+enumPrefixCommandPoolResetFlagBits = "COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"
+
+showTableCommandPoolResetFlagBits :: [(CommandPoolResetFlagBits, String)]
+showTableCommandPoolResetFlagBits = [(COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT, "")]
 
 instance Show CommandPoolResetFlagBits where
-  showsPrec p = \case
-    COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT -> showString "COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"
-    CommandPoolResetFlagBits x -> showParen (p >= 11) (showString "CommandPoolResetFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixCommandPoolResetFlagBits
+                            showTableCommandPoolResetFlagBits
+                            conNameCommandPoolResetFlagBits
+                            (\(CommandPoolResetFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read CommandPoolResetFlagBits where
-  readPrec = parens (choose [("COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT", pure COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CommandPoolResetFlagBits")
-                       v <- step readPrec
-                       pure (CommandPoolResetFlagBits v)))
+  readPrec = enumReadPrec enumPrefixCommandPoolResetFlagBits
+                          showTableCommandPoolResetFlagBits
+                          conNameCommandPoolResetFlagBits
+                          CommandPoolResetFlagBits
 

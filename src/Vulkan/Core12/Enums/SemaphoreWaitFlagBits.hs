@@ -1,27 +1,24 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SemaphoreWaitFlagBits"
-module Vulkan.Core12.Enums.SemaphoreWaitFlagBits  ( SemaphoreWaitFlagBits( SEMAPHORE_WAIT_ANY_BIT
+module Vulkan.Core12.Enums.SemaphoreWaitFlagBits  ( SemaphoreWaitFlags
+                                                  , SemaphoreWaitFlagBits( SEMAPHORE_WAIT_ANY_BIT
                                                                          , ..
                                                                          )
-                                                  , SemaphoreWaitFlags
                                                   ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type SemaphoreWaitFlags = SemaphoreWaitFlagBits
+
 -- | VkSemaphoreWaitFlagBits - Bitmask specifying additional parameters of a
 -- semaphore wait operation
 --
@@ -43,18 +40,25 @@ newtype SemaphoreWaitFlagBits = SemaphoreWaitFlagBits Flags
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreWaitInfo'::@pValues@.
 pattern SEMAPHORE_WAIT_ANY_BIT = SemaphoreWaitFlagBits 0x00000001
 
-type SemaphoreWaitFlags = SemaphoreWaitFlagBits
+conNameSemaphoreWaitFlagBits :: String
+conNameSemaphoreWaitFlagBits = "SemaphoreWaitFlagBits"
+
+enumPrefixSemaphoreWaitFlagBits :: String
+enumPrefixSemaphoreWaitFlagBits = "SEMAPHORE_WAIT_ANY_BIT"
+
+showTableSemaphoreWaitFlagBits :: [(SemaphoreWaitFlagBits, String)]
+showTableSemaphoreWaitFlagBits = [(SEMAPHORE_WAIT_ANY_BIT, "")]
 
 instance Show SemaphoreWaitFlagBits where
-  showsPrec p = \case
-    SEMAPHORE_WAIT_ANY_BIT -> showString "SEMAPHORE_WAIT_ANY_BIT"
-    SemaphoreWaitFlagBits x -> showParen (p >= 11) (showString "SemaphoreWaitFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixSemaphoreWaitFlagBits
+                            showTableSemaphoreWaitFlagBits
+                            conNameSemaphoreWaitFlagBits
+                            (\(SemaphoreWaitFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read SemaphoreWaitFlagBits where
-  readPrec = parens (choose [("SEMAPHORE_WAIT_ANY_BIT", pure SEMAPHORE_WAIT_ANY_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SemaphoreWaitFlagBits")
-                       v <- step readPrec
-                       pure (SemaphoreWaitFlagBits v)))
+  readPrec = enumReadPrec enumPrefixSemaphoreWaitFlagBits
+                          showTableSemaphoreWaitFlagBits
+                          conNameSemaphoreWaitFlagBits
+                          SemaphoreWaitFlagBits
 

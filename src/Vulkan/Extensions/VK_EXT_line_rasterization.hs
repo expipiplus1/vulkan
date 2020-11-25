@@ -148,6 +148,8 @@ module Vulkan.Extensions.VK_EXT_line_rasterization  ( cmdSetLineStippleEXT
                                                     , pattern EXT_LINE_RASTERIZATION_EXTENSION_NAME
                                                     ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -155,15 +157,7 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -178,9 +172,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word16)
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -591,15 +585,15 @@ newtype LineRasterizationModeEXT = LineRasterizationModeEXT Int32
 -- is 'Vulkan.Core10.FundamentalTypes.TRUE', otherwise lines are drawn as
 -- non-@strictLines@ parallelograms. Both of these modes are defined in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-basic Basic Line Segment Rasterization>.
-pattern LINE_RASTERIZATION_MODE_DEFAULT_EXT = LineRasterizationModeEXT 0
+pattern LINE_RASTERIZATION_MODE_DEFAULT_EXT            = LineRasterizationModeEXT 0
 -- | 'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT' specifies lines drawn as if
 -- they were rectangles extruded from the line
-pattern LINE_RASTERIZATION_MODE_RECTANGULAR_EXT = LineRasterizationModeEXT 1
+pattern LINE_RASTERIZATION_MODE_RECTANGULAR_EXT        = LineRasterizationModeEXT 1
 -- | 'LINE_RASTERIZATION_MODE_BRESENHAM_EXT' specifies lines drawn by
 -- determining which pixel diamonds the line intersects and exits, as
 -- defined in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-bresenham Bresenham Line Segment Rasterization>.
-pattern LINE_RASTERIZATION_MODE_BRESENHAM_EXT = LineRasterizationModeEXT 2
+pattern LINE_RASTERIZATION_MODE_BRESENHAM_EXT          = LineRasterizationModeEXT 2
 -- | 'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT' specifies lines drawn
 -- if they were rectangles extruded from the line, with alpha falloff, as
 -- defined in
@@ -610,24 +604,32 @@ pattern LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT = LineRasterizationModeEX
              LINE_RASTERIZATION_MODE_BRESENHAM_EXT,
              LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT :: LineRasterizationModeEXT #-}
 
+conNameLineRasterizationModeEXT :: String
+conNameLineRasterizationModeEXT = "LineRasterizationModeEXT"
+
+enumPrefixLineRasterizationModeEXT :: String
+enumPrefixLineRasterizationModeEXT = "LINE_RASTERIZATION_MODE_"
+
+showTableLineRasterizationModeEXT :: [(LineRasterizationModeEXT, String)]
+showTableLineRasterizationModeEXT =
+  [ (LINE_RASTERIZATION_MODE_DEFAULT_EXT           , "DEFAULT_EXT")
+  , (LINE_RASTERIZATION_MODE_RECTANGULAR_EXT       , "RECTANGULAR_EXT")
+  , (LINE_RASTERIZATION_MODE_BRESENHAM_EXT         , "BRESENHAM_EXT")
+  , (LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT, "RECTANGULAR_SMOOTH_EXT")
+  ]
+
 instance Show LineRasterizationModeEXT where
-  showsPrec p = \case
-    LINE_RASTERIZATION_MODE_DEFAULT_EXT -> showString "LINE_RASTERIZATION_MODE_DEFAULT_EXT"
-    LINE_RASTERIZATION_MODE_RECTANGULAR_EXT -> showString "LINE_RASTERIZATION_MODE_RECTANGULAR_EXT"
-    LINE_RASTERIZATION_MODE_BRESENHAM_EXT -> showString "LINE_RASTERIZATION_MODE_BRESENHAM_EXT"
-    LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT -> showString "LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT"
-    LineRasterizationModeEXT x -> showParen (p >= 11) (showString "LineRasterizationModeEXT " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixLineRasterizationModeEXT
+                            showTableLineRasterizationModeEXT
+                            conNameLineRasterizationModeEXT
+                            (\(LineRasterizationModeEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read LineRasterizationModeEXT where
-  readPrec = parens (choose [("LINE_RASTERIZATION_MODE_DEFAULT_EXT", pure LINE_RASTERIZATION_MODE_DEFAULT_EXT)
-                            , ("LINE_RASTERIZATION_MODE_RECTANGULAR_EXT", pure LINE_RASTERIZATION_MODE_RECTANGULAR_EXT)
-                            , ("LINE_RASTERIZATION_MODE_BRESENHAM_EXT", pure LINE_RASTERIZATION_MODE_BRESENHAM_EXT)
-                            , ("LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT", pure LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "LineRasterizationModeEXT")
-                       v <- step readPrec
-                       pure (LineRasterizationModeEXT v)))
+  readPrec = enumReadPrec enumPrefixLineRasterizationModeEXT
+                          showTableLineRasterizationModeEXT
+                          conNameLineRasterizationModeEXT
+                          LineRasterizationModeEXT
 
 
 type EXT_LINE_RASTERIZATION_SPEC_VERSION = 1

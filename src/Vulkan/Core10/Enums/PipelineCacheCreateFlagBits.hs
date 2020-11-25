@@ -1,27 +1,24 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PipelineCacheCreateFlagBits"
-module Vulkan.Core10.Enums.PipelineCacheCreateFlagBits  ( PipelineCacheCreateFlagBits( PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT
+module Vulkan.Core10.Enums.PipelineCacheCreateFlagBits  ( PipelineCacheCreateFlags
+                                                        , PipelineCacheCreateFlagBits( PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT
                                                                                      , ..
                                                                                      )
-                                                        , PipelineCacheCreateFlags
                                                         ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type PipelineCacheCreateFlags = PipelineCacheCreateFlagBits
+
 -- | VkPipelineCacheCreateFlagBits - Bitmask specifying the behavior of the
 -- pipeline cache
 --
@@ -40,18 +37,25 @@ newtype PipelineCacheCreateFlagBits = PipelineCacheCreateFlagBits Flags
 -- allowed.
 pattern PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT = PipelineCacheCreateFlagBits 0x00000001
 
-type PipelineCacheCreateFlags = PipelineCacheCreateFlagBits
+conNamePipelineCacheCreateFlagBits :: String
+conNamePipelineCacheCreateFlagBits = "PipelineCacheCreateFlagBits"
+
+enumPrefixPipelineCacheCreateFlagBits :: String
+enumPrefixPipelineCacheCreateFlagBits = "PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT"
+
+showTablePipelineCacheCreateFlagBits :: [(PipelineCacheCreateFlagBits, String)]
+showTablePipelineCacheCreateFlagBits = [(PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT, "")]
 
 instance Show PipelineCacheCreateFlagBits where
-  showsPrec p = \case
-    PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT -> showString "PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT"
-    PipelineCacheCreateFlagBits x -> showParen (p >= 11) (showString "PipelineCacheCreateFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPipelineCacheCreateFlagBits
+                            showTablePipelineCacheCreateFlagBits
+                            conNamePipelineCacheCreateFlagBits
+                            (\(PipelineCacheCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCacheCreateFlagBits where
-  readPrec = parens (choose [("PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT", pure PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCacheCreateFlagBits")
-                       v <- step readPrec
-                       pure (PipelineCacheCreateFlagBits v)))
+  readPrec = enumReadPrec enumPrefixPipelineCacheCreateFlagBits
+                          showTablePipelineCacheCreateFlagBits
+                          conNamePipelineCacheCreateFlagBits
+                          PipelineCacheCreateFlagBits
 

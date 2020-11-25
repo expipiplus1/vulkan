@@ -98,30 +98,25 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_device_diagnostics_config  ( PhysicalDeviceDiagnosticsConfigFeaturesNV(..)
                                                           , DeviceDiagnosticsConfigCreateInfoNV(..)
+                                                          , DeviceDiagnosticsConfigFlagsNV
                                                           , DeviceDiagnosticsConfigFlagBitsNV( DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV
                                                                                              , DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV
                                                                                              , DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV
                                                                                              , ..
                                                                                              )
-                                                          , DeviceDiagnosticsConfigFlagsNV
                                                           , NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION
                                                           , pattern NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION
                                                           , NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME
                                                           , pattern NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME
                                                           ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
@@ -133,7 +128,7 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -270,6 +265,8 @@ instance Zero DeviceDiagnosticsConfigCreateInfoNV where
            zero
 
 
+type DeviceDiagnosticsConfigFlagsNV = DeviceDiagnosticsConfigFlagBitsNV
+
 -- | VkDeviceDiagnosticsConfigFlagBitsNV - Bitmask specifying diagnostics
 -- flags
 --
@@ -281,11 +278,11 @@ newtype DeviceDiagnosticsConfigFlagBitsNV = DeviceDiagnosticsConfigFlagBitsNV Fl
 
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV' enables the
 -- generation of debug information for shaders.
-pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000001
+pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV     = DeviceDiagnosticsConfigFlagBitsNV 0x00000001
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV' enables
 -- driver side tracking of resources (images, buffers, etc.) used to
 -- augment the device fault information.
-pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
+pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV     = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV' enables
 -- automatic insertion of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#device-diagnostic-checkpoints diagnostic checkpoints>
@@ -294,24 +291,31 @@ pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV = DeviceDiagno
 -- automatically inserted checkpoints.
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000004
 
-type DeviceDiagnosticsConfigFlagsNV = DeviceDiagnosticsConfigFlagBitsNV
+conNameDeviceDiagnosticsConfigFlagBitsNV :: String
+conNameDeviceDiagnosticsConfigFlagBitsNV = "DeviceDiagnosticsConfigFlagBitsNV"
+
+enumPrefixDeviceDiagnosticsConfigFlagBitsNV :: String
+enumPrefixDeviceDiagnosticsConfigFlagBitsNV = "DEVICE_DIAGNOSTICS_CONFIG_ENABLE_"
+
+showTableDeviceDiagnosticsConfigFlagBitsNV :: [(DeviceDiagnosticsConfigFlagBitsNV, String)]
+showTableDeviceDiagnosticsConfigFlagBitsNV =
+  [ (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV    , "SHADER_DEBUG_INFO_BIT_NV")
+  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV    , "RESOURCE_TRACKING_BIT_NV")
+  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV, "AUTOMATIC_CHECKPOINTS_BIT_NV")
+  ]
 
 instance Show DeviceDiagnosticsConfigFlagBitsNV where
-  showsPrec p = \case
-    DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV -> showString "DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV"
-    DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV -> showString "DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV"
-    DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV -> showString "DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV"
-    DeviceDiagnosticsConfigFlagBitsNV x -> showParen (p >= 11) (showString "DeviceDiagnosticsConfigFlagBitsNV 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixDeviceDiagnosticsConfigFlagBitsNV
+                            showTableDeviceDiagnosticsConfigFlagBitsNV
+                            conNameDeviceDiagnosticsConfigFlagBitsNV
+                            (\(DeviceDiagnosticsConfigFlagBitsNV x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read DeviceDiagnosticsConfigFlagBitsNV where
-  readPrec = parens (choose [("DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV", pure DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV)
-                            , ("DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV", pure DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV)
-                            , ("DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV", pure DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DeviceDiagnosticsConfigFlagBitsNV")
-                       v <- step readPrec
-                       pure (DeviceDiagnosticsConfigFlagBitsNV v)))
+  readPrec = enumReadPrec enumPrefixDeviceDiagnosticsConfigFlagBitsNV
+                          showTableDeviceDiagnosticsConfigFlagBitsNV
+                          conNameDeviceDiagnosticsConfigFlagBitsNV
+                          DeviceDiagnosticsConfigFlagBitsNV
 
 
 type NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION = 1

@@ -294,18 +294,12 @@ module Vulkan.Extensions.VK_EXT_blend_operation_advanced  ( PhysicalDeviceBlendO
                                                           , pattern EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME
                                                           ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -316,8 +310,8 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -666,30 +660,36 @@ newtype BlendOverlapEXT = BlendOverlapEXT Int32
 pattern BLEND_OVERLAP_UNCORRELATED_EXT = BlendOverlapEXT 0
 -- | 'BLEND_OVERLAP_DISJOINT_EXT' specifies that the source and destination
 -- coverage are considered to have minimal overlap.
-pattern BLEND_OVERLAP_DISJOINT_EXT = BlendOverlapEXT 1
+pattern BLEND_OVERLAP_DISJOINT_EXT     = BlendOverlapEXT 1
 -- | 'BLEND_OVERLAP_CONJOINT_EXT' specifies that the source and destination
 -- coverage are considered to have maximal overlap.
-pattern BLEND_OVERLAP_CONJOINT_EXT = BlendOverlapEXT 2
+pattern BLEND_OVERLAP_CONJOINT_EXT     = BlendOverlapEXT 2
 {-# complete BLEND_OVERLAP_UNCORRELATED_EXT,
              BLEND_OVERLAP_DISJOINT_EXT,
              BLEND_OVERLAP_CONJOINT_EXT :: BlendOverlapEXT #-}
 
+conNameBlendOverlapEXT :: String
+conNameBlendOverlapEXT = "BlendOverlapEXT"
+
+enumPrefixBlendOverlapEXT :: String
+enumPrefixBlendOverlapEXT = "BLEND_OVERLAP_"
+
+showTableBlendOverlapEXT :: [(BlendOverlapEXT, String)]
+showTableBlendOverlapEXT =
+  [ (BLEND_OVERLAP_UNCORRELATED_EXT, "UNCORRELATED_EXT")
+  , (BLEND_OVERLAP_DISJOINT_EXT    , "DISJOINT_EXT")
+  , (BLEND_OVERLAP_CONJOINT_EXT    , "CONJOINT_EXT")
+  ]
+
 instance Show BlendOverlapEXT where
-  showsPrec p = \case
-    BLEND_OVERLAP_UNCORRELATED_EXT -> showString "BLEND_OVERLAP_UNCORRELATED_EXT"
-    BLEND_OVERLAP_DISJOINT_EXT -> showString "BLEND_OVERLAP_DISJOINT_EXT"
-    BLEND_OVERLAP_CONJOINT_EXT -> showString "BLEND_OVERLAP_CONJOINT_EXT"
-    BlendOverlapEXT x -> showParen (p >= 11) (showString "BlendOverlapEXT " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixBlendOverlapEXT
+                            showTableBlendOverlapEXT
+                            conNameBlendOverlapEXT
+                            (\(BlendOverlapEXT x) -> x)
+                            (showsPrec 11)
 
 instance Read BlendOverlapEXT where
-  readPrec = parens (choose [("BLEND_OVERLAP_UNCORRELATED_EXT", pure BLEND_OVERLAP_UNCORRELATED_EXT)
-                            , ("BLEND_OVERLAP_DISJOINT_EXT", pure BLEND_OVERLAP_DISJOINT_EXT)
-                            , ("BLEND_OVERLAP_CONJOINT_EXT", pure BLEND_OVERLAP_CONJOINT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "BlendOverlapEXT")
-                       v <- step readPrec
-                       pure (BlendOverlapEXT v)))
+  readPrec = enumReadPrec enumPrefixBlendOverlapEXT showTableBlendOverlapEXT conNameBlendOverlapEXT BlendOverlapEXT
 
 
 type EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION = 2

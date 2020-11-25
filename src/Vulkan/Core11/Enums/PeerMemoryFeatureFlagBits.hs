@@ -1,30 +1,27 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PeerMemoryFeatureFlagBits"
-module Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits  ( PeerMemoryFeatureFlagBits( PEER_MEMORY_FEATURE_COPY_SRC_BIT
+module Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits  ( PeerMemoryFeatureFlags
+                                                      , PeerMemoryFeatureFlagBits( PEER_MEMORY_FEATURE_COPY_SRC_BIT
                                                                                  , PEER_MEMORY_FEATURE_COPY_DST_BIT
                                                                                  , PEER_MEMORY_FEATURE_GENERIC_SRC_BIT
                                                                                  , PEER_MEMORY_FEATURE_GENERIC_DST_BIT
                                                                                  , ..
                                                                                  )
-                                                      , PeerMemoryFeatureFlags
                                                       ) where
 
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
-import Text.Read.Lex (Lexeme(Ident))
+import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
+
 -- | VkPeerMemoryFeatureFlagBits - Bitmask specifying supported peer memory
 -- features
 --
@@ -55,10 +52,10 @@ newtype PeerMemoryFeatureFlagBits = PeerMemoryFeatureFlagBits Flags
 
 -- | 'PEER_MEMORY_FEATURE_COPY_SRC_BIT' specifies that the memory /can/ be
 -- accessed as the source of any @vkCmdCopy*@ command.
-pattern PEER_MEMORY_FEATURE_COPY_SRC_BIT = PeerMemoryFeatureFlagBits 0x00000001
+pattern PEER_MEMORY_FEATURE_COPY_SRC_BIT    = PeerMemoryFeatureFlagBits 0x00000001
 -- | 'PEER_MEMORY_FEATURE_COPY_DST_BIT' specifies that the memory /can/ be
 -- accessed as the destination of any @vkCmdCopy*@ command.
-pattern PEER_MEMORY_FEATURE_COPY_DST_BIT = PeerMemoryFeatureFlagBits 0x00000002
+pattern PEER_MEMORY_FEATURE_COPY_DST_BIT    = PeerMemoryFeatureFlagBits 0x00000002
 -- | 'PEER_MEMORY_FEATURE_GENERIC_SRC_BIT' specifies that the memory /can/ be
 -- read as any memory access type.
 pattern PEER_MEMORY_FEATURE_GENERIC_SRC_BIT = PeerMemoryFeatureFlagBits 0x00000004
@@ -67,24 +64,30 @@ pattern PEER_MEMORY_FEATURE_GENERIC_SRC_BIT = PeerMemoryFeatureFlagBits 0x000000
 -- writes.
 pattern PEER_MEMORY_FEATURE_GENERIC_DST_BIT = PeerMemoryFeatureFlagBits 0x00000008
 
-type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
+conNamePeerMemoryFeatureFlagBits :: String
+conNamePeerMemoryFeatureFlagBits = "PeerMemoryFeatureFlagBits"
+
+enumPrefixPeerMemoryFeatureFlagBits :: String
+enumPrefixPeerMemoryFeatureFlagBits = "PEER_MEMORY_FEATURE_"
+
+showTablePeerMemoryFeatureFlagBits :: [(PeerMemoryFeatureFlagBits, String)]
+showTablePeerMemoryFeatureFlagBits =
+  [ (PEER_MEMORY_FEATURE_COPY_SRC_BIT   , "COPY_SRC_BIT")
+  , (PEER_MEMORY_FEATURE_COPY_DST_BIT   , "COPY_DST_BIT")
+  , (PEER_MEMORY_FEATURE_GENERIC_SRC_BIT, "GENERIC_SRC_BIT")
+  , (PEER_MEMORY_FEATURE_GENERIC_DST_BIT, "GENERIC_DST_BIT")
+  ]
 
 instance Show PeerMemoryFeatureFlagBits where
-  showsPrec p = \case
-    PEER_MEMORY_FEATURE_COPY_SRC_BIT -> showString "PEER_MEMORY_FEATURE_COPY_SRC_BIT"
-    PEER_MEMORY_FEATURE_COPY_DST_BIT -> showString "PEER_MEMORY_FEATURE_COPY_DST_BIT"
-    PEER_MEMORY_FEATURE_GENERIC_SRC_BIT -> showString "PEER_MEMORY_FEATURE_GENERIC_SRC_BIT"
-    PEER_MEMORY_FEATURE_GENERIC_DST_BIT -> showString "PEER_MEMORY_FEATURE_GENERIC_DST_BIT"
-    PeerMemoryFeatureFlagBits x -> showParen (p >= 11) (showString "PeerMemoryFeatureFlagBits 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixPeerMemoryFeatureFlagBits
+                            showTablePeerMemoryFeatureFlagBits
+                            conNamePeerMemoryFeatureFlagBits
+                            (\(PeerMemoryFeatureFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read PeerMemoryFeatureFlagBits where
-  readPrec = parens (choose [("PEER_MEMORY_FEATURE_COPY_SRC_BIT", pure PEER_MEMORY_FEATURE_COPY_SRC_BIT)
-                            , ("PEER_MEMORY_FEATURE_COPY_DST_BIT", pure PEER_MEMORY_FEATURE_COPY_DST_BIT)
-                            , ("PEER_MEMORY_FEATURE_GENERIC_SRC_BIT", pure PEER_MEMORY_FEATURE_GENERIC_SRC_BIT)
-                            , ("PEER_MEMORY_FEATURE_GENERIC_DST_BIT", pure PEER_MEMORY_FEATURE_GENERIC_DST_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PeerMemoryFeatureFlagBits")
-                       v <- step readPrec
-                       pure (PeerMemoryFeatureFlagBits v)))
+  readPrec = enumReadPrec enumPrefixPeerMemoryFeatureFlagBits
+                          showTablePeerMemoryFeatureFlagBits
+                          conNamePeerMemoryFeatureFlagBits
+                          PeerMemoryFeatureFlagBits
 

@@ -405,13 +405,14 @@ module Vulkan.Extensions.VK_KHR_surface  ( destroySurfaceKHR
                                                         , COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT
                                                         , ..
                                                         )
+                                         , CompositeAlphaFlagsKHR
                                          , CompositeAlphaFlagBitsKHR( COMPOSITE_ALPHA_OPAQUE_BIT_KHR
                                                                     , COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR
                                                                     , COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR
                                                                     , COMPOSITE_ALPHA_INHERIT_BIT_KHR
                                                                     , ..
                                                                     )
-                                         , CompositeAlphaFlagsKHR
+                                         , SurfaceTransformFlagsKHR
                                          , SurfaceTransformFlagBitsKHR( SURFACE_TRANSFORM_IDENTITY_BIT_KHR
                                                                       , SURFACE_TRANSFORM_ROTATE_90_BIT_KHR
                                                                       , SURFACE_TRANSFORM_ROTATE_180_BIT_KHR
@@ -423,7 +424,6 @@ module Vulkan.Extensions.VK_KHR_surface  ( destroySurfaceKHR
                                                                       , SURFACE_TRANSFORM_INHERIT_BIT_KHR
                                                                       , ..
                                                                       )
-                                         , SurfaceTransformFlagsKHR
                                          , KHR_SURFACE_SPEC_VERSION
                                          , pattern KHR_SURFACE_SPEC_VERSION
                                          , KHR_SURFACE_EXTENSION_NAME
@@ -431,6 +431,8 @@ module Vulkan.Extensions.VK_KHR_surface  ( destroySurfaceKHR
                                          , SurfaceKHR(..)
                                          ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -442,16 +444,9 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -471,8 +466,8 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -1204,7 +1199,7 @@ newtype PresentModeKHR = PresentModeKHR Int32
 -- meaning this mode /may/ result in visible tearing. No internal queuing
 -- of presentation requests is needed, as the requests are applied
 -- immediately.
-pattern PRESENT_MODE_IMMEDIATE_KHR = PresentModeKHR 0
+pattern PRESENT_MODE_IMMEDIATE_KHR                 = PresentModeKHR 0
 -- | 'PRESENT_MODE_MAILBOX_KHR' specifies that the presentation engine waits
 -- for the next vertical blanking period to update the current image.
 -- Tearing /cannot/ be observed. An internal single-entry queue is used to
@@ -1214,7 +1209,7 @@ pattern PRESENT_MODE_IMMEDIATE_KHR = PresentModeKHR 0
 -- for re-use by the application. One request is removed from the queue and
 -- processed during each vertical blanking period in which the queue is
 -- non-empty.
-pattern PRESENT_MODE_MAILBOX_KHR = PresentModeKHR 1
+pattern PRESENT_MODE_MAILBOX_KHR                   = PresentModeKHR 1
 -- | 'PRESENT_MODE_FIFO_KHR' specifies that the presentation engine waits for
 -- the next vertical blanking period to update the current image. Tearing
 -- /cannot/ be observed. An internal queue is used to hold pending
@@ -1223,7 +1218,7 @@ pattern PRESENT_MODE_MAILBOX_KHR = PresentModeKHR 1
 -- processed during each vertical blanking period in which the queue is
 -- non-empty. This is the only value of @presentMode@ that is /required/ to
 -- be supported.
-pattern PRESENT_MODE_FIFO_KHR = PresentModeKHR 2
+pattern PRESENT_MODE_FIFO_KHR                      = PresentModeKHR 2
 -- | 'PRESENT_MODE_FIFO_RELAXED_KHR' specifies that the presentation engine
 -- generally waits for the next vertical blanking period to update the
 -- current image. If a vertical blanking period has already passed since
@@ -1238,7 +1233,7 @@ pattern PRESENT_MODE_FIFO_KHR = PresentModeKHR 2
 -- queue, and one request is removed from the beginning of the queue and
 -- processed during or after each vertical blanking period in which the
 -- queue is non-empty.
-pattern PRESENT_MODE_FIFO_RELAXED_KHR = PresentModeKHR 3
+pattern PRESENT_MODE_FIFO_RELAXED_KHR              = PresentModeKHR 3
 -- | 'PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR' specifies that the
 -- presentation engine and application have concurrent access to a single
 -- image, which is referred to as a /shared presentable image/. The
@@ -1259,7 +1254,7 @@ pattern PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR = PresentModeKHR 1000111001
 -- presentation request whenever an update is required. However, the
 -- presentation engine /may/ update the current image at any point, meaning
 -- this mode /may/ result in visible tearing.
-pattern PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR = PresentModeKHR 1000111000
+pattern PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR     = PresentModeKHR 1000111000
 {-# complete PRESENT_MODE_IMMEDIATE_KHR,
              PRESENT_MODE_MAILBOX_KHR,
              PRESENT_MODE_FIFO_KHR,
@@ -1267,28 +1262,31 @@ pattern PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR = PresentModeKHR 1000111000
              PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR,
              PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR :: PresentModeKHR #-}
 
+conNamePresentModeKHR :: String
+conNamePresentModeKHR = "PresentModeKHR"
+
+enumPrefixPresentModeKHR :: String
+enumPrefixPresentModeKHR = "PRESENT_MODE_"
+
+showTablePresentModeKHR :: [(PresentModeKHR, String)]
+showTablePresentModeKHR =
+  [ (PRESENT_MODE_IMMEDIATE_KHR                , "IMMEDIATE_KHR")
+  , (PRESENT_MODE_MAILBOX_KHR                  , "MAILBOX_KHR")
+  , (PRESENT_MODE_FIFO_KHR                     , "FIFO_KHR")
+  , (PRESENT_MODE_FIFO_RELAXED_KHR             , "FIFO_RELAXED_KHR")
+  , (PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR, "SHARED_CONTINUOUS_REFRESH_KHR")
+  , (PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR    , "SHARED_DEMAND_REFRESH_KHR")
+  ]
+
 instance Show PresentModeKHR where
-  showsPrec p = \case
-    PRESENT_MODE_IMMEDIATE_KHR -> showString "PRESENT_MODE_IMMEDIATE_KHR"
-    PRESENT_MODE_MAILBOX_KHR -> showString "PRESENT_MODE_MAILBOX_KHR"
-    PRESENT_MODE_FIFO_KHR -> showString "PRESENT_MODE_FIFO_KHR"
-    PRESENT_MODE_FIFO_RELAXED_KHR -> showString "PRESENT_MODE_FIFO_RELAXED_KHR"
-    PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR -> showString "PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR"
-    PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR -> showString "PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR"
-    PresentModeKHR x -> showParen (p >= 11) (showString "PresentModeKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixPresentModeKHR
+                            showTablePresentModeKHR
+                            conNamePresentModeKHR
+                            (\(PresentModeKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read PresentModeKHR where
-  readPrec = parens (choose [("PRESENT_MODE_IMMEDIATE_KHR", pure PRESENT_MODE_IMMEDIATE_KHR)
-                            , ("PRESENT_MODE_MAILBOX_KHR", pure PRESENT_MODE_MAILBOX_KHR)
-                            , ("PRESENT_MODE_FIFO_KHR", pure PRESENT_MODE_FIFO_KHR)
-                            , ("PRESENT_MODE_FIFO_RELAXED_KHR", pure PRESENT_MODE_FIFO_RELAXED_KHR)
-                            , ("PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR", pure PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR)
-                            , ("PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR", pure PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PresentModeKHR")
-                       v <- step readPrec
-                       pure (PresentModeKHR v)))
+  readPrec = enumReadPrec enumPrefixPresentModeKHR showTablePresentModeKHR conNamePresentModeKHR PresentModeKHR
 
 
 -- | VkColorSpaceKHR - supported color space of the presentation engine
@@ -1394,59 +1392,59 @@ newtype ColorSpaceKHR = ColorSpaceKHR Int32
 
 -- | 'COLOR_SPACE_SRGB_NONLINEAR_KHR' specifies support for the sRGB color
 -- space.
-pattern COLOR_SPACE_SRGB_NONLINEAR_KHR = ColorSpaceKHR 0
+pattern COLOR_SPACE_SRGB_NONLINEAR_KHR          = ColorSpaceKHR 0
 -- | 'COLOR_SPACE_DISPLAY_NATIVE_AMD' specifies support for the display’s
 -- native color space. This matches the color space expectations of AMD’s
 -- FreeSync2 standard, for displays supporting it.
-pattern COLOR_SPACE_DISPLAY_NATIVE_AMD = ColorSpaceKHR 1000213000
+pattern COLOR_SPACE_DISPLAY_NATIVE_AMD          = ColorSpaceKHR 1000213000
 -- | 'COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT' specifies support for the
 -- extended sRGB color space to be displayed using an sRGB EOTF.
 pattern COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT = ColorSpaceKHR 1000104014
 -- | 'COLOR_SPACE_PASS_THROUGH_EXT' specifies that color components are used
 -- “as is”. This is intended to allow applications to supply data for color
 -- spaces not described here.
-pattern COLOR_SPACE_PASS_THROUGH_EXT = ColorSpaceKHR 1000104013
+pattern COLOR_SPACE_PASS_THROUGH_EXT            = ColorSpaceKHR 1000104013
 -- | 'COLOR_SPACE_ADOBERGB_NONLINEAR_EXT' specifies support for the AdobeRGB
 -- color space to be displayed using the Gamma 2.2 EOTF.
-pattern COLOR_SPACE_ADOBERGB_NONLINEAR_EXT = ColorSpaceKHR 1000104012
+pattern COLOR_SPACE_ADOBERGB_NONLINEAR_EXT      = ColorSpaceKHR 1000104012
 -- | 'COLOR_SPACE_ADOBERGB_LINEAR_EXT' specifies support for the AdobeRGB
 -- color space to be displayed using a linear EOTF.
-pattern COLOR_SPACE_ADOBERGB_LINEAR_EXT = ColorSpaceKHR 1000104011
+pattern COLOR_SPACE_ADOBERGB_LINEAR_EXT         = ColorSpaceKHR 1000104011
 -- | 'COLOR_SPACE_HDR10_HLG_EXT' specifies support for the HDR10 (BT2020
 -- color space) to be displayed using the Hybrid Log Gamma (HLG) EOTF.
-pattern COLOR_SPACE_HDR10_HLG_EXT = ColorSpaceKHR 1000104010
+pattern COLOR_SPACE_HDR10_HLG_EXT               = ColorSpaceKHR 1000104010
 -- | 'COLOR_SPACE_DOLBYVISION_EXT' specifies support for the Dolby Vision
 -- (BT2020 color space), proprietary encoding, to be displayed using the
 -- SMPTE ST2084 EOTF.
-pattern COLOR_SPACE_DOLBYVISION_EXT = ColorSpaceKHR 1000104009
+pattern COLOR_SPACE_DOLBYVISION_EXT             = ColorSpaceKHR 1000104009
 -- | 'COLOR_SPACE_HDR10_ST2084_EXT' specifies support for the HDR10 (BT2020
 -- color) space to be displayed using the SMPTE ST2084 Perceptual Quantizer
 -- (PQ) EOTF.
-pattern COLOR_SPACE_HDR10_ST2084_EXT = ColorSpaceKHR 1000104008
+pattern COLOR_SPACE_HDR10_ST2084_EXT            = ColorSpaceKHR 1000104008
 -- | 'COLOR_SPACE_BT2020_LINEAR_EXT' specifies support for the BT2020 color
 -- space to be displayed using a linear EOTF.
-pattern COLOR_SPACE_BT2020_LINEAR_EXT = ColorSpaceKHR 1000104007
+pattern COLOR_SPACE_BT2020_LINEAR_EXT           = ColorSpaceKHR 1000104007
 -- | 'COLOR_SPACE_BT709_NONLINEAR_EXT' specifies support for the BT709 color
 -- space to be displayed using the SMPTE 170M EOTF.
-pattern COLOR_SPACE_BT709_NONLINEAR_EXT = ColorSpaceKHR 1000104006
+pattern COLOR_SPACE_BT709_NONLINEAR_EXT         = ColorSpaceKHR 1000104006
 -- | 'COLOR_SPACE_BT709_LINEAR_EXT' specifies support for the BT709 color
 -- space to be displayed using a linear EOTF.
-pattern COLOR_SPACE_BT709_LINEAR_EXT = ColorSpaceKHR 1000104005
+pattern COLOR_SPACE_BT709_LINEAR_EXT            = ColorSpaceKHR 1000104005
 -- | 'COLOR_SPACE_DCI_P3_NONLINEAR_EXT' specifies support for the DCI-P3
 -- color space to be displayed using the DCI-P3 EOTF. Note that values in
 -- such an image are interpreted as XYZ encoded color data by the
 -- presentation engine.
-pattern COLOR_SPACE_DCI_P3_NONLINEAR_EXT = ColorSpaceKHR 1000104004
+pattern COLOR_SPACE_DCI_P3_NONLINEAR_EXT        = ColorSpaceKHR 1000104004
 -- | 'COLOR_SPACE_DISPLAY_P3_LINEAR_EXT' specifies support for the Display-P3
 -- color space to be displayed using a linear EOTF.
-pattern COLOR_SPACE_DISPLAY_P3_LINEAR_EXT = ColorSpaceKHR 1000104003
+pattern COLOR_SPACE_DISPLAY_P3_LINEAR_EXT       = ColorSpaceKHR 1000104003
 -- | 'COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT' specifies support for the
 -- extended sRGB color space to be displayed using a linear EOTF.
-pattern COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT = ColorSpaceKHR 1000104002
+pattern COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT    = ColorSpaceKHR 1000104002
 -- | 'COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT' specifies support for the
 -- Display-P3 color space to be displayed using an sRGB-like EOTF (defined
 -- below).
-pattern COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT = ColorSpaceKHR 1000104001
+pattern COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT    = ColorSpaceKHR 1000104001
 {-# complete COLOR_SPACE_SRGB_NONLINEAR_KHR,
              COLOR_SPACE_DISPLAY_NATIVE_AMD,
              COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT,
@@ -1464,49 +1462,44 @@ pattern COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT = ColorSpaceKHR 1000104001
              COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT,
              COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT :: ColorSpaceKHR #-}
 
+conNameColorSpaceKHR :: String
+conNameColorSpaceKHR = "ColorSpaceKHR"
+
+enumPrefixColorSpaceKHR :: String
+enumPrefixColorSpaceKHR = "COLOR_SPACE_"
+
+showTableColorSpaceKHR :: [(ColorSpaceKHR, String)]
+showTableColorSpaceKHR =
+  [ (COLOR_SPACE_SRGB_NONLINEAR_KHR         , "SRGB_NONLINEAR_KHR")
+  , (COLOR_SPACE_DISPLAY_NATIVE_AMD         , "DISPLAY_NATIVE_AMD")
+  , (COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT, "EXTENDED_SRGB_NONLINEAR_EXT")
+  , (COLOR_SPACE_PASS_THROUGH_EXT           , "PASS_THROUGH_EXT")
+  , (COLOR_SPACE_ADOBERGB_NONLINEAR_EXT     , "ADOBERGB_NONLINEAR_EXT")
+  , (COLOR_SPACE_ADOBERGB_LINEAR_EXT        , "ADOBERGB_LINEAR_EXT")
+  , (COLOR_SPACE_HDR10_HLG_EXT              , "HDR10_HLG_EXT")
+  , (COLOR_SPACE_DOLBYVISION_EXT            , "DOLBYVISION_EXT")
+  , (COLOR_SPACE_HDR10_ST2084_EXT           , "HDR10_ST2084_EXT")
+  , (COLOR_SPACE_BT2020_LINEAR_EXT          , "BT2020_LINEAR_EXT")
+  , (COLOR_SPACE_BT709_NONLINEAR_EXT        , "BT709_NONLINEAR_EXT")
+  , (COLOR_SPACE_BT709_LINEAR_EXT           , "BT709_LINEAR_EXT")
+  , (COLOR_SPACE_DCI_P3_NONLINEAR_EXT       , "DCI_P3_NONLINEAR_EXT")
+  , (COLOR_SPACE_DISPLAY_P3_LINEAR_EXT      , "DISPLAY_P3_LINEAR_EXT")
+  , (COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT   , "EXTENDED_SRGB_LINEAR_EXT")
+  , (COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT   , "DISPLAY_P3_NONLINEAR_EXT")
+  ]
+
 instance Show ColorSpaceKHR where
-  showsPrec p = \case
-    COLOR_SPACE_SRGB_NONLINEAR_KHR -> showString "COLOR_SPACE_SRGB_NONLINEAR_KHR"
-    COLOR_SPACE_DISPLAY_NATIVE_AMD -> showString "COLOR_SPACE_DISPLAY_NATIVE_AMD"
-    COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT -> showString "COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT"
-    COLOR_SPACE_PASS_THROUGH_EXT -> showString "COLOR_SPACE_PASS_THROUGH_EXT"
-    COLOR_SPACE_ADOBERGB_NONLINEAR_EXT -> showString "COLOR_SPACE_ADOBERGB_NONLINEAR_EXT"
-    COLOR_SPACE_ADOBERGB_LINEAR_EXT -> showString "COLOR_SPACE_ADOBERGB_LINEAR_EXT"
-    COLOR_SPACE_HDR10_HLG_EXT -> showString "COLOR_SPACE_HDR10_HLG_EXT"
-    COLOR_SPACE_DOLBYVISION_EXT -> showString "COLOR_SPACE_DOLBYVISION_EXT"
-    COLOR_SPACE_HDR10_ST2084_EXT -> showString "COLOR_SPACE_HDR10_ST2084_EXT"
-    COLOR_SPACE_BT2020_LINEAR_EXT -> showString "COLOR_SPACE_BT2020_LINEAR_EXT"
-    COLOR_SPACE_BT709_NONLINEAR_EXT -> showString "COLOR_SPACE_BT709_NONLINEAR_EXT"
-    COLOR_SPACE_BT709_LINEAR_EXT -> showString "COLOR_SPACE_BT709_LINEAR_EXT"
-    COLOR_SPACE_DCI_P3_NONLINEAR_EXT -> showString "COLOR_SPACE_DCI_P3_NONLINEAR_EXT"
-    COLOR_SPACE_DISPLAY_P3_LINEAR_EXT -> showString "COLOR_SPACE_DISPLAY_P3_LINEAR_EXT"
-    COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT -> showString "COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT"
-    COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT -> showString "COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT"
-    ColorSpaceKHR x -> showParen (p >= 11) (showString "ColorSpaceKHR " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixColorSpaceKHR
+                            showTableColorSpaceKHR
+                            conNameColorSpaceKHR
+                            (\(ColorSpaceKHR x) -> x)
+                            (showsPrec 11)
 
 instance Read ColorSpaceKHR where
-  readPrec = parens (choose [("COLOR_SPACE_SRGB_NONLINEAR_KHR", pure COLOR_SPACE_SRGB_NONLINEAR_KHR)
-                            , ("COLOR_SPACE_DISPLAY_NATIVE_AMD", pure COLOR_SPACE_DISPLAY_NATIVE_AMD)
-                            , ("COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT", pure COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT)
-                            , ("COLOR_SPACE_PASS_THROUGH_EXT", pure COLOR_SPACE_PASS_THROUGH_EXT)
-                            , ("COLOR_SPACE_ADOBERGB_NONLINEAR_EXT", pure COLOR_SPACE_ADOBERGB_NONLINEAR_EXT)
-                            , ("COLOR_SPACE_ADOBERGB_LINEAR_EXT", pure COLOR_SPACE_ADOBERGB_LINEAR_EXT)
-                            , ("COLOR_SPACE_HDR10_HLG_EXT", pure COLOR_SPACE_HDR10_HLG_EXT)
-                            , ("COLOR_SPACE_DOLBYVISION_EXT", pure COLOR_SPACE_DOLBYVISION_EXT)
-                            , ("COLOR_SPACE_HDR10_ST2084_EXT", pure COLOR_SPACE_HDR10_ST2084_EXT)
-                            , ("COLOR_SPACE_BT2020_LINEAR_EXT", pure COLOR_SPACE_BT2020_LINEAR_EXT)
-                            , ("COLOR_SPACE_BT709_NONLINEAR_EXT", pure COLOR_SPACE_BT709_NONLINEAR_EXT)
-                            , ("COLOR_SPACE_BT709_LINEAR_EXT", pure COLOR_SPACE_BT709_LINEAR_EXT)
-                            , ("COLOR_SPACE_DCI_P3_NONLINEAR_EXT", pure COLOR_SPACE_DCI_P3_NONLINEAR_EXT)
-                            , ("COLOR_SPACE_DISPLAY_P3_LINEAR_EXT", pure COLOR_SPACE_DISPLAY_P3_LINEAR_EXT)
-                            , ("COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT", pure COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT)
-                            , ("COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT", pure COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ColorSpaceKHR")
-                       v <- step readPrec
-                       pure (ColorSpaceKHR v)))
+  readPrec = enumReadPrec enumPrefixColorSpaceKHR showTableColorSpaceKHR conNameColorSpaceKHR ColorSpaceKHR
 
+
+type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
 
 -- | VkCompositeAlphaFlagBitsKHR - alpha compositing modes supported on a
 -- device
@@ -1525,12 +1518,12 @@ newtype CompositeAlphaFlagBitsKHR = CompositeAlphaFlagBitsKHR Flags
 -- | 'COMPOSITE_ALPHA_OPAQUE_BIT_KHR': The alpha channel, if it exists, of
 -- the images is ignored in the compositing process. Instead, the image is
 -- treated as if it has a constant alpha of 1.0.
-pattern COMPOSITE_ALPHA_OPAQUE_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000001
+pattern COMPOSITE_ALPHA_OPAQUE_BIT_KHR          = CompositeAlphaFlagBitsKHR 0x00000001
 -- | 'COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR': The alpha channel, if it
 -- exists, of the images is respected in the compositing process. The
 -- non-alpha channels of the image are expected to already be multiplied by
 -- the alpha channel by the application.
-pattern COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000002
+pattern COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR  = CompositeAlphaFlagBitsKHR 0x00000002
 -- | 'COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR': The alpha channel, if it
 -- exists, of the images is respected in the compositing process. The
 -- non-alpha channels of the image are not expected to already be
@@ -1544,29 +1537,37 @@ pattern COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00
 -- alpha blending mode using native window system commands. If the
 -- application does not set the blending mode using native window system
 -- commands, then a platform-specific default will be used.
-pattern COMPOSITE_ALPHA_INHERIT_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000008
+pattern COMPOSITE_ALPHA_INHERIT_BIT_KHR         = CompositeAlphaFlagBitsKHR 0x00000008
 
-type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
+conNameCompositeAlphaFlagBitsKHR :: String
+conNameCompositeAlphaFlagBitsKHR = "CompositeAlphaFlagBitsKHR"
+
+enumPrefixCompositeAlphaFlagBitsKHR :: String
+enumPrefixCompositeAlphaFlagBitsKHR = "COMPOSITE_ALPHA_"
+
+showTableCompositeAlphaFlagBitsKHR :: [(CompositeAlphaFlagBitsKHR, String)]
+showTableCompositeAlphaFlagBitsKHR =
+  [ (COMPOSITE_ALPHA_OPAQUE_BIT_KHR         , "OPAQUE_BIT_KHR")
+  , (COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR , "PRE_MULTIPLIED_BIT_KHR")
+  , (COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR, "POST_MULTIPLIED_BIT_KHR")
+  , (COMPOSITE_ALPHA_INHERIT_BIT_KHR        , "INHERIT_BIT_KHR")
+  ]
 
 instance Show CompositeAlphaFlagBitsKHR where
-  showsPrec p = \case
-    COMPOSITE_ALPHA_OPAQUE_BIT_KHR -> showString "COMPOSITE_ALPHA_OPAQUE_BIT_KHR"
-    COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR -> showString "COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR"
-    COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR -> showString "COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR"
-    COMPOSITE_ALPHA_INHERIT_BIT_KHR -> showString "COMPOSITE_ALPHA_INHERIT_BIT_KHR"
-    CompositeAlphaFlagBitsKHR x -> showParen (p >= 11) (showString "CompositeAlphaFlagBitsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixCompositeAlphaFlagBitsKHR
+                            showTableCompositeAlphaFlagBitsKHR
+                            conNameCompositeAlphaFlagBitsKHR
+                            (\(CompositeAlphaFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read CompositeAlphaFlagBitsKHR where
-  readPrec = parens (choose [("COMPOSITE_ALPHA_OPAQUE_BIT_KHR", pure COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
-                            , ("COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR", pure COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR)
-                            , ("COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR", pure COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR)
-                            , ("COMPOSITE_ALPHA_INHERIT_BIT_KHR", pure COMPOSITE_ALPHA_INHERIT_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CompositeAlphaFlagBitsKHR")
-                       v <- step readPrec
-                       pure (CompositeAlphaFlagBitsKHR v)))
+  readPrec = enumReadPrec enumPrefixCompositeAlphaFlagBitsKHR
+                          showTableCompositeAlphaFlagBitsKHR
+                          conNameCompositeAlphaFlagBitsKHR
+                          CompositeAlphaFlagBitsKHR
 
+
+type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
 
 -- | VkSurfaceTransformFlagBitsKHR - presentation transforms supported on a
 -- device
@@ -1585,23 +1586,23 @@ newtype SurfaceTransformFlagBitsKHR = SurfaceTransformFlagBitsKHR Flags
 
 -- | 'SURFACE_TRANSFORM_IDENTITY_BIT_KHR' specifies that image content is
 -- presented without being transformed.
-pattern SURFACE_TRANSFORM_IDENTITY_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000001
+pattern SURFACE_TRANSFORM_IDENTITY_BIT_KHR                     = SurfaceTransformFlagBitsKHR 0x00000001
 -- | 'SURFACE_TRANSFORM_ROTATE_90_BIT_KHR' specifies that image content is
 -- rotated 90 degrees clockwise.
-pattern SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000002
+pattern SURFACE_TRANSFORM_ROTATE_90_BIT_KHR                    = SurfaceTransformFlagBitsKHR 0x00000002
 -- | 'SURFACE_TRANSFORM_ROTATE_180_BIT_KHR' specifies that image content is
 -- rotated 180 degrees clockwise.
-pattern SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000004
+pattern SURFACE_TRANSFORM_ROTATE_180_BIT_KHR                   = SurfaceTransformFlagBitsKHR 0x00000004
 -- | 'SURFACE_TRANSFORM_ROTATE_270_BIT_KHR' specifies that image content is
 -- rotated 270 degrees clockwise.
-pattern SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000008
+pattern SURFACE_TRANSFORM_ROTATE_270_BIT_KHR                   = SurfaceTransformFlagBitsKHR 0x00000008
 -- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR' specifies that image
 -- content is mirrored horizontally.
-pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000010
+pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR            = SurfaceTransformFlagBitsKHR 0x00000010
 -- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR' specifies that
 -- image content is mirrored horizontally, then rotated 90 degrees
 -- clockwise.
-pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000020
+pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR  = SurfaceTransformFlagBitsKHR 0x00000020
 -- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR' specifies that
 -- image content is mirrored horizontally, then rotated 180 degrees
 -- clockwise.
@@ -1613,38 +1614,39 @@ pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = SurfaceTransfor
 -- | 'SURFACE_TRANSFORM_INHERIT_BIT_KHR' specifies that the presentation
 -- transform is not specified, and is instead determined by
 -- platform-specific considerations and mechanisms outside Vulkan.
-pattern SURFACE_TRANSFORM_INHERIT_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000100
+pattern SURFACE_TRANSFORM_INHERIT_BIT_KHR                      = SurfaceTransformFlagBitsKHR 0x00000100
 
-type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
+conNameSurfaceTransformFlagBitsKHR :: String
+conNameSurfaceTransformFlagBitsKHR = "SurfaceTransformFlagBitsKHR"
+
+enumPrefixSurfaceTransformFlagBitsKHR :: String
+enumPrefixSurfaceTransformFlagBitsKHR = "SURFACE_TRANSFORM_"
+
+showTableSurfaceTransformFlagBitsKHR :: [(SurfaceTransformFlagBitsKHR, String)]
+showTableSurfaceTransformFlagBitsKHR =
+  [ (SURFACE_TRANSFORM_IDENTITY_BIT_KHR                    , "IDENTITY_BIT_KHR")
+  , (SURFACE_TRANSFORM_ROTATE_90_BIT_KHR                   , "ROTATE_90_BIT_KHR")
+  , (SURFACE_TRANSFORM_ROTATE_180_BIT_KHR                  , "ROTATE_180_BIT_KHR")
+  , (SURFACE_TRANSFORM_ROTATE_270_BIT_KHR                  , "ROTATE_270_BIT_KHR")
+  , (SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR           , "HORIZONTAL_MIRROR_BIT_KHR")
+  , (SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR , "HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR")
+  , (SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR, "HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR")
+  , (SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR, "HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR")
+  , (SURFACE_TRANSFORM_INHERIT_BIT_KHR                     , "INHERIT_BIT_KHR")
+  ]
 
 instance Show SurfaceTransformFlagBitsKHR where
-  showsPrec p = \case
-    SURFACE_TRANSFORM_IDENTITY_BIT_KHR -> showString "SURFACE_TRANSFORM_IDENTITY_BIT_KHR"
-    SURFACE_TRANSFORM_ROTATE_90_BIT_KHR -> showString "SURFACE_TRANSFORM_ROTATE_90_BIT_KHR"
-    SURFACE_TRANSFORM_ROTATE_180_BIT_KHR -> showString "SURFACE_TRANSFORM_ROTATE_180_BIT_KHR"
-    SURFACE_TRANSFORM_ROTATE_270_BIT_KHR -> showString "SURFACE_TRANSFORM_ROTATE_270_BIT_KHR"
-    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR"
-    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR"
-    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR"
-    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR"
-    SURFACE_TRANSFORM_INHERIT_BIT_KHR -> showString "SURFACE_TRANSFORM_INHERIT_BIT_KHR"
-    SurfaceTransformFlagBitsKHR x -> showParen (p >= 11) (showString "SurfaceTransformFlagBitsKHR 0x" . showHex x)
+  showsPrec = enumShowsPrec enumPrefixSurfaceTransformFlagBitsKHR
+                            showTableSurfaceTransformFlagBitsKHR
+                            conNameSurfaceTransformFlagBitsKHR
+                            (\(SurfaceTransformFlagBitsKHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
 
 instance Read SurfaceTransformFlagBitsKHR where
-  readPrec = parens (choose [("SURFACE_TRANSFORM_IDENTITY_BIT_KHR", pure SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_ROTATE_90_BIT_KHR", pure SURFACE_TRANSFORM_ROTATE_90_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_ROTATE_180_BIT_KHR", pure SURFACE_TRANSFORM_ROTATE_180_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_ROTATE_270_BIT_KHR", pure SURFACE_TRANSFORM_ROTATE_270_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_INHERIT_BIT_KHR", pure SURFACE_TRANSFORM_INHERIT_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SurfaceTransformFlagBitsKHR")
-                       v <- step readPrec
-                       pure (SurfaceTransformFlagBitsKHR v)))
+  readPrec = enumReadPrec enumPrefixSurfaceTransformFlagBitsKHR
+                          showTableSurfaceTransformFlagBitsKHR
+                          conNameSurfaceTransformFlagBitsKHR
+                          SurfaceTransformFlagBitsKHR
 
 
 type KHR_SURFACE_SPEC_VERSION = 25

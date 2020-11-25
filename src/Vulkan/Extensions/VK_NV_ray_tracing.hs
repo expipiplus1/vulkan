@@ -568,6 +568,8 @@ module Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
                                             , pattern SHADER_UNUSED_KHR
                                             ) where
 
+import Vulkan.Internal.Utils (enumReadPrec)
+import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -582,15 +584,7 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
 import GHC.Show (showsPrec)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -614,9 +608,9 @@ import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
@@ -3887,30 +3881,41 @@ pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV = Acceleration
 -- | 'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV'
 -- requests the memory requirement for scratch space during the initial
 -- build.
-pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV = AccelerationStructureMemoryRequirementsTypeNV 1
+pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV =
+  AccelerationStructureMemoryRequirementsTypeNV 1
 -- | 'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV'
 -- requests the memory requirement for scratch space during an update.
-pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV = AccelerationStructureMemoryRequirementsTypeNV 2
+pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV =
+  AccelerationStructureMemoryRequirementsTypeNV 2
 {-# complete ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV,
              ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV,
              ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV :: AccelerationStructureMemoryRequirementsTypeNV #-}
 
+conNameAccelerationStructureMemoryRequirementsTypeNV :: String
+conNameAccelerationStructureMemoryRequirementsTypeNV = "AccelerationStructureMemoryRequirementsTypeNV"
+
+enumPrefixAccelerationStructureMemoryRequirementsTypeNV :: String
+enumPrefixAccelerationStructureMemoryRequirementsTypeNV = "ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_"
+
+showTableAccelerationStructureMemoryRequirementsTypeNV :: [(AccelerationStructureMemoryRequirementsTypeNV, String)]
+showTableAccelerationStructureMemoryRequirementsTypeNV =
+  [ (ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV        , "OBJECT_NV")
+  , (ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV , "BUILD_SCRATCH_NV")
+  , (ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV, "UPDATE_SCRATCH_NV")
+  ]
+
 instance Show AccelerationStructureMemoryRequirementsTypeNV where
-  showsPrec p = \case
-    ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV -> showString "ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV"
-    ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV -> showString "ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV"
-    ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV -> showString "ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV"
-    AccelerationStructureMemoryRequirementsTypeNV x -> showParen (p >= 11) (showString "AccelerationStructureMemoryRequirementsTypeNV " . showsPrec 11 x)
+  showsPrec = enumShowsPrec enumPrefixAccelerationStructureMemoryRequirementsTypeNV
+                            showTableAccelerationStructureMemoryRequirementsTypeNV
+                            conNameAccelerationStructureMemoryRequirementsTypeNV
+                            (\(AccelerationStructureMemoryRequirementsTypeNV x) -> x)
+                            (showsPrec 11)
 
 instance Read AccelerationStructureMemoryRequirementsTypeNV where
-  readPrec = parens (choose [("ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV", pure ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV)
-                            , ("ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV", pure ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV)
-                            , ("ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV", pure ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AccelerationStructureMemoryRequirementsTypeNV")
-                       v <- step readPrec
-                       pure (AccelerationStructureMemoryRequirementsTypeNV v)))
+  readPrec = enumReadPrec enumPrefixAccelerationStructureMemoryRequirementsTypeNV
+                          showTableAccelerationStructureMemoryRequirementsTypeNV
+                          conNameAccelerationStructureMemoryRequirementsTypeNV
+                          AccelerationStructureMemoryRequirementsTypeNV
 
 
 -- No documentation found for TopLevel "VkGeometryFlagsNV"
