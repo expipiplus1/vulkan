@@ -9,16 +9,11 @@ import           Polysemy
 import           Polysemy.Input
 import           Relude                  hiding ( lift )
 import           Text.Printf
-import qualified Text.Read                     as R
 import           Text.Show
 
 import           Data.Bits
 import           Foreign.Storable
-import           GHC.Read                hiding ( list
-                                                , parens
-                                                )
 import           Numeric
-import           Text.Read               hiding ( parens )
 
 import           CType                          ( CType(TypeName) )
 import qualified Data.Text                     as T
@@ -30,10 +25,8 @@ import           Render.SpecInfo
 import           Render.Type
 import           Spec.Parse
 import           Text.InterpolatedString.Perl6.Unindented
-import           Text.ParserCombinators.ReadP   ( skipSpaces
-                                                , string
-                                                )
-import qualified Text.ParserCombinators.ReadPrec
+import           Language.Haskell.TH            ( mkName )
+import           GHC.Read                       ( Read(readPrec) )
 
 renderEnum
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -207,24 +200,19 @@ renderShowInstance prefixString showTableName conNameName Enum {..} = do
   let n       = mkTyName eName
       conName = mkConName eName eName
   tellImportWith n conName
-  tellImport 'showString
-  tellImport 'showParen
-  (prefix, shows) <- case eType of
+  tellImportWith ''Show 'P.showsPrec
+  tellImport (mkName "Vulkan.Internal.Utils.enumShowsPrec")
+  shows <- case eType of
     AnEnum -> do
       tellImport 'showsPrec
-      pure ("" :: Text, "showsPrec 11" :: Text)
+      pure ("(showsPrec 11)" :: Text)
     ABitmask _ -> do
+      tellImport 'showString
       tellImport 'showHex
-      pure ("0x", "showHex")
+      pure "(\\x -> showString \"0x\" . showHex x)"
   tellDoc [qqi|
     instance Show {n} where
-      showsPrec p e = case lookup e {showTableName} of
-        Just s -> showString {prefixString} . showString s
-        Nothing ->
-          let {conName} x = e
-          in  showParen
-                (p >= 11)
-                (showString {conNameName} . showString " {prefix}" . {shows} x)
+      showsPrec = enumShowsPrec {prefixString} {showTableName} {conNameName} (\\({conName} x) -> x) {shows}
   |]
 
 renderReadInstance
@@ -238,34 +226,10 @@ renderReadInstance prefixString showTableName conNameName Enum {..} = do
   RenderParams {..} <- input
   let n       = mkTyName eName
       conName = mkConName eName eName
+  tellImportWith n conName
   tellImportWith ''Read 'readPrec
-  tellImport 'R.parens
-  tellImport 'skipSpaces
-  tellImport 'expectP
-  tellImportWith ''Lexeme 'Ident
-  tellImport 'choose
-  tellImport '(+++)
-  tellImport 'step
-  tellImport 'prec
-  tellImport 'string
-  tellImport '(<$)
-  tellImport 'asum
-  tellQualImport 'Text.ParserCombinators.ReadPrec.lift
+  tellImport (mkName "Vulkan.Internal.Utils.enumReadPrec")
   tellDoc [qqi|
     instance Read {n} where
-      readPrec = parens
-        (   Text.ParserCombinators.ReadPrec.lift
-            (do
-              skipSpaces
-              _ <- string {prefixString}
-              asum ((\\(e, s) -> e <$ string s) <$> {showTableName})
-            )
-        +++ prec
-              10
-              (do
-                expectP (Ident {conNameName})
-                v <- step readPrec
-                pure ({conName} v)
-              )
-        )
+      readPrec = enumReadPrec {prefixString} {showTableName} {conNameName} {conName}
   |]
