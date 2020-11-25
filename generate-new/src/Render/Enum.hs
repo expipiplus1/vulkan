@@ -39,6 +39,21 @@ renderEnum e@Enum {..} = do
       ABitmask _ -> cToHsType DoNotPreserve (TypeName "VkFlags")
     let n       = mkTyName eName
         conName = mkConName eName eName
+
+    -- Export the type cinnamon first so that it appears above the Flags in the
+    -- Haddocks, this means when viewing the page there, the user will also
+    -- have the flags visible
+    case eType of
+      ABitmask flags | flags /= eName -> do
+        let flagsName = mkTyName flags
+        let syn :: HasRenderElem r => Sem r ()
+            syn = do
+              tellExport (EType flagsName)
+              tellDoc $ "type" <+> pretty flagsName <+> "=" <+> pretty n
+        syn
+        tellBoot syn
+      _ -> pure ()
+
     (patterns, patternExports) <-
       V.unzip <$> traverseV (renderEnumValue eName conName eType) eValues
     tellExport (Export n True patternExports Reexportable)
@@ -81,16 +96,6 @@ renderEnum e@Enum {..} = do
            , vsep (toList (($ getDoc) <$> patterns))
            ]
         ++ maybeToList complete
-    case eType of
-      ABitmask flags | flags /= eName -> do
-        let flagsName = mkTyName flags
-        let syn :: HasRenderElem r => Sem r ()
-            syn = do
-              tellExport (EType flagsName)
-              tellDoc $ "type" <+> pretty flagsName <+> "=" <+> pretty n
-        syn
-        tellBoot syn
-      _ -> pure ()
     renderShowInstance e
     renderReadInstance e
 
