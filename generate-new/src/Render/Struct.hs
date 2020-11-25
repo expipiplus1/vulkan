@@ -72,15 +72,15 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
     simple <- isSimpleStruct s
     let derivedInstances = ["Typeable"] <> [ "Eq" | simple ]
     tellDocWithHaddock $ \getDoc -> [qqi|
-        {getDoc (TopLevel msName)}
-        data {n}{childVar} = {mkConName msName msName}
-          {braceList' (($ getDoc) <$> ms)}
-          deriving {tupled derivedInstances}
-        #if defined(GENERIC_INSTANCES)
-        deriving instance Generic ({n}{childVar})
-        #endif
-        {derivingDecl}
-        |]
+{getDoc (TopLevel msName)}
+data {n}{childVar} = {mkConName msName msName}
+  {braceList' (($ getDoc) <$> ms)}
+  deriving {tupled derivedInstances}
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic ({n}{childVar})
+#endif
+{derivingDecl}
+|]
     memberMap <- sequenceV $ Map.fromList
       [ ( smName (msmStructMember m)
         , (\v -> SiblingInfo v (msmScheme m))
@@ -226,12 +226,12 @@ storableInstance MarshaledStruct {..} = do
   tellQualImportWithAll ''Storable
   declareStorable n
   tellDoc [qqi|
-    instance Storable {n} where
-      sizeOf ~_ = {sSize msStruct}
-      alignment ~_ = {sAlignment msStruct}
-      peek = peekCStruct
-      poke ptr poked = pokeCStruct ptr poked (pure ())
-  |]
+instance Storable {n} where
+  sizeOf ~_ = {sSize msStruct}
+  alignment ~_ = {sAlignment msStruct}
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+|]
 
 toCStructInstance
   :: ( HasErr r

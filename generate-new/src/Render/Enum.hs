@@ -211,9 +211,9 @@ renderShowInstance prefixString showTableName conNameName Enum {..} = do
       tellImport 'showHex
       pure "(\\x -> showString \"0x\" . showHex x)"
   tellDoc [qqi|
-    instance Show {n} where
-      showsPrec = enumShowsPrec {prefixString} {showTableName} {conNameName} (\\({conName} x) -> x) {shows}
-  |]
+instance Show {n} where
+showsPrec = enumShowsPrec {prefixString} {showTableName} {conNameName} (\\({conName} x) -> x) {shows}
+|]
 
 renderReadInstance
   :: (HasErr r, HasRenderParams r, HasRenderElem r)
@@ -230,6 +230,6 @@ renderReadInstance prefixString showTableName conNameName Enum {..} = do
   tellImportWith ''Read 'readPrec
   tellImport (mkName "Vulkan.Internal.Utils.enumReadPrec")
   tellDoc [qqi|
-    instance Read {n} where
-      readPrec = enumReadPrec {prefixString} {showTableName} {conNameName} {conName}
-  |]
+instance Read {n} where
+  readPrec = enumReadPrec {prefixString} {showTableName} {conNameName} {conName}
+|]

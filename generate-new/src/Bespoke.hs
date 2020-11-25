@@ -756,14 +756,14 @@ boolConversion = genRe "Bool conversion" $ do
   tellExport (ETerm (TermName "bool32ToBool"))
   tellImport 'bool
   tellDoc [qqi|
-    boolToBool32 :: Bool -> {bool32}
-    boolToBool32 = bool {false} {true}
+boolToBool32 :: Bool -> {bool32}
+boolToBool32 = bool {false} {true}
 
-    bool32ToBool :: {bool32} -> Bool
-    bool32ToBool = \\case
-      {false} -> False
-      {true}  -> True
-  |]
+bool32ToBool :: {bool32} -> Bool
+bool32ToBool = \\case
+  {false} -> False
+  {true}  -> True
+|]
 
 
 wsiTypes :: (HasErr r, HasRenderParams r) => [Sem r RenderElement]
@@ -803,14 +803,14 @@ nullHandle = genRe "null handle" $ do
   tellImportWithAll (TyConName "Zero")
   tellImport ''Word64
   tellDocWithHaddock $ \getDoc -> [qqi|
-    {getDoc (TopLevel "VK_NULL_HANDLE")}
-    pattern {patName} :: IsHandle a => a
-    pattern {patName} <- ((== zero) -> True)
-      where {patName} = zero
+{getDoc (TopLevel "VK_NULL_HANDLE")}
+pattern {patName} :: IsHandle a => a
+pattern {patName} <- ((== zero) -> True)
+  where {patName} = zero
 
-    -- | A class for things which can be created with '{patName}'.
-    class (Eq a, Zero a) => IsHandle a where
-  |]
+-- | A class for things which can be created with '{patName}'.
+class (Eq a, Zero a) => IsHandle a where
+|]
 
 ----------------------------------------------------------------
 -- Platform specific nonsense

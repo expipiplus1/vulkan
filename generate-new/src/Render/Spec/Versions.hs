@@ -39,9 +39,9 @@ headerVersion version = genRe "header version" $ do
   tellExport (EPat pat)
   tellImport ''Word32
   tellDoc [qqi|
-    pattern {pat} :: Word32
-    pattern {pat} = {version}
-  |]
+pattern {pat} :: Word32
+pattern {pat} = {version}
+|]
 
 headerVersionComplete
   :: (HasErr r, HasRenderParams r) => Version -> Word -> Sem r RenderElement
@@ -55,9 +55,9 @@ headerVersionComplete lastFeatureVersion headerVersion =
     tellExport (EPat pat)
     tellImport ''Word32
     tellDoc [qqi|
-    pattern {pat} :: Word32
-    pattern {pat} = {makeVersion} {major} {minor} {headerVersion}
-  |]
+pattern {pat} :: Word32
+pattern {pat} = {makeVersion} {major} {minor} {headerVersion}
+|]
 
 featureVersion
   :: (HasErr r, HasRenderParams r) => Feature -> Sem r RenderElement
@@ -72,9 +72,9 @@ featureVersion Feature {..} = genRe "feature version" $ do
   tellImport make
   tellExplicitModule (vulkanModule ["Core" <> show major <> show minor])
   tellDoc [qqi|
-    pattern {pat} :: Word32
-    pattern {pat} = {make} {major} {minor} 0
-  |]
+pattern {pat} :: Word32
+pattern {pat} = {make} {major} {minor} 0
+|]
 
 versionConstruction :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 versionConstruction = genRe "version construction" $ do
@@ -93,17 +93,17 @@ versionConstruction = genRe "version construction" $ do
   tellExport (ETerm patMinor)
   tellExport (ETerm patPatch)
   tellDoc [qqi|
-    pattern {mkPatternName "VK_MAKE_VERSION"} :: Word32 -> Word32 -> Word32 -> Word32
-    pattern {mkPatternName "VK_MAKE_VERSION"} major minor patch <-
-      (\\v -> ({patMajor} v, {patMinor} v, {patPatch} v) -> (major, minor, patch))
-      where {mkPatternName "VK_MAKE_VERSION"} major minor patch = major `shiftL` 22 .|. minor `shiftL` 12 .|. patch
+pattern {mkPatternName "VK_MAKE_VERSION"} :: Word32 -> Word32 -> Word32 -> Word32
+pattern {mkPatternName "VK_MAKE_VERSION"} major minor patch <-
+  (\\v -> ({patMajor} v, {patMinor} v, {patPatch} v) -> (major, minor, patch))
+  where {mkPatternName "VK_MAKE_VERSION"} major minor patch = major `shiftL` 22 .|. minor `shiftL` 12 .|. patch
 
-    {patMajor} :: Word32 -> Word32
-    {patMajor} v = v `shiftR` 22
+{patMajor} :: Word32 -> Word32
+{patMajor} v = v `shiftR` 22
 
-    {patMinor} :: Word32 -> Word32
-    {patMinor} v = v `shiftR` 12 .&. 0x3ff
+{patMinor} :: Word32 -> Word32
+{patMinor} v = v `shiftR` 12 .&. 0x3ff
 
-    {patPatch} :: Word32 -> Word32
-    {patPatch} v = v .&. 0xfff
-  |]
+{patPatch} :: Word32 -> Word32
+{patPatch} v = v .&. 0xfff
+|]

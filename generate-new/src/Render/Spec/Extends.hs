@@ -176,217 +176,217 @@ classes Spec {..} = do
     tellImport ''Relude.Type
     tellImport ''Constraint
     tellDoc [qqi|
-      class PeekChain (xs :: [Type])
-      class PokeChain (xs :: [Type])
-      type family Extends (p :: [Type] -> Type) (x :: Type) :: Constraint
-      type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
-        Extendss p '[]      = ()
-        Extendss p (x : xs) = (Extends p x, Extendss p xs)
-      type family Chain (xs :: [a]) = (r :: a) | r -> xs where
-        Chain '[]    = ()
-        Chain (x:xs) = (x, Chain xs)
-    |]
+class PeekChain (xs :: [Type])
+class PokeChain (xs :: [Type])
+type family Extends (p :: [Type] -> Type) (x :: Type) :: Constraint
+type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
+  Extendss p '[]      = ()
+  Extendss p (x : xs) = (Extends p x, Extendss p xs)
+type family Chain (xs :: [a]) = (r :: a) | r -> xs where
+  Chain '[]    = ()
+  Chain (x:xs) = (x, Chain xs)
+ |]
   tellDoc [qqi|
-    data SomeStruct (a :: [Type] -> Type) where
-      SomeStruct
-        :: forall a es
-         . (Extendss a es, PokeChain es, Show (Chain es))
-        => a es
-        -> SomeStruct a
+data SomeStruct (a :: [Type] -> Type) where
+  SomeStruct
+    :: forall a es
+     . (Extendss a es, PokeChain es, Show (Chain es))
+    => a es
+    -> SomeStruct a
 
-    deriving instance (forall es. Show (Chain es) => Show (a es)) => Show (SomeStruct a)
+deriving instance (forall es. Show (Chain es) => Show (a es)) => Show (SomeStruct a)
 
-    -- | The constraint is so on this instance to encourage type inference
-    instance Zero (a '[]) => Zero (SomeStruct a) where
-      zero = SomeStruct (zero :: a '[])
+-- | The constraint is so on this instance to encourage type inference
+instance Zero (a '[]) => Zero (SomeStruct a) where
+  zero = SomeStruct (zero :: a '[])
 
-    -- | Forget which extensions a pointed-to struct has by casting the pointer
-    forgetExtensions :: Ptr (a es) -> Ptr (SomeStruct a)
-    forgetExtensions = castPtr
+-- | Forget which extensions a pointed-to struct has by casting the pointer
+forgetExtensions :: Ptr (a es) -> Ptr (SomeStruct a)
+forgetExtensions = castPtr
 
-    -- | Add an extension to the beginning of the struct chain
-    --
-    -- This can be used to optionally extend structs based on some condition (for
-    -- example, an extension or layer being available)
-    extendSomeStruct
-      :: (Extensible a, Extends a e, ToCStruct e, Show e)
-      => e
-      -> SomeStruct a
-      -> SomeStruct a
-    extendSomeStruct e (SomeStruct a) = SomeStruct (setNext a (e, getNext a))
+-- | Add an extension to the beginning of the struct chain
+--
+-- This can be used to optionally extend structs based on some condition (for
+-- example, an extension or layer being available)
+extendSomeStruct
+  :: (Extensible a, Extends a e, ToCStruct e, Show e)
+  => e
+  -> SomeStruct a
+  -> SomeStruct a
+extendSomeStruct e (SomeStruct a) = SomeStruct (setNext a (e, getNext a))
 
-    -- | Consume a 'SomeStruct' value
-    withSomeStruct
-      :: forall a b
-       . SomeStruct a
-      -> (forall es . (Extendss a es, PokeChain es, Show (Chain es)) => a es -> b)
-      -> b
-    withSomeStruct (SomeStruct s) f = f s
+-- | Consume a 'SomeStruct' value
+withSomeStruct
+  :: forall a b
+   . SomeStruct a
+  -> (forall es . (Extendss a es, PokeChain es, Show (Chain es)) => a es -> b)
+  -> b
+withSomeStruct (SomeStruct s) f = f s
 
-    -- | Write the C representation of some extended @a@ and use the pointer,
-    -- the pointer must not be returned from the continuation.
-    withSomeCStruct
-      :: forall a b
-       . (forall es . (Extendss a es, PokeChain es) => ToCStruct (a es))
-      => SomeStruct a
-      -> (forall es . (Extendss a es, PokeChain es) => Ptr (a es) -> IO b)
-      -> IO b
-    withSomeCStruct s f = withSomeStruct s (`withCStruct` f)
+-- | Write the C representation of some extended @a@ and use the pointer,
+-- the pointer must not be returned from the continuation.
+withSomeCStruct
+  :: forall a b
+   . (forall es . (Extendss a es, PokeChain es) => ToCStruct (a es))
+  => SomeStruct a
+  -> (forall es . (Extendss a es, PokeChain es) => Ptr (a es) -> IO b)
+  -> IO b
+withSomeCStruct s f = withSomeStruct s (`withCStruct` f)
 
-    -- | Given some memory for the head of the chain, allocate and poke the
-    -- tail and run an action.
-    pokeSomeCStruct
-      :: (forall es . (Extendss a es, PokeChain es) => ToCStruct (a es))
-      => Ptr (SomeStruct a)
-      -- ^ Pointer to some memory at least the size of the head of the struct
-      -- chain.
-      -> SomeStruct a
-      -- ^ The struct to poke
-      -> IO b
-      -- ^ Computation to run while the poked tail is valid
-      -> IO b
-    pokeSomeCStruct p (SomeStruct s) = pokeCStruct (castPtr p) s
+-- | Given some memory for the head of the chain, allocate and poke the
+-- tail and run an action.
+pokeSomeCStruct
+  :: (forall es . (Extendss a es, PokeChain es) => ToCStruct (a es))
+  => Ptr (SomeStruct a)
+  -- ^ Pointer to some memory at least the size of the head of the struct
+  -- chain.
+  -> SomeStruct a
+  -- ^ The struct to poke
+  -> IO b
+  -- ^ Computation to run while the poked tail is valid
+  -> IO b
+pokeSomeCStruct p (SomeStruct s) = pokeCStruct (castPtr p) s
 
-    -- | Given a pointer to a struct with an unknown chain, peek the struct and
-    -- its chain.
-    peekSomeCStruct
-      :: forall a
-       . (Extensible a, forall es . (Extendss a es, PeekChain es) => FromCStruct (a es))
-      => Ptr (SomeStruct a)
-      -> IO (SomeStruct a)
-    peekSomeCStruct p = do
-      head'  <- peekCStruct (castPtr @_ @(a '[]) p)
-      pNext <- peek @(Ptr BaseOutStructure) (p `plusPtr` 8)
-      peekSomeChain @a pNext $ \\tail' -> SomeStruct (setNext head' tail')
+-- | Given a pointer to a struct with an unknown chain, peek the struct and
+-- its chain.
+peekSomeCStruct
+  :: forall a
+   . (Extensible a, forall es . (Extendss a es, PeekChain es) => FromCStruct (a es))
+  => Ptr (SomeStruct a)
+  -> IO (SomeStruct a)
+peekSomeCStruct p = do
+  head'  <- peekCStruct (castPtr @_ @(a '[]) p)
+  pNext <- peek @(Ptr BaseOutStructure) (p `plusPtr` 8)
+  peekSomeChain @a pNext $ \\tail' -> SomeStruct (setNext head' tail')
 
-    peekSomeChain
-      :: forall a b
-       . (Extensible a)
-      => Ptr BaseOutStructure
-      -> (  forall es
-          . (Extendss a es, PokeChain es, Show (Chain es))
-         => Chain es
-         -> b
-         )
-      -> IO b
-    peekSomeChain p c = if p == nullPtr
-      then pure (c ())
-      else do
-        baseOut <- peek p
-        join
-          $ peekChainHead @a (sType (baseOut :: BaseOutStructure))
-                             (castPtr @BaseOutStructure @() p)
-          $ \\head' -> peekSomeChain @a (next (baseOut :: BaseOutStructure))
-                                      (\\tail' -> c (head', tail'))
+peekSomeChain
+  :: forall a b
+   . (Extensible a)
+  => Ptr BaseOutStructure
+  -> (  forall es
+      . (Extendss a es, PokeChain es, Show (Chain es))
+     => Chain es
+     -> b
+     )
+  -> IO b
+peekSomeChain p c = if p == nullPtr
+  then pure (c ())
+  else do
+    baseOut <- peek p
+    join
+      $ peekChainHead @a (sType (baseOut :: BaseOutStructure))
+                         (castPtr @BaseOutStructure @() p)
+      $ \\head' -> peekSomeChain @a (next (baseOut :: BaseOutStructure))
+                                  (\\tail' -> c (head', tail'))
 
-    peekChainHead
-      :: forall a b
-       . Extensible a
-      => StructureType
-      -> Ptr ()
-      -> (forall e . (Extends a e, ToCStruct e, Show e) => e -> b)
-      -> IO b
-    peekChainHead ty p c = case ty of
-    {indent 2 (vsep (toList peekChainCases))}
-      t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
-     where
-      go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
-      go =
-        let r = extends @a @e Proxy $ do
-              head' <- peekCStruct @e (castPtr p)
-              pure $ c head'
-        in  fromMaybe
-              (throwIO $ IOError
-                Nothing
-                InvalidArgument
-                "peekChainHead"
-                (  "Illegal struct extension of "
-                <> show (extensibleType @a)
-                <> " with "
-                <> show ty
-                )
-                Nothing
-                Nothing
-              )
-              r
+peekChainHead
+  :: forall a b
+   . Extensible a
+  => StructureType
+  -> Ptr ()
+  -> (forall e . (Extends a e, ToCStruct e, Show e) => e -> b)
+  -> IO b
+peekChainHead ty p c = case ty of
+{indent 2 (vsep (toList peekChainCases))}
+  t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
+ where
+  go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
+  go =
+    let r = extends @a @e Proxy $ do
+          head' <- peekCStruct @e (castPtr p)
+          pure $ c head'
+    in  fromMaybe
+          (throwIO $ IOError
+            Nothing
+            InvalidArgument
+            "peekChainHead"
+            (  "Illegal struct extension of "
+            <> show (extensibleType @a)
+            <> " with "
+            <> show ty
+            )
+            Nothing
+            Nothing
+          )
+          r
 
-    class Extensible (a :: [Type] -> Type) where
-      extensibleType :: StructureType
-      getNext :: a es -> Chain es
-      setNext :: a ds -> Chain es -> a es
-      extends :: forall e b proxy. Typeable e => proxy e -> (Extends a e => b) -> Maybe b
+class Extensible (a :: [Type] -> Type) where
+  extensibleType :: StructureType
+  getNext :: a es -> Chain es
+  setNext :: a ds -> Chain es -> a es
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends a e => b) -> Maybe b
 
-    type family Chain (xs :: [a]) = (r :: a) | r -> xs where
-      Chain '[]    = ()
-      Chain (x:xs) = (x, Chain xs)
+type family Chain (xs :: [a]) = (r :: a) | r -> xs where
+  Chain '[]    = ()
+  Chain (x:xs) = (x, Chain xs)
 
-    -- | A pattern synonym to separate the head of a struct chain from the
-    -- tail, use in conjunction with ':&' to extract several members.
-    --
-    -- @
-    -- Head\{..} ::& () <- returningNoTail a b c
-    -- -- Equivalent to
-    -- Head\{..} <- returningNoTail @'[] a b c
-    -- @
-    --
-    -- @
-    -- Head\{..} ::& Foo\{..} :& Bar\{..} :& () <- returningWithTail a b c
-    -- @
-    --
-    -- @
-    -- myFun (Head\{..} :&& Foo\{..} :& ())
-    -- @
-    pattern (::&) :: Extensible a => a es' -> Chain es -> a es
-    pattern a ::& es <- (\\a -> (a, getNext a) -> (a, es))
-      where a ::& es = setNext a es
-    infix 6 ::&
-    {vsep (toList completeStructTailPragmas)}
+-- | A pattern synonym to separate the head of a struct chain from the
+-- tail, use in conjunction with ':&' to extract several members.
+--
+-- @
+-- Head\{..} ::& () <- returningNoTail a b c
+-- -- Equivalent to
+-- Head\{..} <- returningNoTail @'[] a b c
+-- @
+--
+-- @
+-- Head\{..} ::& Foo\{..} :& Bar\{..} :& () <- returningWithTail a b c
+-- @
+--
+-- @
+-- myFun (Head\{..} :&& Foo\{..} :& ())
+-- @
+pattern (::&) :: Extensible a => a es' -> Chain es -> a es
+pattern a ::& es <- (\\a -> (a, getNext a) -> (a, es))
+  where a ::& es = setNext a es
+infix 6 ::&
+{vsep (toList completeStructTailPragmas)}
 
-    -- | View the head and tail of a 'Chain', see '::&'
-    --
-    -- Equivalent to @(,)@
-    pattern (:&) :: e -> Chain es -> Chain (e:es)
-    pattern e :& es = (e, es)
-    infixr 7 :&
-    \{-# complete (:&) #-}
+-- | View the head and tail of a 'Chain', see '::&'
+--
+-- Equivalent to @(,)@
+pattern (:&) :: e -> Chain es -> Chain (e:es)
+pattern e :& es = (e, es)
+infixr 7 :&
+\{-# complete (:&) #-}
 
-    type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
-      Extendss p '[]      = ()
-      Extendss p (x : xs) = (Extends p x, Extendss p xs)
+type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
+  Extendss p '[]      = ()
+  Extendss p (x : xs) = (Extends p x, Extendss p xs)
 
-    class PokeChain es where
-      withChain :: Chain es -> (Ptr (Chain es) -> IO a) -> IO a
-      withZeroChain :: (Ptr (Chain es) -> IO a) -> IO a
+class PokeChain es where
+  withChain :: Chain es -> (Ptr (Chain es) -> IO a) -> IO a
+  withZeroChain :: (Ptr (Chain es) -> IO a) -> IO a
 
-    instance PokeChain '[] where
-      withChain () f = f nullPtr
-      withZeroChain f = f nullPtr
+instance PokeChain '[] where
+  withChain () f = f nullPtr
+  withZeroChain f = f nullPtr
 
-    instance (ToCStruct e, PokeChain es) => PokeChain (e:es) where
-      withChain (e, es) f = evalContT $ do
-        t <- ContT $ withChain es
-        h <- ContT $ withCStruct e
-        lift $ linkChain h t
-        lift $ f (castPtr h)
-      withZeroChain f = evalContT $ do
-        t <- ContT $ withZeroChain @es
-        h <- ContT $ withZeroCStruct @e
-        lift $ linkChain h t
-        lift $ f (castPtr h)
+instance (ToCStruct e, PokeChain es) => PokeChain (e:es) where
+  withChain (e, es) f = evalContT $ do
+    t <- ContT $ withChain es
+    h <- ContT $ withCStruct e
+    lift $ linkChain h t
+    lift $ f (castPtr h)
+  withZeroChain f = evalContT $ do
+    t <- ContT $ withZeroChain @es
+    h <- ContT $ withZeroCStruct @e
+    lift $ linkChain h t
+    lift $ f (castPtr h)
 
-    class PeekChain es where
-      peekChain :: Ptr (Chain es) -> IO (Chain es)
+class PeekChain es where
+  peekChain :: Ptr (Chain es) -> IO (Chain es)
 
-    instance PeekChain '[] where
-      peekChain _ = pure ()
+instance PeekChain '[] where
+  peekChain _ = pure ()
 
-    instance (FromCStruct e, PeekChain es) => PeekChain (e:es) where
-      peekChain p = do
-        h <- peekCStruct @e (castPtr p)
-        tPtr <- peek (p `plusPtr` 8)
-        t <- peekChain tPtr
-        pure (h, t)
+instance (FromCStruct e, PeekChain es) => PeekChain (e:es) where
+  peekChain p = do
+    h <- peekCStruct @e (castPtr p)
+    tPtr <- peek (p `plusPtr` 8)
+    t <- peekChain tPtr
+    pure (h, t)
 
-    linkChain :: Ptr a -> Ptr b -> IO ()
-    linkChain head' tail' = poke (head' `plusPtr` 8) tail'
-  |]
+linkChain :: Ptr a -> Ptr b -> IO ()
+linkChain head' tail' = poke (head' `plusPtr` 8) tail'
+|]

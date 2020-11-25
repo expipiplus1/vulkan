@@ -146,19 +146,19 @@ writeInitInstanceCmds instanceCommands = do
                                  instanceCommands
   tellExport (ETerm n)
   tellDoc [qqi|
-    {n} :: {tDoc}
-    {n} handle = do
-      let {getFirstInstanceProcAddr} = \\case
-            []   -> pure nullFunPtr
-            x:xs -> do
-              p <- {getInstanceProcAddr'} handle x
-              if p /= nullFunPtr
-                then pure p
-                else {getFirstInstanceProcAddr} xs
-    {indent 2 $ vsep binds}
-      pure $ InstanceCmds handle
-    {indent 4 $ vsep apps}
-  |]
+{n} :: {tDoc}
+{n} handle = do
+  let {getFirstInstanceProcAddr} = \\case
+        []   -> pure nullFunPtr
+        x:xs -> do
+          p <- {getInstanceProcAddr'} handle x
+          if p /= nullFunPtr
+            then pure p
+            else {getFirstInstanceProcAddr} xs
+{indent 2 $ vsep binds}
+  pure $ InstanceCmds handle
+{indent 4 $ vsep apps}
+|]
 
 writeInitDeviceCmds
   :: ( HasTypeInfo r
@@ -190,22 +190,22 @@ writeInitDeviceCmds deviceCommands = do
   tellExport (ETerm n)
   let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'"
   tellDoc [qqi|
-    {n} :: {tDoc}
-    {n} instanceCmds handle = do
-      pGetDeviceProcAddr <- castFunPtr @_ @{getDeviceProcAddrTDoc}
-          <$> {getInstanceProcAddr'} (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr"#)
-      let getDeviceProcAddr' = mkVkGetDeviceProcAddr pGetDeviceProcAddr
-          {getFirstDeviceProcAddr} = \\case
-            []   -> pure nullFunPtr
-            x:xs -> do
-              p <- getDeviceProcAddr' handle x
-              if p /= nullFunPtr
-                then pure p
-                else {getFirstDeviceProcAddr} xs
-    {indent 2 $ vsep binds}
-      pure $ DeviceCmds handle
-    {indent 4 $ vsep apps}
-  |]
+{n} :: {tDoc}
+{n} instanceCmds handle = do
+  pGetDeviceProcAddr <- castFunPtr @_ @{getDeviceProcAddrTDoc}
+      <$> {getInstanceProcAddr'} (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr"#)
+  let getDeviceProcAddr' = mkVkGetDeviceProcAddr pGetDeviceProcAddr
+      {getFirstDeviceProcAddr} = \\case
+        []   -> pure nullFunPtr
+        x:xs -> do
+          p <- getDeviceProcAddr' handle x
+          if p /= nullFunPtr
+            then pure p
+            else {getFirstDeviceProcAddr} xs
+{indent 2 $ vsep binds}
+  pure $ DeviceCmds handle
+{indent 4 $ vsep apps}
+|]
 
 initCmdsStmts
   :: ( HasTypeInfo r
@@ -265,14 +265,14 @@ writeGetInstanceProcAddr = do
   let n = mkFunName "vkGetInstanceProcAddr'"
   tellExport (ETerm n)
   tellDoc [qqi|
-    -- | A version of '{mkFunName "vkGetInstanceProcAddr"}' which can be called
-    -- with a null pointer for the instance.
-    foreign import ccall
-    #if !defined(SAFE_FOREIGN_CALLS)
-      unsafe
-    #endif
-      "vkGetInstanceProcAddr" {n} :: {tDoc}
-  |]
+-- | A version of '{mkFunName "vkGetInstanceProcAddr"}' which can be called
+-- with a null pointer for the instance.
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetInstanceProcAddr" {n} :: {tDoc}
+|]
 
 writeMkGetDeviceProcAddr
   :: ( HasTypeInfo r
@@ -288,13 +288,13 @@ writeMkGetDeviceProcAddr = do
   ty   <- cToHsTypeWrapped DoLower (commandType c)
   tDoc <- renderTypeSource (ConT ''FunPtr :@ ty ~> ty)
   tellDoc [qqi|
-    foreign import ccall
-    #if !defined(SAFE_FOREIGN_CALLS)
-      unsafe
-    #endif
-      "dynamic" mkVkGetDeviceProcAddr
-      :: {tDoc}
-  |]
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetDeviceProcAddr
+  :: {tDoc}
+|]
 
 ----------------------------------------------------------------
 -- Utils
