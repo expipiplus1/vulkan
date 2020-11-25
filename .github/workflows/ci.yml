@@ -273,6 +273,7 @@ jobs:
     - run: nix-build nix/release.nix
     - run: nix-build nix/release.nix -A docs
     - run: nix-build nix/release.nix -A sdistTest
+    - run: nix-build nix/release.nix -A docs-combined
 
   shellcheck:
     runs-on: ubuntu-20.04

@@ -50,15 +50,11 @@ This is done automatically on merge to the main branch
 
 ## gh-pages documentation
 
-- Run `./scripts/gen-standalone-haddocks.sh` script pointing to a worktree on the gh-pages branch
-  - Make sure to clean that directory first
-
 (on my machine)
 
 ```bash
 rm -rf ../vulkan-docs/*
-nix-shell stack ghc
-./scripts/gen-standalone-haddocks.sh ../vulkan-docs
+cp -r $(nix-build --no-link nix/release.nix -A docs-combined)/* ../vulkan-docs
 cd ../vulkan-docs
 git add .
 git commit -m 'vXXX'
