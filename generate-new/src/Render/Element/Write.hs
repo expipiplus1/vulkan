@@ -255,29 +255,26 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
       moduleDocumentation = getDocumentation (moduleChapter modName)
       layoutDoc           = renderStrict
         . layoutPretty defaultLayoutOptions { layoutPageWidth = Unbounded }
-      headerContents =
-        vsep
-          $ vsep languageExtensions
-          : moduleDocumentation
-          : (   "module"
-            <+> pretty modName
-            <>  indent
-                  2
-                  (  parenList
-                  $  ( fmap exportDoc
-                     . nubOrdOnV exportName
-                     $ (exports <> reexports)
-                     )
-                  <> (   (\(ModName m) -> renderExport Module m mempty)
-                     <$> allReexportedModules
-                     )
-                  )
-            <+> "where"
-            :   openImports
-            :   imports
-            :   localImports
-            :   []
-            )
+      headerContents = vsep
+        [ vsep languageExtensions
+        , moduleDocumentation
+        , "module"
+        <+> pretty modName
+        <>  indent
+              2
+              (  parenList
+              $  (fmap exportDoc . nubOrdOnV exportName $ (exports <> reexports)
+                 )
+              <> (   (\(ModName m) -> renderExport Module m mempty)
+                 <$> allReexportedModules
+                 )
+              )
+        <+> "where"
+        , openImports
+        , imports
+        , localImports
+        ]
+
       layoutContent e = runMaybeT $ do
         d <- maybe mzero pure $ reDoc e getDocumentation
         let t = layoutDoc (d <> line <> line)
@@ -446,5 +443,5 @@ brittanyConfig = staticDefaultConfig
                            { _lconfig_cols = pure (pure 120)
                            }
   , _conf_forward      = ForwardOptions (pure [])
-    -- ^ TODO: put language exts here
+    --  ^ TODO: put language exts here
   }

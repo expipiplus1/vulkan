@@ -473,10 +473,11 @@ eitherWord32 name toType fromElem valueRef = case toType of
     elemTy <- cToHsTypeWithHoles DoPreserve toElem
     stmtC (Just (ConT ''Ptr :@ elemTy)) name $ do
       ValueDoc value <- use valueRef
-      let vecName = "v"
+      vecName <- freshName (Just "v")
       subPoke <- renderSubStmts $ do
-        valueRef' <- pureStmt . ValueDoc $ vecName
+        valueRef' <- pureStmt . ValueDoc . pretty $ vecName
         getPokeDirect' name toType (Vector NotNullable fromElem) valueRef'
+      freeNames [vecName]
 
       let (con, d) = case subPoke of
             IOStmts    d -> (IOAction, d)
@@ -485,7 +486,9 @@ eitherWord32 name toType fromElem valueRef = case toType of
       tellImport 'nullPtr
       pure . con . ValueDoc $ "case" <+> value <+> "of" <> line <> indent
         2
-        (vsep ["Left _ -> pure nullPtr", "Right" <+> vecName <+> "->" <+> d])
+        (vsep
+          ["Left _ -> pure nullPtr", "Right" <+> pretty vecName <+> "->" <+> d]
+        )
 
   _ -> throw $ "Unhandled EitherWord32 conversion to " <> show toType
 
@@ -851,9 +854,9 @@ vectorIndirect
 vectorIndirect name toElem fromElem valueRef addrRef =
   stmtC (Just (ConT ''())) name $ do
     -- TODO: add these to the forbidden names for the subpoke
-    let indexDoc = "i"
-    let elemDoc  = "e"
-    indexRef <- pureStmt indexDoc
+    indexDoc <- freshName (Just "i")
+    elemDoc  <- freshName (Just "e")
+    indexRef <- pureStmt (pretty indexDoc)
 
     subPoke  <- renderSubStmts $ do
       -- Get the value of the pointer to this element
@@ -863,9 +866,11 @@ vectorIndirect name toElem fromElem valueRef addrRef =
       elemTy   <- schemeTypeNegative fromElem
       elemRef  <- stmt elemTy (Just (unCName name <> "Elem")) $ pure $ Pure
         AlwaysInline
-        (ValueDoc elemDoc)
+        (ValueDoc (pretty elemDoc))
 
       getPokeIndirect' name toElem fromElem elemRef elemAddr
+
+    freeNames [indexDoc, elemDoc]
 
     let (con, sub) = case subPoke of
           IOStmts    d -> (IOAction, d)
@@ -877,7 +882,7 @@ vectorIndirect name toElem fromElem valueRef addrRef =
       .   con
       .   ValueDoc
       $   "Data.Vector.imapM_"
-      <+> parens ("\\" <> indexDoc <+> elemDoc <+> "->" <+> sub)
+      <+> parens ("\\" <> pretty indexDoc <+> pretty elemDoc <+> "->" <+> sub)
       <+> value
 
 -- Get the value of the pointer to this element

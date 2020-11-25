@@ -398,7 +398,7 @@ maybePeek'
 maybePeek' name lengths addrRef fromPtr to = case fromPtr of
   Ptr _ from@(Ptr _ fromElem) -> do
     let maybePtrDoc   = name
-        notNullPtrDoc = "j"
+    notNullPtrDoc <- freshName (Just "j")
     ptrTy <- cToHsTypeWithHoles DoPreserve from
 
     -- Load the pointer which might be null
@@ -410,10 +410,10 @@ maybePeek' name lengths addrRef fromPtr to = case fromPtr of
 
     elemTy <- cToHsTypeWithHoles DoPreserve fromElem
 
-    stmtC (Just (ConT ''Maybe :@ elemTy)) name $ do
+    r <- stmtC (Just (ConT ''Maybe :@ elemTy)) name $ do
       AddrDoc ptrDoc <- use ptr
       subPeek        <- renderSubStmtsIO $ do
-        ptrRef <- pureStmt (AddrDoc notNullPtrDoc)
+        ptrRef <- pureStmt (AddrDoc (pretty notNullPtrDoc))
         runNonDetMaybe (peekIdiomatic name lengths from ptrRef to) >>= \case
           Nothing -> throw "Nothing to peek to fill Maybe"
           Just p  -> pure p
@@ -422,8 +422,10 @@ maybePeek' name lengths addrRef fromPtr to = case fromPtr of
         .   IOAction
         .   ValueDoc
         $   "maybePeek"
-        <+> parens ("\\" <> notNullPtrDoc <+> "->" <+> subPeek)
+        <+> parens ("\\" <> pretty notNullPtrDoc <+> "->" <+> subPeek)
         <+> ptrDoc
+    freeNames [notNullPtrDoc]
+    pure r
 
   t -> throw ("Unhandled conversion to Maybe from " <> show t)
 
@@ -501,7 +503,7 @@ vectorPeekWithLenRef
 vectorPeekWithLenRef name toElem addrRef fromElem lenTail lenRef nullable = do
   t <- cToHsTypeWithHoles DoPreserve fromElem
   stmtC (Just (ConT ''Vector :@ t)) name $ do
-    let indexVar = "i"
+    indexVar <- freshName (Just "i")
     ValueDoc lenDoc <- case nullable of
       NotNullable -> use lenRef
       Nullable    -> use =<< stmt
@@ -523,7 +525,7 @@ vectorPeekWithLenRef name toElem addrRef fromElem lenTail lenRef nullable = do
     -- Render a peeker for the elements
     subPeek <- renderSubStmtsIO $ do
       -- Get a name for the index variable
-      indexRef    <- pureStmt indexVar
+      indexRef    <- pureStmt (pretty indexVar)
 
       -- Get the value of the pointer to this element
       elemAddrRef <- stmt Nothing Nothing $ do
@@ -557,9 +559,10 @@ vectorPeekWithLenRef name toElem addrRef fromElem lenTail lenRef nullable = do
               Nothing -> throw "Nothing to peek to fill Vector"
               Just p  -> pure p
 
+    freeNames [indexVar]
     tellImport 'V.generateM
     pure . IOAction . ValueDoc $ "generateM" <+> lenDoc <+> parens
-      ("\\" <> indexVar <+> "->" <+> subPeek)
+      ("\\" <> pretty indexVar <+> "->" <+> subPeek)
 
 eitherWord32Peek
   :: forall a r s
