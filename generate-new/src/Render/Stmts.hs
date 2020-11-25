@@ -65,7 +65,9 @@ import           Relude                  hiding ( State
 import           Error
 import           Haskell
 import           Render.Element
-import           Render.Utils
+import           Render.Utils                   ( doBlock
+                                                , unReservedWord
+                                                )
 
 ----------------------------------------------------------------
 -- Some handy newtypes for tagging results
@@ -409,6 +411,7 @@ varName ref hint = do
     -- If it doesn't make one up which isn't in 'usedNames'
     Nothing -> freshName (hint <|> Just ("x" <> show (unRef ref)))
 
+-- | Generate a new name which doesn't shadow anything
 freshName :: forall s r . Maybe Text -> Stmt s r Text
 freshName hint = do
   usedNames <- gets @(ActionsState s r) asUsedNames

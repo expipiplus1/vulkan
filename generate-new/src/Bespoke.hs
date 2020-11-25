@@ -464,7 +464,7 @@ difficultLengths =
                       <+> pretty uuidSizeDoc
                 tellImport uuidSizeDoc
                 throwErrDoc err cond
-              stmt (Just (ConT ''Ptr :@ ConT ''Word8)) (Just "versionData") $ do
+              stmt (Just (ConT ''Ptr :@ ConT ''Word8)) (Just "versionData'") $ do
                 after assertCorrectLength
                 ValueDoc bs <- use bsRef
                 tellImportWithAll ''ContT
