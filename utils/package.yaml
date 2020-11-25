@@ -13,7 +13,8 @@ extra-source-files:
 library:
   source-dirs: src
   c-sources: cbits/DebugCallback.c
-  other-modules: ""
+  other-modules:
+    - Vulkan.Utils.Internal
   dependencies:
     - base <5
     - bytestring
@@ -26,6 +27,7 @@ library:
     - text
     - transformers
     - typed-process
+    - unordered-containers
     - vector
     - vulkan >= 3.6.14 && < 3.8
 
