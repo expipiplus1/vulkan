@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_8bit_storage"
 module Vulkan.Core12.Promoted_From_VK_KHR_8bit_storage  (PhysicalDevice8BitStorageFeatures) where
 
 import Data.Kind (Type)

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "MemoryPropertyFlagBits"
 module Vulkan.Core10.Enums.MemoryPropertyFlagBits  ( MemoryPropertyFlagBits( MEMORY_PROPERTY_DEVICE_LOCAL_BIT
                                                                            , MEMORY_PROPERTY_HOST_VISIBLE_BIT
                                                                            , MEMORY_PROPERTY_HOST_COHERENT_BIT

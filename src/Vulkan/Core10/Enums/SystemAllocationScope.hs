@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SystemAllocationScope"
 module Vulkan.Core10.Enums.SystemAllocationScope  (SystemAllocationScope( SYSTEM_ALLOCATION_SCOPE_COMMAND
                                                                         , SYSTEM_ALLOCATION_SCOPE_OBJECT
                                                                         , SYSTEM_ALLOCATION_SCOPE_CACHE

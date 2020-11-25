@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_shader_draw_parameters"
 module Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters  (PhysicalDeviceShaderDrawParametersFeatures) where
 
 import Data.Kind (Type)

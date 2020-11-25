@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SharingMode"
 module Vulkan.Core10.Enums.SharingMode  (SharingMode( SHARING_MODE_EXCLUSIVE
                                                     , SHARING_MODE_CONCURRENT
                                                     , ..

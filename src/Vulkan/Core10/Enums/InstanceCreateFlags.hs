@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "InstanceCreateFlags"
 module Vulkan.Core10.Enums.InstanceCreateFlags  (InstanceCreateFlags(..)) where
 
 import GHC.Read (choose)

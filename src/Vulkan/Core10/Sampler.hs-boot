@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Sampler"
 module Vulkan.Core10.Sampler  (SamplerCreateInfo) where
 
 import Data.Kind (Type)

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_separate_depth_stencil_layouts"
 module Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts  ( AttachmentDescriptionStencilLayout
                                                                           , AttachmentReferenceStencilLayout
                                                                           , PhysicalDeviceSeparateDepthStencilLayoutsFeatures

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "BlendFactor"
 module Vulkan.Core10.Enums.BlendFactor  (BlendFactor( BLEND_FACTOR_ZERO
                                                     , BLEND_FACTOR_ONE
                                                     , BLEND_FACTOR_SRC_COLOR

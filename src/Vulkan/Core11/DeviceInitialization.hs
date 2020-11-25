@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DeviceInitialization"
 module Vulkan.Core11.DeviceInitialization  (enumerateInstanceVersion) where
 
 import Control.Exception.Base (bracket)

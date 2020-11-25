@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "OtherTypes"
 module Vulkan.Core10.OtherTypes  ( MemoryBarrier(..)
                                  , BufferMemoryBarrier(..)
                                  , ImageMemoryBarrier(..)

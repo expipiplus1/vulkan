@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "APIConstants"
 module Vulkan.Core10.APIConstants  ( LUID_SIZE
                                    , QUEUE_FAMILY_EXTERNAL
                                    , MAX_DEVICE_GROUP_SIZE

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_shader_subgroup_extended_types"
 module Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types  (PhysicalDeviceShaderSubgroupExtendedTypesFeatures) where
 
 import Data.Kind (Type)

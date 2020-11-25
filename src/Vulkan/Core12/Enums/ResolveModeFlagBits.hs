@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ResolveModeFlagBits"
 module Vulkan.Core12.Enums.ResolveModeFlagBits  ( ResolveModeFlagBits( RESOLVE_MODE_NONE
                                                                      , RESOLVE_MODE_SAMPLE_ZERO_BIT
                                                                      , RESOLVE_MODE_AVERAGE_BIT

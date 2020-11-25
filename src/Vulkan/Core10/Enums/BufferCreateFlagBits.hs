@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "BufferCreateFlagBits"
 module Vulkan.Core10.Enums.BufferCreateFlagBits  ( BufferCreateFlagBits( BUFFER_CREATE_SPARSE_BINDING_BIT
                                                                        , BUFFER_CREATE_SPARSE_RESIDENCY_BIT
                                                                        , BUFFER_CREATE_SPARSE_ALIASED_BIT

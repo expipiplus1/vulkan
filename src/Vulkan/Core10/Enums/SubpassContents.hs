@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SubpassContents"
 module Vulkan.Core10.Enums.SubpassContents  (SubpassContents( SUBPASS_CONTENTS_INLINE
                                                             , SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
                                                             , ..

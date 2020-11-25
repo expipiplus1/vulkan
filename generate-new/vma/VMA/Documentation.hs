@@ -49,6 +49,7 @@ loadDocumentation f = do
   let isValid = \case
         TopLevel (CName n) -> "vma" `T.isPrefixOf` T.toLower n
         Nested p _         -> isValid (TopLevel p)
+        Chapter _          -> True
   txt <- liftIO $ T.readFile f
   fromEither (docBookStructToDocumentation isValid txt)
 
@@ -58,6 +59,7 @@ loadHeaderDocumentation f = do
   let isValid = \case
         TopLevel (CName n) -> "vma" `T.isPrefixOf` T.toLower n
         Nested p _         -> isValid (TopLevel p)
+        Chapter _          -> True
   txt <- liftIO $ T.readFile f
   fromEither (docBookHeaderToDocumentation isValid txt)
 

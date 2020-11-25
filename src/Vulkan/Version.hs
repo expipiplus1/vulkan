@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Version"
 module Vulkan.Version  ( pattern HEADER_VERSION
                        , pattern HEADER_VERSION_COMPLETE
                        , pattern MAKE_VERSION

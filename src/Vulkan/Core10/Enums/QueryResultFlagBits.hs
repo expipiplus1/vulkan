@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "QueryResultFlagBits"
 module Vulkan.Core10.Enums.QueryResultFlagBits  ( QueryResultFlagBits( QUERY_RESULT_64_BIT
                                                                      , QUERY_RESULT_WAIT_BIT
                                                                      , QUERY_RESULT_WITH_AVAILABILITY_BIT

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "AccessFlagBits"
 module Vulkan.Core10.Enums.AccessFlagBits  ( AccessFlagBits( ACCESS_INDIRECT_COMMAND_READ_BIT
                                                            , ACCESS_INDEX_READ_BIT
                                                            , ACCESS_VERTEX_ATTRIBUTE_READ_BIT

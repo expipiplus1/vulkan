@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineCacheCreateFlagBits"
 module Vulkan.Core10.Enums.PipelineCacheCreateFlagBits  ( PipelineCacheCreateFlagBits( PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT
                                                                                      , ..
                                                                                      )

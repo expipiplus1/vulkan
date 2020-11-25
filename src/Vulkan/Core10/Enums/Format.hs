@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Format"
 module Vulkan.Core10.Enums.Format  (Format( FORMAT_UNDEFINED
                                           , FORMAT_R4G4_UNORM_PACK8
                                           , FORMAT_R4G4B4A4_UNORM_PACK16

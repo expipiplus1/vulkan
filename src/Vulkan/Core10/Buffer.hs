@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Buffer"
 module Vulkan.Core10.Buffer  ( createBuffer
                              , withBuffer
                              , destroyBuffer

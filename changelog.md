@@ -12,6 +12,7 @@
 - Remove tuples from the constructors of `ClearColorValue`
 - Unpack top level tuple in `TransformMatrixKHR`, the `matrix` record accessor
   has been split into `matrixRow0`, `matrixRow1`, and `matrixRow2`
+- Add extension documentation to extension modules.
 
 ## [3.6.15] - 2020-11-16
 - Bump API version to v1.2.161

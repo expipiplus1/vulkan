@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "InternalAllocationType"
 module Vulkan.Core10.Enums.InternalAllocationType  (InternalAllocationType( INTERNAL_ALLOCATION_TYPE_EXECUTABLE
                                                                           , ..
                                                                           )) where

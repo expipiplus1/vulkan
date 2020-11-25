@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ExternalMemoryFeatureFlagBits"
 module Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits  ( ExternalMemoryFeatureFlagBits( EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
                                                                                          , EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
                                                                                          , EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT

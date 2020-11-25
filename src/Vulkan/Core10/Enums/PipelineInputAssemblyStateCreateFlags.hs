@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineInputAssemblyStateCreateFlags"
 module Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags  (PipelineInputAssemblyStateCreateFlags(..)) where
 
 import GHC.Read (choose)

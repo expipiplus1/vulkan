@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ExternalMemoryHandleTypeFlagBits"
 module Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits  ( ExternalMemoryHandleTypeFlagBits( EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT

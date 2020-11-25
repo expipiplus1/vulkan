@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SubgroupFeatureFlagBits"
 module Vulkan.Core11.Enums.SubgroupFeatureFlagBits  ( SubgroupFeatureFlagBits( SUBGROUP_FEATURE_BASIC_BIT
                                                                              , SUBGROUP_FEATURE_VOTE_BIT
                                                                              , SUBGROUP_FEATURE_ARITHMETIC_BIT

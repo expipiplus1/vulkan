@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "BufferViewCreateFlags"
 module Vulkan.Core10.Enums.BufferViewCreateFlags  (BufferViewCreateFlags(..)) where
 
 import GHC.Read (choose)

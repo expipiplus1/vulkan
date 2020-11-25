@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ComponentSwizzle"
 module Vulkan.Core10.Enums.ComponentSwizzle  (ComponentSwizzle( COMPONENT_SWIZZLE_IDENTITY
                                                               , COMPONENT_SWIZZLE_ZERO
                                                               , COMPONENT_SWIZZLE_ONE

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "AttachmentDescriptionFlagBits"
 module Vulkan.Core10.Enums.AttachmentDescriptionFlagBits  ( AttachmentDescriptionFlagBits( ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
                                                                                          , ..
                                                                                          )

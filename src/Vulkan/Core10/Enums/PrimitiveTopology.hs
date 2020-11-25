@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PrimitiveTopology"
 module Vulkan.Core10.Enums.PrimitiveTopology  (PrimitiveTopology( PRIMITIVE_TOPOLOGY_POINT_LIST
                                                                 , PRIMITIVE_TOPOLOGY_LINE_LIST
                                                                 , PRIMITIVE_TOPOLOGY_LINE_STRIP

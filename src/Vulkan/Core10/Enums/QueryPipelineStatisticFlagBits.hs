@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "QueryPipelineStatisticFlagBits"
 module Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits  ( QueryPipelineStatisticFlagBits( QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT
                                                                                            , QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT
                                                                                            , QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT

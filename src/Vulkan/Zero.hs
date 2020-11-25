@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Zero"
 module Vulkan.Zero  (Zero(..)) where
 
 import GHC.Ptr (nullFunPtr)

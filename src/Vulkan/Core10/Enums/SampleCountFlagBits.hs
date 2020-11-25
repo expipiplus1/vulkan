@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SampleCountFlagBits"
 module Vulkan.Core10.Enums.SampleCountFlagBits  ( SampleCountFlagBits( SAMPLE_COUNT_1_BIT
                                                                      , SAMPLE_COUNT_2_BIT
                                                                      , SAMPLE_COUNT_4_BIT

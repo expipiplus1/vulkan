@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Handles"
 module Vulkan.Core10.Handles  ( Buffer
                               , BufferView
                               , CommandBuffer

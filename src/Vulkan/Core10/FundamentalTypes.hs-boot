@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "FundamentalTypes"
 module Vulkan.Core10.FundamentalTypes  ( Extent2D
                                        , Extent3D
                                        , Offset2D

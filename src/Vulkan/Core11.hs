@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Core11"
 module Vulkan.Core11  ( pattern API_VERSION_1_1
                       , module Vulkan.Core11.DeviceInitialization
                       , module Vulkan.Core11.Enums

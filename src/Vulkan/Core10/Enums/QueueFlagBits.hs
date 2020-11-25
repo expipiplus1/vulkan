@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "QueueFlagBits"
 module Vulkan.Core10.Enums.QueueFlagBits  ( QueueFlagBits( QUEUE_GRAPHICS_BIT
                                                          , QUEUE_COMPUTE_BIT
                                                          , QUEUE_TRANSFER_BIT

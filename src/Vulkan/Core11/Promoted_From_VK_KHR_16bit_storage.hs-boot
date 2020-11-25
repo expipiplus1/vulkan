@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_16bit_storage"
 module Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage  (PhysicalDevice16BitStorageFeatures) where
 
 import Data.Kind (Type)

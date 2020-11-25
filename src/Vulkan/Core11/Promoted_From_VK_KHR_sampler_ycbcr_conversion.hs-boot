@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_sampler_ycbcr_conversion"
 module Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion  ( BindImagePlaneMemoryInfo
                                                                     , ImagePlaneMemoryRequirementsInfo
                                                                     , PhysicalDeviceSamplerYcbcrConversionFeatures

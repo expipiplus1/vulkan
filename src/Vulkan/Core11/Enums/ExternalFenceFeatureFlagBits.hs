@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ExternalFenceFeatureFlagBits"
 module Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits  ( ExternalFenceFeatureFlagBits( EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
                                                                                        , EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT
                                                                                        , ..

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_buffer_device_address"
 module Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address  ( BufferDeviceAddressInfo
                                                                  , BufferOpaqueCaptureAddressCreateInfo
                                                                  , DeviceMemoryOpaqueCaptureAddressInfo

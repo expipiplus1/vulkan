@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ExternalFenceHandleTypeFlagBits"
 module Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits  ( ExternalFenceHandleTypeFlagBits( EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
                                                                                              , EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
                                                                                              , EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT

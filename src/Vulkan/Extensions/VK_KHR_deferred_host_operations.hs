@@ -1,4 +1,238 @@
 {-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_deferred_host_operations - device extension
+--
+-- == VK_KHR_deferred_host_operations
+--
+-- [__Name String__]
+--     @VK_KHR_deferred_host_operations@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     269
+--
+-- [__Revision__]
+--     4
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+-- [__Contact__]
+--
+--     -   Josh Barczak
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_deferred_host_operations:%20&body=@jbarczak%20 >
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2020-11-12
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Joshua Barczak, Intel
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Daniel Koch, NVIDIA
+--
+--     -   Slawek Grajewski, Intel
+--
+--     -   Tobias Hector, AMD
+--
+--     -   Yuriy O’Donnell, Epic
+--
+--     -   Eric Werness, NVIDIA
+--
+--     -   Baldur Karlsson, Valve
+--
+--     -   Jesse Barker, Unity
+--
+--     -   Contributors to VK_KHR_acceleration_structure,
+--         VK_KHR_ray_tracing_pipeline
+--
+-- == Description
+--
+-- The
+-- <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
+-- extension defines the infrastructure and usage patterns for deferrable
+-- commands, but does not specify any commands as deferrable. This is left
+-- to additional dependent extensions. Commands /must/ not be deferred
+-- unless the deferral is specifically allowed by another extension which
+-- depends on
+-- <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>.
+--
+-- == New Object Types
+--
+-- -   'Vulkan.Extensions.Handles.DeferredOperationKHR'
+--
+-- == New Commands
+--
+-- -   'createDeferredOperationKHR'
+--
+-- -   'deferredOperationJoinKHR'
+--
+-- -   'destroyDeferredOperationKHR'
+--
+-- -   'getDeferredOperationMaxConcurrencyKHR'
+--
+-- -   'getDeferredOperationResultKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME'
+--
+-- -   'KHR_DEFERRED_HOST_OPERATIONS_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
+--
+--     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_DEFERRED_OPERATION_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.Result.Result':
+--
+--     -   'Vulkan.Core10.Enums.Result.OPERATION_DEFERRED_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.OPERATION_NOT_DEFERRED_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.THREAD_DONE_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.THREAD_IDLE_KHR'
+--
+-- == Code Examples
+--
+-- The following examples will illustrate the concept of deferrable
+-- operations using a hypothetical example. The command
+-- @vkDoSomethingExpensiveEXT@ denotes a deferrable command. The structure
+-- @VkExpensiveOperationArgsEXT@ represents the arguments which it would
+-- normally accept.
+--
+-- The following example illustrates how a vulkan application might request
+-- deferral of an expensive operation:
+--
+-- > // create a deferred operation
+-- > VkDeferredOperationKHR hOp;
+-- > VkResult result = vkCreateDeferredOperationKHR(device, pCallbacks, &hOp);
+-- > assert(result == VK_SUCCESS);
+-- >
+-- > result = vkDoSomethingExpensive(device, hOp, ...);
+-- > assert( result == VK_OPERATION_DEFERRED_KHR );
+-- >
+-- > // operation was deferred.  Execute it asynchronously
+-- > std::async::launch(
+-- >     [ hOp ] ( )
+-- >     {
+-- >         vkDeferredOperationJoinKHR(device, hOp);
+-- >
+-- >         result = vkGetDeferredOperationResultKHR(device, hOp);
+-- >
+-- >         // deferred operation is now complete.  'result' indicates success or failure
+-- >
+-- >         vkDestroyDeferredOperationKHR(device, hOp, pCallbacks);
+-- >     }
+-- > );
+--
+-- The following example shows a subroutine which guarantees completion of
+-- a deferred operation, in the presence of multiple worker threads, and
+-- returns the result of the operation.
+--
+-- > VkResult FinishDeferredOperation(VkDeferredOperationKHR hOp)
+-- > {
+-- >     // Attempt to join the operation until the implementation indicates that we should stop
+-- >
+-- >     VkResult result = vkDeferredOperationJoinKHR(device, hOp);
+-- >     while( result == VK_THREAD_IDLE_KHR )
+-- >     {
+-- >         std::this_thread::yield();
+-- >         result = vkDeferredOperationJoinKHR(device, hOp);
+-- >     }
+-- >
+-- >     switch( result )
+-- >     {
+-- >     case VK_SUCCESS:
+-- >         {
+-- >             // deferred operation has finished.  Query its result
+-- >             result = vkGetDeferredOperationResultKHR(device, hOp);
+-- >         }
+-- >         break;
+-- >
+-- >     case VK_THREAD_DONE_KHR:
+-- >         {
+-- >             // deferred operation is being wrapped up by another thread
+-- >             //  wait for that thread to finish
+-- >             do
+-- >             {
+-- >                 std::this_thread::yield();
+-- >                 result = vkGetDeferredOperationResultKHR(device, hOp);
+-- >             } while( result == VK_NOT_READY );
+-- >         }
+-- >         break;
+-- >
+-- >     default:
+-- >         assert(false); // other conditions are illegal.
+-- >         break;
+-- >     }
+-- >
+-- >     return result;
+-- > }
+--
+-- == Issues
+--
+-- 1.  Should this entension have a VkPhysicalDevice*FeaturesKHR structure?
+--
+-- RESOLVED: No. This extension does not add any functionality on its own
+-- and requires a dependent extension to actually enable functionality and
+-- thus there is no value in adding a feature structure. If necessary, any
+-- dependent extension could add a feature boolean if it wanted to indicate
+-- that it is adding optional deferral support.
+--
+-- == Version History
+--
+-- -   Revision 1, 2019-12-05 (Josh Barczak, Daniel Koch)
+--
+--     -   Initial draft.
+--
+-- -   Revision 2, 2020-03-06 (Daniel Koch, Tobias Hector)
+--
+--     -   Add missing VK_OBJECT_TYPE_DEFERRED_OPERATION_KHR enum
+--
+--     -   fix sample code
+--
+--     -   Clarified deferred operation parameter lifetimes (#2018,!3647)
+--
+-- -   Revision 3, 2020-05-15 (Josh Barczak)
+--
+--     -   Clarify behavior of vkGetDeferredOperationMaxConcurrencyKHR,
+--         allowing it to return 0 if the operation is complete
+--         (#2036,!3850)
+--
+-- -   Revision 4, 2020-11-12 (Tobias Hector, Daniel Koch)
+--
+--     -   Remove VkDeferredOperationInfoKHR and change return value
+--         semantics when deferred host operations are in use (#2067,3813)
+--
+--     -   clarify return value of vkGetDeferredOperationResultKHR
+--         (#2339,!4110)
+--
+-- = See Also
+--
+-- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
+-- 'createDeferredOperationKHR', 'deferredOperationJoinKHR',
+-- 'destroyDeferredOperationKHR', 'getDeferredOperationMaxConcurrencyKHR',
+-- 'getDeferredOperationResultKHR'
+--
+-- = Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_deferred_host_operations  ( createDeferredOperationKHR
                                                           , withDeferredOperationKHR
                                                           , destroyDeferredOperationKHR

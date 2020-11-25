@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_vulkan_memory_model"
 module Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model  ( PhysicalDeviceVulkanMemoryModelFeatures(..)
                                                                , StructureType(..)
                                                                ) where

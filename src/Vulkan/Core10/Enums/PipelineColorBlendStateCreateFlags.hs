@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineColorBlendStateCreateFlags"
 module Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags  (PipelineColorBlendStateCreateFlags(..)) where
 
 import GHC.Read (choose)

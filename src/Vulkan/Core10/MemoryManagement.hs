@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "MemoryManagement"
 module Vulkan.Core10.MemoryManagement  ( getBufferMemoryRequirements
                                        , bindBufferMemory
                                        , getImageMemoryRequirements

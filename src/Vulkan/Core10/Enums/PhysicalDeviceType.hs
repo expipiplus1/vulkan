@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PhysicalDeviceType"
 module Vulkan.Core10.Enums.PhysicalDeviceType  (PhysicalDeviceType( PHYSICAL_DEVICE_TYPE_OTHER
                                                                   , PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU
                                                                   , PHYSICAL_DEVICE_TYPE_DISCRETE_GPU

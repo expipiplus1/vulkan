@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ImageType"
 module Vulkan.Core10.Enums.ImageType  (ImageType( IMAGE_TYPE_1D
                                                 , IMAGE_TYPE_2D
                                                 , IMAGE_TYPE_3D

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineDepthStencilStateCreateFlags"
 module Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags  (PipelineDepthStencilStateCreateFlags(..)) where
 
 import GHC.Read (choose)

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ImageCreateFlagBits"
 module Vulkan.Core10.Enums.ImageCreateFlagBits  ( ImageCreateFlagBits( IMAGE_CREATE_SPARSE_BINDING_BIT
                                                                      , IMAGE_CREATE_SPARSE_RESIDENCY_BIT
                                                                      , IMAGE_CREATE_SPARSE_ALIASED_BIT

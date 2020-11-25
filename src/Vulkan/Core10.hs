@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Core10"
 module Vulkan.Core10  ( pattern API_VERSION_1_0
                       , module Vulkan.Core10.APIConstants
                       , module Vulkan.Core10.AllocationCallbacks

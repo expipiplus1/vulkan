@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "NamedType"
 module Vulkan.NamedType  ((:::)) where
 
 

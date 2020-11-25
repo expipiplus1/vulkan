@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SubpassDescriptionFlagBits"
 module Vulkan.Core10.Enums.SubpassDescriptionFlagBits  ( SubpassDescriptionFlagBits( SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
                                                                                    , SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM
                                                                                    , SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX

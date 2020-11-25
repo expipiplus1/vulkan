@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DescriptorSet"
 module Vulkan.Core10.DescriptorSet  ( CopyDescriptorSet
                                     , DescriptorBufferInfo
                                     , DescriptorImageInfo

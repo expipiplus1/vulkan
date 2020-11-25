@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ImageViewType"
 module Vulkan.Core10.Enums.ImageViewType  (ImageViewType( IMAGE_VIEW_TYPE_1D
                                                         , IMAGE_VIEW_TYPE_2D
                                                         , IMAGE_VIEW_TYPE_3D

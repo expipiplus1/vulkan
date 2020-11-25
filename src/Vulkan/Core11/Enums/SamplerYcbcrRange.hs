@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SamplerYcbcrRange"
 module Vulkan.Core11.Enums.SamplerYcbcrRange  (SamplerYcbcrRange( SAMPLER_YCBCR_RANGE_ITU_FULL
                                                                 , SAMPLER_YCBCR_RANGE_ITU_NARROW
                                                                 , ..

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "ShaderFloatControlsIndependence"
 module Vulkan.Core12.Enums.ShaderFloatControlsIndependence  (ShaderFloatControlsIndependence( SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY
                                                                                             , SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL
                                                                                             , SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Enums"
 module Vulkan.Core10.Enums  ( module Vulkan.Core10.Enums.AccessFlagBits
                             , module Vulkan.Core10.Enums.AttachmentDescriptionFlagBits
                             , module Vulkan.Core10.Enums.AttachmentLoadOp

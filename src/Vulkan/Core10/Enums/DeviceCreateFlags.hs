@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DeviceCreateFlags"
 module Vulkan.Core10.Enums.DeviceCreateFlags  (DeviceCreateFlags(..)) where
 
 import GHC.Read (choose)

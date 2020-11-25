@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "SemaphoreType"
 module Vulkan.Core12.Enums.SemaphoreType  (SemaphoreType( SEMAPHORE_TYPE_BINARY
                                                         , SEMAPHORE_TYPE_TIMELINE
                                                         , ..

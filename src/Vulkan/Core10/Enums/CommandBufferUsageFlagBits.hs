@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "CommandBufferUsageFlagBits"
 module Vulkan.Core10.Enums.CommandBufferUsageFlagBits  ( CommandBufferUsageFlagBits( COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
                                                                                    , COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT
                                                                                    , COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT

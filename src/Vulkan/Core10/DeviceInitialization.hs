@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "DeviceInitialization"
 module Vulkan.Core10.DeviceInitialization  ( createInstance
                                            , withInstance
                                            , destroyInstance

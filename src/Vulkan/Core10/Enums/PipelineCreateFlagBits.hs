@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineCreateFlagBits"
 module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlagBits( PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
                                                                            , PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
                                                                            , PIPELINE_CREATE_DERIVATIVE_BIT

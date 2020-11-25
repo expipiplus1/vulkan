@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "VendorId"
 module Vulkan.Core10.Enums.VendorId  (VendorId( VENDOR_ID_VIV
                                               , VENDOR_ID_VSI
                                               , VENDOR_ID_KAZAN

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "BlendOp"
 module Vulkan.Core10.Enums.BlendOp  (BlendOp( BLEND_OP_ADD
                                             , BLEND_OP_SUBTRACT
                                             , BLEND_OP_REVERSE_SUBTRACT

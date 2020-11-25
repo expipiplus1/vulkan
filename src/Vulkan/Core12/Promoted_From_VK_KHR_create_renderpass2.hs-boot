@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "Promoted_From_VK_KHR_create_renderpass2"
 module Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2  ( AttachmentDescription2
                                                               , AttachmentReference2
                                                               , RenderPassCreateInfo2

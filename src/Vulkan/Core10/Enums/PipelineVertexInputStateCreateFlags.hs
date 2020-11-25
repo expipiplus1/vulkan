@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PipelineVertexInputStateCreateFlags"
 module Vulkan.Core10.Enums.PipelineVertexInputStateCreateFlags  (PipelineVertexInputStateCreateFlags(..)) where
 
 import GHC.Read (choose)

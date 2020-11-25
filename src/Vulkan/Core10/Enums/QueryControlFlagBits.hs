@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "QueryControlFlagBits"
 module Vulkan.Core10.Enums.QueryControlFlagBits  ( QueryControlFlagBits( QUERY_CONTROL_PRECISE_BIT
                                                                        , ..
                                                                        )

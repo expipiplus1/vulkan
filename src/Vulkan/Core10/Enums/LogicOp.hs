@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "LogicOp"
 module Vulkan.Core10.Enums.LogicOp  (LogicOp( LOGIC_OP_CLEAR
                                             , LOGIC_OP_AND
                                             , LOGIC_OP_AND_REVERSE

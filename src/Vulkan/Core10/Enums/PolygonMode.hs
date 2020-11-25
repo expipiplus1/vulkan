@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "PolygonMode"
 module Vulkan.Core10.Enums.PolygonMode  (PolygonMode( POLYGON_MODE_FILL
                                                     , POLYGON_MODE_LINE
                                                     , POLYGON_MODE_POINT

@@ -1,4 +1,5 @@
 {-# language CPP #-}
+-- No documentation found for Chapter "MemoryHeapFlagBits"
 module Vulkan.Core10.Enums.MemoryHeapFlagBits  ( MemoryHeapFlagBits( MEMORY_HEAP_DEVICE_LOCAL_BIT
                                                                    , MEMORY_HEAP_MULTI_INSTANCE_BIT
                                                                    , ..
