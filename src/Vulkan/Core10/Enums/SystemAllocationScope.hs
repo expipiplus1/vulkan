@@ -8,13 +8,18 @@ module Vulkan.Core10.Enums.SystemAllocationScope  (SystemAllocationScope( SYSTEM
                                                                         , ..
                                                                         )) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
@@ -96,13 +101,13 @@ newtype SystemAllocationScope = SystemAllocationScope Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkSystemAllocationScope" "VK_SYSTEM_ALLOCATION_SCOPE_COMMAND"
-pattern SYSTEM_ALLOCATION_SCOPE_COMMAND = SystemAllocationScope 0
+pattern SYSTEM_ALLOCATION_SCOPE_COMMAND  = SystemAllocationScope 0
 -- No documentation found for Nested "VkSystemAllocationScope" "VK_SYSTEM_ALLOCATION_SCOPE_OBJECT"
-pattern SYSTEM_ALLOCATION_SCOPE_OBJECT = SystemAllocationScope 1
+pattern SYSTEM_ALLOCATION_SCOPE_OBJECT   = SystemAllocationScope 1
 -- No documentation found for Nested "VkSystemAllocationScope" "VK_SYSTEM_ALLOCATION_SCOPE_CACHE"
-pattern SYSTEM_ALLOCATION_SCOPE_CACHE = SystemAllocationScope 2
+pattern SYSTEM_ALLOCATION_SCOPE_CACHE    = SystemAllocationScope 2
 -- No documentation found for Nested "VkSystemAllocationScope" "VK_SYSTEM_ALLOCATION_SCOPE_DEVICE"
-pattern SYSTEM_ALLOCATION_SCOPE_DEVICE = SystemAllocationScope 3
+pattern SYSTEM_ALLOCATION_SCOPE_DEVICE   = SystemAllocationScope 3
 -- No documentation found for Nested "VkSystemAllocationScope" "VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE"
 pattern SYSTEM_ALLOCATION_SCOPE_INSTANCE = SystemAllocationScope 4
 {-# complete SYSTEM_ALLOCATION_SCOPE_COMMAND,
@@ -111,24 +116,42 @@ pattern SYSTEM_ALLOCATION_SCOPE_INSTANCE = SystemAllocationScope 4
              SYSTEM_ALLOCATION_SCOPE_DEVICE,
              SYSTEM_ALLOCATION_SCOPE_INSTANCE :: SystemAllocationScope #-}
 
+conNameSystemAllocationScope :: String
+conNameSystemAllocationScope = "SystemAllocationScope"
+
+enumPrefixSystemAllocationScope :: String
+enumPrefixSystemAllocationScope = "SYSTEM_ALLOCATION_SCOPE_"
+
+showTableSystemAllocationScope :: [(SystemAllocationScope, String)]
+showTableSystemAllocationScope =
+  [ (SYSTEM_ALLOCATION_SCOPE_COMMAND , "COMMAND")
+  , (SYSTEM_ALLOCATION_SCOPE_OBJECT  , "OBJECT")
+  , (SYSTEM_ALLOCATION_SCOPE_CACHE   , "CACHE")
+  , (SYSTEM_ALLOCATION_SCOPE_DEVICE  , "DEVICE")
+  , (SYSTEM_ALLOCATION_SCOPE_INSTANCE, "INSTANCE")
+  ]
+
 instance Show SystemAllocationScope where
-  showsPrec p = \case
-    SYSTEM_ALLOCATION_SCOPE_COMMAND -> showString "SYSTEM_ALLOCATION_SCOPE_COMMAND"
-    SYSTEM_ALLOCATION_SCOPE_OBJECT -> showString "SYSTEM_ALLOCATION_SCOPE_OBJECT"
-    SYSTEM_ALLOCATION_SCOPE_CACHE -> showString "SYSTEM_ALLOCATION_SCOPE_CACHE"
-    SYSTEM_ALLOCATION_SCOPE_DEVICE -> showString "SYSTEM_ALLOCATION_SCOPE_DEVICE"
-    SYSTEM_ALLOCATION_SCOPE_INSTANCE -> showString "SYSTEM_ALLOCATION_SCOPE_INSTANCE"
-    SystemAllocationScope x -> showParen (p >= 11) (showString "SystemAllocationScope " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableSystemAllocationScope of
+    Just s -> showString enumPrefixSystemAllocationScope . showString s
+    Nothing ->
+      let SystemAllocationScope x = e
+      in  showParen (p >= 11) (showString conNameSystemAllocationScope . showString " " . showsPrec 11 x)
 
 instance Read SystemAllocationScope where
-  readPrec = parens (choose [("SYSTEM_ALLOCATION_SCOPE_COMMAND", pure SYSTEM_ALLOCATION_SCOPE_COMMAND)
-                            , ("SYSTEM_ALLOCATION_SCOPE_OBJECT", pure SYSTEM_ALLOCATION_SCOPE_OBJECT)
-                            , ("SYSTEM_ALLOCATION_SCOPE_CACHE", pure SYSTEM_ALLOCATION_SCOPE_CACHE)
-                            , ("SYSTEM_ALLOCATION_SCOPE_DEVICE", pure SYSTEM_ALLOCATION_SCOPE_DEVICE)
-                            , ("SYSTEM_ALLOCATION_SCOPE_INSTANCE", pure SYSTEM_ALLOCATION_SCOPE_INSTANCE)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SystemAllocationScope")
-                       v <- step readPrec
-                       pure (SystemAllocationScope v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixSystemAllocationScope
+          asum ((\(e, s) -> e <$ string s) <$> showTableSystemAllocationScope)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameSystemAllocationScope)
+            v <- step readPrec
+            pure (SystemAllocationScope v)
+          )
+    )
 

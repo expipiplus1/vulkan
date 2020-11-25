@@ -173,9 +173,11 @@ module Vulkan.Extensions.VK_KHR_android_surface  ( createAndroidSurfaceKHR
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -187,7 +189,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -412,17 +417,38 @@ newtype AndroidSurfaceCreateFlagsKHR = AndroidSurfaceCreateFlagsKHR Flags
 
 
 
+conNameAndroidSurfaceCreateFlagsKHR :: String
+conNameAndroidSurfaceCreateFlagsKHR = "AndroidSurfaceCreateFlagsKHR"
+
+enumPrefixAndroidSurfaceCreateFlagsKHR :: String
+enumPrefixAndroidSurfaceCreateFlagsKHR = ""
+
+showTableAndroidSurfaceCreateFlagsKHR :: [(AndroidSurfaceCreateFlagsKHR, String)]
+showTableAndroidSurfaceCreateFlagsKHR = []
+
 instance Show AndroidSurfaceCreateFlagsKHR where
-  showsPrec p = \case
-    AndroidSurfaceCreateFlagsKHR x -> showParen (p >= 11) (showString "AndroidSurfaceCreateFlagsKHR 0x" . showHex x)
+  showsPrec p e = case lookup e showTableAndroidSurfaceCreateFlagsKHR of
+    Just s -> showString enumPrefixAndroidSurfaceCreateFlagsKHR . showString s
+    Nothing ->
+      let AndroidSurfaceCreateFlagsKHR x = e
+      in  showParen (p >= 11) (showString conNameAndroidSurfaceCreateFlagsKHR . showString " 0x" . showHex x)
 
 instance Read AndroidSurfaceCreateFlagsKHR where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AndroidSurfaceCreateFlagsKHR")
-                       v <- step readPrec
-                       pure (AndroidSurfaceCreateFlagsKHR v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixAndroidSurfaceCreateFlagsKHR
+          asum ((\(e, s) -> e <$ string s) <$> showTableAndroidSurfaceCreateFlagsKHR)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameAndroidSurfaceCreateFlagsKHR)
+            v <- step readPrec
+            pure (AndroidSurfaceCreateFlagsKHR v)
+          )
+    )
 
 
 type KHR_ANDROID_SURFACE_SPEC_VERSION = 6

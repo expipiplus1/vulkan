@@ -145,7 +145,9 @@ module Vulkan.Extensions.VK_EXT_validation_features  ( ValidationFeaturesEXT(..)
                                                      , pattern EXT_VALIDATION_FEATURES_EXTENSION_NAME
                                                      ) where
 
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -154,7 +156,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -294,7 +299,7 @@ newtype ValidationFeatureEnableEXT = ValidationFeatureEnableEXT Int32
 -- validation is enabled. Activating this feature instruments shader
 -- programs to generate additional diagnostic data. This feature is
 -- disabled by default.
-pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT = ValidationFeatureEnableEXT 0
+pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT                      = ValidationFeatureEnableEXT 0
 -- | 'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT'
 -- specifies that the validation layers reserve a descriptor set binding
 -- slot for their own use. The layer reports a value for
@@ -309,44 +314,62 @@ pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT = Valida
 -- the output of warnings related to common misuse of the API, but which
 -- are not explicitly prohibited by the specification. This feature is
 -- disabled by default.
-pattern VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT = ValidationFeatureEnableEXT 2
+pattern VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT                    = ValidationFeatureEnableEXT 2
 -- | 'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT' specifies that the layers
 -- will process @debugPrintfEXT@ operations in shaders and send the
 -- resulting output to the debug callback. This feature is disabled by
 -- default.
-pattern VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT = ValidationFeatureEnableEXT 3
+pattern VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT                      = ValidationFeatureEnableEXT 3
 -- | 'VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT' specifies
 -- that Vulkan synchronization validation is enabled. This feature reports
 -- resource access conflicts due to missing or incorrect synchronization
 -- operations between actions (Draw, Copy, Dispatch, Blit) reading or
 -- writing the same regions of memory. This feature is disabled by default.
-pattern VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT = ValidationFeatureEnableEXT 4
+pattern VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT        = ValidationFeatureEnableEXT 4
 {-# complete VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT,
              VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT,
              VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT,
              VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT,
              VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT :: ValidationFeatureEnableEXT #-}
 
+conNameValidationFeatureEnableEXT :: String
+conNameValidationFeatureEnableEXT = "ValidationFeatureEnableEXT"
+
+enumPrefixValidationFeatureEnableEXT :: String
+enumPrefixValidationFeatureEnableEXT = "VALIDATION_FEATURE_ENABLE_"
+
+showTableValidationFeatureEnableEXT :: [(ValidationFeatureEnableEXT, String)]
+showTableValidationFeatureEnableEXT =
+  [ (VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT                     , "GPU_ASSISTED_EXT")
+  , (VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT, "GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT")
+  , (VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT                   , "BEST_PRACTICES_EXT")
+  , (VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT                     , "DEBUG_PRINTF_EXT")
+  , (VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT       , "SYNCHRONIZATION_VALIDATION_EXT")
+  ]
+
 instance Show ValidationFeatureEnableEXT where
-  showsPrec p = \case
-    VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT -> showString "VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT"
-    VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT -> showString "VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT"
-    VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT -> showString "VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT"
-    VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT -> showString "VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT"
-    VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT -> showString "VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT"
-    ValidationFeatureEnableEXT x -> showParen (p >= 11) (showString "ValidationFeatureEnableEXT " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableValidationFeatureEnableEXT of
+    Just s -> showString enumPrefixValidationFeatureEnableEXT . showString s
+    Nothing ->
+      let ValidationFeatureEnableEXT x = e
+      in  showParen (p >= 11) (showString conNameValidationFeatureEnableEXT . showString " " . showsPrec 11 x)
 
 instance Read ValidationFeatureEnableEXT where
-  readPrec = parens (choose [("VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT", pure VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT)
-                            , ("VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT", pure VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT)
-                            , ("VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT", pure VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT)
-                            , ("VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT", pure VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT)
-                            , ("VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT", pure VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ValidationFeatureEnableEXT")
-                       v <- step readPrec
-                       pure (ValidationFeatureEnableEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixValidationFeatureEnableEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableValidationFeatureEnableEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameValidationFeatureEnableEXT)
+            v <- step readPrec
+            pure (ValidationFeatureEnableEXT v)
+          )
+    )
 
 
 -- | VkValidationFeatureDisableEXT - Specify validation features to disable
@@ -359,16 +382,16 @@ newtype ValidationFeatureDisableEXT = ValidationFeatureDisableEXT Int32
 
 -- | 'VALIDATION_FEATURE_DISABLE_ALL_EXT' specifies that all validation
 -- checks are disabled.
-pattern VALIDATION_FEATURE_DISABLE_ALL_EXT = ValidationFeatureDisableEXT 0
+pattern VALIDATION_FEATURE_DISABLE_ALL_EXT              = ValidationFeatureDisableEXT 0
 -- | 'VALIDATION_FEATURE_DISABLE_SHADERS_EXT' specifies that shader
 -- validation is disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_SHADERS_EXT = ValidationFeatureDisableEXT 1
+pattern VALIDATION_FEATURE_DISABLE_SHADERS_EXT          = ValidationFeatureDisableEXT 1
 -- | 'VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT' specifies that thread
 -- safety validation is disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT = ValidationFeatureDisableEXT 2
+pattern VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT    = ValidationFeatureDisableEXT 2
 -- | 'VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT' specifies that stateless
 -- parameter validation is disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT = ValidationFeatureDisableEXT 3
+pattern VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT   = ValidationFeatureDisableEXT 3
 -- | 'VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT' specifies that object
 -- lifetime validation is disabled. This feature is enabled by default.
 pattern VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT = ValidationFeatureDisableEXT 4
@@ -376,11 +399,11 @@ pattern VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT = ValidationFeatureDisab
 -- validation checks are disabled. This feature is enabled by default. If
 -- this feature is disabled, the shader validation and GPU-assisted
 -- validation features are also disabled.
-pattern VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT = ValidationFeatureDisableEXT 5
+pattern VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT      = ValidationFeatureDisableEXT 5
 -- | 'VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT' specifies that
 -- protection against duplicate non-dispatchable object handles is
 -- disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = ValidationFeatureDisableEXT 6
+pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT   = ValidationFeatureDisableEXT 6
 {-# complete VALIDATION_FEATURE_DISABLE_ALL_EXT,
              VALIDATION_FEATURE_DISABLE_SHADERS_EXT,
              VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT,
@@ -389,30 +412,46 @@ pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = ValidationFeatureDisable
              VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT,
              VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT :: ValidationFeatureDisableEXT #-}
 
+conNameValidationFeatureDisableEXT :: String
+conNameValidationFeatureDisableEXT = "ValidationFeatureDisableEXT"
+
+enumPrefixValidationFeatureDisableEXT :: String
+enumPrefixValidationFeatureDisableEXT = "VALIDATION_FEATURE_DISABLE_"
+
+showTableValidationFeatureDisableEXT :: [(ValidationFeatureDisableEXT, String)]
+showTableValidationFeatureDisableEXT =
+  [ (VALIDATION_FEATURE_DISABLE_ALL_EXT             , "ALL_EXT")
+  , (VALIDATION_FEATURE_DISABLE_SHADERS_EXT         , "SHADERS_EXT")
+  , (VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT   , "THREAD_SAFETY_EXT")
+  , (VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT  , "API_PARAMETERS_EXT")
+  , (VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT, "OBJECT_LIFETIMES_EXT")
+  , (VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT     , "CORE_CHECKS_EXT")
+  , (VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT  , "UNIQUE_HANDLES_EXT")
+  ]
+
 instance Show ValidationFeatureDisableEXT where
-  showsPrec p = \case
-    VALIDATION_FEATURE_DISABLE_ALL_EXT -> showString "VALIDATION_FEATURE_DISABLE_ALL_EXT"
-    VALIDATION_FEATURE_DISABLE_SHADERS_EXT -> showString "VALIDATION_FEATURE_DISABLE_SHADERS_EXT"
-    VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT -> showString "VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT"
-    VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT -> showString "VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT"
-    VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT -> showString "VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT"
-    VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT -> showString "VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT"
-    VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT -> showString "VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT"
-    ValidationFeatureDisableEXT x -> showParen (p >= 11) (showString "ValidationFeatureDisableEXT " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableValidationFeatureDisableEXT of
+    Just s -> showString enumPrefixValidationFeatureDisableEXT . showString s
+    Nothing ->
+      let ValidationFeatureDisableEXT x = e
+      in  showParen (p >= 11) (showString conNameValidationFeatureDisableEXT . showString " " . showsPrec 11 x)
 
 instance Read ValidationFeatureDisableEXT where
-  readPrec = parens (choose [("VALIDATION_FEATURE_DISABLE_ALL_EXT", pure VALIDATION_FEATURE_DISABLE_ALL_EXT)
-                            , ("VALIDATION_FEATURE_DISABLE_SHADERS_EXT", pure VALIDATION_FEATURE_DISABLE_SHADERS_EXT)
-                            , ("VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT", pure VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT)
-                            , ("VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT", pure VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT)
-                            , ("VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT", pure VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT)
-                            , ("VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT", pure VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT)
-                            , ("VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT", pure VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ValidationFeatureDisableEXT")
-                       v <- step readPrec
-                       pure (ValidationFeatureDisableEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixValidationFeatureDisableEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableValidationFeatureDisableEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameValidationFeatureDisableEXT)
+            v <- step readPrec
+            pure (ValidationFeatureDisableEXT v)
+          )
+    )
 
 
 type EXT_VALIDATION_FEATURES_SPEC_VERSION = 4

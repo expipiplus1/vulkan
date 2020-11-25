@@ -6,13 +6,18 @@ module Vulkan.Core11.Enums.FenceImportFlagBits  ( FenceImportFlags
                                                                      )
                                                 ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -39,16 +44,36 @@ newtype FenceImportFlagBits = FenceImportFlagBits Flags
 -- regardless of the permanence of @handleType@.
 pattern FENCE_IMPORT_TEMPORARY_BIT = FenceImportFlagBits 0x00000001
 
+conNameFenceImportFlagBits :: String
+conNameFenceImportFlagBits = "FenceImportFlagBits"
+
+enumPrefixFenceImportFlagBits :: String
+enumPrefixFenceImportFlagBits = "FENCE_IMPORT_TEMPORARY_BIT"
+
+showTableFenceImportFlagBits :: [(FenceImportFlagBits, String)]
+showTableFenceImportFlagBits = [(FENCE_IMPORT_TEMPORARY_BIT, "")]
+
 instance Show FenceImportFlagBits where
-  showsPrec p = \case
-    FENCE_IMPORT_TEMPORARY_BIT -> showString "FENCE_IMPORT_TEMPORARY_BIT"
-    FenceImportFlagBits x -> showParen (p >= 11) (showString "FenceImportFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableFenceImportFlagBits of
+    Just s -> showString enumPrefixFenceImportFlagBits . showString s
+    Nothing ->
+      let FenceImportFlagBits x = e
+      in  showParen (p >= 11) (showString conNameFenceImportFlagBits . showString " 0x" . showHex x)
 
 instance Read FenceImportFlagBits where
-  readPrec = parens (choose [("FENCE_IMPORT_TEMPORARY_BIT", pure FENCE_IMPORT_TEMPORARY_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "FenceImportFlagBits")
-                       v <- step readPrec
-                       pure (FenceImportFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixFenceImportFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableFenceImportFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameFenceImportFlagBits)
+            v <- step readPrec
+            pure (FenceImportFlagBits v)
+          )
+    )
 

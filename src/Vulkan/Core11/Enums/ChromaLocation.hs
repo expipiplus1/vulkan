@@ -5,13 +5,18 @@ module Vulkan.Core11.Enums.ChromaLocation  (ChromaLocation( CHROMA_LOCATION_COSI
                                                           , ..
                                                           )) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
@@ -34,22 +39,40 @@ pattern CHROMA_LOCATION_COSITED_EVEN = ChromaLocation 0
 -- | 'CHROMA_LOCATION_MIDPOINT' specifies that downsampled chroma samples are
 -- located half way between each even luma sample and the nearest higher
 -- odd luma sample.
-pattern CHROMA_LOCATION_MIDPOINT = ChromaLocation 1
+pattern CHROMA_LOCATION_MIDPOINT     = ChromaLocation 1
 {-# complete CHROMA_LOCATION_COSITED_EVEN,
              CHROMA_LOCATION_MIDPOINT :: ChromaLocation #-}
 
+conNameChromaLocation :: String
+conNameChromaLocation = "ChromaLocation"
+
+enumPrefixChromaLocation :: String
+enumPrefixChromaLocation = "CHROMA_LOCATION_"
+
+showTableChromaLocation :: [(ChromaLocation, String)]
+showTableChromaLocation = [(CHROMA_LOCATION_COSITED_EVEN, "COSITED_EVEN"), (CHROMA_LOCATION_MIDPOINT, "MIDPOINT")]
+
 instance Show ChromaLocation where
-  showsPrec p = \case
-    CHROMA_LOCATION_COSITED_EVEN -> showString "CHROMA_LOCATION_COSITED_EVEN"
-    CHROMA_LOCATION_MIDPOINT -> showString "CHROMA_LOCATION_MIDPOINT"
-    ChromaLocation x -> showParen (p >= 11) (showString "ChromaLocation " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableChromaLocation of
+    Just s -> showString enumPrefixChromaLocation . showString s
+    Nothing ->
+      let ChromaLocation x = e
+      in  showParen (p >= 11) (showString conNameChromaLocation . showString " " . showsPrec 11 x)
 
 instance Read ChromaLocation where
-  readPrec = parens (choose [("CHROMA_LOCATION_COSITED_EVEN", pure CHROMA_LOCATION_COSITED_EVEN)
-                            , ("CHROMA_LOCATION_MIDPOINT", pure CHROMA_LOCATION_MIDPOINT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ChromaLocation")
-                       v <- step readPrec
-                       pure (ChromaLocation v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixChromaLocation
+          asum ((\(e, s) -> e <$ string s) <$> showTableChromaLocation)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameChromaLocation)
+            v <- step readPrec
+            pure (ChromaLocation v)
+          )
+    )
 

@@ -179,9 +179,11 @@ module Vulkan.Extensions.VK_NV_cooperative_matrix  ( getPhysicalDeviceCooperativ
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -193,7 +195,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -601,11 +606,11 @@ newtype ScopeNV = ScopeNV Int32
 
 -- | 'SCOPE_DEVICE_NV' corresponds to SPIR-V 'Vulkan.Core10.Handles.Device'
 -- scope.
-pattern SCOPE_DEVICE_NV = ScopeNV 1
+pattern SCOPE_DEVICE_NV       = ScopeNV 1
 -- | 'SCOPE_WORKGROUP_NV' corresponds to SPIR-V @Workgroup@ scope.
-pattern SCOPE_WORKGROUP_NV = ScopeNV 2
+pattern SCOPE_WORKGROUP_NV    = ScopeNV 2
 -- | 'SCOPE_SUBGROUP_NV' corresponds to SPIR-V @Subgroup@ scope.
-pattern SCOPE_SUBGROUP_NV = ScopeNV 3
+pattern SCOPE_SUBGROUP_NV     = ScopeNV 3
 -- | 'SCOPE_QUEUE_FAMILY_NV' corresponds to SPIR-V @QueueFamily@ scope.
 pattern SCOPE_QUEUE_FAMILY_NV = ScopeNV 5
 {-# complete SCOPE_DEVICE_NV,
@@ -613,24 +618,41 @@ pattern SCOPE_QUEUE_FAMILY_NV = ScopeNV 5
              SCOPE_SUBGROUP_NV,
              SCOPE_QUEUE_FAMILY_NV :: ScopeNV #-}
 
+conNameScopeNV :: String
+conNameScopeNV = "ScopeNV"
+
+enumPrefixScopeNV :: String
+enumPrefixScopeNV = "SCOPE_"
+
+showTableScopeNV :: [(ScopeNV, String)]
+showTableScopeNV =
+  [ (SCOPE_DEVICE_NV      , "DEVICE_NV")
+  , (SCOPE_WORKGROUP_NV   , "WORKGROUP_NV")
+  , (SCOPE_SUBGROUP_NV    , "SUBGROUP_NV")
+  , (SCOPE_QUEUE_FAMILY_NV, "QUEUE_FAMILY_NV")
+  ]
+
 instance Show ScopeNV where
-  showsPrec p = \case
-    SCOPE_DEVICE_NV -> showString "SCOPE_DEVICE_NV"
-    SCOPE_WORKGROUP_NV -> showString "SCOPE_WORKGROUP_NV"
-    SCOPE_SUBGROUP_NV -> showString "SCOPE_SUBGROUP_NV"
-    SCOPE_QUEUE_FAMILY_NV -> showString "SCOPE_QUEUE_FAMILY_NV"
-    ScopeNV x -> showParen (p >= 11) (showString "ScopeNV " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableScopeNV of
+    Just s  -> showString enumPrefixScopeNV . showString s
+    Nothing -> let ScopeNV x = e in showParen (p >= 11) (showString conNameScopeNV . showString " " . showsPrec 11 x)
 
 instance Read ScopeNV where
-  readPrec = parens (choose [("SCOPE_DEVICE_NV", pure SCOPE_DEVICE_NV)
-                            , ("SCOPE_WORKGROUP_NV", pure SCOPE_WORKGROUP_NV)
-                            , ("SCOPE_SUBGROUP_NV", pure SCOPE_SUBGROUP_NV)
-                            , ("SCOPE_QUEUE_FAMILY_NV", pure SCOPE_QUEUE_FAMILY_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ScopeNV")
-                       v <- step readPrec
-                       pure (ScopeNV v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixScopeNV
+          asum ((\(e, s) -> e <$ string s) <$> showTableScopeNV)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameScopeNV)
+            v <- step readPrec
+            pure (ScopeNV v)
+          )
+    )
 
 
 -- | VkComponentTypeNV - Specify SPIR-V cooperative matrix component type
@@ -648,21 +670,21 @@ pattern COMPONENT_TYPE_FLOAT32_NV = ComponentTypeNV 1
 -- | 'COMPONENT_TYPE_FLOAT64_NV' corresponds to SPIR-V @OpTypeFloat@ 64.
 pattern COMPONENT_TYPE_FLOAT64_NV = ComponentTypeNV 2
 -- | 'COMPONENT_TYPE_SINT8_NV' corresponds to SPIR-V @OpTypeInt@ 8 1.
-pattern COMPONENT_TYPE_SINT8_NV = ComponentTypeNV 3
+pattern COMPONENT_TYPE_SINT8_NV   = ComponentTypeNV 3
 -- | 'COMPONENT_TYPE_SINT16_NV' corresponds to SPIR-V @OpTypeInt@ 16 1.
-pattern COMPONENT_TYPE_SINT16_NV = ComponentTypeNV 4
+pattern COMPONENT_TYPE_SINT16_NV  = ComponentTypeNV 4
 -- | 'COMPONENT_TYPE_SINT32_NV' corresponds to SPIR-V @OpTypeInt@ 32 1.
-pattern COMPONENT_TYPE_SINT32_NV = ComponentTypeNV 5
+pattern COMPONENT_TYPE_SINT32_NV  = ComponentTypeNV 5
 -- | 'COMPONENT_TYPE_SINT64_NV' corresponds to SPIR-V @OpTypeInt@ 64 1.
-pattern COMPONENT_TYPE_SINT64_NV = ComponentTypeNV 6
+pattern COMPONENT_TYPE_SINT64_NV  = ComponentTypeNV 6
 -- | 'COMPONENT_TYPE_UINT8_NV' corresponds to SPIR-V @OpTypeInt@ 8 0.
-pattern COMPONENT_TYPE_UINT8_NV = ComponentTypeNV 7
+pattern COMPONENT_TYPE_UINT8_NV   = ComponentTypeNV 7
 -- | 'COMPONENT_TYPE_UINT16_NV' corresponds to SPIR-V @OpTypeInt@ 16 0.
-pattern COMPONENT_TYPE_UINT16_NV = ComponentTypeNV 8
+pattern COMPONENT_TYPE_UINT16_NV  = ComponentTypeNV 8
 -- | 'COMPONENT_TYPE_UINT32_NV' corresponds to SPIR-V @OpTypeInt@ 32 0.
-pattern COMPONENT_TYPE_UINT32_NV = ComponentTypeNV 9
+pattern COMPONENT_TYPE_UINT32_NV  = ComponentTypeNV 9
 -- | 'COMPONENT_TYPE_UINT64_NV' corresponds to SPIR-V @OpTypeInt@ 64 0.
-pattern COMPONENT_TYPE_UINT64_NV = ComponentTypeNV 10
+pattern COMPONENT_TYPE_UINT64_NV  = ComponentTypeNV 10
 {-# complete COMPONENT_TYPE_FLOAT16_NV,
              COMPONENT_TYPE_FLOAT32_NV,
              COMPONENT_TYPE_FLOAT64_NV,
@@ -675,38 +697,50 @@ pattern COMPONENT_TYPE_UINT64_NV = ComponentTypeNV 10
              COMPONENT_TYPE_UINT32_NV,
              COMPONENT_TYPE_UINT64_NV :: ComponentTypeNV #-}
 
+conNameComponentTypeNV :: String
+conNameComponentTypeNV = "ComponentTypeNV"
+
+enumPrefixComponentTypeNV :: String
+enumPrefixComponentTypeNV = "COMPONENT_TYPE_"
+
+showTableComponentTypeNV :: [(ComponentTypeNV, String)]
+showTableComponentTypeNV =
+  [ (COMPONENT_TYPE_FLOAT16_NV, "FLOAT16_NV")
+  , (COMPONENT_TYPE_FLOAT32_NV, "FLOAT32_NV")
+  , (COMPONENT_TYPE_FLOAT64_NV, "FLOAT64_NV")
+  , (COMPONENT_TYPE_SINT8_NV  , "SINT8_NV")
+  , (COMPONENT_TYPE_SINT16_NV , "SINT16_NV")
+  , (COMPONENT_TYPE_SINT32_NV , "SINT32_NV")
+  , (COMPONENT_TYPE_SINT64_NV , "SINT64_NV")
+  , (COMPONENT_TYPE_UINT8_NV  , "UINT8_NV")
+  , (COMPONENT_TYPE_UINT16_NV , "UINT16_NV")
+  , (COMPONENT_TYPE_UINT32_NV , "UINT32_NV")
+  , (COMPONENT_TYPE_UINT64_NV , "UINT64_NV")
+  ]
+
 instance Show ComponentTypeNV where
-  showsPrec p = \case
-    COMPONENT_TYPE_FLOAT16_NV -> showString "COMPONENT_TYPE_FLOAT16_NV"
-    COMPONENT_TYPE_FLOAT32_NV -> showString "COMPONENT_TYPE_FLOAT32_NV"
-    COMPONENT_TYPE_FLOAT64_NV -> showString "COMPONENT_TYPE_FLOAT64_NV"
-    COMPONENT_TYPE_SINT8_NV -> showString "COMPONENT_TYPE_SINT8_NV"
-    COMPONENT_TYPE_SINT16_NV -> showString "COMPONENT_TYPE_SINT16_NV"
-    COMPONENT_TYPE_SINT32_NV -> showString "COMPONENT_TYPE_SINT32_NV"
-    COMPONENT_TYPE_SINT64_NV -> showString "COMPONENT_TYPE_SINT64_NV"
-    COMPONENT_TYPE_UINT8_NV -> showString "COMPONENT_TYPE_UINT8_NV"
-    COMPONENT_TYPE_UINT16_NV -> showString "COMPONENT_TYPE_UINT16_NV"
-    COMPONENT_TYPE_UINT32_NV -> showString "COMPONENT_TYPE_UINT32_NV"
-    COMPONENT_TYPE_UINT64_NV -> showString "COMPONENT_TYPE_UINT64_NV"
-    ComponentTypeNV x -> showParen (p >= 11) (showString "ComponentTypeNV " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableComponentTypeNV of
+    Just s -> showString enumPrefixComponentTypeNV . showString s
+    Nothing ->
+      let ComponentTypeNV x = e
+      in  showParen (p >= 11) (showString conNameComponentTypeNV . showString " " . showsPrec 11 x)
 
 instance Read ComponentTypeNV where
-  readPrec = parens (choose [("COMPONENT_TYPE_FLOAT16_NV", pure COMPONENT_TYPE_FLOAT16_NV)
-                            , ("COMPONENT_TYPE_FLOAT32_NV", pure COMPONENT_TYPE_FLOAT32_NV)
-                            , ("COMPONENT_TYPE_FLOAT64_NV", pure COMPONENT_TYPE_FLOAT64_NV)
-                            , ("COMPONENT_TYPE_SINT8_NV", pure COMPONENT_TYPE_SINT8_NV)
-                            , ("COMPONENT_TYPE_SINT16_NV", pure COMPONENT_TYPE_SINT16_NV)
-                            , ("COMPONENT_TYPE_SINT32_NV", pure COMPONENT_TYPE_SINT32_NV)
-                            , ("COMPONENT_TYPE_SINT64_NV", pure COMPONENT_TYPE_SINT64_NV)
-                            , ("COMPONENT_TYPE_UINT8_NV", pure COMPONENT_TYPE_UINT8_NV)
-                            , ("COMPONENT_TYPE_UINT16_NV", pure COMPONENT_TYPE_UINT16_NV)
-                            , ("COMPONENT_TYPE_UINT32_NV", pure COMPONENT_TYPE_UINT32_NV)
-                            , ("COMPONENT_TYPE_UINT64_NV", pure COMPONENT_TYPE_UINT64_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ComponentTypeNV")
-                       v <- step readPrec
-                       pure (ComponentTypeNV v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixComponentTypeNV
+          asum ((\(e, s) -> e <$ string s) <$> showTableComponentTypeNV)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameComponentTypeNV)
+            v <- step readPrec
+            pure (ComponentTypeNV v)
+          )
+    )
 
 
 type NV_COOPERATIVE_MATRIX_SPEC_VERSION = 1

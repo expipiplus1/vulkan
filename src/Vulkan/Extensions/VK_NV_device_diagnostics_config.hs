@@ -110,7 +110,9 @@ module Vulkan.Extensions.VK_NV_device_diagnostics_config  ( PhysicalDeviceDiagno
                                                           , pattern NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME
                                                           ) where
 
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -119,7 +121,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -283,11 +288,11 @@ newtype DeviceDiagnosticsConfigFlagBitsNV = DeviceDiagnosticsConfigFlagBitsNV Fl
 
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV' enables the
 -- generation of debug information for shaders.
-pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000001
+pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV     = DeviceDiagnosticsConfigFlagBitsNV 0x00000001
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV' enables
 -- driver side tracking of resources (images, buffers, etc.) used to
 -- augment the device fault information.
-pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
+pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV     = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV' enables
 -- automatic insertion of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#device-diagnostic-checkpoints diagnostic checkpoints>
@@ -296,22 +301,42 @@ pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV = DeviceDiagno
 -- automatically inserted checkpoints.
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000004
 
+conNameDeviceDiagnosticsConfigFlagBitsNV :: String
+conNameDeviceDiagnosticsConfigFlagBitsNV = "DeviceDiagnosticsConfigFlagBitsNV"
+
+enumPrefixDeviceDiagnosticsConfigFlagBitsNV :: String
+enumPrefixDeviceDiagnosticsConfigFlagBitsNV = "DEVICE_DIAGNOSTICS_CONFIG_ENABLE_"
+
+showTableDeviceDiagnosticsConfigFlagBitsNV :: [(DeviceDiagnosticsConfigFlagBitsNV, String)]
+showTableDeviceDiagnosticsConfigFlagBitsNV =
+  [ (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV    , "SHADER_DEBUG_INFO_BIT_NV")
+  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV    , "RESOURCE_TRACKING_BIT_NV")
+  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV, "AUTOMATIC_CHECKPOINTS_BIT_NV")
+  ]
+
 instance Show DeviceDiagnosticsConfigFlagBitsNV where
-  showsPrec p = \case
-    DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV -> showString "DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV"
-    DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV -> showString "DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV"
-    DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV -> showString "DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV"
-    DeviceDiagnosticsConfigFlagBitsNV x -> showParen (p >= 11) (showString "DeviceDiagnosticsConfigFlagBitsNV 0x" . showHex x)
+  showsPrec p e = case lookup e showTableDeviceDiagnosticsConfigFlagBitsNV of
+    Just s -> showString enumPrefixDeviceDiagnosticsConfigFlagBitsNV . showString s
+    Nothing ->
+      let DeviceDiagnosticsConfigFlagBitsNV x = e
+      in  showParen (p >= 11) (showString conNameDeviceDiagnosticsConfigFlagBitsNV . showString " 0x" . showHex x)
 
 instance Read DeviceDiagnosticsConfigFlagBitsNV where
-  readPrec = parens (choose [("DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV", pure DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV)
-                            , ("DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV", pure DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV)
-                            , ("DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV", pure DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DeviceDiagnosticsConfigFlagBitsNV")
-                       v <- step readPrec
-                       pure (DeviceDiagnosticsConfigFlagBitsNV v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDeviceDiagnosticsConfigFlagBitsNV
+          asum ((\(e, s) -> e <$ string s) <$> showTableDeviceDiagnosticsConfigFlagBitsNV)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDeviceDiagnosticsConfigFlagBitsNV)
+            v <- step readPrec
+            pure (DeviceDiagnosticsConfigFlagBitsNV v)
+          )
+    )
 
 
 type NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION = 1

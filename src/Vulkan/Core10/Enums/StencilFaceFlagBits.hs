@@ -9,13 +9,18 @@ module Vulkan.Core10.Enums.StencilFaceFlagBits  ( pattern STENCIL_FRONT_AND_BACK
                                                                      )
                                                 ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -42,29 +47,49 @@ newtype StencilFaceFlagBits = StencilFaceFlagBits Flags
 
 -- | 'STENCIL_FACE_FRONT_BIT' specifies that only the front set of stencil
 -- state is updated.
-pattern STENCIL_FACE_FRONT_BIT = StencilFaceFlagBits 0x00000001
+pattern STENCIL_FACE_FRONT_BIT      = StencilFaceFlagBits 0x00000001
 -- | 'STENCIL_FACE_BACK_BIT' specifies that only the back set of stencil
 -- state is updated.
-pattern STENCIL_FACE_BACK_BIT = StencilFaceFlagBits 0x00000002
+pattern STENCIL_FACE_BACK_BIT       = StencilFaceFlagBits 0x00000002
 -- | 'STENCIL_FACE_FRONT_AND_BACK' is the combination of
 -- 'STENCIL_FACE_FRONT_BIT' and 'STENCIL_FACE_BACK_BIT', and specifies that
 -- both sets of stencil state are updated.
 pattern STENCIL_FACE_FRONT_AND_BACK = StencilFaceFlagBits 0x00000003
 
+conNameStencilFaceFlagBits :: String
+conNameStencilFaceFlagBits = "StencilFaceFlagBits"
+
+enumPrefixStencilFaceFlagBits :: String
+enumPrefixStencilFaceFlagBits = "STENCIL_FACE_"
+
+showTableStencilFaceFlagBits :: [(StencilFaceFlagBits, String)]
+showTableStencilFaceFlagBits =
+  [ (STENCIL_FACE_FRONT_BIT     , "FRONT_BIT")
+  , (STENCIL_FACE_BACK_BIT      , "BACK_BIT")
+  , (STENCIL_FACE_FRONT_AND_BACK, "FRONT_AND_BACK")
+  ]
+
 instance Show StencilFaceFlagBits where
-  showsPrec p = \case
-    STENCIL_FACE_FRONT_BIT -> showString "STENCIL_FACE_FRONT_BIT"
-    STENCIL_FACE_BACK_BIT -> showString "STENCIL_FACE_BACK_BIT"
-    STENCIL_FACE_FRONT_AND_BACK -> showString "STENCIL_FACE_FRONT_AND_BACK"
-    StencilFaceFlagBits x -> showParen (p >= 11) (showString "StencilFaceFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableStencilFaceFlagBits of
+    Just s -> showString enumPrefixStencilFaceFlagBits . showString s
+    Nothing ->
+      let StencilFaceFlagBits x = e
+      in  showParen (p >= 11) (showString conNameStencilFaceFlagBits . showString " 0x" . showHex x)
 
 instance Read StencilFaceFlagBits where
-  readPrec = parens (choose [("STENCIL_FACE_FRONT_BIT", pure STENCIL_FACE_FRONT_BIT)
-                            , ("STENCIL_FACE_BACK_BIT", pure STENCIL_FACE_BACK_BIT)
-                            , ("STENCIL_FACE_FRONT_AND_BACK", pure STENCIL_FACE_FRONT_AND_BACK)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "StencilFaceFlagBits")
-                       v <- step readPrec
-                       pure (StencilFaceFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixStencilFaceFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableStencilFaceFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameStencilFaceFlagBits)
+            v <- step readPrec
+            pure (StencilFaceFlagBits v)
+          )
+    )
 

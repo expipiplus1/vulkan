@@ -105,9 +105,11 @@ module Vulkan.Extensions.VK_EXT_metal_surface  ( createMetalSurfaceEXT
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -119,7 +121,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -313,17 +318,38 @@ newtype MetalSurfaceCreateFlagsEXT = MetalSurfaceCreateFlagsEXT Flags
 
 
 
+conNameMetalSurfaceCreateFlagsEXT :: String
+conNameMetalSurfaceCreateFlagsEXT = "MetalSurfaceCreateFlagsEXT"
+
+enumPrefixMetalSurfaceCreateFlagsEXT :: String
+enumPrefixMetalSurfaceCreateFlagsEXT = ""
+
+showTableMetalSurfaceCreateFlagsEXT :: [(MetalSurfaceCreateFlagsEXT, String)]
+showTableMetalSurfaceCreateFlagsEXT = []
+
 instance Show MetalSurfaceCreateFlagsEXT where
-  showsPrec p = \case
-    MetalSurfaceCreateFlagsEXT x -> showParen (p >= 11) (showString "MetalSurfaceCreateFlagsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTableMetalSurfaceCreateFlagsEXT of
+    Just s -> showString enumPrefixMetalSurfaceCreateFlagsEXT . showString s
+    Nothing ->
+      let MetalSurfaceCreateFlagsEXT x = e
+      in  showParen (p >= 11) (showString conNameMetalSurfaceCreateFlagsEXT . showString " 0x" . showHex x)
 
 instance Read MetalSurfaceCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "MetalSurfaceCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (MetalSurfaceCreateFlagsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixMetalSurfaceCreateFlagsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableMetalSurfaceCreateFlagsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameMetalSurfaceCreateFlagsEXT)
+            v <- step readPrec
+            pure (MetalSurfaceCreateFlagsEXT v)
+          )
+    )
 
 
 type EXT_METAL_SURFACE_SPEC_VERSION = 1

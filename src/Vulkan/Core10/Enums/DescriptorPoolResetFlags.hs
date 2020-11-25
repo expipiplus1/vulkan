@@ -2,13 +2,18 @@
 -- No documentation found for Chapter "DescriptorPoolResetFlags"
 module Vulkan.Core10.Enums.DescriptorPoolResetFlags  (DescriptorPoolResetFlags(..)) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -33,15 +38,36 @@ newtype DescriptorPoolResetFlags = DescriptorPoolResetFlags Flags
 
 
 
+conNameDescriptorPoolResetFlags :: String
+conNameDescriptorPoolResetFlags = "DescriptorPoolResetFlags"
+
+enumPrefixDescriptorPoolResetFlags :: String
+enumPrefixDescriptorPoolResetFlags = ""
+
+showTableDescriptorPoolResetFlags :: [(DescriptorPoolResetFlags, String)]
+showTableDescriptorPoolResetFlags = []
+
 instance Show DescriptorPoolResetFlags where
-  showsPrec p = \case
-    DescriptorPoolResetFlags x -> showParen (p >= 11) (showString "DescriptorPoolResetFlags 0x" . showHex x)
+  showsPrec p e = case lookup e showTableDescriptorPoolResetFlags of
+    Just s -> showString enumPrefixDescriptorPoolResetFlags . showString s
+    Nothing ->
+      let DescriptorPoolResetFlags x = e
+      in  showParen (p >= 11) (showString conNameDescriptorPoolResetFlags . showString " 0x" . showHex x)
 
 instance Read DescriptorPoolResetFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DescriptorPoolResetFlags")
-                       v <- step readPrec
-                       pure (DescriptorPoolResetFlags v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDescriptorPoolResetFlags
+          asum ((\(e, s) -> e <$ string s) <$> showTableDescriptorPoolResetFlags)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDescriptorPoolResetFlags)
+            v <- step readPrec
+            pure (DescriptorPoolResetFlags v)
+          )
+    )
 

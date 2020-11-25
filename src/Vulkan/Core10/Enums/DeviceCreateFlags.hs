@@ -2,13 +2,18 @@
 -- No documentation found for Chapter "DeviceCreateFlags"
 module Vulkan.Core10.Enums.DeviceCreateFlags  (DeviceCreateFlags(..)) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -33,15 +38,36 @@ newtype DeviceCreateFlags = DeviceCreateFlags Flags
 
 
 
+conNameDeviceCreateFlags :: String
+conNameDeviceCreateFlags = "DeviceCreateFlags"
+
+enumPrefixDeviceCreateFlags :: String
+enumPrefixDeviceCreateFlags = ""
+
+showTableDeviceCreateFlags :: [(DeviceCreateFlags, String)]
+showTableDeviceCreateFlags = []
+
 instance Show DeviceCreateFlags where
-  showsPrec p = \case
-    DeviceCreateFlags x -> showParen (p >= 11) (showString "DeviceCreateFlags 0x" . showHex x)
+  showsPrec p e = case lookup e showTableDeviceCreateFlags of
+    Just s -> showString enumPrefixDeviceCreateFlags . showString s
+    Nothing ->
+      let DeviceCreateFlags x = e
+      in  showParen (p >= 11) (showString conNameDeviceCreateFlags . showString " 0x" . showHex x)
 
 instance Read DeviceCreateFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DeviceCreateFlags")
-                       v <- step readPrec
-                       pure (DeviceCreateFlags v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDeviceCreateFlags
+          asum ((\(e, s) -> e <$ string s) <$> showTableDeviceCreateFlags)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDeviceCreateFlags)
+            v <- step readPrec
+            pure (DeviceCreateFlags v)
+          )
+    )
 

@@ -532,10 +532,12 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -547,7 +549,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
@@ -1979,17 +1984,38 @@ newtype DebugUtilsMessengerCreateFlagsEXT = DebugUtilsMessengerCreateFlagsEXT Fl
 
 
 
+conNameDebugUtilsMessengerCreateFlagsEXT :: String
+conNameDebugUtilsMessengerCreateFlagsEXT = "DebugUtilsMessengerCreateFlagsEXT"
+
+enumPrefixDebugUtilsMessengerCreateFlagsEXT :: String
+enumPrefixDebugUtilsMessengerCreateFlagsEXT = ""
+
+showTableDebugUtilsMessengerCreateFlagsEXT :: [(DebugUtilsMessengerCreateFlagsEXT, String)]
+showTableDebugUtilsMessengerCreateFlagsEXT = []
+
 instance Show DebugUtilsMessengerCreateFlagsEXT where
-  showsPrec p = \case
-    DebugUtilsMessengerCreateFlagsEXT x -> showParen (p >= 11) (showString "DebugUtilsMessengerCreateFlagsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTableDebugUtilsMessengerCreateFlagsEXT of
+    Just s -> showString enumPrefixDebugUtilsMessengerCreateFlagsEXT . showString s
+    Nothing ->
+      let DebugUtilsMessengerCreateFlagsEXT x = e
+      in  showParen (p >= 11) (showString conNameDebugUtilsMessengerCreateFlagsEXT . showString " 0x" . showHex x)
 
 instance Read DebugUtilsMessengerCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DebugUtilsMessengerCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (DebugUtilsMessengerCreateFlagsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDebugUtilsMessengerCreateFlagsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableDebugUtilsMessengerCreateFlagsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDebugUtilsMessengerCreateFlagsEXT)
+            v <- step readPrec
+            pure (DebugUtilsMessengerCreateFlagsEXT v)
+          )
+    )
 
 
 -- | VkDebugUtilsMessengerCallbackDataFlagsEXT - Reserved for future use
@@ -2007,17 +2033,38 @@ newtype DebugUtilsMessengerCallbackDataFlagsEXT = DebugUtilsMessengerCallbackDat
 
 
 
+conNameDebugUtilsMessengerCallbackDataFlagsEXT :: String
+conNameDebugUtilsMessengerCallbackDataFlagsEXT = "DebugUtilsMessengerCallbackDataFlagsEXT"
+
+enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT :: String
+enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT = ""
+
+showTableDebugUtilsMessengerCallbackDataFlagsEXT :: [(DebugUtilsMessengerCallbackDataFlagsEXT, String)]
+showTableDebugUtilsMessengerCallbackDataFlagsEXT = []
+
 instance Show DebugUtilsMessengerCallbackDataFlagsEXT where
-  showsPrec p = \case
-    DebugUtilsMessengerCallbackDataFlagsEXT x -> showParen (p >= 11) (showString "DebugUtilsMessengerCallbackDataFlagsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTableDebugUtilsMessengerCallbackDataFlagsEXT of
+    Just s -> showString enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT . showString s
+    Nothing ->
+      let DebugUtilsMessengerCallbackDataFlagsEXT x = e
+      in  showParen (p >= 11) (showString conNameDebugUtilsMessengerCallbackDataFlagsEXT . showString " 0x" . showHex x)
 
 instance Read DebugUtilsMessengerCallbackDataFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DebugUtilsMessengerCallbackDataFlagsEXT")
-                       v <- step readPrec
-                       pure (DebugUtilsMessengerCallbackDataFlagsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableDebugUtilsMessengerCallbackDataFlagsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDebugUtilsMessengerCallbackDataFlagsEXT)
+            v <- step readPrec
+            pure (DebugUtilsMessengerCallbackDataFlagsEXT v)
+          )
+    )
 
 
 type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
@@ -2038,7 +2085,7 @@ pattern DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = DebugUtilsMessageSeverity
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT' specifies an informational
 -- message such as resource details that may be handy when debugging an
 -- application.
-pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00000010
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT    = DebugUtilsMessageSeverityFlagBitsEXT 0x00000010
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT' specifies use of Vulkan
 -- that /may/ expose an app bug. Such cases may not be immediately harmful,
 -- such as a fragment shader outputting to a location with no attachment.
@@ -2049,26 +2096,45 @@ pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = DebugUtilsMessageSeverityFla
 pattern DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00000100
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT' specifies that the
 -- application has violated a valid usage condition of the specification.
-pattern DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00001000
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT   = DebugUtilsMessageSeverityFlagBitsEXT 0x00001000
+
+conNameDebugUtilsMessageSeverityFlagBitsEXT :: String
+conNameDebugUtilsMessageSeverityFlagBitsEXT = "DebugUtilsMessageSeverityFlagBitsEXT"
+
+enumPrefixDebugUtilsMessageSeverityFlagBitsEXT :: String
+enumPrefixDebugUtilsMessageSeverityFlagBitsEXT = "DEBUG_UTILS_MESSAGE_SEVERITY_"
+
+showTableDebugUtilsMessageSeverityFlagBitsEXT :: [(DebugUtilsMessageSeverityFlagBitsEXT, String)]
+showTableDebugUtilsMessageSeverityFlagBitsEXT =
+  [ (DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT, "VERBOSE_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT   , "INFO_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT, "WARNING_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT  , "ERROR_BIT_EXT")
+  ]
 
 instance Show DebugUtilsMessageSeverityFlagBitsEXT where
-  showsPrec p = \case
-    DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT"
-    DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT"
-    DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT"
-    DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT"
-    DebugUtilsMessageSeverityFlagBitsEXT x -> showParen (p >= 11) (showString "DebugUtilsMessageSeverityFlagBitsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTableDebugUtilsMessageSeverityFlagBitsEXT of
+    Just s -> showString enumPrefixDebugUtilsMessageSeverityFlagBitsEXT . showString s
+    Nothing ->
+      let DebugUtilsMessageSeverityFlagBitsEXT x = e
+      in  showParen (p >= 11) (showString conNameDebugUtilsMessageSeverityFlagBitsEXT . showString " 0x" . showHex x)
 
 instance Read DebugUtilsMessageSeverityFlagBitsEXT where
-  readPrec = parens (choose [("DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT", pure DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
-                            , ("DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT", pure DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
-                            , ("DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT", pure DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
-                            , ("DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT", pure DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DebugUtilsMessageSeverityFlagBitsEXT")
-                       v <- step readPrec
-                       pure (DebugUtilsMessageSeverityFlagBitsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableDebugUtilsMessageSeverityFlagBitsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDebugUtilsMessageSeverityFlagBitsEXT)
+            v <- step readPrec
+            pure (DebugUtilsMessageSeverityFlagBitsEXT v)
+          )
+    )
 
 
 type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
@@ -2085,11 +2151,11 @@ newtype DebugUtilsMessageTypeFlagBitsEXT = DebugUtilsMessageTypeFlagBitsEXT Flag
 -- | 'DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT' specifies that some general
 -- event has occurred. This is typically a non-specification,
 -- non-performance event.
-pattern DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x00000001
+pattern DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT     = DebugUtilsMessageTypeFlagBitsEXT 0x00000001
 -- | 'DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT' specifies that something
 -- has occurred during validation against the Vulkan specification that may
 -- indicate invalid behavior.
-pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x00000002
+pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT  = DebugUtilsMessageTypeFlagBitsEXT 0x00000002
 -- | 'DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT' specifies a potentially
 -- non-optimal use of Vulkan, e.g. using
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdClearColorImage' when setting
@@ -2098,22 +2164,42 @@ pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = DebugUtilsMessageTypeFlagB
 -- have worked.
 pattern DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x00000004
 
+conNameDebugUtilsMessageTypeFlagBitsEXT :: String
+conNameDebugUtilsMessageTypeFlagBitsEXT = "DebugUtilsMessageTypeFlagBitsEXT"
+
+enumPrefixDebugUtilsMessageTypeFlagBitsEXT :: String
+enumPrefixDebugUtilsMessageTypeFlagBitsEXT = "DEBUG_UTILS_MESSAGE_TYPE_"
+
+showTableDebugUtilsMessageTypeFlagBitsEXT :: [(DebugUtilsMessageTypeFlagBitsEXT, String)]
+showTableDebugUtilsMessageTypeFlagBitsEXT =
+  [ (DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT    , "GENERAL_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT , "VALIDATION_BIT_EXT")
+  , (DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT, "PERFORMANCE_BIT_EXT")
+  ]
+
 instance Show DebugUtilsMessageTypeFlagBitsEXT where
-  showsPrec p = \case
-    DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT"
-    DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT"
-    DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT -> showString "DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT"
-    DebugUtilsMessageTypeFlagBitsEXT x -> showParen (p >= 11) (showString "DebugUtilsMessageTypeFlagBitsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTableDebugUtilsMessageTypeFlagBitsEXT of
+    Just s -> showString enumPrefixDebugUtilsMessageTypeFlagBitsEXT . showString s
+    Nothing ->
+      let DebugUtilsMessageTypeFlagBitsEXT x = e
+      in  showParen (p >= 11) (showString conNameDebugUtilsMessageTypeFlagBitsEXT . showString " 0x" . showHex x)
 
 instance Read DebugUtilsMessageTypeFlagBitsEXT where
-  readPrec = parens (choose [("DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT", pure DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT)
-                            , ("DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT", pure DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT)
-                            , ("DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT", pure DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DebugUtilsMessageTypeFlagBitsEXT")
-                       v <- step readPrec
-                       pure (DebugUtilsMessageTypeFlagBitsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDebugUtilsMessageTypeFlagBitsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableDebugUtilsMessageTypeFlagBitsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDebugUtilsMessageTypeFlagBitsEXT)
+            v <- step readPrec
+            pure (DebugUtilsMessageTypeFlagBitsEXT v)
+          )
+    )
 
 
 type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr DebugUtilsMessengerCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO Bool32

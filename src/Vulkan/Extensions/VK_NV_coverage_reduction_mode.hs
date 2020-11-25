@@ -148,9 +148,11 @@ module Vulkan.Extensions.VK_NV_coverage_reduction_mode  ( getPhysicalDeviceSuppo
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -163,7 +165,10 @@ import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -545,17 +550,39 @@ newtype PipelineCoverageReductionStateCreateFlagsNV = PipelineCoverageReductionS
 
 
 
+conNamePipelineCoverageReductionStateCreateFlagsNV :: String
+conNamePipelineCoverageReductionStateCreateFlagsNV = "PipelineCoverageReductionStateCreateFlagsNV"
+
+enumPrefixPipelineCoverageReductionStateCreateFlagsNV :: String
+enumPrefixPipelineCoverageReductionStateCreateFlagsNV = ""
+
+showTablePipelineCoverageReductionStateCreateFlagsNV :: [(PipelineCoverageReductionStateCreateFlagsNV, String)]
+showTablePipelineCoverageReductionStateCreateFlagsNV = []
+
 instance Show PipelineCoverageReductionStateCreateFlagsNV where
-  showsPrec p = \case
-    PipelineCoverageReductionStateCreateFlagsNV x -> showParen (p >= 11) (showString "PipelineCoverageReductionStateCreateFlagsNV 0x" . showHex x)
+  showsPrec p e = case lookup e showTablePipelineCoverageReductionStateCreateFlagsNV of
+    Just s -> showString enumPrefixPipelineCoverageReductionStateCreateFlagsNV . showString s
+    Nothing ->
+      let PipelineCoverageReductionStateCreateFlagsNV x = e
+      in  showParen (p >= 11)
+                    (showString conNamePipelineCoverageReductionStateCreateFlagsNV . showString " 0x" . showHex x)
 
 instance Read PipelineCoverageReductionStateCreateFlagsNV where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCoverageReductionStateCreateFlagsNV")
-                       v <- step readPrec
-                       pure (PipelineCoverageReductionStateCreateFlagsNV v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixPipelineCoverageReductionStateCreateFlagsNV
+          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineCoverageReductionStateCreateFlagsNV)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNamePipelineCoverageReductionStateCreateFlagsNV)
+            v <- step readPrec
+            pure (PipelineCoverageReductionStateCreateFlagsNV v)
+          )
+    )
 
 
 -- | VkCoverageReductionModeNV - Specify the coverage reduction mode
@@ -571,7 +598,7 @@ newtype CoverageReductionModeNV = CoverageReductionModeNV Int32
 -- be associated with an implementation-dependent subset of samples in the
 -- pixel coverage. If any of those associated samples are covered, the
 -- color sample is covered.
-pattern COVERAGE_REDUCTION_MODE_MERGE_NV = CoverageReductionModeNV 0
+pattern COVERAGE_REDUCTION_MODE_MERGE_NV    = CoverageReductionModeNV 0
 -- | 'COVERAGE_REDUCTION_MODE_TRUNCATE_NV' specifies that for color samples
 -- present in the color attachments, a color sample is covered if the pixel
 -- coverage sample with the same
@@ -581,20 +608,39 @@ pattern COVERAGE_REDUCTION_MODE_TRUNCATE_NV = CoverageReductionModeNV 1
 {-# complete COVERAGE_REDUCTION_MODE_MERGE_NV,
              COVERAGE_REDUCTION_MODE_TRUNCATE_NV :: CoverageReductionModeNV #-}
 
+conNameCoverageReductionModeNV :: String
+conNameCoverageReductionModeNV = "CoverageReductionModeNV"
+
+enumPrefixCoverageReductionModeNV :: String
+enumPrefixCoverageReductionModeNV = "COVERAGE_REDUCTION_MODE_"
+
+showTableCoverageReductionModeNV :: [(CoverageReductionModeNV, String)]
+showTableCoverageReductionModeNV =
+  [(COVERAGE_REDUCTION_MODE_MERGE_NV, "MERGE_NV"), (COVERAGE_REDUCTION_MODE_TRUNCATE_NV, "TRUNCATE_NV")]
+
 instance Show CoverageReductionModeNV where
-  showsPrec p = \case
-    COVERAGE_REDUCTION_MODE_MERGE_NV -> showString "COVERAGE_REDUCTION_MODE_MERGE_NV"
-    COVERAGE_REDUCTION_MODE_TRUNCATE_NV -> showString "COVERAGE_REDUCTION_MODE_TRUNCATE_NV"
-    CoverageReductionModeNV x -> showParen (p >= 11) (showString "CoverageReductionModeNV " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableCoverageReductionModeNV of
+    Just s -> showString enumPrefixCoverageReductionModeNV . showString s
+    Nothing ->
+      let CoverageReductionModeNV x = e
+      in  showParen (p >= 11) (showString conNameCoverageReductionModeNV . showString " " . showsPrec 11 x)
 
 instance Read CoverageReductionModeNV where
-  readPrec = parens (choose [("COVERAGE_REDUCTION_MODE_MERGE_NV", pure COVERAGE_REDUCTION_MODE_MERGE_NV)
-                            , ("COVERAGE_REDUCTION_MODE_TRUNCATE_NV", pure COVERAGE_REDUCTION_MODE_TRUNCATE_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CoverageReductionModeNV")
-                       v <- step readPrec
-                       pure (CoverageReductionModeNV v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixCoverageReductionModeNV
+          asum ((\(e, s) -> e <$ string s) <$> showTableCoverageReductionModeNV)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameCoverageReductionModeNV)
+            v <- step readPrec
+            pure (CoverageReductionModeNV v)
+          )
+    )
 
 
 type NV_COVERAGE_REDUCTION_MODE_SPEC_VERSION = 1

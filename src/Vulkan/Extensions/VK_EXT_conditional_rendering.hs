@@ -178,7 +178,9 @@ module Vulkan.Extensions.VK_EXT_conditional_rendering  ( cmdBeginConditionalRend
 
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -189,7 +191,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -668,18 +673,38 @@ newtype ConditionalRenderingFlagBitsEXT = ConditionalRenderingFlagBitsEXT Flags
 -- discarded.
 pattern CONDITIONAL_RENDERING_INVERTED_BIT_EXT = ConditionalRenderingFlagBitsEXT 0x00000001
 
+conNameConditionalRenderingFlagBitsEXT :: String
+conNameConditionalRenderingFlagBitsEXT = "ConditionalRenderingFlagBitsEXT"
+
+enumPrefixConditionalRenderingFlagBitsEXT :: String
+enumPrefixConditionalRenderingFlagBitsEXT = "CONDITIONAL_RENDERING_INVERTED_BIT_EXT"
+
+showTableConditionalRenderingFlagBitsEXT :: [(ConditionalRenderingFlagBitsEXT, String)]
+showTableConditionalRenderingFlagBitsEXT = [(CONDITIONAL_RENDERING_INVERTED_BIT_EXT, "")]
+
 instance Show ConditionalRenderingFlagBitsEXT where
-  showsPrec p = \case
-    CONDITIONAL_RENDERING_INVERTED_BIT_EXT -> showString "CONDITIONAL_RENDERING_INVERTED_BIT_EXT"
-    ConditionalRenderingFlagBitsEXT x -> showParen (p >= 11) (showString "ConditionalRenderingFlagBitsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTableConditionalRenderingFlagBitsEXT of
+    Just s -> showString enumPrefixConditionalRenderingFlagBitsEXT . showString s
+    Nothing ->
+      let ConditionalRenderingFlagBitsEXT x = e
+      in  showParen (p >= 11) (showString conNameConditionalRenderingFlagBitsEXT . showString " 0x" . showHex x)
 
 instance Read ConditionalRenderingFlagBitsEXT where
-  readPrec = parens (choose [("CONDITIONAL_RENDERING_INVERTED_BIT_EXT", pure CONDITIONAL_RENDERING_INVERTED_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ConditionalRenderingFlagBitsEXT")
-                       v <- step readPrec
-                       pure (ConditionalRenderingFlagBitsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixConditionalRenderingFlagBitsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableConditionalRenderingFlagBitsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameConditionalRenderingFlagBitsEXT)
+            v <- step readPrec
+            pure (ConditionalRenderingFlagBitsEXT v)
+          )
+    )
 
 
 type EXT_CONDITIONAL_RENDERING_SPEC_VERSION = 2

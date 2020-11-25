@@ -8,13 +8,18 @@ module Vulkan.Core10.Enums.CommandPoolCreateFlagBits  ( CommandPoolCreateFlags
                                                                                  )
                                                       ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -40,7 +45,7 @@ newtype CommandPoolCreateFlagBits = CommandPoolCreateFlagBits Flags
 -- reset or freed in a relatively short timeframe. This flag /may/ be used
 -- by the implementation to control memory allocation behavior within the
 -- pool.
-pattern COMMAND_POOL_CREATE_TRANSIENT_BIT = CommandPoolCreateFlagBits 0x00000001
+pattern COMMAND_POOL_CREATE_TRANSIENT_BIT            = CommandPoolCreateFlagBits 0x00000001
 -- | 'COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT' allows any command buffer
 -- allocated from a pool to be individually reset to the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>;
@@ -52,22 +57,42 @@ pattern COMMAND_POOL_CREATE_TRANSIENT_BIT = CommandPoolCreateFlagBits 0x00000001
 pattern COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = CommandPoolCreateFlagBits 0x00000002
 -- | 'COMMAND_POOL_CREATE_PROTECTED_BIT' specifies that command buffers
 -- allocated from the pool are protected command buffers.
-pattern COMMAND_POOL_CREATE_PROTECTED_BIT = CommandPoolCreateFlagBits 0x00000004
+pattern COMMAND_POOL_CREATE_PROTECTED_BIT            = CommandPoolCreateFlagBits 0x00000004
+
+conNameCommandPoolCreateFlagBits :: String
+conNameCommandPoolCreateFlagBits = "CommandPoolCreateFlagBits"
+
+enumPrefixCommandPoolCreateFlagBits :: String
+enumPrefixCommandPoolCreateFlagBits = "COMMAND_POOL_CREATE_"
+
+showTableCommandPoolCreateFlagBits :: [(CommandPoolCreateFlagBits, String)]
+showTableCommandPoolCreateFlagBits =
+  [ (COMMAND_POOL_CREATE_TRANSIENT_BIT           , "TRANSIENT_BIT")
+  , (COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT, "RESET_COMMAND_BUFFER_BIT")
+  , (COMMAND_POOL_CREATE_PROTECTED_BIT           , "PROTECTED_BIT")
+  ]
 
 instance Show CommandPoolCreateFlagBits where
-  showsPrec p = \case
-    COMMAND_POOL_CREATE_TRANSIENT_BIT -> showString "COMMAND_POOL_CREATE_TRANSIENT_BIT"
-    COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT -> showString "COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT"
-    COMMAND_POOL_CREATE_PROTECTED_BIT -> showString "COMMAND_POOL_CREATE_PROTECTED_BIT"
-    CommandPoolCreateFlagBits x -> showParen (p >= 11) (showString "CommandPoolCreateFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableCommandPoolCreateFlagBits of
+    Just s -> showString enumPrefixCommandPoolCreateFlagBits . showString s
+    Nothing ->
+      let CommandPoolCreateFlagBits x = e
+      in  showParen (p >= 11) (showString conNameCommandPoolCreateFlagBits . showString " 0x" . showHex x)
 
 instance Read CommandPoolCreateFlagBits where
-  readPrec = parens (choose [("COMMAND_POOL_CREATE_TRANSIENT_BIT", pure COMMAND_POOL_CREATE_TRANSIENT_BIT)
-                            , ("COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT", pure COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT)
-                            , ("COMMAND_POOL_CREATE_PROTECTED_BIT", pure COMMAND_POOL_CREATE_PROTECTED_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CommandPoolCreateFlagBits")
-                       v <- step readPrec
-                       pure (CommandPoolCreateFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixCommandPoolCreateFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableCommandPoolCreateFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameCommandPoolCreateFlagBits)
+            v <- step readPrec
+            pure (CommandPoolCreateFlagBits v)
+          )
+    )
 

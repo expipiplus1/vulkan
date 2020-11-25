@@ -6,13 +6,18 @@ module Vulkan.Core11.Enums.SemaphoreImportFlagBits  ( SemaphoreImportFlags
                                                                              )
                                                     ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -43,16 +48,36 @@ newtype SemaphoreImportFlagBits = SemaphoreImportFlagBits Flags
 -- regardless of the permanence of @handleType@.
 pattern SEMAPHORE_IMPORT_TEMPORARY_BIT = SemaphoreImportFlagBits 0x00000001
 
+conNameSemaphoreImportFlagBits :: String
+conNameSemaphoreImportFlagBits = "SemaphoreImportFlagBits"
+
+enumPrefixSemaphoreImportFlagBits :: String
+enumPrefixSemaphoreImportFlagBits = "SEMAPHORE_IMPORT_TEMPORARY_BIT"
+
+showTableSemaphoreImportFlagBits :: [(SemaphoreImportFlagBits, String)]
+showTableSemaphoreImportFlagBits = [(SEMAPHORE_IMPORT_TEMPORARY_BIT, "")]
+
 instance Show SemaphoreImportFlagBits where
-  showsPrec p = \case
-    SEMAPHORE_IMPORT_TEMPORARY_BIT -> showString "SEMAPHORE_IMPORT_TEMPORARY_BIT"
-    SemaphoreImportFlagBits x -> showParen (p >= 11) (showString "SemaphoreImportFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableSemaphoreImportFlagBits of
+    Just s -> showString enumPrefixSemaphoreImportFlagBits . showString s
+    Nothing ->
+      let SemaphoreImportFlagBits x = e
+      in  showParen (p >= 11) (showString conNameSemaphoreImportFlagBits . showString " 0x" . showHex x)
 
 instance Read SemaphoreImportFlagBits where
-  readPrec = parens (choose [("SEMAPHORE_IMPORT_TEMPORARY_BIT", pure SEMAPHORE_IMPORT_TEMPORARY_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SemaphoreImportFlagBits")
-                       v <- step readPrec
-                       pure (SemaphoreImportFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixSemaphoreImportFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableSemaphoreImportFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameSemaphoreImportFlagBits)
+            v <- step readPrec
+            pure (SemaphoreImportFlagBits v)
+          )
+    )
 

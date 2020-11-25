@@ -4,13 +4,18 @@ module Vulkan.Core10.Enums.InternalAllocationType  (InternalAllocationType( INTE
                                                                           , ..
                                                                           )) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
@@ -32,16 +37,36 @@ newtype InternalAllocationType = InternalAllocationType Int32
 pattern INTERNAL_ALLOCATION_TYPE_EXECUTABLE = InternalAllocationType 0
 {-# complete INTERNAL_ALLOCATION_TYPE_EXECUTABLE :: InternalAllocationType #-}
 
+conNameInternalAllocationType :: String
+conNameInternalAllocationType = "InternalAllocationType"
+
+enumPrefixInternalAllocationType :: String
+enumPrefixInternalAllocationType = "INTERNAL_ALLOCATION_TYPE_EXECUTABLE"
+
+showTableInternalAllocationType :: [(InternalAllocationType, String)]
+showTableInternalAllocationType = [(INTERNAL_ALLOCATION_TYPE_EXECUTABLE, "")]
+
 instance Show InternalAllocationType where
-  showsPrec p = \case
-    INTERNAL_ALLOCATION_TYPE_EXECUTABLE -> showString "INTERNAL_ALLOCATION_TYPE_EXECUTABLE"
-    InternalAllocationType x -> showParen (p >= 11) (showString "InternalAllocationType " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableInternalAllocationType of
+    Just s -> showString enumPrefixInternalAllocationType . showString s
+    Nothing ->
+      let InternalAllocationType x = e
+      in  showParen (p >= 11) (showString conNameInternalAllocationType . showString " " . showsPrec 11 x)
 
 instance Read InternalAllocationType where
-  readPrec = parens (choose [("INTERNAL_ALLOCATION_TYPE_EXECUTABLE", pure INTERNAL_ALLOCATION_TYPE_EXECUTABLE)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "InternalAllocationType")
-                       v <- step readPrec
-                       pure (InternalAllocationType v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixInternalAllocationType
+          asum ((\(e, s) -> e <$ string s) <$> showTableInternalAllocationType)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameInternalAllocationType)
+            v <- step readPrec
+            pure (InternalAllocationType v)
+          )
+    )
 

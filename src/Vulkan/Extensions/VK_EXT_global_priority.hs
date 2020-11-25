@@ -132,7 +132,9 @@ module Vulkan.Extensions.VK_EXT_global_priority  ( DeviceQueueGlobalPriorityCrea
                                                  , pattern EXT_GLOBAL_PRIORITY_EXTENSION_NAME
                                                  ) where
 
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -141,7 +143,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.String (IsString)
@@ -241,11 +246,11 @@ newtype QueueGlobalPriorityEXT = QueueGlobalPriorityEXT Int32
 
 -- | 'QUEUE_GLOBAL_PRIORITY_LOW_EXT' is below the system default. Useful for
 -- non-interactive tasks.
-pattern QUEUE_GLOBAL_PRIORITY_LOW_EXT = QueueGlobalPriorityEXT 128
+pattern QUEUE_GLOBAL_PRIORITY_LOW_EXT      = QueueGlobalPriorityEXT 128
 -- | 'QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT' is the system default priority.
-pattern QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT = QueueGlobalPriorityEXT 256
+pattern QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT   = QueueGlobalPriorityEXT 256
 -- | 'QUEUE_GLOBAL_PRIORITY_HIGH_EXT' is above the system default.
-pattern QUEUE_GLOBAL_PRIORITY_HIGH_EXT = QueueGlobalPriorityEXT 512
+pattern QUEUE_GLOBAL_PRIORITY_HIGH_EXT     = QueueGlobalPriorityEXT 512
 -- | 'QUEUE_GLOBAL_PRIORITY_REALTIME_EXT' is the highest priority. Useful for
 -- critical tasks.
 pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = QueueGlobalPriorityEXT 1024
@@ -254,24 +259,43 @@ pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = QueueGlobalPriorityEXT 1024
              QUEUE_GLOBAL_PRIORITY_HIGH_EXT,
              QUEUE_GLOBAL_PRIORITY_REALTIME_EXT :: QueueGlobalPriorityEXT #-}
 
+conNameQueueGlobalPriorityEXT :: String
+conNameQueueGlobalPriorityEXT = "QueueGlobalPriorityEXT"
+
+enumPrefixQueueGlobalPriorityEXT :: String
+enumPrefixQueueGlobalPriorityEXT = "QUEUE_GLOBAL_PRIORITY_"
+
+showTableQueueGlobalPriorityEXT :: [(QueueGlobalPriorityEXT, String)]
+showTableQueueGlobalPriorityEXT =
+  [ (QUEUE_GLOBAL_PRIORITY_LOW_EXT     , "LOW_EXT")
+  , (QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT  , "MEDIUM_EXT")
+  , (QUEUE_GLOBAL_PRIORITY_HIGH_EXT    , "HIGH_EXT")
+  , (QUEUE_GLOBAL_PRIORITY_REALTIME_EXT, "REALTIME_EXT")
+  ]
+
 instance Show QueueGlobalPriorityEXT where
-  showsPrec p = \case
-    QUEUE_GLOBAL_PRIORITY_LOW_EXT -> showString "QUEUE_GLOBAL_PRIORITY_LOW_EXT"
-    QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT -> showString "QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT"
-    QUEUE_GLOBAL_PRIORITY_HIGH_EXT -> showString "QUEUE_GLOBAL_PRIORITY_HIGH_EXT"
-    QUEUE_GLOBAL_PRIORITY_REALTIME_EXT -> showString "QUEUE_GLOBAL_PRIORITY_REALTIME_EXT"
-    QueueGlobalPriorityEXT x -> showParen (p >= 11) (showString "QueueGlobalPriorityEXT " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableQueueGlobalPriorityEXT of
+    Just s -> showString enumPrefixQueueGlobalPriorityEXT . showString s
+    Nothing ->
+      let QueueGlobalPriorityEXT x = e
+      in  showParen (p >= 11) (showString conNameQueueGlobalPriorityEXT . showString " " . showsPrec 11 x)
 
 instance Read QueueGlobalPriorityEXT where
-  readPrec = parens (choose [("QUEUE_GLOBAL_PRIORITY_LOW_EXT", pure QUEUE_GLOBAL_PRIORITY_LOW_EXT)
-                            , ("QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT", pure QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT)
-                            , ("QUEUE_GLOBAL_PRIORITY_HIGH_EXT", pure QUEUE_GLOBAL_PRIORITY_HIGH_EXT)
-                            , ("QUEUE_GLOBAL_PRIORITY_REALTIME_EXT", pure QUEUE_GLOBAL_PRIORITY_REALTIME_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "QueueGlobalPriorityEXT")
-                       v <- step readPrec
-                       pure (QueueGlobalPriorityEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixQueueGlobalPriorityEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableQueueGlobalPriorityEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameQueueGlobalPriorityEXT)
+            v <- step readPrec
+            pure (QueueGlobalPriorityEXT v)
+          )
+    )
 
 
 type EXT_GLOBAL_PRIORITY_SPEC_VERSION = 2

@@ -119,7 +119,9 @@ module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurf
 
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -131,7 +133,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -408,18 +413,38 @@ newtype SurfaceCounterFlagBitsEXT = SurfaceCounterFlagBitsEXT Flags
 -- with the surface.
 pattern SURFACE_COUNTER_VBLANK_BIT_EXT = SurfaceCounterFlagBitsEXT 0x00000001
 
+conNameSurfaceCounterFlagBitsEXT :: String
+conNameSurfaceCounterFlagBitsEXT = "SurfaceCounterFlagBitsEXT"
+
+enumPrefixSurfaceCounterFlagBitsEXT :: String
+enumPrefixSurfaceCounterFlagBitsEXT = "SURFACE_COUNTER_VBLANK_BIT_EXT"
+
+showTableSurfaceCounterFlagBitsEXT :: [(SurfaceCounterFlagBitsEXT, String)]
+showTableSurfaceCounterFlagBitsEXT = [(SURFACE_COUNTER_VBLANK_BIT_EXT, "")]
+
 instance Show SurfaceCounterFlagBitsEXT where
-  showsPrec p = \case
-    SURFACE_COUNTER_VBLANK_BIT_EXT -> showString "SURFACE_COUNTER_VBLANK_BIT_EXT"
-    SurfaceCounterFlagBitsEXT x -> showParen (p >= 11) (showString "SurfaceCounterFlagBitsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTableSurfaceCounterFlagBitsEXT of
+    Just s -> showString enumPrefixSurfaceCounterFlagBitsEXT . showString s
+    Nothing ->
+      let SurfaceCounterFlagBitsEXT x = e
+      in  showParen (p >= 11) (showString conNameSurfaceCounterFlagBitsEXT . showString " 0x" . showHex x)
 
 instance Read SurfaceCounterFlagBitsEXT where
-  readPrec = parens (choose [("SURFACE_COUNTER_VBLANK_BIT_EXT", pure SURFACE_COUNTER_VBLANK_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SurfaceCounterFlagBitsEXT")
-                       v <- step readPrec
-                       pure (SurfaceCounterFlagBitsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixSurfaceCounterFlagBitsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableSurfaceCounterFlagBitsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameSurfaceCounterFlagBitsEXT)
+            v <- step readPrec
+            pure (SurfaceCounterFlagBitsEXT v)
+          )
+    )
 
 
 type EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION = 1

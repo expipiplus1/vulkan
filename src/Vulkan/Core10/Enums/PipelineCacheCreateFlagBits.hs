@@ -6,13 +6,18 @@ module Vulkan.Core10.Enums.PipelineCacheCreateFlagBits  ( PipelineCacheCreateFla
                                                                                      )
                                                         ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -42,16 +47,36 @@ newtype PipelineCacheCreateFlagBits = PipelineCacheCreateFlagBits Flags
 -- allowed.
 pattern PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT = PipelineCacheCreateFlagBits 0x00000001
 
+conNamePipelineCacheCreateFlagBits :: String
+conNamePipelineCacheCreateFlagBits = "PipelineCacheCreateFlagBits"
+
+enumPrefixPipelineCacheCreateFlagBits :: String
+enumPrefixPipelineCacheCreateFlagBits = "PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT"
+
+showTablePipelineCacheCreateFlagBits :: [(PipelineCacheCreateFlagBits, String)]
+showTablePipelineCacheCreateFlagBits = [(PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT, "")]
+
 instance Show PipelineCacheCreateFlagBits where
-  showsPrec p = \case
-    PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT -> showString "PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT"
-    PipelineCacheCreateFlagBits x -> showParen (p >= 11) (showString "PipelineCacheCreateFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTablePipelineCacheCreateFlagBits of
+    Just s -> showString enumPrefixPipelineCacheCreateFlagBits . showString s
+    Nothing ->
+      let PipelineCacheCreateFlagBits x = e
+      in  showParen (p >= 11) (showString conNamePipelineCacheCreateFlagBits . showString " 0x" . showHex x)
 
 instance Read PipelineCacheCreateFlagBits where
-  readPrec = parens (choose [("PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT", pure PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCacheCreateFlagBits")
-                       v <- step readPrec
-                       pure (PipelineCacheCreateFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixPipelineCacheCreateFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineCacheCreateFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNamePipelineCacheCreateFlagBits)
+            v <- step readPrec
+            pure (PipelineCacheCreateFlagBits v)
+          )
+    )
 

@@ -202,9 +202,11 @@ module Vulkan.Extensions.VK_KHR_wayland_surface  ( createWaylandSurfaceKHR
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -216,7 +218,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -479,17 +484,38 @@ newtype WaylandSurfaceCreateFlagsKHR = WaylandSurfaceCreateFlagsKHR Flags
 
 
 
+conNameWaylandSurfaceCreateFlagsKHR :: String
+conNameWaylandSurfaceCreateFlagsKHR = "WaylandSurfaceCreateFlagsKHR"
+
+enumPrefixWaylandSurfaceCreateFlagsKHR :: String
+enumPrefixWaylandSurfaceCreateFlagsKHR = ""
+
+showTableWaylandSurfaceCreateFlagsKHR :: [(WaylandSurfaceCreateFlagsKHR, String)]
+showTableWaylandSurfaceCreateFlagsKHR = []
+
 instance Show WaylandSurfaceCreateFlagsKHR where
-  showsPrec p = \case
-    WaylandSurfaceCreateFlagsKHR x -> showParen (p >= 11) (showString "WaylandSurfaceCreateFlagsKHR 0x" . showHex x)
+  showsPrec p e = case lookup e showTableWaylandSurfaceCreateFlagsKHR of
+    Just s -> showString enumPrefixWaylandSurfaceCreateFlagsKHR . showString s
+    Nothing ->
+      let WaylandSurfaceCreateFlagsKHR x = e
+      in  showParen (p >= 11) (showString conNameWaylandSurfaceCreateFlagsKHR . showString " 0x" . showHex x)
 
 instance Read WaylandSurfaceCreateFlagsKHR where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "WaylandSurfaceCreateFlagsKHR")
-                       v <- step readPrec
-                       pure (WaylandSurfaceCreateFlagsKHR v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixWaylandSurfaceCreateFlagsKHR
+          asum ((\(e, s) -> e <$ string s) <$> showTableWaylandSurfaceCreateFlagsKHR)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameWaylandSurfaceCreateFlagsKHR)
+            v <- step readPrec
+            pure (WaylandSurfaceCreateFlagsKHR v)
+          )
+    )
 
 
 type KHR_WAYLAND_SURFACE_SPEC_VERSION = 6

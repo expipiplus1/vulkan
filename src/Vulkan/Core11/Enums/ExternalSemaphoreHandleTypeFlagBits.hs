@@ -11,13 +11,18 @@ module Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits  ( pattern EXTERN
                                                                                                      )
                                                                 ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -86,14 +91,14 @@ newtype ExternalSemaphoreHandleTypeFlagBits = ExternalSemaphoreHandleTypeFlagBit
 -- Additionally, it /must/ be transportable over a socket using an
 -- @SCM_RIGHTS@ control message. It owns a reference to the underlying
 -- synchronization primitive represented by its Vulkan semaphore object.
-pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000001
+pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT        = ExternalSemaphoreHandleTypeFlagBits 0x00000001
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT' specifies an NT handle
 -- that has only limited valid usage outside of Vulkan and other compatible
 -- APIs. It /must/ be compatible with the functions @DuplicateHandle@,
 -- @CloseHandle@, @CompareObjectHandles@, @GetHandleInformation@, and
 -- @SetHandleInformation@. It owns a reference to the underlying
 -- synchronization primitive represented by its Vulkan semaphore object.
-pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000002
+pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT     = ExternalSemaphoreHandleTypeFlagBits 0x00000002
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' specifies a global
 -- share handle that has only limited valid usage outside of Vulkan and
 -- other compatible APIs. It is not compatible with any native APIs. It
@@ -107,7 +112,7 @@ pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = ExternalSemaphoreH
 -- 12 fence, or @ID3D11Device5@::'Vulkan.Core10.Fence.createFence' by a
 -- Direct3D 11 fence. It owns a reference to the underlying synchronization
 -- primitive associated with the Direct3D fence.
-pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000008
+pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT      = ExternalSemaphoreHandleTypeFlagBits 0x00000008
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT' specifies a POSIX file
 -- descriptor handle to a Linux Sync File or Android Fence object. It can
 -- be used with any native API accepting a valid sync file or fence as
@@ -115,26 +120,44 @@ pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT = ExternalSemaphoreHandle
 -- associated with the file descriptor. Implementations which support
 -- importing this handle type /must/ accept any type of sync or fence FD
 -- supported by the native system they are running on.
-pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000010
+pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT          = ExternalSemaphoreHandleTypeFlagBits 0x00000010
+
+conNameExternalSemaphoreHandleTypeFlagBits :: String
+conNameExternalSemaphoreHandleTypeFlagBits = "ExternalSemaphoreHandleTypeFlagBits"
+
+enumPrefixExternalSemaphoreHandleTypeFlagBits :: String
+enumPrefixExternalSemaphoreHandleTypeFlagBits = "EXTERNAL_SEMAPHORE_HANDLE_TYPE_"
+
+showTableExternalSemaphoreHandleTypeFlagBits :: [(ExternalSemaphoreHandleTypeFlagBits, String)]
+showTableExternalSemaphoreHandleTypeFlagBits =
+  [ (EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT       , "OPAQUE_FD_BIT")
+  , (EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT    , "OPAQUE_WIN32_BIT")
+  , (EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT, "OPAQUE_WIN32_KMT_BIT")
+  , (EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT     , "D3D12_FENCE_BIT")
+  , (EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT         , "SYNC_FD_BIT")
+  ]
 
 instance Show ExternalSemaphoreHandleTypeFlagBits where
-  showsPrec p = \case
-    EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT -> showString "EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT"
-    EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT -> showString "EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT"
-    EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT -> showString "EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"
-    EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT -> showString "EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT"
-    EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT -> showString "EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT"
-    ExternalSemaphoreHandleTypeFlagBits x -> showParen (p >= 11) (showString "ExternalSemaphoreHandleTypeFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableExternalSemaphoreHandleTypeFlagBits of
+    Just s -> showString enumPrefixExternalSemaphoreHandleTypeFlagBits . showString s
+    Nothing ->
+      let ExternalSemaphoreHandleTypeFlagBits x = e
+      in  showParen (p >= 11) (showString conNameExternalSemaphoreHandleTypeFlagBits . showString " 0x" . showHex x)
 
 instance Read ExternalSemaphoreHandleTypeFlagBits where
-  readPrec = parens (choose [("EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT", pure EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT)
-                            , ("EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT", pure EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT)
-                            , ("EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT", pure EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT)
-                            , ("EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT", pure EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT)
-                            , ("EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT", pure EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ExternalSemaphoreHandleTypeFlagBits")
-                       v <- step readPrec
-                       pure (ExternalSemaphoreHandleTypeFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixExternalSemaphoreHandleTypeFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableExternalSemaphoreHandleTypeFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameExternalSemaphoreHandleTypeFlagBits)
+            v <- step readPrec
+            pure (ExternalSemaphoreHandleTypeFlagBits v)
+          )
+    )
 

@@ -116,7 +116,9 @@ module Vulkan.Extensions.VK_EXT_depth_clip_enable  ( PhysicalDeviceDepthClipEnab
                                                    , pattern EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME
                                                    ) where
 
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -125,7 +127,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -302,17 +307,41 @@ newtype PipelineRasterizationDepthClipStateCreateFlagsEXT = PipelineRasterizatio
 
 
 
+conNamePipelineRasterizationDepthClipStateCreateFlagsEXT :: String
+conNamePipelineRasterizationDepthClipStateCreateFlagsEXT = "PipelineRasterizationDepthClipStateCreateFlagsEXT"
+
+enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT :: String
+enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT = ""
+
+showTablePipelineRasterizationDepthClipStateCreateFlagsEXT
+  :: [(PipelineRasterizationDepthClipStateCreateFlagsEXT, String)]
+showTablePipelineRasterizationDepthClipStateCreateFlagsEXT = []
+
 instance Show PipelineRasterizationDepthClipStateCreateFlagsEXT where
-  showsPrec p = \case
-    PipelineRasterizationDepthClipStateCreateFlagsEXT x -> showParen (p >= 11) (showString "PipelineRasterizationDepthClipStateCreateFlagsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTablePipelineRasterizationDepthClipStateCreateFlagsEXT of
+    Just s -> showString enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT . showString s
+    Nothing ->
+      let PipelineRasterizationDepthClipStateCreateFlagsEXT x = e
+      in  showParen
+            (p >= 11)
+            (showString conNamePipelineRasterizationDepthClipStateCreateFlagsEXT . showString " 0x" . showHex x)
 
 instance Read PipelineRasterizationDepthClipStateCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineRasterizationDepthClipStateCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (PipelineRasterizationDepthClipStateCreateFlagsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineRasterizationDepthClipStateCreateFlagsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNamePipelineRasterizationDepthClipStateCreateFlagsEXT)
+            v <- step readPrec
+            pure (PipelineRasterizationDepthClipStateCreateFlagsEXT v)
+          )
+    )
 
 
 type EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION = 1

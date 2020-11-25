@@ -205,7 +205,9 @@ module Vulkan.Extensions.VK_NV_fragment_shading_rate_enums  ( cmdSetFragmentShad
 import Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -216,7 +218,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -707,7 +712,7 @@ newtype FragmentShadingRateNV = FragmentShadingRateNV Int32
 
 -- | 'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV' specifies a fragment
 -- size of 1x1 pixels.
-pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV = FragmentShadingRateNV 0
+pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV      = FragmentShadingRateNV 0
 -- | 'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV' specifies a
 -- fragment size of 1x2 pixels.
 pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV = FragmentShadingRateNV 1
@@ -728,21 +733,21 @@ pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X2_PIXELS_NV = FragmentShadingRa
 pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X4_PIXELS_NV = FragmentShadingRateNV 10
 -- | 'FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV' specifies a fragment
 -- size of 1x1 pixels, with two fragment shader invocations per fragment.
-pattern FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV = FragmentShadingRateNV 11
+pattern FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV     = FragmentShadingRateNV 11
 -- | 'FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV' specifies a fragment
 -- size of 1x1 pixels, with four fragment shader invocations per fragment.
-pattern FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV = FragmentShadingRateNV 12
+pattern FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV     = FragmentShadingRateNV 12
 -- | 'FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV' specifies a fragment
 -- size of 1x1 pixels, with eight fragment shader invocations per fragment.
-pattern FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV = FragmentShadingRateNV 13
+pattern FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV     = FragmentShadingRateNV 13
 -- | 'FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV' specifies a fragment
 -- size of 1x1 pixels, with sixteen fragment shader invocations per
 -- fragment.
-pattern FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV = FragmentShadingRateNV 14
+pattern FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV    = FragmentShadingRateNV 14
 -- | 'FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV' specifies that any portions of
 -- a primitive that use that shading rate should be discarded without
 -- invoking any fragment shader.
-pattern FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV = FragmentShadingRateNV 15
+pattern FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV              = FragmentShadingRateNV 15
 {-# complete FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV,
              FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV,
              FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV,
@@ -756,40 +761,51 @@ pattern FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV = FragmentShadingRateNV 15
              FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV,
              FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV :: FragmentShadingRateNV #-}
 
+conNameFragmentShadingRateNV :: String
+conNameFragmentShadingRateNV = "FragmentShadingRateNV"
+
+enumPrefixFragmentShadingRateNV :: String
+enumPrefixFragmentShadingRateNV = "FRAGMENT_SHADING_RATE_"
+
+showTableFragmentShadingRateNV :: [(FragmentShadingRateNV, String)]
+showTableFragmentShadingRateNV =
+  [ (FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV     , "1_INVOCATION_PER_PIXEL_NV")
+  , (FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV, "1_INVOCATION_PER_1X2_PIXELS_NV")
+  , (FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV, "1_INVOCATION_PER_2X1_PIXELS_NV")
+  , (FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X2_PIXELS_NV, "1_INVOCATION_PER_2X2_PIXELS_NV")
+  , (FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X4_PIXELS_NV, "1_INVOCATION_PER_2X4_PIXELS_NV")
+  , (FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X2_PIXELS_NV, "1_INVOCATION_PER_4X2_PIXELS_NV")
+  , (FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X4_PIXELS_NV, "1_INVOCATION_PER_4X4_PIXELS_NV")
+  , (FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV    , "2_INVOCATIONS_PER_PIXEL_NV")
+  , (FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV    , "4_INVOCATIONS_PER_PIXEL_NV")
+  , (FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV    , "8_INVOCATIONS_PER_PIXEL_NV")
+  , (FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV   , "16_INVOCATIONS_PER_PIXEL_NV")
+  , (FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV             , "NO_INVOCATIONS_NV")
+  ]
+
 instance Show FragmentShadingRateNV where
-  showsPrec p = \case
-    FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV -> showString "FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV"
-    FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV -> showString "FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV"
-    FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV -> showString "FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV"
-    FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X2_PIXELS_NV -> showString "FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X2_PIXELS_NV"
-    FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X4_PIXELS_NV -> showString "FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X4_PIXELS_NV"
-    FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X2_PIXELS_NV -> showString "FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X2_PIXELS_NV"
-    FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X4_PIXELS_NV -> showString "FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X4_PIXELS_NV"
-    FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV -> showString "FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV"
-    FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV -> showString "FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV"
-    FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV -> showString "FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV"
-    FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV -> showString "FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV"
-    FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV -> showString "FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV"
-    FragmentShadingRateNV x -> showParen (p >= 11) (showString "FragmentShadingRateNV " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableFragmentShadingRateNV of
+    Just s -> showString enumPrefixFragmentShadingRateNV . showString s
+    Nothing ->
+      let FragmentShadingRateNV x = e
+      in  showParen (p >= 11) (showString conNameFragmentShadingRateNV . showString " " . showsPrec 11 x)
 
 instance Read FragmentShadingRateNV where
-  readPrec = parens (choose [("FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV", pure FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV)
-                            , ("FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV", pure FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV)
-                            , ("FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV", pure FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV)
-                            , ("FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X2_PIXELS_NV", pure FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X2_PIXELS_NV)
-                            , ("FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X4_PIXELS_NV", pure FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X4_PIXELS_NV)
-                            , ("FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X2_PIXELS_NV", pure FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X2_PIXELS_NV)
-                            , ("FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X4_PIXELS_NV", pure FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X4_PIXELS_NV)
-                            , ("FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV", pure FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV)
-                            , ("FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV", pure FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV)
-                            , ("FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV", pure FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV)
-                            , ("FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV", pure FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV)
-                            , ("FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV", pure FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "FragmentShadingRateNV")
-                       v <- step readPrec
-                       pure (FragmentShadingRateNV v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixFragmentShadingRateNV
+          asum ((\(e, s) -> e <$ string s) <$> showTableFragmentShadingRateNV)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameFragmentShadingRateNV)
+            v <- step readPrec
+            pure (FragmentShadingRateNV v)
+          )
+    )
 
 
 -- | VkFragmentShadingRateTypeNV - Enumeration with fragment shading rate
@@ -816,24 +832,43 @@ pattern FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV = FragmentShadingRateTypeNV 
 -- any state specified by the
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'
 -- structure should be ignored.
-pattern FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV = FragmentShadingRateTypeNV 1
+pattern FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV         = FragmentShadingRateTypeNV 1
 {-# complete FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV,
              FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV :: FragmentShadingRateTypeNV #-}
 
+conNameFragmentShadingRateTypeNV :: String
+conNameFragmentShadingRateTypeNV = "FragmentShadingRateTypeNV"
+
+enumPrefixFragmentShadingRateTypeNV :: String
+enumPrefixFragmentShadingRateTypeNV = "FRAGMENT_SHADING_RATE_TYPE_"
+
+showTableFragmentShadingRateTypeNV :: [(FragmentShadingRateTypeNV, String)]
+showTableFragmentShadingRateTypeNV =
+  [(FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV, "FRAGMENT_SIZE_NV"), (FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV, "ENUMS_NV")]
+
 instance Show FragmentShadingRateTypeNV where
-  showsPrec p = \case
-    FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV -> showString "FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV"
-    FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV -> showString "FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV"
-    FragmentShadingRateTypeNV x -> showParen (p >= 11) (showString "FragmentShadingRateTypeNV " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableFragmentShadingRateTypeNV of
+    Just s -> showString enumPrefixFragmentShadingRateTypeNV . showString s
+    Nothing ->
+      let FragmentShadingRateTypeNV x = e
+      in  showParen (p >= 11) (showString conNameFragmentShadingRateTypeNV . showString " " . showsPrec 11 x)
 
 instance Read FragmentShadingRateTypeNV where
-  readPrec = parens (choose [("FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV", pure FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV)
-                            , ("FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV", pure FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "FragmentShadingRateTypeNV")
-                       v <- step readPrec
-                       pure (FragmentShadingRateTypeNV v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixFragmentShadingRateTypeNV
+          asum ((\(e, s) -> e <$ string s) <$> showTableFragmentShadingRateTypeNV)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameFragmentShadingRateTypeNV)
+            v <- step readPrec
+            pure (FragmentShadingRateTypeNV v)
+          )
+    )
 
 
 type NV_FRAGMENT_SHADING_RATE_ENUMS_SPEC_VERSION = 1

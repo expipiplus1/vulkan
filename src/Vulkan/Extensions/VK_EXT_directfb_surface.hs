@@ -107,9 +107,11 @@ module Vulkan.Extensions.VK_EXT_directfb_surface  ( createDirectFBSurfaceEXT
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -121,7 +123,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -385,17 +390,38 @@ newtype DirectFBSurfaceCreateFlagsEXT = DirectFBSurfaceCreateFlagsEXT Flags
 
 
 
+conNameDirectFBSurfaceCreateFlagsEXT :: String
+conNameDirectFBSurfaceCreateFlagsEXT = "DirectFBSurfaceCreateFlagsEXT"
+
+enumPrefixDirectFBSurfaceCreateFlagsEXT :: String
+enumPrefixDirectFBSurfaceCreateFlagsEXT = ""
+
+showTableDirectFBSurfaceCreateFlagsEXT :: [(DirectFBSurfaceCreateFlagsEXT, String)]
+showTableDirectFBSurfaceCreateFlagsEXT = []
+
 instance Show DirectFBSurfaceCreateFlagsEXT where
-  showsPrec p = \case
-    DirectFBSurfaceCreateFlagsEXT x -> showParen (p >= 11) (showString "DirectFBSurfaceCreateFlagsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTableDirectFBSurfaceCreateFlagsEXT of
+    Just s -> showString enumPrefixDirectFBSurfaceCreateFlagsEXT . showString s
+    Nothing ->
+      let DirectFBSurfaceCreateFlagsEXT x = e
+      in  showParen (p >= 11) (showString conNameDirectFBSurfaceCreateFlagsEXT . showString " 0x" . showHex x)
 
 instance Read DirectFBSurfaceCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DirectFBSurfaceCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (DirectFBSurfaceCreateFlagsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDirectFBSurfaceCreateFlagsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableDirectFBSurfaceCreateFlagsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDirectFBSurfaceCreateFlagsEXT)
+            v <- step readPrec
+            pure (DirectFBSurfaceCreateFlagsEXT v)
+          )
+    )
 
 
 type EXT_DIRECTFB_SURFACE_SPEC_VERSION = 1

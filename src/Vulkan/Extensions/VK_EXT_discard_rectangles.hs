@@ -140,7 +140,9 @@ module Vulkan.Extensions.VK_EXT_discard_rectangles  ( cmdSetDiscardRectangleEXT
 
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -152,7 +154,10 @@ import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -474,17 +479,39 @@ newtype PipelineDiscardRectangleStateCreateFlagsEXT = PipelineDiscardRectangleSt
 
 
 
+conNamePipelineDiscardRectangleStateCreateFlagsEXT :: String
+conNamePipelineDiscardRectangleStateCreateFlagsEXT = "PipelineDiscardRectangleStateCreateFlagsEXT"
+
+enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT :: String
+enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT = ""
+
+showTablePipelineDiscardRectangleStateCreateFlagsEXT :: [(PipelineDiscardRectangleStateCreateFlagsEXT, String)]
+showTablePipelineDiscardRectangleStateCreateFlagsEXT = []
+
 instance Show PipelineDiscardRectangleStateCreateFlagsEXT where
-  showsPrec p = \case
-    PipelineDiscardRectangleStateCreateFlagsEXT x -> showParen (p >= 11) (showString "PipelineDiscardRectangleStateCreateFlagsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTablePipelineDiscardRectangleStateCreateFlagsEXT of
+    Just s -> showString enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT . showString s
+    Nothing ->
+      let PipelineDiscardRectangleStateCreateFlagsEXT x = e
+      in  showParen (p >= 11)
+                    (showString conNamePipelineDiscardRectangleStateCreateFlagsEXT . showString " 0x" . showHex x)
 
 instance Read PipelineDiscardRectangleStateCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineDiscardRectangleStateCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (PipelineDiscardRectangleStateCreateFlagsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineDiscardRectangleStateCreateFlagsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNamePipelineDiscardRectangleStateCreateFlagsEXT)
+            v <- step readPrec
+            pure (PipelineDiscardRectangleStateCreateFlagsEXT v)
+          )
+    )
 
 
 -- | VkDiscardRectangleModeEXT - Specify the discard rectangle mode
@@ -504,20 +531,39 @@ pattern DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = DiscardRectangleModeEXT 1
 {-# complete DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT,
              DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT :: DiscardRectangleModeEXT #-}
 
+conNameDiscardRectangleModeEXT :: String
+conNameDiscardRectangleModeEXT = "DiscardRectangleModeEXT"
+
+enumPrefixDiscardRectangleModeEXT :: String
+enumPrefixDiscardRectangleModeEXT = "DISCARD_RECTANGLE_MODE_"
+
+showTableDiscardRectangleModeEXT :: [(DiscardRectangleModeEXT, String)]
+showTableDiscardRectangleModeEXT =
+  [(DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT, "INCLUSIVE_EXT"), (DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT, "EXCLUSIVE_EXT")]
+
 instance Show DiscardRectangleModeEXT where
-  showsPrec p = \case
-    DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT -> showString "DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT"
-    DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT -> showString "DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT"
-    DiscardRectangleModeEXT x -> showParen (p >= 11) (showString "DiscardRectangleModeEXT " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableDiscardRectangleModeEXT of
+    Just s -> showString enumPrefixDiscardRectangleModeEXT . showString s
+    Nothing ->
+      let DiscardRectangleModeEXT x = e
+      in  showParen (p >= 11) (showString conNameDiscardRectangleModeEXT . showString " " . showsPrec 11 x)
 
 instance Read DiscardRectangleModeEXT where
-  readPrec = parens (choose [("DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT", pure DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT)
-                            , ("DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT", pure DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DiscardRectangleModeEXT")
-                       v <- step readPrec
-                       pure (DiscardRectangleModeEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDiscardRectangleModeEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableDiscardRectangleModeEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDiscardRectangleModeEXT)
+            v <- step readPrec
+            pure (DiscardRectangleModeEXT v)
+          )
+    )
 
 
 type EXT_DISCARD_RECTANGLES_SPEC_VERSION = 1

@@ -2,13 +2,18 @@
 -- No documentation found for Chapter "PipelineColorBlendStateCreateFlags"
 module Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags  (PipelineColorBlendStateCreateFlags(..)) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -33,15 +38,36 @@ newtype PipelineColorBlendStateCreateFlags = PipelineColorBlendStateCreateFlags 
 
 
 
+conNamePipelineColorBlendStateCreateFlags :: String
+conNamePipelineColorBlendStateCreateFlags = "PipelineColorBlendStateCreateFlags"
+
+enumPrefixPipelineColorBlendStateCreateFlags :: String
+enumPrefixPipelineColorBlendStateCreateFlags = ""
+
+showTablePipelineColorBlendStateCreateFlags :: [(PipelineColorBlendStateCreateFlags, String)]
+showTablePipelineColorBlendStateCreateFlags = []
+
 instance Show PipelineColorBlendStateCreateFlags where
-  showsPrec p = \case
-    PipelineColorBlendStateCreateFlags x -> showParen (p >= 11) (showString "PipelineColorBlendStateCreateFlags 0x" . showHex x)
+  showsPrec p e = case lookup e showTablePipelineColorBlendStateCreateFlags of
+    Just s -> showString enumPrefixPipelineColorBlendStateCreateFlags . showString s
+    Nothing ->
+      let PipelineColorBlendStateCreateFlags x = e
+      in  showParen (p >= 11) (showString conNamePipelineColorBlendStateCreateFlags . showString " 0x" . showHex x)
 
 instance Read PipelineColorBlendStateCreateFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineColorBlendStateCreateFlags")
-                       v <- step readPrec
-                       pure (PipelineColorBlendStateCreateFlags v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixPipelineColorBlendStateCreateFlags
+          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineColorBlendStateCreateFlags)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNamePipelineColorBlendStateCreateFlags)
+            v <- step readPrec
+            pure (PipelineColorBlendStateCreateFlags v)
+          )
+    )
 

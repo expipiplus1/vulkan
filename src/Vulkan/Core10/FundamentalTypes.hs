@@ -20,7 +20,9 @@ module Vulkan.Core10.FundamentalTypes  ( boolToBool32
                                        ) where
 
 import Data.Bool (bool)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
 import GHC.Read (expectP)
@@ -28,7 +30,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Typeable (Typeable)
@@ -537,24 +542,40 @@ newtype Bool32 = Bool32 Int32
 -- No documentation found for Nested "VkBool32" "VK_FALSE"
 pattern FALSE = Bool32 0
 -- No documentation found for Nested "VkBool32" "VK_TRUE"
-pattern TRUE = Bool32 1
+pattern TRUE  = Bool32 1
 {-# complete FALSE,
              TRUE :: Bool32 #-}
 
+conNameBool32 :: String
+conNameBool32 = "Bool32"
+
+enumPrefixBool32 :: String
+enumPrefixBool32 = ""
+
+showTableBool32 :: [(Bool32, String)]
+showTableBool32 = [(FALSE, "FALSE"), (TRUE, "TRUE")]
+
 instance Show Bool32 where
-  showsPrec p = \case
-    FALSE -> showString "FALSE"
-    TRUE -> showString "TRUE"
-    Bool32 x -> showParen (p >= 11) (showString "Bool32 " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableBool32 of
+    Just s  -> showString enumPrefixBool32 . showString s
+    Nothing -> let Bool32 x = e in showParen (p >= 11) (showString conNameBool32 . showString " " . showsPrec 11 x)
 
 instance Read Bool32 where
-  readPrec = parens (choose [("FALSE", pure FALSE)
-                            , ("TRUE", pure TRUE)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "Bool32")
-                       v <- step readPrec
-                       pure (Bool32 v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixBool32
+          asum ((\(e, s) -> e <$ string s) <$> showTableBool32)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameBool32)
+            v <- step readPrec
+            pure (Bool32 v)
+          )
+    )
 
 
 -- | VkSampleMask - Mask of sample coverage information

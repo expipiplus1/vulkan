@@ -6,13 +6,18 @@ module Vulkan.Core10.Enums.ImageType  (ImageType( IMAGE_TYPE_1D
                                                 , ..
                                                 )) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
@@ -43,20 +48,35 @@ pattern IMAGE_TYPE_3D = ImageType 2
              IMAGE_TYPE_2D,
              IMAGE_TYPE_3D :: ImageType #-}
 
+conNameImageType :: String
+conNameImageType = "ImageType"
+
+enumPrefixImageType :: String
+enumPrefixImageType = "IMAGE_TYPE_"
+
+showTableImageType :: [(ImageType, String)]
+showTableImageType = [(IMAGE_TYPE_1D, "1D"), (IMAGE_TYPE_2D, "2D"), (IMAGE_TYPE_3D, "3D")]
+
 instance Show ImageType where
-  showsPrec p = \case
-    IMAGE_TYPE_1D -> showString "IMAGE_TYPE_1D"
-    IMAGE_TYPE_2D -> showString "IMAGE_TYPE_2D"
-    IMAGE_TYPE_3D -> showString "IMAGE_TYPE_3D"
-    ImageType x -> showParen (p >= 11) (showString "ImageType " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableImageType of
+    Just s -> showString enumPrefixImageType . showString s
+    Nothing ->
+      let ImageType x = e in showParen (p >= 11) (showString conNameImageType . showString " " . showsPrec 11 x)
 
 instance Read ImageType where
-  readPrec = parens (choose [("IMAGE_TYPE_1D", pure IMAGE_TYPE_1D)
-                            , ("IMAGE_TYPE_2D", pure IMAGE_TYPE_2D)
-                            , ("IMAGE_TYPE_3D", pure IMAGE_TYPE_3D)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ImageType")
-                       v <- step readPrec
-                       pure (ImageType v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixImageType
+          asum ((\(e, s) -> e <$ string s) <$> showTableImageType)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameImageType)
+            v <- step readPrec
+            pure (ImageType v)
+          )
+    )
 

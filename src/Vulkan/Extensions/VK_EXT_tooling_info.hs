@@ -189,9 +189,11 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -203,7 +205,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCString)
@@ -429,14 +434,14 @@ newtype ToolPurposeFlagBitsEXT = ToolPurposeFlagBitsEXT Flags
 
 -- | 'TOOL_PURPOSE_VALIDATION_BIT_EXT' specifies that the tool provides
 -- validation of API usage.
-pattern TOOL_PURPOSE_VALIDATION_BIT_EXT = ToolPurposeFlagBitsEXT 0x00000001
+pattern TOOL_PURPOSE_VALIDATION_BIT_EXT          = ToolPurposeFlagBitsEXT 0x00000001
 -- | 'TOOL_PURPOSE_PROFILING_BIT_EXT' specifies that the tool provides
 -- profiling of API usage.
-pattern TOOL_PURPOSE_PROFILING_BIT_EXT = ToolPurposeFlagBitsEXT 0x00000002
+pattern TOOL_PURPOSE_PROFILING_BIT_EXT           = ToolPurposeFlagBitsEXT 0x00000002
 -- | 'TOOL_PURPOSE_TRACING_BIT_EXT' specifies that the tool is capturing data
 -- about the application’s API usage, including anything from simple
 -- logging to capturing data for later replay.
-pattern TOOL_PURPOSE_TRACING_BIT_EXT = ToolPurposeFlagBitsEXT 0x00000004
+pattern TOOL_PURPOSE_TRACING_BIT_EXT             = ToolPurposeFlagBitsEXT 0x00000004
 -- | 'TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT' specifies that the tool
 -- provides additional API features\/extensions on top of the underlying
 -- implementation.
@@ -444,7 +449,7 @@ pattern TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT = ToolPurposeFlagBitsEXT 0x0000
 -- | 'TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT' specifies that the tool
 -- modifies the API features\/limits\/extensions presented to the
 -- application.
-pattern TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT = ToolPurposeFlagBitsEXT 0x00000010
+pattern TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT  = ToolPurposeFlagBitsEXT 0x00000010
 -- | 'TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT' specifies that the tool consumes
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-debug-markers debug markers>
 -- or
@@ -452,37 +457,53 @@ pattern TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT = ToolPurposeFlagBitsEXT 0x00000
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-queue-labels queue labels>,
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-command-buffer-labels command buffer labels>
-pattern TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT = ToolPurposeFlagBitsEXT 0x00000040
+pattern TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT       = ToolPurposeFlagBitsEXT 0x00000040
 -- | 'TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT' specifies that the tool reports
 -- additional information to the application via callbacks specified by
 -- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT' or
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT'
-pattern TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT = ToolPurposeFlagBitsEXT 0x00000020
+pattern TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT     = ToolPurposeFlagBitsEXT 0x00000020
+
+conNameToolPurposeFlagBitsEXT :: String
+conNameToolPurposeFlagBitsEXT = "ToolPurposeFlagBitsEXT"
+
+enumPrefixToolPurposeFlagBitsEXT :: String
+enumPrefixToolPurposeFlagBitsEXT = "TOOL_PURPOSE_"
+
+showTableToolPurposeFlagBitsEXT :: [(ToolPurposeFlagBitsEXT, String)]
+showTableToolPurposeFlagBitsEXT =
+  [ (TOOL_PURPOSE_VALIDATION_BIT_EXT         , "VALIDATION_BIT_EXT")
+  , (TOOL_PURPOSE_PROFILING_BIT_EXT          , "PROFILING_BIT_EXT")
+  , (TOOL_PURPOSE_TRACING_BIT_EXT            , "TRACING_BIT_EXT")
+  , (TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT, "ADDITIONAL_FEATURES_BIT_EXT")
+  , (TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT , "MODIFYING_FEATURES_BIT_EXT")
+  , (TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT      , "DEBUG_MARKERS_BIT_EXT")
+  , (TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT    , "DEBUG_REPORTING_BIT_EXT")
+  ]
 
 instance Show ToolPurposeFlagBitsEXT where
-  showsPrec p = \case
-    TOOL_PURPOSE_VALIDATION_BIT_EXT -> showString "TOOL_PURPOSE_VALIDATION_BIT_EXT"
-    TOOL_PURPOSE_PROFILING_BIT_EXT -> showString "TOOL_PURPOSE_PROFILING_BIT_EXT"
-    TOOL_PURPOSE_TRACING_BIT_EXT -> showString "TOOL_PURPOSE_TRACING_BIT_EXT"
-    TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT -> showString "TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT"
-    TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT -> showString "TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT"
-    TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT -> showString "TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT"
-    TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT -> showString "TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT"
-    ToolPurposeFlagBitsEXT x -> showParen (p >= 11) (showString "ToolPurposeFlagBitsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTableToolPurposeFlagBitsEXT of
+    Just s -> showString enumPrefixToolPurposeFlagBitsEXT . showString s
+    Nothing ->
+      let ToolPurposeFlagBitsEXT x = e
+      in  showParen (p >= 11) (showString conNameToolPurposeFlagBitsEXT . showString " 0x" . showHex x)
 
 instance Read ToolPurposeFlagBitsEXT where
-  readPrec = parens (choose [("TOOL_PURPOSE_VALIDATION_BIT_EXT", pure TOOL_PURPOSE_VALIDATION_BIT_EXT)
-                            , ("TOOL_PURPOSE_PROFILING_BIT_EXT", pure TOOL_PURPOSE_PROFILING_BIT_EXT)
-                            , ("TOOL_PURPOSE_TRACING_BIT_EXT", pure TOOL_PURPOSE_TRACING_BIT_EXT)
-                            , ("TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT", pure TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT)
-                            , ("TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT", pure TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT)
-                            , ("TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT", pure TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT)
-                            , ("TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT", pure TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ToolPurposeFlagBitsEXT")
-                       v <- step readPrec
-                       pure (ToolPurposeFlagBitsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixToolPurposeFlagBitsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableToolPurposeFlagBitsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameToolPurposeFlagBitsEXT)
+            v <- step readPrec
+            pure (ToolPurposeFlagBitsEXT v)
+          )
+    )
 
 
 type EXT_TOOLING_INFO_SPEC_VERSION = 1

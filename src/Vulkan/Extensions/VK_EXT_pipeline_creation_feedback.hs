@@ -129,7 +129,9 @@ module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback  ( PipelineCreationFe
                                                             , pattern EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME
                                                             ) where
 
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -138,7 +140,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -406,7 +411,8 @@ pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT = PipelineCreationFeedbackFlagB
 -- it gets\" using the pipeline cache provided by the application. If an
 -- implementation uses an internal cache, it is discouraged from setting
 -- this bit as the feedback would be unactionable.
-pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT = PipelineCreationFeedbackFlagBitsEXT 0x00000002
+pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT =
+  PipelineCreationFeedbackFlagBitsEXT 0x00000002
 -- | 'PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT'
 -- indicates that the base pipeline specified by the @basePipelineHandle@
 -- or @basePipelineIndex@ member of the @Vk*PipelineCreateInfo@ structure
@@ -425,22 +431,42 @@ pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT = Pipe
 -- this bit, while a 50% reduction would.
 pattern PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT = PipelineCreationFeedbackFlagBitsEXT 0x00000004
 
+conNamePipelineCreationFeedbackFlagBitsEXT :: String
+conNamePipelineCreationFeedbackFlagBitsEXT = "PipelineCreationFeedbackFlagBitsEXT"
+
+enumPrefixPipelineCreationFeedbackFlagBitsEXT :: String
+enumPrefixPipelineCreationFeedbackFlagBitsEXT = "PIPELINE_CREATION_FEEDBACK_"
+
+showTablePipelineCreationFeedbackFlagBitsEXT :: [(PipelineCreationFeedbackFlagBitsEXT, String)]
+showTablePipelineCreationFeedbackFlagBitsEXT =
+  [ (PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT                         , "VALID_BIT_EXT")
+  , (PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT, "APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT")
+  , (PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT    , "BASE_PIPELINE_ACCELERATION_BIT_EXT")
+  ]
+
 instance Show PipelineCreationFeedbackFlagBitsEXT where
-  showsPrec p = \case
-    PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT -> showString "PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT"
-    PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT -> showString "PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT"
-    PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT -> showString "PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT"
-    PipelineCreationFeedbackFlagBitsEXT x -> showParen (p >= 11) (showString "PipelineCreationFeedbackFlagBitsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTablePipelineCreationFeedbackFlagBitsEXT of
+    Just s -> showString enumPrefixPipelineCreationFeedbackFlagBitsEXT . showString s
+    Nothing ->
+      let PipelineCreationFeedbackFlagBitsEXT x = e
+      in  showParen (p >= 11) (showString conNamePipelineCreationFeedbackFlagBitsEXT . showString " 0x" . showHex x)
 
 instance Read PipelineCreationFeedbackFlagBitsEXT where
-  readPrec = parens (choose [("PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT", pure PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT)
-                            , ("PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT", pure PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT)
-                            , ("PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT", pure PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCreationFeedbackFlagBitsEXT")
-                       v <- step readPrec
-                       pure (PipelineCreationFeedbackFlagBitsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixPipelineCreationFeedbackFlagBitsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineCreationFeedbackFlagBitsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNamePipelineCreationFeedbackFlagBitsEXT)
+            v <- step readPrec
+            pure (PipelineCreationFeedbackFlagBitsEXT v)
+          )
+    )
 
 
 type EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION = 1

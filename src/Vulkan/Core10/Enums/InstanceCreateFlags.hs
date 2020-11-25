@@ -2,13 +2,18 @@
 -- No documentation found for Chapter "InstanceCreateFlags"
 module Vulkan.Core10.Enums.InstanceCreateFlags  (InstanceCreateFlags(..)) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -33,15 +38,36 @@ newtype InstanceCreateFlags = InstanceCreateFlags Flags
 
 
 
+conNameInstanceCreateFlags :: String
+conNameInstanceCreateFlags = "InstanceCreateFlags"
+
+enumPrefixInstanceCreateFlags :: String
+enumPrefixInstanceCreateFlags = ""
+
+showTableInstanceCreateFlags :: [(InstanceCreateFlags, String)]
+showTableInstanceCreateFlags = []
+
 instance Show InstanceCreateFlags where
-  showsPrec p = \case
-    InstanceCreateFlags x -> showParen (p >= 11) (showString "InstanceCreateFlags 0x" . showHex x)
+  showsPrec p e = case lookup e showTableInstanceCreateFlags of
+    Just s -> showString enumPrefixInstanceCreateFlags . showString s
+    Nothing ->
+      let InstanceCreateFlags x = e
+      in  showParen (p >= 11) (showString conNameInstanceCreateFlags . showString " 0x" . showHex x)
 
 instance Read InstanceCreateFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "InstanceCreateFlags")
-                       v <- step readPrec
-                       pure (InstanceCreateFlags v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixInstanceCreateFlags
+          asum ((\(e, s) -> e <$ string s) <$> showTableInstanceCreateFlags)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameInstanceCreateFlags)
+            v <- step readPrec
+            pure (InstanceCreateFlags v)
+          )
+    )
 

@@ -2,13 +2,18 @@
 -- No documentation found for Chapter "QueryPoolCreateFlags"
 module Vulkan.Core10.Enums.QueryPoolCreateFlags  (QueryPoolCreateFlags(..)) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -33,15 +38,36 @@ newtype QueryPoolCreateFlags = QueryPoolCreateFlags Flags
 
 
 
+conNameQueryPoolCreateFlags :: String
+conNameQueryPoolCreateFlags = "QueryPoolCreateFlags"
+
+enumPrefixQueryPoolCreateFlags :: String
+enumPrefixQueryPoolCreateFlags = ""
+
+showTableQueryPoolCreateFlags :: [(QueryPoolCreateFlags, String)]
+showTableQueryPoolCreateFlags = []
+
 instance Show QueryPoolCreateFlags where
-  showsPrec p = \case
-    QueryPoolCreateFlags x -> showParen (p >= 11) (showString "QueryPoolCreateFlags 0x" . showHex x)
+  showsPrec p e = case lookup e showTableQueryPoolCreateFlags of
+    Just s -> showString enumPrefixQueryPoolCreateFlags . showString s
+    Nothing ->
+      let QueryPoolCreateFlags x = e
+      in  showParen (p >= 11) (showString conNameQueryPoolCreateFlags . showString " 0x" . showHex x)
 
 instance Read QueryPoolCreateFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "QueryPoolCreateFlags")
-                       v <- step readPrec
-                       pure (QueryPoolCreateFlags v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixQueryPoolCreateFlags
+          asum ((\(e, s) -> e <$ string s) <$> showTableQueryPoolCreateFlags)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameQueryPoolCreateFlags)
+            v <- step readPrec
+            pure (QueryPoolCreateFlags v)
+          )
+    )
 

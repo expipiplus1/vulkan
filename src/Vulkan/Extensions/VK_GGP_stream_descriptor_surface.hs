@@ -131,9 +131,11 @@ module Vulkan.Extensions.VK_GGP_stream_descriptor_surface  ( createStreamDescrip
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -145,7 +147,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -348,17 +353,38 @@ newtype StreamDescriptorSurfaceCreateFlagsGGP = StreamDescriptorSurfaceCreateFla
 
 
 
+conNameStreamDescriptorSurfaceCreateFlagsGGP :: String
+conNameStreamDescriptorSurfaceCreateFlagsGGP = "StreamDescriptorSurfaceCreateFlagsGGP"
+
+enumPrefixStreamDescriptorSurfaceCreateFlagsGGP :: String
+enumPrefixStreamDescriptorSurfaceCreateFlagsGGP = ""
+
+showTableStreamDescriptorSurfaceCreateFlagsGGP :: [(StreamDescriptorSurfaceCreateFlagsGGP, String)]
+showTableStreamDescriptorSurfaceCreateFlagsGGP = []
+
 instance Show StreamDescriptorSurfaceCreateFlagsGGP where
-  showsPrec p = \case
-    StreamDescriptorSurfaceCreateFlagsGGP x -> showParen (p >= 11) (showString "StreamDescriptorSurfaceCreateFlagsGGP 0x" . showHex x)
+  showsPrec p e = case lookup e showTableStreamDescriptorSurfaceCreateFlagsGGP of
+    Just s -> showString enumPrefixStreamDescriptorSurfaceCreateFlagsGGP . showString s
+    Nothing ->
+      let StreamDescriptorSurfaceCreateFlagsGGP x = e
+      in  showParen (p >= 11) (showString conNameStreamDescriptorSurfaceCreateFlagsGGP . showString " 0x" . showHex x)
 
 instance Read StreamDescriptorSurfaceCreateFlagsGGP where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "StreamDescriptorSurfaceCreateFlagsGGP")
-                       v <- step readPrec
-                       pure (StreamDescriptorSurfaceCreateFlagsGGP v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixStreamDescriptorSurfaceCreateFlagsGGP
+          asum ((\(e, s) -> e <$ string s) <$> showTableStreamDescriptorSurfaceCreateFlagsGGP)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameStreamDescriptorSurfaceCreateFlagsGGP)
+            v <- step readPrec
+            pure (StreamDescriptorSurfaceCreateFlagsGGP v)
+          )
+    )
 
 
 type GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION = 1

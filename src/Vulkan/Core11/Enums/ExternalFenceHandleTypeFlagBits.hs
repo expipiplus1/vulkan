@@ -9,13 +9,18 @@ module Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits  ( ExternalFenceHandl
                                                                                              )
                                                             ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -68,14 +73,14 @@ newtype ExternalFenceHandleTypeFlagBits = ExternalFenceHandleTypeFlagBits Flags
 -- Additionally, it /must/ be transportable over a socket using an
 -- @SCM_RIGHTS@ control message. It owns a reference to the underlying
 -- synchronization primitive represented by its Vulkan fence object.
-pattern EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT = ExternalFenceHandleTypeFlagBits 0x00000001
+pattern EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT        = ExternalFenceHandleTypeFlagBits 0x00000001
 -- | 'EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT' specifies an NT handle
 -- that has only limited valid usage outside of Vulkan and other compatible
 -- APIs. It /must/ be compatible with the functions @DuplicateHandle@,
 -- @CloseHandle@, @CompareObjectHandles@, @GetHandleInformation@, and
 -- @SetHandleInformation@. It owns a reference to the underlying
 -- synchronization primitive represented by its Vulkan fence object.
-pattern EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT = ExternalFenceHandleTypeFlagBits 0x00000002
+pattern EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT     = ExternalFenceHandleTypeFlagBits 0x00000002
 -- | 'EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' specifies a global
 -- share handle that has only limited valid usage outside of Vulkan and
 -- other compatible APIs. It is not compatible with any native APIs. It
@@ -90,24 +95,43 @@ pattern EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = ExternalFenceHandleTyp
 -- with the file descriptor. Implementations which support importing this
 -- handle type /must/ accept any type of sync or fence FD supported by the
 -- native system they are running on.
-pattern EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT = ExternalFenceHandleTypeFlagBits 0x00000008
+pattern EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT          = ExternalFenceHandleTypeFlagBits 0x00000008
+
+conNameExternalFenceHandleTypeFlagBits :: String
+conNameExternalFenceHandleTypeFlagBits = "ExternalFenceHandleTypeFlagBits"
+
+enumPrefixExternalFenceHandleTypeFlagBits :: String
+enumPrefixExternalFenceHandleTypeFlagBits = "EXTERNAL_FENCE_HANDLE_TYPE_"
+
+showTableExternalFenceHandleTypeFlagBits :: [(ExternalFenceHandleTypeFlagBits, String)]
+showTableExternalFenceHandleTypeFlagBits =
+  [ (EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT       , "OPAQUE_FD_BIT")
+  , (EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT    , "OPAQUE_WIN32_BIT")
+  , (EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT, "OPAQUE_WIN32_KMT_BIT")
+  , (EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT         , "SYNC_FD_BIT")
+  ]
 
 instance Show ExternalFenceHandleTypeFlagBits where
-  showsPrec p = \case
-    EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT -> showString "EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT"
-    EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT -> showString "EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT"
-    EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT -> showString "EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"
-    EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT -> showString "EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT"
-    ExternalFenceHandleTypeFlagBits x -> showParen (p >= 11) (showString "ExternalFenceHandleTypeFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableExternalFenceHandleTypeFlagBits of
+    Just s -> showString enumPrefixExternalFenceHandleTypeFlagBits . showString s
+    Nothing ->
+      let ExternalFenceHandleTypeFlagBits x = e
+      in  showParen (p >= 11) (showString conNameExternalFenceHandleTypeFlagBits . showString " 0x" . showHex x)
 
 instance Read ExternalFenceHandleTypeFlagBits where
-  readPrec = parens (choose [("EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT", pure EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT)
-                            , ("EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT", pure EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT)
-                            , ("EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT", pure EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT)
-                            , ("EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT", pure EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ExternalFenceHandleTypeFlagBits")
-                       v <- step readPrec
-                       pure (ExternalFenceHandleTypeFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixExternalFenceHandleTypeFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableExternalFenceHandleTypeFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameExternalFenceHandleTypeFlagBits)
+            v <- step readPrec
+            pure (ExternalFenceHandleTypeFlagBits v)
+          )
+    )
 

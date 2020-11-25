@@ -6,13 +6,18 @@ module Vulkan.Core10.Enums.AttachmentStoreOp  (AttachmentStoreOp( ATTACHMENT_STO
                                                                 , ..
                                                                 )) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
@@ -44,7 +49,7 @@ newtype AttachmentStoreOp = AttachmentStoreOp Int32
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
-pattern ATTACHMENT_STORE_OP_STORE = AttachmentStoreOp 0
+pattern ATTACHMENT_STORE_OP_STORE     = AttachmentStoreOp 0
 -- | 'ATTACHMENT_STORE_OP_DONT_CARE' specifies the contents within the render
 -- area are not needed after rendering, and /may/ be discarded; the
 -- contents of the attachment will be undefined inside the render area. For
@@ -62,20 +67,40 @@ pattern ATTACHMENT_STORE_OP_NONE_QCOM = AttachmentStoreOp 1000301000
              ATTACHMENT_STORE_OP_DONT_CARE,
              ATTACHMENT_STORE_OP_NONE_QCOM :: AttachmentStoreOp #-}
 
+conNameAttachmentStoreOp :: String
+conNameAttachmentStoreOp = "AttachmentStoreOp"
+
+enumPrefixAttachmentStoreOp :: String
+enumPrefixAttachmentStoreOp = "ATTACHMENT_STORE_OP_"
+
+showTableAttachmentStoreOp :: [(AttachmentStoreOp, String)]
+showTableAttachmentStoreOp =
+  [ (ATTACHMENT_STORE_OP_STORE    , "STORE")
+  , (ATTACHMENT_STORE_OP_DONT_CARE, "DONT_CARE")
+  , (ATTACHMENT_STORE_OP_NONE_QCOM, "NONE_QCOM")
+  ]
+
 instance Show AttachmentStoreOp where
-  showsPrec p = \case
-    ATTACHMENT_STORE_OP_STORE -> showString "ATTACHMENT_STORE_OP_STORE"
-    ATTACHMENT_STORE_OP_DONT_CARE -> showString "ATTACHMENT_STORE_OP_DONT_CARE"
-    ATTACHMENT_STORE_OP_NONE_QCOM -> showString "ATTACHMENT_STORE_OP_NONE_QCOM"
-    AttachmentStoreOp x -> showParen (p >= 11) (showString "AttachmentStoreOp " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableAttachmentStoreOp of
+    Just s -> showString enumPrefixAttachmentStoreOp . showString s
+    Nothing ->
+      let AttachmentStoreOp x = e
+      in  showParen (p >= 11) (showString conNameAttachmentStoreOp . showString " " . showsPrec 11 x)
 
 instance Read AttachmentStoreOp where
-  readPrec = parens (choose [("ATTACHMENT_STORE_OP_STORE", pure ATTACHMENT_STORE_OP_STORE)
-                            , ("ATTACHMENT_STORE_OP_DONT_CARE", pure ATTACHMENT_STORE_OP_DONT_CARE)
-                            , ("ATTACHMENT_STORE_OP_NONE_QCOM", pure ATTACHMENT_STORE_OP_NONE_QCOM)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AttachmentStoreOp")
-                       v <- step readPrec
-                       pure (AttachmentStoreOp v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixAttachmentStoreOp
+          asum ((\(e, s) -> e <$ string s) <$> showTableAttachmentStoreOp)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameAttachmentStoreOp)
+            v <- step readPrec
+            pure (AttachmentStoreOp v)
+          )
+    )
 

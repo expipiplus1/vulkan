@@ -135,7 +135,9 @@ module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  ( PipelineCoverageModu
                                                           ) where
 
 import Control.Monad (unless)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -146,7 +148,10 @@ import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -358,17 +363,39 @@ newtype PipelineCoverageModulationStateCreateFlagsNV = PipelineCoverageModulatio
 
 
 
+conNamePipelineCoverageModulationStateCreateFlagsNV :: String
+conNamePipelineCoverageModulationStateCreateFlagsNV = "PipelineCoverageModulationStateCreateFlagsNV"
+
+enumPrefixPipelineCoverageModulationStateCreateFlagsNV :: String
+enumPrefixPipelineCoverageModulationStateCreateFlagsNV = ""
+
+showTablePipelineCoverageModulationStateCreateFlagsNV :: [(PipelineCoverageModulationStateCreateFlagsNV, String)]
+showTablePipelineCoverageModulationStateCreateFlagsNV = []
+
 instance Show PipelineCoverageModulationStateCreateFlagsNV where
-  showsPrec p = \case
-    PipelineCoverageModulationStateCreateFlagsNV x -> showParen (p >= 11) (showString "PipelineCoverageModulationStateCreateFlagsNV 0x" . showHex x)
+  showsPrec p e = case lookup e showTablePipelineCoverageModulationStateCreateFlagsNV of
+    Just s -> showString enumPrefixPipelineCoverageModulationStateCreateFlagsNV . showString s
+    Nothing ->
+      let PipelineCoverageModulationStateCreateFlagsNV x = e
+      in  showParen (p >= 11)
+                    (showString conNamePipelineCoverageModulationStateCreateFlagsNV . showString " 0x" . showHex x)
 
 instance Read PipelineCoverageModulationStateCreateFlagsNV where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCoverageModulationStateCreateFlagsNV")
-                       v <- step readPrec
-                       pure (PipelineCoverageModulationStateCreateFlagsNV v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixPipelineCoverageModulationStateCreateFlagsNV
+          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineCoverageModulationStateCreateFlagsNV)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNamePipelineCoverageModulationStateCreateFlagsNV)
+            v <- step readPrec
+            pure (PipelineCoverageModulationStateCreateFlagsNV v)
+          )
+    )
 
 
 -- | VkCoverageModulationModeNV - Specify the coverage modulation mode
@@ -381,39 +408,58 @@ newtype CoverageModulationModeNV = CoverageModulationModeNV Int32
 
 -- | 'COVERAGE_MODULATION_MODE_NONE_NV' specifies that no components are
 -- multiplied by the modulation factor.
-pattern COVERAGE_MODULATION_MODE_NONE_NV = CoverageModulationModeNV 0
+pattern COVERAGE_MODULATION_MODE_NONE_NV  = CoverageModulationModeNV 0
 -- | 'COVERAGE_MODULATION_MODE_RGB_NV' specifies that the red, green, and
 -- blue components are multiplied by the modulation factor.
-pattern COVERAGE_MODULATION_MODE_RGB_NV = CoverageModulationModeNV 1
+pattern COVERAGE_MODULATION_MODE_RGB_NV   = CoverageModulationModeNV 1
 -- | 'COVERAGE_MODULATION_MODE_ALPHA_NV' specifies that the alpha component
 -- is multiplied by the modulation factor.
 pattern COVERAGE_MODULATION_MODE_ALPHA_NV = CoverageModulationModeNV 2
 -- | 'COVERAGE_MODULATION_MODE_RGBA_NV' specifies that all components are
 -- multiplied by the modulation factor.
-pattern COVERAGE_MODULATION_MODE_RGBA_NV = CoverageModulationModeNV 3
+pattern COVERAGE_MODULATION_MODE_RGBA_NV  = CoverageModulationModeNV 3
 {-# complete COVERAGE_MODULATION_MODE_NONE_NV,
              COVERAGE_MODULATION_MODE_RGB_NV,
              COVERAGE_MODULATION_MODE_ALPHA_NV,
              COVERAGE_MODULATION_MODE_RGBA_NV :: CoverageModulationModeNV #-}
 
+conNameCoverageModulationModeNV :: String
+conNameCoverageModulationModeNV = "CoverageModulationModeNV"
+
+enumPrefixCoverageModulationModeNV :: String
+enumPrefixCoverageModulationModeNV = "COVERAGE_MODULATION_MODE_"
+
+showTableCoverageModulationModeNV :: [(CoverageModulationModeNV, String)]
+showTableCoverageModulationModeNV =
+  [ (COVERAGE_MODULATION_MODE_NONE_NV , "NONE_NV")
+  , (COVERAGE_MODULATION_MODE_RGB_NV  , "RGB_NV")
+  , (COVERAGE_MODULATION_MODE_ALPHA_NV, "ALPHA_NV")
+  , (COVERAGE_MODULATION_MODE_RGBA_NV , "RGBA_NV")
+  ]
+
 instance Show CoverageModulationModeNV where
-  showsPrec p = \case
-    COVERAGE_MODULATION_MODE_NONE_NV -> showString "COVERAGE_MODULATION_MODE_NONE_NV"
-    COVERAGE_MODULATION_MODE_RGB_NV -> showString "COVERAGE_MODULATION_MODE_RGB_NV"
-    COVERAGE_MODULATION_MODE_ALPHA_NV -> showString "COVERAGE_MODULATION_MODE_ALPHA_NV"
-    COVERAGE_MODULATION_MODE_RGBA_NV -> showString "COVERAGE_MODULATION_MODE_RGBA_NV"
-    CoverageModulationModeNV x -> showParen (p >= 11) (showString "CoverageModulationModeNV " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableCoverageModulationModeNV of
+    Just s -> showString enumPrefixCoverageModulationModeNV . showString s
+    Nothing ->
+      let CoverageModulationModeNV x = e
+      in  showParen (p >= 11) (showString conNameCoverageModulationModeNV . showString " " . showsPrec 11 x)
 
 instance Read CoverageModulationModeNV where
-  readPrec = parens (choose [("COVERAGE_MODULATION_MODE_NONE_NV", pure COVERAGE_MODULATION_MODE_NONE_NV)
-                            , ("COVERAGE_MODULATION_MODE_RGB_NV", pure COVERAGE_MODULATION_MODE_RGB_NV)
-                            , ("COVERAGE_MODULATION_MODE_ALPHA_NV", pure COVERAGE_MODULATION_MODE_ALPHA_NV)
-                            , ("COVERAGE_MODULATION_MODE_RGBA_NV", pure COVERAGE_MODULATION_MODE_RGBA_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CoverageModulationModeNV")
-                       v <- step readPrec
-                       pure (CoverageModulationModeNV v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixCoverageModulationModeNV
+          asum ((\(e, s) -> e <$ string s) <$> showTableCoverageModulationModeNV)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameCoverageModulationModeNV)
+            v <- step readPrec
+            pure (CoverageModulationModeNV v)
+          )
+    )
 
 
 type NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION = 1

@@ -8,13 +8,18 @@ module Vulkan.Core10.Enums.CommandBufferUsageFlagBits  ( CommandBufferUsageFlags
                                                                                    )
                                                        ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -38,7 +43,7 @@ newtype CommandBufferUsageFlagBits = CommandBufferUsageFlagBits Flags
 -- | 'COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT' specifies that each recording
 -- of the command buffer will only be submitted once, and the command
 -- buffer will be reset and recorded again between each submission.
-pattern COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = CommandBufferUsageFlagBits 0x00000001
+pattern COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT      = CommandBufferUsageFlagBits 0x00000001
 -- | 'COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT' specifies that a
 -- secondary command buffer is considered to be entirely inside a render
 -- pass. If this is a primary command buffer, then this bit is ignored.
@@ -46,22 +51,42 @@ pattern COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = CommandBufferUsageFlagBi
 -- | 'COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT' specifies that a command
 -- buffer /can/ be resubmitted to a queue while it is in the /pending
 -- state/, and recorded into multiple primary command buffers.
-pattern COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = CommandBufferUsageFlagBits 0x00000004
+pattern COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT     = CommandBufferUsageFlagBits 0x00000004
+
+conNameCommandBufferUsageFlagBits :: String
+conNameCommandBufferUsageFlagBits = "CommandBufferUsageFlagBits"
+
+enumPrefixCommandBufferUsageFlagBits :: String
+enumPrefixCommandBufferUsageFlagBits = "COMMAND_BUFFER_USAGE_"
+
+showTableCommandBufferUsageFlagBits :: [(CommandBufferUsageFlagBits, String)]
+showTableCommandBufferUsageFlagBits =
+  [ (COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT     , "ONE_TIME_SUBMIT_BIT")
+  , (COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT, "RENDER_PASS_CONTINUE_BIT")
+  , (COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT    , "SIMULTANEOUS_USE_BIT")
+  ]
 
 instance Show CommandBufferUsageFlagBits where
-  showsPrec p = \case
-    COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT -> showString "COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT"
-    COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT -> showString "COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT"
-    COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT -> showString "COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT"
-    CommandBufferUsageFlagBits x -> showParen (p >= 11) (showString "CommandBufferUsageFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableCommandBufferUsageFlagBits of
+    Just s -> showString enumPrefixCommandBufferUsageFlagBits . showString s
+    Nothing ->
+      let CommandBufferUsageFlagBits x = e
+      in  showParen (p >= 11) (showString conNameCommandBufferUsageFlagBits . showString " 0x" . showHex x)
 
 instance Read CommandBufferUsageFlagBits where
-  readPrec = parens (choose [("COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT", pure COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT)
-                            , ("COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT", pure COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT)
-                            , ("COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT", pure COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CommandBufferUsageFlagBits")
-                       v <- step readPrec
-                       pure (CommandBufferUsageFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixCommandBufferUsageFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableCommandBufferUsageFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameCommandBufferUsageFlagBits)
+            v <- step readPrec
+            pure (CommandBufferUsageFlagBits v)
+          )
+    )
 

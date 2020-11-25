@@ -182,9 +182,11 @@ module Vulkan.Extensions.VK_EXT_display_control  ( displayPowerControlEXT
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -196,7 +198,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -777,7 +782,7 @@ newtype DisplayPowerStateEXT = DisplayPowerStateEXT Int32
 
 -- | 'DISPLAY_POWER_STATE_OFF_EXT' specifies that the display is powered
 -- down.
-pattern DISPLAY_POWER_STATE_OFF_EXT = DisplayPowerStateEXT 0
+pattern DISPLAY_POWER_STATE_OFF_EXT     = DisplayPowerStateEXT 0
 -- | 'DISPLAY_POWER_STATE_SUSPEND_EXT' specifies that the display is put into
 -- a low power mode, from which it /may/ be able to transition back to
 -- 'DISPLAY_POWER_STATE_ON_EXT' more quickly than if it were in
@@ -785,27 +790,47 @@ pattern DISPLAY_POWER_STATE_OFF_EXT = DisplayPowerStateEXT 0
 -- 'DISPLAY_POWER_STATE_OFF_EXT'.
 pattern DISPLAY_POWER_STATE_SUSPEND_EXT = DisplayPowerStateEXT 1
 -- | 'DISPLAY_POWER_STATE_ON_EXT' specifies that the display is powered on.
-pattern DISPLAY_POWER_STATE_ON_EXT = DisplayPowerStateEXT 2
+pattern DISPLAY_POWER_STATE_ON_EXT      = DisplayPowerStateEXT 2
 {-# complete DISPLAY_POWER_STATE_OFF_EXT,
              DISPLAY_POWER_STATE_SUSPEND_EXT,
              DISPLAY_POWER_STATE_ON_EXT :: DisplayPowerStateEXT #-}
 
+conNameDisplayPowerStateEXT :: String
+conNameDisplayPowerStateEXT = "DisplayPowerStateEXT"
+
+enumPrefixDisplayPowerStateEXT :: String
+enumPrefixDisplayPowerStateEXT = "DISPLAY_POWER_STATE_"
+
+showTableDisplayPowerStateEXT :: [(DisplayPowerStateEXT, String)]
+showTableDisplayPowerStateEXT =
+  [ (DISPLAY_POWER_STATE_OFF_EXT    , "OFF_EXT")
+  , (DISPLAY_POWER_STATE_SUSPEND_EXT, "SUSPEND_EXT")
+  , (DISPLAY_POWER_STATE_ON_EXT     , "ON_EXT")
+  ]
+
 instance Show DisplayPowerStateEXT where
-  showsPrec p = \case
-    DISPLAY_POWER_STATE_OFF_EXT -> showString "DISPLAY_POWER_STATE_OFF_EXT"
-    DISPLAY_POWER_STATE_SUSPEND_EXT -> showString "DISPLAY_POWER_STATE_SUSPEND_EXT"
-    DISPLAY_POWER_STATE_ON_EXT -> showString "DISPLAY_POWER_STATE_ON_EXT"
-    DisplayPowerStateEXT x -> showParen (p >= 11) (showString "DisplayPowerStateEXT " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableDisplayPowerStateEXT of
+    Just s -> showString enumPrefixDisplayPowerStateEXT . showString s
+    Nothing ->
+      let DisplayPowerStateEXT x = e
+      in  showParen (p >= 11) (showString conNameDisplayPowerStateEXT . showString " " . showsPrec 11 x)
 
 instance Read DisplayPowerStateEXT where
-  readPrec = parens (choose [("DISPLAY_POWER_STATE_OFF_EXT", pure DISPLAY_POWER_STATE_OFF_EXT)
-                            , ("DISPLAY_POWER_STATE_SUSPEND_EXT", pure DISPLAY_POWER_STATE_SUSPEND_EXT)
-                            , ("DISPLAY_POWER_STATE_ON_EXT", pure DISPLAY_POWER_STATE_ON_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DisplayPowerStateEXT")
-                       v <- step readPrec
-                       pure (DisplayPowerStateEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDisplayPowerStateEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableDisplayPowerStateEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDisplayPowerStateEXT)
+            v <- step readPrec
+            pure (DisplayPowerStateEXT v)
+          )
+    )
 
 
 -- | VkDeviceEventTypeEXT - Events that can occur on a device object
@@ -823,18 +848,38 @@ newtype DeviceEventTypeEXT = DeviceEventTypeEXT Int32
 pattern DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT = DeviceEventTypeEXT 0
 {-# complete DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT :: DeviceEventTypeEXT #-}
 
+conNameDeviceEventTypeEXT :: String
+conNameDeviceEventTypeEXT = "DeviceEventTypeEXT"
+
+enumPrefixDeviceEventTypeEXT :: String
+enumPrefixDeviceEventTypeEXT = "DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT"
+
+showTableDeviceEventTypeEXT :: [(DeviceEventTypeEXT, String)]
+showTableDeviceEventTypeEXT = [(DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT, "")]
+
 instance Show DeviceEventTypeEXT where
-  showsPrec p = \case
-    DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT -> showString "DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT"
-    DeviceEventTypeEXT x -> showParen (p >= 11) (showString "DeviceEventTypeEXT " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableDeviceEventTypeEXT of
+    Just s -> showString enumPrefixDeviceEventTypeEXT . showString s
+    Nothing ->
+      let DeviceEventTypeEXT x = e
+      in  showParen (p >= 11) (showString conNameDeviceEventTypeEXT . showString " " . showsPrec 11 x)
 
 instance Read DeviceEventTypeEXT where
-  readPrec = parens (choose [("DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT", pure DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DeviceEventTypeEXT")
-                       v <- step readPrec
-                       pure (DeviceEventTypeEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDeviceEventTypeEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableDeviceEventTypeEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDeviceEventTypeEXT)
+            v <- step readPrec
+            pure (DeviceEventTypeEXT v)
+          )
+    )
 
 
 -- | VkDisplayEventTypeEXT - Events that can occur on a display object
@@ -851,18 +896,38 @@ newtype DisplayEventTypeEXT = DisplayEventTypeEXT Int32
 pattern DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT = DisplayEventTypeEXT 0
 {-# complete DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT :: DisplayEventTypeEXT #-}
 
+conNameDisplayEventTypeEXT :: String
+conNameDisplayEventTypeEXT = "DisplayEventTypeEXT"
+
+enumPrefixDisplayEventTypeEXT :: String
+enumPrefixDisplayEventTypeEXT = "DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT"
+
+showTableDisplayEventTypeEXT :: [(DisplayEventTypeEXT, String)]
+showTableDisplayEventTypeEXT = [(DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT, "")]
+
 instance Show DisplayEventTypeEXT where
-  showsPrec p = \case
-    DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT -> showString "DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT"
-    DisplayEventTypeEXT x -> showParen (p >= 11) (showString "DisplayEventTypeEXT " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableDisplayEventTypeEXT of
+    Just s -> showString enumPrefixDisplayEventTypeEXT . showString s
+    Nothing ->
+      let DisplayEventTypeEXT x = e
+      in  showParen (p >= 11) (showString conNameDisplayEventTypeEXT . showString " " . showsPrec 11 x)
 
 instance Read DisplayEventTypeEXT where
-  readPrec = parens (choose [("DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT", pure DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DisplayEventTypeEXT")
-                       v <- step readPrec
-                       pure (DisplayEventTypeEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDisplayEventTypeEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableDisplayEventTypeEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDisplayEventTypeEXT)
+            v <- step readPrec
+            pure (DisplayEventTypeEXT v)
+          )
+    )
 
 
 type EXT_DISPLAY_CONTROL_SPEC_VERSION = 1

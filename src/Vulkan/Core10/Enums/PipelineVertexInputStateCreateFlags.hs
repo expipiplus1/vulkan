@@ -2,13 +2,18 @@
 -- No documentation found for Chapter "PipelineVertexInputStateCreateFlags"
 module Vulkan.Core10.Enums.PipelineVertexInputStateCreateFlags  (PipelineVertexInputStateCreateFlags(..)) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -33,15 +38,36 @@ newtype PipelineVertexInputStateCreateFlags = PipelineVertexInputStateCreateFlag
 
 
 
+conNamePipelineVertexInputStateCreateFlags :: String
+conNamePipelineVertexInputStateCreateFlags = "PipelineVertexInputStateCreateFlags"
+
+enumPrefixPipelineVertexInputStateCreateFlags :: String
+enumPrefixPipelineVertexInputStateCreateFlags = ""
+
+showTablePipelineVertexInputStateCreateFlags :: [(PipelineVertexInputStateCreateFlags, String)]
+showTablePipelineVertexInputStateCreateFlags = []
+
 instance Show PipelineVertexInputStateCreateFlags where
-  showsPrec p = \case
-    PipelineVertexInputStateCreateFlags x -> showParen (p >= 11) (showString "PipelineVertexInputStateCreateFlags 0x" . showHex x)
+  showsPrec p e = case lookup e showTablePipelineVertexInputStateCreateFlags of
+    Just s -> showString enumPrefixPipelineVertexInputStateCreateFlags . showString s
+    Nothing ->
+      let PipelineVertexInputStateCreateFlags x = e
+      in  showParen (p >= 11) (showString conNamePipelineVertexInputStateCreateFlags . showString " 0x" . showHex x)
 
 instance Read PipelineVertexInputStateCreateFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineVertexInputStateCreateFlags")
-                       v <- step readPrec
-                       pure (PipelineVertexInputStateCreateFlags v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixPipelineVertexInputStateCreateFlags
+          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineVertexInputStateCreateFlags)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNamePipelineVertexInputStateCreateFlags)
+            v <- step readPrec
+            pure (PipelineVertexInputStateCreateFlags v)
+          )
+    )
 

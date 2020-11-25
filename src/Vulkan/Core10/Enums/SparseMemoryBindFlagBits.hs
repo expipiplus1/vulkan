@@ -6,13 +6,18 @@ module Vulkan.Core10.Enums.SparseMemoryBindFlagBits  ( SparseMemoryBindFlags
                                                                                )
                                                      ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -37,16 +42,36 @@ newtype SparseMemoryBindFlagBits = SparseMemoryBindFlagBits Flags
 -- is only for the metadata aspect.
 pattern SPARSE_MEMORY_BIND_METADATA_BIT = SparseMemoryBindFlagBits 0x00000001
 
+conNameSparseMemoryBindFlagBits :: String
+conNameSparseMemoryBindFlagBits = "SparseMemoryBindFlagBits"
+
+enumPrefixSparseMemoryBindFlagBits :: String
+enumPrefixSparseMemoryBindFlagBits = "SPARSE_MEMORY_BIND_METADATA_BIT"
+
+showTableSparseMemoryBindFlagBits :: [(SparseMemoryBindFlagBits, String)]
+showTableSparseMemoryBindFlagBits = [(SPARSE_MEMORY_BIND_METADATA_BIT, "")]
+
 instance Show SparseMemoryBindFlagBits where
-  showsPrec p = \case
-    SPARSE_MEMORY_BIND_METADATA_BIT -> showString "SPARSE_MEMORY_BIND_METADATA_BIT"
-    SparseMemoryBindFlagBits x -> showParen (p >= 11) (showString "SparseMemoryBindFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableSparseMemoryBindFlagBits of
+    Just s -> showString enumPrefixSparseMemoryBindFlagBits . showString s
+    Nothing ->
+      let SparseMemoryBindFlagBits x = e
+      in  showParen (p >= 11) (showString conNameSparseMemoryBindFlagBits . showString " 0x" . showHex x)
 
 instance Read SparseMemoryBindFlagBits where
-  readPrec = parens (choose [("SPARSE_MEMORY_BIND_METADATA_BIT", pure SPARSE_MEMORY_BIND_METADATA_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SparseMemoryBindFlagBits")
-                       v <- step readPrec
-                       pure (SparseMemoryBindFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixSparseMemoryBindFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableSparseMemoryBindFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameSparseMemoryBindFlagBits)
+            v <- step readPrec
+            pure (SparseMemoryBindFlagBits v)
+          )
+    )
 

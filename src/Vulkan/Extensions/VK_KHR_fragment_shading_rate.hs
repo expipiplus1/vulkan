@@ -227,9 +227,11 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -242,7 +244,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -1361,45 +1366,63 @@ newtype FragmentShadingRateCombinerOpKHR = FragmentShadingRateCombinerOpKHR Int3
 
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = Axy.
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR = FragmentShadingRateCombinerOpKHR 0
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR    = FragmentShadingRateCombinerOpKHR 0
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = Bxy.
 pattern FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR = FragmentShadingRateCombinerOpKHR 1
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = min(Axy,Bxy).
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR = FragmentShadingRateCombinerOpKHR 2
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR     = FragmentShadingRateCombinerOpKHR 2
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR' specifies a combiner
 -- operation of combine(Axy,Bxy) = max(Axy,Bxy).
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR = FragmentShadingRateCombinerOpKHR 3
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR     = FragmentShadingRateCombinerOpKHR 3
 -- | 'FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR' combiner operation of
 -- combine(Axy,Bxy) = Axy*Bxy.
-pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR = FragmentShadingRateCombinerOpKHR 4
+pattern FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR     = FragmentShadingRateCombinerOpKHR 4
 {-# complete FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR,
              FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR :: FragmentShadingRateCombinerOpKHR #-}
 
+conNameFragmentShadingRateCombinerOpKHR :: String
+conNameFragmentShadingRateCombinerOpKHR = "FragmentShadingRateCombinerOpKHR"
+
+enumPrefixFragmentShadingRateCombinerOpKHR :: String
+enumPrefixFragmentShadingRateCombinerOpKHR = "FRAGMENT_SHADING_RATE_COMBINER_OP_"
+
+showTableFragmentShadingRateCombinerOpKHR :: [(FragmentShadingRateCombinerOpKHR, String)]
+showTableFragmentShadingRateCombinerOpKHR =
+  [ (FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR   , "KEEP_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR, "REPLACE_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR    , "MIN_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR    , "MAX_KHR")
+  , (FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR    , "MUL_KHR")
+  ]
+
 instance Show FragmentShadingRateCombinerOpKHR where
-  showsPrec p = \case
-    FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR"
-    FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR -> showString "FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR"
-    FragmentShadingRateCombinerOpKHR x -> showParen (p >= 11) (showString "FragmentShadingRateCombinerOpKHR " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableFragmentShadingRateCombinerOpKHR of
+    Just s -> showString enumPrefixFragmentShadingRateCombinerOpKHR . showString s
+    Nothing ->
+      let FragmentShadingRateCombinerOpKHR x = e
+      in  showParen (p >= 11) (showString conNameFragmentShadingRateCombinerOpKHR . showString " " . showsPrec 11 x)
 
 instance Read FragmentShadingRateCombinerOpKHR where
-  readPrec = parens (choose [("FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR)
-                            , ("FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR", pure FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "FragmentShadingRateCombinerOpKHR")
-                       v <- step readPrec
-                       pure (FragmentShadingRateCombinerOpKHR v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixFragmentShadingRateCombinerOpKHR
+          asum ((\(e, s) -> e <$ string s) <$> showTableFragmentShadingRateCombinerOpKHR)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameFragmentShadingRateCombinerOpKHR)
+            v <- step readPrec
+            pure (FragmentShadingRateCombinerOpKHR v)
+          )
+    )
 
 
 type KHR_FRAGMENT_SHADING_RATE_SPEC_VERSION = 1

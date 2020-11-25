@@ -24,13 +24,18 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                                            )
                                                    ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -154,90 +159,98 @@ newtype PipelineCreateFlagBits = PipelineCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT"
-pattern PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = PipelineCreateFlagBits 0x00000001
+pattern PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                    = PipelineCreateFlagBits 0x00000001
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT"
-pattern PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = PipelineCreateFlagBits 0x00000002
+pattern PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                       = PipelineCreateFlagBits 0x00000002
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DERIVATIVE_BIT"
-pattern PIPELINE_CREATE_DERIVATIVE_BIT = PipelineCreateFlagBits 0x00000004
+pattern PIPELINE_CREATE_DERIVATIVE_BIT                              = PipelineCreateFlagBits 0x00000004
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT"
-pattern PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT = PipelineCreateFlagBits 0x00000200
+pattern PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT             = PipelineCreateFlagBits 0x00000200
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT"
-pattern PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT = PipelineCreateFlagBits 0x00000100
+pattern PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT   = PipelineCreateFlagBits 0x00000100
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_LIBRARY_BIT_KHR"
-pattern PIPELINE_CREATE_LIBRARY_BIT_KHR = PipelineCreateFlagBits 0x00000800
+pattern PIPELINE_CREATE_LIBRARY_BIT_KHR                             = PipelineCreateFlagBits 0x00000800
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV"
-pattern PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV = PipelineCreateFlagBits 0x00040000
+pattern PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV                    = PipelineCreateFlagBits 0x00040000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR"
-pattern PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR = PipelineCreateFlagBits 0x00000080
+pattern PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR    = PipelineCreateFlagBits 0x00000080
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR"
-pattern PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR = PipelineCreateFlagBits 0x00000040
+pattern PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR                  = PipelineCreateFlagBits 0x00000040
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV"
-pattern PIPELINE_CREATE_DEFER_COMPILE_BIT_NV = PipelineCreateFlagBits 0x00000020
+pattern PIPELINE_CREATE_DEFER_COMPILE_BIT_NV                        = PipelineCreateFlagBits 0x00000020
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"
 pattern PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR = PipelineCreateFlagBits 0x00080000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR"
-pattern PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR = PipelineCreateFlagBits 0x00002000
+pattern PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR              = PipelineCreateFlagBits 0x00002000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"
-pattern PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR = PipelineCreateFlagBits 0x00001000
+pattern PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR          = PipelineCreateFlagBits 0x00001000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"
 pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR = PipelineCreateFlagBits 0x00020000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR"
-pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR = PipelineCreateFlagBits 0x00010000
+pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR    = PipelineCreateFlagBits 0x00010000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR"
 pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR = PipelineCreateFlagBits 0x00008000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"
 pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR = PipelineCreateFlagBits 0x00004000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DISPATCH_BASE_BIT"
-pattern PIPELINE_CREATE_DISPATCH_BASE_BIT = PipelineCreateFlagBits 0x00000010
+pattern PIPELINE_CREATE_DISPATCH_BASE_BIT                           = PipelineCreateFlagBits 0x00000010
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"
-pattern PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = PipelineCreateFlagBits 0x00000008
+pattern PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT            = PipelineCreateFlagBits 0x00000008
+
+conNamePipelineCreateFlagBits :: String
+conNamePipelineCreateFlagBits = "PipelineCreateFlagBits"
+
+enumPrefixPipelineCreateFlagBits :: String
+enumPrefixPipelineCreateFlagBits = "PIPELINE_CREATE_"
+
+showTablePipelineCreateFlagBits :: [(PipelineCreateFlagBits, String)]
+showTablePipelineCreateFlagBits =
+  [ (PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                 , "DISABLE_OPTIMIZATION_BIT")
+  , (PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                    , "ALLOW_DERIVATIVES_BIT")
+  , (PIPELINE_CREATE_DERIVATIVE_BIT                           , "DERIVATIVE_BIT")
+  , (PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT          , "EARLY_RETURN_ON_FAILURE_BIT_EXT")
+  , (PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT, "FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT")
+  , (PIPELINE_CREATE_LIBRARY_BIT_KHR                          , "LIBRARY_BIT_KHR")
+  , (PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV                 , "INDIRECT_BINDABLE_BIT_NV")
+  , (PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR , "CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR")
+  , (PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR               , "CAPTURE_STATISTICS_BIT_KHR")
+  , (PIPELINE_CREATE_DEFER_COMPILE_BIT_NV                     , "DEFER_COMPILE_BIT_NV")
+  , ( PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR
+    , "RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"
+    )
+  , (PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR    , "RAY_TRACING_SKIP_AABBS_BIT_KHR")
+  , (PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR, "RAY_TRACING_SKIP_TRIANGLES_BIT_KHR")
+  , ( PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR
+    , "RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"
+    )
+  , (PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR       , "RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR")
+  , (PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR, "RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR")
+  , (PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR    , "RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR")
+  , (PIPELINE_CREATE_DISPATCH_BASE_BIT                              , "DISPATCH_BASE_BIT")
+  , (PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT               , "VIEW_INDEX_FROM_DEVICE_INDEX_BIT")
+  ]
 
 instance Show PipelineCreateFlagBits where
-  showsPrec p = \case
-    PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT -> showString "PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT"
-    PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT -> showString "PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT"
-    PIPELINE_CREATE_DERIVATIVE_BIT -> showString "PIPELINE_CREATE_DERIVATIVE_BIT"
-    PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT -> showString "PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT"
-    PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT -> showString "PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT"
-    PIPELINE_CREATE_LIBRARY_BIT_KHR -> showString "PIPELINE_CREATE_LIBRARY_BIT_KHR"
-    PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV -> showString "PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV"
-    PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR -> showString "PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR"
-    PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR -> showString "PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR"
-    PIPELINE_CREATE_DEFER_COMPILE_BIT_NV -> showString "PIPELINE_CREATE_DEFER_COMPILE_BIT_NV"
-    PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR -> showString "PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"
-    PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR -> showString "PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR"
-    PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR -> showString "PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"
-    PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR -> showString "PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"
-    PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR -> showString "PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR"
-    PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR -> showString "PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR"
-    PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR -> showString "PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"
-    PIPELINE_CREATE_DISPATCH_BASE_BIT -> showString "PIPELINE_CREATE_DISPATCH_BASE_BIT"
-    PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT -> showString "PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"
-    PipelineCreateFlagBits x -> showParen (p >= 11) (showString "PipelineCreateFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTablePipelineCreateFlagBits of
+    Just s -> showString enumPrefixPipelineCreateFlagBits . showString s
+    Nothing ->
+      let PipelineCreateFlagBits x = e
+      in  showParen (p >= 11) (showString conNamePipelineCreateFlagBits . showString " 0x" . showHex x)
 
 instance Read PipelineCreateFlagBits where
-  readPrec = parens (choose [("PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT", pure PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT)
-                            , ("PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT", pure PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT)
-                            , ("PIPELINE_CREATE_DERIVATIVE_BIT", pure PIPELINE_CREATE_DERIVATIVE_BIT)
-                            , ("PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT", pure PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT)
-                            , ("PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT", pure PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT)
-                            , ("PIPELINE_CREATE_LIBRARY_BIT_KHR", pure PIPELINE_CREATE_LIBRARY_BIT_KHR)
-                            , ("PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV", pure PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV)
-                            , ("PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR", pure PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR)
-                            , ("PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR", pure PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR)
-                            , ("PIPELINE_CREATE_DEFER_COMPILE_BIT_NV", pure PIPELINE_CREATE_DEFER_COMPILE_BIT_NV)
-                            , ("PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR", pure PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR)
-                            , ("PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR", pure PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR)
-                            , ("PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR", pure PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR)
-                            , ("PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR", pure PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR)
-                            , ("PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR", pure PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR)
-                            , ("PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR", pure PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR)
-                            , ("PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR", pure PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR)
-                            , ("PIPELINE_CREATE_DISPATCH_BASE_BIT", pure PIPELINE_CREATE_DISPATCH_BASE_BIT)
-                            , ("PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT", pure PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCreateFlagBits")
-                       v <- step readPrec
-                       pure (PipelineCreateFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixPipelineCreateFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineCreateFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNamePipelineCreateFlagBits)
+            v <- step readPrec
+            pure (PipelineCreateFlagBits v)
+          )
+    )
 

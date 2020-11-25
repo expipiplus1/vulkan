@@ -6,13 +6,18 @@ module Vulkan.Core10.Enums.ImageTiling  (ImageTiling( IMAGE_TILING_OPTIMAL
                                                     , ..
                                                     )) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
@@ -36,10 +41,10 @@ newtype ImageTiling = ImageTiling Int32
 -- | 'IMAGE_TILING_OPTIMAL' specifies optimal tiling (texels are laid out in
 -- an implementation-dependent arrangement, for more optimal memory
 -- access).
-pattern IMAGE_TILING_OPTIMAL = ImageTiling 0
+pattern IMAGE_TILING_OPTIMAL                 = ImageTiling 0
 -- | 'IMAGE_TILING_LINEAR' specifies linear tiling (texels are laid out in
 -- memory in row-major order, possibly with some padding on each row).
-pattern IMAGE_TILING_LINEAR = ImageTiling 1
+pattern IMAGE_TILING_LINEAR                  = ImageTiling 1
 -- | 'IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT' indicates that the image’s tiling
 -- is defined by a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
@@ -54,20 +59,39 @@ pattern IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT = ImageTiling 1000158000
              IMAGE_TILING_LINEAR,
              IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT :: ImageTiling #-}
 
+conNameImageTiling :: String
+conNameImageTiling = "ImageTiling"
+
+enumPrefixImageTiling :: String
+enumPrefixImageTiling = "IMAGE_TILING_"
+
+showTableImageTiling :: [(ImageTiling, String)]
+showTableImageTiling =
+  [ (IMAGE_TILING_OPTIMAL                , "OPTIMAL")
+  , (IMAGE_TILING_LINEAR                 , "LINEAR")
+  , (IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT, "DRM_FORMAT_MODIFIER_EXT")
+  ]
+
 instance Show ImageTiling where
-  showsPrec p = \case
-    IMAGE_TILING_OPTIMAL -> showString "IMAGE_TILING_OPTIMAL"
-    IMAGE_TILING_LINEAR -> showString "IMAGE_TILING_LINEAR"
-    IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT -> showString "IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT"
-    ImageTiling x -> showParen (p >= 11) (showString "ImageTiling " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableImageTiling of
+    Just s -> showString enumPrefixImageTiling . showString s
+    Nothing ->
+      let ImageTiling x = e in showParen (p >= 11) (showString conNameImageTiling . showString " " . showsPrec 11 x)
 
 instance Read ImageTiling where
-  readPrec = parens (choose [("IMAGE_TILING_OPTIMAL", pure IMAGE_TILING_OPTIMAL)
-                            , ("IMAGE_TILING_LINEAR", pure IMAGE_TILING_LINEAR)
-                            , ("IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT", pure IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ImageTiling")
-                       v <- step readPrec
-                       pure (ImageTiling v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixImageTiling
+          asum ((\(e, s) -> e <$ string s) <$> showTableImageTiling)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameImageTiling)
+            v <- step readPrec
+            pure (ImageTiling v)
+          )
+    )
 

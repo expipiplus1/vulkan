@@ -122,9 +122,11 @@ module Vulkan.Extensions.VK_NN_vi_surface  ( createViSurfaceNN
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -136,7 +138,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -347,17 +352,38 @@ newtype ViSurfaceCreateFlagsNN = ViSurfaceCreateFlagsNN Flags
 
 
 
+conNameViSurfaceCreateFlagsNN :: String
+conNameViSurfaceCreateFlagsNN = "ViSurfaceCreateFlagsNN"
+
+enumPrefixViSurfaceCreateFlagsNN :: String
+enumPrefixViSurfaceCreateFlagsNN = ""
+
+showTableViSurfaceCreateFlagsNN :: [(ViSurfaceCreateFlagsNN, String)]
+showTableViSurfaceCreateFlagsNN = []
+
 instance Show ViSurfaceCreateFlagsNN where
-  showsPrec p = \case
-    ViSurfaceCreateFlagsNN x -> showParen (p >= 11) (showString "ViSurfaceCreateFlagsNN 0x" . showHex x)
+  showsPrec p e = case lookup e showTableViSurfaceCreateFlagsNN of
+    Just s -> showString enumPrefixViSurfaceCreateFlagsNN . showString s
+    Nothing ->
+      let ViSurfaceCreateFlagsNN x = e
+      in  showParen (p >= 11) (showString conNameViSurfaceCreateFlagsNN . showString " 0x" . showHex x)
 
 instance Read ViSurfaceCreateFlagsNN where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ViSurfaceCreateFlagsNN")
-                       v <- step readPrec
-                       pure (ViSurfaceCreateFlagsNN v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixViSurfaceCreateFlagsNN
+          asum ((\(e, s) -> e <$ string s) <$> showTableViSurfaceCreateFlagsNN)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameViSurfaceCreateFlagsNN)
+            v <- step readPrec
+            pure (ViSurfaceCreateFlagsNN v)
+          )
+    )
 
 
 type NN_VI_SURFACE_SPEC_VERSION = 1

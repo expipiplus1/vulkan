@@ -110,7 +110,9 @@ module Vulkan.Extensions.VK_AMD_pipeline_compiler_control  ( PipelineCompilerCon
                                                            , pattern AMD_PIPELINE_COMPILER_CONTROL_EXTENSION_NAME
                                                            ) where
 
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base ((<$))
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -119,7 +121,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -211,17 +216,38 @@ newtype PipelineCompilerControlFlagBitsAMD = PipelineCompilerControlFlagBitsAMD 
 
 
 
+conNamePipelineCompilerControlFlagBitsAMD :: String
+conNamePipelineCompilerControlFlagBitsAMD = "PipelineCompilerControlFlagBitsAMD"
+
+enumPrefixPipelineCompilerControlFlagBitsAMD :: String
+enumPrefixPipelineCompilerControlFlagBitsAMD = ""
+
+showTablePipelineCompilerControlFlagBitsAMD :: [(PipelineCompilerControlFlagBitsAMD, String)]
+showTablePipelineCompilerControlFlagBitsAMD = []
+
 instance Show PipelineCompilerControlFlagBitsAMD where
-  showsPrec p = \case
-    PipelineCompilerControlFlagBitsAMD x -> showParen (p >= 11) (showString "PipelineCompilerControlFlagBitsAMD 0x" . showHex x)
+  showsPrec p e = case lookup e showTablePipelineCompilerControlFlagBitsAMD of
+    Just s -> showString enumPrefixPipelineCompilerControlFlagBitsAMD . showString s
+    Nothing ->
+      let PipelineCompilerControlFlagBitsAMD x = e
+      in  showParen (p >= 11) (showString conNamePipelineCompilerControlFlagBitsAMD . showString " 0x" . showHex x)
 
 instance Read PipelineCompilerControlFlagBitsAMD where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PipelineCompilerControlFlagBitsAMD")
-                       v <- step readPrec
-                       pure (PipelineCompilerControlFlagBitsAMD v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixPipelineCompilerControlFlagBitsAMD
+          asum ((\(e, s) -> e <$ string s) <$> showTablePipelineCompilerControlFlagBitsAMD)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNamePipelineCompilerControlFlagBitsAMD)
+            v <- step readPrec
+            pure (PipelineCompilerControlFlagBitsAMD v)
+          )
+    )
 
 
 type AMD_PIPELINE_COMPILER_CONTROL_SPEC_VERSION = 1

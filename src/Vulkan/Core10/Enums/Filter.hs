@@ -6,13 +6,18 @@ module Vulkan.Core10.Enums.Filter  (Filter( FILTER_NEAREST
                                           , ..
                                           )) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
@@ -37,29 +42,43 @@ newtype Filter = Filter Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'FILTER_NEAREST' specifies nearest filtering.
-pattern FILTER_NEAREST = Filter 0
+pattern FILTER_NEAREST   = Filter 0
 -- | 'FILTER_LINEAR' specifies linear filtering.
-pattern FILTER_LINEAR = Filter 1
+pattern FILTER_LINEAR    = Filter 1
 -- No documentation found for Nested "VkFilter" "VK_FILTER_CUBIC_IMG"
 pattern FILTER_CUBIC_IMG = Filter 1000015000
 {-# complete FILTER_NEAREST,
              FILTER_LINEAR,
              FILTER_CUBIC_IMG :: Filter #-}
 
+conNameFilter :: String
+conNameFilter = "Filter"
+
+enumPrefixFilter :: String
+enumPrefixFilter = "FILTER_"
+
+showTableFilter :: [(Filter, String)]
+showTableFilter = [(FILTER_NEAREST, "NEAREST"), (FILTER_LINEAR, "LINEAR"), (FILTER_CUBIC_IMG, "CUBIC_IMG")]
+
 instance Show Filter where
-  showsPrec p = \case
-    FILTER_NEAREST -> showString "FILTER_NEAREST"
-    FILTER_LINEAR -> showString "FILTER_LINEAR"
-    FILTER_CUBIC_IMG -> showString "FILTER_CUBIC_IMG"
-    Filter x -> showParen (p >= 11) (showString "Filter " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableFilter of
+    Just s  -> showString enumPrefixFilter . showString s
+    Nothing -> let Filter x = e in showParen (p >= 11) (showString conNameFilter . showString " " . showsPrec 11 x)
 
 instance Read Filter where
-  readPrec = parens (choose [("FILTER_NEAREST", pure FILTER_NEAREST)
-                            , ("FILTER_LINEAR", pure FILTER_LINEAR)
-                            , ("FILTER_CUBIC_IMG", pure FILTER_CUBIC_IMG)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "Filter")
-                       v <- step readPrec
-                       pure (Filter v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixFilter
+          asum ((\(e, s) -> e <$ string s) <$> showTableFilter)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameFilter)
+            v <- step readPrec
+            pure (Filter v)
+          )
+    )
 

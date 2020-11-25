@@ -6,13 +6,18 @@ module Vulkan.Core12.Enums.SemaphoreWaitFlagBits  ( SemaphoreWaitFlags
                                                                          )
                                                   ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -45,16 +50,36 @@ newtype SemaphoreWaitFlagBits = SemaphoreWaitFlagBits Flags
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreWaitInfo'::@pValues@.
 pattern SEMAPHORE_WAIT_ANY_BIT = SemaphoreWaitFlagBits 0x00000001
 
+conNameSemaphoreWaitFlagBits :: String
+conNameSemaphoreWaitFlagBits = "SemaphoreWaitFlagBits"
+
+enumPrefixSemaphoreWaitFlagBits :: String
+enumPrefixSemaphoreWaitFlagBits = "SEMAPHORE_WAIT_ANY_BIT"
+
+showTableSemaphoreWaitFlagBits :: [(SemaphoreWaitFlagBits, String)]
+showTableSemaphoreWaitFlagBits = [(SEMAPHORE_WAIT_ANY_BIT, "")]
+
 instance Show SemaphoreWaitFlagBits where
-  showsPrec p = \case
-    SEMAPHORE_WAIT_ANY_BIT -> showString "SEMAPHORE_WAIT_ANY_BIT"
-    SemaphoreWaitFlagBits x -> showParen (p >= 11) (showString "SemaphoreWaitFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableSemaphoreWaitFlagBits of
+    Just s -> showString enumPrefixSemaphoreWaitFlagBits . showString s
+    Nothing ->
+      let SemaphoreWaitFlagBits x = e
+      in  showParen (p >= 11) (showString conNameSemaphoreWaitFlagBits . showString " 0x" . showHex x)
 
 instance Read SemaphoreWaitFlagBits where
-  readPrec = parens (choose [("SEMAPHORE_WAIT_ANY_BIT", pure SEMAPHORE_WAIT_ANY_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SemaphoreWaitFlagBits")
-                       v <- step readPrec
-                       pure (SemaphoreWaitFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixSemaphoreWaitFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableSemaphoreWaitFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameSemaphoreWaitFlagBits)
+            v <- step readPrec
+            pure (SemaphoreWaitFlagBits v)
+          )
+    )
 

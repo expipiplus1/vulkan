@@ -17,13 +17,18 @@ module Vulkan.Core12.Enums.DriverId  (DriverId( DRIVER_ID_AMD_PROPRIETARY
                                               , ..
                                               )) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
@@ -57,33 +62,33 @@ newtype DriverId = DriverId Int32
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_AMD_PROPRIETARY"
-pattern DRIVER_ID_AMD_PROPRIETARY = DriverId 1
+pattern DRIVER_ID_AMD_PROPRIETARY           = DriverId 1
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_AMD_OPEN_SOURCE"
-pattern DRIVER_ID_AMD_OPEN_SOURCE = DriverId 2
+pattern DRIVER_ID_AMD_OPEN_SOURCE           = DriverId 2
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_RADV"
-pattern DRIVER_ID_MESA_RADV = DriverId 3
+pattern DRIVER_ID_MESA_RADV                 = DriverId 3
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_NVIDIA_PROPRIETARY"
-pattern DRIVER_ID_NVIDIA_PROPRIETARY = DriverId 4
+pattern DRIVER_ID_NVIDIA_PROPRIETARY        = DriverId 4
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_INTEL_PROPRIETARY_WINDOWS"
 pattern DRIVER_ID_INTEL_PROPRIETARY_WINDOWS = DriverId 5
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_INTEL_OPEN_SOURCE_MESA"
-pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA = DriverId 6
+pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA    = DriverId 6
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_IMAGINATION_PROPRIETARY"
-pattern DRIVER_ID_IMAGINATION_PROPRIETARY = DriverId 7
+pattern DRIVER_ID_IMAGINATION_PROPRIETARY   = DriverId 7
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_QUALCOMM_PROPRIETARY"
-pattern DRIVER_ID_QUALCOMM_PROPRIETARY = DriverId 8
+pattern DRIVER_ID_QUALCOMM_PROPRIETARY      = DriverId 8
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_ARM_PROPRIETARY"
-pattern DRIVER_ID_ARM_PROPRIETARY = DriverId 9
+pattern DRIVER_ID_ARM_PROPRIETARY           = DriverId 9
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_GOOGLE_SWIFTSHADER"
-pattern DRIVER_ID_GOOGLE_SWIFTSHADER = DriverId 10
+pattern DRIVER_ID_GOOGLE_SWIFTSHADER        = DriverId 10
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_GGP_PROPRIETARY"
-pattern DRIVER_ID_GGP_PROPRIETARY = DriverId 11
+pattern DRIVER_ID_GGP_PROPRIETARY           = DriverId 11
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_BROADCOM_PROPRIETARY"
-pattern DRIVER_ID_BROADCOM_PROPRIETARY = DriverId 12
+pattern DRIVER_ID_BROADCOM_PROPRIETARY      = DriverId 12
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_LLVMPIPE"
-pattern DRIVER_ID_MESA_LLVMPIPE = DriverId 13
+pattern DRIVER_ID_MESA_LLVMPIPE             = DriverId 13
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MOLTENVK"
-pattern DRIVER_ID_MOLTENVK = DriverId 14
+pattern DRIVER_ID_MOLTENVK                  = DriverId 14
 {-# complete DRIVER_ID_AMD_PROPRIETARY,
              DRIVER_ID_AMD_OPEN_SOURCE,
              DRIVER_ID_MESA_RADV,
@@ -99,42 +104,50 @@ pattern DRIVER_ID_MOLTENVK = DriverId 14
              DRIVER_ID_MESA_LLVMPIPE,
              DRIVER_ID_MOLTENVK :: DriverId #-}
 
+conNameDriverId :: String
+conNameDriverId = "DriverId"
+
+enumPrefixDriverId :: String
+enumPrefixDriverId = "DRIVER_ID_"
+
+showTableDriverId :: [(DriverId, String)]
+showTableDriverId =
+  [ (DRIVER_ID_AMD_PROPRIETARY          , "AMD_PROPRIETARY")
+  , (DRIVER_ID_AMD_OPEN_SOURCE          , "AMD_OPEN_SOURCE")
+  , (DRIVER_ID_MESA_RADV                , "MESA_RADV")
+  , (DRIVER_ID_NVIDIA_PROPRIETARY       , "NVIDIA_PROPRIETARY")
+  , (DRIVER_ID_INTEL_PROPRIETARY_WINDOWS, "INTEL_PROPRIETARY_WINDOWS")
+  , (DRIVER_ID_INTEL_OPEN_SOURCE_MESA   , "INTEL_OPEN_SOURCE_MESA")
+  , (DRIVER_ID_IMAGINATION_PROPRIETARY  , "IMAGINATION_PROPRIETARY")
+  , (DRIVER_ID_QUALCOMM_PROPRIETARY     , "QUALCOMM_PROPRIETARY")
+  , (DRIVER_ID_ARM_PROPRIETARY          , "ARM_PROPRIETARY")
+  , (DRIVER_ID_GOOGLE_SWIFTSHADER       , "GOOGLE_SWIFTSHADER")
+  , (DRIVER_ID_GGP_PROPRIETARY          , "GGP_PROPRIETARY")
+  , (DRIVER_ID_BROADCOM_PROPRIETARY     , "BROADCOM_PROPRIETARY")
+  , (DRIVER_ID_MESA_LLVMPIPE            , "MESA_LLVMPIPE")
+  , (DRIVER_ID_MOLTENVK                 , "MOLTENVK")
+  ]
+
 instance Show DriverId where
-  showsPrec p = \case
-    DRIVER_ID_AMD_PROPRIETARY -> showString "DRIVER_ID_AMD_PROPRIETARY"
-    DRIVER_ID_AMD_OPEN_SOURCE -> showString "DRIVER_ID_AMD_OPEN_SOURCE"
-    DRIVER_ID_MESA_RADV -> showString "DRIVER_ID_MESA_RADV"
-    DRIVER_ID_NVIDIA_PROPRIETARY -> showString "DRIVER_ID_NVIDIA_PROPRIETARY"
-    DRIVER_ID_INTEL_PROPRIETARY_WINDOWS -> showString "DRIVER_ID_INTEL_PROPRIETARY_WINDOWS"
-    DRIVER_ID_INTEL_OPEN_SOURCE_MESA -> showString "DRIVER_ID_INTEL_OPEN_SOURCE_MESA"
-    DRIVER_ID_IMAGINATION_PROPRIETARY -> showString "DRIVER_ID_IMAGINATION_PROPRIETARY"
-    DRIVER_ID_QUALCOMM_PROPRIETARY -> showString "DRIVER_ID_QUALCOMM_PROPRIETARY"
-    DRIVER_ID_ARM_PROPRIETARY -> showString "DRIVER_ID_ARM_PROPRIETARY"
-    DRIVER_ID_GOOGLE_SWIFTSHADER -> showString "DRIVER_ID_GOOGLE_SWIFTSHADER"
-    DRIVER_ID_GGP_PROPRIETARY -> showString "DRIVER_ID_GGP_PROPRIETARY"
-    DRIVER_ID_BROADCOM_PROPRIETARY -> showString "DRIVER_ID_BROADCOM_PROPRIETARY"
-    DRIVER_ID_MESA_LLVMPIPE -> showString "DRIVER_ID_MESA_LLVMPIPE"
-    DRIVER_ID_MOLTENVK -> showString "DRIVER_ID_MOLTENVK"
-    DriverId x -> showParen (p >= 11) (showString "DriverId " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableDriverId of
+    Just s -> showString enumPrefixDriverId . showString s
+    Nothing ->
+      let DriverId x = e in showParen (p >= 11) (showString conNameDriverId . showString " " . showsPrec 11 x)
 
 instance Read DriverId where
-  readPrec = parens (choose [("DRIVER_ID_AMD_PROPRIETARY", pure DRIVER_ID_AMD_PROPRIETARY)
-                            , ("DRIVER_ID_AMD_OPEN_SOURCE", pure DRIVER_ID_AMD_OPEN_SOURCE)
-                            , ("DRIVER_ID_MESA_RADV", pure DRIVER_ID_MESA_RADV)
-                            , ("DRIVER_ID_NVIDIA_PROPRIETARY", pure DRIVER_ID_NVIDIA_PROPRIETARY)
-                            , ("DRIVER_ID_INTEL_PROPRIETARY_WINDOWS", pure DRIVER_ID_INTEL_PROPRIETARY_WINDOWS)
-                            , ("DRIVER_ID_INTEL_OPEN_SOURCE_MESA", pure DRIVER_ID_INTEL_OPEN_SOURCE_MESA)
-                            , ("DRIVER_ID_IMAGINATION_PROPRIETARY", pure DRIVER_ID_IMAGINATION_PROPRIETARY)
-                            , ("DRIVER_ID_QUALCOMM_PROPRIETARY", pure DRIVER_ID_QUALCOMM_PROPRIETARY)
-                            , ("DRIVER_ID_ARM_PROPRIETARY", pure DRIVER_ID_ARM_PROPRIETARY)
-                            , ("DRIVER_ID_GOOGLE_SWIFTSHADER", pure DRIVER_ID_GOOGLE_SWIFTSHADER)
-                            , ("DRIVER_ID_GGP_PROPRIETARY", pure DRIVER_ID_GGP_PROPRIETARY)
-                            , ("DRIVER_ID_BROADCOM_PROPRIETARY", pure DRIVER_ID_BROADCOM_PROPRIETARY)
-                            , ("DRIVER_ID_MESA_LLVMPIPE", pure DRIVER_ID_MESA_LLVMPIPE)
-                            , ("DRIVER_ID_MOLTENVK", pure DRIVER_ID_MOLTENVK)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DriverId")
-                       v <- step readPrec
-                       pure (DriverId v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDriverId
+          asum ((\(e, s) -> e <$ string s) <$> showTableDriverId)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDriverId)
+            v <- step readPrec
+            pure (DriverId v)
+          )
+    )
 

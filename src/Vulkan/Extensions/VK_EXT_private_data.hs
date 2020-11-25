@@ -156,9 +156,11 @@ module Vulkan.Extensions.VK_EXT_private_data  ( createPrivateDataSlotEXT
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -170,7 +172,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -707,17 +712,38 @@ newtype PrivateDataSlotCreateFlagBitsEXT = PrivateDataSlotCreateFlagBitsEXT Flag
 
 
 
+conNamePrivateDataSlotCreateFlagBitsEXT :: String
+conNamePrivateDataSlotCreateFlagBitsEXT = "PrivateDataSlotCreateFlagBitsEXT"
+
+enumPrefixPrivateDataSlotCreateFlagBitsEXT :: String
+enumPrefixPrivateDataSlotCreateFlagBitsEXT = ""
+
+showTablePrivateDataSlotCreateFlagBitsEXT :: [(PrivateDataSlotCreateFlagBitsEXT, String)]
+showTablePrivateDataSlotCreateFlagBitsEXT = []
+
 instance Show PrivateDataSlotCreateFlagBitsEXT where
-  showsPrec p = \case
-    PrivateDataSlotCreateFlagBitsEXT x -> showParen (p >= 11) (showString "PrivateDataSlotCreateFlagBitsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTablePrivateDataSlotCreateFlagBitsEXT of
+    Just s -> showString enumPrefixPrivateDataSlotCreateFlagBitsEXT . showString s
+    Nothing ->
+      let PrivateDataSlotCreateFlagBitsEXT x = e
+      in  showParen (p >= 11) (showString conNamePrivateDataSlotCreateFlagBitsEXT . showString " 0x" . showHex x)
 
 instance Read PrivateDataSlotCreateFlagBitsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "PrivateDataSlotCreateFlagBitsEXT")
-                       v <- step readPrec
-                       pure (PrivateDataSlotCreateFlagBitsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixPrivateDataSlotCreateFlagBitsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTablePrivateDataSlotCreateFlagBitsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNamePrivateDataSlotCreateFlagBitsEXT)
+            v <- step readPrec
+            pure (PrivateDataSlotCreateFlagBitsEXT v)
+          )
+    )
 
 
 type EXT_PRIVATE_DATA_SPEC_VERSION = 1

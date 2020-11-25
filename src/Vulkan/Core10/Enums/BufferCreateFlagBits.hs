@@ -10,13 +10,18 @@ module Vulkan.Core10.Enums.BufferCreateFlagBits  ( BufferCreateFlags
                                                                        )
                                                  ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -47,18 +52,18 @@ newtype BufferCreateFlagBits = BufferCreateFlagBits Flags
 
 -- | 'BUFFER_CREATE_SPARSE_BINDING_BIT' specifies that the buffer will be
 -- backed using sparse memory binding.
-pattern BUFFER_CREATE_SPARSE_BINDING_BIT = BufferCreateFlagBits 0x00000001
+pattern BUFFER_CREATE_SPARSE_BINDING_BIT                = BufferCreateFlagBits 0x00000001
 -- | 'BUFFER_CREATE_SPARSE_RESIDENCY_BIT' specifies that the buffer /can/ be
 -- partially backed using sparse memory binding. Buffers created with this
 -- flag /must/ also be created with the 'BUFFER_CREATE_SPARSE_BINDING_BIT'
 -- flag.
-pattern BUFFER_CREATE_SPARSE_RESIDENCY_BIT = BufferCreateFlagBits 0x00000002
+pattern BUFFER_CREATE_SPARSE_RESIDENCY_BIT              = BufferCreateFlagBits 0x00000002
 -- | 'BUFFER_CREATE_SPARSE_ALIASED_BIT' specifies that the buffer will be
 -- backed using sparse memory binding with memory ranges that might also
 -- simultaneously be backing another buffer (or another portion of the same
 -- buffer). Buffers created with this flag /must/ also be created with the
 -- 'BUFFER_CREATE_SPARSE_BINDING_BIT' flag.
-pattern BUFFER_CREATE_SPARSE_ALIASED_BIT = BufferCreateFlagBits 0x00000004
+pattern BUFFER_CREATE_SPARSE_ALIASED_BIT                = BufferCreateFlagBits 0x00000004
 -- | 'BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT' specifies that the
 -- buffer’s address /can/ be saved and reused on a subsequent run (e.g. for
 -- trace capture and replay), see
@@ -67,26 +72,44 @@ pattern BUFFER_CREATE_SPARSE_ALIASED_BIT = BufferCreateFlagBits 0x00000004
 pattern BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = BufferCreateFlagBits 0x00000010
 -- | 'BUFFER_CREATE_PROTECTED_BIT' specifies that the buffer is a protected
 -- buffer.
-pattern BUFFER_CREATE_PROTECTED_BIT = BufferCreateFlagBits 0x00000008
+pattern BUFFER_CREATE_PROTECTED_BIT                     = BufferCreateFlagBits 0x00000008
+
+conNameBufferCreateFlagBits :: String
+conNameBufferCreateFlagBits = "BufferCreateFlagBits"
+
+enumPrefixBufferCreateFlagBits :: String
+enumPrefixBufferCreateFlagBits = "BUFFER_CREATE_"
+
+showTableBufferCreateFlagBits :: [(BufferCreateFlagBits, String)]
+showTableBufferCreateFlagBits =
+  [ (BUFFER_CREATE_SPARSE_BINDING_BIT               , "SPARSE_BINDING_BIT")
+  , (BUFFER_CREATE_SPARSE_RESIDENCY_BIT             , "SPARSE_RESIDENCY_BIT")
+  , (BUFFER_CREATE_SPARSE_ALIASED_BIT               , "SPARSE_ALIASED_BIT")
+  , (BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT, "DEVICE_ADDRESS_CAPTURE_REPLAY_BIT")
+  , (BUFFER_CREATE_PROTECTED_BIT                    , "PROTECTED_BIT")
+  ]
 
 instance Show BufferCreateFlagBits where
-  showsPrec p = \case
-    BUFFER_CREATE_SPARSE_BINDING_BIT -> showString "BUFFER_CREATE_SPARSE_BINDING_BIT"
-    BUFFER_CREATE_SPARSE_RESIDENCY_BIT -> showString "BUFFER_CREATE_SPARSE_RESIDENCY_BIT"
-    BUFFER_CREATE_SPARSE_ALIASED_BIT -> showString "BUFFER_CREATE_SPARSE_ALIASED_BIT"
-    BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT -> showString "BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT"
-    BUFFER_CREATE_PROTECTED_BIT -> showString "BUFFER_CREATE_PROTECTED_BIT"
-    BufferCreateFlagBits x -> showParen (p >= 11) (showString "BufferCreateFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableBufferCreateFlagBits of
+    Just s -> showString enumPrefixBufferCreateFlagBits . showString s
+    Nothing ->
+      let BufferCreateFlagBits x = e
+      in  showParen (p >= 11) (showString conNameBufferCreateFlagBits . showString " 0x" . showHex x)
 
 instance Read BufferCreateFlagBits where
-  readPrec = parens (choose [("BUFFER_CREATE_SPARSE_BINDING_BIT", pure BUFFER_CREATE_SPARSE_BINDING_BIT)
-                            , ("BUFFER_CREATE_SPARSE_RESIDENCY_BIT", pure BUFFER_CREATE_SPARSE_RESIDENCY_BIT)
-                            , ("BUFFER_CREATE_SPARSE_ALIASED_BIT", pure BUFFER_CREATE_SPARSE_ALIASED_BIT)
-                            , ("BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT", pure BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT)
-                            , ("BUFFER_CREATE_PROTECTED_BIT", pure BUFFER_CREATE_PROTECTED_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "BufferCreateFlagBits")
-                       v <- step readPrec
-                       pure (BufferCreateFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixBufferCreateFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableBufferCreateFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameBufferCreateFlagBits)
+            v <- step readPrec
+            pure (BufferCreateFlagBits v)
+          )
+    )
 

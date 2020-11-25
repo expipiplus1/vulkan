@@ -7,13 +7,18 @@ module Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits  ( DescriptorSetLay
                                                                                                  )
                                                               ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -38,7 +43,7 @@ newtype DescriptorSetLayoutCreateFlagBits = DescriptorSetLayoutCreateFlagBits Fl
 -- descriptor sets /must/ not be allocated using this layout, and
 -- descriptors are instead pushed by
 -- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR'.
-pattern DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = DescriptorSetLayoutCreateFlagBits 0x00000001
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR    = DescriptorSetLayoutCreateFlagBits 0x00000001
 -- | 'DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT' specifies that
 -- descriptor sets using this layout /must/ be allocated from a descriptor
 -- pool created with the
@@ -51,18 +56,39 @@ pattern DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = DescriptorSetLayo
 -- limits.
 pattern DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT = DescriptorSetLayoutCreateFlagBits 0x00000002
 
+conNameDescriptorSetLayoutCreateFlagBits :: String
+conNameDescriptorSetLayoutCreateFlagBits = "DescriptorSetLayoutCreateFlagBits"
+
+enumPrefixDescriptorSetLayoutCreateFlagBits :: String
+enumPrefixDescriptorSetLayoutCreateFlagBits = "DESCRIPTOR_SET_LAYOUT_CREATE_"
+
+showTableDescriptorSetLayoutCreateFlagBits :: [(DescriptorSetLayoutCreateFlagBits, String)]
+showTableDescriptorSetLayoutCreateFlagBits =
+  [ (DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR   , "PUSH_DESCRIPTOR_BIT_KHR")
+  , (DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT, "UPDATE_AFTER_BIND_POOL_BIT")
+  ]
+
 instance Show DescriptorSetLayoutCreateFlagBits where
-  showsPrec p = \case
-    DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR -> showString "DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR"
-    DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT -> showString "DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT"
-    DescriptorSetLayoutCreateFlagBits x -> showParen (p >= 11) (showString "DescriptorSetLayoutCreateFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableDescriptorSetLayoutCreateFlagBits of
+    Just s -> showString enumPrefixDescriptorSetLayoutCreateFlagBits . showString s
+    Nothing ->
+      let DescriptorSetLayoutCreateFlagBits x = e
+      in  showParen (p >= 11) (showString conNameDescriptorSetLayoutCreateFlagBits . showString " 0x" . showHex x)
 
 instance Read DescriptorSetLayoutCreateFlagBits where
-  readPrec = parens (choose [("DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR", pure DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR)
-                            , ("DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT", pure DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DescriptorSetLayoutCreateFlagBits")
-                       v <- step readPrec
-                       pure (DescriptorSetLayoutCreateFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDescriptorSetLayoutCreateFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableDescriptorSetLayoutCreateFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDescriptorSetLayoutCreateFlagBits)
+            v <- step readPrec
+            pure (DescriptorSetLayoutCreateFlagBits v)
+          )
+    )
 

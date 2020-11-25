@@ -170,9 +170,11 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -185,7 +187,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCStringLen)
@@ -557,10 +562,10 @@ newtype ShaderInfoTypeAMD = ShaderInfoTypeAMD Int32
 
 -- | 'SHADER_INFO_TYPE_STATISTICS_AMD' specifies that device resources used
 -- by a shader will be queried.
-pattern SHADER_INFO_TYPE_STATISTICS_AMD = ShaderInfoTypeAMD 0
+pattern SHADER_INFO_TYPE_STATISTICS_AMD  = ShaderInfoTypeAMD 0
 -- | 'SHADER_INFO_TYPE_BINARY_AMD' specifies that implementation-specific
 -- information will be queried.
-pattern SHADER_INFO_TYPE_BINARY_AMD = ShaderInfoTypeAMD 1
+pattern SHADER_INFO_TYPE_BINARY_AMD      = ShaderInfoTypeAMD 1
 -- | 'SHADER_INFO_TYPE_DISASSEMBLY_AMD' specifies that human-readable
 -- dissassembly of a shader.
 pattern SHADER_INFO_TYPE_DISASSEMBLY_AMD = ShaderInfoTypeAMD 2
@@ -568,22 +573,42 @@ pattern SHADER_INFO_TYPE_DISASSEMBLY_AMD = ShaderInfoTypeAMD 2
              SHADER_INFO_TYPE_BINARY_AMD,
              SHADER_INFO_TYPE_DISASSEMBLY_AMD :: ShaderInfoTypeAMD #-}
 
+conNameShaderInfoTypeAMD :: String
+conNameShaderInfoTypeAMD = "ShaderInfoTypeAMD"
+
+enumPrefixShaderInfoTypeAMD :: String
+enumPrefixShaderInfoTypeAMD = "SHADER_INFO_TYPE_"
+
+showTableShaderInfoTypeAMD :: [(ShaderInfoTypeAMD, String)]
+showTableShaderInfoTypeAMD =
+  [ (SHADER_INFO_TYPE_STATISTICS_AMD , "STATISTICS_AMD")
+  , (SHADER_INFO_TYPE_BINARY_AMD     , "BINARY_AMD")
+  , (SHADER_INFO_TYPE_DISASSEMBLY_AMD, "DISASSEMBLY_AMD")
+  ]
+
 instance Show ShaderInfoTypeAMD where
-  showsPrec p = \case
-    SHADER_INFO_TYPE_STATISTICS_AMD -> showString "SHADER_INFO_TYPE_STATISTICS_AMD"
-    SHADER_INFO_TYPE_BINARY_AMD -> showString "SHADER_INFO_TYPE_BINARY_AMD"
-    SHADER_INFO_TYPE_DISASSEMBLY_AMD -> showString "SHADER_INFO_TYPE_DISASSEMBLY_AMD"
-    ShaderInfoTypeAMD x -> showParen (p >= 11) (showString "ShaderInfoTypeAMD " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableShaderInfoTypeAMD of
+    Just s -> showString enumPrefixShaderInfoTypeAMD . showString s
+    Nothing ->
+      let ShaderInfoTypeAMD x = e
+      in  showParen (p >= 11) (showString conNameShaderInfoTypeAMD . showString " " . showsPrec 11 x)
 
 instance Read ShaderInfoTypeAMD where
-  readPrec = parens (choose [("SHADER_INFO_TYPE_STATISTICS_AMD", pure SHADER_INFO_TYPE_STATISTICS_AMD)
-                            , ("SHADER_INFO_TYPE_BINARY_AMD", pure SHADER_INFO_TYPE_BINARY_AMD)
-                            , ("SHADER_INFO_TYPE_DISASSEMBLY_AMD", pure SHADER_INFO_TYPE_DISASSEMBLY_AMD)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ShaderInfoTypeAMD")
-                       v <- step readPrec
-                       pure (ShaderInfoTypeAMD v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixShaderInfoTypeAMD
+          asum ((\(e, s) -> e <$ string s) <$> showTableShaderInfoTypeAMD)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameShaderInfoTypeAMD)
+            v <- step readPrec
+            pure (ShaderInfoTypeAMD v)
+          )
+    )
 
 
 type AMD_SHADER_INFO_SPEC_VERSION = 1

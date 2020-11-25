@@ -185,9 +185,11 @@ module Vulkan.Extensions.VK_KHR_xlib_surface  ( createXlibSurfaceKHR
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -199,7 +201,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -464,17 +469,38 @@ newtype XlibSurfaceCreateFlagsKHR = XlibSurfaceCreateFlagsKHR Flags
 
 
 
+conNameXlibSurfaceCreateFlagsKHR :: String
+conNameXlibSurfaceCreateFlagsKHR = "XlibSurfaceCreateFlagsKHR"
+
+enumPrefixXlibSurfaceCreateFlagsKHR :: String
+enumPrefixXlibSurfaceCreateFlagsKHR = ""
+
+showTableXlibSurfaceCreateFlagsKHR :: [(XlibSurfaceCreateFlagsKHR, String)]
+showTableXlibSurfaceCreateFlagsKHR = []
+
 instance Show XlibSurfaceCreateFlagsKHR where
-  showsPrec p = \case
-    XlibSurfaceCreateFlagsKHR x -> showParen (p >= 11) (showString "XlibSurfaceCreateFlagsKHR 0x" . showHex x)
+  showsPrec p e = case lookup e showTableXlibSurfaceCreateFlagsKHR of
+    Just s -> showString enumPrefixXlibSurfaceCreateFlagsKHR . showString s
+    Nothing ->
+      let XlibSurfaceCreateFlagsKHR x = e
+      in  showParen (p >= 11) (showString conNameXlibSurfaceCreateFlagsKHR . showString " 0x" . showHex x)
 
 instance Read XlibSurfaceCreateFlagsKHR where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "XlibSurfaceCreateFlagsKHR")
-                       v <- step readPrec
-                       pure (XlibSurfaceCreateFlagsKHR v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixXlibSurfaceCreateFlagsKHR
+          asum ((\(e, s) -> e <$ string s) <$> showTableXlibSurfaceCreateFlagsKHR)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameXlibSurfaceCreateFlagsKHR)
+            v <- step readPrec
+            pure (XlibSurfaceCreateFlagsKHR v)
+          )
+    )
 
 
 type KHR_XLIB_SURFACE_SPEC_VERSION = 6

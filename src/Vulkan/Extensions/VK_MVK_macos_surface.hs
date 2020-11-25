@@ -123,9 +123,11 @@ module Vulkan.Extensions.VK_MVK_macos_surface  ( createMacOSSurfaceMVK
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -137,7 +139,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -374,17 +379,38 @@ newtype MacOSSurfaceCreateFlagsMVK = MacOSSurfaceCreateFlagsMVK Flags
 
 
 
+conNameMacOSSurfaceCreateFlagsMVK :: String
+conNameMacOSSurfaceCreateFlagsMVK = "MacOSSurfaceCreateFlagsMVK"
+
+enumPrefixMacOSSurfaceCreateFlagsMVK :: String
+enumPrefixMacOSSurfaceCreateFlagsMVK = ""
+
+showTableMacOSSurfaceCreateFlagsMVK :: [(MacOSSurfaceCreateFlagsMVK, String)]
+showTableMacOSSurfaceCreateFlagsMVK = []
+
 instance Show MacOSSurfaceCreateFlagsMVK where
-  showsPrec p = \case
-    MacOSSurfaceCreateFlagsMVK x -> showParen (p >= 11) (showString "MacOSSurfaceCreateFlagsMVK 0x" . showHex x)
+  showsPrec p e = case lookup e showTableMacOSSurfaceCreateFlagsMVK of
+    Just s -> showString enumPrefixMacOSSurfaceCreateFlagsMVK . showString s
+    Nothing ->
+      let MacOSSurfaceCreateFlagsMVK x = e
+      in  showParen (p >= 11) (showString conNameMacOSSurfaceCreateFlagsMVK . showString " 0x" . showHex x)
 
 instance Read MacOSSurfaceCreateFlagsMVK where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "MacOSSurfaceCreateFlagsMVK")
-                       v <- step readPrec
-                       pure (MacOSSurfaceCreateFlagsMVK v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixMacOSSurfaceCreateFlagsMVK
+          asum ((\(e, s) -> e <$ string s) <$> showTableMacOSSurfaceCreateFlagsMVK)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameMacOSSurfaceCreateFlagsMVK)
+            v <- step readPrec
+            pure (MacOSSurfaceCreateFlagsMVK v)
+          )
+    )
 
 
 type MVK_MACOS_SURFACE_SPEC_VERSION = 3

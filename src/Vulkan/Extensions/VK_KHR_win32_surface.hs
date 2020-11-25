@@ -228,9 +228,11 @@ module Vulkan.Extensions.VK_KHR_win32_surface  ( createWin32SurfaceKHR
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -242,7 +244,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -500,17 +505,38 @@ newtype Win32SurfaceCreateFlagsKHR = Win32SurfaceCreateFlagsKHR Flags
 
 
 
+conNameWin32SurfaceCreateFlagsKHR :: String
+conNameWin32SurfaceCreateFlagsKHR = "Win32SurfaceCreateFlagsKHR"
+
+enumPrefixWin32SurfaceCreateFlagsKHR :: String
+enumPrefixWin32SurfaceCreateFlagsKHR = ""
+
+showTableWin32SurfaceCreateFlagsKHR :: [(Win32SurfaceCreateFlagsKHR, String)]
+showTableWin32SurfaceCreateFlagsKHR = []
+
 instance Show Win32SurfaceCreateFlagsKHR where
-  showsPrec p = \case
-    Win32SurfaceCreateFlagsKHR x -> showParen (p >= 11) (showString "Win32SurfaceCreateFlagsKHR 0x" . showHex x)
+  showsPrec p e = case lookup e showTableWin32SurfaceCreateFlagsKHR of
+    Just s -> showString enumPrefixWin32SurfaceCreateFlagsKHR . showString s
+    Nothing ->
+      let Win32SurfaceCreateFlagsKHR x = e
+      in  showParen (p >= 11) (showString conNameWin32SurfaceCreateFlagsKHR . showString " 0x" . showHex x)
 
 instance Read Win32SurfaceCreateFlagsKHR where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "Win32SurfaceCreateFlagsKHR")
-                       v <- step readPrec
-                       pure (Win32SurfaceCreateFlagsKHR v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixWin32SurfaceCreateFlagsKHR
+          asum ((\(e, s) -> e <$ string s) <$> showTableWin32SurfaceCreateFlagsKHR)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameWin32SurfaceCreateFlagsKHR)
+            v <- step readPrec
+            pure (Win32SurfaceCreateFlagsKHR v)
+          )
+    )
 
 
 type KHR_WIN32_SURFACE_SPEC_VERSION = 6

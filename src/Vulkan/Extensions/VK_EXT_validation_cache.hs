@@ -143,9 +143,11 @@ module Vulkan.Extensions.VK_EXT_validation_cache  ( createValidationCacheEXT
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -159,7 +161,10 @@ import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCStringLen)
@@ -790,17 +795,38 @@ newtype ValidationCacheCreateFlagsEXT = ValidationCacheCreateFlagsEXT Flags
 
 
 
+conNameValidationCacheCreateFlagsEXT :: String
+conNameValidationCacheCreateFlagsEXT = "ValidationCacheCreateFlagsEXT"
+
+enumPrefixValidationCacheCreateFlagsEXT :: String
+enumPrefixValidationCacheCreateFlagsEXT = ""
+
+showTableValidationCacheCreateFlagsEXT :: [(ValidationCacheCreateFlagsEXT, String)]
+showTableValidationCacheCreateFlagsEXT = []
+
 instance Show ValidationCacheCreateFlagsEXT where
-  showsPrec p = \case
-    ValidationCacheCreateFlagsEXT x -> showParen (p >= 11) (showString "ValidationCacheCreateFlagsEXT 0x" . showHex x)
+  showsPrec p e = case lookup e showTableValidationCacheCreateFlagsEXT of
+    Just s -> showString enumPrefixValidationCacheCreateFlagsEXT . showString s
+    Nothing ->
+      let ValidationCacheCreateFlagsEXT x = e
+      in  showParen (p >= 11) (showString conNameValidationCacheCreateFlagsEXT . showString " 0x" . showHex x)
 
 instance Read ValidationCacheCreateFlagsEXT where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ValidationCacheCreateFlagsEXT")
-                       v <- step readPrec
-                       pure (ValidationCacheCreateFlagsEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixValidationCacheCreateFlagsEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableValidationCacheCreateFlagsEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameValidationCacheCreateFlagsEXT)
+            v <- step readPrec
+            pure (ValidationCacheCreateFlagsEXT v)
+          )
+    )
 
 
 -- | VkValidationCacheHeaderVersionEXT - Encode validation cache version
@@ -817,18 +843,38 @@ newtype ValidationCacheHeaderVersionEXT = ValidationCacheHeaderVersionEXT Int32
 pattern VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = ValidationCacheHeaderVersionEXT 1
 {-# complete VALIDATION_CACHE_HEADER_VERSION_ONE_EXT :: ValidationCacheHeaderVersionEXT #-}
 
+conNameValidationCacheHeaderVersionEXT :: String
+conNameValidationCacheHeaderVersionEXT = "ValidationCacheHeaderVersionEXT"
+
+enumPrefixValidationCacheHeaderVersionEXT :: String
+enumPrefixValidationCacheHeaderVersionEXT = "VALIDATION_CACHE_HEADER_VERSION_ONE_EXT"
+
+showTableValidationCacheHeaderVersionEXT :: [(ValidationCacheHeaderVersionEXT, String)]
+showTableValidationCacheHeaderVersionEXT = [(VALIDATION_CACHE_HEADER_VERSION_ONE_EXT, "")]
+
 instance Show ValidationCacheHeaderVersionEXT where
-  showsPrec p = \case
-    VALIDATION_CACHE_HEADER_VERSION_ONE_EXT -> showString "VALIDATION_CACHE_HEADER_VERSION_ONE_EXT"
-    ValidationCacheHeaderVersionEXT x -> showParen (p >= 11) (showString "ValidationCacheHeaderVersionEXT " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableValidationCacheHeaderVersionEXT of
+    Just s -> showString enumPrefixValidationCacheHeaderVersionEXT . showString s
+    Nothing ->
+      let ValidationCacheHeaderVersionEXT x = e
+      in  showParen (p >= 11) (showString conNameValidationCacheHeaderVersionEXT . showString " " . showsPrec 11 x)
 
 instance Read ValidationCacheHeaderVersionEXT where
-  readPrec = parens (choose [("VALIDATION_CACHE_HEADER_VERSION_ONE_EXT", pure VALIDATION_CACHE_HEADER_VERSION_ONE_EXT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ValidationCacheHeaderVersionEXT")
-                       v <- step readPrec
-                       pure (ValidationCacheHeaderVersionEXT v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixValidationCacheHeaderVersionEXT
+          asum ((\(e, s) -> e <$ string s) <$> showTableValidationCacheHeaderVersionEXT)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameValidationCacheHeaderVersionEXT)
+            v <- step readPrec
+            pure (ValidationCacheHeaderVersionEXT v)
+          )
+    )
 
 
 type EXT_VALIDATION_CACHE_SPEC_VERSION = 1

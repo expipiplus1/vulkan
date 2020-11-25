@@ -7,13 +7,18 @@ module Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits  ( ExternalFenceFeatureF
                                                                                        )
                                                          ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -41,18 +46,37 @@ pattern EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x0
 -- /can/ be imported to Vulkan fence objects.
 pattern EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x00000002
 
+conNameExternalFenceFeatureFlagBits :: String
+conNameExternalFenceFeatureFlagBits = "ExternalFenceFeatureFlagBits"
+
+enumPrefixExternalFenceFeatureFlagBits :: String
+enumPrefixExternalFenceFeatureFlagBits = "EXTERNAL_FENCE_FEATURE_"
+
+showTableExternalFenceFeatureFlagBits :: [(ExternalFenceFeatureFlagBits, String)]
+showTableExternalFenceFeatureFlagBits =
+  [(EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT, "EXPORTABLE_BIT"), (EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT, "IMPORTABLE_BIT")]
+
 instance Show ExternalFenceFeatureFlagBits where
-  showsPrec p = \case
-    EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT -> showString "EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"
-    EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT -> showString "EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"
-    ExternalFenceFeatureFlagBits x -> showParen (p >= 11) (showString "ExternalFenceFeatureFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableExternalFenceFeatureFlagBits of
+    Just s -> showString enumPrefixExternalFenceFeatureFlagBits . showString s
+    Nothing ->
+      let ExternalFenceFeatureFlagBits x = e
+      in  showParen (p >= 11) (showString conNameExternalFenceFeatureFlagBits . showString " 0x" . showHex x)
 
 instance Read ExternalFenceFeatureFlagBits where
-  readPrec = parens (choose [("EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT", pure EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT)
-                            , ("EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT", pure EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ExternalFenceFeatureFlagBits")
-                       v <- step readPrec
-                       pure (ExternalFenceFeatureFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixExternalFenceFeatureFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableExternalFenceFeatureFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameExternalFenceFeatureFlagBits)
+            v <- step readPrec
+            pure (ExternalFenceFeatureFlagBits v)
+          )
+    )
 

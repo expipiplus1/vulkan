@@ -1125,10 +1125,12 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -1141,7 +1143,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -3616,38 +3621,57 @@ newtype DeviceGroupPresentModeFlagBitsKHR = DeviceGroupPresentModeFlagBitsKHR Fl
 -- | 'DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR' specifies that any physical
 -- device with a presentation engine /can/ present its own swapchain
 -- images.
-pattern DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000001
+pattern DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR              = DeviceGroupPresentModeFlagBitsKHR 0x00000001
 -- | 'DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR' specifies that any physical
 -- device with a presentation engine /can/ present swapchain images from
 -- any physical device in its @presentMask@.
-pattern DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000002
+pattern DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR             = DeviceGroupPresentModeFlagBitsKHR 0x00000002
 -- | 'DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR' specifies that any physical
 -- device with a presentation engine /can/ present the sum of swapchain
 -- images from any physical devices in its @presentMask@.
-pattern DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000004
+pattern DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR                = DeviceGroupPresentModeFlagBitsKHR 0x00000004
 -- | 'DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR' specifies that
 -- multiple physical devices with a presentation engine /can/ each present
 -- their own swapchain images.
 pattern DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000008
 
+conNameDeviceGroupPresentModeFlagBitsKHR :: String
+conNameDeviceGroupPresentModeFlagBitsKHR = "DeviceGroupPresentModeFlagBitsKHR"
+
+enumPrefixDeviceGroupPresentModeFlagBitsKHR :: String
+enumPrefixDeviceGroupPresentModeFlagBitsKHR = "DEVICE_GROUP_PRESENT_MODE_"
+
+showTableDeviceGroupPresentModeFlagBitsKHR :: [(DeviceGroupPresentModeFlagBitsKHR, String)]
+showTableDeviceGroupPresentModeFlagBitsKHR =
+  [ (DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR             , "LOCAL_BIT_KHR")
+  , (DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR            , "REMOTE_BIT_KHR")
+  , (DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR               , "SUM_BIT_KHR")
+  , (DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR, "LOCAL_MULTI_DEVICE_BIT_KHR")
+  ]
+
 instance Show DeviceGroupPresentModeFlagBitsKHR where
-  showsPrec p = \case
-    DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR -> showString "DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR"
-    DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR -> showString "DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR"
-    DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR -> showString "DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR"
-    DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR -> showString "DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR"
-    DeviceGroupPresentModeFlagBitsKHR x -> showParen (p >= 11) (showString "DeviceGroupPresentModeFlagBitsKHR 0x" . showHex x)
+  showsPrec p e = case lookup e showTableDeviceGroupPresentModeFlagBitsKHR of
+    Just s -> showString enumPrefixDeviceGroupPresentModeFlagBitsKHR . showString s
+    Nothing ->
+      let DeviceGroupPresentModeFlagBitsKHR x = e
+      in  showParen (p >= 11) (showString conNameDeviceGroupPresentModeFlagBitsKHR . showString " 0x" . showHex x)
 
 instance Read DeviceGroupPresentModeFlagBitsKHR where
-  readPrec = parens (choose [("DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR", pure DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR)
-                            , ("DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR", pure DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR)
-                            , ("DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR", pure DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR)
-                            , ("DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR", pure DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DeviceGroupPresentModeFlagBitsKHR")
-                       v <- step readPrec
-                       pure (DeviceGroupPresentModeFlagBitsKHR v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDeviceGroupPresentModeFlagBitsKHR
+          asum ((\(e, s) -> e <$ string s) <$> showTableDeviceGroupPresentModeFlagBitsKHR)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDeviceGroupPresentModeFlagBitsKHR)
+            v <- step readPrec
+            pure (DeviceGroupPresentModeFlagBitsKHR v)
+          )
+    )
 
 
 type SwapchainCreateFlagsKHR = SwapchainCreateFlagBitsKHR
@@ -3671,7 +3695,7 @@ newtype SwapchainCreateFlagBitsKHR = SwapchainCreateFlagBitsKHR Flags
 -- flags that are not supported for the format the swapchain is created
 -- with but are supported for at least one of the allowed image view
 -- formats.
-pattern SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000004
+pattern SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR              = SwapchainCreateFlagBitsKHR 0x00000004
 -- | 'SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR' specifies that
 -- images created from the swapchain (i.e. with the @swapchain@ member of
 -- 'ImageSwapchainCreateInfoKHR' set to this swapchain’s handle) /must/ use
@@ -3679,24 +3703,44 @@ pattern SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR = SwapchainCreateFlagBitsKHR 0x0
 pattern SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000001
 -- | 'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR' specifies that images created from
 -- the swapchain are protected images.
-pattern SWAPCHAIN_CREATE_PROTECTED_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000002
+pattern SWAPCHAIN_CREATE_PROTECTED_BIT_KHR                   = SwapchainCreateFlagBitsKHR 0x00000002
+
+conNameSwapchainCreateFlagBitsKHR :: String
+conNameSwapchainCreateFlagBitsKHR = "SwapchainCreateFlagBitsKHR"
+
+enumPrefixSwapchainCreateFlagBitsKHR :: String
+enumPrefixSwapchainCreateFlagBitsKHR = "SWAPCHAIN_CREATE_"
+
+showTableSwapchainCreateFlagBitsKHR :: [(SwapchainCreateFlagBitsKHR, String)]
+showTableSwapchainCreateFlagBitsKHR =
+  [ (SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR             , "MUTABLE_FORMAT_BIT_KHR")
+  , (SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR, "SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR")
+  , (SWAPCHAIN_CREATE_PROTECTED_BIT_KHR                  , "PROTECTED_BIT_KHR")
+  ]
 
 instance Show SwapchainCreateFlagBitsKHR where
-  showsPrec p = \case
-    SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR -> showString "SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR"
-    SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR -> showString "SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"
-    SWAPCHAIN_CREATE_PROTECTED_BIT_KHR -> showString "SWAPCHAIN_CREATE_PROTECTED_BIT_KHR"
-    SwapchainCreateFlagBitsKHR x -> showParen (p >= 11) (showString "SwapchainCreateFlagBitsKHR 0x" . showHex x)
+  showsPrec p e = case lookup e showTableSwapchainCreateFlagBitsKHR of
+    Just s -> showString enumPrefixSwapchainCreateFlagBitsKHR . showString s
+    Nothing ->
+      let SwapchainCreateFlagBitsKHR x = e
+      in  showParen (p >= 11) (showString conNameSwapchainCreateFlagBitsKHR . showString " 0x" . showHex x)
 
 instance Read SwapchainCreateFlagBitsKHR where
-  readPrec = parens (choose [("SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR", pure SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR)
-                            , ("SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR", pure SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR)
-                            , ("SWAPCHAIN_CREATE_PROTECTED_BIT_KHR", pure SWAPCHAIN_CREATE_PROTECTED_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SwapchainCreateFlagBitsKHR")
-                       v <- step readPrec
-                       pure (SwapchainCreateFlagBitsKHR v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixSwapchainCreateFlagBitsKHR
+          asum ((\(e, s) -> e <$ string s) <$> showTableSwapchainCreateFlagBitsKHR)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameSwapchainCreateFlagBitsKHR)
+            v <- step readPrec
+            pure (SwapchainCreateFlagBitsKHR v)
+          )
+    )
 
 
 type KHR_SWAPCHAIN_SPEC_VERSION = 70

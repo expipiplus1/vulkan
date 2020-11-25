@@ -2,13 +2,18 @@
 -- No documentation found for Chapter "CommandPoolTrimFlags"
 module Vulkan.Core11.Enums.CommandPoolTrimFlags  (CommandPoolTrimFlags(..)) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -34,15 +39,36 @@ newtype CommandPoolTrimFlags = CommandPoolTrimFlags Flags
 
 
 
+conNameCommandPoolTrimFlags :: String
+conNameCommandPoolTrimFlags = "CommandPoolTrimFlags"
+
+enumPrefixCommandPoolTrimFlags :: String
+enumPrefixCommandPoolTrimFlags = ""
+
+showTableCommandPoolTrimFlags :: [(CommandPoolTrimFlags, String)]
+showTableCommandPoolTrimFlags = []
+
 instance Show CommandPoolTrimFlags where
-  showsPrec p = \case
-    CommandPoolTrimFlags x -> showParen (p >= 11) (showString "CommandPoolTrimFlags 0x" . showHex x)
+  showsPrec p e = case lookup e showTableCommandPoolTrimFlags of
+    Just s -> showString enumPrefixCommandPoolTrimFlags . showString s
+    Nothing ->
+      let CommandPoolTrimFlags x = e
+      in  showParen (p >= 11) (showString conNameCommandPoolTrimFlags . showString " 0x" . showHex x)
 
 instance Read CommandPoolTrimFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CommandPoolTrimFlags")
-                       v <- step readPrec
-                       pure (CommandPoolTrimFlags v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixCommandPoolTrimFlags
+          asum ((\(e, s) -> e <$ string s) <$> showTableCommandPoolTrimFlags)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameCommandPoolTrimFlags)
+            v <- step readPrec
+            pure (CommandPoolTrimFlags v)
+          )
+    )
 

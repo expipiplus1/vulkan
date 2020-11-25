@@ -758,12 +758,14 @@ module Vulkan.Extensions.VK_KHR_ray_tracing_pipeline  ( cmdTraceRaysKHR
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Foldable (asum)
 import Data.Foldable (traverse_)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
+import GHC.Base ((<$))
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -776,7 +778,10 @@ import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
@@ -3476,11 +3481,11 @@ newtype RayTracingShaderGroupTypeKHR = RayTracingShaderGroupTypeKHR Int32
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MISS_BIT_KHR', or
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_CALLABLE_BIT_KHR'
 -- shader in it.
-pattern RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR = RayTracingShaderGroupTypeKHR 0
+pattern RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR              = RayTracingShaderGroupTypeKHR 0
 -- | 'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR' specifies a
 -- shader group that only hits triangles and /must/ not contain an
 -- intersection shader, only closest hit and any-hit shaders.
-pattern RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR = RayTracingShaderGroupTypeKHR 1
+pattern RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR  = RayTracingShaderGroupTypeKHR 1
 -- | 'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR' specifies a
 -- shader group that only intersects with custom geometry and /must/
 -- contain an intersection shader and /may/ contain closest hit and any-hit
@@ -3490,22 +3495,42 @@ pattern RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR = RayTracingShade
              RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR,
              RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR :: RayTracingShaderGroupTypeKHR #-}
 
+conNameRayTracingShaderGroupTypeKHR :: String
+conNameRayTracingShaderGroupTypeKHR = "RayTracingShaderGroupTypeKHR"
+
+enumPrefixRayTracingShaderGroupTypeKHR :: String
+enumPrefixRayTracingShaderGroupTypeKHR = "RAY_TRACING_SHADER_GROUP_TYPE_"
+
+showTableRayTracingShaderGroupTypeKHR :: [(RayTracingShaderGroupTypeKHR, String)]
+showTableRayTracingShaderGroupTypeKHR =
+  [ (RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR             , "GENERAL_KHR")
+  , (RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR , "TRIANGLES_HIT_GROUP_KHR")
+  , (RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR, "PROCEDURAL_HIT_GROUP_KHR")
+  ]
+
 instance Show RayTracingShaderGroupTypeKHR where
-  showsPrec p = \case
-    RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR -> showString "RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR"
-    RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR -> showString "RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR"
-    RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR -> showString "RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR"
-    RayTracingShaderGroupTypeKHR x -> showParen (p >= 11) (showString "RayTracingShaderGroupTypeKHR " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableRayTracingShaderGroupTypeKHR of
+    Just s -> showString enumPrefixRayTracingShaderGroupTypeKHR . showString s
+    Nothing ->
+      let RayTracingShaderGroupTypeKHR x = e
+      in  showParen (p >= 11) (showString conNameRayTracingShaderGroupTypeKHR . showString " " . showsPrec 11 x)
 
 instance Read RayTracingShaderGroupTypeKHR where
-  readPrec = parens (choose [("RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR", pure RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR)
-                            , ("RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR", pure RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR)
-                            , ("RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR", pure RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "RayTracingShaderGroupTypeKHR")
-                       v <- step readPrec
-                       pure (RayTracingShaderGroupTypeKHR v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixRayTracingShaderGroupTypeKHR
+          asum ((\(e, s) -> e <$ string s) <$> showTableRayTracingShaderGroupTypeKHR)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameRayTracingShaderGroupTypeKHR)
+            v <- step readPrec
+            pure (RayTracingShaderGroupTypeKHR v)
+          )
+    )
 
 
 -- | VkShaderGroupShaderKHR - Shader group shaders
@@ -3518,13 +3543,13 @@ newtype ShaderGroupShaderKHR = ShaderGroupShaderKHR Int32
 
 -- | 'SHADER_GROUP_SHADER_GENERAL_KHR' uses the shader specified in the group
 -- with 'RayTracingShaderGroupCreateInfoKHR'::@generalShader@
-pattern SHADER_GROUP_SHADER_GENERAL_KHR = ShaderGroupShaderKHR 0
+pattern SHADER_GROUP_SHADER_GENERAL_KHR      = ShaderGroupShaderKHR 0
 -- | 'SHADER_GROUP_SHADER_CLOSEST_HIT_KHR' uses the shader specified in the
 -- group with 'RayTracingShaderGroupCreateInfoKHR'::@closestHitShader@
-pattern SHADER_GROUP_SHADER_CLOSEST_HIT_KHR = ShaderGroupShaderKHR 1
+pattern SHADER_GROUP_SHADER_CLOSEST_HIT_KHR  = ShaderGroupShaderKHR 1
 -- | 'SHADER_GROUP_SHADER_ANY_HIT_KHR' uses the shader specified in the group
 -- with 'RayTracingShaderGroupCreateInfoKHR'::@anyHitShader@
-pattern SHADER_GROUP_SHADER_ANY_HIT_KHR = ShaderGroupShaderKHR 2
+pattern SHADER_GROUP_SHADER_ANY_HIT_KHR      = ShaderGroupShaderKHR 2
 -- | 'SHADER_GROUP_SHADER_INTERSECTION_KHR' uses the shader specified in the
 -- group with 'RayTracingShaderGroupCreateInfoKHR'::@intersectionShader@
 pattern SHADER_GROUP_SHADER_INTERSECTION_KHR = ShaderGroupShaderKHR 3
@@ -3533,24 +3558,43 @@ pattern SHADER_GROUP_SHADER_INTERSECTION_KHR = ShaderGroupShaderKHR 3
              SHADER_GROUP_SHADER_ANY_HIT_KHR,
              SHADER_GROUP_SHADER_INTERSECTION_KHR :: ShaderGroupShaderKHR #-}
 
+conNameShaderGroupShaderKHR :: String
+conNameShaderGroupShaderKHR = "ShaderGroupShaderKHR"
+
+enumPrefixShaderGroupShaderKHR :: String
+enumPrefixShaderGroupShaderKHR = "SHADER_GROUP_SHADER_"
+
+showTableShaderGroupShaderKHR :: [(ShaderGroupShaderKHR, String)]
+showTableShaderGroupShaderKHR =
+  [ (SHADER_GROUP_SHADER_GENERAL_KHR     , "GENERAL_KHR")
+  , (SHADER_GROUP_SHADER_CLOSEST_HIT_KHR , "CLOSEST_HIT_KHR")
+  , (SHADER_GROUP_SHADER_ANY_HIT_KHR     , "ANY_HIT_KHR")
+  , (SHADER_GROUP_SHADER_INTERSECTION_KHR, "INTERSECTION_KHR")
+  ]
+
 instance Show ShaderGroupShaderKHR where
-  showsPrec p = \case
-    SHADER_GROUP_SHADER_GENERAL_KHR -> showString "SHADER_GROUP_SHADER_GENERAL_KHR"
-    SHADER_GROUP_SHADER_CLOSEST_HIT_KHR -> showString "SHADER_GROUP_SHADER_CLOSEST_HIT_KHR"
-    SHADER_GROUP_SHADER_ANY_HIT_KHR -> showString "SHADER_GROUP_SHADER_ANY_HIT_KHR"
-    SHADER_GROUP_SHADER_INTERSECTION_KHR -> showString "SHADER_GROUP_SHADER_INTERSECTION_KHR"
-    ShaderGroupShaderKHR x -> showParen (p >= 11) (showString "ShaderGroupShaderKHR " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableShaderGroupShaderKHR of
+    Just s -> showString enumPrefixShaderGroupShaderKHR . showString s
+    Nothing ->
+      let ShaderGroupShaderKHR x = e
+      in  showParen (p >= 11) (showString conNameShaderGroupShaderKHR . showString " " . showsPrec 11 x)
 
 instance Read ShaderGroupShaderKHR where
-  readPrec = parens (choose [("SHADER_GROUP_SHADER_GENERAL_KHR", pure SHADER_GROUP_SHADER_GENERAL_KHR)
-                            , ("SHADER_GROUP_SHADER_CLOSEST_HIT_KHR", pure SHADER_GROUP_SHADER_CLOSEST_HIT_KHR)
-                            , ("SHADER_GROUP_SHADER_ANY_HIT_KHR", pure SHADER_GROUP_SHADER_ANY_HIT_KHR)
-                            , ("SHADER_GROUP_SHADER_INTERSECTION_KHR", pure SHADER_GROUP_SHADER_INTERSECTION_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ShaderGroupShaderKHR")
-                       v <- step readPrec
-                       pure (ShaderGroupShaderKHR v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixShaderGroupShaderKHR
+          asum ((\(e, s) -> e <$ string s) <$> showTableShaderGroupShaderKHR)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameShaderGroupShaderKHR)
+            v <- step readPrec
+            pure (ShaderGroupShaderKHR v)
+          )
+    )
 
 
 type KHR_RAY_TRACING_PIPELINE_SPEC_VERSION = 1

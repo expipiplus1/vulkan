@@ -6,13 +6,18 @@ module Vulkan.Core10.Enums.FramebufferCreateFlagBits  ( FramebufferCreateFlags
                                                                                  )
                                                       ) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -39,16 +44,36 @@ newtype FramebufferCreateFlagBits = FramebufferCreateFlagBits Flags
 -- structure.
 pattern FRAMEBUFFER_CREATE_IMAGELESS_BIT = FramebufferCreateFlagBits 0x00000001
 
+conNameFramebufferCreateFlagBits :: String
+conNameFramebufferCreateFlagBits = "FramebufferCreateFlagBits"
+
+enumPrefixFramebufferCreateFlagBits :: String
+enumPrefixFramebufferCreateFlagBits = "FRAMEBUFFER_CREATE_IMAGELESS_BIT"
+
+showTableFramebufferCreateFlagBits :: [(FramebufferCreateFlagBits, String)]
+showTableFramebufferCreateFlagBits = [(FRAMEBUFFER_CREATE_IMAGELESS_BIT, "")]
+
 instance Show FramebufferCreateFlagBits where
-  showsPrec p = \case
-    FRAMEBUFFER_CREATE_IMAGELESS_BIT -> showString "FRAMEBUFFER_CREATE_IMAGELESS_BIT"
-    FramebufferCreateFlagBits x -> showParen (p >= 11) (showString "FramebufferCreateFlagBits 0x" . showHex x)
+  showsPrec p e = case lookup e showTableFramebufferCreateFlagBits of
+    Just s -> showString enumPrefixFramebufferCreateFlagBits . showString s
+    Nothing ->
+      let FramebufferCreateFlagBits x = e
+      in  showParen (p >= 11) (showString conNameFramebufferCreateFlagBits . showString " 0x" . showHex x)
 
 instance Read FramebufferCreateFlagBits where
-  readPrec = parens (choose [("FRAMEBUFFER_CREATE_IMAGELESS_BIT", pure FRAMEBUFFER_CREATE_IMAGELESS_BIT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "FramebufferCreateFlagBits")
-                       v <- step readPrec
-                       pure (FramebufferCreateFlagBits v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixFramebufferCreateFlagBits
+          asum ((\(e, s) -> e <$ string s) <$> showTableFramebufferCreateFlagBits)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameFramebufferCreateFlagBits)
+            v <- step readPrec
+            pure (FramebufferCreateFlagBits v)
+          )
+    )
 

@@ -6,13 +6,18 @@ module Vulkan.Core12.Enums.ShaderFloatControlsIndependence  (ShaderFloatControls
                                                                                             , ..
                                                                                             )) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
@@ -36,28 +41,48 @@ newtype ShaderFloatControlsIndependence = ShaderFloatControlsIndependence Int32
 pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY = ShaderFloatControlsIndependence 0
 -- | 'SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL' specifies that shader float
 -- controls for all bit widths /can/ be set independently.
-pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL = ShaderFloatControlsIndependence 1
+pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL         = ShaderFloatControlsIndependence 1
 -- | 'SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE' specifies that shader float
 -- controls for all bit widths /must/ be set identically.
-pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE = ShaderFloatControlsIndependence 2
+pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE        = ShaderFloatControlsIndependence 2
 {-# complete SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY,
              SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL,
              SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE :: ShaderFloatControlsIndependence #-}
 
+conNameShaderFloatControlsIndependence :: String
+conNameShaderFloatControlsIndependence = "ShaderFloatControlsIndependence"
+
+enumPrefixShaderFloatControlsIndependence :: String
+enumPrefixShaderFloatControlsIndependence = "SHADER_FLOAT_CONTROLS_INDEPENDENCE_"
+
+showTableShaderFloatControlsIndependence :: [(ShaderFloatControlsIndependence, String)]
+showTableShaderFloatControlsIndependence =
+  [ (SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY, "32_BIT_ONLY")
+  , (SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL        , "ALL")
+  , (SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE       , "NONE")
+  ]
+
 instance Show ShaderFloatControlsIndependence where
-  showsPrec p = \case
-    SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY -> showString "SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY"
-    SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL -> showString "SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL"
-    SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE -> showString "SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE"
-    ShaderFloatControlsIndependence x -> showParen (p >= 11) (showString "ShaderFloatControlsIndependence " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableShaderFloatControlsIndependence of
+    Just s -> showString enumPrefixShaderFloatControlsIndependence . showString s
+    Nothing ->
+      let ShaderFloatControlsIndependence x = e
+      in  showParen (p >= 11) (showString conNameShaderFloatControlsIndependence . showString " " . showsPrec 11 x)
 
 instance Read ShaderFloatControlsIndependence where
-  readPrec = parens (choose [("SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY", pure SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY)
-                            , ("SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL", pure SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL)
-                            , ("SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE", pure SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "ShaderFloatControlsIndependence")
-                       v <- step readPrec
-                       pure (ShaderFloatControlsIndependence v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixShaderFloatControlsIndependence
+          asum ((\(e, s) -> e <$ string s) <$> showTableShaderFloatControlsIndependence)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameShaderFloatControlsIndependence)
+            v <- step readPrec
+            pure (ShaderFloatControlsIndependence v)
+          )
+    )
 

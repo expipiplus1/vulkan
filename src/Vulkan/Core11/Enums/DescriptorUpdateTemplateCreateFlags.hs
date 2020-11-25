@@ -2,13 +2,18 @@
 -- No documentation found for Chapter "DescriptorUpdateTemplateCreateFlags"
 module Vulkan.Core11.Enums.DescriptorUpdateTemplateCreateFlags  (DescriptorUpdateTemplateCreateFlags(..)) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Data.Bits (Bits)
@@ -33,15 +38,36 @@ newtype DescriptorUpdateTemplateCreateFlags = DescriptorUpdateTemplateCreateFlag
 
 
 
+conNameDescriptorUpdateTemplateCreateFlags :: String
+conNameDescriptorUpdateTemplateCreateFlags = "DescriptorUpdateTemplateCreateFlags"
+
+enumPrefixDescriptorUpdateTemplateCreateFlags :: String
+enumPrefixDescriptorUpdateTemplateCreateFlags = ""
+
+showTableDescriptorUpdateTemplateCreateFlags :: [(DescriptorUpdateTemplateCreateFlags, String)]
+showTableDescriptorUpdateTemplateCreateFlags = []
+
 instance Show DescriptorUpdateTemplateCreateFlags where
-  showsPrec p = \case
-    DescriptorUpdateTemplateCreateFlags x -> showParen (p >= 11) (showString "DescriptorUpdateTemplateCreateFlags 0x" . showHex x)
+  showsPrec p e = case lookup e showTableDescriptorUpdateTemplateCreateFlags of
+    Just s -> showString enumPrefixDescriptorUpdateTemplateCreateFlags . showString s
+    Nothing ->
+      let DescriptorUpdateTemplateCreateFlags x = e
+      in  showParen (p >= 11) (showString conNameDescriptorUpdateTemplateCreateFlags . showString " 0x" . showHex x)
 
 instance Read DescriptorUpdateTemplateCreateFlags where
-  readPrec = parens (choose []
-                     +++
-                     prec 10 (do
-                       expectP (Ident "DescriptorUpdateTemplateCreateFlags")
-                       v <- step readPrec
-                       pure (DescriptorUpdateTemplateCreateFlags v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixDescriptorUpdateTemplateCreateFlags
+          asum ((\(e, s) -> e <$ string s) <$> showTableDescriptorUpdateTemplateCreateFlags)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameDescriptorUpdateTemplateCreateFlags)
+            v <- step readPrec
+            pure (DescriptorUpdateTemplateCreateFlags v)
+          )
+    )
 

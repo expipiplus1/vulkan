@@ -6,13 +6,18 @@ module Vulkan.Core12.Enums.SamplerReductionMode  (SamplerReductionMode( SAMPLER_
                                                                       , ..
                                                                       )) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
@@ -36,29 +41,49 @@ pattern SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE = SamplerReductionMode 0
 -- | 'SAMPLER_REDUCTION_MODE_MIN' specifies that texel values are combined by
 -- taking the component-wise minimum of values in the footprint with
 -- non-zero weights.
-pattern SAMPLER_REDUCTION_MODE_MIN = SamplerReductionMode 1
+pattern SAMPLER_REDUCTION_MODE_MIN              = SamplerReductionMode 1
 -- | 'SAMPLER_REDUCTION_MODE_MAX' specifies that texel values are combined by
 -- taking the component-wise maximum of values in the footprint with
 -- non-zero weights.
-pattern SAMPLER_REDUCTION_MODE_MAX = SamplerReductionMode 2
+pattern SAMPLER_REDUCTION_MODE_MAX              = SamplerReductionMode 2
 {-# complete SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE,
              SAMPLER_REDUCTION_MODE_MIN,
              SAMPLER_REDUCTION_MODE_MAX :: SamplerReductionMode #-}
 
+conNameSamplerReductionMode :: String
+conNameSamplerReductionMode = "SamplerReductionMode"
+
+enumPrefixSamplerReductionMode :: String
+enumPrefixSamplerReductionMode = "SAMPLER_REDUCTION_MODE_"
+
+showTableSamplerReductionMode :: [(SamplerReductionMode, String)]
+showTableSamplerReductionMode =
+  [ (SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE, "WEIGHTED_AVERAGE")
+  , (SAMPLER_REDUCTION_MODE_MIN             , "MIN")
+  , (SAMPLER_REDUCTION_MODE_MAX             , "MAX")
+  ]
+
 instance Show SamplerReductionMode where
-  showsPrec p = \case
-    SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE -> showString "SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE"
-    SAMPLER_REDUCTION_MODE_MIN -> showString "SAMPLER_REDUCTION_MODE_MIN"
-    SAMPLER_REDUCTION_MODE_MAX -> showString "SAMPLER_REDUCTION_MODE_MAX"
-    SamplerReductionMode x -> showParen (p >= 11) (showString "SamplerReductionMode " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableSamplerReductionMode of
+    Just s -> showString enumPrefixSamplerReductionMode . showString s
+    Nothing ->
+      let SamplerReductionMode x = e
+      in  showParen (p >= 11) (showString conNameSamplerReductionMode . showString " " . showsPrec 11 x)
 
 instance Read SamplerReductionMode where
-  readPrec = parens (choose [("SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE", pure SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE)
-                            , ("SAMPLER_REDUCTION_MODE_MIN", pure SAMPLER_REDUCTION_MODE_MIN)
-                            , ("SAMPLER_REDUCTION_MODE_MAX", pure SAMPLER_REDUCTION_MODE_MAX)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SamplerReductionMode")
-                       v <- step readPrec
-                       pure (SamplerReductionMode v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixSamplerReductionMode
+          asum ((\(e, s) -> e <$ string s) <$> showTableSamplerReductionMode)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameSamplerReductionMode)
+            v <- step readPrec
+            pure (SamplerReductionMode v)
+          )
+    )
 

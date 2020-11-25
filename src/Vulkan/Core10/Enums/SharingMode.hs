@@ -5,13 +5,18 @@ module Vulkan.Core10.Enums.SharingMode  (SharingMode( SHARING_MODE_EXCLUSIVE
                                                     , ..
                                                     )) where
 
+import Data.Foldable (asum)
+import GHC.Base ((<$))
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
 import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadP (skipSpaces)
+import Text.ParserCombinators.ReadP (string)
 import Text.ParserCombinators.ReadPrec ((+++))
+import qualified Text.ParserCombinators.ReadPrec (lift)
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Foreign.Storable (Storable)
@@ -71,7 +76,7 @@ newtype SharingMode = SharingMode Int32
 -- | 'SHARING_MODE_EXCLUSIVE' specifies that access to any range or image
 -- subresource of the object will be exclusive to a single queue family at
 -- a time.
-pattern SHARING_MODE_EXCLUSIVE = SharingMode 0
+pattern SHARING_MODE_EXCLUSIVE  = SharingMode 0
 -- | 'SHARING_MODE_CONCURRENT' specifies that concurrent access to any range
 -- or image subresource of the object from multiple queue families is
 -- supported.
@@ -79,18 +84,35 @@ pattern SHARING_MODE_CONCURRENT = SharingMode 1
 {-# complete SHARING_MODE_EXCLUSIVE,
              SHARING_MODE_CONCURRENT :: SharingMode #-}
 
+conNameSharingMode :: String
+conNameSharingMode = "SharingMode"
+
+enumPrefixSharingMode :: String
+enumPrefixSharingMode = "SHARING_MODE_"
+
+showTableSharingMode :: [(SharingMode, String)]
+showTableSharingMode = [(SHARING_MODE_EXCLUSIVE, "EXCLUSIVE"), (SHARING_MODE_CONCURRENT, "CONCURRENT")]
+
 instance Show SharingMode where
-  showsPrec p = \case
-    SHARING_MODE_EXCLUSIVE -> showString "SHARING_MODE_EXCLUSIVE"
-    SHARING_MODE_CONCURRENT -> showString "SHARING_MODE_CONCURRENT"
-    SharingMode x -> showParen (p >= 11) (showString "SharingMode " . showsPrec 11 x)
+  showsPrec p e = case lookup e showTableSharingMode of
+    Just s -> showString enumPrefixSharingMode . showString s
+    Nothing ->
+      let SharingMode x = e in showParen (p >= 11) (showString conNameSharingMode . showString " " . showsPrec 11 x)
 
 instance Read SharingMode where
-  readPrec = parens (choose [("SHARING_MODE_EXCLUSIVE", pure SHARING_MODE_EXCLUSIVE)
-                            , ("SHARING_MODE_CONCURRENT", pure SHARING_MODE_CONCURRENT)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SharingMode")
-                       v <- step readPrec
-                       pure (SharingMode v)))
+  readPrec = parens
+    (   Text.ParserCombinators.ReadPrec.lift
+        (do
+          skipSpaces
+          _ <- string enumPrefixSharingMode
+          asum ((\(e, s) -> e <$ string s) <$> showTableSharingMode)
+        )
+    +++ prec
+          10
+          (do
+            expectP (Ident conNameSharingMode)
+            v <- step readPrec
+            pure (SharingMode v)
+          )
+    )
 
