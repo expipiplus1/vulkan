@@ -138,7 +138,7 @@ data instance Requirement PhysicalDevice where
     :: { version :: Word32 }
     -> Requirement PhysicalDevice
   -- | Require a Vulkan physical device feature.
-  RequireFeature
+  RequireDeviceFeature
     :: forall struct
     .  KnownFeatureStruct struct
     => { featureName   :: ByteString
@@ -147,7 +147,7 @@ data instance Requirement PhysicalDevice where
        }
     -> Requirement PhysicalDevice
   -- | Require a Vulkan physical device property.
-  RequireProperty
+  RequireDeviceProperty
     :: forall struct
     .  KnownPropertyStruct struct
     => { propertyName  :: ByteString
@@ -341,10 +341,10 @@ instance KnownRequestTarget PhysicalDevice where
       -> requestDeviceVersion isOptional version
     RequireDeviceExtension {..}
       -> requestDeviceExtension isOptional deviceExtensionLayerName deviceExtensionName deviceExtensionMinVersion
-    RequireFeature {..}
-      -> requestFeature isOptional featureName checkFeature enableFeature
-    RequireProperty {..}
-      -> requestProperty isOptional propertyName checkProperty
+    RequireDeviceFeature {..}
+      -> requestDeviceFeature isOptional featureName checkFeature enableFeature
+    RequireDeviceProperty {..}
+      -> requestDeviceProperty isOptional propertyName checkProperty
 
 -- | Add a single request to a collection of requests.
 addRequests
@@ -443,11 +443,11 @@ requestInstanceSetting _isOptional setting
             setts' = (setting, setts)
         -> InstanceRequests ver lays instExts setts'
 
-requestFeature
+requestDeviceFeature
   :: forall struct
   .  ( KnownFeatureStruct struct )
   => Bool -> ByteString -> (struct -> Bool) -> (struct -> struct) -> Requests PhysicalDevice -> Requests PhysicalDevice
-requestFeature isOptional featName checkFeat enableFeat
+requestDeviceFeature isOptional featName checkFeat enableFeat
   ( PhysicalDeviceRequests ver devExts
       (missingFeats :: PhysicalDeviceFeatures2 feats -> ReqAndOpt (HashSet ByteString))
       enableFeats
@@ -502,11 +502,11 @@ requestFeature isOptional featName checkFeat enableFeat
               = enabled { next = (struct, nextEnabledFeats) }
         -> PhysicalDeviceRequests ver devExts missingFeats' enabledFeats' missingProps
 
-requestProperty
+requestDeviceProperty
   :: forall struct
   .  ( KnownPropertyStruct struct )
   => Bool -> ByteString -> (struct -> Bool) -> Requests PhysicalDevice -> Requests PhysicalDevice
-requestProperty isOptional propName checkProp
+requestDeviceProperty isOptional propName checkProp
   ( PhysicalDeviceRequests ver devExts missingFeats enabledFeats
       (missingProps :: PhysicalDeviceProperties2 props -> ReqAndOpt (HashSet ByteString))
   )
