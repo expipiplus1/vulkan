@@ -73,32 +73,12 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceExternalSemaphoreProperties
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceExternalSemaphoreInfo) -> Ptr ExternalSemaphoreProperties -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceExternalSemaphoreInfo) -> Ptr ExternalSemaphoreProperties -> IO ()
 
--- | vkGetPhysicalDeviceExternalSemaphoreProperties - Function for querying
--- external semaphore handle capabilities.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'ExternalSemaphoreProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
--- 'PhysicalDeviceExternalSemaphoreInfo'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceExternalSemaphoreProperties"
 getPhysicalDeviceExternalSemaphoreProperties :: forall a io
                                               . (Extendss PhysicalDeviceExternalSemaphoreInfo a, PokeChain a, MonadIO io)
-                                             => -- | @physicalDevice@ is the physical device from which to query the
-                                                -- semaphore capabilities.
-                                                --
-                                                -- #VUID-vkGetPhysicalDeviceExternalSemaphoreProperties-physicalDevice-parameter#
-                                                -- @physicalDevice@ /must/ be a valid
-                                                -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                             => -- No documentation found for Nested "vkGetPhysicalDeviceExternalSemaphoreProperties" "physicalDevice"
                                                 PhysicalDevice
-                                             -> -- | @pExternalSemaphoreInfo@ is a pointer to a
-                                                -- 'PhysicalDeviceExternalSemaphoreInfo' structure describing the
-                                                -- parameters that would be consumed by
-                                                -- 'Vulkan.Core10.QueueSemaphore.createSemaphore'.
-                                                --
-                                                -- #VUID-vkGetPhysicalDeviceExternalSemaphoreProperties-pExternalSemaphoreInfo-parameter#
-                                                -- @pExternalSemaphoreInfo@ /must/ be a valid pointer to a valid
-                                                -- 'PhysicalDeviceExternalSemaphoreInfo' structure
+                                             -> -- No documentation found for Nested "vkGetPhysicalDeviceExternalSemaphoreProperties" "pExternalSemaphoreInfo"
                                                 (PhysicalDeviceExternalSemaphoreInfo a)
                                              -> io (ExternalSemaphoreProperties)
 getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInfo = liftIO . evalContT $ do
@@ -113,40 +93,12 @@ getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInf
   pure $ (pExternalSemaphoreProperties)
 
 
--- | VkPhysicalDeviceExternalSemaphoreInfo - Structure specifying semaphore
--- creation parameters.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPhysicalDeviceExternalSemaphoreInfo-sType-sType# @sType@
---     /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO'
---
--- -   #VUID-VkPhysicalDeviceExternalSemaphoreInfo-pNext-pNext# @pNext@
---     /must/ be @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'
---
--- -   #VUID-VkPhysicalDeviceExternalSemaphoreInfo-sType-unique# The
---     @sType@ value of each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkPhysicalDeviceExternalSemaphoreInfo-handleType-parameter#
---     @handleType@ /must/ be a valid
---     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
---     value
---
--- = See Also
---
--- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceExternalSemaphoreProperties',
--- 'Vulkan.Extensions.VK_KHR_external_semaphore_capabilities.getPhysicalDeviceExternalSemaphorePropertiesKHR'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceExternalSemaphoreInfo"
 data PhysicalDeviceExternalSemaphoreInfo (es :: [Type]) = PhysicalDeviceExternalSemaphoreInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkPhysicalDeviceExternalSemaphoreInfo" "pNext"
     next :: Chain es
-  , -- | @handleType@ is a
-    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
-    -- value specifying the external semaphore handle type for which
-    -- capabilities will be returned.
+  , -- No documentation found for Nested "VkPhysicalDeviceExternalSemaphoreInfo" "handleType"
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   }
   deriving (Typeable)
@@ -195,38 +147,14 @@ instance es ~ '[] => Zero (PhysicalDeviceExternalSemaphoreInfo es) where
            zero
 
 
--- | VkExternalSemaphoreProperties - Structure describing supported external
--- semaphore handle features
---
--- = Description
---
--- If @handleType@ is not supported by the implementation, then
--- 'ExternalSemaphoreProperties'::@externalSemaphoreFeatures@ will be set
--- to zero.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.ExternalSemaphoreFeatureFlags',
--- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceExternalSemaphoreProperties',
--- 'Vulkan.Extensions.VK_KHR_external_semaphore_capabilities.getPhysicalDeviceExternalSemaphorePropertiesKHR'
+
+-- No documentation found for TopLevel "VkExternalSemaphoreProperties"
 data ExternalSemaphoreProperties = ExternalSemaphoreProperties
-  { -- | @exportFromImportedHandleTypes@ is a bitmask of
-    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
-    -- specifying which types of imported handle @handleType@ /can/ be exported
-    -- from.
+  { -- No documentation found for Nested "VkExternalSemaphoreProperties" "exportFromImportedHandleTypes"
     exportFromImportedHandleTypes :: ExternalSemaphoreHandleTypeFlags
-  , -- | @compatibleHandleTypes@ is a bitmask of
-    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
-    -- specifying handle types which /can/ be specified at the same time as
-    -- @handleType@ when creating a semaphore.
+  , -- No documentation found for Nested "VkExternalSemaphoreProperties" "compatibleHandleTypes"
     compatibleHandleTypes :: ExternalSemaphoreHandleTypeFlags
-  , -- | @externalSemaphoreFeatures@ is a bitmask of
-    -- 'Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.ExternalSemaphoreFeatureFlagBits'
-    -- describing the features of @handleType@.
+  , -- No documentation found for Nested "VkExternalSemaphoreProperties" "externalSemaphoreFeatures"
     externalSemaphoreFeatures :: ExternalSemaphoreFeatureFlags
   }
   deriving (Typeable, Eq)
@@ -260,6 +188,7 @@ instance FromCStruct ExternalSemaphoreProperties where
     externalSemaphoreFeatures <- peek @ExternalSemaphoreFeatureFlags ((p `plusPtr` 24 :: Ptr ExternalSemaphoreFeatureFlags))
     pure $ ExternalSemaphoreProperties
              exportFromImportedHandleTypes compatibleHandleTypes externalSemaphoreFeatures
+
 
 instance Storable ExternalSemaphoreProperties where
   sizeOf ~_ = 32

@@ -53,39 +53,14 @@ import Vulkan.Core10.Enums.ImageLayout (ImageLayout(..))
 import Vulkan.Core11.Enums.PointClippingBehavior (PointClippingBehavior(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 import Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(..))
--- | VkInputAttachmentAspectReference - Structure specifying a subpass\/input
--- attachment pair and an aspect mask that /can/ be read.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
--- 'RenderPassInputAttachmentAspectCreateInfo'
+
+-- No documentation found for TopLevel "VkInputAttachmentAspectReference"
 data InputAttachmentAspectReference = InputAttachmentAspectReference
-  { -- | @subpass@ is an index into the @pSubpasses@ array of the parent
-    -- 'Vulkan.Core10.Pass.RenderPassCreateInfo' structure.
+  { -- No documentation found for Nested "VkInputAttachmentAspectReference" "subpass"
     subpass :: Word32
-  , -- | @inputAttachmentIndex@ is an index into the @pInputAttachments@ of the
-    -- specified subpass.
+  , -- No documentation found for Nested "VkInputAttachmentAspectReference" "inputAttachmentIndex"
     inputAttachmentIndex :: Word32
-  , -- | @aspectMask@ is a mask of which aspect(s) /can/ be accessed within the
-    -- specified subpass.
-    --
-    -- #VUID-VkInputAttachmentAspectReference-aspectMask-01964# @aspectMask@
-    -- /must/ not include
-    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_METADATA_BIT'
-    --
-    -- #VUID-VkInputAttachmentAspectReference-aspectMask-02250# @aspectMask@
-    -- /must/ not include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any
-    -- index @i@
-    --
-    -- #VUID-VkInputAttachmentAspectReference-aspectMask-parameter#
-    -- @aspectMask@ /must/ be a valid combination of
-    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' values
-    --
-    -- #VUID-VkInputAttachmentAspectReference-aspectMask-requiredbitmask#
-    -- @aspectMask@ /must/ not be @0@
+  , -- No documentation found for Nested "VkInputAttachmentAspectReference" "aspectMask"
     aspectMask :: ImageAspectFlags
   }
   deriving (Typeable, Eq)
@@ -117,6 +92,7 @@ instance FromCStruct InputAttachmentAspectReference where
     pure $ InputAttachmentAspectReference
              subpass inputAttachmentIndex aspectMask
 
+
 instance Storable InputAttachmentAspectReference where
   sizeOf ~_ = 12
   alignment ~_ = 4
@@ -130,31 +106,10 @@ instance Zero InputAttachmentAspectReference where
            zero
 
 
--- | VkRenderPassInputAttachmentAspectCreateInfo - Structure specifying, for
--- a given subpass\/input attachment pair, which aspect /can/ be read.
---
--- = Description
---
--- An application /can/ access any aspect of an input attachment that does
--- not have a specified aspect mask in the @pAspectReferences@ array.
--- Otherwise, an application /must/ not access aspect(s) of an input
--- attachment other than those in its specified aspect mask.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'InputAttachmentAspectReference',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkRenderPassInputAttachmentAspectCreateInfo"
 data RenderPassInputAttachmentAspectCreateInfo = RenderPassInputAttachmentAspectCreateInfo
-  { -- | @pAspectReferences@ is a pointer to an array of @aspectReferenceCount@
-    -- 'InputAttachmentAspectReference' structures containing a mask describing
-    -- which aspect(s) /can/ be accessed for a given input attachment within a
-    -- given subpass.
-    --
-    -- #VUID-VkRenderPassInputAttachmentAspectCreateInfo-pAspectReferences-parameter#
-    -- @pAspectReferences@ /must/ be a valid pointer to an array of
-    -- @aspectReferenceCount@ valid 'InputAttachmentAspectReference' structures
+  { -- No documentation found for Nested "VkRenderPassInputAttachmentAspectCreateInfo" "pAspectReferences"
     aspectReferences :: Vector InputAttachmentAspectReference }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -195,31 +150,10 @@ instance Zero RenderPassInputAttachmentAspectCreateInfo where
            mempty
 
 
--- | VkPhysicalDevicePointClippingProperties - Structure describing the point
--- clipping behavior supported by an implementation
---
--- = Members
---
--- The members of the 'PhysicalDevicePointClippingProperties' structure
--- describe the following implementation-dependent limit:
---
--- = Description
---
--- If the 'PhysicalDevicePointClippingProperties' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDevicePointClippingProperties"
 data PhysicalDevicePointClippingProperties = PhysicalDevicePointClippingProperties
-  { -- | #extension-limits-pointClipping# @pointClippingBehavior@ is a
-    -- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior' value
-    -- specifying the point clipping behavior supported by the implementation.
+  { -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "pointClippingBehavior"
     pointClippingBehavior :: PointClippingBehavior }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -248,6 +182,7 @@ instance FromCStruct PhysicalDevicePointClippingProperties where
     pure $ PhysicalDevicePointClippingProperties
              pointClippingBehavior
 
+
 instance Storable PhysicalDevicePointClippingProperties where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -259,33 +194,10 @@ instance Zero PhysicalDevicePointClippingProperties where
            zero
 
 
--- | VkImageViewUsageCreateInfo - Specify the intended usage of an image view
---
--- = Description
---
--- When this structure is chained to
--- 'Vulkan.Core10.ImageView.ImageViewCreateInfo' the @usage@ field
--- overrides the implicit @usage@ parameter inherited from image creation
--- time and its value is used instead for the purposes of determining the
--- valid usage conditions of 'Vulkan.Core10.ImageView.ImageViewCreateInfo'.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkImageViewUsageCreateInfo"
 data ImageViewUsageCreateInfo = ImageViewUsageCreateInfo
-  { -- | @usage@ is a bitmask describing the allowed usages of the image view.
-    -- See 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' for a
-    -- description of the supported bits.
-    --
-    -- #VUID-VkImageViewUsageCreateInfo-usage-parameter# @usage@ /must/ be a
-    -- valid combination of
-    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
-    --
-    -- #VUID-VkImageViewUsageCreateInfo-usage-requiredbitmask# @usage@ /must/
-    -- not be @0@
+  { -- No documentation found for Nested "VkImageViewUsageCreateInfo" "usage"
     usage :: ImageUsageFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -314,6 +226,7 @@ instance FromCStruct ImageViewUsageCreateInfo where
     pure $ ImageViewUsageCreateInfo
              usage
 
+
 instance Storable ImageViewUsageCreateInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -325,33 +238,10 @@ instance Zero ImageViewUsageCreateInfo where
            zero
 
 
--- | VkPipelineTessellationDomainOriginStateCreateInfo - Structure specifying
--- the orientation of the tessellation domain
---
--- = Description
---
--- If the 'PipelineTessellationDomainOriginStateCreateInfo' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.PipelineTessellationStateCreateInfo', it
--- controls the origin of the tessellation domain. If this structure is not
--- present, it is as if @domainOrigin@ were
--- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT'.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
+
+-- No documentation found for TopLevel "VkPipelineTessellationDomainOriginStateCreateInfo"
 data PipelineTessellationDomainOriginStateCreateInfo = PipelineTessellationDomainOriginStateCreateInfo
-  { -- | @domainOrigin@ is a
-    -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
-    -- value controlling the origin of the tessellation domain space.
-    --
-    -- #VUID-VkPipelineTessellationDomainOriginStateCreateInfo-domainOrigin-parameter#
-    -- @domainOrigin@ /must/ be a valid
-    -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
-    -- value
+  { -- No documentation found for Nested "VkPipelineTessellationDomainOriginStateCreateInfo" "domainOrigin"
     domainOrigin :: TessellationDomainOrigin }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -379,6 +269,7 @@ instance FromCStruct PipelineTessellationDomainOriginStateCreateInfo where
     domainOrigin <- peek @TessellationDomainOrigin ((p `plusPtr` 16 :: Ptr TessellationDomainOrigin))
     pure $ PipelineTessellationDomainOriginStateCreateInfo
              domainOrigin
+
 
 instance Storable PipelineTessellationDomainOriginStateCreateInfo where
   sizeOf ~_ = 24

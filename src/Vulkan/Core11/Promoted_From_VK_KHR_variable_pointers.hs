@@ -32,52 +32,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
 
 
--- | VkPhysicalDeviceVariablePointersFeatures - Structure describing variable
--- pointers features that can be supported by an implementation
---
--- = Members
---
--- The members of the 'PhysicalDeviceVariablePointersFeatures' structure
--- describe the following features:
---
--- = Description
---
--- -   #extension-features-variablePointersStorageBuffer#
---     @variablePointersStorageBuffer@ specifies whether the implementation
---     supports the SPIR-V @VariablePointersStorageBuffer@ capability. When
---     this feature is not enabled, shader modules /must/ not declare the
---     @SPV_KHR_variable_pointers@ extension or the
---     @VariablePointersStorageBuffer@ capability.
---
--- -   #extension-features-variablePointers# @variablePointers@ specifies
---     whether the implementation supports the SPIR-V @VariablePointers@
---     capability. When this feature is not enabled, shader modules /must/
---     not declare the @VariablePointers@ capability.
---
--- If the 'PhysicalDeviceVariablePointersFeatures' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceVariablePointersFeatures' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- features.
---
--- == Valid Usage
---
--- -   #VUID-VkPhysicalDeviceVariablePointersFeatures-variablePointers-01431#
---     If @variablePointers@ is enabled then
---     @variablePointersStorageBuffer@ /must/ also be enabled
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPhysicalDeviceVariablePointersFeatures-sType-sType# @sType@
---     /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES'
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceVariablePointersFeatures"
 data PhysicalDeviceVariablePointersFeatures = PhysicalDeviceVariablePointersFeatures
   { -- No documentation found for Nested "VkPhysicalDeviceVariablePointersFeatures" "variablePointersStorageBuffer"
     variablePointersStorageBuffer :: Bool
@@ -113,6 +69,7 @@ instance FromCStruct PhysicalDeviceVariablePointersFeatures where
     variablePointers <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceVariablePointersFeatures
              (bool32ToBool variablePointersStorageBuffer) (bool32ToBool variablePointers)
+
 
 instance Storable PhysicalDeviceVariablePointersFeatures where
   sizeOf ~_ = 24

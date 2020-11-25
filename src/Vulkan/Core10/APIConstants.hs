@@ -220,11 +220,8 @@ pattern SHADER_UNUSED_KHR :: Word32
 pattern SHADER_UNUSED_KHR = 0xffffffff
 
 
--- | VK_NULL_HANDLE - Reserved non-valid object handle
---
--- = See Also
---
--- No cross-references are available
+
+-- No documentation found for TopLevel "VK_NULL_HANDLE"
 pattern NULL_HANDLE :: IsHandle a => a
 pattern NULL_HANDLE <- ((== zero) -> True)
   where NULL_HANDLE = zero

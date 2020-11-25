@@ -63,29 +63,12 @@ foreign import ccall
   "dynamic" mkVkGetBufferMemoryRequirements
   :: FunPtr (Ptr Device_T -> Buffer -> Ptr MemoryRequirements -> IO ()) -> Ptr Device_T -> Buffer -> Ptr MemoryRequirements -> IO ()
 
--- | vkGetBufferMemoryRequirements - Returns the memory requirements for
--- specified Vulkan object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device',
--- 'MemoryRequirements'
+-- No documentation found for TopLevel "vkGetBufferMemoryRequirements"
 getBufferMemoryRequirements :: forall io
                              . (MonadIO io)
-                            => -- | @device@ is the logical device that owns the buffer.
-                               --
-                               -- #VUID-vkGetBufferMemoryRequirements-device-parameter# @device@ /must/ be
-                               -- a valid 'Vulkan.Core10.Handles.Device' handle
+                            => -- No documentation found for Nested "vkGetBufferMemoryRequirements" "device"
                                Device
-                            -> -- | @buffer@ is the buffer to query.
-                               --
-                               -- #VUID-vkGetBufferMemoryRequirements-buffer-parameter# @buffer@ /must/ be
-                               -- a valid 'Vulkan.Core10.Handles.Buffer' handle
-                               --
-                               -- #VUID-vkGetBufferMemoryRequirements-buffer-parent# @buffer@ /must/ have
-                               -- been created, allocated, or retrieved from @device@
+                            -> -- No documentation found for Nested "vkGetBufferMemoryRequirements" "buffer"
                                Buffer
                             -> io (MemoryRequirements)
 getBufferMemoryRequirements device buffer = liftIO . evalContT $ do
@@ -106,165 +89,16 @@ foreign import ccall
   "dynamic" mkVkBindBufferMemory
   :: FunPtr (Ptr Device_T -> Buffer -> DeviceMemory -> DeviceSize -> IO Result) -> Ptr Device_T -> Buffer -> DeviceMemory -> DeviceSize -> IO Result
 
--- | vkBindBufferMemory - Bind device memory to a buffer object
---
--- = Description
---
--- 'bindBufferMemory' is equivalent to passing the same parameters through
--- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo'
--- to 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.bindBufferMemory2'.
---
--- == Valid Usage
---
--- -   #VUID-vkBindBufferMemory-buffer-01029# @buffer@ /must/ not already
---     be backed by a memory object
---
--- -   #VUID-vkBindBufferMemory-buffer-01030# @buffer@ /must/ not have been
---     created with any sparse memory binding flags
---
--- -   #VUID-vkBindBufferMemory-memoryOffset-01031# @memoryOffset@ /must/
---     be less than the size of @memory@
---
--- -   #VUID-vkBindBufferMemory-memory-01035# @memory@ /must/ have been
---     allocated using one of the memory types allowed in the
---     @memoryTypeBits@ member of the 'MemoryRequirements' structure
---     returned from a call to 'getBufferMemoryRequirements' with @buffer@
---
--- -   #VUID-vkBindBufferMemory-memoryOffset-01036# @memoryOffset@ /must/
---     be an integer multiple of the @alignment@ member of the
---     'MemoryRequirements' structure returned from a call to
---     'getBufferMemoryRequirements' with @buffer@
---
--- -   #VUID-vkBindBufferMemory-size-01037# The @size@ member of the
---     'MemoryRequirements' structure returned from a call to
---     'getBufferMemoryRequirements' with @buffer@ /must/ be less than or
---     equal to the size of @memory@ minus @memoryOffset@
---
--- -   #VUID-vkBindBufferMemory-buffer-01444# If @buffer@ requires a
---     dedicated allocation(as reported by
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'
---     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for @buffer@), @memory@ /must/ have been created with
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
---     equal to @buffer@
---
--- -   #VUID-vkBindBufferMemory-memory-01508# If the
---     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
---     allocated included a
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     structure in its @pNext@ chain, and
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
---     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', then @buffer@
---     /must/ equal
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@,
---     and @memoryOffset@ /must/ be zero
---
--- -   #VUID-vkBindBufferMemory-None-01898# If buffer was created with the
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
---     bit set, the buffer /must/ be bound to a memory object allocated
---     with a memory type that reports
---     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
---
--- -   #VUID-vkBindBufferMemory-None-01899# If buffer was created with the
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
---     bit not set, the buffer /must/ not be bound to a memory object
---     created with a memory type that reports
---     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
---
--- -   #VUID-vkBindBufferMemory-buffer-01038# If @buffer@ was created with
---     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
---     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
---     been created with
---     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@buffer@
---     equal to a buffer handle created with identical creation parameters
---     to @buffer@ and @memoryOffset@ /must/ be zero
---
--- -   #VUID-vkBindBufferMemory-memory-02726# If the value of
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
---     used to allocate @memory@ is not @0@, it /must/ include at least one
---     of the handles set in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
---     when @buffer@ was created
---
--- -   #VUID-vkBindBufferMemory-memory-02985# If @memory@ was created by a
---     memory import operation, that is not
---     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
---     with a non-@NULL@ @buffer@ value, the external handle type of the
---     imported memory /must/ also have been set in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
---     when @buffer@ was created
---
--- -   #VUID-vkBindBufferMemory-memory-02986# If @memory@ was created with
---     the
---     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
---     memory import operation with a non-@NULL@ @buffer@ value,
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     /must/ also have been set in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
---     when @buffer@ was created
---
--- -   #VUID-vkBindBufferMemory-bufferDeviceAddress-03339# If the
---     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeatures'::@bufferDeviceAddress@
---     feature is enabled and @buffer@ was created with the
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
---     bit set, @memory@ /must/ have been allocated with the
---     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
---     bit set
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkBindBufferMemory-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkBindBufferMemory-buffer-parameter# @buffer@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Buffer' handle
---
--- -   #VUID-vkBindBufferMemory-memory-parameter# @memory@ /must/ be a
---     valid 'Vulkan.Core10.Handles.DeviceMemory' handle
---
--- -   #VUID-vkBindBufferMemory-buffer-parent# @buffer@ /must/ have been
---     created, allocated, or retrieved from @device@
---
--- -   #VUID-vkBindBufferMemory-memory-parent# @memory@ /must/ have been
---     created, allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @buffer@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device',
--- 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
+-- No documentation found for TopLevel "vkBindBufferMemory"
 bindBufferMemory :: forall io
                   . (MonadIO io)
-                 => -- | @device@ is the logical device that owns the buffer and memory.
+                 => -- No documentation found for Nested "vkBindBufferMemory" "device"
                     Device
-                 -> -- | @buffer@ is the buffer to be attached to memory.
+                 -> -- No documentation found for Nested "vkBindBufferMemory" "buffer"
                     Buffer
-                 -> -- | @memory@ is a 'Vulkan.Core10.Handles.DeviceMemory' object describing the
-                    -- device memory to attach.
+                 -> -- No documentation found for Nested "vkBindBufferMemory" "memory"
                     DeviceMemory
-                 -> -- | @memoryOffset@ is the start offset of the region of @memory@ which is to
-                    -- be bound to the buffer. The number of bytes returned in the
-                    -- 'MemoryRequirements'::@size@ member in @memory@, starting from
-                    -- @memoryOffset@ bytes, will be bound to the specified buffer.
+                 -> -- No documentation found for Nested "vkBindBufferMemory" "memoryOffset"
                     ("memoryOffset" ::: DeviceSize)
                  -> io ()
 bindBufferMemory device buffer memory memoryOffset = liftIO $ do
@@ -283,45 +117,12 @@ foreign import ccall
   "dynamic" mkVkGetImageMemoryRequirements
   :: FunPtr (Ptr Device_T -> Image -> Ptr MemoryRequirements -> IO ()) -> Ptr Device_T -> Image -> Ptr MemoryRequirements -> IO ()
 
--- | vkGetImageMemoryRequirements - Returns the memory requirements for
--- specified Vulkan object
---
--- == Valid Usage
---
--- -   #VUID-vkGetImageMemoryRequirements-image-01588# @image@ /must/ not
---     have been created with the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
---     flag set
---
--- -   #VUID-vkGetImageMemoryRequirements-image-04004# If @image@ was
---     created with the
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     external memory handle type, then @image@ /must/ be bound to memory
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetImageMemoryRequirements-device-parameter# @device@ /must/
---     be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkGetImageMemoryRequirements-image-parameter# @image@ /must/
---     be a valid 'Vulkan.Core10.Handles.Image' handle
---
--- -   #VUID-vkGetImageMemoryRequirements-pMemoryRequirements-parameter#
---     @pMemoryRequirements@ /must/ be a valid pointer to a
---     'MemoryRequirements' structure
---
--- -   #VUID-vkGetImageMemoryRequirements-image-parent# @image@ /must/ have
---     been created, allocated, or retrieved from @device@
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
--- 'MemoryRequirements'
+-- No documentation found for TopLevel "vkGetImageMemoryRequirements"
 getImageMemoryRequirements :: forall io
                             . (MonadIO io)
-                           => -- | @device@ is the logical device that owns the image.
+                           => -- No documentation found for Nested "vkGetImageMemoryRequirements" "device"
                               Device
-                           -> -- | @image@ is the image to query.
+                           -> -- No documentation found for Nested "vkGetImageMemoryRequirements" "image"
                               Image
                            -> io (MemoryRequirements)
 getImageMemoryRequirements device image = liftIO . evalContT $ do
@@ -342,182 +143,16 @@ foreign import ccall
   "dynamic" mkVkBindImageMemory
   :: FunPtr (Ptr Device_T -> Image -> DeviceMemory -> DeviceSize -> IO Result) -> Ptr Device_T -> Image -> DeviceMemory -> DeviceSize -> IO Result
 
--- | vkBindImageMemory - Bind device memory to an image object
---
--- = Description
---
--- 'bindImageMemory' is equivalent to passing the same parameters through
--- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo' to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.bindImageMemory2'.
---
--- == Valid Usage
---
--- -   #VUID-vkBindImageMemory-image-01044# @image@ /must/ not already be
---     backed by a memory object
---
--- -   #VUID-vkBindImageMemory-image-01045# @image@ /must/ not have been
---     created with any sparse memory binding flags
---
--- -   #VUID-vkBindImageMemory-memoryOffset-01046# @memoryOffset@ /must/ be
---     less than the size of @memory@
---
--- -   #VUID-vkBindImageMemory-image-01445# If @image@ requires a dedicated
---     allocation (as reported by
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
---     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for @image@), @memory@ /must/ have been created with
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     equal to @image@
---
--- -   #VUID-vkBindImageMemory-memory-02628# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
---     feature is not enabled, and the
---     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
---     allocated included a
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     structure in its @pNext@ chain, and
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', then @image@
---     /must/ equal
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     and @memoryOffset@ /must/ be zero
---
--- -   #VUID-vkBindImageMemory-memory-02629# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
---     feature is enabled, and the
---     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
---     allocated included a
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     structure in its @pNext@ chain, and
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', then
---     @memoryOffset@ /must/ be zero, and @image@ /must/ be either equal to
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     or an image that was created using the same parameters in
---     'Vulkan.Core10.Image.ImageCreateInfo', with the exception that
---     @extent@ and @arrayLayers@ /may/ differ subject to the following
---     restrictions: every dimension in the @extent@ parameter of the image
---     being bound /must/ be equal to or smaller than the original image
---     for which the allocation was created; and the @arrayLayers@
---     parameter of the image being bound /must/ be equal to or smaller
---     than the original image for which the allocation was created
---
--- -   #VUID-vkBindImageMemory-None-01901# If image was created with the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
---     bit set, the image /must/ be bound to a memory object allocated with
---     a memory type that reports
---     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
---
--- -   #VUID-vkBindImageMemory-None-01902# If image was created with the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
---     bit not set, the image /must/ not be bound to a memory object
---     created with a memory type that reports
---     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
---
--- -   #VUID-vkBindImageMemory-image-01050# If @image@ was created with
---     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
---     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
---     been created with
---     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@image@
---     equal to an image handle created with identical creation parameters
---     to @image@ and @memoryOffset@ /must/ be zero
---
--- -   #VUID-vkBindImageMemory-memory-02728# If the value of
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
---     used to allocate @memory@ is not @0@, it /must/ include at least one
---     of the handles set in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when @image@ was created
---
--- -   #VUID-vkBindImageMemory-memory-02989# If @memory@ was created by a
---     memory import operation, that is not
---     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
---     with a non-@NULL@ @buffer@ value, the external handle type of the
---     imported memory /must/ also have been set in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when @image@ was created
---
--- -   #VUID-vkBindImageMemory-memory-02990# If @memory@ was created with
---     the
---     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
---     memory import operation with a non-@NULL@ @buffer@ value,
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     /must/ also have been set in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when @image@ was created
---
--- -   #VUID-vkBindImageMemory-image-01608# @image@ /must/ not have been
---     created with the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
---     set
---
--- -   #VUID-vkBindImageMemory-memory-01047# @memory@ /must/ have been
---     allocated using one of the memory types allowed in the
---     @memoryTypeBits@ member of the 'MemoryRequirements' structure
---     returned from a call to 'getImageMemoryRequirements' with @image@
---
--- -   #VUID-vkBindImageMemory-memoryOffset-01048# @memoryOffset@ /must/ be
---     an integer multiple of the @alignment@ member of the
---     'MemoryRequirements' structure returned from a call to
---     'getImageMemoryRequirements' with @image@
---
--- -   #VUID-vkBindImageMemory-size-01049# The difference of the size of
---     @memory@ and @memoryOffset@ /must/ be greater than or equal to the
---     @size@ member of the 'MemoryRequirements' structure returned from a
---     call to 'getImageMemoryRequirements' with the same @image@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkBindImageMemory-device-parameter# @device@ /must/ be a valid
---     'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkBindImageMemory-image-parameter# @image@ /must/ be a valid
---     'Vulkan.Core10.Handles.Image' handle
---
--- -   #VUID-vkBindImageMemory-memory-parameter# @memory@ /must/ be a valid
---     'Vulkan.Core10.Handles.DeviceMemory' handle
---
--- -   #VUID-vkBindImageMemory-image-parent# @image@ /must/ have been
---     created, allocated, or retrieved from @device@
---
--- -   #VUID-vkBindImageMemory-memory-parent# @memory@ /must/ have been
---     created, allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @image@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
--- 'Vulkan.Core10.Handles.Image'
+-- No documentation found for TopLevel "vkBindImageMemory"
 bindImageMemory :: forall io
                  . (MonadIO io)
-                => -- | @device@ is the logical device that owns the image and memory.
+                => -- No documentation found for Nested "vkBindImageMemory" "device"
                    Device
-                -> -- | @image@ is the image.
+                -> -- No documentation found for Nested "vkBindImageMemory" "image"
                    Image
-                -> -- | @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object describing
-                   -- the device memory to attach.
+                -> -- No documentation found for Nested "vkBindImageMemory" "memory"
                    DeviceMemory
-                -> -- | @memoryOffset@ is the start offset of the region of @memory@ which is to
-                   -- be bound to the image. The number of bytes returned in the
-                   -- 'MemoryRequirements'::@size@ member in @memory@, starting from
-                   -- @memoryOffset@ bytes, will be bound to the specified image.
+                -> -- No documentation found for Nested "vkBindImageMemory" "memoryOffset"
                    ("memoryOffset" ::: DeviceSize)
                 -> io ()
 bindImageMemory device image memory memoryOffset = liftIO $ do
@@ -529,25 +164,14 @@ bindImageMemory device image memory memoryOffset = liftIO $ do
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
--- | VkMemoryRequirements - Structure specifying memory requirements
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2',
--- 'getBufferMemoryRequirements', 'getImageMemoryRequirements'
+
+-- No documentation found for TopLevel "VkMemoryRequirements"
 data MemoryRequirements = MemoryRequirements
-  { -- | @size@ is the size, in bytes, of the memory allocation /required/ for
-    -- the resource.
+  { -- No documentation found for Nested "VkMemoryRequirements" "size"
     size :: DeviceSize
-  , -- | @alignment@ is the alignment, in bytes, of the offset within the
-    -- allocation /required/ for the resource.
+  , -- No documentation found for Nested "VkMemoryRequirements" "alignment"
     alignment :: DeviceSize
-  , -- | @memoryTypeBits@ is a bitmask and contains one bit set for every
-    -- supported memory type for the resource. Bit @i@ is set if and only if
-    -- the memory type @i@ in the
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'
-    -- structure for the physical device is supported for the resource.
+  , -- No documentation found for Nested "VkMemoryRequirements" "memoryTypeBits"
     memoryTypeBits :: Word32
   }
   deriving (Typeable, Eq)
@@ -578,6 +202,7 @@ instance FromCStruct MemoryRequirements where
     memoryTypeBits <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pure $ MemoryRequirements
              size alignment memoryTypeBits
+
 
 instance Storable MemoryRequirements where
   sizeOf ~_ = 24

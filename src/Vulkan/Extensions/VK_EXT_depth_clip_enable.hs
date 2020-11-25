@@ -1,112 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_depth_clip_enable - device extension
---
--- == VK_EXT_depth_clip_enable
---
--- [__Name String__]
---     @VK_EXT_depth_clip_enable@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     103
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
--- [__Special Use__]
---
---     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse D3D support>
---
--- [__Contact__]
---
---     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_depth_clip_enable:%20&body=@pdaniell-nv%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2018-12-20
---
--- [__Contributors__]
---
---     -   Daniel Rakos, AMD
---
---     -   Henri Verbeet, CodeWeavers
---
---     -   Jeff Bolz, NVIDIA
---
---     -   Philip Rebohle, DXVK
---
---     -   Tobias Hector, AMD
---
--- == Description
---
--- This extension allows the depth clipping operation, that is normally
--- implicitly controlled by
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@,
--- to instead be controlled explicitly by
--- 'PipelineRasterizationDepthClipStateCreateInfoEXT'::@depthClipEnable@.
---
--- This is useful for translating DX content which assumes depth clamping
--- is always enabled, but depth clip can be controlled by the
--- DepthClipEnable rasterization state (D3D12_RASTERIZER_DESC).
---
--- == New Structures
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
---     'Vulkan.Core10.Device.DeviceCreateInfo':
---
---     -   'PhysicalDeviceDepthClipEnableFeaturesEXT'
---
--- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo':
---
---     -   'PipelineRasterizationDepthClipStateCreateInfoEXT'
---
--- == New Bitmasks
---
--- -   'PipelineRasterizationDepthClipStateCreateFlagsEXT'
---
--- == New Enum Constants
---
--- -   'EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME'
---
--- -   'EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT'
---
--- == Version History
---
--- -   Revision 1, 2018-12-20 (Piers Daniell)
---
---     -   Internal revisions
---
--- = See Also
---
--- 'PhysicalDeviceDepthClipEnableFeaturesEXT',
--- 'PipelineRasterizationDepthClipStateCreateFlagsEXT',
--- 'PipelineRasterizationDepthClipStateCreateInfoEXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_enable Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_depth_clip_enable"
 module Vulkan.Extensions.VK_EXT_depth_clip_enable  ( PhysicalDeviceDepthClipEnableFeaturesEXT(..)
                                                    , PipelineRasterizationDepthClipStateCreateInfoEXT(..)
                                                    , PipelineRasterizationDepthClipStateCreateFlagsEXT(..)
@@ -149,37 +42,10 @@ import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT))
--- | VkPhysicalDeviceDepthClipEnableFeaturesEXT - Structure indicating
--- support for explicit enable of depth clip
---
--- = Members
---
--- The members of the 'PhysicalDeviceDepthClipEnableFeaturesEXT' structure
--- describe the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceDepthClipEnableFeaturesEXT' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceDepthClipEnableFeaturesEXT' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable this
--- feature.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceDepthClipEnableFeaturesEXT"
 data PhysicalDeviceDepthClipEnableFeaturesEXT = PhysicalDeviceDepthClipEnableFeaturesEXT
-  { -- | #features-depthClipEnable# @depthClipEnable@ indicates that the
-    -- implementation supports setting the depth clipping operation explicitly
-    -- via the 'PipelineRasterizationDepthClipStateCreateInfoEXT' pipeline
-    -- state. Otherwise depth clipping is only enabled when
-    -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@
-    -- is set to 'Vulkan.Core10.FundamentalTypes.FALSE'.
+  { -- No documentation found for Nested "VkPhysicalDeviceDepthClipEnableFeaturesEXT" "depthClipEnable"
     depthClipEnable :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -208,6 +74,7 @@ instance FromCStruct PhysicalDeviceDepthClipEnableFeaturesEXT where
     pure $ PhysicalDeviceDepthClipEnableFeaturesEXT
              (bool32ToBool depthClipEnable)
 
+
 instance Storable PhysicalDeviceDepthClipEnableFeaturesEXT where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -219,25 +86,12 @@ instance Zero PhysicalDeviceDepthClipEnableFeaturesEXT where
            zero
 
 
--- | VkPipelineRasterizationDepthClipStateCreateInfoEXT - Structure
--- specifying depth clipping state
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'PipelineRasterizationDepthClipStateCreateFlagsEXT',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPipelineRasterizationDepthClipStateCreateInfoEXT"
 data PipelineRasterizationDepthClipStateCreateInfoEXT = PipelineRasterizationDepthClipStateCreateInfoEXT
-  { -- | @flags@ is reserved for future use.
-    --
-    -- #VUID-VkPipelineRasterizationDepthClipStateCreateInfoEXT-flags-zerobitmask#
-    -- @flags@ /must/ be @0@
+  { -- No documentation found for Nested "VkPipelineRasterizationDepthClipStateCreateInfoEXT" "flags"
     flags :: PipelineRasterizationDepthClipStateCreateFlagsEXT
-  , -- | @depthClipEnable@ controls whether depth clipping is enabled as
-    -- described in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>.
+  , -- No documentation found for Nested "VkPipelineRasterizationDepthClipStateCreateInfoEXT" "depthClipEnable"
     depthClipEnable :: Bool
   }
   deriving (Typeable, Eq)
@@ -269,6 +123,7 @@ instance FromCStruct PipelineRasterizationDepthClipStateCreateInfoEXT where
     pure $ PipelineRasterizationDepthClipStateCreateInfoEXT
              flags (bool32ToBool depthClipEnable)
 
+
 instance Storable PipelineRasterizationDepthClipStateCreateInfoEXT where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -281,17 +136,7 @@ instance Zero PipelineRasterizationDepthClipStateCreateInfoEXT where
            zero
 
 
--- | VkPipelineRasterizationDepthClipStateCreateFlagsEXT - Reserved for
--- future use
---
--- = Description
---
--- 'PipelineRasterizationDepthClipStateCreateFlagsEXT' is a bitmask type
--- for setting a mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'PipelineRasterizationDepthClipStateCreateInfoEXT'
+-- No documentation found for TopLevel "VkPipelineRasterizationDepthClipStateCreateFlagsEXT"
 newtype PipelineRasterizationDepthClipStateCreateFlagsEXT = PipelineRasterizationDepthClipStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -307,12 +152,14 @@ showTablePipelineRasterizationDepthClipStateCreateFlagsEXT
   :: [(PipelineRasterizationDepthClipStateCreateFlagsEXT, String)]
 showTablePipelineRasterizationDepthClipStateCreateFlagsEXT = []
 
+
 instance Show PipelineRasterizationDepthClipStateCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT
-                            showTablePipelineRasterizationDepthClipStateCreateFlagsEXT
-                            conNamePipelineRasterizationDepthClipStateCreateFlagsEXT
-                            (\(PipelineRasterizationDepthClipStateCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT
+                          showTablePipelineRasterizationDepthClipStateCreateFlagsEXT
+                          conNamePipelineRasterizationDepthClipStateCreateFlagsEXT
+                          (\(PipelineRasterizationDepthClipStateCreateFlagsEXT x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineRasterizationDepthClipStateCreateFlagsEXT where
   readPrec = enumReadPrec enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT

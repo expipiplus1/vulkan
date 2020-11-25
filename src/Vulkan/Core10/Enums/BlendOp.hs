@@ -62,77 +62,7 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkBlendOp - Framebuffer blending operations
---
--- = Description
---
--- The semantics of each basic blend operations is described in the table
--- below:
---
--- +-------------------------------+--------------------+-----------------+
--- | 'BlendOp'                     | RGB Components     | Alpha Component |
--- +===============================+====================+=================+
--- | 'BLEND_OP_ADD'                | R = Rs0 × Sr + Rd  | A = As0 × Sa +  |
--- |                               | × Dr               | Ad × Da         |
--- |                               | G = Gs0 × Sg + Gd  |                 |
--- |                               | × Dg               |                 |
--- |                               | B = Bs0 × Sb + Bd  |                 |
--- |                               | × Db               |                 |
--- +-------------------------------+--------------------+-----------------+
--- | 'BLEND_OP_SUBTRACT'           | R = Rs0 × Sr - Rd  | A = As0 × Sa -  |
--- |                               | × Dr               | Ad × Da         |
--- |                               | G = Gs0 × Sg - Gd  |                 |
--- |                               | × Dg               |                 |
--- |                               | B = Bs0 × Sb - Bd  |                 |
--- |                               | × Db               |                 |
--- +-------------------------------+--------------------+-----------------+
--- | 'BLEND_OP_REVERSE_SUBTRACT'   | R = Rd × Dr - Rs0  | A = Ad × Da -   |
--- |                               | × Sr               | As0 × Sa        |
--- |                               | G = Gd × Dg - Gs0  |                 |
--- |                               | × Sg               |                 |
--- |                               | B = Bd × Db - Bs0  |                 |
--- |                               | × Sb               |                 |
--- +-------------------------------+--------------------+-----------------+
--- | 'BLEND_OP_MIN'                | R = min(Rs0,Rd)    | A = min(As0,Ad) |
--- |                               | G = min(Gs0,Gd)    |                 |
--- |                               | B = min(Bs0,Bd)    |                 |
--- +-------------------------------+--------------------+-----------------+
--- | 'BLEND_OP_MAX'                | R = max(Rs0,Rd)    | A = max(As0,Ad) |
--- |                               | G = max(Gs0,Gd)    |                 |
--- |                               | B = max(Bs0,Bd)    |                 |
--- +-------------------------------+--------------------+-----------------+
---
--- Basic Blend Operations
---
--- In this table, the following conventions are used:
---
--- -   Rs0, Gs0, Bs0 and As0 represent the first source color R, G, B, and
---     A components, respectively.
---
--- -   Rd, Gd, Bd and Ad represent the R, G, B, and A components of the
---     destination color. That is, the color currently in the corresponding
---     color attachment for this fragment\/sample.
---
--- -   Sr, Sg, Sb and Sa represent the source blend factor R, G, B, and A
---     components, respectively.
---
--- -   Dr, Dg, Db and Da represent the destination blend factor R, G, B,
---     and A components, respectively.
---
--- The blending operation produces a new set of values R, G, B and A, which
--- are written to the framebuffer attachment. If blending is not enabled
--- for this attachment, then R, G, B and A are assigned Rs0, Gs0, Bs0 and
--- As0, respectively.
---
--- If the color attachment is fixed-point, the components of the source and
--- destination values and blend factors are each clamped to [0,1] or [-1,1]
--- respectively for an unsigned normalized or signed normalized color
--- attachment prior to evaluating the blend operations. If the color
--- attachment is floating-point, no clamping occurs.
---
--- = See Also
---
--- 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState'
+-- No documentation found for TopLevel "VkBlendOp"
 newtype BlendOp = BlendOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -351,8 +281,10 @@ showTableBlendOp =
   , (BLEND_OP_ZERO_EXT              , "ZERO_EXT")
   ]
 
+
 instance Show BlendOp where
-  showsPrec = enumShowsPrec enumPrefixBlendOp showTableBlendOp conNameBlendOp (\(BlendOp x) -> x) (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixBlendOp showTableBlendOp conNameBlendOp (\(BlendOp x) -> x) (showsPrec 11)
+
 
 instance Read BlendOp where
   readPrec = enumReadPrec enumPrefixBlendOp showTableBlendOp conNameBlendOp BlendOp

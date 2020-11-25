@@ -1,91 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_KHR_win32_keyed_mutex - device extension
---
--- == VK_KHR_win32_keyed_mutex
---
--- [__Name String__]
---     @VK_KHR_win32_keyed_mutex@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     76
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_external_memory_win32@
---
--- [__Contact__]
---
---     -   Carsten Rohde
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_win32_keyed_mutex:%20&body=@crohde%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2016-10-21
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   James Jones, NVIDIA
---
---     -   Jeff Juliano, NVIDIA
---
---     -   Carsten Rohde, NVIDIA
---
--- == Description
---
--- Applications that wish to import Direct3D 11 memory objects into the
--- Vulkan API may wish to use the native keyed mutex mechanism to
--- synchronize access to the memory between Vulkan and Direct3D. This
--- extension provides a way for an application to access the keyed mutex
--- associated with an imported Vulkan memory object when submitting command
--- buffers to a queue.
---
--- == New Structures
---
--- -   Extending 'Vulkan.Core10.Queue.SubmitInfo':
---
---     -   'Win32KeyedMutexAcquireReleaseInfoKHR'
---
--- == New Enum Constants
---
--- -   'KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME'
---
--- -   'KHR_WIN32_KEYED_MUTEX_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR'
---
--- == Version History
---
--- -   Revision 1, 2016-10-21 (James Jones)
---
---     -   Initial revision
---
--- = See Also
---
--- 'Win32KeyedMutexAcquireReleaseInfoKHR'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_keyed_mutex Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_KHR_win32_keyed_mutex"
 module Vulkan.Extensions.VK_KHR_win32_keyed_mutex  ( Win32KeyedMutexAcquireReleaseInfoKHR(..)
                                                    , KHR_WIN32_KEYED_MUTEX_SPEC_VERSION
                                                    , pattern KHR_WIN32_KEYED_MUTEX_SPEC_VERSION
@@ -125,76 +39,18 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR))
--- | VkWin32KeyedMutexAcquireReleaseInfoKHR - Use the Windows keyed mutex
--- mechanism to synchronize work
---
--- == Valid Usage
---
--- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pAcquireSyncs-00081#
---     Each member of @pAcquireSyncs@ and @pReleaseSyncs@ /must/ be a
---     device memory object imported by setting
---     'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR'::@handleType@
---     to
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT'
---     or
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-sType-sType# @sType@
---     /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR'
---
--- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pAcquireSyncs-parameter#
---     If @acquireCount@ is not @0@, @pAcquireSyncs@ /must/ be a valid
---     pointer to an array of @acquireCount@ valid
---     'Vulkan.Core10.Handles.DeviceMemory' handles
---
--- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pAcquireKeys-parameter#
---     If @acquireCount@ is not @0@, @pAcquireKeys@ /must/ be a valid
---     pointer to an array of @acquireCount@ @uint64_t@ values
---
--- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pAcquireTimeouts-parameter#
---     If @acquireCount@ is not @0@, @pAcquireTimeouts@ /must/ be a valid
---     pointer to an array of @acquireCount@ @uint32_t@ values
---
--- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pReleaseSyncs-parameter#
---     If @releaseCount@ is not @0@, @pReleaseSyncs@ /must/ be a valid
---     pointer to an array of @releaseCount@ valid
---     'Vulkan.Core10.Handles.DeviceMemory' handles
---
--- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-pReleaseKeys-parameter#
---     If @releaseCount@ is not @0@, @pReleaseKeys@ /must/ be a valid
---     pointer to an array of @releaseCount@ @uint64_t@ values
---
--- -   #VUID-VkWin32KeyedMutexAcquireReleaseInfoKHR-commonparent# Both of
---     the elements of @pAcquireSyncs@, and the elements of @pReleaseSyncs@
---     that are valid handles of non-ignored parameters /must/ have been
---     created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Device'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkWin32KeyedMutexAcquireReleaseInfoKHR"
 data Win32KeyedMutexAcquireReleaseInfoKHR = Win32KeyedMutexAcquireReleaseInfoKHR
-  { -- | @pAcquireSyncs@ is a pointer to an array of
-    -- 'Vulkan.Core10.Handles.DeviceMemory' objects which were imported from
-    -- Direct3D 11 resources.
+  { -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "pAcquireSyncs"
     acquireSyncs :: Vector DeviceMemory
-  , -- | @pAcquireKeys@ is a pointer to an array of mutex key values to wait for
-    -- prior to beginning the submitted work. Entries refer to the keyed mutex
-    -- associated with the corresponding entries in @pAcquireSyncs@.
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "pAcquireKeys"
     acquireKeys :: Vector Word64
   , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "pAcquireTimeouts"
     acquireTimeouts :: Vector Word32
-  , -- | @pReleaseSyncs@ is a pointer to an array of
-    -- 'Vulkan.Core10.Handles.DeviceMemory' objects which were imported from
-    -- Direct3D 11 resources.
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "pReleaseSyncs"
     releaseSyncs :: Vector DeviceMemory
-  , -- | @pReleaseKeys@ is a pointer to an array of mutex key values to set when
-    -- the submitted work has completed. Entries refer to the keyed mutex
-    -- associated with the corresponding entries in @pReleaseSyncs@.
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "pReleaseKeys"
     releaseKeys :: Vector Word64
   }
   deriving (Typeable)

@@ -26,33 +26,14 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
--- | VkPhysicalDeviceVulkanMemoryModelFeatures - Structure describing
--- features supported by the memory model
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceVulkanMemoryModelFeatures"
 data PhysicalDeviceVulkanMemoryModelFeatures = PhysicalDeviceVulkanMemoryModelFeatures
-  { -- | #extension-features-vulkanMemoryModel# @vulkanMemoryModel@ indicates
-    -- whether the Vulkan Memory Model is supported, as defined in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model Vulkan Memory Model>.
-    -- This also indicates whether shader modules /can/ declare the
-    -- @VulkanMemoryModel@ capability.
+  { -- No documentation found for Nested "VkPhysicalDeviceVulkanMemoryModelFeatures" "vulkanMemoryModel"
     vulkanMemoryModel :: Bool
-  , -- | #extension-features-vulkanMemoryModelDeviceScope#
-    -- @vulkanMemoryModelDeviceScope@ indicates whether the Vulkan Memory Model
-    -- can use 'Vulkan.Core10.Handles.Device' scope synchronization. This also
-    -- indicates whether shader modules /can/ declare the
-    -- @VulkanMemoryModelDeviceScope@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkanMemoryModelFeatures" "vulkanMemoryModelDeviceScope"
     vulkanMemoryModelDeviceScope :: Bool
-  , -- | #extension-features-vulkanMemoryModelAvailabilityVisibilityChains#
-    -- @vulkanMemoryModelAvailabilityVisibilityChains@ indicates whether the
-    -- Vulkan Memory Model can use
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model-availability-visibility availability and visibility chains>
-    -- with more than one element.
+  , -- No documentation found for Nested "VkPhysicalDeviceVulkanMemoryModelFeatures" "vulkanMemoryModelAvailabilityVisibilityChains"
     vulkanMemoryModelAvailabilityVisibilityChains :: Bool
   }
   deriving (Typeable, Eq)
@@ -87,6 +68,7 @@ instance FromCStruct PhysicalDeviceVulkanMemoryModelFeatures where
     vulkanMemoryModelAvailabilityVisibilityChains <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDeviceVulkanMemoryModelFeatures
              (bool32ToBool vulkanMemoryModel) (bool32ToBool vulkanMemoryModelDeviceScope) (bool32ToBool vulkanMemoryModelAvailabilityVisibilityChains)
+
 
 instance Storable PhysicalDeviceVulkanMemoryModelFeatures where
   sizeOf ~_ = 32

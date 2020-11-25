@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkPipelineTessellationStateCreateFlags - Reserved for future use
---
--- = Description
---
--- 'PipelineTessellationStateCreateFlags' is a bitmask type for setting a
--- mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.Pipeline.PipelineTessellationStateCreateInfo'
+-- No documentation found for TopLevel "VkPipelineTessellationStateCreateFlags"
 newtype PipelineTessellationStateCreateFlags = PipelineTessellationStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixPipelineTessellationStateCreateFlags = ""
 showTablePipelineTessellationStateCreateFlags :: [(PipelineTessellationStateCreateFlags, String)]
 showTablePipelineTessellationStateCreateFlags = []
 
+
 instance Show PipelineTessellationStateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineTessellationStateCreateFlags
-                            showTablePipelineTessellationStateCreateFlags
-                            conNamePipelineTessellationStateCreateFlags
-                            (\(PipelineTessellationStateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineTessellationStateCreateFlags
+                          showTablePipelineTessellationStateCreateFlags
+                          conNamePipelineTessellationStateCreateFlags
+                          (\(PipelineTessellationStateCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineTessellationStateCreateFlags where
   readPrec = enumReadPrec enumPrefixPipelineTessellationStateCreateFlags

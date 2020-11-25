@@ -67,59 +67,7 @@ foreign import ccall
   "dynamic" mkVkEnumerateInstanceLayerProperties
   :: FunPtr (Ptr Word32 -> Ptr LayerProperties -> IO Result) -> Ptr Word32 -> Ptr LayerProperties -> IO Result
 
--- | vkEnumerateInstanceLayerProperties - Returns up to requested number of
--- global layer properties
---
--- = Description
---
--- If @pProperties@ is @NULL@, then the number of layer properties
--- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
--- /must/ point to a variable set by the user to the number of elements in
--- the @pProperties@ array, and on return the variable is overwritten with
--- the number of structures actually written to @pProperties@. If
--- @pPropertyCount@ is less than the number of layer properties available,
--- at most @pPropertyCount@ structures will be written. If @pPropertyCount@
--- is smaller than the number of layers available,
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
--- available layer properties were returned.
---
--- The list of available layers may change at any time due to actions
--- outside of the Vulkan implementation, so two calls to
--- 'enumerateInstanceLayerProperties' with the same parameters /may/ return
--- different results, or retrieve different @pPropertyCount@ values or
--- @pProperties@ contents. Once an instance has been created, the layers
--- enabled for that instance will continue to be enabled and valid for the
--- lifetime of that instance, even if some of them become unavailable for
--- future instances.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkEnumerateInstanceLayerProperties-pPropertyCount-parameter#
---     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   #VUID-vkEnumerateInstanceLayerProperties-pProperties-parameter# If
---     the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ 'LayerProperties' structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'LayerProperties'
+-- No documentation found for TopLevel "vkEnumerateInstanceLayerProperties"
 enumerateInstanceLayerProperties :: forall io
                                   . (MonadIO io)
                                  => io (Result, ("properties" ::: Vector LayerProperties))
@@ -148,60 +96,7 @@ foreign import ccall
   "dynamic" mkVkEnumerateDeviceLayerProperties
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr LayerProperties -> IO Result) -> Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr LayerProperties -> IO Result
 
--- | vkEnumerateDeviceLayerProperties - Returns properties of available
--- physical device layers
---
--- = Description
---
--- If @pProperties@ is @NULL@, then the number of layer properties
--- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
--- /must/ point to a variable set by the user to the number of elements in
--- the @pProperties@ array, and on return the variable is overwritten with
--- the number of structures actually written to @pProperties@. If
--- @pPropertyCount@ is less than the number of layer properties available,
--- at most @pPropertyCount@ structures will be written. If @pPropertyCount@
--- is smaller than the number of layers available,
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
--- available layer properties were returned.
---
--- The list of layers enumerated by 'enumerateDeviceLayerProperties' /must/
--- be exactly the sequence of layers enabled for the instance. The members
--- of 'LayerProperties' for each enumerated layer /must/ be the same as the
--- properties when the layer was enumerated by
--- 'enumerateInstanceLayerProperties'.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkEnumerateDeviceLayerProperties-physicalDevice-parameter#
---     @physicalDevice@ /must/ be a valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkEnumerateDeviceLayerProperties-pPropertyCount-parameter#
---     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   #VUID-vkEnumerateDeviceLayerProperties-pProperties-parameter# If the
---     value referenced by @pPropertyCount@ is not @0@, and @pProperties@
---     is not @NULL@, @pProperties@ /must/ be a valid pointer to an array
---     of @pPropertyCount@ 'LayerProperties' structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'LayerProperties', 'Vulkan.Core10.Handles.PhysicalDevice'
+-- No documentation found for TopLevel "vkEnumerateDeviceLayerProperties"
 enumerateDeviceLayerProperties :: forall io
                                 . (MonadIO io)
                                => -- No documentation found for Nested "vkEnumerateDeviceLayerProperties" "physicalDevice"
@@ -226,30 +121,16 @@ enumerateDeviceLayerProperties physicalDevice = liftIO . evalContT $ do
   pure $ ((r'), pProperties')
 
 
--- | VkLayerProperties - Structure specifying layer properties
---
--- = See Also
---
--- 'enumerateDeviceLayerProperties', 'enumerateInstanceLayerProperties'
+
+-- No documentation found for TopLevel "VkLayerProperties"
 data LayerProperties = LayerProperties
-  { -- | @layerName@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_EXTENSION_NAME_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string which is the name of the layer. Use this
-    -- name in the @ppEnabledLayerNames@ array passed in the
-    -- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure to
-    -- enable this layer for an instance.
+  { -- No documentation found for Nested "VkLayerProperties" "layerName"
     layerName :: ByteString
-  , -- | @specVersion@ is the Vulkan version the layer was written to, encoded as
-    -- described in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
+  , -- No documentation found for Nested "VkLayerProperties" "specVersion"
     specVersion :: Word32
-  , -- | @implementationVersion@ is the version of this layer. It is an integer,
-    -- increasing with backward compatible changes.
+  , -- No documentation found for Nested "VkLayerProperties" "implementationVersion"
     implementationVersion :: Word32
-  , -- | @description@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string which provides additional details that
-    -- /can/ be used by the application to identify the layer.
+  , -- No documentation found for Nested "VkLayerProperties" "description"
     description :: ByteString
   }
   deriving (Typeable)
@@ -283,6 +164,7 @@ instance FromCStruct LayerProperties where
     description <- packCString (lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
     pure $ LayerProperties
              layerName specVersion implementationVersion description
+
 
 instance Storable LayerProperties where
   sizeOf ~_ = 520

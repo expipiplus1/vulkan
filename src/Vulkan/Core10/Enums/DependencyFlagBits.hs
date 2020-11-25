@@ -21,23 +21,15 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type DependencyFlags = DependencyFlagBits
 
--- | VkDependencyFlagBits - Bitmask specifying how execution and memory
--- dependencies are formed
---
--- = See Also
---
--- 'DependencyFlags'
+-- No documentation found for TopLevel "VkDependencyFlagBits"
 newtype DependencyFlagBits = DependencyFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'DEPENDENCY_BY_REGION_BIT' specifies that dependencies will be
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-local>.
+-- No documentation found for Nested "VkDependencyFlagBits" "VK_DEPENDENCY_BY_REGION_BIT"
 pattern DEPENDENCY_BY_REGION_BIT    = DependencyFlagBits 0x00000001
--- | 'DEPENDENCY_VIEW_LOCAL_BIT' specifies that a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass has more than one view>.
+-- No documentation found for Nested "VkDependencyFlagBits" "VK_DEPENDENCY_VIEW_LOCAL_BIT"
 pattern DEPENDENCY_VIEW_LOCAL_BIT   = DependencyFlagBits 0x00000002
--- | 'DEPENDENCY_DEVICE_GROUP_BIT' specifies that dependencies are
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-device-local-dependencies non-device-local dependency>.
+-- No documentation found for Nested "VkDependencyFlagBits" "VK_DEPENDENCY_DEVICE_GROUP_BIT"
 pattern DEPENDENCY_DEVICE_GROUP_BIT = DependencyFlagBits 0x00000004
 
 conNameDependencyFlagBits :: String
@@ -53,12 +45,14 @@ showTableDependencyFlagBits =
   , (DEPENDENCY_DEVICE_GROUP_BIT, "DEVICE_GROUP_BIT")
   ]
 
+
 instance Show DependencyFlagBits where
-  showsPrec = enumShowsPrec enumPrefixDependencyFlagBits
-                            showTableDependencyFlagBits
-                            conNameDependencyFlagBits
-                            (\(DependencyFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixDependencyFlagBits
+                          showTableDependencyFlagBits
+                          conNameDependencyFlagBits
+                          (\(DependencyFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read DependencyFlagBits where
   readPrec =

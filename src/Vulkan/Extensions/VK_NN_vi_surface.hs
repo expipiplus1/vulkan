@@ -1,114 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_NN_vi_surface - instance extension
---
--- == VK_NN_vi_surface
---
--- [__Name String__]
---     @VK_NN_vi_surface@
---
--- [__Extension Type__]
---     Instance extension
---
--- [__Registered Extension Number__]
---     63
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_surface@
---
--- [__Contact__]
---
---     -   Mathias Heyer <<data:image/png;base64, GitLab>>mheyer
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2016-12-02
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Mathias Heyer, NVIDIA
---
---     -   Michael Chock, NVIDIA
---
---     -   Yasuhiro Yoshioka, Nintendo
---
---     -   Daniel Koch, NVIDIA
---
--- == Description
---
--- The @VK_NN_vi_surface@ extension is an instance extension. It provides a
--- mechanism to create a 'Vulkan.Extensions.Handles.SurfaceKHR' object
--- (defined by the @VK_KHR_surface@ extension) associated with an
--- @nn@::@vi@::@Layer@.
---
--- == New Commands
---
--- -   'createViSurfaceNN'
---
--- == New Structures
---
--- -   'ViSurfaceCreateInfoNN'
---
--- == New Bitmasks
---
--- -   'ViSurfaceCreateFlagsNN'
---
--- == New Enum Constants
---
--- -   'NN_VI_SURFACE_EXTENSION_NAME'
---
--- -   'NN_VI_SURFACE_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN'
---
--- == Issues
---
--- 1) Does VI need a way to query for compatibility between a particular
--- physical device (and queue family?) and a specific VI display?
---
--- __RESOLVED__: No. It is currently always assumed that the device and
--- display will always be compatible.
---
--- 2) 'ViSurfaceCreateInfoNN'::@pWindow@ is intended to store an
--- @nn@::@vi@::@NativeWindowHandle@, but its declared type is a bare
--- @void@* to store the window handle. Why the discrepancy?
---
--- __RESOLVED__: It is for C compatibility. The definition for the VI
--- native window handle type is defined inside the @nn@::@vi@ C++
--- namespace. This prevents its use in C source files.
--- @nn@::@vi@::@NativeWindowHandle@ is always defined to be @void@*, so
--- this extension uses @void@* to match.
---
--- == Version History
---
--- -   Revision 1, 2016-12-2 (Michael Chock)
---
---     -   Initial draft.
---
--- = See Also
---
--- 'ViSurfaceCreateFlagsNN', 'ViSurfaceCreateInfoNN', 'createViSurfaceNN'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NN_vi_surface Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_NN_vi_surface"
 module Vulkan.Extensions.VK_NN_vi_surface  ( createViSurfaceNN
                                            , ViSurfaceCreateInfoNN(..)
                                            , ViSurfaceCreateFlagsNN(..)
@@ -183,70 +74,14 @@ foreign import ccall
   "dynamic" mkVkCreateViSurfaceNN
   :: FunPtr (Ptr Instance_T -> Ptr ViSurfaceCreateInfoNN -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result) -> Ptr Instance_T -> Ptr ViSurfaceCreateInfoNN -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
 
--- | vkCreateViSurfaceNN - Create a 'Vulkan.Extensions.Handles.SurfaceKHR'
--- object for a VI layer
---
--- = Description
---
--- During the lifetime of a surface created using a particular
--- @nn@::@vi@::@NativeWindowHandle@, applications /must/ not attempt to
--- create another surface for the same @nn@::@vi@::@Layer@ or attempt to
--- connect to the same @nn@::@vi@::@Layer@ through other platform
--- mechanisms.
---
--- If the native window is created with a specified size, @currentExtent@
--- will reflect that size. In this case, applications should use the same
--- size for the swapchain’s @imageExtent@. Otherwise, the @currentExtent@
--- will have the special value (0xFFFFFFFF, 0xFFFFFFFF), indicating that
--- applications are expected to choose an appropriate size for the
--- swapchain’s @imageExtent@ (e.g., by matching the result of a call to
--- @nn@::@vi@::@GetDisplayResolution@).
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateViSurfaceNN-instance-parameter# @instance@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Instance' handle
---
--- -   #VUID-vkCreateViSurfaceNN-pCreateInfo-parameter# @pCreateInfo@
---     /must/ be a valid pointer to a valid 'ViSurfaceCreateInfoNN'
---     structure
---
--- -   #VUID-vkCreateViSurfaceNN-pAllocator-parameter# If @pAllocator@ is
---     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkCreateViSurfaceNN-pSurface-parameter# @pSurface@ /must/ be a
---     valid pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Instance',
--- 'Vulkan.Extensions.Handles.SurfaceKHR', 'ViSurfaceCreateInfoNN'
+-- No documentation found for TopLevel "vkCreateViSurfaceNN"
 createViSurfaceNN :: forall io
                    . (MonadIO io)
-                  => -- | @instance@ is the instance with which to associate the surface.
+                  => -- No documentation found for Nested "vkCreateViSurfaceNN" "instance"
                      Instance
-                  -> -- | @pCreateInfo@ is a pointer to a 'ViSurfaceCreateInfoNN' structure
-                     -- containing parameters affecting the creation of the surface object.
+                  -> -- No documentation found for Nested "vkCreateViSurfaceNN" "pCreateInfo"
                      ViSurfaceCreateInfoNN
-                  -> -- | @pAllocator@ is the allocator used for host memory allocated for the
-                     -- surface object when there is no more specific allocator available (see
-                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                  -> -- No documentation found for Nested "vkCreateViSurfaceNN" "pAllocator"
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (SurfaceKHR)
 createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
@@ -265,25 +100,12 @@ createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
   pure $ (pSurface)
 
 
--- | VkViSurfaceCreateInfoNN - Structure specifying parameters of a newly
--- created VI surface object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'ViSurfaceCreateFlagsNN', 'createViSurfaceNN'
+
+-- No documentation found for TopLevel "VkViSurfaceCreateInfoNN"
 data ViSurfaceCreateInfoNN = ViSurfaceCreateInfoNN
-  { -- | @flags@ is reserved for future use.
-    --
-    -- #VUID-VkViSurfaceCreateInfoNN-flags-zerobitmask# @flags@ /must/ be @0@
+  { -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "flags"
     flags :: ViSurfaceCreateFlagsNN
-  , -- | @window@ is the @nn@::@vi@::@NativeWindowHandle@ for the
-    -- @nn@::@vi@::@Layer@ with which to associate the surface.
-    --
-    -- #VUID-VkViSurfaceCreateInfoNN-window-01318# @window@ /must/ be a valid
-    -- @nn@::@vi@::@NativeWindowHandle@
+  , -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "window"
     window :: Ptr ()
   }
   deriving (Typeable)
@@ -315,6 +137,7 @@ instance FromCStruct ViSurfaceCreateInfoNN where
     pure $ ViSurfaceCreateInfoNN
              flags window
 
+
 instance Storable ViSurfaceCreateInfoNN where
   sizeOf ~_ = 32
   alignment ~_ = 8
@@ -327,16 +150,7 @@ instance Zero ViSurfaceCreateInfoNN where
            zero
 
 
--- | VkViSurfaceCreateFlagsNN - Reserved for future use
---
--- = Description
---
--- 'ViSurfaceCreateFlagsNN' is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'ViSurfaceCreateInfoNN'
+-- No documentation found for TopLevel "VkViSurfaceCreateFlagsNN"
 newtype ViSurfaceCreateFlagsNN = ViSurfaceCreateFlagsNN Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -351,12 +165,14 @@ enumPrefixViSurfaceCreateFlagsNN = ""
 showTableViSurfaceCreateFlagsNN :: [(ViSurfaceCreateFlagsNN, String)]
 showTableViSurfaceCreateFlagsNN = []
 
+
 instance Show ViSurfaceCreateFlagsNN where
-  showsPrec = enumShowsPrec enumPrefixViSurfaceCreateFlagsNN
-                            showTableViSurfaceCreateFlagsNN
-                            conNameViSurfaceCreateFlagsNN
-                            (\(ViSurfaceCreateFlagsNN x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixViSurfaceCreateFlagsNN
+                          showTableViSurfaceCreateFlagsNN
+                          conNameViSurfaceCreateFlagsNN
+                          (\(ViSurfaceCreateFlagsNN x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read ViSurfaceCreateFlagsNN where
   readPrec = enumReadPrec enumPrefixViSurfaceCreateFlagsNN

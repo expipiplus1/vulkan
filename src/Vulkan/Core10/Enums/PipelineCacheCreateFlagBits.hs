@@ -19,22 +19,11 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type PipelineCacheCreateFlags = PipelineCacheCreateFlagBits
 
--- | VkPipelineCacheCreateFlagBits - Bitmask specifying the behavior of the
--- pipeline cache
---
--- = See Also
---
--- 'PipelineCacheCreateFlags'
+-- No documentation found for TopLevel "VkPipelineCacheCreateFlagBits"
 newtype PipelineCacheCreateFlagBits = PipelineCacheCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT' specifies that
--- all commands that modify the created
--- 'Vulkan.Core10.Handles.PipelineCache' will be
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
--- When set, the implementation /may/ skip any unnecessary processing
--- needed to support simultaneous modification from multiple threads where
--- allowed.
+-- No documentation found for Nested "VkPipelineCacheCreateFlagBits" "VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT"
 pattern PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT = PipelineCacheCreateFlagBits 0x00000001
 
 conNamePipelineCacheCreateFlagBits :: String
@@ -46,12 +35,14 @@ enumPrefixPipelineCacheCreateFlagBits = "PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHR
 showTablePipelineCacheCreateFlagBits :: [(PipelineCacheCreateFlagBits, String)]
 showTablePipelineCacheCreateFlagBits = [(PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT, "")]
 
+
 instance Show PipelineCacheCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixPipelineCacheCreateFlagBits
-                            showTablePipelineCacheCreateFlagBits
-                            conNamePipelineCacheCreateFlagBits
-                            (\(PipelineCacheCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineCacheCreateFlagBits
+                          showTablePipelineCacheCreateFlagBits
+                          conNamePipelineCacheCreateFlagBits
+                          (\(PipelineCacheCreateFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineCacheCreateFlagBits where
   readPrec = enumReadPrec enumPrefixPipelineCacheCreateFlagBits

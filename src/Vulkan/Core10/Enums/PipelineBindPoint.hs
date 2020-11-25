@@ -14,30 +14,15 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkPipelineBindPoint - Specify the bind point of a pipeline object to a
--- command buffer
---
--- = See Also
---
--- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateCreateInfo',
--- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
--- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoNV',
--- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutCreateInfoNV',
--- 'Vulkan.Core10.Pass.SubpassDescription',
--- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
--- 'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets',
--- 'Vulkan.Core10.CommandBufferBuilding.cmdBindPipeline',
--- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdBindPipelineShaderGroupNV',
--- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR'
+-- No documentation found for TopLevel "VkPipelineBindPoint"
 newtype PipelineBindPoint = PipelineBindPoint Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PIPELINE_BIND_POINT_GRAPHICS' specifies binding as a graphics pipeline.
+-- No documentation found for Nested "VkPipelineBindPoint" "VK_PIPELINE_BIND_POINT_GRAPHICS"
 pattern PIPELINE_BIND_POINT_GRAPHICS        = PipelineBindPoint 0
--- | 'PIPELINE_BIND_POINT_COMPUTE' specifies binding as a compute pipeline.
+-- No documentation found for Nested "VkPipelineBindPoint" "VK_PIPELINE_BIND_POINT_COMPUTE"
 pattern PIPELINE_BIND_POINT_COMPUTE         = PipelineBindPoint 1
--- | 'PIPELINE_BIND_POINT_RAY_TRACING_KHR' specifies binding as a ray tracing
--- pipeline.
+-- No documentation found for Nested "VkPipelineBindPoint" "VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR"
 pattern PIPELINE_BIND_POINT_RAY_TRACING_KHR = PipelineBindPoint 1000165000
 {-# complete PIPELINE_BIND_POINT_GRAPHICS,
              PIPELINE_BIND_POINT_COMPUTE,
@@ -56,12 +41,14 @@ showTablePipelineBindPoint =
   , (PIPELINE_BIND_POINT_RAY_TRACING_KHR, "RAY_TRACING_KHR")
   ]
 
+
 instance Show PipelineBindPoint where
-  showsPrec = enumShowsPrec enumPrefixPipelineBindPoint
-                            showTablePipelineBindPoint
-                            conNamePipelineBindPoint
-                            (\(PipelineBindPoint x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixPipelineBindPoint
+                          showTablePipelineBindPoint
+                          conNamePipelineBindPoint
+                          (\(PipelineBindPoint x) -> x)
+                          (showsPrec 11)
+
 
 instance Read PipelineBindPoint where
   readPrec =

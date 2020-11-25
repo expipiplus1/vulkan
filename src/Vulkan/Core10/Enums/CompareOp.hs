@@ -19,33 +19,25 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkCompareOp - Stencil comparison function
---
--- = See Also
---
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo',
--- 'Vulkan.Core10.Sampler.SamplerCreateInfo',
--- 'Vulkan.Core10.Pipeline.StencilOpState',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthCompareOpEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT'
+-- No documentation found for TopLevel "VkCompareOp"
 newtype CompareOp = CompareOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COMPARE_OP_NEVER' specifies that the test evaluates to false.
+-- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_NEVER"
 pattern COMPARE_OP_NEVER            = CompareOp 0
--- | 'COMPARE_OP_LESS' specifies that the test evaluates A \< B.
+-- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_LESS"
 pattern COMPARE_OP_LESS             = CompareOp 1
--- | 'COMPARE_OP_EQUAL' specifies that the test evaluates A = B.
+-- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_EQUAL"
 pattern COMPARE_OP_EQUAL            = CompareOp 2
--- | 'COMPARE_OP_LESS_OR_EQUAL' specifies that the test evaluates A ≤ B.
+-- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_LESS_OR_EQUAL"
 pattern COMPARE_OP_LESS_OR_EQUAL    = CompareOp 3
--- | 'COMPARE_OP_GREATER' specifies that the test evaluates A > B.
+-- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_GREATER"
 pattern COMPARE_OP_GREATER          = CompareOp 4
--- | 'COMPARE_OP_NOT_EQUAL' specifies that the test evaluates A ≠ B.
+-- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_NOT_EQUAL"
 pattern COMPARE_OP_NOT_EQUAL        = CompareOp 5
--- | 'COMPARE_OP_GREATER_OR_EQUAL' specifies that the test evaluates A ≥ B.
+-- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_GREATER_OR_EQUAL"
 pattern COMPARE_OP_GREATER_OR_EQUAL = CompareOp 6
--- | 'COMPARE_OP_ALWAYS' specifies that the test evaluates to true.
+-- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_ALWAYS"
 pattern COMPARE_OP_ALWAYS           = CompareOp 7
 {-# complete COMPARE_OP_NEVER,
              COMPARE_OP_LESS,
@@ -74,9 +66,10 @@ showTableCompareOp =
   , (COMPARE_OP_ALWAYS          , "ALWAYS")
   ]
 
+
 instance Show CompareOp where
-  showsPrec =
-    enumShowsPrec enumPrefixCompareOp showTableCompareOp conNameCompareOp (\(CompareOp x) -> x) (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixCompareOp showTableCompareOp conNameCompareOp (\(CompareOp x) -> x) (showsPrec 11)
+
 
 instance Read CompareOp where
   readPrec = enumReadPrec enumPrefixCompareOp showTableCompareOp conNameCompareOp CompareOp

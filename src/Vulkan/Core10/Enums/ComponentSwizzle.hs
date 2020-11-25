@@ -18,55 +18,23 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkComponentSwizzle - Specify how a component is swizzled
---
--- = Description
---
--- Setting the identity swizzle on a component is equivalent to setting the
--- identity mapping on that component. That is:
---
--- +-----------------------------------+-----------------------------------+
--- | Component                         | Identity Mapping                  |
--- +===================================+===================================+
--- | @components.r@                    | 'COMPONENT_SWIZZLE_R'             |
--- +-----------------------------------+-----------------------------------+
--- | @components.g@                    | 'COMPONENT_SWIZZLE_G'             |
--- +-----------------------------------+-----------------------------------+
--- | @components.b@                    | 'COMPONENT_SWIZZLE_B'             |
--- +-----------------------------------+-----------------------------------+
--- | @components.a@                    | 'COMPONENT_SWIZZLE_A'             |
--- +-----------------------------------+-----------------------------------+
---
--- Component Mappings Equivalent To 'COMPONENT_SWIZZLE_IDENTITY'
---
--- = See Also
---
--- 'Vulkan.Core10.ImageView.ComponentMapping'
+-- No documentation found for TopLevel "VkComponentSwizzle"
 newtype ComponentSwizzle = ComponentSwizzle Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COMPONENT_SWIZZLE_IDENTITY' specifies that the component is set to the
--- identity swizzle.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_IDENTITY"
 pattern COMPONENT_SWIZZLE_IDENTITY = ComponentSwizzle 0
--- | 'COMPONENT_SWIZZLE_ZERO' specifies that the component is set to zero.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_ZERO"
 pattern COMPONENT_SWIZZLE_ZERO     = ComponentSwizzle 1
--- | 'COMPONENT_SWIZZLE_ONE' specifies that the component is set to either 1
--- or 1.0, depending on whether the type of the image view format is
--- integer or floating-point respectively, as determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-definition Format Definition>
--- section for each 'Vulkan.Core10.Enums.Format.Format'.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_ONE"
 pattern COMPONENT_SWIZZLE_ONE      = ComponentSwizzle 2
--- | 'COMPONENT_SWIZZLE_R' specifies that the component is set to the value
--- of the R component of the image.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_R"
 pattern COMPONENT_SWIZZLE_R        = ComponentSwizzle 3
--- | 'COMPONENT_SWIZZLE_G' specifies that the component is set to the value
--- of the G component of the image.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_G"
 pattern COMPONENT_SWIZZLE_G        = ComponentSwizzle 4
--- | 'COMPONENT_SWIZZLE_B' specifies that the component is set to the value
--- of the B component of the image.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_B"
 pattern COMPONENT_SWIZZLE_B        = ComponentSwizzle 5
--- | 'COMPONENT_SWIZZLE_A' specifies that the component is set to the value
--- of the A component of the image.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_A"
 pattern COMPONENT_SWIZZLE_A        = ComponentSwizzle 6
 {-# complete COMPONENT_SWIZZLE_IDENTITY,
              COMPONENT_SWIZZLE_ZERO,
@@ -93,12 +61,14 @@ showTableComponentSwizzle =
   , (COMPONENT_SWIZZLE_A       , "A")
   ]
 
+
 instance Show ComponentSwizzle where
-  showsPrec = enumShowsPrec enumPrefixComponentSwizzle
-                            showTableComponentSwizzle
-                            conNameComponentSwizzle
-                            (\(ComponentSwizzle x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixComponentSwizzle
+                          showTableComponentSwizzle
+                          conNameComponentSwizzle
+                          (\(ComponentSwizzle x) -> x)
+                          (showsPrec 11)
+
 
 instance Read ComponentSwizzle where
   readPrec = enumReadPrec enumPrefixComponentSwizzle showTableComponentSwizzle conNameComponentSwizzle ComponentSwizzle

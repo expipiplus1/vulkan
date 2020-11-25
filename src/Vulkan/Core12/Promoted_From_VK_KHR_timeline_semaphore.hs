@@ -91,54 +91,12 @@ foreign import ccall
   "dynamic" mkVkGetSemaphoreCounterValue
   :: FunPtr (Ptr Device_T -> Semaphore -> Ptr Word64 -> IO Result) -> Ptr Device_T -> Semaphore -> Ptr Word64 -> IO Result
 
--- | vkGetSemaphoreCounterValue - Query the current state of a timeline
--- semaphore
---
--- = Description
---
--- Note
---
--- If a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission>
--- command is pending execution, then the value returned by this command
--- /may/ immediately be out of date.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore'
+-- No documentation found for TopLevel "vkGetSemaphoreCounterValue"
 getSemaphoreCounterValue :: forall io
                           . (MonadIO io)
-                         => -- | @device@ is the logical device that owns the semaphore.
-                            --
-                            -- #VUID-vkGetSemaphoreCounterValue-device-parameter# @device@ /must/ be a
-                            -- valid 'Vulkan.Core10.Handles.Device' handle
+                         => -- No documentation found for Nested "vkGetSemaphoreCounterValue" "device"
                             Device
-                         -> -- | @semaphore@ is the handle of the semaphore to query.
-                            --
-                            -- #VUID-vkGetSemaphoreCounterValue-semaphore-03255# @semaphore@ /must/
-                            -- have been created with a
-                            -- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
-                            -- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
-                            --
-                            -- #VUID-vkGetSemaphoreCounterValue-semaphore-parameter# @semaphore@ /must/
-                            -- be a valid 'Vulkan.Core10.Handles.Semaphore' handle
-                            --
-                            -- #VUID-vkGetSemaphoreCounterValue-semaphore-parent# @semaphore@ /must/
-                            -- have been created, allocated, or retrieved from @device@
+                         -> -- No documentation found for Nested "vkGetSemaphoreCounterValue" "semaphore"
                             Semaphore
                          -> io (("value" ::: Word64))
 getSemaphoreCounterValue device semaphore = liftIO . evalContT $ do
@@ -169,21 +127,11 @@ waitSemaphoresSafeOrUnsafe :: forall io
                             . (MonadIO io)
                            => -- No documentation found for TopLevel ""
                               (FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result)
-                           -> -- | @device@ is the logical device that owns the semaphore.
-                              --
-                              -- #VUID-vkWaitSemaphores-device-parameter# @device@ /must/ be a valid
-                              -- 'Vulkan.Core10.Handles.Device' handle
+                           -> -- No documentation found for Nested "vkWaitSemaphores" "device"
                               Device
-                           -> -- | @pWaitInfo@ is a pointer to a 'SemaphoreWaitInfo' structure containing
-                              -- information about the wait condition.
-                              --
-                              -- #VUID-vkWaitSemaphores-pWaitInfo-parameter# @pWaitInfo@ /must/ be a
-                              -- valid pointer to a valid 'SemaphoreWaitInfo' structure
+                           -> -- No documentation found for Nested "vkWaitSemaphores" "pWaitInfo"
                               SemaphoreWaitInfo
-                           -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
-                              -- adjusted to the closest value allowed by the implementation-dependent
-                              -- timeout accuracy, which /may/ be substantially longer than one
-                              -- nanosecond, and /may/ be longer than the requested period.
+                           -> -- No documentation found for Nested "vkWaitSemaphores" "timeout"
                               ("timeout" ::: Word64)
                            -> io (Result)
 waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO . evalContT $ do
@@ -196,69 +144,14 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO .
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
--- | vkWaitSemaphores - Wait for timeline semaphores on the host
---
--- = Description
---
--- If the condition is satisfied when 'waitSemaphores' is called, then
--- 'waitSemaphores' returns immediately. If the condition is not satisfied
--- at the time 'waitSemaphores' is called, then 'waitSemaphores' will block
--- and wait until the condition is satisfied or the @timeout@ has expired,
--- whichever is sooner.
---
--- If @timeout@ is zero, then 'waitSemaphores' does not wait, but simply
--- returns information about the current state of the semaphore.
--- 'Vulkan.Core10.Enums.Result.TIMEOUT' will be returned in this case if
--- the condition is not satisfied, even though no actual wait was
--- performed.
---
--- If the condition is satisfied before the @timeout@ has expired,
--- 'waitSemaphores' returns 'Vulkan.Core10.Enums.Result.SUCCESS'.
--- Otherwise, 'waitSemaphores' returns 'Vulkan.Core10.Enums.Result.TIMEOUT'
--- after the @timeout@ has expired.
---
--- If device loss occurs (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>)
--- before the timeout has expired, 'waitSemaphores' /must/ return in finite
--- time with either 'Vulkan.Core10.Enums.Result.SUCCESS' or
--- 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.TIMEOUT'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'SemaphoreWaitInfo'
+-- No documentation found for TopLevel "vkWaitSemaphores"
 waitSemaphores :: forall io
                 . (MonadIO io)
-               => -- | @device@ is the logical device that owns the semaphore.
-                  --
-                  -- #VUID-vkWaitSemaphores-device-parameter# @device@ /must/ be a valid
-                  -- 'Vulkan.Core10.Handles.Device' handle
+               => -- No documentation found for Nested "vkWaitSemaphores" "device"
                   Device
-               -> -- | @pWaitInfo@ is a pointer to a 'SemaphoreWaitInfo' structure containing
-                  -- information about the wait condition.
-                  --
-                  -- #VUID-vkWaitSemaphores-pWaitInfo-parameter# @pWaitInfo@ /must/ be a
-                  -- valid pointer to a valid 'SemaphoreWaitInfo' structure
+               -> -- No documentation found for Nested "vkWaitSemaphores" "pWaitInfo"
                   SemaphoreWaitInfo
-               -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
-                  -- adjusted to the closest value allowed by the implementation-dependent
-                  -- timeout accuracy, which /may/ be substantially longer than one
-                  -- nanosecond, and /may/ be longer than the requested period.
+               -> -- No documentation found for Nested "vkWaitSemaphores" "timeout"
                   ("timeout" ::: Word64)
                -> io (Result)
 waitSemaphores = waitSemaphoresSafeOrUnsafe mkVkWaitSemaphoresUnsafe
@@ -266,21 +159,11 @@ waitSemaphores = waitSemaphoresSafeOrUnsafe mkVkWaitSemaphoresUnsafe
 -- | A variant of 'waitSemaphores' which makes a *safe* FFI call
 waitSemaphoresSafe :: forall io
                     . (MonadIO io)
-                   => -- | @device@ is the logical device that owns the semaphore.
-                      --
-                      -- #VUID-vkWaitSemaphores-device-parameter# @device@ /must/ be a valid
-                      -- 'Vulkan.Core10.Handles.Device' handle
+                   => -- No documentation found for Nested "vkWaitSemaphores" "device"
                       Device
-                   -> -- | @pWaitInfo@ is a pointer to a 'SemaphoreWaitInfo' structure containing
-                      -- information about the wait condition.
-                      --
-                      -- #VUID-vkWaitSemaphores-pWaitInfo-parameter# @pWaitInfo@ /must/ be a
-                      -- valid pointer to a valid 'SemaphoreWaitInfo' structure
+                   -> -- No documentation found for Nested "vkWaitSemaphores" "pWaitInfo"
                       SemaphoreWaitInfo
-                   -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
-                      -- adjusted to the closest value allowed by the implementation-dependent
-                      -- timeout accuracy, which /may/ be substantially longer than one
-                      -- nanosecond, and /may/ be longer than the requested period.
+                   -> -- No documentation found for Nested "vkWaitSemaphores" "timeout"
                       ("timeout" ::: Word64)
                    -> io (Result)
 waitSemaphoresSafe = waitSemaphoresSafeOrUnsafe mkVkWaitSemaphoresSafe
@@ -293,48 +176,12 @@ foreign import ccall
   "dynamic" mkVkSignalSemaphore
   :: FunPtr (Ptr Device_T -> Ptr SemaphoreSignalInfo -> IO Result) -> Ptr Device_T -> Ptr SemaphoreSignalInfo -> IO Result
 
--- | vkSignalSemaphore - Signal a timeline semaphore on the host
---
--- = Description
---
--- When 'signalSemaphore' is executed on the host, it defines and
--- immediately executes a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
--- which sets the timeline semaphore to the given value.
---
--- The first synchronization scope is defined by the host execution model,
--- but includes execution of 'signalSemaphore' on the host and anything
--- that happened-before it.
---
--- The second synchronization scope is empty.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'SemaphoreSignalInfo'
+-- No documentation found for TopLevel "vkSignalSemaphore"
 signalSemaphore :: forall io
                  . (MonadIO io)
-                => -- | @device@ is the logical device that owns the semaphore.
-                   --
-                   -- #VUID-vkSignalSemaphore-device-parameter# @device@ /must/ be a valid
-                   -- 'Vulkan.Core10.Handles.Device' handle
+                => -- No documentation found for Nested "vkSignalSemaphore" "device"
                    Device
-                -> -- | @pSignalInfo@ is a pointer to a 'SemaphoreSignalInfo' structure
-                   -- containing information about the signal operation.
-                   --
-                   -- #VUID-vkSignalSemaphore-pSignalInfo-parameter# @pSignalInfo@ /must/ be a
-                   -- valid pointer to a valid 'SemaphoreSignalInfo' structure
+                -> -- No documentation found for Nested "vkSignalSemaphore" "pSignalInfo"
                    SemaphoreSignalInfo
                 -> io ()
 signalSemaphore device signalInfo = liftIO . evalContT $ do
@@ -347,36 +194,10 @@ signalSemaphore device signalInfo = liftIO . evalContT $ do
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
--- | VkPhysicalDeviceTimelineSemaphoreFeatures - Structure describing
--- timeline semaphore features that can be supported by an implementation
---
--- = Members
---
--- The members of the 'PhysicalDeviceTimelineSemaphoreFeatures' structure
--- describe the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceTimelineSemaphoreFeatures' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceTimelineSemaphoreFeatures' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceTimelineSemaphoreFeatures"
 data PhysicalDeviceTimelineSemaphoreFeatures = PhysicalDeviceTimelineSemaphoreFeatures
-  { -- | #extension-features-timelineSemaphore# @timelineSemaphore@ indicates
-    -- whether semaphores created with a
-    -- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
-    -- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' are
-    -- supported.
+  { -- No documentation found for Nested "VkPhysicalDeviceTimelineSemaphoreFeatures" "timelineSemaphore"
     timelineSemaphore :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -405,6 +226,7 @@ instance FromCStruct PhysicalDeviceTimelineSemaphoreFeatures where
     pure $ PhysicalDeviceTimelineSemaphoreFeatures
              (bool32ToBool timelineSemaphore)
 
+
 instance Storable PhysicalDeviceTimelineSemaphoreFeatures where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -416,24 +238,10 @@ instance Zero PhysicalDeviceTimelineSemaphoreFeatures where
            zero
 
 
--- | VkPhysicalDeviceTimelineSemaphoreProperties - Structure describing
--- timeline semaphore properties that can be supported by an implementation
---
--- = Members
---
--- The members of the 'PhysicalDeviceTimelineSemaphoreProperties' structure
--- describe the following implementation-dependent limits:
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceTimelineSemaphoreProperties"
 data PhysicalDeviceTimelineSemaphoreProperties = PhysicalDeviceTimelineSemaphoreProperties
-  { -- | #extension-limits-maxTimelineSemaphoreValueDifference#
-    -- @maxTimelineSemaphoreValueDifference@ indicates the maximum difference
-    -- allowed by the implementation between the current value of a timeline
-    -- semaphore and any pending signal or wait operations.
+  { -- No documentation found for Nested "VkPhysicalDeviceTimelineSemaphoreProperties" "maxTimelineSemaphoreValueDifference"
     maxTimelineSemaphoreValueDifference :: Word64 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -462,6 +270,7 @@ instance FromCStruct PhysicalDeviceTimelineSemaphoreProperties where
     pure $ PhysicalDeviceTimelineSemaphoreProperties
              maxTimelineSemaphoreValueDifference
 
+
 instance Storable PhysicalDeviceTimelineSemaphoreProperties where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -473,46 +282,12 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
            zero
 
 
--- | VkSemaphoreTypeCreateInfo - Structure specifying the type of a newly
--- created semaphore
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkSemaphoreTypeCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO'
---
--- -   #VUID-VkSemaphoreTypeCreateInfo-semaphoreType-parameter#
---     @semaphoreType@ /must/ be a valid
---     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' value
---
--- == Valid Usage
---
--- -   #VUID-VkSemaphoreTypeCreateInfo-timelineSemaphore-03252# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-timelineSemaphore timelineSemaphore>
---     feature is not enabled, @semaphoreType@ /must/ not equal
---     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
---
--- -   #VUID-VkSemaphoreTypeCreateInfo-semaphoreType-03279# If
---     @semaphoreType@ is
---     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY',
---     @initialValue@ /must/ be zero
---
--- If no 'SemaphoreTypeCreateInfo' structure is included in the @pNext@
--- chain of 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo', then the
--- created semaphore will have a default
--- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
--- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'.
---
--- = See Also
---
--- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkSemaphoreTypeCreateInfo"
 data SemaphoreTypeCreateInfo = SemaphoreTypeCreateInfo
-  { -- | @semaphoreType@ is a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType'
-    -- value specifying the type of the semaphore.
+  { -- No documentation found for Nested "VkSemaphoreTypeCreateInfo" "semaphoreType"
     semaphoreType :: SemaphoreType
-  , -- | @initialValue@ is the initial payload value if @semaphoreType@ is
-    -- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'.
+  , -- No documentation found for Nested "VkSemaphoreTypeCreateInfo" "initialValue"
     initialValue :: Word64
   }
   deriving (Typeable, Eq)
@@ -545,6 +320,7 @@ instance FromCStruct SemaphoreTypeCreateInfo where
     pure $ SemaphoreTypeCreateInfo
              semaphoreType initialValue
 
+
 instance Storable SemaphoreTypeCreateInfo where
   sizeOf ~_ = 32
   alignment ~_ = 8
@@ -557,54 +333,16 @@ instance Zero SemaphoreTypeCreateInfo where
            zero
 
 
--- | VkTimelineSemaphoreSubmitInfo - Structure specifying signal and wait
--- values for timeline semaphores
---
--- = Description
---
--- If the semaphore in 'Vulkan.Core10.Queue.SubmitInfo'::@pWaitSemaphores@
--- or 'Vulkan.Core10.Queue.SubmitInfo'::@pSignalSemaphores@ corresponding
--- to an entry in @pWaitSemaphoreValues@ or @pSignalSemaphoreValues@
--- respectively was not created with a
--- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
--- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE', the
--- implementation /must/ ignore the value in the @pWaitSemaphoreValues@ or
--- @pSignalSemaphoreValues@ entry.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkTimelineSemaphoreSubmitInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO'
---
--- -   #VUID-VkTimelineSemaphoreSubmitInfo-pWaitSemaphoreValues-parameter#
---     If @waitSemaphoreValueCount@ is not @0@, and @pWaitSemaphoreValues@
---     is not @NULL@, @pWaitSemaphoreValues@ /must/ be a valid pointer to
---     an array of @waitSemaphoreValueCount@ @uint64_t@ values
---
--- -   #VUID-VkTimelineSemaphoreSubmitInfo-pSignalSemaphoreValues-parameter#
---     If @signalSemaphoreValueCount@ is not @0@, and
---     @pSignalSemaphoreValues@ is not @NULL@, @pSignalSemaphoreValues@
---     /must/ be a valid pointer to an array of @signalSemaphoreValueCount@
---     @uint64_t@ values
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkTimelineSemaphoreSubmitInfo"
 data TimelineSemaphoreSubmitInfo = TimelineSemaphoreSubmitInfo
-  { -- | @waitSemaphoreValueCount@ is the number of semaphore wait values
-    -- specified in @pWaitSemaphoreValues@.
+  { -- No documentation found for Nested "VkTimelineSemaphoreSubmitInfo" "waitSemaphoreValueCount"
     waitSemaphoreValueCount :: Word32
-  , -- | @pWaitSemaphoreValues@ is an array of length @waitSemaphoreValueCount@
-    -- containing values for the corresponding semaphores in
-    -- 'Vulkan.Core10.Queue.SubmitInfo'::@pWaitSemaphores@ to wait for.
+  , -- No documentation found for Nested "VkTimelineSemaphoreSubmitInfo" "pWaitSemaphoreValues"
     waitSemaphoreValues :: Vector Word64
-  , -- | @signalSemaphoreValueCount@ is the number of semaphore signal values
-    -- specified in @pSignalSemaphoreValues@.
+  , -- No documentation found for Nested "VkTimelineSemaphoreSubmitInfo" "signalSemaphoreValueCount"
     signalSemaphoreValueCount :: Word32
-  , -- | @pSignalSemaphoreValues@ is an array of length
-    -- @signalSemaphoreValueCount@ containing values for the corresponding
-    -- semaphores in 'Vulkan.Core10.Queue.SubmitInfo'::@pSignalSemaphores@ to
-    -- set when signaled.
+  , -- No documentation found for Nested "VkTimelineSemaphoreSubmitInfo" "pSignalSemaphoreValues"
     signalSemaphoreValues :: Vector Word64
   }
   deriving (Typeable)
@@ -677,54 +415,14 @@ instance Zero TimelineSemaphoreSubmitInfo where
            mempty
 
 
--- | VkSemaphoreWaitInfo - Structure containing information about the
--- semaphore wait condition
---
--- == Valid Usage
---
--- -   #VUID-VkSemaphoreWaitInfo-pSemaphores-03256# All of the elements of
---     @pSemaphores@ /must/ reference a semaphore that was created with a
---     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
---     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkSemaphoreWaitInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO'
---
--- -   #VUID-VkSemaphoreWaitInfo-pNext-pNext# @pNext@ /must/ be @NULL@
---
--- -   #VUID-VkSemaphoreWaitInfo-flags-parameter# @flags@ /must/ be a valid
---     combination of
---     'Vulkan.Core12.Enums.SemaphoreWaitFlagBits.SemaphoreWaitFlagBits'
---     values
---
--- -   #VUID-VkSemaphoreWaitInfo-pSemaphores-parameter# @pSemaphores@
---     /must/ be a valid pointer to an array of @semaphoreCount@ valid
---     'Vulkan.Core10.Handles.Semaphore' handles
---
--- -   #VUID-VkSemaphoreWaitInfo-pValues-parameter# @pValues@ /must/ be a
---     valid pointer to an array of @semaphoreCount@ @uint64_t@ values
---
--- -   #VUID-VkSemaphoreWaitInfo-semaphoreCount-arraylength#
---     @semaphoreCount@ /must/ be greater than @0@
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Semaphore',
--- 'Vulkan.Core12.Enums.SemaphoreWaitFlagBits.SemaphoreWaitFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'waitSemaphores',
--- 'Vulkan.Extensions.VK_KHR_timeline_semaphore.waitSemaphoresKHR'
+
+-- No documentation found for TopLevel "VkSemaphoreWaitInfo"
 data SemaphoreWaitInfo = SemaphoreWaitInfo
-  { -- | @flags@ is a bitmask of
-    -- 'Vulkan.Core12.Enums.SemaphoreWaitFlagBits.SemaphoreWaitFlagBits'
-    -- specifying additional parameters for the semaphore wait operation.
+  { -- No documentation found for Nested "VkSemaphoreWaitInfo" "flags"
     flags :: SemaphoreWaitFlags
-  , -- | @pSemaphores@ is a pointer to an array of @semaphoreCount@ semaphore
-    -- handles to wait on.
+  , -- No documentation found for Nested "VkSemaphoreWaitInfo" "pSemaphores"
     semaphores :: Vector Semaphore
-  , -- | @pValues@ is a pointer to an array of @semaphoreCount@ timeline
-    -- semaphore values.
+  , -- No documentation found for Nested "VkSemaphoreWaitInfo" "pValues"
     values :: Vector Word64
   }
   deriving (Typeable)
@@ -781,39 +479,12 @@ instance Zero SemaphoreWaitInfo where
            mempty
 
 
--- | VkSemaphoreSignalInfo - Structure containing information about a
--- semaphore signal operation
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Semaphore',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'signalSemaphore',
--- 'Vulkan.Extensions.VK_KHR_timeline_semaphore.signalSemaphoreKHR'
+
+-- No documentation found for TopLevel "VkSemaphoreSignalInfo"
 data SemaphoreSignalInfo = SemaphoreSignalInfo
-  { -- | @semaphore@ is the handle of the semaphore to signal.
-    --
-    -- #VUID-VkSemaphoreSignalInfo-semaphore-03257# @semaphore@ /must/ have
-    -- been created with a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
-    -- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
-    --
-    -- #VUID-VkSemaphoreSignalInfo-semaphore-parameter# @semaphore@ /must/ be a
-    -- valid 'Vulkan.Core10.Handles.Semaphore' handle
+  { -- No documentation found for Nested "VkSemaphoreSignalInfo" "semaphore"
     semaphore :: Semaphore
-  , -- | @value@ is the value to signal.
-    --
-    -- #VUID-VkSemaphoreSignalInfo-value-03258# @value@ /must/ have a value
-    -- greater than the current value of the semaphore
-    --
-    -- #VUID-VkSemaphoreSignalInfo-value-03259# @value@ /must/ be less than the
-    -- value of any pending semaphore signal operations
-    --
-    -- #VUID-VkSemaphoreSignalInfo-value-03260# @value@ /must/ have a value
-    -- which does not differ from the current value of the semaphore or the
-    -- value of any outstanding semaphore wait or signal operation on
-    -- @semaphore@ by more than
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
+  , -- No documentation found for Nested "VkSemaphoreSignalInfo" "value"
     value :: Word64
   }
   deriving (Typeable, Eq)
@@ -845,6 +516,7 @@ instance FromCStruct SemaphoreSignalInfo where
     value <- peek @Word64 ((p `plusPtr` 24 :: Ptr Word64))
     pure $ SemaphoreSignalInfo
              semaphore value
+
 
 instance Storable SemaphoreSignalInfo where
   sizeOf ~_ = 32

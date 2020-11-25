@@ -13,24 +13,13 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkSemaphoreType - Sepcifies the type of a semaphore object
---
--- = See Also
---
--- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'
+-- No documentation found for TopLevel "VkSemaphoreType"
 newtype SemaphoreType = SemaphoreType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SEMAPHORE_TYPE_BINARY' specifies a /binary semaphore/ type that has a
--- boolean payload indicating whether the semaphore is currently signaled
--- or unsignaled. When created, the semaphore is in the unsignaled state.
+-- No documentation found for Nested "VkSemaphoreType" "VK_SEMAPHORE_TYPE_BINARY"
 pattern SEMAPHORE_TYPE_BINARY   = SemaphoreType 0
--- | 'SEMAPHORE_TYPE_TIMELINE' specifies a /timeline semaphore/ type that has
--- a monotonically increasing 64-bit unsigned integer payload indicating
--- whether the semaphore is signaled with respect to a particular reference
--- value. When created, the semaphore payload has the value given by the
--- @initialValue@ field of
--- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'.
+-- No documentation found for Nested "VkSemaphoreType" "VK_SEMAPHORE_TYPE_TIMELINE"
 pattern SEMAPHORE_TYPE_TIMELINE = SemaphoreType 1
 {-# complete SEMAPHORE_TYPE_BINARY,
              SEMAPHORE_TYPE_TIMELINE :: SemaphoreType #-}
@@ -44,12 +33,14 @@ enumPrefixSemaphoreType = "SEMAPHORE_TYPE_"
 showTableSemaphoreType :: [(SemaphoreType, String)]
 showTableSemaphoreType = [(SEMAPHORE_TYPE_BINARY, "BINARY"), (SEMAPHORE_TYPE_TIMELINE, "TIMELINE")]
 
+
 instance Show SemaphoreType where
-  showsPrec = enumShowsPrec enumPrefixSemaphoreType
-                            showTableSemaphoreType
-                            conNameSemaphoreType
-                            (\(SemaphoreType x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixSemaphoreType
+                          showTableSemaphoreType
+                          conNameSemaphoreType
+                          (\(SemaphoreType x) -> x)
+                          (showsPrec 11)
+
 
 instance Read SemaphoreType where
   readPrec = enumReadPrec enumPrefixSemaphoreType showTableSemaphoreType conNameSemaphoreType SemaphoreType

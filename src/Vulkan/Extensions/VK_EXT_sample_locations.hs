@@ -1,171 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_sample_locations - device extension
---
--- == VK_EXT_sample_locations
---
--- [__Name String__]
---     @VK_EXT_sample_locations@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     144
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@
---
--- [__Contact__]
---
---     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_sample_locations:%20&body=@drakos-amd%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2017-08-02
---
--- [__Contributors__]
---
---     -   Mais Alnasser, AMD
---
---     -   Matthaeus G. Chajdas, AMD
---
---     -   Maciej Jesionowski, AMD
---
---     -   Daniel Rakos, AMD
---
---     -   Slawomir Grajewski, Intel
---
---     -   Jeff Bolz, NVIDIA
---
---     -   Bill Licea-Kane, Qualcomm
---
--- == Description
---
--- This extension allows an application to modify the locations of samples
--- within a pixel used in rasterization. Additionally, it allows
--- applications to specify different sample locations for each pixel in a
--- group of adjacent pixels, which /can/ increase antialiasing quality
--- (particularly if a custom resolve shader is used that takes advantage of
--- these different locations).
---
--- It is common for implementations to optimize the storage of depth values
--- by storing values that /can/ be used to reconstruct depth at each sample
--- location, rather than storing separate depth values for each sample. For
--- example, the depth values from a single triangle /may/ be represented
--- using plane equations. When the depth value for a sample is needed, it
--- is automatically evaluated at the sample location. Modifying the sample
--- locations causes the reconstruction to no longer evaluate the same depth
--- values as when the samples were originally generated, thus the depth
--- aspect of a depth\/stencil attachment /must/ be cleared before rendering
--- to it using different sample locations.
---
--- Some implementations /may/ need to evaluate depth image values while
--- performing image layout transitions. To accommodate this, instances of
--- the 'SampleLocationsInfoEXT' structure /can/ be specified for each
--- situation where an explicit or automatic layout transition has to take
--- place. 'SampleLocationsInfoEXT' /can/ be chained from
--- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures to provide
--- sample locations for layout transitions performed by
--- 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' and
--- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier' calls, and
--- 'RenderPassSampleLocationsBeginInfoEXT' /can/ be chained from
--- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo' to provide
--- sample locations for layout transitions performed implicitly by a render
--- pass instance.
---
--- == New Commands
---
--- -   'cmdSetSampleLocationsEXT'
---
--- -   'getPhysicalDeviceMultisamplePropertiesEXT'
---
--- == New Structures
---
--- -   'AttachmentSampleLocationsEXT'
---
--- -   'MultisamplePropertiesEXT'
---
--- -   'SampleLocationEXT'
---
--- -   'SubpassSampleLocationsEXT'
---
--- -   Extending 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier':
---
---     -   'SampleLocationsInfoEXT'
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
---
---     -   'PhysicalDeviceSampleLocationsPropertiesEXT'
---
--- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
---
---     -   'PipelineSampleLocationsStateCreateInfoEXT'
---
--- -   Extending 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo':
---
---     -   'RenderPassSampleLocationsBeginInfoEXT'
---
--- == New Enum Constants
---
--- -   'EXT_SAMPLE_LOCATIONS_EXTENSION_NAME'
---
--- -   'EXT_SAMPLE_LOCATIONS_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
---
--- -   Extending
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits':
---
---     -   'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT'
---
--- == Version History
---
--- -   Revision 1, 2017-08-02 (Daniel Rakos)
---
---     -   Internal revisions
---
--- = See Also
---
--- 'AttachmentSampleLocationsEXT', 'MultisamplePropertiesEXT',
--- 'PhysicalDeviceSampleLocationsPropertiesEXT',
--- 'PipelineSampleLocationsStateCreateInfoEXT',
--- 'RenderPassSampleLocationsBeginInfoEXT', 'SampleLocationEXT',
--- 'SampleLocationsInfoEXT', 'SubpassSampleLocationsEXT',
--- 'cmdSetSampleLocationsEXT', 'getPhysicalDeviceMultisamplePropertiesEXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_sample_locations"
 module Vulkan.Extensions.VK_EXT_sample_locations  ( cmdSetSampleLocationsEXT
                                                   , getPhysicalDeviceMultisamplePropertiesEXT
                                                   , SampleLocationEXT(..)
@@ -249,71 +83,12 @@ foreign import ccall
   "dynamic" mkVkCmdSetSampleLocationsEXT
   :: FunPtr (Ptr CommandBuffer_T -> Ptr SampleLocationsInfoEXT -> IO ()) -> Ptr CommandBuffer_T -> Ptr SampleLocationsInfoEXT -> IO ()
 
--- | vkCmdSetSampleLocationsEXT - Set the dynamic sample locations state
---
--- == Valid Usage
---
--- -   #VUID-vkCmdSetSampleLocationsEXT-sampleLocationsPerPixel-01529# The
---     @sampleLocationsPerPixel@ member of @pSampleLocationsInfo@ /must/
---     equal the @rasterizationSamples@ member of the
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
---     structure the bound graphics pipeline has been created with
---
--- -   #VUID-vkCmdSetSampleLocationsEXT-variableSampleLocations-01530# If
---     'PhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
---     is 'Vulkan.Core10.FundamentalTypes.FALSE' then the current render
---     pass /must/ have been begun by specifying a
---     'RenderPassSampleLocationsBeginInfoEXT' structure whose
---     @pPostSubpassSampleLocations@ member contains an element with a
---     @subpassIndex@ matching the current subpass index and the
---     @sampleLocationsInfo@ member of that element /must/ match the sample
---     locations state pointed to by @pSampleLocationsInfo@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdSetSampleLocationsEXT-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdSetSampleLocationsEXT-pSampleLocationsInfo-parameter#
---     @pSampleLocationsInfo@ /must/ be a valid pointer to a valid
---     'SampleLocationsInfoEXT' structure
---
--- -   #VUID-vkCmdSetSampleLocationsEXT-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdSetSampleLocationsEXT-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer', 'SampleLocationsInfoEXT'
+-- No documentation found for TopLevel "vkCmdSetSampleLocationsEXT"
 cmdSetSampleLocationsEXT :: forall io
                           . (MonadIO io)
-                         => -- | @commandBuffer@ is the command buffer into which the command will be
-                            -- recorded.
+                         => -- No documentation found for Nested "vkCmdSetSampleLocationsEXT" "commandBuffer"
                             CommandBuffer
-                         -> -- | @pSampleLocationsInfo@ is the sample locations state to set.
+                         -> -- No documentation found for Nested "vkCmdSetSampleLocationsEXT" "pSampleLocationsInfo"
                             SampleLocationsInfoEXT
                          -> io ()
 cmdSetSampleLocationsEXT commandBuffer sampleLocationsInfo = liftIO . evalContT $ do
@@ -333,29 +108,12 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceMultisamplePropertiesEXT
   :: FunPtr (Ptr PhysicalDevice_T -> SampleCountFlagBits -> Ptr MultisamplePropertiesEXT -> IO ()) -> Ptr PhysicalDevice_T -> SampleCountFlagBits -> Ptr MultisamplePropertiesEXT -> IO ()
 
--- | vkGetPhysicalDeviceMultisamplePropertiesEXT - Report sample count
--- specific multisampling capabilities of a physical device
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'MultisamplePropertiesEXT', 'Vulkan.Core10.Handles.PhysicalDevice',
--- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceMultisamplePropertiesEXT"
 getPhysicalDeviceMultisamplePropertiesEXT :: forall io
                                            . (MonadIO io)
-                                          => -- | @physicalDevice@ is the physical device from which to query the
-                                             -- additional multisampling capabilities.
-                                             --
-                                             -- #VUID-vkGetPhysicalDeviceMultisamplePropertiesEXT-physicalDevice-parameter#
-                                             -- @physicalDevice@ /must/ be a valid
-                                             -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                          => -- No documentation found for Nested "vkGetPhysicalDeviceMultisamplePropertiesEXT" "physicalDevice"
                                              PhysicalDevice
-                                          -> -- | @samples@ is the sample count to query the capabilities for.
-                                             --
-                                             -- #VUID-vkGetPhysicalDeviceMultisamplePropertiesEXT-samples-parameter#
-                                             -- @samples@ /must/ be a valid
-                                             -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+                                          -> -- No documentation found for Nested "vkGetPhysicalDeviceMultisamplePropertiesEXT" "samples"
                                              ("samples" ::: SampleCountFlagBits)
                                           -> io (MultisamplePropertiesEXT)
 getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . evalContT $ do
@@ -369,29 +127,12 @@ getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . eval
   pure $ (pMultisampleProperties)
 
 
--- | VkSampleLocationEXT - Structure specifying the coordinates of a sample
--- location
---
--- = Description
---
--- The domain space of the sample location coordinates has an upper-left
--- origin within the pixel in framebuffer space.
---
--- The values specified in a 'SampleLocationEXT' structure are always
--- clamped to the implementation-dependent sample location coordinate range
--- [@sampleLocationCoordinateRange@[0],@sampleLocationCoordinateRange@[1]]
--- that /can/ be queried by adding a
--- 'PhysicalDeviceSampleLocationsPropertiesEXT' structure to the @pNext@
--- chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'.
---
--- = See Also
---
--- 'SampleLocationsInfoEXT'
+
+-- No documentation found for TopLevel "VkSampleLocationEXT"
 data SampleLocationEXT = SampleLocationEXT
-  { -- | @x@ is the horizontal coordinate of the sample’s location.
+  { -- No documentation found for Nested "VkSampleLocationEXT" "x"
     x :: Float
-  , -- | @y@ is the vertical coordinate of the sample’s location.
+  , -- No documentation found for Nested "VkSampleLocationEXT" "y"
     y :: Float
   }
   deriving (Typeable, Eq)
@@ -420,6 +161,7 @@ instance FromCStruct SampleLocationEXT where
     pure $ SampleLocationEXT
              ((\(CFloat a) -> a) x) ((\(CFloat a) -> a) y)
 
+
 instance Storable SampleLocationEXT where
   sizeOf ~_ = 8
   alignment ~_ = 4
@@ -432,71 +174,14 @@ instance Zero SampleLocationEXT where
            zero
 
 
--- | VkSampleLocationsInfoEXT - Structure specifying a set of sample
--- locations
---
--- = Description
---
--- This structure /can/ be used either to specify the sample locations to
--- be used for rendering or to specify the set of sample locations an image
--- subresource has been last rendered with for the purposes of layout
--- transitions of depth\/stencil images created with
--- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'.
---
--- The sample locations in @pSampleLocations@ specify
--- @sampleLocationsPerPixel@ number of sample locations for each pixel in
--- the grid of the size specified in @sampleLocationGridSize@. The sample
--- location for sample i at the pixel grid location (x,y) is taken from
--- @pSampleLocations@[(x + y × @sampleLocationGridSize.width@) ×
--- @sampleLocationsPerPixel@ + i].
---
--- If the render pass has a fragment density map, the implementation will
--- choose the sample locations for the fragment and the contents of
--- @pSampleLocations@ /may/ be ignored.
---
--- == Valid Usage
---
--- -   #VUID-VkSampleLocationsInfoEXT-sampleLocationsPerPixel-01526#
---     @sampleLocationsPerPixel@ /must/ be a bit value that is set in
---     'PhysicalDeviceSampleLocationsPropertiesEXT'::@sampleLocationSampleCounts@
---
--- -   #VUID-VkSampleLocationsInfoEXT-sampleLocationsCount-01527#
---     @sampleLocationsCount@ /must/ equal @sampleLocationsPerPixel@ ×
---     @sampleLocationGridSize.width@ × @sampleLocationGridSize.height@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkSampleLocationsInfoEXT-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT'
---
--- -   #VUID-VkSampleLocationsInfoEXT-sampleLocationsPerPixel-parameter# If
---     @sampleLocationsPerPixel@ is not @0@, @sampleLocationsPerPixel@
---     /must/ be a valid
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
---
--- -   #VUID-VkSampleLocationsInfoEXT-pSampleLocations-parameter# If
---     @sampleLocationsCount@ is not @0@, @pSampleLocations@ /must/ be a
---     valid pointer to an array of @sampleLocationsCount@
---     'SampleLocationEXT' structures
---
--- = See Also
---
--- 'AttachmentSampleLocationsEXT',
--- 'Vulkan.Core10.FundamentalTypes.Extent2D',
--- 'PipelineSampleLocationsStateCreateInfoEXT',
--- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
--- 'SampleLocationEXT', 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'SubpassSampleLocationsEXT', 'cmdSetSampleLocationsEXT'
+
+-- No documentation found for TopLevel "VkSampleLocationsInfoEXT"
 data SampleLocationsInfoEXT = SampleLocationsInfoEXT
-  { -- | @sampleLocationsPerPixel@ is a
-    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' specifying
-    -- the number of sample locations per pixel.
+  { -- No documentation found for Nested "VkSampleLocationsInfoEXT" "sampleLocationsPerPixel"
     sampleLocationsPerPixel :: SampleCountFlagBits
-  , -- | @sampleLocationGridSize@ is the size of the sample location grid to
-    -- select custom sample locations for.
+  , -- No documentation found for Nested "VkSampleLocationsInfoEXT" "sampleLocationGridSize"
     sampleLocationGridSize :: Extent2D
-  , -- | @pSampleLocations@ is a pointer to an array of @sampleLocationsCount@
-    -- 'SampleLocationEXT' structures.
+  , -- No documentation found for Nested "VkSampleLocationsInfoEXT" "pSampleLocations"
     sampleLocations :: Vector SampleLocationEXT
   }
   deriving (Typeable)
@@ -545,39 +230,12 @@ instance Zero SampleLocationsInfoEXT where
            mempty
 
 
--- | VkAttachmentSampleLocationsEXT - Structure specifying the sample
--- locations state to use in the initial layout transition of attachments
---
--- = Description
---
--- If the image referenced by the framebuffer attachment at index
--- @attachmentIndex@ was not created with
--- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
--- then the values specified in @sampleLocationsInfo@ are ignored.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'RenderPassSampleLocationsBeginInfoEXT', 'SampleLocationsInfoEXT'
+
+-- No documentation found for TopLevel "VkAttachmentSampleLocationsEXT"
 data AttachmentSampleLocationsEXT = AttachmentSampleLocationsEXT
-  { -- | @attachmentIndex@ is the index of the attachment for which the sample
-    -- locations state is provided.
-    --
-    -- #VUID-VkAttachmentSampleLocationsEXT-attachmentIndex-01531#
-    -- @attachmentIndex@ /must/ be less than the @attachmentCount@ specified in
-    -- 'Vulkan.Core10.Pass.RenderPassCreateInfo' the render pass specified by
-    -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::@renderPass@
-    -- was created with
+  { -- No documentation found for Nested "VkAttachmentSampleLocationsEXT" "attachmentIndex"
     attachmentIndex :: Word32
-  , -- | @sampleLocationsInfo@ is the sample locations state to use for the
-    -- layout transition of the given attachment from the initial layout of the
-    -- attachment to the image layout specified for the attachment in the first
-    -- subpass using it.
-    --
-    -- #VUID-VkAttachmentSampleLocationsEXT-sampleLocationsInfo-parameter#
-    -- @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
-    -- structure
+  , -- No documentation found for Nested "VkAttachmentSampleLocationsEXT" "sampleLocationsInfo"
     sampleLocationsInfo :: SampleLocationsInfoEXT
   }
   deriving (Typeable)
@@ -612,43 +270,12 @@ instance Zero AttachmentSampleLocationsEXT where
            zero
 
 
--- | VkSubpassSampleLocationsEXT - Structure specifying the sample locations
--- state to use for layout transitions of attachments performed after a
--- given subpass
---
--- = Description
---
--- If the image referenced by the depth\/stencil attachment used in the
--- subpass identified by @subpassIndex@ was not created with
--- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
--- or if the subpass does not use a depth\/stencil attachment, and
--- 'PhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
--- is 'Vulkan.Core10.FundamentalTypes.TRUE' then the values specified in
--- @sampleLocationsInfo@ are ignored.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'RenderPassSampleLocationsBeginInfoEXT', 'SampleLocationsInfoEXT'
+
+-- No documentation found for TopLevel "VkSubpassSampleLocationsEXT"
 data SubpassSampleLocationsEXT = SubpassSampleLocationsEXT
-  { -- | @subpassIndex@ is the index of the subpass for which the sample
-    -- locations state is provided.
-    --
-    -- #VUID-VkSubpassSampleLocationsEXT-subpassIndex-01532# @subpassIndex@
-    -- /must/ be less than the @subpassCount@ specified in
-    -- 'Vulkan.Core10.Pass.RenderPassCreateInfo' the render pass specified by
-    -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::@renderPass@
-    -- was created with
+  { -- No documentation found for Nested "VkSubpassSampleLocationsEXT" "subpassIndex"
     subpassIndex :: Word32
-  , -- | @sampleLocationsInfo@ is the sample locations state to use for the
-    -- layout transition of the depth\/stencil attachment away from the image
-    -- layout the attachment is used with in the subpass specified in
-    -- @subpassIndex@.
-    --
-    -- #VUID-VkSubpassSampleLocationsEXT-sampleLocationsInfo-parameter#
-    -- @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
-    -- structure
+  , -- No documentation found for Nested "VkSubpassSampleLocationsEXT" "sampleLocationsInfo"
     sampleLocationsInfo :: SampleLocationsInfoEXT
   }
   deriving (Typeable)
@@ -683,61 +310,12 @@ instance Zero SubpassSampleLocationsEXT where
            zero
 
 
--- | VkRenderPassSampleLocationsBeginInfoEXT - Structure specifying sample
--- locations to use for the layout transition of custom sample locations
--- compatible depth\/stencil attachments
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkRenderPassSampleLocationsBeginInfoEXT-sType-sType# @sType@
---     /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT'
---
--- -   #VUID-VkRenderPassSampleLocationsBeginInfoEXT-pAttachmentInitialSampleLocations-parameter#
---     If @attachmentInitialSampleLocationsCount@ is not @0@,
---     @pAttachmentInitialSampleLocations@ /must/ be a valid pointer to an
---     array of @attachmentInitialSampleLocationsCount@ valid
---     'AttachmentSampleLocationsEXT' structures
---
--- -   #VUID-VkRenderPassSampleLocationsBeginInfoEXT-pPostSubpassSampleLocations-parameter#
---     If @postSubpassSampleLocationsCount@ is not @0@,
---     @pPostSubpassSampleLocations@ /must/ be a valid pointer to an array
---     of @postSubpassSampleLocationsCount@ valid
---     'SubpassSampleLocationsEXT' structures
---
--- = See Also
---
--- 'AttachmentSampleLocationsEXT',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'SubpassSampleLocationsEXT'
+
+-- No documentation found for TopLevel "VkRenderPassSampleLocationsBeginInfoEXT"
 data RenderPassSampleLocationsBeginInfoEXT = RenderPassSampleLocationsBeginInfoEXT
-  { -- | @pAttachmentInitialSampleLocations@ is a pointer to an array of
-    -- @attachmentInitialSampleLocationsCount@ 'AttachmentSampleLocationsEXT'
-    -- structures specifying the attachment indices and their corresponding
-    -- sample location state. Each element of
-    -- @pAttachmentInitialSampleLocations@ /can/ specify the sample location
-    -- state to use in the automatic layout transition performed to transition
-    -- a depth\/stencil attachment from the initial layout of the attachment to
-    -- the image layout specified for the attachment in the first subpass using
-    -- it.
+  { -- No documentation found for Nested "VkRenderPassSampleLocationsBeginInfoEXT" "pAttachmentInitialSampleLocations"
     attachmentInitialSampleLocations :: Vector AttachmentSampleLocationsEXT
-  , -- | @pPostSubpassSampleLocations@ is a pointer to an array of
-    -- @postSubpassSampleLocationsCount@ 'SubpassSampleLocationsEXT' structures
-    -- specifying the subpass indices and their corresponding sample location
-    -- state. Each element of @pPostSubpassSampleLocations@ /can/ specify the
-    -- sample location state to use in the automatic layout transition
-    -- performed to transition the depth\/stencil attachment used by the
-    -- specified subpass to the image layout specified in a dependent subpass
-    -- or to the final layout of the attachment in case the specified subpass
-    -- is the last subpass using that attachment. In addition, if
-    -- 'PhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
-    -- is 'Vulkan.Core10.FundamentalTypes.FALSE', each element of
-    -- @pPostSubpassSampleLocations@ /must/ specify the sample location state
-    -- that matches the sample locations used by all pipelines that will be
-    -- bound to a command buffer during the specified subpass. If
-    -- @variableSampleLocations@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the
-    -- sample locations used for rasterization do not depend on
-    -- @pPostSubpassSampleLocations@.
+  , -- No documentation found for Nested "VkRenderPassSampleLocationsBeginInfoEXT" "pPostSubpassSampleLocations"
     postSubpassSampleLocations :: Vector SubpassSampleLocationsEXT
   }
   deriving (Typeable)
@@ -790,30 +368,12 @@ instance Zero RenderPassSampleLocationsBeginInfoEXT where
            mempty
 
 
--- | VkPipelineSampleLocationsStateCreateInfoEXT - Structure specifying
--- sample locations for a pipeline
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32', 'SampleLocationsInfoEXT',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPipelineSampleLocationsStateCreateInfoEXT"
 data PipelineSampleLocationsStateCreateInfoEXT = PipelineSampleLocationsStateCreateInfoEXT
-  { -- | @sampleLocationsEnable@ controls whether custom sample locations are
-    -- used. If @sampleLocationsEnable@ is
-    -- 'Vulkan.Core10.FundamentalTypes.FALSE', the default sample locations are
-    -- used and the values specified in @sampleLocationsInfo@ are ignored.
+  { -- No documentation found for Nested "VkPipelineSampleLocationsStateCreateInfoEXT" "sampleLocationsEnable"
     sampleLocationsEnable :: Bool
-  , -- | @sampleLocationsInfo@ is the sample locations to use during
-    -- rasterization if @sampleLocationsEnable@ is
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE' and the graphics pipeline is not
-    -- created with
-    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'.
-    --
-    -- #VUID-VkPipelineSampleLocationsStateCreateInfoEXT-sampleLocationsInfo-parameter#
-    -- @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
-    -- structure
+  , -- No documentation found for Nested "VkPipelineSampleLocationsStateCreateInfoEXT" "sampleLocationsInfo"
     sampleLocationsInfo :: SampleLocationsInfoEXT
   }
   deriving (Typeable)
@@ -852,52 +412,18 @@ instance Zero PipelineSampleLocationsStateCreateInfoEXT where
            zero
 
 
--- | VkPhysicalDeviceSampleLocationsPropertiesEXT - Structure describing
--- sample location limits that can be supported by an implementation
---
--- = Members
---
--- The members of the 'PhysicalDeviceSampleLocationsPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
--- = Description
---
--- If the 'PhysicalDeviceSampleLocationsPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.FundamentalTypes.Extent2D',
--- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceSampleLocationsPropertiesEXT"
 data PhysicalDeviceSampleLocationsPropertiesEXT = PhysicalDeviceSampleLocationsPropertiesEXT
-  { -- | #limits-sampleLocationSampleCounts# @sampleLocationSampleCounts@ is a
-    -- bitmask of 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
-    -- indicating the sample counts supporting custom sample locations.
+  { -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "sampleLocationSampleCounts"
     sampleLocationSampleCounts :: SampleCountFlags
-  , -- | #limits-maxSampleLocationGridSize# @maxSampleLocationGridSize@ is the
-    -- maximum size of the pixel grid in which sample locations /can/ vary that
-    -- is supported for all sample counts in @sampleLocationSampleCounts@.
+  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "maxSampleLocationGridSize"
     maxSampleLocationGridSize :: Extent2D
-  , -- | #limits-sampleLocationCoordinateRange#
-    -- @sampleLocationCoordinateRange@[2] is the range of supported sample
-    -- location coordinates.
+  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "sampleLocationCoordinateRange"
     sampleLocationCoordinateRange :: (Float, Float)
-  , -- | #limits-sampleLocationSubPixelBits# @sampleLocationSubPixelBits@ is the
-    -- number of bits of subpixel precision for sample locations.
+  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "sampleLocationSubPixelBits"
     sampleLocationSubPixelBits :: Word32
-  , -- | #limits-variableSampleLocations# @variableSampleLocations@ specifies
-    -- whether the sample locations used by all pipelines that will be bound to
-    -- a command buffer during a subpass /must/ match. If set to
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE', the implementation supports
-    -- variable sample locations in a subpass. If set to
-    -- 'Vulkan.Core10.FundamentalTypes.FALSE', then the sample locations /must/
-    -- stay constant in each subpass.
+  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "variableSampleLocations"
     variableSampleLocations :: Bool
   }
   deriving (Typeable)
@@ -949,6 +475,7 @@ instance FromCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
     pure $ PhysicalDeviceSampleLocationsPropertiesEXT
              sampleLocationSampleCounts maxSampleLocationGridSize ((((\(CFloat a) -> a) sampleLocationCoordinateRange0), ((\(CFloat a) -> a) sampleLocationCoordinateRange1))) sampleLocationSubPixelBits (bool32ToBool variableSampleLocations)
 
+
 instance Storable PhysicalDeviceSampleLocationsPropertiesEXT where
   sizeOf ~_ = 48
   alignment ~_ = 8
@@ -964,19 +491,10 @@ instance Zero PhysicalDeviceSampleLocationsPropertiesEXT where
            zero
 
 
--- | VkMultisamplePropertiesEXT - Structure returning information about
--- sample count specific additional multisampling capabilities
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Extent2D',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceMultisamplePropertiesEXT'
+
+-- No documentation found for TopLevel "VkMultisamplePropertiesEXT"
 data MultisamplePropertiesEXT = MultisamplePropertiesEXT
-  { -- | @maxSampleLocationGridSize@ is the maximum size of the pixel grid in
-    -- which sample locations /can/ vary.
+  { -- No documentation found for Nested "VkMultisamplePropertiesEXT" "maxSampleLocationGridSize"
     maxSampleLocationGridSize :: Extent2D }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -1004,6 +522,7 @@ instance FromCStruct MultisamplePropertiesEXT where
     maxSampleLocationGridSize <- peekCStruct @Extent2D ((p `plusPtr` 16 :: Ptr Extent2D))
     pure $ MultisamplePropertiesEXT
              maxSampleLocationGridSize
+
 
 instance Storable MultisamplePropertiesEXT where
   sizeOf ~_ = 24

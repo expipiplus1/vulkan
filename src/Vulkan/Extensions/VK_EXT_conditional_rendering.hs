@@ -1,165 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_conditional_rendering - device extension
---
--- == VK_EXT_conditional_rendering
---
--- [__Name String__]
---     @VK_EXT_conditional_rendering@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     82
---
--- [__Revision__]
---     2
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
--- [__Contact__]
---
---     -   Vikram Kushwaha
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_conditional_rendering:%20&body=@vkushwaha%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2018-05-21
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Vikram Kushwaha, NVIDIA
---
---     -   Daniel Rakos, AMD
---
---     -   Jesse Hall, Google
---
---     -   Jeff Bolz, NVIDIA
---
---     -   Piers Daniell, NVIDIA
---
---     -   Stuart Smith, Imagination Technologies
---
--- == Description
---
--- This extension allows the execution of one or more rendering commands to
--- be conditional on a value in buffer memory. This may help an application
--- reduce the latency by conditionally discarding rendering commands
--- without application intervention. The conditional rendering commands are
--- limited to draws, compute dispatches and clearing attachments within a
--- conditional rendering block.
---
--- == New Commands
---
--- -   'cmdBeginConditionalRenderingEXT'
---
--- -   'cmdEndConditionalRenderingEXT'
---
--- == New Structures
---
--- -   'ConditionalRenderingBeginInfoEXT'
---
--- -   Extending
---     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo':
---
---     -   'CommandBufferInheritanceConditionalRenderingInfoEXT'
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
---     'Vulkan.Core10.Device.DeviceCreateInfo':
---
---     -   'PhysicalDeviceConditionalRenderingFeaturesEXT'
---
--- == New Enums
---
--- -   'ConditionalRenderingFlagBitsEXT'
---
--- == New Bitmasks
---
--- -   'ConditionalRenderingFlagsEXT'
---
--- == New Enum Constants
---
--- -   'EXT_CONDITIONAL_RENDERING_EXTENSION_NAME'
---
--- -   'EXT_CONDITIONAL_RENDERING_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':
---
---     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT'
---
--- -   Extending
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits':
---
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT'
---
--- -   Extending
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
---
---     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT'
---
--- == Issues
---
--- 1) Should conditional rendering affect copy and blit commands?
---
--- RESOLVED: Conditional rendering should not affect copies and blits.
---
--- 2) Should secondary command buffers be allowed to execute while
--- conditional rendering is active in the primary command buffer?
---
--- RESOLVED: The rendering commands in secondary command buffer will be
--- affected by an active conditional rendering in primary command buffer if
--- the @conditionalRenderingEnable@ is set to
--- 'Vulkan.Core10.FundamentalTypes.TRUE'. Conditional rendering /must/ not
--- be active in the primary command buffer if @conditionalRenderingEnable@
--- is 'Vulkan.Core10.FundamentalTypes.FALSE'.
---
--- == Examples
---
--- None.
---
--- == Version History
---
--- -   Revision 1, 2018-04-19 (Vikram Kushwaha)
---
---     -   First Version
---
--- -   Revision 2, 2018-05-21 (Vikram Kushwaha)
---
---     -   Add new pipeline stage, access flags and limit conditional
---         rendering to a subpass or entire renderpass.
---
--- = See Also
---
--- 'CommandBufferInheritanceConditionalRenderingInfoEXT',
--- 'ConditionalRenderingBeginInfoEXT', 'ConditionalRenderingFlagBitsEXT',
--- 'ConditionalRenderingFlagsEXT',
--- 'PhysicalDeviceConditionalRenderingFeaturesEXT',
--- 'cmdBeginConditionalRenderingEXT', 'cmdEndConditionalRenderingEXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_conditional_rendering"
 module Vulkan.Extensions.VK_EXT_conditional_rendering  ( cmdBeginConditionalRenderingEXT
                                                        , cmdUseConditionalRenderingEXT
                                                        , cmdEndConditionalRenderingEXT
@@ -235,63 +75,12 @@ foreign import ccall
   "dynamic" mkVkCmdBeginConditionalRenderingEXT
   :: FunPtr (Ptr CommandBuffer_T -> Ptr ConditionalRenderingBeginInfoEXT -> IO ()) -> Ptr CommandBuffer_T -> Ptr ConditionalRenderingBeginInfoEXT -> IO ()
 
--- | vkCmdBeginConditionalRenderingEXT - Define the beginning of a
--- conditional rendering block
---
--- == Valid Usage
---
--- -   #VUID-vkCmdBeginConditionalRenderingEXT-None-01980# Conditional
---     rendering /must/ not already be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdBeginConditionalRenderingEXT-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdBeginConditionalRenderingEXT-pConditionalRenderingBegin-parameter#
---     @pConditionalRenderingBegin@ /must/ be a valid pointer to a valid
---     'ConditionalRenderingBeginInfoEXT' structure
---
--- -   #VUID-vkCmdBeginConditionalRenderingEXT-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdBeginConditionalRenderingEXT-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer',
--- 'ConditionalRenderingBeginInfoEXT'
+-- No documentation found for TopLevel "vkCmdBeginConditionalRenderingEXT"
 cmdBeginConditionalRenderingEXT :: forall io
                                  . (MonadIO io)
-                                => -- | @commandBuffer@ is the command buffer into which this command will be
-                                   -- recorded.
+                                => -- No documentation found for Nested "vkCmdBeginConditionalRenderingEXT" "commandBuffer"
                                    CommandBuffer
-                                -> -- | @pConditionalRenderingBegin@ is a pointer to a
-                                   -- 'ConditionalRenderingBeginInfoEXT' structure specifying parameters of
-                                   -- conditional rendering.
+                                -> -- No documentation found for Nested "vkCmdBeginConditionalRenderingEXT" "pConditionalRenderingBegin"
                                    ConditionalRenderingBeginInfoEXT
                                 -> io ()
 cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO . evalContT $ do
@@ -320,69 +109,10 @@ foreign import ccall
   "dynamic" mkVkCmdEndConditionalRenderingEXT
   :: FunPtr (Ptr CommandBuffer_T -> IO ()) -> Ptr CommandBuffer_T -> IO ()
 
--- | vkCmdEndConditionalRenderingEXT - Define the end of a conditional
--- rendering block
---
--- = Description
---
--- Once ended, conditional rendering becomes inactive.
---
--- == Valid Usage
---
--- -   #VUID-vkCmdEndConditionalRenderingEXT-None-01985# Conditional
---     rendering /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
---
--- -   #VUID-vkCmdEndConditionalRenderingEXT-None-01986# If conditional
---     rendering was made
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
---     outside of a render pass instance, it /must/ not be ended inside a
---     render pass instance
---
--- -   #VUID-vkCmdEndConditionalRenderingEXT-None-01987# If conditional
---     rendering was made
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
---     within a subpass it /must/ be ended in the same subpass
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdEndConditionalRenderingEXT-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdEndConditionalRenderingEXT-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdEndConditionalRenderingEXT-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer'
+-- No documentation found for TopLevel "vkCmdEndConditionalRenderingEXT"
 cmdEndConditionalRenderingEXT :: forall io
                                . (MonadIO io)
-                              => -- | @commandBuffer@ is the command buffer into which this command will be
-                                 -- recorded.
+                              => -- No documentation found for Nested "vkCmdEndConditionalRenderingEXT" "commandBuffer"
                                  CommandBuffer
                               -> io ()
 cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
@@ -394,66 +124,14 @@ cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
   pure $ ()
 
 
--- | VkConditionalRenderingBeginInfoEXT - Structure specifying conditional
--- rendering begin info
---
--- = Description
---
--- If the 32-bit value at @offset@ in @buffer@ memory is zero, then the
--- rendering commands are discarded, otherwise they are executed as normal.
--- If the value of the predicate in buffer memory changes while conditional
--- rendering is active, the rendering commands /may/ be discarded in an
--- implementation-dependent way. Some implementations may latch the value
--- of the predicate upon beginning conditional rendering while others may
--- read it before every rendering command.
---
--- == Valid Usage
---
--- -   #VUID-VkConditionalRenderingBeginInfoEXT-buffer-01981# If @buffer@
---     is non-sparse then it /must/ be bound completely and contiguously to
---     a single 'Vulkan.Core10.Handles.DeviceMemory' object
---
--- -   #VUID-VkConditionalRenderingBeginInfoEXT-buffer-01982# @buffer@
---     /must/ have been created with the
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT'
---     bit set
---
--- -   #VUID-VkConditionalRenderingBeginInfoEXT-offset-01983# @offset@
---     /must/ be less than the size of @buffer@ by at least 32 bits
---
--- -   #VUID-VkConditionalRenderingBeginInfoEXT-offset-01984# @offset@
---     /must/ be a multiple of 4
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkConditionalRenderingBeginInfoEXT-sType-sType# @sType@ /must/
---     be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT'
---
--- -   #VUID-VkConditionalRenderingBeginInfoEXT-pNext-pNext# @pNext@ /must/
---     be @NULL@
---
--- -   #VUID-VkConditionalRenderingBeginInfoEXT-buffer-parameter# @buffer@
---     /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
---
--- -   #VUID-VkConditionalRenderingBeginInfoEXT-flags-parameter# @flags@
---     /must/ be a valid combination of 'ConditionalRenderingFlagBitsEXT'
---     values
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Buffer', 'ConditionalRenderingFlagsEXT',
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'cmdBeginConditionalRenderingEXT'
+
+-- No documentation found for TopLevel "VkConditionalRenderingBeginInfoEXT"
 data ConditionalRenderingBeginInfoEXT = ConditionalRenderingBeginInfoEXT
-  { -- | @buffer@ is a buffer containing the predicate for conditional rendering.
+  { -- No documentation found for Nested "VkConditionalRenderingBeginInfoEXT" "buffer"
     buffer :: Buffer
-  , -- | @offset@ is the byte offset into @buffer@ where the predicate is
-    -- located.
+  , -- No documentation found for Nested "VkConditionalRenderingBeginInfoEXT" "offset"
     offset :: DeviceSize
-  , -- | @flags@ is a bitmask of 'ConditionalRenderingFlagsEXT' specifying the
-    -- behavior of conditional rendering.
+  , -- No documentation found for Nested "VkConditionalRenderingBeginInfoEXT" "flags"
     flags :: ConditionalRenderingFlagsEXT
   }
   deriving (Typeable, Eq)
@@ -488,6 +166,7 @@ instance FromCStruct ConditionalRenderingBeginInfoEXT where
     pure $ ConditionalRenderingBeginInfoEXT
              buffer offset flags
 
+
 instance Storable ConditionalRenderingBeginInfoEXT where
   sizeOf ~_ = 40
   alignment ~_ = 8
@@ -501,40 +180,10 @@ instance Zero ConditionalRenderingBeginInfoEXT where
            zero
 
 
--- | VkCommandBufferInheritanceConditionalRenderingInfoEXT - Structure
--- specifying command buffer inheritance info
---
--- = Description
---
--- If this structure is not present, the behavior is as if
--- @conditionalRenderingEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE'.
---
--- == Valid Usage
---
--- -   #VUID-VkCommandBufferInheritanceConditionalRenderingInfoEXT-conditionalRenderingEnable-01977#
---     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedConditionalRendering inherited conditional rendering>
---     feature is not enabled, @conditionalRenderingEnable@ /must/ be
---     'Vulkan.Core10.FundamentalTypes.FALSE'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkCommandBufferInheritanceConditionalRenderingInfoEXT-sType-sType#
---     @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT'
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkCommandBufferInheritanceConditionalRenderingInfoEXT"
 data CommandBufferInheritanceConditionalRenderingInfoEXT = CommandBufferInheritanceConditionalRenderingInfoEXT
-  { -- | @conditionalRenderingEnable@ specifies whether the command buffer /can/
-    -- be executed while conditional rendering is active in the primary command
-    -- buffer. If this is 'Vulkan.Core10.FundamentalTypes.TRUE', then this
-    -- command buffer /can/ be executed whether the primary command buffer has
-    -- active conditional rendering or not. If this is
-    -- 'Vulkan.Core10.FundamentalTypes.FALSE', then the primary command buffer
-    -- /must/ not have conditional rendering active.
+  { -- No documentation found for Nested "VkCommandBufferInheritanceConditionalRenderingInfoEXT" "conditionalRenderingEnable"
     conditionalRenderingEnable :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -563,6 +212,7 @@ instance FromCStruct CommandBufferInheritanceConditionalRenderingInfoEXT where
     pure $ CommandBufferInheritanceConditionalRenderingInfoEXT
              (bool32ToBool conditionalRenderingEnable)
 
+
 instance Storable CommandBufferInheritanceConditionalRenderingInfoEXT where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -574,33 +224,12 @@ instance Zero CommandBufferInheritanceConditionalRenderingInfoEXT where
            zero
 
 
--- | VkPhysicalDeviceConditionalRenderingFeaturesEXT - Structure describing
--- if a secondary command buffer can be executed if conditional rendering
--- is active in the primary command buffer
---
--- = Description
---
--- If the 'PhysicalDeviceConditionalRenderingFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating the implementation-dependent
--- behavior. 'PhysicalDeviceConditionalRenderingFeaturesEXT' /can/ also be
--- included in @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- enable the features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceConditionalRenderingFeaturesEXT"
 data PhysicalDeviceConditionalRenderingFeaturesEXT = PhysicalDeviceConditionalRenderingFeaturesEXT
-  { -- | #features-conditionalRendering# @conditionalRendering@ specifies whether
-    -- conditional rendering is supported.
+  { -- No documentation found for Nested "VkPhysicalDeviceConditionalRenderingFeaturesEXT" "conditionalRendering"
     conditionalRendering :: Bool
-  , -- | #features-inheritedConditionalRendering# @inheritedConditionalRendering@
-    -- specifies whether a secondary command buffer /can/ be executed while
-    -- conditional rendering is active in the primary command buffer.
+  , -- No documentation found for Nested "VkPhysicalDeviceConditionalRenderingFeaturesEXT" "inheritedConditionalRendering"
     inheritedConditionalRendering :: Bool
   }
   deriving (Typeable, Eq)
@@ -633,6 +262,7 @@ instance FromCStruct PhysicalDeviceConditionalRenderingFeaturesEXT where
     pure $ PhysicalDeviceConditionalRenderingFeaturesEXT
              (bool32ToBool conditionalRendering) (bool32ToBool inheritedConditionalRendering)
 
+
 instance Storable PhysicalDeviceConditionalRenderingFeaturesEXT where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -647,20 +277,11 @@ instance Zero PhysicalDeviceConditionalRenderingFeaturesEXT where
 
 type ConditionalRenderingFlagsEXT = ConditionalRenderingFlagBitsEXT
 
--- | VkConditionalRenderingFlagBitsEXT - Specify the behavior of conditional
--- rendering
---
--- = See Also
---
--- 'ConditionalRenderingFlagsEXT'
+-- No documentation found for TopLevel "VkConditionalRenderingFlagBitsEXT"
 newtype ConditionalRenderingFlagBitsEXT = ConditionalRenderingFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'CONDITIONAL_RENDERING_INVERTED_BIT_EXT' specifies the condition used to
--- determine whether to discard rendering commands or not. That is, if the
--- 32-bit predicate read from @buffer@ memory at @offset@ is zero, the
--- rendering commands are not discarded, and if non zero, then they are
--- discarded.
+-- No documentation found for Nested "VkConditionalRenderingFlagBitsEXT" "VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT"
 pattern CONDITIONAL_RENDERING_INVERTED_BIT_EXT = ConditionalRenderingFlagBitsEXT 0x00000001
 
 conNameConditionalRenderingFlagBitsEXT :: String
@@ -672,12 +293,14 @@ enumPrefixConditionalRenderingFlagBitsEXT = "CONDITIONAL_RENDERING_INVERTED_BIT_
 showTableConditionalRenderingFlagBitsEXT :: [(ConditionalRenderingFlagBitsEXT, String)]
 showTableConditionalRenderingFlagBitsEXT = [(CONDITIONAL_RENDERING_INVERTED_BIT_EXT, "")]
 
+
 instance Show ConditionalRenderingFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixConditionalRenderingFlagBitsEXT
-                            showTableConditionalRenderingFlagBitsEXT
-                            conNameConditionalRenderingFlagBitsEXT
-                            (\(ConditionalRenderingFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixConditionalRenderingFlagBitsEXT
+                          showTableConditionalRenderingFlagBitsEXT
+                          conNameConditionalRenderingFlagBitsEXT
+                          (\(ConditionalRenderingFlagBitsEXT x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read ConditionalRenderingFlagBitsEXT where
   readPrec = enumReadPrec enumPrefixConditionalRenderingFlagBitsEXT

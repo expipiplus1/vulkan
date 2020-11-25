@@ -1,131 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_KHR_push_descriptor - device extension
---
--- == VK_KHR_push_descriptor
---
--- [__Name String__]
---     @VK_KHR_push_descriptor@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     81
---
--- [__Revision__]
---     2
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@
---
--- [__Contact__]
---
---     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_push_descriptor:%20&body=@jeffbolznv%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2017-09-12
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Jeff Bolz, NVIDIA
---
---     -   Michael Worcester, Imagination Technologies
---
--- == Description
---
--- This extension allows descriptors to be written into the command buffer,
--- while the implementation is responsible for managing their memory. Push
--- descriptors may enable easier porting from older APIs and in some cases
--- can be more efficient than writing descriptors into descriptor sets.
---
--- == New Commands
---
--- -   'cmdPushDescriptorSetKHR'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_descriptor_update_template VK_KHR_descriptor_update_template>
--- is supported:
---
--- -   'cmdPushDescriptorSetWithTemplateKHR'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
--- is supported:
---
--- -   'cmdPushDescriptorSetWithTemplateKHR'
---
--- == New Structures
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
---
---     -   'PhysicalDevicePushDescriptorPropertiesKHR'
---
--- == New Enum Constants
---
--- -   'KHR_PUSH_DESCRIPTOR_EXTENSION_NAME'
---
--- -   'KHR_PUSH_DESCRIPTOR_SPEC_VERSION'
---
--- -   Extending
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DescriptorSetLayoutCreateFlagBits':
---
---     -   'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_descriptor_update_template VK_KHR_descriptor_update_template>
--- is supported:
---
--- -   Extending
---     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DescriptorUpdateTemplateType':
---
---     -   'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
--- is supported:
---
--- -   Extending
---     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DescriptorUpdateTemplateType':
---
---     -   'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
---
--- == Version History
---
--- -   Revision 1, 2016-10-15 (Jeff Bolz)
---
---     -   Internal revisions
---
--- -   Revision 2, 2017-09-12 (Tobias Hector)
---
---     -   Added interactions with Vulkan 1.1
---
--- = See Also
---
--- 'PhysicalDevicePushDescriptorPropertiesKHR', 'cmdPushDescriptorSetKHR'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_push_descriptor Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_KHR_push_descriptor"
 module Vulkan.Extensions.VK_KHR_push_descriptor  ( cmdPushDescriptorSetKHR
                                                  , cmdPushDescriptorSetWithTemplateKHR
                                                  , PhysicalDevicePushDescriptorPropertiesKHR(..)
@@ -192,150 +66,18 @@ foreign import ccall
   "dynamic" mkVkCmdPushDescriptorSetKHR
   :: FunPtr (Ptr CommandBuffer_T -> PipelineBindPoint -> PipelineLayout -> Word32 -> Word32 -> Ptr (SomeStruct WriteDescriptorSet) -> IO ()) -> Ptr CommandBuffer_T -> PipelineBindPoint -> PipelineLayout -> Word32 -> Word32 -> Ptr (SomeStruct WriteDescriptorSet) -> IO ()
 
--- | vkCmdPushDescriptorSetKHR - Pushes descriptor updates into a command
--- buffer
---
--- = Description
---
--- /Push descriptors/ are a small bank of descriptors whose storage is
--- internally managed by the command buffer rather than being written into
--- a descriptor set and later bound to a command buffer. Push descriptors
--- allow for incremental updates of descriptors without managing the
--- lifetime of descriptor sets.
---
--- When a command buffer begins recording, all push descriptors are
--- undefined. Push descriptors /can/ be updated incrementally and cause
--- shaders to use the updated descriptors for subsequent
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-bindpoint-commands bound pipeline commands>
--- with the pipeline type set by @pipelineBindPoint@ until the descriptor
--- is overwritten, or else until the set is disturbed as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
--- When the set is disturbed or push descriptors with a different
--- descriptor set layout are set, all push descriptors are undefined.
---
--- Push descriptors that are
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-staticuse statically used>
--- by a pipeline /must/ not be undefined at the time that a draw or
--- dispatch command is recorded to execute using that pipeline. This
--- includes immutable sampler descriptors, which /must/ be pushed before
--- they are accessed by a pipeline (the immutable samplers are pushed,
--- rather than the samplers in @pDescriptorWrites@). Push descriptors that
--- are not statically used /can/ remain undefined.
---
--- Push descriptors do not use dynamic offsets. Instead, the corresponding
--- non-dynamic descriptor types /can/ be used and the @offset@ member of
--- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' /can/ be changed each
--- time the descriptor is written.
---
--- Each element of @pDescriptorWrites@ is interpreted as in
--- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet', except the @dstSet@
--- member is ignored.
---
--- To push an immutable sampler, use a
--- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet' with @dstBinding@ and
--- @dstArrayElement@ selecting the immutable sampler’s binding. If the
--- descriptor type is
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER', the
--- @pImageInfo@ parameter is ignored and the immutable sampler is taken
--- from the push descriptor set layout in the pipeline layout. If the
--- descriptor type is
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
--- the @sampler@ member of the @pImageInfo@ parameter is ignored and the
--- immutable sampler is taken from the push descriptor set layout in the
--- pipeline layout.
---
--- == Valid Usage
---
--- -   #VUID-vkCmdPushDescriptorSetKHR-pipelineBindPoint-00363#
---     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
---     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
---
--- -   #VUID-vkCmdPushDescriptorSetKHR-set-00364# @set@ /must/ be less than
---     'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'::@setLayoutCount@
---     provided when @layout@ was created
---
--- -   #VUID-vkCmdPushDescriptorSetKHR-set-00365# @set@ /must/ be the
---     unique set number in the pipeline layout that uses a descriptor set
---     layout that was created with
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdPushDescriptorSetKHR-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdPushDescriptorSetKHR-pipelineBindPoint-parameter#
---     @pipelineBindPoint@ /must/ be a valid
---     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
---
--- -   #VUID-vkCmdPushDescriptorSetKHR-layout-parameter# @layout@ /must/ be
---     a valid 'Vulkan.Core10.Handles.PipelineLayout' handle
---
--- -   #VUID-vkCmdPushDescriptorSetKHR-pDescriptorWrites-parameter#
---     @pDescriptorWrites@ /must/ be a valid pointer to an array of
---     @descriptorWriteCount@ valid
---     'Vulkan.Core10.DescriptorSet.WriteDescriptorSet' structures
---
--- -   #VUID-vkCmdPushDescriptorSetKHR-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdPushDescriptorSetKHR-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
---
--- -   #VUID-vkCmdPushDescriptorSetKHR-descriptorWriteCount-arraylength#
---     @descriptorWriteCount@ /must/ be greater than @0@
---
--- -   #VUID-vkCmdPushDescriptorSetKHR-commonparent# Both of
---     @commandBuffer@, and @layout@ /must/ have been created, allocated,
---     or retrieved from the same 'Vulkan.Core10.Handles.Device'
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
--- 'Vulkan.Core10.Handles.PipelineLayout',
--- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
+-- No documentation found for TopLevel "vkCmdPushDescriptorSetKHR"
 cmdPushDescriptorSetKHR :: forall io
                          . (MonadIO io)
-                        => -- | @commandBuffer@ is the command buffer that the descriptors will be
-                           -- recorded in.
+                        => -- No documentation found for Nested "vkCmdPushDescriptorSetKHR" "commandBuffer"
                            CommandBuffer
-                        -> -- | @pipelineBindPoint@ is a
-                           -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating the
-                           -- type of the pipeline that will use the descriptors. There is a separate
-                           -- set of push descriptor bindings for each pipeline type, so binding one
-                           -- does not disturb the others.
+                        -> -- No documentation found for Nested "vkCmdPushDescriptorSetKHR" "pipelineBindPoint"
                            PipelineBindPoint
-                        -> -- | @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to
-                           -- program the bindings.
+                        -> -- No documentation found for Nested "vkCmdPushDescriptorSetKHR" "layout"
                            PipelineLayout
-                        -> -- | @set@ is the set number of the descriptor set in the pipeline layout
-                           -- that will be updated.
+                        -> -- No documentation found for Nested "vkCmdPushDescriptorSetKHR" "set"
                            ("set" ::: Word32)
-                        -> -- | @pDescriptorWrites@ is a pointer to an array of
-                           -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet' structures describing
-                           -- the descriptors to be updated.
+                        -> -- No documentation found for Nested "vkCmdPushDescriptorSetKHR" "pDescriptorWrites"
                            ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet))
                         -> io ()
 cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWrites = liftIO . evalContT $ do
@@ -356,140 +98,18 @@ foreign import ccall
   "dynamic" mkVkCmdPushDescriptorSetWithTemplateKHR
   :: FunPtr (Ptr CommandBuffer_T -> DescriptorUpdateTemplate -> PipelineLayout -> Word32 -> Ptr () -> IO ()) -> Ptr CommandBuffer_T -> DescriptorUpdateTemplate -> PipelineLayout -> Word32 -> Ptr () -> IO ()
 
--- | vkCmdPushDescriptorSetWithTemplateKHR - Pushes descriptor updates into a
--- command buffer using a descriptor update template
---
--- == Valid Usage
---
--- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-00366# The
---     @pipelineBindPoint@ specified during the creation of the descriptor
---     update template /must/ be supported by the @commandBuffer@’s parent
---     'Vulkan.Core10.Handles.CommandPool'’s queue family
---
--- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-pData-01686# @pData@
---     /must/ be a valid pointer to a memory containing one or more valid
---     instances of 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
---     'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
---     'Vulkan.Core10.Handles.BufferView' in a layout defined by
---     @descriptorUpdateTemplate@ when it was created with
---     'Vulkan.Extensions.VK_KHR_descriptor_update_template.createDescriptorUpdateTemplateKHR'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-descriptorUpdateTemplate-parameter#
---     @descriptorUpdateTemplate@ /must/ be a valid
---     'Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle
---
--- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-layout-parameter#
---     @layout@ /must/ be a valid 'Vulkan.Core10.Handles.PipelineLayout'
---     handle
---
--- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-cmdpool#
---     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
---
--- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commonparent# Each of
---     @commandBuffer@, @descriptorUpdateTemplate@, and @layout@ /must/
---     have been created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Device'
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- __API example__
---
--- > struct AppDataStructure
--- > {
--- >     VkDescriptorImageInfo  imageInfo;          // a single image info
--- >     // ... some more application related data
--- > };
--- >
--- > const VkDescriptorUpdateTemplateEntry descriptorUpdateTemplateEntries[] =
--- > {
--- >     // binding to a single image descriptor
--- >     {
--- >         0,                                           // binding
--- >         0,                                           // dstArrayElement
--- >         1,                                           // descriptorCount
--- >         VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,   // descriptorType
--- >         offsetof(AppDataStructure, imageInfo),       // offset
--- >         0                                            // stride is not required if descriptorCount is 1
--- >     }
--- > };
--- >
--- > // create a descriptor update template for descriptor set updates
--- > const VkDescriptorUpdateTemplateCreateInfo createInfo =
--- > {
--- >     VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,  // sType
--- >     NULL,                                                      // pNext
--- >     0,                                                         // flags
--- >     1,                                                         // descriptorUpdateEntryCount
--- >     descriptorUpdateTemplateEntries,                           // pDescriptorUpdateEntries
--- >     VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR,   // templateType
--- >     0,                                                         // descriptorSetLayout, ignored by given templateType
--- >     VK_PIPELINE_BIND_POINT_GRAPHICS,                           // pipelineBindPoint
--- >     myPipelineLayout,                                          // pipelineLayout
--- >     0,                                                         // set
--- > };
--- >
--- > VkDescriptorUpdateTemplate myDescriptorUpdateTemplate;
--- > myResult = vkCreateDescriptorUpdateTemplate(
--- >     myDevice,
--- >     &createInfo,
--- >     NULL,
--- >     &myDescriptorUpdateTemplate);
--- > }
--- >
--- > AppDataStructure appData;
--- > // fill appData here or cache it in your engine
--- > vkCmdPushDescriptorSetWithTemplateKHR(myCmdBuffer, myDescriptorUpdateTemplate, myPipelineLayout, 0,&appData);
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
--- 'Vulkan.Core10.Handles.PipelineLayout'
+-- No documentation found for TopLevel "vkCmdPushDescriptorSetWithTemplateKHR"
 cmdPushDescriptorSetWithTemplateKHR :: forall io
                                      . (MonadIO io)
-                                    => -- | @commandBuffer@ is the command buffer that the descriptors will be
-                                       -- recorded in.
+                                    => -- No documentation found for Nested "vkCmdPushDescriptorSetWithTemplateKHR" "commandBuffer"
                                        CommandBuffer
-                                    -> -- | @descriptorUpdateTemplate@ is a descriptor update template defining how
-                                       -- to interpret the descriptor information in @pData@.
+                                    -> -- No documentation found for Nested "vkCmdPushDescriptorSetWithTemplateKHR" "descriptorUpdateTemplate"
                                        DescriptorUpdateTemplate
-                                    -> -- | @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to
-                                       -- program the bindings. It /must/ be compatible with the layout used to
-                                       -- create the @descriptorUpdateTemplate@ handle.
+                                    -> -- No documentation found for Nested "vkCmdPushDescriptorSetWithTemplateKHR" "layout"
                                        PipelineLayout
-                                    -> -- | @set@ is the set number of the descriptor set in the pipeline layout
-                                       -- that will be updated. This /must/ be the same number used to create the
-                                       -- @descriptorUpdateTemplate@ handle.
+                                    -> -- No documentation found for Nested "vkCmdPushDescriptorSetWithTemplateKHR" "set"
                                        ("set" ::: Word32)
-                                    -> -- | @pData@ is a pointer to memory containing descriptors for the templated
-                                       -- update.
+                                    -> -- No documentation found for Nested "vkCmdPushDescriptorSetWithTemplateKHR" "pData"
                                        ("data" ::: Ptr ())
                                     -> io ()
 cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layout set data' = liftIO $ do
@@ -501,31 +121,10 @@ cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layou
   pure $ ()
 
 
--- | VkPhysicalDevicePushDescriptorPropertiesKHR - Structure describing push
--- descriptor limits that can be supported by an implementation
---
--- = Members
---
--- The members of the 'PhysicalDevicePushDescriptorPropertiesKHR' structure
--- describe the following implementation-dependent limits:
---
--- = Description
---
--- If the 'PhysicalDevicePushDescriptorPropertiesKHR' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDevicePushDescriptorPropertiesKHR"
 data PhysicalDevicePushDescriptorPropertiesKHR = PhysicalDevicePushDescriptorPropertiesKHR
-  { -- | #limits-maxPushDescriptors# @maxPushDescriptors@ is the maximum number
-    -- of descriptors that /can/ be used in a descriptor set created with
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
-    -- set.
+  { -- No documentation found for Nested "VkPhysicalDevicePushDescriptorPropertiesKHR" "maxPushDescriptors"
     maxPushDescriptors :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -553,6 +152,7 @@ instance FromCStruct PhysicalDevicePushDescriptorPropertiesKHR where
     maxPushDescriptors <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pure $ PhysicalDevicePushDescriptorPropertiesKHR
              maxPushDescriptors
+
 
 instance Storable PhysicalDevicePushDescriptorPropertiesKHR where
   sizeOf ~_ = 24

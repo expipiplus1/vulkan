@@ -68,76 +68,10 @@ foreign import ccall
   "dynamic" mkVkEnumerateInstanceExtensionProperties
   :: FunPtr (Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO Result) -> Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO Result
 
--- | vkEnumerateInstanceExtensionProperties - Returns up to requested number
--- of global extension properties
---
--- = Description
---
--- When @pLayerName@ parameter is @NULL@, only extensions provided by the
--- Vulkan implementation or by implicitly enabled layers are returned. When
--- @pLayerName@ is the name of a layer, the instance extensions provided by
--- that layer are returned.
---
--- If @pProperties@ is @NULL@, then the number of extensions properties
--- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
--- /must/ point to a variable set by the user to the number of elements in
--- the @pProperties@ array, and on return the variable is overwritten with
--- the number of structures actually written to @pProperties@. If
--- @pPropertyCount@ is less than the number of extension properties
--- available, at most @pPropertyCount@ structures will be written. If
--- @pPropertyCount@ is smaller than the number of extensions available,
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
--- available properties were returned.
---
--- Because the list of available layers may change externally between calls
--- to 'enumerateInstanceExtensionProperties', two calls may retrieve
--- different results if a @pLayerName@ is available in one call but not in
--- another. The extensions supported by a layer may also change between two
--- calls, e.g. if the layer implementation is replaced by a different
--- version between those calls.
---
--- Implementations /must/ not advertise any pair of extensions that cannot
--- be enabled together due to behavioral differences, or any extension that
--- cannot be enabled against the advertised version.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkEnumerateInstanceExtensionProperties-pLayerName-parameter#
---     If @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a
---     null-terminated UTF-8 string
---
--- -   #VUID-vkEnumerateInstanceExtensionProperties-pPropertyCount-parameter#
---     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   #VUID-vkEnumerateInstanceExtensionProperties-pProperties-parameter#
---     If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ 'ExtensionProperties' structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_LAYER_NOT_PRESENT'
---
--- = See Also
---
--- 'ExtensionProperties'
+-- No documentation found for TopLevel "vkEnumerateInstanceExtensionProperties"
 enumerateInstanceExtensionProperties :: forall io
                                       . (MonadIO io)
-                                     => -- | @pLayerName@ is either @NULL@ or a pointer to a null-terminated UTF-8
-                                        -- string naming the layer to retrieve extensions from.
+                                     => -- No documentation found for Nested "vkEnumerateInstanceExtensionProperties" "pLayerName"
                                         ("layerName" ::: Maybe ByteString)
                                      -> io (Result, ("properties" ::: Vector ExtensionProperties))
 enumerateInstanceExtensionProperties layerName = liftIO . evalContT $ do
@@ -168,63 +102,12 @@ foreign import ccall
   "dynamic" mkVkEnumerateDeviceExtensionProperties
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO Result) -> Ptr PhysicalDevice_T -> Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO Result
 
--- | vkEnumerateDeviceExtensionProperties - Returns properties of available
--- physical device extensions
---
--- = Description
---
--- When @pLayerName@ parameter is @NULL@, only extensions provided by the
--- Vulkan implementation or by implicitly enabled layers are returned. When
--- @pLayerName@ is the name of a layer, the device extensions provided by
--- that layer are returned.
---
--- Implementations /must/ not advertise any pair of extensions that cannot
--- be enabled together due to behavioral differences, or any extension that
--- cannot be enabled against the advertised version.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkEnumerateDeviceExtensionProperties-physicalDevice-parameter#
---     @physicalDevice@ /must/ be a valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkEnumerateDeviceExtensionProperties-pLayerName-parameter# If
---     @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a null-terminated
---     UTF-8 string
---
--- -   #VUID-vkEnumerateDeviceExtensionProperties-pPropertyCount-parameter#
---     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   #VUID-vkEnumerateDeviceExtensionProperties-pProperties-parameter# If
---     the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ 'ExtensionProperties' structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_LAYER_NOT_PRESENT'
---
--- = See Also
---
--- 'ExtensionProperties', 'Vulkan.Core10.Handles.PhysicalDevice'
+-- No documentation found for TopLevel "vkEnumerateDeviceExtensionProperties"
 enumerateDeviceExtensionProperties :: forall io
                                     . (MonadIO io)
-                                   => -- | @physicalDevice@ is the physical device that will be queried.
+                                   => -- No documentation found for Nested "vkEnumerateDeviceExtensionProperties" "physicalDevice"
                                       PhysicalDevice
-                                   -> -- | @pLayerName@ is either @NULL@ or a pointer to a null-terminated UTF-8
-                                      -- string naming the layer to retrieve extensions from.
+                                   -> -- No documentation found for Nested "vkEnumerateDeviceExtensionProperties" "pLayerName"
                                       ("layerName" ::: Maybe ByteString)
                                    -> io (Result, ("properties" ::: Vector ExtensionProperties))
 enumerateDeviceExtensionProperties physicalDevice layerName = liftIO . evalContT $ do
@@ -249,19 +132,12 @@ enumerateDeviceExtensionProperties physicalDevice layerName = liftIO . evalContT
   pure $ ((r'), pProperties')
 
 
--- | VkExtensionProperties - Structure specifying an extension properties
---
--- = See Also
---
--- 'enumerateDeviceExtensionProperties',
--- 'enumerateInstanceExtensionProperties'
+
+-- No documentation found for TopLevel "VkExtensionProperties"
 data ExtensionProperties = ExtensionProperties
-  { -- | @extensionName@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_EXTENSION_NAME_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string which is the name of the extension.
+  { -- No documentation found for Nested "VkExtensionProperties" "extensionName"
     extensionName :: ByteString
-  , -- | @specVersion@ is the version of this extension. It is an integer,
-    -- incremented with backward compatible changes.
+  , -- No documentation found for Nested "VkExtensionProperties" "specVersion"
     specVersion :: Word32
   }
   deriving (Typeable)
@@ -289,6 +165,7 @@ instance FromCStruct ExtensionProperties where
     specVersion <- peek @Word32 ((p `plusPtr` 256 :: Ptr Word32))
     pure $ ExtensionProperties
              extensionName specVersion
+
 
 instance Storable ExtensionProperties where
   sizeOf ~_ = 260

@@ -58,6 +58,7 @@ import Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters
 import Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers
 import Data.Word (Word32)
 import Vulkan.Version (pattern MAKE_VERSION)
+
 pattern API_VERSION_1_1 :: Word32
 pattern API_VERSION_1_1 = MAKE_VERSION 1 1 0
 

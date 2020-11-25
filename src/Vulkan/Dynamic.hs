@@ -449,6 +449,7 @@ instance Zero InstanceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr
 
+
 -- | A version of 'getInstanceProcAddr' which can be called
 -- with a null pointer for the instance.
 foreign import ccall
@@ -456,6 +457,7 @@ foreign import ccall
   unsafe
 #endif
   "vkGetInstanceProcAddr" getInstanceProcAddr' :: Ptr Instance_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
+
 
 initInstanceCmds :: Ptr Instance_T -> IO InstanceCmds
 initInstanceCmds handle = do
@@ -995,12 +997,14 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "dynamic" mkVkGetDeviceProcAddr
   :: FunPtr (Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) -> Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
+
 
 initDeviceCmds :: InstanceCmds -> Ptr Device_T -> IO DeviceCmds
 initDeviceCmds instanceCmds handle = do

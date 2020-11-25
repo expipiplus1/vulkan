@@ -1,191 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_KHR_wayland_surface - instance extension
---
--- == VK_KHR_wayland_surface
---
--- [__Name String__]
---     @VK_KHR_wayland_surface@
---
--- [__Extension Type__]
---     Instance extension
---
--- [__Registered Extension Number__]
---     7
---
--- [__Revision__]
---     6
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_surface@
---
--- [__Contact__]
---
---     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_wayland_surface:%20&body=@critsec%20 >
---
---     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_wayland_surface:%20&body=@ianelliottus%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2015-11-28
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Patrick Doane, Blizzard
---
---     -   Jason Ekstrand, Intel
---
---     -   Ian Elliott, LunarG
---
---     -   Courtney Goeltzenleuchter, LunarG
---
---     -   Jesse Hall, Google
---
---     -   James Jones, NVIDIA
---
---     -   Antoine Labour, Google
---
---     -   Jon Leech, Khronos
---
---     -   David Mao, AMD
---
---     -   Norbert Nopper, Freescale
---
---     -   Alon Or-bach, Samsung
---
---     -   Daniel Rakos, AMD
---
---     -   Graham Sellers, AMD
---
---     -   Ray Smith, ARM
---
---     -   Jeff Vigil, Qualcomm
---
---     -   Chia-I Wu, LunarG
---
--- == Description
---
--- The @VK_KHR_wayland_surface@ extension is an instance extension. It
--- provides a mechanism to create a 'Vulkan.Extensions.Handles.SurfaceKHR'
--- object (defined by the @VK_KHR_surface@ extension) that refers to a
--- Wayland @wl_surface@, as well as a query to determine support for
--- rendering to a Wayland compositor.
---
--- == New Commands
---
--- -   'createWaylandSurfaceKHR'
---
--- -   'getPhysicalDeviceWaylandPresentationSupportKHR'
---
--- == New Structures
---
--- -   'WaylandSurfaceCreateInfoKHR'
---
--- == New Bitmasks
---
--- -   'WaylandSurfaceCreateFlagsKHR'
---
--- == New Enum Constants
---
--- -   'KHR_WAYLAND_SURFACE_EXTENSION_NAME'
---
--- -   'KHR_WAYLAND_SURFACE_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR'
---
--- == Issues
---
--- 1) Does Wayland need a way to query for compatibility between a
--- particular physical device and a specific Wayland display? This would be
--- a more general query than
--- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR':
--- if the Wayland-specific query returned
--- 'Vulkan.Core10.FundamentalTypes.TRUE' for a
--- ('Vulkan.Core10.Handles.PhysicalDevice', @struct wl_display*@) pair,
--- then the physical device could be assumed to support presentation to any
--- 'Vulkan.Extensions.Handles.SurfaceKHR' for surfaces on the display.
---
--- __RESOLVED__: Yes. 'getPhysicalDeviceWaylandPresentationSupportKHR' was
--- added to address this issue.
---
--- 2) Should we require surfaces created with 'createWaylandSurfaceKHR' to
--- support the 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR'
--- present mode?
---
--- __RESOLVED__: Yes. Wayland is an inherently mailbox window system and
--- mailbox support is required for some Wayland compositor interactions to
--- work as expected. While handling these interactions may be possible with
--- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR', it is much
--- more difficult to do without deadlock and requiring all Wayland
--- applications to be able to support implementations which only support
--- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' would be an
--- onerous restriction on application developers.
---
--- == Version History
---
--- -   Revision 1, 2015-09-23 (Jesse Hall)
---
---     -   Initial draft, based on the previous contents of
---         VK_EXT_KHR_swapchain (later renamed VK_EXT_KHR_surface).
---
--- -   Revision 2, 2015-10-02 (James Jones)
---
---     -   Added vkGetPhysicalDeviceWaylandPresentationSupportKHR() to
---         resolve issue #1.
---
---     -   Adjusted wording of issue #1 to match the agreed-upon solution.
---
---     -   Renamed \"window\" parameters to \"surface\" to match Wayland
---         conventions.
---
--- -   Revision 3, 2015-10-26 (Ian Elliott)
---
---     -   Renamed from VK_EXT_KHR_wayland_surface to
---         VK_KHR_wayland_surface.
---
--- -   Revision 4, 2015-11-03 (Daniel Rakos)
---
---     -   Added allocation callbacks to vkCreateWaylandSurfaceKHR.
---
--- -   Revision 5, 2015-11-28 (Daniel Rakos)
---
---     -   Updated the surface create function to take a pCreateInfo
---         structure.
---
--- -   Revision 6, 2017-02-08 (Jason Ekstrand)
---
---     -   Added the requirement that implementations support
---         'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR'.
---
---     -   Added wording about interactions between
---         'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' and the
---         Wayland requests sent to the compositor.
---
--- = See Also
---
--- 'WaylandSurfaceCreateFlagsKHR', 'WaylandSurfaceCreateInfoKHR',
--- 'createWaylandSurfaceKHR',
--- 'getPhysicalDeviceWaylandPresentationSupportKHR'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_KHR_wayland_surface"
 module Vulkan.Extensions.VK_KHR_wayland_surface  ( createWaylandSurfaceKHR
                                                  , getPhysicalDeviceWaylandPresentationSupportKHR
                                                  , WaylandSurfaceCreateInfoKHR(..)
@@ -271,54 +85,14 @@ foreign import ccall
   "dynamic" mkVkCreateWaylandSurfaceKHR
   :: FunPtr (Ptr Instance_T -> Ptr WaylandSurfaceCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result) -> Ptr Instance_T -> Ptr WaylandSurfaceCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
 
--- | vkCreateWaylandSurfaceKHR - Create a
--- 'Vulkan.Extensions.Handles.SurfaceKHR' object for a Wayland window
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateWaylandSurfaceKHR-instance-parameter# @instance@
---     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
---
--- -   #VUID-vkCreateWaylandSurfaceKHR-pCreateInfo-parameter# @pCreateInfo@
---     /must/ be a valid pointer to a valid 'WaylandSurfaceCreateInfoKHR'
---     structure
---
--- -   #VUID-vkCreateWaylandSurfaceKHR-pAllocator-parameter# If
---     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
---     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     structure
---
--- -   #VUID-vkCreateWaylandSurfaceKHR-pSurface-parameter# @pSurface@
---     /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Instance',
--- 'Vulkan.Extensions.Handles.SurfaceKHR', 'WaylandSurfaceCreateInfoKHR'
+-- No documentation found for TopLevel "vkCreateWaylandSurfaceKHR"
 createWaylandSurfaceKHR :: forall io
                          . (MonadIO io)
-                        => -- | @instance@ is the instance to associate the surface with.
+                        => -- No documentation found for Nested "vkCreateWaylandSurfaceKHR" "instance"
                            Instance
-                        -> -- | @pCreateInfo@ is a pointer to a 'WaylandSurfaceCreateInfoKHR' structure
-                           -- containing parameters affecting the creation of the surface object.
+                        -> -- No documentation found for Nested "vkCreateWaylandSurfaceKHR" "pCreateInfo"
                            WaylandSurfaceCreateInfoKHR
-                        -> -- | @pAllocator@ is the allocator used for host memory allocated for the
-                           -- surface object when there is no more specific allocator available (see
-                           -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                        -> -- No documentation found for Nested "vkCreateWaylandSurfaceKHR" "pAllocator"
                            ("allocator" ::: Maybe AllocationCallbacks)
                         -> io (SurfaceKHR)
 createWaylandSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
@@ -344,40 +118,14 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceWaylandPresentationSupportKHR
   :: FunPtr (Ptr PhysicalDevice_T -> Word32 -> Ptr Wl_display -> IO Bool32) -> Ptr PhysicalDevice_T -> Word32 -> Ptr Wl_display -> IO Bool32
 
--- | vkGetPhysicalDeviceWaylandPresentationSupportKHR - Query physical device
--- for presentation to Wayland
---
--- = Description
---
--- This platform-specific function /can/ be called prior to creating a
--- surface.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceWaylandPresentationSupportKHR"
 getPhysicalDeviceWaylandPresentationSupportKHR :: forall io
                                                 . (MonadIO io)
-                                               => -- | @physicalDevice@ is the physical device.
-                                                  --
-                                                  -- #VUID-vkGetPhysicalDeviceWaylandPresentationSupportKHR-physicalDevice-parameter#
-                                                  -- @physicalDevice@ /must/ be a valid
-                                                  -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                               => -- No documentation found for Nested "vkGetPhysicalDeviceWaylandPresentationSupportKHR" "physicalDevice"
                                                   PhysicalDevice
-                                               -> -- | @queueFamilyIndex@ is the queue family index.
-                                                  --
-                                                  -- #VUID-vkGetPhysicalDeviceWaylandPresentationSupportKHR-queueFamilyIndex-01306#
-                                                  -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
-                                                  -- returned by
-                                                  -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
-                                                  -- for the given @physicalDevice@
+                                               -> -- No documentation found for Nested "vkGetPhysicalDeviceWaylandPresentationSupportKHR" "queueFamilyIndex"
                                                   ("queueFamilyIndex" ::: Word32)
-                                               -> -- | @display@ is a pointer to the @wl_display@ associated with a Wayland
-                                                  -- compositor.
-                                                  --
-                                                  -- #VUID-vkGetPhysicalDeviceWaylandPresentationSupportKHR-display-parameter#
-                                                  -- @display@ /must/ be a valid pointer to a @wl_display@ value
+                                               -> -- No documentation found for Nested "vkGetPhysicalDeviceWaylandPresentationSupportKHR" "display"
                                                   (Ptr Wl_display)
                                                -> io (Bool)
 getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex display = liftIO $ do
@@ -389,29 +137,14 @@ getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex d
   pure $ ((bool32ToBool r))
 
 
--- | VkWaylandSurfaceCreateInfoKHR - Structure specifying parameters of a
--- newly created Wayland surface object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'WaylandSurfaceCreateFlagsKHR', 'createWaylandSurfaceKHR'
+
+-- No documentation found for TopLevel "VkWaylandSurfaceCreateInfoKHR"
 data WaylandSurfaceCreateInfoKHR = WaylandSurfaceCreateInfoKHR
-  { -- | @flags@ is reserved for future use.
-    --
-    -- #VUID-VkWaylandSurfaceCreateInfoKHR-flags-zerobitmask# @flags@ /must/ be
-    -- @0@
+  { -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "flags"
     flags :: WaylandSurfaceCreateFlagsKHR
-  , -- | @display@ and @surface@ are pointers to the Wayland @wl_display@ and
-    -- @wl_surface@ to associate the surface with.
-    --
-    -- #VUID-VkWaylandSurfaceCreateInfoKHR-display-01304# @display@ /must/
-    -- point to a valid Wayland @wl_display@
+  , -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "display"
     display :: Ptr Wl_display
-  , -- | #VUID-VkWaylandSurfaceCreateInfoKHR-surface-01305# @surface@ /must/
-    -- point to a valid Wayland @wl_surface@
+  , -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "surface"
     surface :: Ptr Wl_surface
   }
   deriving (Typeable, Eq)
@@ -446,6 +179,7 @@ instance FromCStruct WaylandSurfaceCreateInfoKHR where
     pure $ WaylandSurfaceCreateInfoKHR
              flags display surface
 
+
 instance Storable WaylandSurfaceCreateInfoKHR where
   sizeOf ~_ = 40
   alignment ~_ = 8
@@ -459,16 +193,7 @@ instance Zero WaylandSurfaceCreateInfoKHR where
            zero
 
 
--- | VkWaylandSurfaceCreateFlagsKHR - Reserved for future use
---
--- = Description
---
--- 'WaylandSurfaceCreateFlagsKHR' is a bitmask type for setting a mask, but
--- is currently reserved for future use.
---
--- = See Also
---
--- 'WaylandSurfaceCreateInfoKHR'
+-- No documentation found for TopLevel "VkWaylandSurfaceCreateFlagsKHR"
 newtype WaylandSurfaceCreateFlagsKHR = WaylandSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -483,12 +208,14 @@ enumPrefixWaylandSurfaceCreateFlagsKHR = ""
 showTableWaylandSurfaceCreateFlagsKHR :: [(WaylandSurfaceCreateFlagsKHR, String)]
 showTableWaylandSurfaceCreateFlagsKHR = []
 
+
 instance Show WaylandSurfaceCreateFlagsKHR where
-  showsPrec = enumShowsPrec enumPrefixWaylandSurfaceCreateFlagsKHR
-                            showTableWaylandSurfaceCreateFlagsKHR
-                            conNameWaylandSurfaceCreateFlagsKHR
-                            (\(WaylandSurfaceCreateFlagsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixWaylandSurfaceCreateFlagsKHR
+                          showTableWaylandSurfaceCreateFlagsKHR
+                          conNameWaylandSurfaceCreateFlagsKHR
+                          (\(WaylandSurfaceCreateFlagsKHR x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read WaylandSurfaceCreateFlagsKHR where
   readPrec = enumReadPrec enumPrefixWaylandSurfaceCreateFlagsKHR

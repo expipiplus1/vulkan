@@ -20,24 +20,13 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type MemoryHeapFlags = MemoryHeapFlagBits
 
--- | VkMemoryHeapFlagBits - Bitmask specifying attribute flags for a heap
---
--- = See Also
---
--- 'MemoryHeapFlags'
+-- No documentation found for TopLevel "VkMemoryHeapFlagBits"
 newtype MemoryHeapFlagBits = MemoryHeapFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'MEMORY_HEAP_DEVICE_LOCAL_BIT' specifies that the heap corresponds to
--- device local memory. Device local memory /may/ have different
--- performance characteristics than host local memory, and /may/ support
--- different memory property flags.
+-- No documentation found for Nested "VkMemoryHeapFlagBits" "VK_MEMORY_HEAP_DEVICE_LOCAL_BIT"
 pattern MEMORY_HEAP_DEVICE_LOCAL_BIT   = MemoryHeapFlagBits 0x00000001
--- | 'MEMORY_HEAP_MULTI_INSTANCE_BIT' specifies that in a logical device
--- representing more than one physical device, there is a per-physical
--- device instance of the heap memory. By default, an allocation from such
--- a heap will be replicated to each physical device’s instance of the
--- heap.
+-- No documentation found for Nested "VkMemoryHeapFlagBits" "VK_MEMORY_HEAP_MULTI_INSTANCE_BIT"
 pattern MEMORY_HEAP_MULTI_INSTANCE_BIT = MemoryHeapFlagBits 0x00000002
 
 conNameMemoryHeapFlagBits :: String
@@ -50,12 +39,14 @@ showTableMemoryHeapFlagBits :: [(MemoryHeapFlagBits, String)]
 showTableMemoryHeapFlagBits =
   [(MEMORY_HEAP_DEVICE_LOCAL_BIT, "DEVICE_LOCAL_BIT"), (MEMORY_HEAP_MULTI_INSTANCE_BIT, "MULTI_INSTANCE_BIT")]
 
+
 instance Show MemoryHeapFlagBits where
-  showsPrec = enumShowsPrec enumPrefixMemoryHeapFlagBits
-                            showTableMemoryHeapFlagBits
-                            conNameMemoryHeapFlagBits
-                            (\(MemoryHeapFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixMemoryHeapFlagBits
+                          showTableMemoryHeapFlagBits
+                          conNameMemoryHeapFlagBits
+                          (\(MemoryHeapFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read MemoryHeapFlagBits where
   readPrec =

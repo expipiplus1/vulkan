@@ -28,61 +28,27 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type ImageUsageFlags = ImageUsageFlagBits
 
--- | VkImageUsageFlagBits - Bitmask specifying intended usage of an image
---
--- = See Also
---
--- 'ImageUsageFlags'
+-- No documentation found for TopLevel "VkImageUsageFlagBits"
 newtype ImageUsageFlagBits = ImageUsageFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'IMAGE_USAGE_TRANSFER_SRC_BIT' specifies that the image /can/ be used as
--- the source of a transfer command.
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_TRANSFER_SRC_BIT"
 pattern IMAGE_USAGE_TRANSFER_SRC_BIT             = ImageUsageFlagBits 0x00000001
--- | 'IMAGE_USAGE_TRANSFER_DST_BIT' specifies that the image /can/ be used as
--- the destination of a transfer command.
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_TRANSFER_DST_BIT"
 pattern IMAGE_USAGE_TRANSFER_DST_BIT             = ImageUsageFlagBits 0x00000002
--- | 'IMAGE_USAGE_SAMPLED_BIT' specifies that the image /can/ be used to
--- create a 'Vulkan.Core10.Handles.ImageView' suitable for occupying a
--- 'Vulkan.Core10.Handles.DescriptorSet' slot either of type
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE' or
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
--- and be sampled by a shader.
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_SAMPLED_BIT"
 pattern IMAGE_USAGE_SAMPLED_BIT                  = ImageUsageFlagBits 0x00000004
--- | 'IMAGE_USAGE_STORAGE_BIT' specifies that the image /can/ be used to
--- create a 'Vulkan.Core10.Handles.ImageView' suitable for occupying a
--- 'Vulkan.Core10.Handles.DescriptorSet' slot of type
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'.
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_STORAGE_BIT"
 pattern IMAGE_USAGE_STORAGE_BIT                  = ImageUsageFlagBits 0x00000008
--- | 'IMAGE_USAGE_COLOR_ATTACHMENT_BIT' specifies that the image /can/ be
--- used to create a 'Vulkan.Core10.Handles.ImageView' suitable for use as a
--- color or resolve attachment in a 'Vulkan.Core10.Handles.Framebuffer'.
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT"
 pattern IMAGE_USAGE_COLOR_ATTACHMENT_BIT         = ImageUsageFlagBits 0x00000010
--- | 'IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT' specifies that the image
--- /can/ be used to create a 'Vulkan.Core10.Handles.ImageView' suitable for
--- use as a depth\/stencil or depth\/stencil resolve attachment in a
--- 'Vulkan.Core10.Handles.Framebuffer'.
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT"
 pattern IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = ImageUsageFlagBits 0x00000020
--- | 'IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT' specifies that the memory bound
--- to this image will have been allocated with the
--- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT'
--- (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory>
--- for more detail). This bit /can/ be set for any image that /can/ be used
--- to create a 'Vulkan.Core10.Handles.ImageView' suitable for use as a
--- color, resolve, depth\/stencil, or input attachment.
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT"
 pattern IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT     = ImageUsageFlagBits 0x00000040
--- | 'IMAGE_USAGE_INPUT_ATTACHMENT_BIT' specifies that the image /can/ be
--- used to create a 'Vulkan.Core10.Handles.ImageView' suitable for
--- occupying 'Vulkan.Core10.Handles.DescriptorSet' slot of type
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT';
--- be read from a shader as an input attachment; and be used as an input
--- attachment in a framebuffer.
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT"
 pattern IMAGE_USAGE_INPUT_ATTACHMENT_BIT         = ImageUsageFlagBits 0x00000080
--- | 'IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that the image
--- /can/ be used to create a 'Vulkan.Core10.Handles.ImageView' suitable for
--- use as a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragmentdensitymapops fragment density map image>.
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT"
 pattern IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT = ImageUsageFlagBits 0x00000200
 -- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV"
 pattern IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV    = ImageUsageFlagBits 0x00000100
@@ -107,12 +73,14 @@ showTableImageUsageFlagBits =
   , (IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV   , "SHADING_RATE_IMAGE_BIT_NV")
   ]
 
+
 instance Show ImageUsageFlagBits where
-  showsPrec = enumShowsPrec enumPrefixImageUsageFlagBits
-                            showTableImageUsageFlagBits
-                            conNameImageUsageFlagBits
-                            (\(ImageUsageFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixImageUsageFlagBits
+                          showTableImageUsageFlagBits
+                          conNameImageUsageFlagBits
+                          (\(ImageUsageFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read ImageUsageFlagBits where
   readPrec =

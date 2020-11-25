@@ -78,50 +78,14 @@ foreign import ccall
   "dynamic" mkVkCreateSemaphore
   :: FunPtr (Ptr Device_T -> Ptr (SomeStruct SemaphoreCreateInfo) -> Ptr AllocationCallbacks -> Ptr Semaphore -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct SemaphoreCreateInfo) -> Ptr AllocationCallbacks -> Ptr Semaphore -> IO Result
 
--- | vkCreateSemaphore - Create a new queue semaphore object
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateSemaphore-device-parameter# @device@ /must/ be a valid
---     'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkCreateSemaphore-pCreateInfo-parameter# @pCreateInfo@ /must/
---     be a valid pointer to a valid 'SemaphoreCreateInfo' structure
---
--- -   #VUID-vkCreateSemaphore-pAllocator-parameter# If @pAllocator@ is not
---     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkCreateSemaphore-pSemaphore-parameter# @pSemaphore@ /must/ be
---     a valid pointer to a 'Vulkan.Core10.Handles.Semaphore' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore',
--- 'SemaphoreCreateInfo'
+-- No documentation found for TopLevel "vkCreateSemaphore"
 createSemaphore :: forall a io
                  . (Extendss SemaphoreCreateInfo a, PokeChain a, MonadIO io)
-                => -- | @device@ is the logical device that creates the semaphore.
+                => -- No documentation found for Nested "vkCreateSemaphore" "device"
                    Device
-                -> -- | @pCreateInfo@ is a pointer to a 'SemaphoreCreateInfo' structure
-                   -- containing information about how the semaphore is to be created.
+                -> -- No documentation found for Nested "vkCreateSemaphore" "pCreateInfo"
                    (SemaphoreCreateInfo a)
-                -> -- | @pAllocator@ controls host memory allocation as described in the
-                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                   -- chapter.
+                -> -- No documentation found for Nested "vkCreateSemaphore" "pAllocator"
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (Semaphore)
 createSemaphore device createInfo allocator = liftIO . evalContT $ do
@@ -160,56 +124,14 @@ foreign import ccall
   "dynamic" mkVkDestroySemaphore
   :: FunPtr (Ptr Device_T -> Semaphore -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> Semaphore -> Ptr AllocationCallbacks -> IO ()
 
--- | vkDestroySemaphore - Destroy a semaphore object
---
--- == Valid Usage
---
--- -   #VUID-vkDestroySemaphore-semaphore-01137# All submitted batches that
---     refer to @semaphore@ /must/ have completed execution
---
--- -   #VUID-vkDestroySemaphore-semaphore-01138# If
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @semaphore@ was created, a compatible set of callbacks
---     /must/ be provided here
---
--- -   #VUID-vkDestroySemaphore-semaphore-01139# If no
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @semaphore@ was created, @pAllocator@ /must/ be @NULL@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDestroySemaphore-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDestroySemaphore-semaphore-parameter# If @semaphore@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @semaphore@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Semaphore' handle
---
--- -   #VUID-vkDestroySemaphore-pAllocator-parameter# If @pAllocator@ is
---     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkDestroySemaphore-semaphore-parent# If @semaphore@ is a valid
---     handle, it /must/ have been created, allocated, or retrieved from
---     @device@
---
--- == Host Synchronization
---
--- -   Host access to @semaphore@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore'
+-- No documentation found for TopLevel "vkDestroySemaphore"
 destroySemaphore :: forall io
                   . (MonadIO io)
-                 => -- | @device@ is the logical device that destroys the semaphore.
+                 => -- No documentation found for Nested "vkDestroySemaphore" "device"
                     Device
-                 -> -- | @semaphore@ is the handle of the semaphore to destroy.
+                 -> -- No documentation found for Nested "vkDestroySemaphore" "semaphore"
                     Semaphore
-                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                    -- chapter.
+                 -> -- No documentation found for Nested "vkDestroySemaphore" "pAllocator"
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
 destroySemaphore device semaphore allocator = liftIO . evalContT $ do
@@ -224,35 +146,12 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
   pure $ ()
 
 
--- | VkSemaphoreCreateInfo - Structure specifying parameters of a newly
--- created semaphore
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkSemaphoreCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO'
---
--- -   #VUID-VkSemaphoreCreateInfo-pNext-pNext# Each @pNext@ member of any
---     structure (including this one) in the @pNext@ chain /must/ be either
---     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo',
---     'Vulkan.Extensions.VK_KHR_external_semaphore_win32.ExportSemaphoreWin32HandleInfoKHR',
---     or
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'
---
--- -   #VUID-VkSemaphoreCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkSemaphoreCreateInfo-flags-zerobitmask# @flags@ /must/ be @0@
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.SemaphoreCreateFlags.SemaphoreCreateFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createSemaphore'
+
+-- No documentation found for TopLevel "VkSemaphoreCreateInfo"
 data SemaphoreCreateInfo (es :: [Type]) = SemaphoreCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkSemaphoreCreateInfo" "pNext"
     next :: Chain es
-  , -- | @flags@ is reserved for future use.
+  , -- No documentation found for Nested "VkSemaphoreCreateInfo" "flags"
     flags :: SemaphoreCreateFlags
   }
   deriving (Typeable)

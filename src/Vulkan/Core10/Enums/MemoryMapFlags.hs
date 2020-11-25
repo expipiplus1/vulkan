@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkMemoryMapFlags - Reserved for future use
---
--- = Description
---
--- 'MemoryMapFlags' is a bitmask type for setting a mask, but is currently
--- reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.Memory.mapMemory'
+-- No documentation found for TopLevel "VkMemoryMapFlags"
 newtype MemoryMapFlags = MemoryMapFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixMemoryMapFlags = ""
 showTableMemoryMapFlags :: [(MemoryMapFlags, String)]
 showTableMemoryMapFlags = []
 
+
 instance Show MemoryMapFlags where
-  showsPrec = enumShowsPrec enumPrefixMemoryMapFlags
-                            showTableMemoryMapFlags
-                            conNameMemoryMapFlags
-                            (\(MemoryMapFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixMemoryMapFlags
+                          showTableMemoryMapFlags
+                          conNameMemoryMapFlags
+                          (\(MemoryMapFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read MemoryMapFlags where
   readPrec = enumReadPrec enumPrefixMemoryMapFlags showTableMemoryMapFlags conNameMemoryMapFlags MemoryMapFlags

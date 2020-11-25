@@ -13,21 +13,13 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkChromaLocation - Position of downsampled chroma samples
---
--- = See Also
---
--- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
+-- No documentation found for TopLevel "VkChromaLocation"
 newtype ChromaLocation = ChromaLocation Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'CHROMA_LOCATION_COSITED_EVEN' specifies that downsampled chroma samples
--- are aligned with luma samples with even coordinates.
+-- No documentation found for Nested "VkChromaLocation" "VK_CHROMA_LOCATION_COSITED_EVEN"
 pattern CHROMA_LOCATION_COSITED_EVEN = ChromaLocation 0
--- | 'CHROMA_LOCATION_MIDPOINT' specifies that downsampled chroma samples are
--- located half way between each even luma sample and the nearest higher
--- odd luma sample.
+-- No documentation found for Nested "VkChromaLocation" "VK_CHROMA_LOCATION_MIDPOINT"
 pattern CHROMA_LOCATION_MIDPOINT     = ChromaLocation 1
 {-# complete CHROMA_LOCATION_COSITED_EVEN,
              CHROMA_LOCATION_MIDPOINT :: ChromaLocation #-}
@@ -41,12 +33,14 @@ enumPrefixChromaLocation = "CHROMA_LOCATION_"
 showTableChromaLocation :: [(ChromaLocation, String)]
 showTableChromaLocation = [(CHROMA_LOCATION_COSITED_EVEN, "COSITED_EVEN"), (CHROMA_LOCATION_MIDPOINT, "MIDPOINT")]
 
+
 instance Show ChromaLocation where
-  showsPrec = enumShowsPrec enumPrefixChromaLocation
-                            showTableChromaLocation
-                            conNameChromaLocation
-                            (\(ChromaLocation x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixChromaLocation
+                          showTableChromaLocation
+                          conNameChromaLocation
+                          (\(ChromaLocation x) -> x)
+                          (showsPrec 11)
+
 
 instance Read ChromaLocation where
   readPrec = enumReadPrec enumPrefixChromaLocation showTableChromaLocation conNameChromaLocation ChromaLocation

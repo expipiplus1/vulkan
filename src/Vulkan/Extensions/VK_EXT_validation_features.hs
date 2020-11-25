@@ -1,127 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_validation_features - instance extension
---
--- == VK_EXT_validation_features
---
--- [__Name String__]
---     @VK_EXT_validation_features@
---
--- [__Extension Type__]
---     Instance extension
---
--- [__Registered Extension Number__]
---     248
---
--- [__Revision__]
---     4
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
--- [__Special Use__]
---
---     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
---
--- [__Contact__]
---
---     -   Karl Schultz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_features:%20&body=@karl-lunarg%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2018-11-14
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Karl Schultz, LunarG
---
---     -   Dave Houlton, LunarG
---
---     -   Mark Lobodzinski, LunarG
---
---     -   Camden Stocker, LunarG
---
---     -   Tony Barbour, LunarG
---
---     -   John Zulauf, LunarG
---
--- == Description
---
--- This extension provides the 'ValidationFeaturesEXT' struct that can be
--- included in the @pNext@ chain of the
--- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure passed
--- as the @pCreateInfo@ parameter of
--- 'Vulkan.Core10.DeviceInitialization.createInstance'. The structure
--- contains an array of 'ValidationFeatureEnableEXT' enum values that
--- enable specific validation features that are disabled by default. The
--- structure also contains an array of 'ValidationFeatureDisableEXT' enum
--- values that disable specific validation layer features that are enabled
--- by default.
---
--- Note
---
--- The @VK_EXT_validation_features@ extension subsumes all the
--- functionality provided in the @VK_EXT_validation_flags@ extension.
---
--- == New Structures
---
--- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':
---
---     -   'ValidationFeaturesEXT'
---
--- == New Enums
---
--- -   'ValidationFeatureDisableEXT'
---
--- -   'ValidationFeatureEnableEXT'
---
--- == New Enum Constants
---
--- -   'EXT_VALIDATION_FEATURES_EXTENSION_NAME'
---
--- -   'EXT_VALIDATION_FEATURES_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VALIDATION_FEATURES_EXT'
---
--- == Version History
---
--- -   Revision 1, 2018-11-14 (Karl Schultz)
---
---     -   Initial revision
---
--- -   Revision 2, 2019-08-06 (Mark Lobodzinski)
---
---     -   Add Best Practices enable
---
--- -   Revision 3, 2020-03-04 (Tony Barbour)
---
---     -   Add Debug Printf enable
---
--- -   Revision 4, 2020-07-29 (John Zulauf)
---
---     -   Add Synchronization Validation enable
---
--- = See Also
---
--- 'ValidationFeatureDisableEXT', 'ValidationFeatureEnableEXT',
--- 'ValidationFeaturesEXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_features Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_validation_features"
 module Vulkan.Extensions.VK_EXT_validation_features  ( ValidationFeaturesEXT(..)
                                                      , ValidationFeatureEnableEXT( VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT
                                                                                  , VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT
@@ -179,51 +57,12 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_VALIDATION_FEATURES_EXT))
--- | VkValidationFeaturesEXT - Specify validation features to enable or
--- disable for a Vulkan instance
---
--- == Valid Usage
---
--- -   #VUID-VkValidationFeaturesEXT-pEnabledValidationFeatures-02967# If
---     the @pEnabledValidationFeatures@ array contains
---     'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT',
---     then it /must/ also contain
---     'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT'
---
--- -   #VUID-VkValidationFeaturesEXT-pEnabledValidationFeatures-02968# If
---     the @pEnabledValidationFeatures@ array contains
---     'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT', then it /must/ not
---     contain 'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkValidationFeaturesEXT-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VALIDATION_FEATURES_EXT'
---
--- -   #VUID-VkValidationFeaturesEXT-pEnabledValidationFeatures-parameter#
---     If @enabledValidationFeatureCount@ is not @0@,
---     @pEnabledValidationFeatures@ /must/ be a valid pointer to an array
---     of @enabledValidationFeatureCount@ valid
---     'ValidationFeatureEnableEXT' values
---
--- -   #VUID-VkValidationFeaturesEXT-pDisabledValidationFeatures-parameter#
---     If @disabledValidationFeatureCount@ is not @0@,
---     @pDisabledValidationFeatures@ /must/ be a valid pointer to an array
---     of @disabledValidationFeatureCount@ valid
---     'ValidationFeatureDisableEXT' values
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'ValidationFeatureDisableEXT', 'ValidationFeatureEnableEXT'
+
+-- No documentation found for TopLevel "VkValidationFeaturesEXT"
 data ValidationFeaturesEXT = ValidationFeaturesEXT
-  { -- | @pEnabledValidationFeatures@ is a pointer to an array of
-    -- 'ValidationFeatureEnableEXT' values specifying the validation features
-    -- to be enabled.
+  { -- No documentation found for Nested "VkValidationFeaturesEXT" "pEnabledValidationFeatures"
     enabledValidationFeatures :: Vector ValidationFeatureEnableEXT
-  , -- | @pDisabledValidationFeatures@ is a pointer to an array of
-    -- 'ValidationFeatureDisableEXT' values specifying the validation features
-    -- to be disabled.
+  , -- No documentation found for Nested "VkValidationFeaturesEXT" "pDisabledValidationFeatures"
     disabledValidationFeatures :: Vector ValidationFeatureDisableEXT
   }
   deriving (Typeable)
@@ -276,44 +115,19 @@ instance Zero ValidationFeaturesEXT where
            mempty
 
 
--- | VkValidationFeatureEnableEXT - Specify validation features to enable
---
--- = See Also
---
--- 'ValidationFeaturesEXT'
+-- No documentation found for TopLevel "VkValidationFeatureEnableEXT"
 newtype ValidationFeatureEnableEXT = ValidationFeatureEnableEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT' specifies that GPU-assisted
--- validation is enabled. Activating this feature instruments shader
--- programs to generate additional diagnostic data. This feature is
--- disabled by default.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT"
 pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT                      = ValidationFeatureEnableEXT 0
--- | 'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT'
--- specifies that the validation layers reserve a descriptor set binding
--- slot for their own use. The layer reports a value for
--- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxBoundDescriptorSets@
--- that is one less than the value reported by the device. If the device
--- supports the binding of only one descriptor set, the validation layer
--- does not perform GPU-assisted validation. This feature is disabled by
--- default.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT"
 pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT = ValidationFeatureEnableEXT 1
--- | 'VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT' specifies that Vulkan
--- best-practices validation is enabled. Activating this feature enables
--- the output of warnings related to common misuse of the API, but which
--- are not explicitly prohibited by the specification. This feature is
--- disabled by default.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT"
 pattern VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT                    = ValidationFeatureEnableEXT 2
--- | 'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT' specifies that the layers
--- will process @debugPrintfEXT@ operations in shaders and send the
--- resulting output to the debug callback. This feature is disabled by
--- default.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT"
 pattern VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT                      = ValidationFeatureEnableEXT 3
--- | 'VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT' specifies
--- that Vulkan synchronization validation is enabled. This feature reports
--- resource access conflicts due to missing or incorrect synchronization
--- operations between actions (Draw, Copy, Dispatch, Blit) reading or
--- writing the same regions of memory. This feature is disabled by default.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT"
 pattern VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT        = ValidationFeatureEnableEXT 4
 {-# complete VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT,
              VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT,
@@ -336,12 +150,14 @@ showTableValidationFeatureEnableEXT =
   , (VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT       , "SYNCHRONIZATION_VALIDATION_EXT")
   ]
 
+
 instance Show ValidationFeatureEnableEXT where
-  showsPrec = enumShowsPrec enumPrefixValidationFeatureEnableEXT
-                            showTableValidationFeatureEnableEXT
-                            conNameValidationFeatureEnableEXT
-                            (\(ValidationFeatureEnableEXT x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixValidationFeatureEnableEXT
+                          showTableValidationFeatureEnableEXT
+                          conNameValidationFeatureEnableEXT
+                          (\(ValidationFeatureEnableEXT x) -> x)
+                          (showsPrec 11)
+
 
 instance Read ValidationFeatureEnableEXT where
   readPrec = enumReadPrec enumPrefixValidationFeatureEnableEXT
@@ -350,37 +166,23 @@ instance Read ValidationFeatureEnableEXT where
                           ValidationFeatureEnableEXT
 
 
--- | VkValidationFeatureDisableEXT - Specify validation features to disable
---
--- = See Also
---
--- 'ValidationFeaturesEXT'
+-- No documentation found for TopLevel "VkValidationFeatureDisableEXT"
 newtype ValidationFeatureDisableEXT = ValidationFeatureDisableEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'VALIDATION_FEATURE_DISABLE_ALL_EXT' specifies that all validation
--- checks are disabled.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_ALL_EXT"
 pattern VALIDATION_FEATURE_DISABLE_ALL_EXT              = ValidationFeatureDisableEXT 0
--- | 'VALIDATION_FEATURE_DISABLE_SHADERS_EXT' specifies that shader
--- validation is disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT"
 pattern VALIDATION_FEATURE_DISABLE_SHADERS_EXT          = ValidationFeatureDisableEXT 1
--- | 'VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT' specifies that thread
--- safety validation is disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT"
 pattern VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT    = ValidationFeatureDisableEXT 2
--- | 'VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT' specifies that stateless
--- parameter validation is disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT"
 pattern VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT   = ValidationFeatureDisableEXT 3
--- | 'VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT' specifies that object
--- lifetime validation is disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT"
 pattern VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT = ValidationFeatureDisableEXT 4
--- | 'VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT' specifies that core
--- validation checks are disabled. This feature is enabled by default. If
--- this feature is disabled, the shader validation and GPU-assisted
--- validation features are also disabled.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT"
 pattern VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT      = ValidationFeatureDisableEXT 5
--- | 'VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT' specifies that
--- protection against duplicate non-dispatchable object handles is
--- disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT"
 pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT   = ValidationFeatureDisableEXT 6
 {-# complete VALIDATION_FEATURE_DISABLE_ALL_EXT,
              VALIDATION_FEATURE_DISABLE_SHADERS_EXT,
@@ -407,12 +209,14 @@ showTableValidationFeatureDisableEXT =
   , (VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT  , "UNIQUE_HANDLES_EXT")
   ]
 
+
 instance Show ValidationFeatureDisableEXT where
-  showsPrec = enumShowsPrec enumPrefixValidationFeatureDisableEXT
-                            showTableValidationFeatureDisableEXT
-                            conNameValidationFeatureDisableEXT
-                            (\(ValidationFeatureDisableEXT x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixValidationFeatureDisableEXT
+                          showTableValidationFeatureDisableEXT
+                          conNameValidationFeatureDisableEXT
+                          (\(ValidationFeatureDisableEXT x) -> x)
+                          (showsPrec 11)
+
 
 instance Read ValidationFeatureDisableEXT where
   readPrec = enumReadPrec enumPrefixValidationFeatureDisableEXT

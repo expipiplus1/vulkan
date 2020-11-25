@@ -32,12 +32,14 @@ enumPrefixShaderModuleCreateFlagBits = ""
 showTableShaderModuleCreateFlagBits :: [(ShaderModuleCreateFlagBits, String)]
 showTableShaderModuleCreateFlagBits = []
 
+
 instance Show ShaderModuleCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixShaderModuleCreateFlagBits
-                            showTableShaderModuleCreateFlagBits
-                            conNameShaderModuleCreateFlagBits
-                            (\(ShaderModuleCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixShaderModuleCreateFlagBits
+                          showTableShaderModuleCreateFlagBits
+                          conNameShaderModuleCreateFlagBits
+                          (\(ShaderModuleCreateFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read ShaderModuleCreateFlagBits where
   readPrec = enumReadPrec enumPrefixShaderModuleCreateFlagBits

@@ -70,64 +70,14 @@ foreign import ccall
   "dynamic" mkVkCreateEvent
   :: FunPtr (Ptr Device_T -> Ptr EventCreateInfo -> Ptr AllocationCallbacks -> Ptr Event -> IO Result) -> Ptr Device_T -> Ptr EventCreateInfo -> Ptr AllocationCallbacks -> Ptr Event -> IO Result
 
--- | vkCreateEvent - Create a new event object
---
--- = Description
---
--- When created, the event object is in the unsignaled state.
---
--- == Valid Usage
---
--- -   #VUID-vkCreateEvent-events-04468# If the @VK_KHR_portability_subset@
---     extension is enabled, and
---     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@events@
---     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the implementation
---     does not support
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-events events>,
---     and 'createEvent' /must/ not be used.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateEvent-device-parameter# @device@ /must/ be a valid
---     'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkCreateEvent-pCreateInfo-parameter# @pCreateInfo@ /must/ be a
---     valid pointer to a valid 'EventCreateInfo' structure
---
--- -   #VUID-vkCreateEvent-pAllocator-parameter# If @pAllocator@ is not
---     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkCreateEvent-pEvent-parameter# @pEvent@ /must/ be a valid
---     pointer to a 'Vulkan.Core10.Handles.Event' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event',
--- 'EventCreateInfo'
+-- No documentation found for TopLevel "vkCreateEvent"
 createEvent :: forall io
              . (MonadIO io)
-            => -- | @device@ is the logical device that creates the event.
+            => -- No documentation found for Nested "vkCreateEvent" "device"
                Device
-            -> -- | @pCreateInfo@ is a pointer to a 'EventCreateInfo' structure containing
-               -- information about how the event is to be created.
+            -> -- No documentation found for Nested "vkCreateEvent" "pCreateInfo"
                EventCreateInfo
-            -> -- | @pAllocator@ controls host memory allocation as described in the
-               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-               -- chapter.
+            -> -- No documentation found for Nested "vkCreateEvent" "pAllocator"
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Event)
 createEvent device createInfo allocator = liftIO . evalContT $ do
@@ -166,55 +116,14 @@ foreign import ccall
   "dynamic" mkVkDestroyEvent
   :: FunPtr (Ptr Device_T -> Event -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> Event -> Ptr AllocationCallbacks -> IO ()
 
--- | vkDestroyEvent - Destroy an event object
---
--- == Valid Usage
---
--- -   #VUID-vkDestroyEvent-event-01145# All submitted commands that refer
---     to @event@ /must/ have completed execution
---
--- -   #VUID-vkDestroyEvent-event-01146# If
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @event@ was created, a compatible set of callbacks
---     /must/ be provided here
---
--- -   #VUID-vkDestroyEvent-event-01147# If no
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @event@ was created, @pAllocator@ /must/ be @NULL@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDestroyEvent-device-parameter# @device@ /must/ be a valid
---     'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDestroyEvent-event-parameter# If @event@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @event@ /must/ be a valid
---     'Vulkan.Core10.Handles.Event' handle
---
--- -   #VUID-vkDestroyEvent-pAllocator-parameter# If @pAllocator@ is not
---     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkDestroyEvent-event-parent# If @event@ is a valid handle, it
---     /must/ have been created, allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @event@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
+-- No documentation found for TopLevel "vkDestroyEvent"
 destroyEvent :: forall io
               . (MonadIO io)
-             => -- | @device@ is the logical device that destroys the event.
+             => -- No documentation found for Nested "vkDestroyEvent" "device"
                 Device
-             -> -- | @event@ is the handle of the event to destroy.
+             -> -- No documentation found for Nested "vkDestroyEvent" "event"
                 Event
-             -> -- | @pAllocator@ controls host memory allocation as described in the
-                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                -- chapter.
+             -> -- No documentation found for Nested "vkDestroyEvent" "pAllocator"
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
 destroyEvent device event allocator = liftIO . evalContT $ do
@@ -236,70 +145,12 @@ foreign import ccall
   "dynamic" mkVkGetEventStatus
   :: FunPtr (Ptr Device_T -> Event -> IO Result) -> Ptr Device_T -> Event -> IO Result
 
--- | vkGetEventStatus - Retrieve the status of an event object
---
--- = Description
---
--- Upon success, 'getEventStatus' returns the state of the event object
--- with the following return codes:
---
--- +------------------------------------------+-----------------------------------+
--- | Status                                   | Meaning                           |
--- +==========================================+===================================+
--- | 'Vulkan.Core10.Enums.Result.EVENT_SET'   | The event specified by @event@ is |
--- |                                          | signaled.                         |
--- +------------------------------------------+-----------------------------------+
--- | 'Vulkan.Core10.Enums.Result.EVENT_RESET' | The event specified by @event@ is |
--- |                                          | unsignaled.                       |
--- +------------------------------------------+-----------------------------------+
---
--- Event Object Status Codes
---
--- If a 'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent' or
--- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' command is in a
--- command buffer that is in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>,
--- then the value returned by this command /may/ immediately be out of
--- date.
---
--- The state of an event /can/ be updated by the host. The state of the
--- event is immediately changed, and subsequent calls to 'getEventStatus'
--- will return the new state. If an event is already in the requested
--- state, then updating it to the same state has no effect.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.EVENT_SET'
---
---     -   'Vulkan.Core10.Enums.Result.EVENT_RESET'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
+-- No documentation found for TopLevel "vkGetEventStatus"
 getEventStatus :: forall io
                 . (MonadIO io)
-               => -- | @device@ is the logical device that owns the event.
-                  --
-                  -- #VUID-vkGetEventStatus-device-parameter# @device@ /must/ be a valid
-                  -- 'Vulkan.Core10.Handles.Device' handle
+               => -- No documentation found for Nested "vkGetEventStatus" "device"
                   Device
-               -> -- | @event@ is the handle of the event to query.
-                  --
-                  -- #VUID-vkGetEventStatus-event-parameter# @event@ /must/ be a valid
-                  -- 'Vulkan.Core10.Handles.Event' handle
-                  --
-                  -- #VUID-vkGetEventStatus-event-parent# @event@ /must/ have been created,
-                  -- allocated, or retrieved from @device@
+               -> -- No documentation found for Nested "vkGetEventStatus" "event"
                   Event
                -> io (Result)
 getEventStatus device event = liftIO $ do
@@ -319,51 +170,12 @@ foreign import ccall
   "dynamic" mkVkSetEvent
   :: FunPtr (Ptr Device_T -> Event -> IO Result) -> Ptr Device_T -> Event -> IO Result
 
--- | vkSetEvent - Set an event to signaled state
---
--- = Description
---
--- When 'setEvent' is executed on the host, it defines an /event signal
--- operation/ which sets the event to the signaled state.
---
--- If @event@ is already in the signaled state when 'setEvent' is executed,
--- then 'setEvent' has no effect, and no event signal operation occurs.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkSetEvent-device-parameter# @device@ /must/ be a valid
---     'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkSetEvent-event-parameter# @event@ /must/ be a valid
---     'Vulkan.Core10.Handles.Event' handle
---
--- -   #VUID-vkSetEvent-event-parent# @event@ /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @event@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
+-- No documentation found for TopLevel "vkSetEvent"
 setEvent :: forall io
           . (MonadIO io)
-         => -- | @device@ is the logical device that owns the event.
+         => -- No documentation found for Nested "vkSetEvent" "device"
             Device
-         -> -- | @event@ is the event to set.
+         -> -- No documentation found for Nested "vkSetEvent" "event"
             Event
          -> io ()
 setEvent device event = liftIO $ do
@@ -382,56 +194,12 @@ foreign import ccall
   "dynamic" mkVkResetEvent
   :: FunPtr (Ptr Device_T -> Event -> IO Result) -> Ptr Device_T -> Event -> IO Result
 
--- | vkResetEvent - Reset an event to non-signaled state
---
--- = Description
---
--- When 'resetEvent' is executed on the host, it defines an /event unsignal
--- operation/ which resets the event to the unsignaled state.
---
--- If @event@ is already in the unsignaled state when 'resetEvent' is
--- executed, then 'resetEvent' has no effect, and no event unsignal
--- operation occurs.
---
--- == Valid Usage
---
--- -   #VUID-vkResetEvent-event-01148# @event@ /must/ not be waited on by a
---     'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' command that is
---     currently executing
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkResetEvent-device-parameter# @device@ /must/ be a valid
---     'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkResetEvent-event-parameter# @event@ /must/ be a valid
---     'Vulkan.Core10.Handles.Event' handle
---
--- -   #VUID-vkResetEvent-event-parent# @event@ /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @event@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
+-- No documentation found for TopLevel "vkResetEvent"
 resetEvent :: forall io
             . (MonadIO io)
-           => -- | @device@ is the logical device that owns the event.
+           => -- No documentation found for Nested "vkResetEvent" "device"
               Device
-           -> -- | @event@ is the event to reset.
+           -> -- No documentation found for Nested "vkResetEvent" "event"
               Event
            -> io ()
 resetEvent device event = liftIO $ do
@@ -443,19 +211,10 @@ resetEvent device event = liftIO $ do
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
--- | VkEventCreateInfo - Structure specifying parameters of a newly created
--- event
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.EventCreateFlags.EventCreateFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createEvent'
+
+-- No documentation found for TopLevel "VkEventCreateInfo"
 data EventCreateInfo = EventCreateInfo
-  { -- | @flags@ is reserved for future use.
-    --
-    -- #VUID-VkEventCreateInfo-flags-zerobitmask# @flags@ /must/ be @0@
+  { -- No documentation found for Nested "VkEventCreateInfo" "flags"
     flags :: EventCreateFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -482,6 +241,7 @@ instance FromCStruct EventCreateInfo where
     flags <- peek @EventCreateFlags ((p `plusPtr` 16 :: Ptr EventCreateFlags))
     pure $ EventCreateInfo
              flags
+
 
 instance Storable EventCreateInfo where
   sizeOf ~_ = 24

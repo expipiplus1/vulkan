@@ -1,122 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_hdr_metadata - device extension
---
--- == VK_EXT_hdr_metadata
---
--- [__Name String__]
---     @VK_EXT_hdr_metadata@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     106
---
--- [__Revision__]
---     2
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_swapchain@
---
--- [__Contact__]
---
---     -   Courtney Goeltzenleuchter
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_hdr_metadata:%20&body=@courtney-g%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2018-12-19
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Courtney Goeltzenleuchter, Google
---
--- == Description
---
--- This extension defines two new structures and a function to assign SMPTE
--- (the Society of Motion Picture and Television Engineers) 2086 metadata
--- and CTA (Consumer Technology Association) 861.3 metadata to a swapchain.
--- The metadata includes the color primaries, white point, and luminance
--- range of the reference monitor, which all together define the color
--- volume that contains all the possible colors the reference monitor can
--- produce. The reference monitor is the display where creative work is
--- done and creative intent is established. To preserve such creative
--- intent as much as possible and achieve consistent color reproduction on
--- different viewing displays, it is useful for the display pipeline to
--- know the color volume of the original reference monitor where content
--- was created or tuned. This avoids performing unnecessary mapping of
--- colors that are not displayable on the original reference monitor. The
--- metadata also includes the @maxContentLightLevel@ and
--- @maxFrameAverageLightLevel@ as defined by CTA 861.3.
---
--- While the general purpose of the metadata is to assist in the
--- transformation between different color volumes of different displays and
--- help achieve better color reproduction, it is not in the scope of this
--- extension to define how exactly the metadata should be used in such a
--- process. It is up to the implementation to determine how to make use of
--- the metadata.
---
--- == New Commands
---
--- -   'setHdrMetadataEXT'
---
--- == New Structures
---
--- -   'HdrMetadataEXT'
---
--- -   'XYColorEXT'
---
--- == New Enum Constants
---
--- -   'EXT_HDR_METADATA_EXTENSION_NAME'
---
--- -   'EXT_HDR_METADATA_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_HDR_METADATA_EXT'
---
--- == Issues
---
--- 1) Do we need a query function?
---
--- __PROPOSED__: No, Vulkan does not provide queries for state that the
--- application can track on its own.
---
--- 2) Should we specify default if not specified by the application?
---
--- __PROPOSED__: No, that leaves the default up to the display.
---
--- == Version History
---
--- -   Revision 1, 2016-12-27 (Courtney Goeltzenleuchter)
---
---     -   Initial version
---
--- -   Revision 2, 2018-12-19 (Courtney Goeltzenleuchter)
---
---     -   Correct implicit validity for VkHdrMetadataEXT structure
---
--- = See Also
---
--- 'HdrMetadataEXT', 'XYColorEXT', 'setHdrMetadataEXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_hdr_metadata Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_hdr_metadata"
 module Vulkan.Extensions.VK_EXT_hdr_metadata  ( setHdrMetadataEXT
                                               , XYColorEXT(..)
                                               , HdrMetadataEXT(..)
@@ -178,41 +61,14 @@ foreign import ccall
   "dynamic" mkVkSetHdrMetadataEXT
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr SwapchainKHR -> Ptr HdrMetadataEXT -> IO ()) -> Ptr Device_T -> Word32 -> Ptr SwapchainKHR -> Ptr HdrMetadataEXT -> IO ()
 
--- | vkSetHdrMetadataEXT - function to set Hdr metadata
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkSetHdrMetadataEXT-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkSetHdrMetadataEXT-pSwapchains-parameter# @pSwapchains@
---     /must/ be a valid pointer to an array of @swapchainCount@ valid
---     'Vulkan.Extensions.Handles.SwapchainKHR' handles
---
--- -   #VUID-vkSetHdrMetadataEXT-pMetadata-parameter# @pMetadata@ /must/ be
---     a valid pointer to an array of @swapchainCount@ valid
---     'HdrMetadataEXT' structures
---
--- -   #VUID-vkSetHdrMetadataEXT-swapchainCount-arraylength#
---     @swapchainCount@ /must/ be greater than @0@
---
--- -   #VUID-vkSetHdrMetadataEXT-commonparent# Both of @device@, and the
---     elements of @pSwapchains@ /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Instance'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'HdrMetadataEXT',
--- 'Vulkan.Extensions.Handles.SwapchainKHR'
+-- No documentation found for TopLevel "vkSetHdrMetadataEXT"
 setHdrMetadataEXT :: forall io
                    . (MonadIO io)
-                  => -- | @device@ is the logical device where the swapchain(s) were created.
+                  => -- No documentation found for Nested "vkSetHdrMetadataEXT" "device"
                      Device
-                  -> -- | @pSwapchains@ is a pointer to an array of @swapchainCount@
-                     -- 'Vulkan.Extensions.Handles.SwapchainKHR' handles.
+                  -> -- No documentation found for Nested "vkSetHdrMetadataEXT" "pSwapchains"
                      ("swapchains" ::: Vector SwapchainKHR)
-                  -> -- | @pMetadata@ is a pointer to an array of @swapchainCount@
-                     -- 'HdrMetadataEXT' structures.
+                  -> -- No documentation found for Nested "vkSetHdrMetadataEXT" "pMetadata"
                      ("metadata" ::: Vector HdrMetadataEXT)
                   -> io ()
 setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
@@ -231,11 +87,8 @@ setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
   pure $ ()
 
 
--- | VkXYColorEXT - structure to specify X,Y chromaticity coordinates
---
--- = See Also
---
--- 'HdrMetadataEXT'
+
+-- No documentation found for TopLevel "VkXYColorEXT"
 data XYColorEXT = XYColorEXT
   { -- No documentation found for Nested "VkXYColorEXT" "x"
     x :: Float
@@ -268,6 +121,7 @@ instance FromCStruct XYColorEXT where
     pure $ XYColorEXT
              ((\(CFloat a) -> a) x) ((\(CFloat a) -> a) y)
 
+
 instance Storable XYColorEXT where
   sizeOf ~_ = 8
   alignment ~_ = 4
@@ -280,39 +134,24 @@ instance Zero XYColorEXT where
            zero
 
 
--- | VkHdrMetadataEXT - structure to specify Hdr metadata
---
--- == Valid Usage (Implicit)
---
--- Note
---
--- The validity and use of this data is outside the scope of Vulkan.
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'XYColorEXT',
--- 'setHdrMetadataEXT'
+
+-- No documentation found for TopLevel "VkHdrMetadataEXT"
 data HdrMetadataEXT = HdrMetadataEXT
-  { -- | @displayPrimaryRed@ is the reference monitor’s red primary in
-    -- chromaticity coordinates
+  { -- No documentation found for Nested "VkHdrMetadataEXT" "displayPrimaryRed"
     displayPrimaryRed :: XYColorEXT
-  , -- | @displayPrimaryGreen@ is the reference monitor’s green primary in
-    -- chromaticity coordinates
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "displayPrimaryGreen"
     displayPrimaryGreen :: XYColorEXT
-  , -- | @displayPrimaryBlue@ is the reference monitor’s blue primary in
-    -- chromaticity coordinates
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "displayPrimaryBlue"
     displayPrimaryBlue :: XYColorEXT
-  , -- | @whitePoint@ is the reference monitor’s white-point in chromaticity
-    -- coordinates
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "whitePoint"
     whitePoint :: XYColorEXT
-  , -- | @maxLuminance@ is the maximum luminance of the reference monitor in nits
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "maxLuminance"
     maxLuminance :: Float
-  , -- | @minLuminance@ is the minimum luminance of the reference monitor in nits
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "minLuminance"
     minLuminance :: Float
-  , -- | @maxContentLightLevel@ is content’s maximum luminance in nits
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "maxContentLightLevel"
     maxContentLightLevel :: Float
-  , -- | @maxFrameAverageLightLevel@ is the maximum frame average light level in
-    -- nits
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "maxFrameAverageLightLevel"
     maxFrameAverageLightLevel :: Float
   }
   deriving (Typeable)
@@ -362,6 +201,7 @@ instance FromCStruct HdrMetadataEXT where
     maxFrameAverageLightLevel <- peek @CFloat ((p `plusPtr` 60 :: Ptr CFloat))
     pure $ HdrMetadataEXT
              displayPrimaryRed displayPrimaryGreen displayPrimaryBlue whitePoint ((\(CFloat a) -> a) maxLuminance) ((\(CFloat a) -> a) minLuminance) ((\(CFloat a) -> a) maxContentLightLevel) ((\(CFloat a) -> a) maxFrameAverageLightLevel)
+
 
 instance Storable HdrMetadataEXT where
   sizeOf ~_ = 64

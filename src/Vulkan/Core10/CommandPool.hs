@@ -75,58 +75,14 @@ foreign import ccall
   "dynamic" mkVkCreateCommandPool
   :: FunPtr (Ptr Device_T -> Ptr CommandPoolCreateInfo -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result) -> Ptr Device_T -> Ptr CommandPoolCreateInfo -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result
 
--- | vkCreateCommandPool - Create a new command pool object
---
--- == Valid Usage
---
--- -   #VUID-vkCreateCommandPool-queueFamilyIndex-01937#
---     @pCreateInfo->queueFamilyIndex@ /must/ be the index of a queue
---     family available in the logical device @device@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateCommandPool-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkCreateCommandPool-pCreateInfo-parameter# @pCreateInfo@
---     /must/ be a valid pointer to a valid 'CommandPoolCreateInfo'
---     structure
---
--- -   #VUID-vkCreateCommandPool-pAllocator-parameter# If @pAllocator@ is
---     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkCreateCommandPool-pCommandPool-parameter# @pCommandPool@
---     /must/ be a valid pointer to a 'Vulkan.Core10.Handles.CommandPool'
---     handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.CommandPool', 'CommandPoolCreateInfo',
--- 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkCreateCommandPool"
 createCommandPool :: forall io
                    . (MonadIO io)
-                  => -- | @device@ is the logical device that creates the command pool.
+                  => -- No documentation found for Nested "vkCreateCommandPool" "device"
                      Device
-                  -> -- | @pCreateInfo@ is a pointer to a 'CommandPoolCreateInfo' structure
-                     -- specifying the state of the command pool object.
+                  -> -- No documentation found for Nested "vkCreateCommandPool" "pCreateInfo"
                      CommandPoolCreateInfo
-                  -> -- | @pAllocator@ controls host memory allocation as described in the
-                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                     -- chapter.
+                  -> -- No documentation found for Nested "vkCreateCommandPool" "pAllocator"
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (CommandPool)
 createCommandPool device createInfo allocator = liftIO . evalContT $ do
@@ -165,71 +121,14 @@ foreign import ccall
   "dynamic" mkVkDestroyCommandPool
   :: FunPtr (Ptr Device_T -> CommandPool -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> CommandPool -> Ptr AllocationCallbacks -> IO ()
 
--- | vkDestroyCommandPool - Destroy a command pool object
---
--- = Description
---
--- When a pool is destroyed, all command buffers allocated from the pool
--- are <vkFreeCommandBuffers.html freed>.
---
--- Any primary command buffer allocated from another
--- 'Vulkan.Core10.Handles.CommandPool' that is in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
--- and has a secondary command buffer allocated from @commandPool@ recorded
--- into it, becomes
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
---
--- == Valid Usage
---
--- -   #VUID-vkDestroyCommandPool-commandPool-00041# All
---     'Vulkan.Core10.Handles.CommandBuffer' objects allocated from
---     @commandPool@ /must/ not be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
---
--- -   #VUID-vkDestroyCommandPool-commandPool-00042# If
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @commandPool@ was created, a compatible set of
---     callbacks /must/ be provided here
---
--- -   #VUID-vkDestroyCommandPool-commandPool-00043# If no
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @commandPool@ was created, @pAllocator@ /must/ be
---     @NULL@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDestroyCommandPool-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDestroyCommandPool-commandPool-parameter# If @commandPool@
---     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @commandPool@
---     /must/ be a valid 'Vulkan.Core10.Handles.CommandPool' handle
---
--- -   #VUID-vkDestroyCommandPool-pAllocator-parameter# If @pAllocator@ is
---     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkDestroyCommandPool-commandPool-parent# If @commandPool@ is a
---     valid handle, it /must/ have been created, allocated, or retrieved
---     from @device@
---
--- == Host Synchronization
---
--- -   Host access to @commandPool@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.CommandPool', 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkDestroyCommandPool"
 destroyCommandPool :: forall io
                     . (MonadIO io)
-                   => -- | @device@ is the logical device that destroys the command pool.
+                   => -- No documentation found for Nested "vkDestroyCommandPool" "device"
                       Device
-                   -> -- | @commandPool@ is the handle of the command pool to destroy.
+                   -> -- No documentation found for Nested "vkDestroyCommandPool" "commandPool"
                       CommandPool
-                   -> -- | @pAllocator@ controls host memory allocation as described in the
-                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                      -- chapter.
+                   -> -- No documentation found for Nested "vkDestroyCommandPool" "pAllocator"
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io ()
 destroyCommandPool device commandPool allocator = liftIO . evalContT $ do
@@ -251,74 +150,14 @@ foreign import ccall
   "dynamic" mkVkResetCommandPool
   :: FunPtr (Ptr Device_T -> CommandPool -> CommandPoolResetFlags -> IO Result) -> Ptr Device_T -> CommandPool -> CommandPoolResetFlags -> IO Result
 
--- | vkResetCommandPool - Reset a command pool
---
--- = Description
---
--- Resetting a command pool recycles all of the resources from all of the
--- command buffers allocated from the command pool back to the command
--- pool. All command buffers that have been allocated from the command pool
--- are put in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
---
--- Any primary command buffer allocated from another
--- 'Vulkan.Core10.Handles.CommandPool' that is in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
--- and has a secondary command buffer allocated from @commandPool@ recorded
--- into it, becomes
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
---
--- == Valid Usage
---
--- -   #VUID-vkResetCommandPool-commandPool-00040# All
---     'Vulkan.Core10.Handles.CommandBuffer' objects allocated from
---     @commandPool@ /must/ not be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkResetCommandPool-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkResetCommandPool-commandPool-parameter# @commandPool@ /must/
---     be a valid 'Vulkan.Core10.Handles.CommandPool' handle
---
--- -   #VUID-vkResetCommandPool-flags-parameter# @flags@ /must/ be a valid
---     combination of
---     'Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlagBits'
---     values
---
--- -   #VUID-vkResetCommandPool-commandPool-parent# @commandPool@ /must/
---     have been created, allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @commandPool@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandPool',
--- 'Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlags',
--- 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkResetCommandPool"
 resetCommandPool :: forall io
                   . (MonadIO io)
-                 => -- | @device@ is the logical device that owns the command pool.
+                 => -- No documentation found for Nested "vkResetCommandPool" "device"
                     Device
-                 -> -- | @commandPool@ is the command pool to reset.
+                 -> -- No documentation found for Nested "vkResetCommandPool" "commandPool"
                     CommandPool
-                 -> -- | @flags@ is a bitmask of
-                    -- 'Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlagBits'
-                    -- controlling the reset operation.
+                 -> -- No documentation found for Nested "vkResetCommandPool" "flags"
                     CommandPoolResetFlags
                  -> io ()
 resetCommandPool device commandPool flags = liftIO $ do
@@ -330,42 +169,12 @@ resetCommandPool device commandPool flags = liftIO $ do
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
--- | VkCommandPoolCreateInfo - Structure specifying parameters of a newly
--- created command pool
---
--- == Valid Usage
---
--- -   #VUID-VkCommandPoolCreateInfo-flags-02860# If the protected memory
---     feature is not enabled, the
---     'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_PROTECTED_BIT'
---     bit of @flags@ /must/ not be set
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkCommandPoolCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO'
---
--- -   #VUID-VkCommandPoolCreateInfo-pNext-pNext# @pNext@ /must/ be @NULL@
---
--- -   #VUID-VkCommandPoolCreateInfo-flags-parameter# @flags@ /must/ be a
---     valid combination of
---     'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlagBits'
---     values
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createCommandPool'
+
+-- No documentation found for TopLevel "VkCommandPoolCreateInfo"
 data CommandPoolCreateInfo = CommandPoolCreateInfo
-  { -- | @flags@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlagBits'
-    -- indicating usage behavior for the pool and command buffers allocated
-    -- from it.
+  { -- No documentation found for Nested "VkCommandPoolCreateInfo" "flags"
     flags :: CommandPoolCreateFlags
-  , -- | @queueFamilyIndex@ designates a queue family as described in section
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-queueprops Queue Family Properties>.
-    -- All command buffers allocated from this command pool /must/ be submitted
-    -- on queues from the same queue family.
+  , -- No documentation found for Nested "VkCommandPoolCreateInfo" "queueFamilyIndex"
     queueFamilyIndex :: Word32
   }
   deriving (Typeable, Eq)
@@ -396,6 +205,7 @@ instance FromCStruct CommandPoolCreateInfo where
     queueFamilyIndex <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     pure $ CommandPoolCreateInfo
              flags queueFamilyIndex
+
 
 instance Storable CommandPoolCreateInfo where
   sizeOf ~_ = 24

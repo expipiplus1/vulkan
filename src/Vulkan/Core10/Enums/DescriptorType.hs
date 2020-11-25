@@ -25,113 +25,7 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkDescriptorType - Specifies the type of a descriptor in a descriptor
--- set
---
--- = Description
---
--- -   'DESCRIPTOR_TYPE_SAMPLER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampler sampler descriptor>.
---
--- -   'DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-combinedimagesampler combined image sampler descriptor>.
---
--- -   'DESCRIPTOR_TYPE_SAMPLED_IMAGE' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage sampled image descriptor>.
---
--- -   'DESCRIPTOR_TYPE_STORAGE_IMAGE' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image descriptor>.
---
--- -   'DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer uniform texel buffer descriptor>.
---
--- -   'DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffer descriptor>.
---
--- -   'DESCRIPTOR_TYPE_UNIFORM_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-uniformbuffer uniform buffer descriptor>.
---
--- -   'DESCRIPTOR_TYPE_STORAGE_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storagebuffer storage buffer descriptor>.
---
--- -   'DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic dynamic uniform buffer descriptor>.
---
--- -   'DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic dynamic storage buffer descriptor>.
---
--- -   'DESCRIPTOR_TYPE_INPUT_ATTACHMENT' specifies an
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inputattachment input attachment descriptor>.
---
--- -   'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT' specifies an
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>.
---
--- When a descriptor set is updated via elements of
--- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet', members of
--- @pImageInfo@, @pBufferInfo@ and @pTexelBufferView@ are only accessed by
--- the implementation when they correspond to descriptor type being defined
--- - otherwise they are ignored. The members accessed are as follows for
--- each descriptor type:
---
--- -   For 'DESCRIPTOR_TYPE_SAMPLER', only the @sampler@ member of each
---     element of
---     'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'::@pImageInfo@ is
---     accessed.
---
--- -   For 'DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     'DESCRIPTOR_TYPE_STORAGE_IMAGE', or
---     'DESCRIPTOR_TYPE_INPUT_ATTACHMENT', only the @imageView@ and
---     @imageLayout@ members of each element of
---     'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'::@pImageInfo@ are
---     accessed.
---
--- -   For 'DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER', all members of each
---     element of
---     'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'::@pImageInfo@ are
---     accessed.
---
--- -   For 'DESCRIPTOR_TYPE_UNIFORM_BUFFER',
---     'DESCRIPTOR_TYPE_STORAGE_BUFFER',
---     'DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC', or
---     'DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC', all members of each
---     element of
---     'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'::@pBufferInfo@ are
---     accessed.
---
--- -   For 'DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER' or
---     'DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER', each element of
---     'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'::@pTexelBufferView@
---     is accessed.
---
--- When updating descriptors with a @descriptorType@ of
--- 'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT', none of the @pImageInfo@,
--- @pBufferInfo@, or @pTexelBufferView@ members are accessed, instead the
--- source data of the descriptor update operation is taken from the
--- 'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
--- structure in the @pNext@ chain of
--- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'. When updating
--- descriptors with a @descriptorType@ of
--- 'DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR', none of the @pImageInfo@,
--- @pBufferInfo@, or @pTexelBufferView@ members are accessed, instead the
--- source data of the descriptor update operation is taken from the
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
--- structure in the @pNext@ chain of
--- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'. When updating
--- descriptors with a @descriptorType@ of
--- 'DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV', none of the @pImageInfo@,
--- @pBufferInfo@, or @pTexelBufferView@ members are accessed, instead the
--- source data of the descriptor update operation is taken from the
--- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
--- structure in the @pNext@ chain of
--- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'.
---
--- = See Also
---
--- 'Vulkan.Core10.DescriptorSet.DescriptorPoolSize',
--- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateEntry',
--- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewHandleInfoNVX',
--- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
+-- No documentation found for TopLevel "VkDescriptorType"
 newtype DescriptorType = DescriptorType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -202,12 +96,14 @@ showTableDescriptorType =
   , (DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT  , "INLINE_UNIFORM_BLOCK_EXT")
   ]
 
+
 instance Show DescriptorType where
-  showsPrec = enumShowsPrec enumPrefixDescriptorType
-                            showTableDescriptorType
-                            conNameDescriptorType
-                            (\(DescriptorType x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixDescriptorType
+                          showTableDescriptorType
+                          conNameDescriptorType
+                          (\(DescriptorType x) -> x)
+                          (showsPrec 11)
+
 
 instance Read DescriptorType where
   readPrec = enumReadPrec enumPrefixDescriptorType showTableDescriptorType conNameDescriptorType DescriptorType

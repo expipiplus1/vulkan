@@ -623,21 +623,12 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_hdr_metadata (XYColorEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xcb_surface (XcbSurfaceCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xlib_surface (XlibSurfaceCreateInfoKHR)
 import Vulkan.Zero (Zero(..))
--- | VkBaseOutStructure - Base structure for a read-only pointer chain
---
--- = Description
---
--- 'BaseOutStructure' can be used to facilitate iterating through a
--- structure pointer chain that returns data back to the application.
---
--- = See Also
---
--- 'BaseOutStructure', 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkBaseOutStructure"
 data BaseOutStructure = BaseOutStructure
-  { -- | @sType@ is the structure type of the structure being iterated through.
+  { -- No documentation found for Nested "VkBaseOutStructure" "sType"
     sType :: StructureType
-  , -- | @pNext@ is @NULL@ or a pointer to the next structure in a structure
-    -- chain.
+  , -- No documentation found for Nested "VkBaseOutStructure" "pNext"
     next :: Ptr BaseOutStructure
   }
   deriving (Typeable, Eq)
@@ -665,6 +656,7 @@ instance FromCStruct BaseOutStructure where
     pure $ BaseOutStructure
              sType pNext
 
+
 instance Storable BaseOutStructure where
   sizeOf ~_ = 16
   alignment ~_ = 8
@@ -677,21 +669,12 @@ instance Zero BaseOutStructure where
            zero
 
 
--- | VkBaseInStructure - Base structure for a read-only pointer chain
---
--- = Description
---
--- 'BaseInStructure' can be used to facilitate iterating through a
--- read-only structure pointer chain.
---
--- = See Also
---
--- 'BaseInStructure', 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkBaseInStructure"
 data BaseInStructure = BaseInStructure
-  { -- | @sType@ is the structure type of the structure being iterated through.
+  { -- No documentation found for Nested "VkBaseInStructure" "sType"
     sType :: StructureType
-  , -- | @pNext@ is @NULL@ or a pointer to the next structure in a structure
-    -- chain.
+  , -- No documentation found for Nested "VkBaseInStructure" "pNext"
     next :: Ptr BaseInStructure
   }
   deriving (Typeable, Eq)
@@ -718,6 +701,7 @@ instance FromCStruct BaseInStructure where
     pNext <- peek @(Ptr BaseInStructure) ((p `plusPtr` 8 :: Ptr (Ptr BaseInStructure)))
     pure $ BaseInStructure
              sType pNext
+
 
 instance Storable BaseInStructure where
   sizeOf ~_ = 16
@@ -1086,6 +1070,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends WriteDescriptorSet WriteDescriptorSetAccelerationStructureKHR = ()
   Extends WriteDescriptorSet WriteDescriptorSetAccelerationStructureNV = ()
   Extends a b = TypeError (ShowType a :<>: Text " is not extended by " :<>: ShowType b)
+
 
 data SomeStruct (a :: [Type] -> Type) where
   SomeStruct

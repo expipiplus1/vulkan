@@ -1,157 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_NV_corner_sampled_image - device extension
---
--- == VK_NV_corner_sampled_image
---
--- [__Name String__]
---     @VK_NV_corner_sampled_image@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     51
---
--- [__Revision__]
---     2
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@
---
--- [__Contact__]
---
---     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_corner_sampled_image:%20&body=@dgkoch%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2018-08-13
---
--- [__Contributors__]
---
---     -   Jeff Bolz, NVIDIA
---
---     -   Pat Brown, NVIDIA
---
---     -   Chris Lentini, NVIDIA
---
--- == Description
---
--- This extension adds support for a new image organization, which this
--- extension refers to as “corner-sampled” images. A corner-sampled image
--- differs from a conventional image in the following ways:
---
--- -   Texels are centered on integer coordinates. See
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-unnormalized-to-integer Unnormalized Texel Coordinate Operations>
---
--- -   Normalized coordinates are scaled using coord × (dim - 1) rather
---     than coord × dim, where dim is the size of one dimension of the
---     image. See
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-normalized-to-unnormalized normalized texel coordinate transform>.
---
--- -   Partial derivatives are scaled using coord × (dim - 1) rather than
---     coord × dim. See
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-scale-factor Scale Factor Operation>.
---
--- -   Calculation of the next higher lod size goes according to ⌈dim \/ 2⌉
---     rather than ⌊dim \/ 2⌋. See
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
---
--- -   The minimum level size is 2x2 for 2D images and 2x2x2 for 3D images.
---     See
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
---
--- This image organization is designed to facilitate a system like Ptex
--- with separate textures for each face of a subdivision or polygon mesh.
--- Placing sample locations at pixel corners allows applications to
--- maintain continuity between adjacent patches by duplicating values along
--- shared edges. Additionally, using the modified mipmapping logic along
--- with texture dimensions of the form 2n+1 allows continuity across shared
--- edges even if the adjacent patches use different level-of-detail values.
---
--- == New Structures
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
---     'Vulkan.Core10.Device.DeviceCreateInfo':
---
---     -   'PhysicalDeviceCornerSampledImageFeaturesNV'
---
--- == New Enum Constants
---
--- -   'NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME'
---
--- -   'NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION'
---
--- -   Extending
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits':
---
---     -   'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV'
---
--- == Issues
---
--- 1.  What should this extension be named?
---
---     DISCUSSION: While naming this extension, we chose the most
---     distinctive aspect of the image organization and referred to such
---     images as “corner-sampled images”. As a result, we decided to name
---     the extension NV_corner_sampled_image.
---
--- 2.  Do we need a format feature flag so formats can advertise if they
---     support corner-sampling?
---
---     DISCUSSION: Currently NVIDIA supports this for all 2D and 3D
---     formats, but not for cubemaps or depth-stencil formats. A format
---     feature might be useful if other vendors would only support this on
---     some formats.
---
--- 3.  Do integer texel coordinates have a different range for
---     corner-sampled images?
---
---     RESOLVED: No, these are unchanged.
---
--- 4.  Do unnormalized sampler coordinates work with corner-sampled images?
---     Are there any functional differences?
---
---     RESOLVED: Yes they work. Unnormalized coordinates are treated as
---     already scaled for corner-sample usage.
---
--- 5.  Should we have a diagram in the “Image Operations” chapter
---     demonstrating different texel sampling locations?
---
---     UNRESOLVED: Probaby, but later.
---
--- == Version History
---
--- -   Revision 1, 2018-08-14 (Daniel Koch)
---
---     -   Internal revisions
---
--- -   Revision 2, 2018-08-14 (Daniel Koch)
---
---     -   ???
---
--- = See Also
---
--- 'PhysicalDeviceCornerSampledImageFeaturesNV'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_corner_sampled_image Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_NV_corner_sampled_image"
 module Vulkan.Extensions.VK_NV_corner_sampled_image  ( PhysicalDeviceCornerSampledImageFeaturesNV(..)
                                                      , NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION
                                                      , pattern NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION
@@ -181,37 +29,10 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV))
--- | VkPhysicalDeviceCornerSampledImageFeaturesNV - Structure describing
--- corner sampled image features that can be supported by an implementation
---
--- = Members
---
--- The members of the 'PhysicalDeviceCornerSampledImageFeaturesNV'
--- structure describe the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceCornerSampledImageFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceCornerSampledImageFeaturesNV' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceCornerSampledImageFeaturesNV"
 data PhysicalDeviceCornerSampledImageFeaturesNV = PhysicalDeviceCornerSampledImageFeaturesNV
-  { -- | #features-cornersampledimage# @cornerSampledImage@ specifies whether
-    -- images can be created with a
-    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
-    -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'.
-    -- See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-images-corner-sampled Corner-Sampled Images>.
+  { -- No documentation found for Nested "VkPhysicalDeviceCornerSampledImageFeaturesNV" "cornerSampledImage"
     cornerSampledImage :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -239,6 +60,7 @@ instance FromCStruct PhysicalDeviceCornerSampledImageFeaturesNV where
     cornerSampledImage <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     pure $ PhysicalDeviceCornerSampledImageFeaturesNV
              (bool32ToBool cornerSampledImage)
+
 
 instance Storable PhysicalDeviceCornerSampledImageFeaturesNV where
   sizeOf ~_ = 24

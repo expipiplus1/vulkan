@@ -1,112 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_KHR_external_semaphore_fd - device extension
---
--- == VK_KHR_external_semaphore_fd
---
--- [__Name String__]
---     @VK_KHR_external_semaphore_fd@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     80
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_external_semaphore@
---
--- [__Contact__]
---
---     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_semaphore_fd:%20&body=@cubanismo%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2016-10-21
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Jesse Hall, Google
---
---     -   James Jones, NVIDIA
---
---     -   Jeff Juliano, NVIDIA
---
---     -   Carsten Rohde, NVIDIA
---
--- == Description
---
--- An application using external memory may wish to synchronize access to
--- that memory using semaphores. This extension enables an application to
--- export semaphore payload to and import semaphore payload from POSIX file
--- descriptors.
---
--- == New Commands
---
--- -   'getSemaphoreFdKHR'
---
--- -   'importSemaphoreFdKHR'
---
--- == New Structures
---
--- -   'ImportSemaphoreFdInfoKHR'
---
--- -   'SemaphoreGetFdInfoKHR'
---
--- == New Enum Constants
---
--- -   'KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME'
---
--- -   'KHR_EXTERNAL_SEMAPHORE_FD_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR'
---
--- == Issues
---
--- 1) Does the application need to close the file descriptor returned by
--- 'getSemaphoreFdKHR'?
---
--- __RESOLVED__: Yes, unless it is passed back in to a driver instance to
--- import the semaphore. A successful get call transfers ownership of the
--- file descriptor to the application, and a successful import transfers it
--- back to the driver. Destroying the original semaphore object will not
--- close the file descriptor or remove its reference to the underlying
--- semaphore resource associated with it.
---
--- == Version History
---
--- -   Revision 1, 2016-10-21 (Jesse Hall)
---
---     -   Initial revision
---
--- = See Also
---
--- 'ImportSemaphoreFdInfoKHR', 'SemaphoreGetFdInfoKHR',
--- 'getSemaphoreFdKHR', 'importSemaphoreFdKHR'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_KHR_external_semaphore_fd"
 module Vulkan.Extensions.VK_KHR_external_semaphore_fd  ( getSemaphoreFdKHR
                                                        , importSemaphoreFdKHR
                                                        , ImportSemaphoreFdInfoKHR(..)
@@ -176,58 +69,12 @@ foreign import ccall
   "dynamic" mkVkGetSemaphoreFdKHR
   :: FunPtr (Ptr Device_T -> Ptr SemaphoreGetFdInfoKHR -> Ptr CInt -> IO Result) -> Ptr Device_T -> Ptr SemaphoreGetFdInfoKHR -> Ptr CInt -> IO Result
 
--- | vkGetSemaphoreFdKHR - Get a POSIX file descriptor handle for a semaphore
---
--- = Description
---
--- Each call to 'getSemaphoreFdKHR' /must/ create a new file descriptor and
--- transfer ownership of it to the application. To avoid leaking resources,
--- the application /must/ release ownership of the file descriptor when it
--- is no longer needed.
---
--- Note
---
--- Ownership can be released in many ways. For example, the application can
--- call @close@() on the file descriptor, or transfer ownership back to
--- Vulkan by using the file descriptor to import a semaphore payload.
---
--- Where supported by the operating system, the implementation /must/ set
--- the file descriptor to be closed automatically when an @execve@ system
--- call is made.
---
--- Exporting a file descriptor from a semaphore /may/ have side effects
--- depending on the transference of the specified handle type, as described
--- in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore State>.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'SemaphoreGetFdInfoKHR'
+-- No documentation found for TopLevel "vkGetSemaphoreFdKHR"
 getSemaphoreFdKHR :: forall io
                    . (MonadIO io)
-                  => -- | @device@ is the logical device that created the semaphore being
-                     -- exported.
-                     --
-                     -- #VUID-vkGetSemaphoreFdKHR-device-parameter# @device@ /must/ be a valid
-                     -- 'Vulkan.Core10.Handles.Device' handle
+                  => -- No documentation found for Nested "vkGetSemaphoreFdKHR" "device"
                      Device
-                  -> -- | @pGetFdInfo@ is a pointer to a 'SemaphoreGetFdInfoKHR' structure
-                     -- containing parameters of the export operation.
-                     --
-                     -- #VUID-vkGetSemaphoreFdKHR-pGetFdInfo-parameter# @pGetFdInfo@ /must/ be a
-                     -- valid pointer to a valid 'SemaphoreGetFdInfoKHR' structure
+                  -> -- No documentation found for Nested "vkGetSemaphoreFdKHR" "pGetFdInfo"
                      SemaphoreGetFdInfoKHR
                   -> io (("fd" ::: Int32))
 getSemaphoreFdKHR device getFdInfo = liftIO . evalContT $ do
@@ -250,47 +97,12 @@ foreign import ccall
   "dynamic" mkVkImportSemaphoreFdKHR
   :: FunPtr (Ptr Device_T -> Ptr ImportSemaphoreFdInfoKHR -> IO Result) -> Ptr Device_T -> Ptr ImportSemaphoreFdInfoKHR -> IO Result
 
--- | vkImportSemaphoreFdKHR - Import a semaphore from a POSIX file descriptor
---
--- = Description
---
--- Importing a semaphore payload from a file descriptor transfers ownership
--- of the file descriptor from the application to the Vulkan
--- implementation. The application /must/ not perform any operations on the
--- file descriptor after a successful import.
---
--- Applications /can/ import the same semaphore payload into multiple
--- instances of Vulkan, into the same instance from which it was exported,
--- and multiple times into a given Vulkan instance.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'ImportSemaphoreFdInfoKHR'
+-- No documentation found for TopLevel "vkImportSemaphoreFdKHR"
 importSemaphoreFdKHR :: forall io
                       . (MonadIO io)
-                     => -- | @device@ is the logical device that created the semaphore.
-                        --
-                        -- #VUID-vkImportSemaphoreFdKHR-device-parameter# @device@ /must/ be a
-                        -- valid 'Vulkan.Core10.Handles.Device' handle
+                     => -- No documentation found for Nested "vkImportSemaphoreFdKHR" "device"
                         Device
-                     -> -- | @pImportSemaphoreFdInfo@ is a pointer to a 'ImportSemaphoreFdInfoKHR'
-                        -- structure specifying the semaphore and import parameters.
-                        --
-                        -- #VUID-vkImportSemaphoreFdKHR-pImportSemaphoreFdInfo-parameter#
-                        -- @pImportSemaphoreFdInfo@ /must/ be a valid pointer to a valid
-                        -- 'ImportSemaphoreFdInfoKHR' structure
+                     -> -- No documentation found for Nested "vkImportSemaphoreFdKHR" "pImportSemaphoreFdInfo"
                         ImportSemaphoreFdInfoKHR
                      -> io ()
 importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
@@ -303,118 +115,16 @@ importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
--- | VkImportSemaphoreFdInfoKHR - Structure specifying POSIX file descriptor
--- to import to a semaphore
---
--- = Description
---
--- The handle types supported by @handleType@ are:
---
--- +--------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
--- | Handle Type                                                                                            | Transference         | Permanence Supported  |
--- +========================================================================================================+======================+=======================+
--- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT' | Reference            | Temporary,Permanent   |
--- +--------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
--- | 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT'   | Copy                 | Temporary             |
--- +--------------------------------------------------------------------------------------------------------+----------------------+-----------------------+
---
--- Handle Types Supported by 'ImportSemaphoreFdInfoKHR'
---
--- == Valid Usage
---
--- -   #VUID-VkImportSemaphoreFdInfoKHR-handleType-01143# @handleType@
---     /must/ be a value included in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphore-handletypes-fd Handle Types Supported by >
---     table
---
--- -   #VUID-VkImportSemaphoreFdInfoKHR-fd-01544# @fd@ /must/ obey any
---     requirements listed for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
---
--- -   #VUID-VkImportSemaphoreFdInfoKHR-handleType-03263# If @handleType@
---     is
---     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT',
---     the 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'::@flags@
---     field /must/ match that of the semaphore from which @fd@ was
---     exported
---
--- -   #VUID-VkImportSemaphoreFdInfoKHR-handleType-03264# If @handleType@
---     is
---     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT',
---     the
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@semaphoreType@
---     field /must/ match that of the semaphore from which @fd@ was
---     exported
---
--- -   #VUID-VkImportSemaphoreFdInfoKHR-flags-03323# If @flags@ contains
---     'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SEMAPHORE_IMPORT_TEMPORARY_BIT',
---     the
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@semaphoreType@
---     field of the semaphore from which @fd@ was exported /must/ not be
---     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
---
--- If @handleType@ is
--- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT',
--- the special value @-1@ for @fd@ is treated like a valid sync file
--- descriptor referring to an object that has already signaled. The import
--- operation will succeed and the 'Vulkan.Core10.Handles.Semaphore' will
--- have a temporarily imported payload as if a valid file descriptor had
--- been provided.
---
--- Note
---
--- This special behavior for importing an invalid sync file descriptor
--- allows easier interoperability with other system APIs which use the
--- convention that an invalid sync file descriptor represents work that has
--- already completed and does not need to be waited for. It is consistent
--- with the option for implementations to return a @-1@ file descriptor
--- when exporting a
--- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT'
--- from a 'Vulkan.Core10.Handles.Semaphore' which is signaled.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkImportSemaphoreFdInfoKHR-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR'
---
--- -   #VUID-VkImportSemaphoreFdInfoKHR-pNext-pNext# @pNext@ /must/ be
---     @NULL@
---
--- -   #VUID-VkImportSemaphoreFdInfoKHR-semaphore-parameter# @semaphore@
---     /must/ be a valid 'Vulkan.Core10.Handles.Semaphore' handle
---
--- -   #VUID-VkImportSemaphoreFdInfoKHR-flags-parameter# @flags@ /must/ be
---     a valid combination of
---     'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SemaphoreImportFlagBits'
---     values
---
--- -   #VUID-VkImportSemaphoreFdInfoKHR-handleType-parameter# @handleType@
---     /must/ be a valid
---     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
---     value
---
--- == Host Synchronization
---
--- -   Host access to @semaphore@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
--- 'Vulkan.Core10.Handles.Semaphore',
--- 'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SemaphoreImportFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'importSemaphoreFdKHR'
+
+-- No documentation found for TopLevel "VkImportSemaphoreFdInfoKHR"
 data ImportSemaphoreFdInfoKHR = ImportSemaphoreFdInfoKHR
-  { -- | @semaphore@ is the semaphore into which the payload will be imported.
+  { -- No documentation found for Nested "VkImportSemaphoreFdInfoKHR" "semaphore"
     semaphore :: Semaphore
-  , -- | @flags@ is a bitmask of
-    -- 'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SemaphoreImportFlagBits'
-    -- specifying additional parameters for the semaphore payload import
-    -- operation.
+  , -- No documentation found for Nested "VkImportSemaphoreFdInfoKHR" "flags"
     flags :: SemaphoreImportFlags
-  , -- | @handleType@ specifies the type of @fd@.
+  , -- No documentation found for Nested "VkImportSemaphoreFdInfoKHR" "handleType"
     handleType :: ExternalSemaphoreHandleTypeFlagBits
-  , -- | @fd@ is the external handle to import.
+  , -- No documentation found for Nested "VkImportSemaphoreFdInfoKHR" "fd"
     fd :: Int32
   }
   deriving (Typeable, Eq)
@@ -452,6 +162,7 @@ instance FromCStruct ImportSemaphoreFdInfoKHR where
     pure $ ImportSemaphoreFdInfoKHR
              semaphore flags handleType ((\(CInt a) -> a) fd)
 
+
 instance Storable ImportSemaphoreFdInfoKHR where
   sizeOf ~_ = 40
   alignment ~_ = 8
@@ -466,84 +177,12 @@ instance Zero ImportSemaphoreFdInfoKHR where
            zero
 
 
--- | VkSemaphoreGetFdInfoKHR - Structure describing a POSIX FD semaphore
--- export operation
---
--- = Description
---
--- The properties of the file descriptor returned depend on the value of
--- @handleType@. See
--- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
--- for a description of the properties of the defined external semaphore
--- handle types.
---
--- == Valid Usage
---
--- -   #VUID-VkSemaphoreGetFdInfoKHR-handleType-01132# @handleType@ /must/
---     have been included in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'::@handleTypes@
---     when @semaphore@’s current payload was created
---
--- -   #VUID-VkSemaphoreGetFdInfoKHR-semaphore-01133# @semaphore@ /must/
---     not currently have its payload replaced by an imported payload as
---     described below in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
---     unless that imported payload’s handle type was included in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.ExternalSemaphoreProperties'::@exportFromImportedHandleTypes@
---     for @handleType@
---
--- -   #VUID-VkSemaphoreGetFdInfoKHR-handleType-01134# If @handleType@
---     refers to a handle type with copy payload transference semantics, as
---     defined below in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
---     there /must/ be no queue waiting on @semaphore@
---
--- -   #VUID-VkSemaphoreGetFdInfoKHR-handleType-01135# If @handleType@
---     refers to a handle type with copy payload transference semantics,
---     @semaphore@ /must/ be signaled, or have an associated
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
---     pending execution
---
--- -   #VUID-VkSemaphoreGetFdInfoKHR-handleType-01136# @handleType@ /must/
---     be defined as a POSIX file descriptor handle
---
--- -   #VUID-VkSemaphoreGetFdInfoKHR-handleType-03253# If @handleType@
---     refers to a handle type with copy payload transference semantics,
---     @semaphore@ /must/ have been created with a
---     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
---     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'
---
--- -   #VUID-VkSemaphoreGetFdInfoKHR-handleType-03254# If @handleType@
---     refers to a handle type with copy payload transference semantics,
---     @semaphore@ /must/ have an associated semaphore signal operation
---     that has been submitted for execution and any semaphore signal
---     operations on which it depends (if any) /must/ have also been
---     submitted for execution
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkSemaphoreGetFdInfoKHR-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR'
---
--- -   #VUID-VkSemaphoreGetFdInfoKHR-pNext-pNext# @pNext@ /must/ be @NULL@
---
--- -   #VUID-VkSemaphoreGetFdInfoKHR-semaphore-parameter# @semaphore@
---     /must/ be a valid 'Vulkan.Core10.Handles.Semaphore' handle
---
--- -   #VUID-VkSemaphoreGetFdInfoKHR-handleType-parameter# @handleType@
---     /must/ be a valid
---     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
---     value
---
--- = See Also
---
--- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
--- 'Vulkan.Core10.Handles.Semaphore',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getSemaphoreFdKHR'
+
+-- No documentation found for TopLevel "VkSemaphoreGetFdInfoKHR"
 data SemaphoreGetFdInfoKHR = SemaphoreGetFdInfoKHR
-  { -- | @semaphore@ is the semaphore from which state will be exported.
+  { -- No documentation found for Nested "VkSemaphoreGetFdInfoKHR" "semaphore"
     semaphore :: Semaphore
-  , -- | @handleType@ is the type of handle requested.
+  , -- No documentation found for Nested "VkSemaphoreGetFdInfoKHR" "handleType"
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
@@ -575,6 +214,7 @@ instance FromCStruct SemaphoreGetFdInfoKHR where
     handleType <- peek @ExternalSemaphoreHandleTypeFlagBits ((p `plusPtr` 24 :: Ptr ExternalSemaphoreHandleTypeFlagBits))
     pure $ SemaphoreGetFdInfoKHR
              semaphore handleType
+
 
 instance Storable SemaphoreGetFdInfoKHR where
   sizeOf ~_ = 32

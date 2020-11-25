@@ -1,146 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_KHR_get_surface_capabilities2 - instance extension
---
--- == VK_KHR_get_surface_capabilities2
---
--- [__Name String__]
---     @VK_KHR_get_surface_capabilities2@
---
--- [__Extension Type__]
---     Instance extension
---
--- [__Registered Extension Number__]
---     120
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_surface@
---
--- [__Contact__]
---
---     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_get_surface_capabilities2:%20&body=@cubanismo%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2017-02-27
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Ian Elliott, Google
---
---     -   James Jones, NVIDIA
---
---     -   Alon Or-bach, Samsung
---
--- == Description
---
--- This extension provides new entry points to query device surface
--- capabilities in a way that can be easily extended by other extensions,
--- without introducing any further entry points. This extension can be
--- considered the @VK_KHR_surface@ equivalent of the
--- @VK_KHR_get_physical_device_properties2@ extension.
---
--- == New Commands
---
--- -   'getPhysicalDeviceSurfaceCapabilities2KHR'
---
--- -   'getPhysicalDeviceSurfaceFormats2KHR'
---
--- == New Structures
---
--- -   'PhysicalDeviceSurfaceInfo2KHR'
---
--- -   'SurfaceCapabilities2KHR'
---
--- -   'SurfaceFormat2KHR'
---
--- == New Enum Constants
---
--- -   'KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME'
---
--- -   'KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR'
---
--- == Issues
---
--- 1) What should this extension be named?
---
--- __RESOLVED__: @VK_KHR_get_surface_capabilities2@. Other alternatives:
---
--- -   @VK_KHR_surface2@
---
--- -   One extension, combining a separate display-specific query
---     extension.
---
--- 2) Should additional WSI query functions be extended?
---
--- __RESOLVED__:
---
--- -   'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR':
---     Yes. The need for this motivated the extension.
---
--- -   'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR':
---     No. Currently only has boolean output. Extensions should instead
---     extend 'getPhysicalDeviceSurfaceCapabilities2KHR'.
---
--- -   'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceFormatsKHR':
---     Yes.
---
--- -   'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfacePresentModesKHR':
---     No. Recent discussion concluded this introduced too much variability
---     for applications to deal with. Extensions should instead extend
---     'getPhysicalDeviceSurfaceCapabilities2KHR'.
---
--- -   'Vulkan.Extensions.VK_KHR_xlib_surface.getPhysicalDeviceXlibPresentationSupportKHR':
---     Not in this extension.
---
--- -   'Vulkan.Extensions.VK_KHR_xcb_surface.getPhysicalDeviceXcbPresentationSupportKHR':
---     Not in this extension.
---
--- -   'Vulkan.Extensions.VK_KHR_wayland_surface.getPhysicalDeviceWaylandPresentationSupportKHR':
---     Not in this extension.
---
--- -   'Vulkan.Extensions.VK_KHR_win32_surface.getPhysicalDeviceWin32PresentationSupportKHR':
---     Not in this extension.
---
--- == Version History
---
--- -   Revision 1, 2017-02-27 (James Jones)
---
---     -   Initial draft.
---
--- = See Also
---
--- 'PhysicalDeviceSurfaceInfo2KHR', 'SurfaceCapabilities2KHR',
--- 'SurfaceFormat2KHR', 'getPhysicalDeviceSurfaceCapabilities2KHR',
--- 'getPhysicalDeviceSurfaceFormats2KHR'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_KHR_get_surface_capabilities2"
 module Vulkan.Extensions.VK_KHR_get_surface_capabilities2  ( getPhysicalDeviceSurfaceCapabilities2KHR
                                                            , getPhysicalDeviceSurfaceFormats2KHR
                                                            , PhysicalDeviceSurfaceInfo2KHR(..)
@@ -247,67 +106,12 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceSurfaceCapabilities2KHR
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr (SomeStruct SurfaceCapabilities2KHR) -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr (SomeStruct SurfaceCapabilities2KHR) -> IO Result
 
--- | vkGetPhysicalDeviceSurfaceCapabilities2KHR - Reports capabilities of a
--- surface on a physical device
---
--- = Description
---
--- 'getPhysicalDeviceSurfaceCapabilities2KHR' behaves similarly to
--- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR',
--- with the ability to specify extended inputs via chained input
--- structures, and to return extended information via chained output
--- structures.
---
--- == Valid Usage
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-02671# If a
---     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceCapabilitiesFullScreenExclusiveEXT'
---     structure is included in the @pNext@ chain of
---     @pSurfaceCapabilities@, a
---     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
---     structure /must/ be included in the @pNext@ chain of @pSurfaceInfo@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-physicalDevice-parameter#
---     @physicalDevice@ /must/ be a valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pSurfaceInfo-parameter#
---     @pSurfaceInfo@ /must/ be a valid pointer to a valid
---     'PhysicalDeviceSurfaceInfo2KHR' structure
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pSurfaceCapabilities-parameter#
---     @pSurfaceCapabilities@ /must/ be a valid pointer to a
---     'SurfaceCapabilities2KHR' structure
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceSurfaceInfo2KHR',
--- 'SurfaceCapabilities2KHR'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceSurfaceCapabilities2KHR"
 getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io
                                           . (Extendss PhysicalDeviceSurfaceInfo2KHR a, Extendss SurfaceCapabilities2KHR b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
-                                         => -- | @physicalDevice@ is the physical device that will be associated with the
-                                            -- swapchain to be created, as described for
-                                            -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                         => -- No documentation found for Nested "vkGetPhysicalDeviceSurfaceCapabilities2KHR" "physicalDevice"
                                             PhysicalDevice
-                                         -> -- | @pSurfaceInfo@ is a pointer to a 'PhysicalDeviceSurfaceInfo2KHR'
-                                            -- structure describing the surface and other fixed parameters that would
-                                            -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                         -> -- No documentation found for Nested "vkGetPhysicalDeviceSurfaceCapabilities2KHR" "pSurfaceInfo"
                                             (PhysicalDeviceSurfaceInfo2KHR a)
                                          -> io (SurfaceCapabilities2KHR b)
 getPhysicalDeviceSurfaceCapabilities2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
@@ -330,86 +134,12 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceSurfaceFormats2KHR
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr Word32 -> Ptr SurfaceFormat2KHR -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr Word32 -> Ptr SurfaceFormat2KHR -> IO Result
 
--- | vkGetPhysicalDeviceSurfaceFormats2KHR - Query color formats supported by
--- surface
---
--- = Description
---
--- 'getPhysicalDeviceSurfaceFormats2KHR' behaves similarly to
--- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceFormatsKHR',
--- with the ability to be extended via @pNext@ chains.
---
--- If @pSurfaceFormats@ is @NULL@, then the number of format tuples
--- supported for the given @surface@ is returned in @pSurfaceFormatCount@.
--- Otherwise, @pSurfaceFormatCount@ /must/ point to a variable set by the
--- user to the number of elements in the @pSurfaceFormats@ array, and on
--- return the variable is overwritten with the number of structures
--- actually written to @pSurfaceFormats@. If the value of
--- @pSurfaceFormatCount@ is less than the number of format tuples
--- supported, at most @pSurfaceFormatCount@ structures will be written. If
--- @pSurfaceFormatCount@ is smaller than the number of format tuples
--- supported for the surface parameters described in @pSurfaceInfo@,
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
--- available values were returned.
---
--- == Valid Usage
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceInfo-02740#
---     @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
---     reported by
---     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
---     or an equivalent platform-specific mechanism
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-physicalDevice-parameter#
---     @physicalDevice@ /must/ be a valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceInfo-parameter#
---     @pSurfaceInfo@ /must/ be a valid pointer to a valid
---     'PhysicalDeviceSurfaceInfo2KHR' structure
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceFormatCount-parameter#
---     @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
---     value
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceFormats-parameter#
---     If the value referenced by @pSurfaceFormatCount@ is not @0@, and
---     @pSurfaceFormats@ is not @NULL@, @pSurfaceFormats@ /must/ be a valid
---     pointer to an array of @pSurfaceFormatCount@ 'SurfaceFormat2KHR'
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceSurfaceInfo2KHR',
--- 'SurfaceFormat2KHR'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceSurfaceFormats2KHR"
 getPhysicalDeviceSurfaceFormats2KHR :: forall a io
                                      . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, MonadIO io)
-                                    => -- | @physicalDevice@ is the physical device that will be associated with the
-                                       -- swapchain to be created, as described for
-                                       -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                    => -- No documentation found for Nested "vkGetPhysicalDeviceSurfaceFormats2KHR" "physicalDevice"
                                        PhysicalDevice
-                                    -> -- | @pSurfaceInfo@ is a pointer to a 'PhysicalDeviceSurfaceInfo2KHR'
-                                       -- structure describing the surface and other fixed parameters that would
-                                       -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                    -> -- No documentation found for Nested "vkGetPhysicalDeviceSurfaceFormats2KHR" "pSurfaceInfo"
                                        (PhysicalDeviceSurfaceInfo2KHR a)
                                     -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormat2KHR))
 getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
@@ -433,72 +163,12 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalCo
   pure $ ((r'), pSurfaceFormats')
 
 
--- | VkPhysicalDeviceSurfaceInfo2KHR - Structure specifying a surface and
--- related swapchain creation parameters
---
--- = Description
---
--- The members of 'PhysicalDeviceSurfaceInfo2KHR' correspond to the
--- arguments to
--- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR',
--- with @sType@ and @pNext@ added for extensibility.
---
--- Additional capabilities of a surface /may/ be available to swapchains
--- created with different full-screen exclusive settings - particularly if
--- exclusive full-screen access is application controlled. These additional
--- capabilities /can/ be queried by adding a
--- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT'
--- structure to the @pNext@ chain of this structure when used to query
--- surface properties. Additionally, for Win32 surfaces with application
--- controlled exclusive full-screen access, chaining a
--- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
--- structure /may/ also report additional surface capabilities. These
--- additional capabilities only apply to swapchains created with the same
--- parameters included in the @pNext@ chain of
--- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'.
---
--- == Valid Usage
---
--- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-pNext-02672# If the @pNext@
---     chain includes a
---     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT'
---     structure with its @fullScreenExclusive@ member set to
---     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT',
---     and @surface@ was created using
---     'Vulkan.Extensions.VK_KHR_win32_surface.createWin32SurfaceKHR', a
---     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
---     structure /must/ be included in the @pNext@ chain
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR'
---
--- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-pNext-pNext# Each @pNext@
---     member of any structure (including this one) in the @pNext@ chain
---     /must/ be either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT'
---     or
---     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
---
--- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-sType-unique# The @sType@
---     value of each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-surface-parameter# @surface@
---     /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR' handle
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Extensions.Handles.SurfaceKHR',
--- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getDeviceGroupSurfacePresentModes2EXT',
--- 'getPhysicalDeviceSurfaceCapabilities2KHR',
--- 'getPhysicalDeviceSurfaceFormats2KHR',
--- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceSurfaceInfo2KHR"
 data PhysicalDeviceSurfaceInfo2KHR (es :: [Type]) = PhysicalDeviceSurfaceInfo2KHR
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkPhysicalDeviceSurfaceInfo2KHR" "pNext"
     next :: Chain es
-  , -- | @surface@ is the surface that will be associated with the swapchain.
+  , -- No documentation found for Nested "VkPhysicalDeviceSurfaceInfo2KHR" "surface"
     surface :: SurfaceKHR
   }
   deriving (Typeable)
@@ -548,37 +218,12 @@ instance es ~ '[] => Zero (PhysicalDeviceSurfaceInfo2KHR es) where
            zero
 
 
--- | VkSurfaceCapabilities2KHR - Structure describing capabilities of a
--- surface
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkSurfaceCapabilities2KHR-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR'
---
--- -   #VUID-VkSurfaceCapabilities2KHR-pNext-pNext# Each @pNext@ member of
---     any structure (including this one) in the @pNext@ chain /must/ be
---     either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_AMD_display_native_hdr.DisplayNativeHdrSurfaceCapabilitiesAMD',
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.SharedPresentSurfaceCapabilitiesKHR',
---     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceCapabilitiesFullScreenExclusiveEXT',
---     or
---     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'
---
--- -   #VUID-VkSurfaceCapabilities2KHR-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR',
--- 'getPhysicalDeviceSurfaceCapabilities2KHR'
+
+-- No documentation found for TopLevel "VkSurfaceCapabilities2KHR"
 data SurfaceCapabilities2KHR (es :: [Type]) = SurfaceCapabilities2KHR
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkSurfaceCapabilities2KHR" "pNext"
     next :: Chain es
-  , -- | @surfaceCapabilities@ is a
-    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' structure
-    -- describing the capabilities of the specified surface.
+  , -- No documentation found for Nested "VkSurfaceCapabilities2KHR" "surfaceCapabilities"
     surfaceCapabilities :: SurfaceCapabilitiesKHR
   }
   deriving (Typeable)
@@ -630,20 +275,10 @@ instance es ~ '[] => Zero (SurfaceCapabilities2KHR es) where
            zero
 
 
--- | VkSurfaceFormat2KHR - Structure describing a supported swapchain format
--- tuple
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Extensions.VK_KHR_surface.SurfaceFormatKHR',
--- 'getPhysicalDeviceSurfaceFormats2KHR'
+
+-- No documentation found for TopLevel "VkSurfaceFormat2KHR"
 data SurfaceFormat2KHR = SurfaceFormat2KHR
-  { -- | @surfaceFormat@ is a 'Vulkan.Extensions.VK_KHR_surface.SurfaceFormatKHR'
-    -- structure describing a format-color space pair that is compatible with
-    -- the specified surface.
+  { -- No documentation found for Nested "VkSurfaceFormat2KHR" "surfaceFormat"
     surfaceFormat :: SurfaceFormatKHR }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -671,6 +306,7 @@ instance FromCStruct SurfaceFormat2KHR where
     surfaceFormat <- peekCStruct @SurfaceFormatKHR ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR))
     pure $ SurfaceFormat2KHR
              surfaceFormat
+
 
 instance Storable SurfaceFormat2KHR where
   sizeOf ~_ = 24

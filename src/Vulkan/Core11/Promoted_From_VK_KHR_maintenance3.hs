@@ -68,60 +68,12 @@ foreign import ccall
   "dynamic" mkVkGetDescriptorSetLayoutSupport
   :: FunPtr (Ptr Device_T -> Ptr (SomeStruct DescriptorSetLayoutCreateInfo) -> Ptr (SomeStruct DescriptorSetLayoutSupport) -> IO ()) -> Ptr Device_T -> Ptr (SomeStruct DescriptorSetLayoutCreateInfo) -> Ptr (SomeStruct DescriptorSetLayoutSupport) -> IO ()
 
--- | vkGetDescriptorSetLayoutSupport - Query whether a descriptor set layout
--- can be created
---
--- = Description
---
--- Some implementations have limitations on what fits in a descriptor set
--- which are not easily expressible in terms of existing limits like
--- @maxDescriptorSet@*, for example if all descriptor types share a limited
--- space in memory but each descriptor is a different size or alignment.
--- This command returns information about whether a descriptor set
--- satisfies this limit. If the descriptor set layout satisfies the
--- 'PhysicalDeviceMaintenance3Properties'::@maxPerSetDescriptors@ limit,
--- this command is guaranteed to return
--- 'Vulkan.Core10.FundamentalTypes.TRUE' in
--- 'DescriptorSetLayoutSupport'::@supported@. If the descriptor set layout
--- exceeds the
--- 'PhysicalDeviceMaintenance3Properties'::@maxPerSetDescriptors@ limit,
--- whether the descriptor set layout is supported is
--- implementation-dependent and /may/ depend on whether the descriptor
--- sizes and alignments cause the layout to exceed an internal limit.
---
--- This command does not consider other limits such as
--- @maxPerStageDescriptor@*, and so a descriptor set layout that is
--- supported according to this command /must/ still satisfy the pipeline
--- layout limits such as @maxPerStageDescriptor@* in order to be used in a
--- pipeline layout.
---
--- Note
---
--- This is a 'Vulkan.Core10.Handles.Device' query rather than
--- 'Vulkan.Core10.Handles.PhysicalDevice' because the answer /may/ depend
--- on enabled features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
--- 'DescriptorSetLayoutSupport', 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkGetDescriptorSetLayoutSupport"
 getDescriptorSetLayoutSupport :: forall a b io
                                . (Extendss DescriptorSetLayoutCreateInfo a, Extendss DescriptorSetLayoutSupport b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
-                              => -- | @device@ is the logical device that would create the descriptor set
-                                 -- layout.
-                                 --
-                                 -- #VUID-vkGetDescriptorSetLayoutSupport-device-parameter# @device@ /must/
-                                 -- be a valid 'Vulkan.Core10.Handles.Device' handle
+                              => -- No documentation found for Nested "vkGetDescriptorSetLayoutSupport" "device"
                                  Device
-                              -> -- | @pCreateInfo@ is a pointer to a
-                                 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
-                                 -- specifying the state of the descriptor set layout object.
-                                 --
-                                 -- #VUID-vkGetDescriptorSetLayoutSupport-pCreateInfo-parameter#
-                                 -- @pCreateInfo@ /must/ be a valid pointer to a valid
-                                 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
+                              -> -- No documentation found for Nested "vkGetDescriptorSetLayoutSupport" "pCreateInfo"
                                  (DescriptorSetLayoutCreateInfo a)
                               -> io (DescriptorSetLayoutSupport b)
 getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
@@ -136,38 +88,12 @@ getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
   pure $ (pSupport)
 
 
--- | VkPhysicalDeviceMaintenance3Properties - Structure describing descriptor
--- set properties
---
--- = Members
---
--- The members of the 'PhysicalDeviceMaintenance3Properties' structure
--- describe the following implementation-dependent limits:
---
--- = Description
---
--- If the 'PhysicalDeviceMaintenance3Properties' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceMaintenance3Properties"
 data PhysicalDeviceMaintenance3Properties = PhysicalDeviceMaintenance3Properties
-  { -- | #extension-limits-maxPerSetDescriptors# @maxPerSetDescriptors@ is a
-    -- maximum number of descriptors (summed over all descriptor types) in a
-    -- single descriptor set that is guaranteed to satisfy any
-    -- implementation-dependent constraints on the size of a descriptor set
-    -- itself. Applications /can/ query whether a descriptor set that goes
-    -- beyond this limit is supported using 'getDescriptorSetLayoutSupport'.
+  { -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "maxPerSetDescriptors"
     maxPerSetDescriptors :: Word32
-  , -- | #extension-limits-maxMemoryAllocationSize# @maxMemoryAllocationSize@ is
-    -- the maximum size of a memory allocation that /can/ be created, even if
-    -- there is more space available in the heap.
+  , -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "maxMemoryAllocationSize"
     maxMemoryAllocationSize :: DeviceSize
   }
   deriving (Typeable, Eq)
@@ -200,6 +126,7 @@ instance FromCStruct PhysicalDeviceMaintenance3Properties where
     pure $ PhysicalDeviceMaintenance3Properties
              maxPerSetDescriptors maxMemoryAllocationSize
 
+
 instance Storable PhysicalDeviceMaintenance3Properties where
   sizeOf ~_ = 32
   alignment ~_ = 8
@@ -212,38 +139,12 @@ instance Zero PhysicalDeviceMaintenance3Properties where
            zero
 
 
--- | VkDescriptorSetLayoutSupport - Structure returning information about
--- whether a descriptor set layout can be supported
---
--- = Description
---
--- @supported@ is set to 'Vulkan.Core10.FundamentalTypes.TRUE' if the
--- descriptor set /can/ be created, or else is set to
--- 'Vulkan.Core10.FundamentalTypes.FALSE'.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDescriptorSetLayoutSupport-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT'
---
--- -   #VUID-VkDescriptorSetLayoutSupport-pNext-pNext# @pNext@ /must/ be
---     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountLayoutSupport'
---
--- -   #VUID-VkDescriptorSetLayoutSupport-sType-unique# The @sType@ value
---     of each struct in the @pNext@ chain /must/ be unique
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getDescriptorSetLayoutSupport',
--- 'Vulkan.Extensions.VK_KHR_maintenance3.getDescriptorSetLayoutSupportKHR'
+
+-- No documentation found for TopLevel "VkDescriptorSetLayoutSupport"
 data DescriptorSetLayoutSupport (es :: [Type]) = DescriptorSetLayoutSupport
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkDescriptorSetLayoutSupport" "pNext"
     next :: Chain es
-  , -- | @supported@ specifies whether the descriptor set layout /can/ be
-    -- created.
+  , -- No documentation found for Nested "VkDescriptorSetLayoutSupport" "supported"
     supported :: Bool
   }
   deriving (Typeable)

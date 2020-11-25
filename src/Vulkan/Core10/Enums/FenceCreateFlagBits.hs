@@ -19,17 +19,11 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type FenceCreateFlags = FenceCreateFlagBits
 
--- | VkFenceCreateFlagBits - Bitmask specifying initial state and behavior of
--- a fence
---
--- = See Also
---
--- 'FenceCreateFlags'
+-- No documentation found for TopLevel "VkFenceCreateFlagBits"
 newtype FenceCreateFlagBits = FenceCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'FENCE_CREATE_SIGNALED_BIT' specifies that the fence object is created
--- in the signaled state. Otherwise, it is created in the unsignaled state.
+-- No documentation found for Nested "VkFenceCreateFlagBits" "VK_FENCE_CREATE_SIGNALED_BIT"
 pattern FENCE_CREATE_SIGNALED_BIT = FenceCreateFlagBits 0x00000001
 
 conNameFenceCreateFlagBits :: String
@@ -41,12 +35,14 @@ enumPrefixFenceCreateFlagBits = "FENCE_CREATE_SIGNALED_BIT"
 showTableFenceCreateFlagBits :: [(FenceCreateFlagBits, String)]
 showTableFenceCreateFlagBits = [(FENCE_CREATE_SIGNALED_BIT, "")]
 
+
 instance Show FenceCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixFenceCreateFlagBits
-                            showTableFenceCreateFlagBits
-                            conNameFenceCreateFlagBits
-                            (\(FenceCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixFenceCreateFlagBits
+                          showTableFenceCreateFlagBits
+                          conNameFenceCreateFlagBits
+                          (\(FenceCreateFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read FenceCreateFlagBits where
   readPrec = enumReadPrec enumPrefixFenceCreateFlagBits

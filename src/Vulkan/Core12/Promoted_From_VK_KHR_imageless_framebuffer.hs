@@ -49,35 +49,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PA
 import Vulkan.Core10.Enums.FramebufferCreateFlagBits (FramebufferCreateFlagBits(..))
 import Vulkan.Core10.Enums.FramebufferCreateFlagBits (FramebufferCreateFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
--- | VkPhysicalDeviceImagelessFramebufferFeatures - Structure indicating
--- support for imageless framebuffers
---
--- = Members
---
--- The members of the 'PhysicalDeviceImagelessFramebufferFeatures'
--- structure describe the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceImagelessFramebufferFeatures' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceImagelessFramebufferFeatures' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- this feature.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceImagelessFramebufferFeatures"
 data PhysicalDeviceImagelessFramebufferFeatures = PhysicalDeviceImagelessFramebufferFeatures
-  { -- | #extension-features-imagelessFramebuffer# @imagelessFramebuffer@
-    -- indicates that the implementation supports specifying the image view for
-    -- attachments at render pass begin time via
-    -- 'RenderPassAttachmentBeginInfo'.
+  { -- No documentation found for Nested "VkPhysicalDeviceImagelessFramebufferFeatures" "imagelessFramebuffer"
     imagelessFramebuffer :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -106,6 +81,7 @@ instance FromCStruct PhysicalDeviceImagelessFramebufferFeatures where
     pure $ PhysicalDeviceImagelessFramebufferFeatures
              (bool32ToBool imagelessFramebuffer)
 
+
 instance Storable PhysicalDeviceImagelessFramebufferFeatures where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -117,29 +93,10 @@ instance Zero PhysicalDeviceImagelessFramebufferFeatures where
            zero
 
 
--- | VkFramebufferAttachmentsCreateInfo - Structure specifying parameters of
--- images that will be used with a framebuffer
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkFramebufferAttachmentsCreateInfo-sType-sType# @sType@ /must/
---     be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO'
---
--- -   #VUID-VkFramebufferAttachmentsCreateInfo-pAttachmentImageInfos-parameter#
---     If @attachmentImageInfoCount@ is not @0@, @pAttachmentImageInfos@
---     /must/ be a valid pointer to an array of @attachmentImageInfoCount@
---     valid 'FramebufferAttachmentImageInfo' structures
---
--- = See Also
---
--- 'FramebufferAttachmentImageInfo',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkFramebufferAttachmentsCreateInfo"
 data FramebufferAttachmentsCreateInfo = FramebufferAttachmentsCreateInfo
-  { -- | @pAttachmentImageInfos@ is a pointer to an array of
-    -- 'FramebufferAttachmentImageInfo' instances, each of which describes a
-    -- number of parameters of the corresponding attachment in a render pass
-    -- instance.
+  { -- No documentation found for Nested "VkFramebufferAttachmentsCreateInfo" "pAttachmentImageInfos"
     attachmentImageInfos :: Vector FramebufferAttachmentImageInfo }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -180,67 +137,20 @@ instance Zero FramebufferAttachmentsCreateInfo where
            mempty
 
 
--- | VkFramebufferAttachmentImageInfo - Structure specifying parameters of an
--- image that will be used with a framebuffer
---
--- = Description
---
--- Images that /can/ be used with the framebuffer when beginning a render
--- pass, as specified by 'RenderPassAttachmentBeginInfo', /must/ be created
--- with parameters that are identical to those specified here.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkFramebufferAttachmentImageInfo-sType-sType# @sType@ /must/
---     be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO'
---
--- -   #VUID-VkFramebufferAttachmentImageInfo-pNext-pNext# @pNext@ /must/
---     be @NULL@
---
--- -   #VUID-VkFramebufferAttachmentImageInfo-flags-parameter# @flags@
---     /must/ be a valid combination of
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits' values
---
--- -   #VUID-VkFramebufferAttachmentImageInfo-usage-parameter# @usage@
---     /must/ be a valid combination of
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
---
--- -   #VUID-VkFramebufferAttachmentImageInfo-usage-requiredbitmask#
---     @usage@ /must/ not be @0@
---
--- -   #VUID-VkFramebufferAttachmentImageInfo-pViewFormats-parameter# If
---     @viewFormatCount@ is not @0@, @pViewFormats@ /must/ be a valid
---     pointer to an array of @viewFormatCount@ valid
---     'Vulkan.Core10.Enums.Format.Format' values
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.Format.Format', 'FramebufferAttachmentsCreateInfo',
--- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlags',
--- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkFramebufferAttachmentImageInfo"
 data FramebufferAttachmentImageInfo = FramebufferAttachmentImageInfo
-  { -- | @flags@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits', matching
-    -- the value of 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ used to
-    -- create an image that will be used with this framebuffer.
+  { -- No documentation found for Nested "VkFramebufferAttachmentImageInfo" "flags"
     flags :: ImageCreateFlags
-  , -- | @usage@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits', matching
-    -- the value of 'Vulkan.Core10.Image.ImageCreateInfo'::@usage@ used to
-    -- create an image used with this framebuffer.
+  , -- No documentation found for Nested "VkFramebufferAttachmentImageInfo" "usage"
     usage :: ImageUsageFlags
-  , -- | @width@ is the width of the image view used for rendering.
+  , -- No documentation found for Nested "VkFramebufferAttachmentImageInfo" "width"
     width :: Word32
-  , -- | @height@ is the height of the image view used for rendering.
+  , -- No documentation found for Nested "VkFramebufferAttachmentImageInfo" "height"
     height :: Word32
   , -- No documentation found for Nested "VkFramebufferAttachmentImageInfo" "layerCount"
     layerCount :: Word32
-  , -- | @pViewFormats@ is an array which lists of all formats which /can/ be
-    -- used when creating views of the image, matching the value of
-    -- 'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::pViewFormats
-    -- used to create an image used with this framebuffer.
+  , -- No documentation found for Nested "VkFramebufferAttachmentImageInfo" "pViewFormats"
     viewFormats :: Vector Format
   }
   deriving (Typeable)
@@ -301,41 +211,10 @@ instance Zero FramebufferAttachmentImageInfo where
            mempty
 
 
--- | VkRenderPassAttachmentBeginInfo - Structure specifying images to be used
--- as framebuffer attachments
---
--- == Valid Usage
---
--- -   #VUID-VkRenderPassAttachmentBeginInfo-pAttachments-03218# Each
---     element of @pAttachments@ /must/ only specify a single mip level
---
--- -   #VUID-VkRenderPassAttachmentBeginInfo-pAttachments-03219# Each
---     element of @pAttachments@ /must/ have been created with the identity
---     swizzle
---
--- -   #VUID-VkRenderPassAttachmentBeginInfo-pAttachments-04114# Each
---     element of @pAttachments@ /must/ have been created with
---     'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@viewType@ not equal
---     to 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkRenderPassAttachmentBeginInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO'
---
--- -   #VUID-VkRenderPassAttachmentBeginInfo-pAttachments-parameter# If
---     @attachmentCount@ is not @0@, @pAttachments@ /must/ be a valid
---     pointer to an array of @attachmentCount@ valid
---     'Vulkan.Core10.Handles.ImageView' handles
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.ImageView',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkRenderPassAttachmentBeginInfo"
 data RenderPassAttachmentBeginInfo = RenderPassAttachmentBeginInfo
-  { -- | @pAttachments@ is a pointer to an array of
-    -- 'Vulkan.Core10.Handles.ImageView' handles, each of which will be used as
-    -- the corresponding attachment in the render pass instance.
+  { -- No documentation found for Nested "VkRenderPassAttachmentBeginInfo" "pAttachments"
     attachments :: Vector ImageView }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)

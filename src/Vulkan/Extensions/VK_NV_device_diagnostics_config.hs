@@ -1,101 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_NV_device_diagnostics_config - device extension
---
--- == VK_NV_device_diagnostics_config
---
--- [__Name String__]
---     @VK_NV_device_diagnostics_config@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     301
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@
---
--- [__Contact__]
---
---     -   Kedarnath Thangudu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_device_diagnostics_config:%20&body=@kthangudu%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2019-12-15
---
--- [__Contributors__]
---
---     -   Kedarnath Thangudu, NVIDIA
---
---     -   Thomas Klein, NVIDIA
---
--- == Description
---
--- Applications using Nvidia Nsight™ Aftermath SDK for Vulkan to integrate
--- device crash dumps into their error reporting mechanisms, /may/ use this
--- extension to configure options related to device crash dump creation.
---
--- == New Structures
---
--- -   Extending 'Vulkan.Core10.Device.DeviceCreateInfo':
---
---     -   'DeviceDiagnosticsConfigCreateInfoNV'
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
---     'Vulkan.Core10.Device.DeviceCreateInfo':
---
---     -   'PhysicalDeviceDiagnosticsConfigFeaturesNV'
---
--- == New Enums
---
--- -   'DeviceDiagnosticsConfigFlagBitsNV'
---
--- == New Bitmasks
---
--- -   'DeviceDiagnosticsConfigFlagsNV'
---
--- == New Enum Constants
---
--- -   'NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME'
---
--- -   'NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV'
---
--- == Version History
---
--- -   Revision 1, 2019-11-21 (Kedarnath Thangudu)
---
---     -   Internal revisions
---
--- = See Also
---
--- 'DeviceDiagnosticsConfigCreateInfoNV',
--- 'DeviceDiagnosticsConfigFlagBitsNV', 'DeviceDiagnosticsConfigFlagsNV',
--- 'PhysicalDeviceDiagnosticsConfigFeaturesNV'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostics_config Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_NV_device_diagnostics_config"
 module Vulkan.Extensions.VK_NV_device_diagnostics_config  ( PhysicalDeviceDiagnosticsConfigFeaturesNV(..)
                                                           , DeviceDiagnosticsConfigCreateInfoNV(..)
                                                           , DeviceDiagnosticsConfigFlagsNV
@@ -143,35 +47,10 @@ import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV))
--- | VkPhysicalDeviceDiagnosticsConfigFeaturesNV - Structure describing the
--- device-generated diagnostic configuration features that can be supported
--- by an implementation
---
--- = Members
---
--- The members of the 'PhysicalDeviceDiagnosticsConfigFeaturesNV' structure
--- describe the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceDiagnosticsConfigFeaturesNV' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceDiagnosticsConfigFeaturesNV' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- feature.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceDiagnosticsConfigFeaturesNV"
 data PhysicalDeviceDiagnosticsConfigFeaturesNV = PhysicalDeviceDiagnosticsConfigFeaturesNV
-  { -- | #features-features-diagnosticsConfig# @diagnosticsConfig@ indicates
-    -- whether the implementation supports the ability to configure diagnostic
-    -- tools.
+  { -- No documentation found for Nested "VkPhysicalDeviceDiagnosticsConfigFeaturesNV" "diagnosticsConfig"
     diagnosticsConfig :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -200,6 +79,7 @@ instance FromCStruct PhysicalDeviceDiagnosticsConfigFeaturesNV where
     pure $ PhysicalDeviceDiagnosticsConfigFeaturesNV
              (bool32ToBool diagnosticsConfig)
 
+
 instance Storable PhysicalDeviceDiagnosticsConfigFeaturesNV where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -211,22 +91,10 @@ instance Zero PhysicalDeviceDiagnosticsConfigFeaturesNV where
            zero
 
 
--- | VkDeviceDiagnosticsConfigCreateInfoNV - Specify diagnostics config for a
--- Vulkan device
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'DeviceDiagnosticsConfigFlagsNV',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkDeviceDiagnosticsConfigCreateInfoNV"
 data DeviceDiagnosticsConfigCreateInfoNV = DeviceDiagnosticsConfigCreateInfoNV
-  { -- | @flags@ is a bitmask of 'DeviceDiagnosticsConfigFlagBitsNV' specifying
-    -- addtional parameters for configuring diagnostic tools.
-    --
-    -- #VUID-VkDeviceDiagnosticsConfigCreateInfoNV-flags-parameter# @flags@
-    -- /must/ be a valid combination of 'DeviceDiagnosticsConfigFlagBitsNV'
-    -- values
+  { -- No documentation found for Nested "VkDeviceDiagnosticsConfigCreateInfoNV" "flags"
     flags :: DeviceDiagnosticsConfigFlagsNV }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -254,6 +122,7 @@ instance FromCStruct DeviceDiagnosticsConfigCreateInfoNV where
     pure $ DeviceDiagnosticsConfigCreateInfoNV
              flags
 
+
 instance Storable DeviceDiagnosticsConfigCreateInfoNV where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -267,28 +136,15 @@ instance Zero DeviceDiagnosticsConfigCreateInfoNV where
 
 type DeviceDiagnosticsConfigFlagsNV = DeviceDiagnosticsConfigFlagBitsNV
 
--- | VkDeviceDiagnosticsConfigFlagBitsNV - Bitmask specifying diagnostics
--- flags
---
--- = See Also
---
--- 'DeviceDiagnosticsConfigFlagsNV'
+-- No documentation found for TopLevel "VkDeviceDiagnosticsConfigFlagBitsNV"
 newtype DeviceDiagnosticsConfigFlagBitsNV = DeviceDiagnosticsConfigFlagBitsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV' enables the
--- generation of debug information for shaders.
+-- No documentation found for Nested "VkDeviceDiagnosticsConfigFlagBitsNV" "VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV"
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV     = DeviceDiagnosticsConfigFlagBitsNV 0x00000001
--- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV' enables
--- driver side tracking of resources (images, buffers, etc.) used to
--- augment the device fault information.
+-- No documentation found for Nested "VkDeviceDiagnosticsConfigFlagBitsNV" "VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV"
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV     = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
--- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV' enables
--- automatic insertion of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#device-diagnostic-checkpoints diagnostic checkpoints>
--- for draw calls, dispatches, trace rays, and copies. The CPU call stack
--- at the time of the command will be associated as the marker data for the
--- automatically inserted checkpoints.
+-- No documentation found for Nested "VkDeviceDiagnosticsConfigFlagBitsNV" "VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV"
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000004
 
 conNameDeviceDiagnosticsConfigFlagBitsNV :: String
@@ -304,12 +160,14 @@ showTableDeviceDiagnosticsConfigFlagBitsNV =
   , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV, "AUTOMATIC_CHECKPOINTS_BIT_NV")
   ]
 
+
 instance Show DeviceDiagnosticsConfigFlagBitsNV where
-  showsPrec = enumShowsPrec enumPrefixDeviceDiagnosticsConfigFlagBitsNV
-                            showTableDeviceDiagnosticsConfigFlagBitsNV
-                            conNameDeviceDiagnosticsConfigFlagBitsNV
-                            (\(DeviceDiagnosticsConfigFlagBitsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixDeviceDiagnosticsConfigFlagBitsNV
+                          showTableDeviceDiagnosticsConfigFlagBitsNV
+                          conNameDeviceDiagnosticsConfigFlagBitsNV
+                          (\(DeviceDiagnosticsConfigFlagBitsNV x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read DeviceDiagnosticsConfigFlagBitsNV where
   readPrec = enumReadPrec enumPrefixDeviceDiagnosticsConfigFlagBitsNV

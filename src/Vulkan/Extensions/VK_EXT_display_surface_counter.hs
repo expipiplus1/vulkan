@@ -1,103 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_display_surface_counter - instance extension
---
--- == VK_EXT_display_surface_counter
---
--- [__Name String__]
---     @VK_EXT_display_surface_counter@
---
--- [__Extension Type__]
---     Instance extension
---
--- [__Registered Extension Number__]
---     91
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_display@
---
--- [__Contact__]
---
---     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_display_surface_counter:%20&body=@cubanismo%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2016-12-13
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Pierre Boudier, NVIDIA
---
---     -   James Jones, NVIDIA
---
---     -   Damien Leone, NVIDIA
---
---     -   Pierre-Loup Griffais, Valve
---
---     -   Daniel Vetter, Intel
---
--- == Description
---
--- This extension defines a vertical blanking period counter associated
--- with display surfaces. It provides a mechanism to query support for such
--- a counter from a 'Vulkan.Extensions.Handles.SurfaceKHR' object.
---
--- == New Commands
---
--- -   'getPhysicalDeviceSurfaceCapabilities2EXT'
---
--- == New Structures
---
--- -   'SurfaceCapabilities2EXT'
---
--- == New Enums
---
--- -   'SurfaceCounterFlagBitsEXT'
---
--- == New Bitmasks
---
--- -   'SurfaceCounterFlagsEXT'
---
--- == New Enum Constants
---
--- -   'EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME'
---
--- -   'EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT'
---
--- == Version History
---
--- -   Revision 1, 2016-12-13 (James Jones)
---
---     -   Initial draft
---
--- = See Also
---
--- 'SurfaceCapabilities2EXT', 'SurfaceCounterFlagBitsEXT',
--- 'SurfaceCounterFlagsEXT', 'getPhysicalDeviceSurfaceCapabilities2EXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_surface_counter Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_display_surface_counter"
 module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurfaceCapabilities2EXT
                                                          , pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT
                                                          , pattern SURFACE_COUNTER_VBLANK_EXT
@@ -186,59 +88,12 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceSurfaceCapabilities2EXT
   :: FunPtr (Ptr PhysicalDevice_T -> SurfaceKHR -> Ptr SurfaceCapabilities2EXT -> IO Result) -> Ptr PhysicalDevice_T -> SurfaceKHR -> Ptr SurfaceCapabilities2EXT -> IO Result
 
--- | vkGetPhysicalDeviceSurfaceCapabilities2EXT - Query surface capabilities
---
--- = Description
---
--- 'getPhysicalDeviceSurfaceCapabilities2EXT' behaves similarly to
--- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR',
--- with the ability to return extended information by adding extending
--- structures to the @pNext@ chain of its @pSurfaceCapabilities@ parameter.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-physicalDevice-parameter#
---     @physicalDevice@ /must/ be a valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-surface-parameter#
---     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-pSurfaceCapabilities-parameter#
---     @pSurfaceCapabilities@ /must/ be a valid pointer to a
---     'SurfaceCapabilities2EXT' structure
---
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-commonparent# Both
---     of @physicalDevice@, and @surface@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceCapabilities2EXT',
--- 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceSurfaceCapabilities2EXT"
 getPhysicalDeviceSurfaceCapabilities2EXT :: forall io
                                           . (MonadIO io)
-                                         => -- | @physicalDevice@ is the physical device that will be associated with the
-                                            -- swapchain to be created, as described for
-                                            -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                         => -- No documentation found for Nested "vkGetPhysicalDeviceSurfaceCapabilities2EXT" "physicalDevice"
                                             PhysicalDevice
-                                         -> -- | @surface@ is the surface that will be associated with the swapchain.
+                                         -> -- No documentation found for Nested "vkGetPhysicalDeviceSurfaceCapabilities2EXT" "surface"
                                             SurfaceKHR
                                          -> io (SurfaceCapabilities2EXT)
 getPhysicalDeviceSurfaceCapabilities2EXT physicalDevice surface = liftIO . evalContT $ do
@@ -261,28 +116,8 @@ pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT = STRUCTURE_TYPE_SURFACE_CAPABI
 pattern SURFACE_COUNTER_VBLANK_EXT = SURFACE_COUNTER_VBLANK_BIT_EXT
 
 
--- | VkSurfaceCapabilities2EXT - Structure describing capabilities of a
--- surface
---
--- = Members
---
--- All members of 'SurfaceCapabilities2EXT' are identical to the
--- corresponding members of
--- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' where one
--- exists. The remaining members are:
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagsKHR',
--- 'Vulkan.Core10.FundamentalTypes.Extent2D',
--- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'SurfaceCounterFlagsEXT',
--- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR',
--- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagsKHR',
--- 'getPhysicalDeviceSurfaceCapabilities2EXT'
+
+-- No documentation found for TopLevel "VkSurfaceCapabilities2EXT"
 data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
   { -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "minImageCount"
     minImageCount :: Word32
@@ -304,13 +139,7 @@ data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
     supportedCompositeAlpha :: CompositeAlphaFlagsKHR
   , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedUsageFlags"
     supportedUsageFlags :: ImageUsageFlags
-  , -- | @supportedSurfaceCounters@ is a bitmask of 'SurfaceCounterFlagBitsEXT'
-    -- indicating the supported surface counter types.
-    --
-    -- #VUID-VkSurfaceCapabilities2EXT-supportedSurfaceCounters-01246#
-    -- @supportedSurfaceCounters@ /must/ not include
-    -- 'SURFACE_COUNTER_VBLANK_BIT_EXT' unless the surface queried is a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#wsi-display-surfaces display surface>
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedSurfaceCounters"
     supportedSurfaceCounters :: SurfaceCounterFlagsEXT
   }
   deriving (Typeable)
@@ -366,6 +195,7 @@ instance FromCStruct SurfaceCapabilities2EXT where
     pure $ SurfaceCapabilities2EXT
              minImageCount maxImageCount currentExtent minImageExtent maxImageExtent maxImageArrayLayers supportedTransforms currentTransform supportedCompositeAlpha supportedUsageFlags supportedSurfaceCounters
 
+
 instance Storable SurfaceCapabilities2EXT where
   sizeOf ~_ = 72
   alignment ~_ = 8
@@ -389,18 +219,11 @@ instance Zero SurfaceCapabilities2EXT where
 
 type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
 
--- | VkSurfaceCounterFlagBitsEXT - Surface-relative counter types
---
--- = See Also
---
--- 'SurfaceCounterFlagsEXT',
--- 'Vulkan.Extensions.VK_EXT_display_control.getSwapchainCounterEXT'
+-- No documentation found for TopLevel "VkSurfaceCounterFlagBitsEXT"
 newtype SurfaceCounterFlagBitsEXT = SurfaceCounterFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'SURFACE_COUNTER_VBLANK_BIT_EXT' specifies a counter incrementing once
--- every time a vertical blanking period occurs on the display associated
--- with the surface.
+-- No documentation found for Nested "VkSurfaceCounterFlagBitsEXT" "VK_SURFACE_COUNTER_VBLANK_BIT_EXT"
 pattern SURFACE_COUNTER_VBLANK_BIT_EXT = SurfaceCounterFlagBitsEXT 0x00000001
 
 conNameSurfaceCounterFlagBitsEXT :: String
@@ -412,12 +235,14 @@ enumPrefixSurfaceCounterFlagBitsEXT = "SURFACE_COUNTER_VBLANK_BIT_EXT"
 showTableSurfaceCounterFlagBitsEXT :: [(SurfaceCounterFlagBitsEXT, String)]
 showTableSurfaceCounterFlagBitsEXT = [(SURFACE_COUNTER_VBLANK_BIT_EXT, "")]
 
+
 instance Show SurfaceCounterFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixSurfaceCounterFlagBitsEXT
-                            showTableSurfaceCounterFlagBitsEXT
-                            conNameSurfaceCounterFlagBitsEXT
-                            (\(SurfaceCounterFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixSurfaceCounterFlagBitsEXT
+                          showTableSurfaceCounterFlagBitsEXT
+                          conNameSurfaceCounterFlagBitsEXT
+                          (\(SurfaceCounterFlagBitsEXT x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read SurfaceCounterFlagBitsEXT where
   readPrec = enumReadPrec enumPrefixSurfaceCounterFlagBitsEXT

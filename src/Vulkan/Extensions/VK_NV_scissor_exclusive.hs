@@ -1,126 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_NV_scissor_exclusive - device extension
---
--- == VK_NV_scissor_exclusive
---
--- [__Name String__]
---     @VK_NV_scissor_exclusive@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     206
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@
---
--- [__Contact__]
---
---     -   Pat Brown
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_scissor_exclusive:%20&body=@nvpbrown%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2018-07-31
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Interactions and External Dependencies__]
---     None
---
--- [__Contributors__]
---
---     -   Pat Brown, NVIDIA
---
---     -   Jeff Bolz, NVIDIA
---
---     -   Piers Daniell, NVIDIA
---
---     -   Daniel Koch, NVIDIA
---
--- == Description
---
--- This extension adds support for an exclusive scissor test to Vulkan. The
--- exclusive scissor test behaves like the scissor test, except that the
--- exclusive scissor test fails for pixels inside the corresponding
--- rectangle and passes for pixels outside the rectangle. If the same
--- rectangle is used for both the scissor and exclusive scissor tests, the
--- exclusive scissor test will pass if and only if the scissor test fails.
---
--- == New Commands
---
--- -   'cmdSetExclusiveScissorNV'
---
--- == New Structures
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
---     'Vulkan.Core10.Device.DeviceCreateInfo':
---
---     -   'PhysicalDeviceExclusiveScissorFeaturesNV'
---
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo':
---
---     -   'PipelineViewportExclusiveScissorStateCreateInfoNV'
---
--- == New Enum Constants
---
--- -   'NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME'
---
--- -   'NV_SCISSOR_EXCLUSIVE_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV'
---
--- == Issues
---
--- 1) For the scissor test, the viewport state must be created with a
--- matching number of scissor and viewport rectangles. Should we have the
--- same requirement for exclusive scissors?
---
--- __RESOLVED__: For exclusive scissors, we relax this requirement and
--- allow an exclusive scissor rectangle count that is either zero or equal
--- to the number of viewport rectangles. If you pass in an exclusive
--- scissor count of zero, the exclusive scissor test is treated as
--- disabled.
---
--- == Version History
---
--- -   Revision 1, 2018-07-31 (Pat Brown)
---
---     -   Internal revisions
---
--- = See Also
---
--- 'PhysicalDeviceExclusiveScissorFeaturesNV',
--- 'PipelineViewportExclusiveScissorStateCreateInfoNV',
--- 'cmdSetExclusiveScissorNV'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_scissor_exclusive Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_NV_scissor_exclusive"
 module Vulkan.Extensions.VK_NV_scissor_exclusive  ( cmdSetExclusiveScissorNV
                                                   , PhysicalDeviceExclusiveScissorFeaturesNV(..)
                                                   , PipelineViewportExclusiveScissorStateCreateInfoNV(..)
@@ -183,110 +62,14 @@ foreign import ccall
   "dynamic" mkVkCmdSetExclusiveScissorNV
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()
 
--- | vkCmdSetExclusiveScissorNV - Set the dynamic exclusive scissor
--- rectangles on a command buffer
---
--- = Description
---
--- The scissor rectangles taken from element i of @pExclusiveScissors@
--- replace the current state for the scissor index @firstExclusiveScissor@
--- + i, for i in [0, @exclusiveScissorCount@).
---
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
--- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
--- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
---
--- == Valid Usage
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-None-02031# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-exclusiveScissor exclusive scissor>
---     feature /must/ be enabled
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-firstExclusiveScissor-02034# The
---     sum of @firstExclusiveScissor@ and @exclusiveScissorCount@ /must/ be
---     between @1@ and
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@,
---     inclusive
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-firstExclusiveScissor-02035# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
---     feature is not enabled, @firstExclusiveScissor@ /must/ be @0@
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-exclusiveScissorCount-02036# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
---     feature is not enabled, @exclusiveScissorCount@ /must/ be @1@
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-x-02037# The @x@ and @y@ members of
---     @offset@ in each member of @pExclusiveScissors@ /must/ be greater
---     than or equal to @0@
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-offset-02038# Evaluation of
---     (@offset.x@ + @extent.width@) for each member of
---     @pExclusiveScissors@ /must/ not cause a signed integer addition
---     overflow
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-offset-02039# Evaluation of
---     (@offset.y@ + @extent.height@) for each member of
---     @pExclusiveScissors@ /must/ not cause a signed integer addition
---     overflow
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-pExclusiveScissors-parameter#
---     @pExclusiveScissors@ /must/ be a valid pointer to an array of
---     @exclusiveScissorCount@ 'Vulkan.Core10.FundamentalTypes.Rect2D'
---     structures
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
---
--- -   #VUID-vkCmdSetExclusiveScissorNV-exclusiveScissorCount-arraylength#
---     @exclusiveScissorCount@ /must/ be greater than @0@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.FundamentalTypes.Rect2D'
+-- No documentation found for TopLevel "vkCmdSetExclusiveScissorNV"
 cmdSetExclusiveScissorNV :: forall io
                           . (MonadIO io)
-                         => -- | @commandBuffer@ is the command buffer into which the command will be
-                            -- recorded.
+                         => -- No documentation found for Nested "vkCmdSetExclusiveScissorNV" "commandBuffer"
                             CommandBuffer
-                         -> -- | @firstExclusiveScissor@ is the index of the first exclusive scissor
-                            -- rectangle whose state is updated by the command.
+                         -> -- No documentation found for Nested "vkCmdSetExclusiveScissorNV" "firstExclusiveScissor"
                             ("firstExclusiveScissor" ::: Word32)
-                         -> -- | @pExclusiveScissors@ is a pointer to an array of
-                            -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures defining exclusive
-                            -- scissor rectangles.
+                         -> -- No documentation found for Nested "vkCmdSetExclusiveScissorNV" "pExclusiveScissors"
                             ("exclusiveScissors" ::: Vector Rect2D)
                          -> io ()
 cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors = liftIO . evalContT $ do
@@ -300,37 +83,10 @@ cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors =
   pure $ ()
 
 
--- | VkPhysicalDeviceExclusiveScissorFeaturesNV - Structure describing
--- exclusive scissor features that can be supported by an implementation
---
--- = Members
---
--- The members of the 'PhysicalDeviceExclusiveScissorFeaturesNV' structure
--- describe the following features:
---
--- = Description
---
--- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-exclusive-scissor Exclusive Scissor Test>
--- for more information.
---
--- If the 'PhysicalDeviceExclusiveScissorFeaturesNV' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceExclusiveScissorFeaturesNV' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- feature.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceExclusiveScissorFeaturesNV"
 data PhysicalDeviceExclusiveScissorFeaturesNV = PhysicalDeviceExclusiveScissorFeaturesNV
-  { -- | #features-exclusiveScissor# @exclusiveScissor@ indicates that the
-    -- implementation supports the exclusive scissor test.
+  { -- No documentation found for Nested "VkPhysicalDeviceExclusiveScissorFeaturesNV" "exclusiveScissor"
     exclusiveScissor :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -359,6 +115,7 @@ instance FromCStruct PhysicalDeviceExclusiveScissorFeaturesNV where
     pure $ PhysicalDeviceExclusiveScissorFeaturesNV
              (bool32ToBool exclusiveScissor)
 
+
 instance Storable PhysicalDeviceExclusiveScissorFeaturesNV where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -370,52 +127,10 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
            zero
 
 
--- | VkPipelineViewportExclusiveScissorStateCreateInfoNV - Structure
--- specifying parameters controlling exclusive scissor testing
---
--- = Description
---
--- If the
--- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
--- dynamic state is enabled for a pipeline, the @pExclusiveScissors@ member
--- is ignored.
---
--- When this structure is included in the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it defines
--- parameters of the exclusive scissor test. If this structure is not
--- included in the @pNext@ chain, it is equivalent to specifying this
--- structure with a @exclusiveScissorCount@ of @0@.
---
--- == Valid Usage
---
--- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02027#
---     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
---     feature is not enabled, @exclusiveScissorCount@ /must/ be @0@ or @1@
---
--- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02028#
---     @exclusiveScissorCount@ /must/ be less than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
---
--- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02029#
---     @exclusiveScissorCount@ /must/ be @0@ or greater than or equal to
---     the @viewportCount@ member of
---     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-sType-sType#
---     @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV'
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Rect2D',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPipelineViewportExclusiveScissorStateCreateInfoNV"
 data PipelineViewportExclusiveScissorStateCreateInfoNV = PipelineViewportExclusiveScissorStateCreateInfoNV
-  { -- | @pExclusiveScissors@ is a pointer to an array of
-    -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures defining exclusive
-    -- scissor rectangles.
+  { -- No documentation found for Nested "VkPipelineViewportExclusiveScissorStateCreateInfoNV" "pExclusiveScissors"
     exclusiveScissors :: Vector Rect2D }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)

@@ -13,17 +13,13 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkCommandBufferLevel - Enumerant specifying a command buffer level
---
--- = See Also
---
--- 'Vulkan.Core10.CommandBuffer.CommandBufferAllocateInfo'
+-- No documentation found for TopLevel "VkCommandBufferLevel"
 newtype CommandBufferLevel = CommandBufferLevel Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COMMAND_BUFFER_LEVEL_PRIMARY' specifies a primary command buffer.
+-- No documentation found for Nested "VkCommandBufferLevel" "VK_COMMAND_BUFFER_LEVEL_PRIMARY"
 pattern COMMAND_BUFFER_LEVEL_PRIMARY   = CommandBufferLevel 0
--- | 'COMMAND_BUFFER_LEVEL_SECONDARY' specifies a secondary command buffer.
+-- No documentation found for Nested "VkCommandBufferLevel" "VK_COMMAND_BUFFER_LEVEL_SECONDARY"
 pattern COMMAND_BUFFER_LEVEL_SECONDARY = CommandBufferLevel 1
 {-# complete COMMAND_BUFFER_LEVEL_PRIMARY,
              COMMAND_BUFFER_LEVEL_SECONDARY :: CommandBufferLevel #-}
@@ -38,12 +34,14 @@ showTableCommandBufferLevel :: [(CommandBufferLevel, String)]
 showTableCommandBufferLevel =
   [(COMMAND_BUFFER_LEVEL_PRIMARY, "PRIMARY"), (COMMAND_BUFFER_LEVEL_SECONDARY, "SECONDARY")]
 
+
 instance Show CommandBufferLevel where
-  showsPrec = enumShowsPrec enumPrefixCommandBufferLevel
-                            showTableCommandBufferLevel
-                            conNameCommandBufferLevel
-                            (\(CommandBufferLevel x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixCommandBufferLevel
+                          showTableCommandBufferLevel
+                          conNameCommandBufferLevel
+                          (\(CommandBufferLevel x) -> x)
+                          (showsPrec 11)
+
 
 instance Read CommandBufferLevel where
   readPrec =

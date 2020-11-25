@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkPipelineDepthStencilStateCreateFlags - Reserved for future use
---
--- = Description
---
--- 'PipelineDepthStencilStateCreateFlags' is a bitmask type for setting a
--- mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'
+-- No documentation found for TopLevel "VkPipelineDepthStencilStateCreateFlags"
 newtype PipelineDepthStencilStateCreateFlags = PipelineDepthStencilStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixPipelineDepthStencilStateCreateFlags = ""
 showTablePipelineDepthStencilStateCreateFlags :: [(PipelineDepthStencilStateCreateFlags, String)]
 showTablePipelineDepthStencilStateCreateFlags = []
 
+
 instance Show PipelineDepthStencilStateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineDepthStencilStateCreateFlags
-                            showTablePipelineDepthStencilStateCreateFlags
-                            conNamePipelineDepthStencilStateCreateFlags
-                            (\(PipelineDepthStencilStateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineDepthStencilStateCreateFlags
+                          showTablePipelineDepthStencilStateCreateFlags
+                          conNamePipelineDepthStencilStateCreateFlags
+                          (\(PipelineDepthStencilStateCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineDepthStencilStateCreateFlags where
   readPrec = enumReadPrec enumPrefixPipelineDepthStencilStateCreateFlags

@@ -249,28 +249,10 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceFeatures2
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceFeatures2) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceFeatures2) -> IO ()
 
--- | vkGetPhysicalDeviceFeatures2 - Reports capabilities of a physical device
---
--- = Description
---
--- Each structure in @pFeatures@ and its @pNext@ chain contains members
--- corresponding to fine-grained features. 'getPhysicalDeviceFeatures2'
--- writes each member to a boolean value indicating whether that feature is
--- supported.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceFeatures2'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceFeatures2"
 getPhysicalDeviceFeatures2 :: forall a io
                             . (Extendss PhysicalDeviceFeatures2 a, PokeChain a, PeekChain a, MonadIO io)
-                           => -- | @physicalDevice@ is the physical device from which to query the
-                              -- supported features.
-                              --
-                              -- #VUID-vkGetPhysicalDeviceFeatures2-physicalDevice-parameter#
-                              -- @physicalDevice@ /must/ be a valid
-                              -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                           => -- No documentation found for Nested "vkGetPhysicalDeviceFeatures2" "physicalDevice"
                               PhysicalDevice
                            -> io (PhysicalDeviceFeatures2 a)
 getPhysicalDeviceFeatures2 physicalDevice = liftIO . evalContT $ do
@@ -291,28 +273,10 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceProperties2
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceProperties2) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceProperties2) -> IO ()
 
--- | vkGetPhysicalDeviceProperties2 - Returns properties of a physical device
---
--- = Description
---
--- Each structure in @pProperties@ and its @pNext@ chain contain members
--- corresponding to properties or implementation-dependent limits.
--- 'getPhysicalDeviceProperties2' writes each member to a value indicating
--- the value of that property or limit.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceProperties2'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceProperties2"
 getPhysicalDeviceProperties2 :: forall a io
                               . (Extendss PhysicalDeviceProperties2 a, PokeChain a, PeekChain a, MonadIO io)
-                             => -- | @physicalDevice@ is the handle to the physical device whose properties
-                                -- will be queried.
-                                --
-                                -- #VUID-vkGetPhysicalDeviceProperties2-physicalDevice-parameter#
-                                -- @physicalDevice@ /must/ be a valid
-                                -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                             => -- No documentation found for Nested "vkGetPhysicalDeviceProperties2" "physicalDevice"
                                 PhysicalDevice
                              -> io (PhysicalDeviceProperties2 a)
 getPhysicalDeviceProperties2 physicalDevice = liftIO . evalContT $ do
@@ -333,35 +297,12 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceFormatProperties2
   :: FunPtr (Ptr PhysicalDevice_T -> Format -> Ptr (SomeStruct FormatProperties2) -> IO ()) -> Ptr PhysicalDevice_T -> Format -> Ptr (SomeStruct FormatProperties2) -> IO ()
 
--- | vkGetPhysicalDeviceFormatProperties2 - Lists physical device’s format
--- capabilities
---
--- = Description
---
--- 'getPhysicalDeviceFormatProperties2' behaves similarly to
--- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties',
--- with the ability to return extended information in a @pNext@ chain of
--- output structures.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.Format.Format', 'FormatProperties2',
--- 'Vulkan.Core10.Handles.PhysicalDevice'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceFormatProperties2"
 getPhysicalDeviceFormatProperties2 :: forall a io
                                     . (Extendss FormatProperties2 a, PokeChain a, PeekChain a, MonadIO io)
-                                   => -- | @physicalDevice@ is the physical device from which to query the format
-                                      -- properties.
-                                      --
-                                      -- #VUID-vkGetPhysicalDeviceFormatProperties2-physicalDevice-parameter#
-                                      -- @physicalDevice@ /must/ be a valid
-                                      -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                   => -- No documentation found for Nested "vkGetPhysicalDeviceFormatProperties2" "physicalDevice"
                                       PhysicalDevice
-                                   -> -- | @format@ is the format whose properties are queried.
-                                      --
-                                      -- #VUID-vkGetPhysicalDeviceFormatProperties2-format-parameter# @format@
-                                      -- /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+                                   -> -- No documentation found for Nested "vkGetPhysicalDeviceFormatProperties2" "format"
                                       Format
                                    -> io (FormatProperties2 a)
 getPhysicalDeviceFormatProperties2 physicalDevice format = liftIO . evalContT $ do
@@ -382,66 +323,12 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceImageFormatProperties2
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceImageFormatInfo2) -> Ptr (SomeStruct ImageFormatProperties2) -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceImageFormatInfo2) -> Ptr (SomeStruct ImageFormatProperties2) -> IO Result
 
--- | vkGetPhysicalDeviceImageFormatProperties2 - Lists physical device’s
--- image format capabilities
---
--- = Description
---
--- 'getPhysicalDeviceImageFormatProperties2' behaves similarly to
--- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties',
--- with the ability to return extended information in a @pNext@ chain of
--- output structures.
---
--- == Valid Usage
---
--- -   #VUID-vkGetPhysicalDeviceImageFormatProperties2-pNext-01868# If the
---     @pNext@ chain of @pImageFormatProperties@ includes a
---     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferUsageANDROID'
---     structure, the @pNext@ chain of @pImageFormatInfo@ /must/ include a
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalImageFormatInfo'
---     structure with @handleType@ set to
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetPhysicalDeviceImageFormatProperties2-physicalDevice-parameter#
---     @physicalDevice@ /must/ be a valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkGetPhysicalDeviceImageFormatProperties2-pImageFormatInfo-parameter#
---     @pImageFormatInfo@ /must/ be a valid pointer to a valid
---     'PhysicalDeviceImageFormatInfo2' structure
---
--- -   #VUID-vkGetPhysicalDeviceImageFormatProperties2-pImageFormatProperties-parameter#
---     @pImageFormatProperties@ /must/ be a valid pointer to a
---     'ImageFormatProperties2' structure
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'
---
--- = See Also
---
--- 'ImageFormatProperties2', 'Vulkan.Core10.Handles.PhysicalDevice',
--- 'PhysicalDeviceImageFormatInfo2'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceImageFormatProperties2"
 getPhysicalDeviceImageFormatProperties2 :: forall a b io
                                          . (Extendss PhysicalDeviceImageFormatInfo2 a, Extendss ImageFormatProperties2 b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
-                                        => -- | @physicalDevice@ is the physical device from which to query the image
-                                           -- capabilities.
+                                        => -- No documentation found for Nested "vkGetPhysicalDeviceImageFormatProperties2" "physicalDevice"
                                            PhysicalDevice
-                                        -> -- | @pImageFormatInfo@ is a pointer to a 'PhysicalDeviceImageFormatInfo2'
-                                           -- structure describing the parameters that would be consumed by
-                                           -- 'Vulkan.Core10.Image.createImage'.
+                                        -> -- No documentation found for Nested "vkGetPhysicalDeviceImageFormatProperties2" "pImageFormatInfo"
                                            (PhysicalDeviceImageFormatInfo2 a)
                                         -> io (ImageFormatProperties2 b)
 getPhysicalDeviceImageFormatProperties2 physicalDevice imageFormatInfo = liftIO . evalContT $ do
@@ -464,39 +351,10 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceQueueFamilyProperties2
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr (SomeStruct QueueFamilyProperties2) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr (SomeStruct QueueFamilyProperties2) -> IO ()
 
--- | vkGetPhysicalDeviceQueueFamilyProperties2 - Reports properties of the
--- queues of the specified physical device
---
--- = Description
---
--- 'getPhysicalDeviceQueueFamilyProperties2' behaves similarly to
--- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties',
--- with the ability to return extended information in a @pNext@ chain of
--- output structures.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetPhysicalDeviceQueueFamilyProperties2-physicalDevice-parameter#
---     @physicalDevice@ /must/ be a valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkGetPhysicalDeviceQueueFamilyProperties2-pQueueFamilyPropertyCount-parameter#
---     @pQueueFamilyPropertyCount@ /must/ be a valid pointer to a
---     @uint32_t@ value
---
--- -   #VUID-vkGetPhysicalDeviceQueueFamilyProperties2-pQueueFamilyProperties-parameter#
---     If the value referenced by @pQueueFamilyPropertyCount@ is not @0@,
---     and @pQueueFamilyProperties@ is not @NULL@, @pQueueFamilyProperties@
---     /must/ be a valid pointer to an array of @pQueueFamilyPropertyCount@
---     'QueueFamilyProperties2' structures
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice', 'QueueFamilyProperties2'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceQueueFamilyProperties2"
 getPhysicalDeviceQueueFamilyProperties2 :: forall a io
                                          . (Extendss QueueFamilyProperties2 a, PokeChain a, PeekChain a, MonadIO io)
-                                        => -- | @physicalDevice@ is the handle to the physical device whose properties
-                                           -- will be queried.
+                                        => -- No documentation found for Nested "vkGetPhysicalDeviceQueueFamilyProperties2" "physicalDevice"
                                            PhysicalDevice
                                         -> io (("queueFamilyProperties" ::: Vector (QueueFamilyProperties2 a)))
 getPhysicalDeviceQueueFamilyProperties2 physicalDevice = liftIO . evalContT $ do
@@ -523,29 +381,10 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceMemoryProperties2
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceMemoryProperties2) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceMemoryProperties2) -> IO ()
 
--- | vkGetPhysicalDeviceMemoryProperties2 - Reports memory information for
--- the specified physical device
---
--- = Description
---
--- 'getPhysicalDeviceMemoryProperties2' behaves similarly to
--- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties',
--- with the ability to return extended information in a @pNext@ chain of
--- output structures.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice',
--- 'PhysicalDeviceMemoryProperties2'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceMemoryProperties2"
 getPhysicalDeviceMemoryProperties2 :: forall a io
                                     . (Extendss PhysicalDeviceMemoryProperties2 a, PokeChain a, PeekChain a, MonadIO io)
-                                   => -- | @physicalDevice@ is the handle to the device to query.
-                                      --
-                                      -- #VUID-vkGetPhysicalDeviceMemoryProperties2-physicalDevice-parameter#
-                                      -- @physicalDevice@ /must/ be a valid
-                                      -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                   => -- No documentation found for Nested "vkGetPhysicalDeviceMemoryProperties2" "physicalDevice"
                                       PhysicalDevice
                                    -> io (PhysicalDeviceMemoryProperties2 a)
 getPhysicalDeviceMemoryProperties2 physicalDevice = liftIO . evalContT $ do
@@ -566,46 +405,12 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceSparseImageFormatProperties2
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr PhysicalDeviceSparseImageFormatInfo2 -> Ptr Word32 -> Ptr SparseImageFormatProperties2 -> IO ()) -> Ptr PhysicalDevice_T -> Ptr PhysicalDeviceSparseImageFormatInfo2 -> Ptr Word32 -> Ptr SparseImageFormatProperties2 -> IO ()
 
--- | vkGetPhysicalDeviceSparseImageFormatProperties2 - Retrieve properties of
--- an image format applied to sparse images
---
--- = Description
---
--- 'getPhysicalDeviceSparseImageFormatProperties2' behaves identically to
--- 'Vulkan.Core10.SparseResourceMemoryManagement.getPhysicalDeviceSparseImageFormatProperties',
--- with the ability to return extended information by adding extending
--- structures to the @pNext@ chain of its @pProperties@ parameter.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties2-physicalDevice-parameter#
---     @physicalDevice@ /must/ be a valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties2-pFormatInfo-parameter#
---     @pFormatInfo@ /must/ be a valid pointer to a valid
---     'PhysicalDeviceSparseImageFormatInfo2' structure
---
--- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties2-pPropertyCount-parameter#
---     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties2-pProperties-parameter#
---     If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ 'SparseImageFormatProperties2'
---     structures
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice',
--- 'PhysicalDeviceSparseImageFormatInfo2', 'SparseImageFormatProperties2'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceSparseImageFormatProperties2"
 getPhysicalDeviceSparseImageFormatProperties2 :: forall io
                                                . (MonadIO io)
-                                              => -- | @physicalDevice@ is the physical device from which to query the sparse
-                                                 -- image capabilities.
+                                              => -- No documentation found for Nested "vkGetPhysicalDeviceSparseImageFormatProperties2" "physicalDevice"
                                                  PhysicalDevice
-                                              -> -- | @pFormatInfo@ is a pointer to a 'PhysicalDeviceSparseImageFormatInfo2'
-                                                 -- structure containing input parameters to the command.
+                                              -> -- No documentation found for Nested "vkGetPhysicalDeviceSparseImageFormatProperties2" "pFormatInfo"
                                                  PhysicalDeviceSparseImageFormatInfo2
                                               -> io (("properties" ::: Vector SparseImageFormatProperties2))
 getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = liftIO . evalContT $ do
@@ -626,36 +431,12 @@ getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = liftIO
   pure $ (pProperties')
 
 
--- | VkPhysicalDeviceFeatures2 - Structure describing the fine-grained
--- features that can be supported by an implementation
---
--- = Members
---
--- The 'PhysicalDeviceFeatures2' structure is defined as:
---
--- = Description
---
--- The @pNext@ chain of this structure is used to extend the structure with
--- features defined by extensions. This structure /can/ be used in
--- 'getPhysicalDeviceFeatures2' or /can/ be included in the @pNext@ chain
--- of a 'Vulkan.Core10.Device.DeviceCreateInfo' structure, in which case it
--- controls which features are enabled in the device in lieu of
--- @pEnabledFeatures@.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceFeatures',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceFeatures2',
--- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2KHR'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceFeatures2"
 data PhysicalDeviceFeatures2 (es :: [Type]) = PhysicalDeviceFeatures2
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkPhysicalDeviceFeatures2" "pNext"
     next :: Chain es
-  , -- | @features@ is a
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceFeatures' structure
-    -- describing the fine-grained features of the Vulkan 1.0 API.
+  , -- No documentation found for Nested "VkPhysicalDeviceFeatures2" "features"
     features :: PhysicalDeviceFeatures
   }
   deriving (Typeable)
@@ -779,86 +560,12 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
            zero
 
 
--- | VkPhysicalDeviceProperties2 - Structure specifying physical device
--- properties
---
--- = Description
---
--- The @pNext@ chain of this structure is used to extend the structure with
--- properties defined by extensions.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPhysicalDeviceProperties2-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2'
---
--- -   #VUID-VkPhysicalDeviceProperties2-pNext-pNext# Each @pNext@ member
---     of any structure (including this one) in the @pNext@ chain /must/ be
---     either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructurePropertiesKHR',
---     'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT',
---     'Vulkan.Extensions.VK_EXT_conservative_rasterization.PhysicalDeviceConservativeRasterizationPropertiesEXT',
---     'Vulkan.Extensions.VK_NV_cooperative_matrix.PhysicalDeviceCooperativeMatrixPropertiesNV',
---     'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorPropertiesEXT',
---     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties',
---     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties',
---     'Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsPropertiesNV',
---     'Vulkan.Extensions.VK_EXT_discard_rectangles.PhysicalDeviceDiscardRectanglePropertiesEXT',
---     'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.PhysicalDeviceDriverProperties',
---     'Vulkan.Extensions.VK_EXT_external_memory_host.PhysicalDeviceExternalMemoryHostPropertiesEXT',
---     'Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls.PhysicalDeviceFloatControlsProperties',
---     'Vulkan.Extensions.VK_EXT_fragment_density_map2.PhysicalDeviceFragmentDensityMap2PropertiesEXT',
---     'Vulkan.Extensions.VK_EXT_fragment_density_map.PhysicalDeviceFragmentDensityMapPropertiesEXT',
---     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PhysicalDeviceFragmentShadingRateEnumsPropertiesNV',
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PhysicalDeviceFragmentShadingRatePropertiesKHR',
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties',
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT',
---     'Vulkan.Extensions.VK_EXT_line_rasterization.PhysicalDeviceLineRasterizationPropertiesEXT',
---     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties',
---     'Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV',
---     'Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX',
---     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties',
---     'Vulkan.Extensions.VK_EXT_pci_bus_info.PhysicalDevicePCIBusInfoPropertiesEXT',
---     'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryPropertiesKHR',
---     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PhysicalDevicePointClippingProperties',
---     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetPropertiesKHR',
---     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryProperties',
---     'Vulkan.Extensions.VK_KHR_push_descriptor.PhysicalDevicePushDescriptorPropertiesKHR',
---     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.PhysicalDeviceRayTracingPipelinePropertiesKHR',
---     'Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV',
---     'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2PropertiesEXT',
---     'Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT',
---     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.PhysicalDeviceSamplerFilterMinmaxProperties',
---     'Vulkan.Extensions.VK_AMD_shader_core_properties2.PhysicalDeviceShaderCoreProperties2AMD',
---     'Vulkan.Extensions.VK_AMD_shader_core_properties.PhysicalDeviceShaderCorePropertiesAMD',
---     'Vulkan.Extensions.VK_NV_shader_sm_builtins.PhysicalDeviceShaderSMBuiltinsPropertiesNV',
---     'Vulkan.Extensions.VK_NV_shading_rate_image.PhysicalDeviceShadingRateImagePropertiesNV',
---     'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties',
---     'Vulkan.Extensions.VK_EXT_subgroup_size_control.PhysicalDeviceSubgroupSizeControlPropertiesEXT',
---     'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT',
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.PhysicalDeviceTimelineSemaphoreProperties',
---     'Vulkan.Extensions.VK_EXT_transform_feedback.PhysicalDeviceTransformFeedbackPropertiesEXT',
---     'Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesEXT',
---     'Vulkan.Core12.PhysicalDeviceVulkan11Properties', or
---     'Vulkan.Core12.PhysicalDeviceVulkan12Properties'
---
--- -   #VUID-VkPhysicalDeviceProperties2-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
---
--- = See Also
---
--- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceProperties2',
--- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2KHR'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceProperties2"
 data PhysicalDeviceProperties2 (es :: [Type]) = PhysicalDeviceProperties2
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkPhysicalDeviceProperties2" "pNext"
     next :: Chain es
-  , -- | @properties@ is a
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties' structure
-    -- describing properties of the physical device. This structure is written
-    -- with the same values as if it were written by
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceProperties'.
+  , -- No documentation found for Nested "VkPhysicalDeviceProperties2" "properties"
     properties :: PhysicalDeviceProperties
   }
   deriving (Typeable)
@@ -952,32 +659,12 @@ instance es ~ '[] => Zero (PhysicalDeviceProperties2 es) where
            zero
 
 
--- | VkFormatProperties2 - Structure specifying image format properties
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkFormatProperties2-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FORMAT_PROPERTIES_2'
---
--- -   #VUID-VkFormatProperties2-pNext-pNext# @pNext@ /must/ be @NULL@ or a
---     pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesListEXT'
---
--- -   #VUID-VkFormatProperties2-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
---
--- = See Also
---
--- 'Vulkan.Core10.DeviceInitialization.FormatProperties',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceFormatProperties2',
--- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2KHR'
+
+-- No documentation found for TopLevel "VkFormatProperties2"
 data FormatProperties2 (es :: [Type]) = FormatProperties2
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkFormatProperties2" "pNext"
     next :: Chain es
-  , -- | @formatProperties@ is a
-    -- 'Vulkan.Core10.DeviceInitialization.FormatProperties' structure
-    -- describing features supported by the requested format.
+  , -- No documentation found for Nested "VkFormatProperties2" "formatProperties"
     formatProperties :: FormatProperties
   }
   deriving (Typeable)
@@ -1026,58 +713,12 @@ instance es ~ '[] => Zero (FormatProperties2 es) where
            zero
 
 
--- | VkImageFormatProperties2 - Structure specifying an image format
--- properties
---
--- = Description
---
--- If the combination of parameters to
--- 'getPhysicalDeviceImageFormatProperties2' is not supported by the
--- implementation for use in 'Vulkan.Core10.Image.createImage', then all
--- members of @imageFormatProperties@ will be filled with zero.
---
--- Note
---
--- Filling @imageFormatProperties@ with zero for unsupported formats is an
--- exception to the usual rule that output structures have undefined
--- contents on error. This exception was unintentional, but is preserved
--- for backwards compatibility. This exeption only applies to
--- @imageFormatProperties@, not @sType@, @pNext@, or any structures chained
--- from @pNext@.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkImageFormatProperties2-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2'
---
--- -   #VUID-VkImageFormatProperties2-pNext-pNext# Each @pNext@ member of
---     any structure (including this one) in the @pNext@ chain /must/ be
---     either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferUsageANDROID',
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties',
---     'Vulkan.Extensions.VK_EXT_filter_cubic.FilterCubicImageViewImageFormatPropertiesEXT',
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties',
---     or
---     'Vulkan.Extensions.VK_AMD_texture_gather_bias_lod.TextureLODGatherFormatPropertiesAMD'
---
--- -   #VUID-VkImageFormatProperties2-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
---
--- = See Also
---
--- 'Vulkan.Core10.DeviceInitialization.ImageFormatProperties',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceImageFormatProperties2',
--- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2KHR'
+
+-- No documentation found for TopLevel "VkImageFormatProperties2"
 data ImageFormatProperties2 (es :: [Type]) = ImageFormatProperties2
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
-    -- The @pNext@ chain of 'ImageFormatProperties2' is used to allow the
-    -- specification of additional capabilities to be returned from
-    -- 'getPhysicalDeviceImageFormatProperties2'.
+  { -- No documentation found for Nested "VkImageFormatProperties2" "pNext"
     next :: Chain es
-  , -- | @imageFormatProperties@ is a
-    -- 'Vulkan.Core10.DeviceInitialization.ImageFormatProperties' structure in
-    -- which capabilities are returned.
+  , -- No documentation found for Nested "VkImageFormatProperties2" "imageFormatProperties"
     imageFormatProperties :: ImageFormatProperties
   }
   deriving (Typeable)
@@ -1130,109 +771,20 @@ instance es ~ '[] => Zero (ImageFormatProperties2 es) where
            zero
 
 
--- | VkPhysicalDeviceImageFormatInfo2 - Structure specifying image creation
--- parameters
---
--- = Description
---
--- The members of 'PhysicalDeviceImageFormatInfo2' correspond to the
--- arguments to
--- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties',
--- with @sType@ and @pNext@ added for extensibility.
---
--- == Valid Usage
---
--- -   #VUID-VkPhysicalDeviceImageFormatInfo2-tiling-02249# @tiling@ /must/
---     be
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
---     if and only if the @pNext@ chain includes
---     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT'
---
--- -   #VUID-VkPhysicalDeviceImageFormatInfo2-tiling-02313# If @tiling@ is
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
---     and @flags@ contains
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
---     then the @pNext@ chain /must/ include a
---     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
---     structure with non-zero @viewFormatCount@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPhysicalDeviceImageFormatInfo2-sType-sType# @sType@ /must/
---     be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2'
---
--- -   #VUID-VkPhysicalDeviceImageFormatInfo2-pNext-pNext# Each @pNext@
---     member of any structure (including this one) in the @pNext@ chain
---     /must/ be either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo',
---     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo',
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalImageFormatInfo',
---     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT',
---     or
---     'Vulkan.Extensions.VK_EXT_filter_cubic.PhysicalDeviceImageViewImageFormatInfoEXT'
---
--- -   #VUID-VkPhysicalDeviceImageFormatInfo2-sType-unique# The @sType@
---     value of each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkPhysicalDeviceImageFormatInfo2-format-parameter# @format@
---     /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
---
--- -   #VUID-VkPhysicalDeviceImageFormatInfo2-type-parameter# @type@ /must/
---     be a valid 'Vulkan.Core10.Enums.ImageType.ImageType' value
---
--- -   #VUID-VkPhysicalDeviceImageFormatInfo2-tiling-parameter# @tiling@
---     /must/ be a valid 'Vulkan.Core10.Enums.ImageTiling.ImageTiling'
---     value
---
--- -   #VUID-VkPhysicalDeviceImageFormatInfo2-usage-parameter# @usage@
---     /must/ be a valid combination of
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
---
--- -   #VUID-VkPhysicalDeviceImageFormatInfo2-usage-requiredbitmask#
---     @usage@ /must/ not be @0@
---
--- -   #VUID-VkPhysicalDeviceImageFormatInfo2-flags-parameter# @flags@
---     /must/ be a valid combination of
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits' values
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.Format.Format',
--- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlags',
--- 'Vulkan.Core10.Enums.ImageTiling.ImageTiling',
--- 'Vulkan.Core10.Enums.ImageType.ImageType',
--- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceImageFormatProperties2',
--- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2KHR'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceImageFormatInfo2"
 data PhysicalDeviceImageFormatInfo2 (es :: [Type]) = PhysicalDeviceImageFormatInfo2
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
-    -- The @pNext@ chain of 'PhysicalDeviceImageFormatInfo2' is used to provide
-    -- additional image parameters to
-    -- 'getPhysicalDeviceImageFormatProperties2'.
+  { -- No documentation found for Nested "VkPhysicalDeviceImageFormatInfo2" "pNext"
     next :: Chain es
-  , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' value indicating the
-    -- image format, corresponding to
-    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@format@.
+  , -- No documentation found for Nested "VkPhysicalDeviceImageFormatInfo2" "format"
     format :: Format
-  , -- | @type@ is a 'Vulkan.Core10.Enums.ImageType.ImageType' value indicating
-    -- the image type, corresponding to
-    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@imageType@.
+  , -- No documentation found for Nested "VkPhysicalDeviceImageFormatInfo2" "type"
     type' :: ImageType
-  , -- | @tiling@ is a 'Vulkan.Core10.Enums.ImageTiling.ImageTiling' value
-    -- indicating the image tiling, corresponding to
-    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@tiling@.
+  , -- No documentation found for Nested "VkPhysicalDeviceImageFormatInfo2" "tiling"
     tiling :: ImageTiling
-  , -- | @usage@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' indicating
-    -- the intended usage of the image, corresponding to
-    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@usage@.
+  , -- No documentation found for Nested "VkPhysicalDeviceImageFormatInfo2" "usage"
     usage :: ImageUsageFlags
-  , -- | @flags@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits' indicating
-    -- additional parameters of the image, corresponding to
-    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@.
+  , -- No documentation found for Nested "VkPhysicalDeviceImageFormatInfo2" "flags"
     flags :: ImageCreateFlags
   }
   deriving (Typeable)
@@ -1300,34 +852,12 @@ instance es ~ '[] => Zero (PhysicalDeviceImageFormatInfo2 es) where
            zero
 
 
--- | VkQueueFamilyProperties2 - Structure providing information about a queue
--- family
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkQueueFamilyProperties2-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2'
---
--- -   #VUID-VkQueueFamilyProperties2-pNext-pNext# @pNext@ /must/ be @NULL@
---     or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.QueueFamilyCheckpointPropertiesNV'
---
--- -   #VUID-VkQueueFamilyProperties2-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
---
--- = See Also
---
--- 'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceQueueFamilyProperties2',
--- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2KHR'
+
+-- No documentation found for TopLevel "VkQueueFamilyProperties2"
 data QueueFamilyProperties2 (es :: [Type]) = QueueFamilyProperties2
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkQueueFamilyProperties2" "pNext"
     next :: Chain es
-  , -- | @queueFamilyProperties@ is a
-    -- 'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties' structure
-    -- which is populated with the same values as in
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'.
+  , -- No documentation found for Nested "VkQueueFamilyProperties2" "queueFamilyProperties"
     queueFamilyProperties :: QueueFamilyProperties
   }
   deriving (Typeable)
@@ -1376,35 +906,12 @@ instance es ~ '[] => Zero (QueueFamilyProperties2 es) where
            zero
 
 
--- | VkPhysicalDeviceMemoryProperties2 - Structure specifying physical device
--- memory properties
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPhysicalDeviceMemoryProperties2-sType-sType# @sType@ /must/
---     be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2'
---
--- -   #VUID-VkPhysicalDeviceMemoryProperties2-pNext-pNext# @pNext@ /must/
---     be @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_memory_budget.PhysicalDeviceMemoryBudgetPropertiesEXT'
---
--- -   #VUID-VkPhysicalDeviceMemoryProperties2-sType-unique# The @sType@
---     value of each struct in the @pNext@ chain /must/ be unique
---
--- = See Also
---
--- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceMemoryProperties2',
--- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceMemoryProperties2KHR'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceMemoryProperties2"
 data PhysicalDeviceMemoryProperties2 (es :: [Type]) = PhysicalDeviceMemoryProperties2
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkPhysicalDeviceMemoryProperties2" "pNext"
     next :: Chain es
-  , -- | @memoryProperties@ is a
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'
-    -- structure which is populated with the same values as in
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'.
+  , -- No documentation found for Nested "VkPhysicalDeviceMemoryProperties2" "memoryProperties"
     memoryProperties :: PhysicalDeviceMemoryProperties
   }
   deriving (Typeable)
@@ -1453,22 +960,10 @@ instance es ~ '[] => Zero (PhysicalDeviceMemoryProperties2 es) where
            zero
 
 
--- | VkSparseImageFormatProperties2 - Structure specifying sparse image
--- format properties
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageFormatProperties',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceSparseImageFormatProperties2',
--- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceSparseImageFormatProperties2KHR'
+
+-- No documentation found for TopLevel "VkSparseImageFormatProperties2"
 data SparseImageFormatProperties2 = SparseImageFormatProperties2
-  { -- | @properties@ is a
-    -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageFormatProperties'
-    -- structure which is populated with the same values as in
-    -- 'Vulkan.Core10.SparseResourceMemoryManagement.getPhysicalDeviceSparseImageFormatProperties'.
+  { -- No documentation found for Nested "VkSparseImageFormatProperties2" "properties"
     properties :: SparseImageFormatProperties }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -1497,6 +992,7 @@ instance FromCStruct SparseImageFormatProperties2 where
     pure $ SparseImageFormatProperties2
              properties
 
+
 instance Storable SparseImageFormatProperties2 where
   sizeOf ~_ = 40
   alignment ~_ = 8
@@ -1508,61 +1004,18 @@ instance Zero SparseImageFormatProperties2 where
            zero
 
 
--- | VkPhysicalDeviceSparseImageFormatInfo2 - Structure specifying sparse
--- image format inputs
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.Format.Format',
--- 'Vulkan.Core10.Enums.ImageTiling.ImageTiling',
--- 'Vulkan.Core10.Enums.ImageType.ImageType',
--- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
--- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceSparseImageFormatProperties2',
--- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceSparseImageFormatProperties2KHR'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceSparseImageFormatInfo2"
 data PhysicalDeviceSparseImageFormatInfo2 = PhysicalDeviceSparseImageFormatInfo2
-  { -- | @format@ is the image format.
-    --
-    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-format-parameter# @format@
-    -- /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+  { -- No documentation found for Nested "VkPhysicalDeviceSparseImageFormatInfo2" "format"
     format :: Format
-  , -- | @type@ is the dimensionality of image.
-    --
-    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-type-parameter# @type@
-    -- /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType' value
+  , -- No documentation found for Nested "VkPhysicalDeviceSparseImageFormatInfo2" "type"
     type' :: ImageType
-  , -- | @samples@ is the number of samples per texel as defined in
-    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
-    --
-    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-samples-01095# @samples@
-    -- /must/ be a bit value that is set in
-    -- 'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@sampleCounts@
-    -- returned by
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
-    -- with @format@, @type@, @tiling@, and @usage@ equal to those in this
-    -- command and @flags@ equal to the value that is set in
-    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ when the image is created
-    --
-    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-samples-parameter#
-    -- @samples@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+  , -- No documentation found for Nested "VkPhysicalDeviceSparseImageFormatInfo2" "samples"
     samples :: SampleCountFlagBits
-  , -- | @usage@ is a bitmask describing the intended usage of the image.
-    --
-    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-usage-parameter# @usage@
-    -- /must/ be a valid combination of
-    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
-    --
-    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-usage-requiredbitmask#
-    -- @usage@ /must/ not be @0@
+  , -- No documentation found for Nested "VkPhysicalDeviceSparseImageFormatInfo2" "usage"
     usage :: ImageUsageFlags
-  , -- | @tiling@ is the tiling arrangement of the texel blocks in memory.
-    --
-    -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-tiling-parameter# @tiling@
-    -- /must/ be a valid 'Vulkan.Core10.Enums.ImageTiling.ImageTiling' value
+  , -- No documentation found for Nested "VkPhysicalDeviceSparseImageFormatInfo2" "tiling"
     tiling :: ImageTiling
   }
   deriving (Typeable, Eq)
@@ -1603,6 +1056,7 @@ instance FromCStruct PhysicalDeviceSparseImageFormatInfo2 where
     tiling <- peek @ImageTiling ((p `plusPtr` 32 :: Ptr ImageTiling))
     pure $ PhysicalDeviceSparseImageFormatInfo2
              format type' samples usage tiling
+
 
 instance Storable PhysicalDeviceSparseImageFormatInfo2 where
   sizeOf ~_ = 40

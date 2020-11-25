@@ -33,45 +33,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ATTACHMEN
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES))
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
--- | VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures - Structure
--- describing whether the implementation can do depth and stencil image
--- barriers separately
---
--- = Members
---
--- The members of the 'PhysicalDeviceSeparateDepthStencilLayoutsFeatures'
--- structure describe the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceSeparateDepthStencilLayoutsFeatures' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceSeparateDepthStencilLayoutsFeatures' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable the feature.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures"
 data PhysicalDeviceSeparateDepthStencilLayoutsFeatures = PhysicalDeviceSeparateDepthStencilLayoutsFeatures
-  { -- | #extension-features-separateDepthStencilLayouts#
-    -- @separateDepthStencilLayouts@ indicates whether the implementation
-    -- supports a 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' for a
-    -- depth\/stencil image with only one of
-    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
-    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT' set,
-    -- and whether
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL',
-    -- or
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
-    -- can be used.
+  { -- No documentation found for Nested "VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures" "separateDepthStencilLayouts"
     separateDepthStencilLayouts :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -100,6 +65,7 @@ instance FromCStruct PhysicalDeviceSeparateDepthStencilLayoutsFeatures where
     pure $ PhysicalDeviceSeparateDepthStencilLayoutsFeatures
              (bool32ToBool separateDepthStencilLayouts)
 
+
 instance Storable PhysicalDeviceSeparateDepthStencilLayoutsFeatures where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -111,36 +77,10 @@ instance Zero PhysicalDeviceSeparateDepthStencilLayoutsFeatures where
            zero
 
 
--- | VkAttachmentReferenceStencilLayout - Structure specifying an attachment
--- description
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkAttachmentReferenceStencilLayout"
 data AttachmentReferenceStencilLayout = AttachmentReferenceStencilLayout
-  { -- | @stencilLayout@ is a 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
-    -- specifying the layout the stencil aspect of the attachment uses during
-    -- the subpass.
-    --
-    -- #VUID-VkAttachmentReferenceStencilLayout-stencilLayout-03318#
-    -- @stencilLayout@ /must/ not be
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
-    -- or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR'
-    --
-    -- #VUID-VkAttachmentReferenceStencilLayout-stencilLayout-parameter#
-    -- @stencilLayout@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
+  { -- No documentation found for Nested "VkAttachmentReferenceStencilLayout" "stencilLayout"
     stencilLayout :: ImageLayout }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -169,6 +109,7 @@ instance FromCStruct AttachmentReferenceStencilLayout where
     pure $ AttachmentReferenceStencilLayout
              stencilLayout
 
+
 instance Storable AttachmentReferenceStencilLayout where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -180,58 +121,12 @@ instance Zero AttachmentReferenceStencilLayout where
            zero
 
 
--- | VkAttachmentDescriptionStencilLayout - Structure specifying an
--- attachment description
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkAttachmentDescriptionStencilLayout"
 data AttachmentDescriptionStencilLayout = AttachmentDescriptionStencilLayout
-  { -- | @stencilInitialLayout@ is the layout the stencil aspect of the
-    -- attachment image subresource will be in when a render pass instance
-    -- begins.
-    --
-    -- #VUID-VkAttachmentDescriptionStencilLayout-stencilInitialLayout-03308#
-    -- @stencilInitialLayout@ /must/ not be
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
-    -- or
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
-    --
-    -- #VUID-VkAttachmentDescriptionStencilLayout-stencilInitialLayout-parameter#
-    -- @stencilInitialLayout@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
+  { -- No documentation found for Nested "VkAttachmentDescriptionStencilLayout" "stencilInitialLayout"
     stencilInitialLayout :: ImageLayout
-  , -- | @stencilFinalLayout@ is the layout the stencil aspect of the attachment
-    -- image subresource will be transitioned to when a render pass instance
-    -- ends.
-    --
-    -- #VUID-VkAttachmentDescriptionStencilLayout-stencilFinalLayout-03309#
-    -- @stencilFinalLayout@ /must/ not be
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
-    -- or
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
-    --
-    -- #VUID-VkAttachmentDescriptionStencilLayout-stencilFinalLayout-03310#
-    -- @stencilFinalLayout@ /must/ not be
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
-    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
-    --
-    -- #VUID-VkAttachmentDescriptionStencilLayout-stencilFinalLayout-parameter#
-    -- @stencilFinalLayout@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
+  , -- No documentation found for Nested "VkAttachmentDescriptionStencilLayout" "stencilFinalLayout"
     stencilFinalLayout :: ImageLayout
   }
   deriving (Typeable, Eq)
@@ -263,6 +158,7 @@ instance FromCStruct AttachmentDescriptionStencilLayout where
     stencilFinalLayout <- peek @ImageLayout ((p `plusPtr` 20 :: Ptr ImageLayout))
     pure $ AttachmentDescriptionStencilLayout
              stencilInitialLayout stencilFinalLayout
+
 
 instance Storable AttachmentDescriptionStencilLayout where
   sizeOf ~_ = 24

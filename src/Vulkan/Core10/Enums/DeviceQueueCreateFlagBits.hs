@@ -19,16 +19,11 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type DeviceQueueCreateFlags = DeviceQueueCreateFlagBits
 
--- | VkDeviceQueueCreateFlagBits - Bitmask specifying behavior of the queue
---
--- = See Also
---
--- 'DeviceQueueCreateFlags'
+-- No documentation found for TopLevel "VkDeviceQueueCreateFlagBits"
 newtype DeviceQueueCreateFlagBits = DeviceQueueCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'DEVICE_QUEUE_CREATE_PROTECTED_BIT' specifies that the device queue is a
--- protected-capable queue.
+-- No documentation found for Nested "VkDeviceQueueCreateFlagBits" "VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT"
 pattern DEVICE_QUEUE_CREATE_PROTECTED_BIT = DeviceQueueCreateFlagBits 0x00000001
 
 conNameDeviceQueueCreateFlagBits :: String
@@ -40,12 +35,14 @@ enumPrefixDeviceQueueCreateFlagBits = "DEVICE_QUEUE_CREATE_PROTECTED_BIT"
 showTableDeviceQueueCreateFlagBits :: [(DeviceQueueCreateFlagBits, String)]
 showTableDeviceQueueCreateFlagBits = [(DEVICE_QUEUE_CREATE_PROTECTED_BIT, "")]
 
+
 instance Show DeviceQueueCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixDeviceQueueCreateFlagBits
-                            showTableDeviceQueueCreateFlagBits
-                            conNameDeviceQueueCreateFlagBits
-                            (\(DeviceQueueCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixDeviceQueueCreateFlagBits
+                          showTableDeviceQueueCreateFlagBits
+                          conNameDeviceQueueCreateFlagBits
+                          (\(DeviceQueueCreateFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read DeviceQueueCreateFlagBits where
   readPrec = enumReadPrec enumPrefixDeviceQueueCreateFlagBits

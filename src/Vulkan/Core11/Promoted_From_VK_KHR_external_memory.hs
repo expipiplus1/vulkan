@@ -34,32 +34,10 @@ import Vulkan.Core10.APIConstants (QUEUE_FAMILY_EXTERNAL)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 import Vulkan.Core10.APIConstants (pattern QUEUE_FAMILY_EXTERNAL)
--- | VkExternalMemoryImageCreateInfo - Specify that an image may be backed by
--- external memory
---
--- = Members
---
--- Note
---
--- A 'ExternalMemoryImageCreateInfo' structure with a non-zero @handleType@
--- field must be included in the creation parameters for an image that will
--- be bound to memory that is either exported or imported.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkExternalMemoryImageCreateInfo"
 data ExternalMemoryImageCreateInfo = ExternalMemoryImageCreateInfo
-  { -- | @handleTypes@ is zero, or a bitmask of
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- specifying one or more external memory handle types.
-    --
-    -- #VUID-VkExternalMemoryImageCreateInfo-handleTypes-parameter#
-    -- @handleTypes@ /must/ be a valid combination of
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- values
+  { -- No documentation found for Nested "VkExternalMemoryImageCreateInfo" "handleTypes"
     handleTypes :: ExternalMemoryHandleTypeFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -87,6 +65,7 @@ instance FromCStruct ExternalMemoryImageCreateInfo where
     pure $ ExternalMemoryImageCreateInfo
              handleTypes
 
+
 instance Storable ExternalMemoryImageCreateInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -98,32 +77,10 @@ instance Zero ExternalMemoryImageCreateInfo where
            zero
 
 
--- | VkExternalMemoryBufferCreateInfo - Specify that a buffer may be backed
--- by external memory
---
--- = Members
---
--- Note
---
--- A 'ExternalMemoryBufferCreateInfo' structure with a non-zero
--- @handleTypes@ field must be included in the creation parameters for a
--- buffer that will be bound to memory that is either exported or imported.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkExternalMemoryBufferCreateInfo"
 data ExternalMemoryBufferCreateInfo = ExternalMemoryBufferCreateInfo
-  { -- | @handleTypes@ is zero, or a bitmask of
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- specifying one or more external memory handle types.
-    --
-    -- #VUID-VkExternalMemoryBufferCreateInfo-handleTypes-parameter#
-    -- @handleTypes@ /must/ be a valid combination of
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- values
+  { -- No documentation found for Nested "VkExternalMemoryBufferCreateInfo" "handleTypes"
     handleTypes :: ExternalMemoryHandleTypeFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -151,6 +108,7 @@ instance FromCStruct ExternalMemoryBufferCreateInfo where
     pure $ ExternalMemoryBufferCreateInfo
              handleTypes
 
+
 instance Storable ExternalMemoryBufferCreateInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -162,37 +120,10 @@ instance Zero ExternalMemoryBufferCreateInfo where
            zero
 
 
--- | VkExportMemoryAllocateInfo - Specify exportable handle types for a
--- device memory object
---
--- == Valid Usage
---
--- -   #VUID-VkExportMemoryAllocateInfo-handleTypes-00656# The bits in
---     @handleTypes@ /must/ be supported and compatible, as reported by
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
---     or
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkExportMemoryAllocateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO'
---
--- -   #VUID-VkExportMemoryAllocateInfo-handleTypes-parameter#
---     @handleTypes@ /must/ be a valid combination of
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
---     values
---
--- = See Also
---
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkExportMemoryAllocateInfo"
 data ExportMemoryAllocateInfo = ExportMemoryAllocateInfo
-  { -- | @handleTypes@ is a bitmask of
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- specifying one or more memory handle types the application /can/ export
-    -- from the resulting allocation. The application /can/ request multiple
-    -- handle types for the same allocation.
+  { -- No documentation found for Nested "VkExportMemoryAllocateInfo" "handleTypes"
     handleTypes :: ExternalMemoryHandleTypeFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -219,6 +150,7 @@ instance FromCStruct ExportMemoryAllocateInfo where
     handleTypes <- peek @ExternalMemoryHandleTypeFlags ((p `plusPtr` 16 :: Ptr ExternalMemoryHandleTypeFlags))
     pure $ ExportMemoryAllocateInfo
              handleTypes
+
 
 instance Storable ExportMemoryAllocateInfo where
   sizeOf ~_ = 24

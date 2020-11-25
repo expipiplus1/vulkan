@@ -1,181 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_KHR_pipeline_executable_properties - device extension
---
--- == VK_KHR_pipeline_executable_properties
---
--- [__Name String__]
---     @VK_KHR_pipeline_executable_properties@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     270
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@
---
--- [__Special Use__]
---
---     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
---
--- [__Contact__]
---
---     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_pipeline_executable_properties:%20&body=@jekstrand%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2019-05-28
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Interactions and External Dependencies__; __Contributors__]
---
---     -   Jason Ekstrand, Intel
---
---     -   Ian Romanick, Intel
---
---     -   Kenneth Graunke, Intel
---
---     -   Baldur Karlsson, Valve
---
---     -   Jesse Hall, Google
---
---     -   Jeff Bolz, Nvidia
---
---     -   Piers Daniel, Nvidia
---
---     -   Tobias Hector, AMD
---
---     -   Jan-Harald Fredriksen, ARM
---
---     -   Tom Olson, ARM
---
---     -   Daniel Koch, Nvidia
---
---     -   Spencer Fricke, Samsung
---
--- == Description
---
--- When a pipeline is created, its state and shaders are compiled into zero
--- or more device-specific executables, which are used when executing
--- commands against that pipeline. This extension adds a mechanism to query
--- properties and statistics about the different executables produced by
--- the pipeline compilation process. This is intended to be used by
--- debugging and performance tools to allow them to provide more detailed
--- information to the user. Certain compile-time shader statistics provided
--- through this extension may be useful to developers for debugging or
--- performance analysis.
---
--- == New Commands
---
--- -   'getPipelineExecutableInternalRepresentationsKHR'
---
--- -   'getPipelineExecutablePropertiesKHR'
---
--- -   'getPipelineExecutableStatisticsKHR'
---
--- == New Structures
---
--- -   'PipelineExecutableInfoKHR'
---
--- -   'PipelineExecutableInternalRepresentationKHR'
---
--- -   'PipelineExecutablePropertiesKHR'
---
--- -   'PipelineExecutableStatisticKHR'
---
--- -   'PipelineInfoKHR'
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
---     'Vulkan.Core10.Device.DeviceCreateInfo':
---
---     -   'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR'
---
--- == New Unions
---
--- -   'PipelineExecutableStatisticValueKHR'
---
--- == New Enums
---
--- -   'PipelineExecutableStatisticFormatKHR'
---
--- == New Enum Constants
---
--- -   'KHR_PIPELINE_EXECUTABLE_PROPERTIES_EXTENSION_NAME'
---
--- -   'KHR_PIPELINE_EXECUTABLE_PROPERTIES_SPEC_VERSION'
---
--- -   Extending
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
---
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR'
---
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INFO_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_INFO_KHR'
---
--- == Issues
---
--- 1) What should we call the pieces of the pipeline which are produced by
--- the compilation process and about which you can query properties and
--- statistics?
---
--- __RESOLVED__: Call them \"executables\". The name \"binary\" was used in
--- early drafts of the extension but it was determined that \"pipeline
--- binary\" could have a fairly broad meaning (such as a binary serialized
--- form of an entire pipeline) and was too big of a namespace for the very
--- specific needs of this extension.
---
--- == Version History
---
--- -   Revision 1, 2019-05-28 (Jason Ekstrand)
---
---     -   Initial draft
---
--- = See Also
---
--- 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
--- 'PipelineExecutableInfoKHR',
--- 'PipelineExecutableInternalRepresentationKHR',
--- 'PipelineExecutablePropertiesKHR',
--- 'PipelineExecutableStatisticFormatKHR',
--- 'PipelineExecutableStatisticKHR', 'PipelineExecutableStatisticValueKHR',
--- 'PipelineInfoKHR', 'getPipelineExecutableInternalRepresentationsKHR',
--- 'getPipelineExecutablePropertiesKHR',
--- 'getPipelineExecutableStatisticsKHR'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_KHR_pipeline_executable_properties"
 module Vulkan.Extensions.VK_KHR_pipeline_executable_properties  ( getPipelineExecutablePropertiesKHR
                                                                 , getPipelineExecutableStatisticsKHR
                                                                 , getPipelineExecutableInternalRepresentationsKHR
@@ -287,72 +111,12 @@ foreign import ccall
   "dynamic" mkVkGetPipelineExecutablePropertiesKHR
   :: FunPtr (Ptr Device_T -> Ptr PipelineInfoKHR -> Ptr Word32 -> Ptr PipelineExecutablePropertiesKHR -> IO Result) -> Ptr Device_T -> Ptr PipelineInfoKHR -> Ptr Word32 -> Ptr PipelineExecutablePropertiesKHR -> IO Result
 
--- | vkGetPipelineExecutablePropertiesKHR - Get the executables associated
--- with a pipeline
---
--- = Description
---
--- If @pProperties@ is @NULL@, then the number of executables associated
--- with the pipeline is returned in @pExecutableCount@. Otherwise,
--- @pExecutableCount@ /must/ point to a variable set by the user to the
--- number of elements in the @pProperties@ array, and on return the
--- variable is overwritten with the number of structures actually written
--- to @pProperties@. If @pExecutableCount@ is less than the number of
--- executables associated with the pipeline, at most @pExecutableCount@
--- structures will be written and 'getPipelineExecutablePropertiesKHR' will
--- return 'Vulkan.Core10.Enums.Result.INCOMPLETE'.
---
--- == Valid Usage
---
--- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pipelineExecutableInfo-03270#
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled
---
--- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pipeline-03271#
---     @pipeline@ member of @pPipelineInfo@ /must/ have been created with
---     @device@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetPipelineExecutablePropertiesKHR-device-parameter#
---     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pPipelineInfo-parameter#
---     @pPipelineInfo@ /must/ be a valid pointer to a valid
---     'PipelineInfoKHR' structure
---
--- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pExecutableCount-parameter#
---     @pExecutableCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pProperties-parameter# If
---     the value referenced by @pExecutableCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pExecutableCount@ 'PipelineExecutablePropertiesKHR'
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'PipelineExecutablePropertiesKHR',
--- 'PipelineInfoKHR'
+-- No documentation found for TopLevel "vkGetPipelineExecutablePropertiesKHR"
 getPipelineExecutablePropertiesKHR :: forall io
                                     . (MonadIO io)
-                                   => -- | @device@ is the device that created the pipeline.
+                                   => -- No documentation found for Nested "vkGetPipelineExecutablePropertiesKHR" "device"
                                       Device
-                                   -> -- | @pPipelineInfo@ describes the pipeline being queried.
+                                   -> -- No documentation found for Nested "vkGetPipelineExecutablePropertiesKHR" "pPipelineInfo"
                                       PipelineInfoKHR
                                    -> io (Result, ("properties" ::: Vector PipelineExecutablePropertiesKHR))
 getPipelineExecutablePropertiesKHR device pipelineInfo = liftIO . evalContT $ do
@@ -382,80 +146,12 @@ foreign import ccall
   "dynamic" mkVkGetPipelineExecutableStatisticsKHR
   :: FunPtr (Ptr Device_T -> Ptr PipelineExecutableInfoKHR -> Ptr Word32 -> Ptr PipelineExecutableStatisticKHR -> IO Result) -> Ptr Device_T -> Ptr PipelineExecutableInfoKHR -> Ptr Word32 -> Ptr PipelineExecutableStatisticKHR -> IO Result
 
--- | vkGetPipelineExecutableStatisticsKHR - Get compile time statistics
--- associated with a pipeline executable
---
--- = Description
---
--- If @pStatistics@ is @NULL@, then the number of statistics associated
--- with the pipeline executable is returned in @pStatisticCount@.
--- Otherwise, @pStatisticCount@ /must/ point to a variable set by the user
--- to the number of elements in the @pStatistics@ array, and on return the
--- variable is overwritten with the number of structures actually written
--- to @pStatistics@. If @pStatisticCount@ is less than the number of
--- statistics associated with the pipeline executable, at most
--- @pStatisticCount@ structures will be written and
--- 'getPipelineExecutableStatisticsKHR' will return
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE'.
---
--- == Valid Usage
---
--- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipelineExecutableInfo-03272#
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled
---
--- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipeline-03273#
---     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
---     @device@
---
--- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipeline-03274#
---     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR'
---     set in the @flags@ field of
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetPipelineExecutableStatisticsKHR-device-parameter#
---     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pExecutableInfo-parameter#
---     @pExecutableInfo@ /must/ be a valid pointer to a valid
---     'PipelineExecutableInfoKHR' structure
---
--- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pStatisticCount-parameter#
---     @pStatisticCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pStatistics-parameter# If
---     the value referenced by @pStatisticCount@ is not @0@, and
---     @pStatistics@ is not @NULL@, @pStatistics@ /must/ be a valid pointer
---     to an array of @pStatisticCount@ 'PipelineExecutableStatisticKHR'
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'PipelineExecutableInfoKHR',
--- 'PipelineExecutableStatisticKHR'
+-- No documentation found for TopLevel "vkGetPipelineExecutableStatisticsKHR"
 getPipelineExecutableStatisticsKHR :: forall io
                                     . (MonadIO io)
-                                   => -- | @device@ is the device that created the pipeline.
+                                   => -- No documentation found for Nested "vkGetPipelineExecutableStatisticsKHR" "device"
                                       Device
-                                   -> -- | @pExecutableInfo@ describes the pipeline executable being queried.
+                                   -> -- No documentation found for Nested "vkGetPipelineExecutableStatisticsKHR" "pExecutableInfo"
                                       PipelineExecutableInfoKHR
                                    -> io (Result, ("statistics" ::: Vector PipelineExecutableStatisticKHR))
 getPipelineExecutableStatisticsKHR device executableInfo = liftIO . evalContT $ do
@@ -485,89 +181,12 @@ foreign import ccall
   "dynamic" mkVkGetPipelineExecutableInternalRepresentationsKHR
   :: FunPtr (Ptr Device_T -> Ptr PipelineExecutableInfoKHR -> Ptr Word32 -> Ptr PipelineExecutableInternalRepresentationKHR -> IO Result) -> Ptr Device_T -> Ptr PipelineExecutableInfoKHR -> Ptr Word32 -> Ptr PipelineExecutableInternalRepresentationKHR -> IO Result
 
--- | vkGetPipelineExecutableInternalRepresentationsKHR - Get internal
--- representations of the pipeline executable
---
--- = Description
---
--- If @pInternalRepresentations@ is @NULL@, then the number of internal
--- representations associated with the pipeline executable is returned in
--- @pInternalRepresentationCount@. Otherwise,
--- @pInternalRepresentationCount@ /must/ point to a variable set by the
--- user to the number of elements in the @pInternalRepresentations@ array,
--- and on return the variable is overwritten with the number of structures
--- actually written to @pInternalRepresentations@. If
--- @pInternalRepresentationCount@ is less than the number of internal
--- representations associated with the pipeline executable, at most
--- @pInternalRepresentationCount@ structures will be written and
--- 'getPipelineExecutableInternalRepresentationsKHR' will return
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE'.
---
--- While the details of the internal representations remain implementation
--- dependent, the implementation /should/ order the internal
--- representations in the order in which they occur in the compile pipeline
--- with the final shader assembly (if any) last.
---
--- == Valid Usage
---
--- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipelineExecutableInfo-03276#
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled
---
--- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipeline-03277#
---     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
---     @device@
---
--- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipeline-03278#
---     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR'
---     set in the @flags@ field of
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-device-parameter#
---     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pExecutableInfo-parameter#
---     @pExecutableInfo@ /must/ be a valid pointer to a valid
---     'PipelineExecutableInfoKHR' structure
---
--- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pInternalRepresentationCount-parameter#
---     @pInternalRepresentationCount@ /must/ be a valid pointer to a
---     @uint32_t@ value
---
--- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pInternalRepresentations-parameter#
---     If the value referenced by @pInternalRepresentationCount@ is not
---     @0@, and @pInternalRepresentations@ is not @NULL@,
---     @pInternalRepresentations@ /must/ be a valid pointer to an array of
---     @pInternalRepresentationCount@
---     'PipelineExecutableInternalRepresentationKHR' structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'PipelineExecutableInfoKHR',
--- 'PipelineExecutableInternalRepresentationKHR'
+-- No documentation found for TopLevel "vkGetPipelineExecutableInternalRepresentationsKHR"
 getPipelineExecutableInternalRepresentationsKHR :: forall io
                                                  . (MonadIO io)
-                                                => -- | @device@ is the device that created the pipeline.
+                                                => -- No documentation found for Nested "vkGetPipelineExecutableInternalRepresentationsKHR" "device"
                                                    Device
-                                                -> -- | @pExecutableInfo@ describes the pipeline executable being queried.
+                                                -> -- No documentation found for Nested "vkGetPipelineExecutableInternalRepresentationsKHR" "pExecutableInfo"
                                                    PipelineExecutableInfoKHR
                                                 -> io (Result, ("internalRepresentations" ::: Vector PipelineExecutableInternalRepresentationKHR))
 getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO . evalContT $ do
@@ -590,35 +209,10 @@ getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO .
   pure $ ((r'), pInternalRepresentations')
 
 
--- | VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR - Structure
--- describing whether pipeline executable properties are available
---
--- = Members
---
--- The members of the
--- 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR' structure
--- describe the following features:
---
--- = Description
---
--- If the 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR' structure
--- is included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR"
 data PhysicalDevicePipelineExecutablePropertiesFeaturesKHR = PhysicalDevicePipelineExecutablePropertiesFeaturesKHR
-  { -- | #features-pipelineExecutableInfo# @pipelineExecutableInfo@ indicates
-    -- that the implementation supports reporting properties and statistics
-    -- about the executables associated with a compiled pipeline.
+  { -- No documentation found for Nested "VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR" "pipelineExecutableInfo"
     pipelineExecutableInfo :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -647,6 +241,7 @@ instance FromCStruct PhysicalDevicePipelineExecutablePropertiesFeaturesKHR where
     pure $ PhysicalDevicePipelineExecutablePropertiesFeaturesKHR
              (bool32ToBool pipelineExecutableInfo)
 
+
 instance Storable PhysicalDevicePipelineExecutablePropertiesFeaturesKHR where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -658,20 +253,10 @@ instance Zero PhysicalDevicePipelineExecutablePropertiesFeaturesKHR where
            zero
 
 
--- | VkPipelineInfoKHR - Structure describing a pipeline
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Pipeline',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPipelineExecutablePropertiesKHR'
+
+-- No documentation found for TopLevel "VkPipelineInfoKHR"
 data PipelineInfoKHR = PipelineInfoKHR
-  { -- | @pipeline@ is a 'Vulkan.Core10.Handles.Pipeline' handle.
-    --
-    -- #VUID-VkPipelineInfoKHR-pipeline-parameter# @pipeline@ /must/ be a valid
-    -- 'Vulkan.Core10.Handles.Pipeline' handle
+  { -- No documentation found for Nested "VkPipelineInfoKHR" "pipeline"
     pipeline :: Pipeline }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -700,6 +285,7 @@ instance FromCStruct PipelineInfoKHR where
     pure $ PipelineInfoKHR
              pipeline
 
+
 instance Storable PipelineInfoKHR where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -711,47 +297,16 @@ instance Zero PipelineInfoKHR where
            zero
 
 
--- | VkPipelineExecutablePropertiesKHR - Structure describing a pipeline
--- executable
---
--- = Description
---
--- The @stages@ field /may/ be zero or it /may/ contain one or more bits
--- describing the stages principally used to compile this pipeline. Not all
--- implementations have a 1:1 mapping between shader stages and pipeline
--- executables and some implementations /may/ reduce a given shader stage
--- to fixed function hardware programming such that no executable is
--- available. No guarantees are provided about the mapping between shader
--- stages and pipeline executables and @stages@ /should/ be considered a
--- best effort hint. Because the application /cannot/ rely on the @stages@
--- field to provide an exact description, @name@ and @description@ provide
--- a human readable name and description which more accurately describes
--- the given pipeline executable.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPipelineExecutablePropertiesKHR'
+
+-- No documentation found for TopLevel "VkPipelineExecutablePropertiesKHR"
 data PipelineExecutablePropertiesKHR = PipelineExecutablePropertiesKHR
-  { -- | @stages@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' indicating
-    -- which shader stages (if any) were principally used as inputs to compile
-    -- this pipeline executable.
+  { -- No documentation found for Nested "VkPipelineExecutablePropertiesKHR" "stages"
     stages :: ShaderStageFlags
-  , -- | @name@ is an array of 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE'
-    -- @char@ containing a null-terminated UTF-8 string which is a short human
-    -- readable name for this executable.
+  , -- No documentation found for Nested "VkPipelineExecutablePropertiesKHR" "name"
     name :: ByteString
-  , -- | @description@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string which is a human readable description for
-    -- this executable.
+  , -- No documentation found for Nested "VkPipelineExecutablePropertiesKHR" "description"
     description :: ByteString
-  , -- | @subgroupSize@ is the subgroup size with which this executable is
-    -- dispatched.
+  , -- No documentation found for Nested "VkPipelineExecutablePropertiesKHR" "subgroupSize"
     subgroupSize :: Word32
   }
   deriving (Typeable)
@@ -790,6 +345,7 @@ instance FromCStruct PipelineExecutablePropertiesKHR where
     pure $ PipelineExecutablePropertiesKHR
              stages name description subgroupSize
 
+
 instance Storable PipelineExecutablePropertiesKHR where
   sizeOf ~_ = 536
   alignment ~_ = 8
@@ -804,31 +360,12 @@ instance Zero PipelineExecutablePropertiesKHR where
            zero
 
 
--- | VkPipelineExecutableInfoKHR - Structure describing a pipeline executable
--- to query for associated statistics or internal representations
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Pipeline',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPipelineExecutableInternalRepresentationsKHR',
--- 'getPipelineExecutableStatisticsKHR'
+
+-- No documentation found for TopLevel "VkPipelineExecutableInfoKHR"
 data PipelineExecutableInfoKHR = PipelineExecutableInfoKHR
-  { -- | @pipeline@ is the pipeline to query.
-    --
-    -- #VUID-VkPipelineExecutableInfoKHR-pipeline-parameter# @pipeline@ /must/
-    -- be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+  { -- No documentation found for Nested "VkPipelineExecutableInfoKHR" "pipeline"
     pipeline :: Pipeline
-  , -- | @executableIndex@ is the index of the executable to query in the array
-    -- of executable properties returned by
-    -- 'getPipelineExecutablePropertiesKHR'.
-    --
-    -- #VUID-VkPipelineExecutableInfoKHR-executableIndex-03275#
-    -- @executableIndex@ /must/ be less than the number of executables
-    -- associated with @pipeline@ as returned in the @pExecutableCount@
-    -- parameter of 'getPipelineExecutablePropertiesKHR'
+  , -- No documentation found for Nested "VkPipelineExecutableInfoKHR" "executableIndex"
     executableIndex :: Word32
   }
   deriving (Typeable, Eq)
@@ -861,6 +398,7 @@ instance FromCStruct PipelineExecutableInfoKHR where
     pure $ PipelineExecutableInfoKHR
              pipeline executableIndex
 
+
 instance Storable PipelineExecutableInfoKHR where
   sizeOf ~_ = 32
   alignment ~_ = 8
@@ -873,31 +411,16 @@ instance Zero PipelineExecutableInfoKHR where
            zero
 
 
--- | VkPipelineExecutableStatisticKHR - Structure describing a compile-time
--- pipeline executable statistic
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'PipelineExecutableStatisticFormatKHR',
--- 'PipelineExecutableStatisticValueKHR',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPipelineExecutableStatisticsKHR'
+
+-- No documentation found for TopLevel "VkPipelineExecutableStatisticKHR"
 data PipelineExecutableStatisticKHR = PipelineExecutableStatisticKHR
-  { -- | @name@ is an array of 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE'
-    -- @char@ containing a null-terminated UTF-8 string which is a short human
-    -- readable name for this statistic.
+  { -- No documentation found for Nested "VkPipelineExecutableStatisticKHR" "name"
     name :: ByteString
-  , -- | @description@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string which is a human readable description for
-    -- this statistic.
+  , -- No documentation found for Nested "VkPipelineExecutableStatisticKHR" "description"
     description :: ByteString
-  , -- | @format@ is a 'PipelineExecutableStatisticFormatKHR' value specifying
-    -- the format of the data found in @value@.
+  , -- No documentation found for Nested "VkPipelineExecutableStatisticKHR" "format"
     format :: PipelineExecutableStatisticFormatKHR
-  , -- | @value@ is the value of this statistic.
+  , -- No documentation found for Nested "VkPipelineExecutableStatisticKHR" "value"
     value :: PipelineExecutableStatisticValueKHR
   }
   deriving (Typeable)
@@ -944,52 +467,18 @@ instance Zero PipelineExecutableStatisticKHR where
            zero
 
 
--- | VkPipelineExecutableInternalRepresentationKHR - Structure describing the
--- textual form of a pipeline executable internal representation
---
--- = Description
---
--- If @pData@ is @NULL@, then the size, in bytes, of the internal
--- representation data is returned in @dataSize@. Otherwise, @dataSize@
--- must be the size of the buffer, in bytes, pointed to by @pData@ and on
--- return @dataSize@ is overwritten with the number of bytes of data
--- actually written to @pData@ including any trailing null character. If
--- @dataSize@ is less than the size, in bytes, of the internal
--- representation data, at most @dataSize@ bytes of data will be written to
--- @pData@ and 'getPipelineExecutableInternalRepresentationsKHR' will
--- return 'Vulkan.Core10.Enums.Result.INCOMPLETE'. If @isText@ is
--- 'Vulkan.Core10.FundamentalTypes.TRUE' and @pData@ is not @NULL@ and
--- @dataSize@ is not zero, the last byte written to @pData@ will be a null
--- character.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPipelineExecutableInternalRepresentationsKHR'
+
+-- No documentation found for TopLevel "VkPipelineExecutableInternalRepresentationKHR"
 data PipelineExecutableInternalRepresentationKHR = PipelineExecutableInternalRepresentationKHR
-  { -- | @name@ is an array of 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE'
-    -- @char@ containing a null-terminated UTF-8 string which is a short human
-    -- readable name for this internal representation.
+  { -- No documentation found for Nested "VkPipelineExecutableInternalRepresentationKHR" "name"
     name :: ByteString
-  , -- | @description@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string which is a human readable description for
-    -- this internal representation.
+  , -- No documentation found for Nested "VkPipelineExecutableInternalRepresentationKHR" "description"
     description :: ByteString
-  , -- | @isText@ specifies whether the returned data is text or opaque data. If
-    -- @isText@ is 'Vulkan.Core10.FundamentalTypes.TRUE' then the data returned
-    -- in @pData@ is text and is guaranteed to be a null-terminated UTF-8
-    -- string.
+  , -- No documentation found for Nested "VkPipelineExecutableInternalRepresentationKHR" "isText"
     isText :: Bool
-  , -- | @dataSize@ is an integer related to the size, in bytes, of the internal
-    -- representation data, as described below.
+  , -- No documentation found for Nested "VkPipelineExecutableInternalRepresentationKHR" "dataSize"
     dataSize :: Word64
-  , -- | @pData@ is either @NULL@ or a pointer to an block of data into which the
-    -- implementation will write the textual form of the internal
-    -- representation.
+  , -- No documentation found for Nested "VkPipelineExecutableInternalRepresentationKHR" "pData"
     data' :: Ptr ()
   }
   deriving (Typeable)
@@ -1028,6 +517,7 @@ instance FromCStruct PipelineExecutableInternalRepresentationKHR where
     pData <- peek @(Ptr ()) ((p `plusPtr` 544 :: Ptr (Ptr ())))
     pure $ PipelineExecutableInternalRepresentationKHR
              name description (bool32ToBool isText) ((\(CSize a) -> a) dataSize) pData
+
 
 instance Storable PipelineExecutableInternalRepresentationKHR where
   sizeOf ~_ = 552
@@ -1079,32 +569,17 @@ peekPipelineExecutableStatisticValueKHR tag p = case tag of
     pure $ (\(CDouble a) -> a) f64)
 
 
--- | VkPipelineExecutableStatisticFormatKHR - Enum describing a pipeline
--- executable statistic
---
--- = See Also
---
--- 'PipelineExecutableStatisticKHR'
+-- No documentation found for TopLevel "VkPipelineExecutableStatisticFormatKHR"
 newtype PipelineExecutableStatisticFormatKHR = PipelineExecutableStatisticFormatKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR' specifies that the
--- statistic is returned as a 32-bit boolean value which /must/ be either
--- 'Vulkan.Core10.FundamentalTypes.TRUE' or
--- 'Vulkan.Core10.FundamentalTypes.FALSE' and /should/ be read from the
--- @b32@ field of 'PipelineExecutableStatisticValueKHR'.
+-- No documentation found for Nested "VkPipelineExecutableStatisticFormatKHR" "VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR"
 pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR  = PipelineExecutableStatisticFormatKHR 0
--- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR' specifies that the
--- statistic is returned as a signed 64-bit integer and /should/ be read
--- from the @i64@ field of 'PipelineExecutableStatisticValueKHR'.
+-- No documentation found for Nested "VkPipelineExecutableStatisticFormatKHR" "VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR"
 pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR   = PipelineExecutableStatisticFormatKHR 1
--- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR' specifies that the
--- statistic is returned as an unsigned 64-bit integer and /should/ be read
--- from the @u64@ field of 'PipelineExecutableStatisticValueKHR'.
+-- No documentation found for Nested "VkPipelineExecutableStatisticFormatKHR" "VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR"
 pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR  = PipelineExecutableStatisticFormatKHR 2
--- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR' specifies that the
--- statistic is returned as a 64-bit floating-point value and /should/ be
--- read from the @f64@ field of 'PipelineExecutableStatisticValueKHR'.
+-- No documentation found for Nested "VkPipelineExecutableStatisticFormatKHR" "VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR"
 pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR = PipelineExecutableStatisticFormatKHR 3
 {-# complete PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR,
              PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR,
@@ -1125,12 +600,14 @@ showTablePipelineExecutableStatisticFormatKHR =
   , (PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR, "FLOAT64_KHR")
   ]
 
+
 instance Show PipelineExecutableStatisticFormatKHR where
-  showsPrec = enumShowsPrec enumPrefixPipelineExecutableStatisticFormatKHR
-                            showTablePipelineExecutableStatisticFormatKHR
-                            conNamePipelineExecutableStatisticFormatKHR
-                            (\(PipelineExecutableStatisticFormatKHR x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixPipelineExecutableStatisticFormatKHR
+                          showTablePipelineExecutableStatisticFormatKHR
+                          conNamePipelineExecutableStatisticFormatKHR
+                          (\(PipelineExecutableStatisticFormatKHR x) -> x)
+                          (showsPrec 11)
+
 
 instance Read PipelineExecutableStatisticFormatKHR where
   readPrec = enumReadPrec enumPrefixPipelineExecutableStatisticFormatKHR

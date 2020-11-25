@@ -22,35 +22,17 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type ColorComponentFlags = ColorComponentFlagBits
 
--- | VkColorComponentFlagBits - Bitmask controlling which components are
--- written to the framebuffer
---
--- = Description
---
--- The color write mask operation is applied regardless of whether blending
--- is enabled.
---
--- = See Also
---
--- 'ColorComponentFlags'
+-- No documentation found for TopLevel "VkColorComponentFlagBits"
 newtype ColorComponentFlagBits = ColorComponentFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'COLOR_COMPONENT_R_BIT' specifies that the R value is written to the
--- color attachment for the appropriate sample. Otherwise, the value in
--- memory is unmodified.
+-- No documentation found for Nested "VkColorComponentFlagBits" "VK_COLOR_COMPONENT_R_BIT"
 pattern COLOR_COMPONENT_R_BIT = ColorComponentFlagBits 0x00000001
--- | 'COLOR_COMPONENT_G_BIT' specifies that the G value is written to the
--- color attachment for the appropriate sample. Otherwise, the value in
--- memory is unmodified.
+-- No documentation found for Nested "VkColorComponentFlagBits" "VK_COLOR_COMPONENT_G_BIT"
 pattern COLOR_COMPONENT_G_BIT = ColorComponentFlagBits 0x00000002
--- | 'COLOR_COMPONENT_B_BIT' specifies that the B value is written to the
--- color attachment for the appropriate sample. Otherwise, the value in
--- memory is unmodified.
+-- No documentation found for Nested "VkColorComponentFlagBits" "VK_COLOR_COMPONENT_B_BIT"
 pattern COLOR_COMPONENT_B_BIT = ColorComponentFlagBits 0x00000004
--- | 'COLOR_COMPONENT_A_BIT' specifies that the A value is written to the
--- color attachment for the appropriate sample. Otherwise, the value in
--- memory is unmodified.
+-- No documentation found for Nested "VkColorComponentFlagBits" "VK_COLOR_COMPONENT_A_BIT"
 pattern COLOR_COMPONENT_A_BIT = ColorComponentFlagBits 0x00000008
 
 conNameColorComponentFlagBits :: String
@@ -67,12 +49,14 @@ showTableColorComponentFlagBits =
   , (COLOR_COMPONENT_A_BIT, "A_BIT")
   ]
 
+
 instance Show ColorComponentFlagBits where
-  showsPrec = enumShowsPrec enumPrefixColorComponentFlagBits
-                            showTableColorComponentFlagBits
-                            conNameColorComponentFlagBits
-                            (\(ColorComponentFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixColorComponentFlagBits
+                          showTableColorComponentFlagBits
+                          conNameColorComponentFlagBits
+                          (\(ColorComponentFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read ColorComponentFlagBits where
   readPrec = enumReadPrec enumPrefixColorComponentFlagBits

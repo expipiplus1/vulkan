@@ -43,66 +43,67 @@ import Data.Kind (Type)
 import Data.Vector (Vector)
 import qualified Data.Vector.Generic (Vector)
 
--- | An unpopulated type intended to be used as in @'Ptr' (FixedArray n a)@ to
--- indicate that the pointer points to an array of @n@ @a@s
-data FixedArray (n :: Nat) (a :: Type)
 
--- | Store a 'ByteString' in a fixed amount of space inserting a null
--- character at the end and truncating if necessary.
---
--- If the 'ByteString' is not long enough to fill the space the remaining
--- bytes are unchanged
---
--- Note that if the 'ByteString' is exactly long enough the last byte will
--- still be replaced with 0
-pokeFixedLengthNullTerminatedByteString
-  :: forall n
-   . KnownNat n
-  => Ptr (FixedArray n CChar)
-  -> ByteString
-  -> IO ()
-pokeFixedLengthNullTerminatedByteString to bs =
-  unsafeUseAsCString bs $ \from -> do
-    let maxLength = fromIntegral (natVal (Proxy @n))
-        len       = min maxLength (Data.ByteString.length bs)
-        end       = min (maxLength - 1) len
-    -- Copy the entire string into the buffer
-    copyBytes (lowerArrayPtr to) from len
-    -- Make the last byte (the one following the string, or the
-    -- one at the end of the buffer)
-    pokeElemOff (lowerArrayPtr to) end 0
+    -- | An unpopulated type intended to be used as in @'Ptr' (FixedArray n a)@ to
+    -- indicate that the pointer points to an array of @n@ @a@s
+    data FixedArray (n :: Nat) (a :: Type)
 
--- | Store a 'ByteString' in a fixed amount of space, truncating if necessary.
---
--- If the 'ByteString' is not long enough to fill the space the remaining
--- bytes are unchanged
-pokeFixedLengthByteString
-  :: forall n
-   . KnownNat n
-  => Ptr (FixedArray n Word8)
-  -> ByteString
-  -> IO ()
-pokeFixedLengthByteString to bs = unsafeUseAsCString bs $ \from -> do
-  let maxLength = fromIntegral (natVal (Proxy @n))
-      len       = min maxLength (Data.ByteString.length bs)
-  copyBytes (lowerArrayPtr to) (castPtr @CChar @Word8 from) len
+    -- | Store a 'ByteString' in a fixed amount of space inserting a null
+    -- character at the end and truncating if necessary.
+    --
+    -- If the 'ByteString' is not long enough to fill the space the remaining
+    -- bytes are unchanged
+    --
+    -- Note that if the 'ByteString' is exactly long enough the last byte will
+    -- still be replaced with 0
+    pokeFixedLengthNullTerminatedByteString
+      :: forall n
+       . KnownNat n
+      => Ptr (FixedArray n CChar)
+      -> ByteString
+      -> IO ()
+    pokeFixedLengthNullTerminatedByteString to bs =
+      unsafeUseAsCString bs $ \from -> do
+        let maxLength = fromIntegral (natVal (Proxy @n))
+            len       = min maxLength (Data.ByteString.length bs)
+            end       = min (maxLength - 1) len
+        -- Copy the entire string into the buffer
+        copyBytes (lowerArrayPtr to) from len
+        -- Make the last byte (the one following the string, or the
+        -- one at the end of the buffer)
+        pokeElemOff (lowerArrayPtr to) end 0
 
--- | Peek a 'ByteString' from a fixed sized array of bytes
-peekByteStringFromSizedVectorPtr
-  :: forall n
-   . KnownNat n
-  => Ptr (FixedArray n Word8)
-  -> IO ByteString
-peekByteStringFromSizedVectorPtr p = packCStringLen (castPtr p, fromIntegral (natVal (Proxy @n)))
+    -- | Store a 'ByteString' in a fixed amount of space, truncating if necessary.
+    --
+    -- If the 'ByteString' is not long enough to fill the space the remaining
+    -- bytes are unchanged
+    pokeFixedLengthByteString
+      :: forall n
+       . KnownNat n
+      => Ptr (FixedArray n Word8)
+      -> ByteString
+      -> IO ()
+    pokeFixedLengthByteString to bs = unsafeUseAsCString bs $ \from -> do
+      let maxLength = fromIntegral (natVal (Proxy @n))
+          len       = min maxLength (Data.ByteString.length bs)
+      copyBytes (lowerArrayPtr to) (castPtr @CChar @Word8 from) len
 
--- | Get the pointer to the first element in the array
-lowerArrayPtr
-  :: forall a n
-   . Ptr (FixedArray n a)
-  -> Ptr a
-lowerArrayPtr = castPtr
+    -- | Peek a 'ByteString' from a fixed sized array of bytes
+    peekByteStringFromSizedVectorPtr
+      :: forall n
+       . KnownNat n
+      => Ptr (FixedArray n Word8)
+      -> IO ByteString
+    peekByteStringFromSizedVectorPtr p = packCStringLen (castPtr p, fromIntegral (natVal (Proxy @n)))
 
--- | A type restricted 'plusPtr'
-advancePtrBytes :: Ptr a -> Int -> Ptr a
-advancePtrBytes = plusPtr
+    -- | Get the pointer to the first element in the array
+    lowerArrayPtr
+      :: forall a n
+       . Ptr (FixedArray n a)
+      -> Ptr a
+    lowerArrayPtr = castPtr
+
+    -- | A type restricted 'plusPtr'
+    advancePtrBytes :: Ptr a -> Int -> Ptr a
+    advancePtrBytes = plusPtr
 

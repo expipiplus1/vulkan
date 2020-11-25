@@ -27,51 +27,27 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type SubgroupFeatureFlags = SubgroupFeatureFlagBits
 
--- | VkSubgroupFeatureFlagBits - Enum describing what group operations are
--- supported with subgroup scope
---
--- = See Also
---
--- 'SubgroupFeatureFlags'
+-- No documentation found for TopLevel "VkSubgroupFeatureFlagBits"
 newtype SubgroupFeatureFlagBits = SubgroupFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | #features-subgroup-basic# 'SUBGROUP_FEATURE_BASIC_BIT' specifies the
--- device will accept SPIR-V shader modules containing the
--- @GroupNonUniform@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_BASIC_BIT"
 pattern SUBGROUP_FEATURE_BASIC_BIT            = SubgroupFeatureFlagBits 0x00000001
--- | #features-subgroup-vote# 'SUBGROUP_FEATURE_VOTE_BIT' specifies the
--- device will accept SPIR-V shader modules containing the
--- @GroupNonUniformVote@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_VOTE_BIT"
 pattern SUBGROUP_FEATURE_VOTE_BIT             = SubgroupFeatureFlagBits 0x00000002
--- | #features-subgroup-arithmetic# 'SUBGROUP_FEATURE_ARITHMETIC_BIT'
--- specifies the device will accept SPIR-V shader modules containing the
--- @GroupNonUniformArithmetic@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_ARITHMETIC_BIT"
 pattern SUBGROUP_FEATURE_ARITHMETIC_BIT       = SubgroupFeatureFlagBits 0x00000004
--- | #features-subgroup-ballot# 'SUBGROUP_FEATURE_BALLOT_BIT' specifies the
--- device will accept SPIR-V shader modules containing the
--- @GroupNonUniformBallot@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_BALLOT_BIT"
 pattern SUBGROUP_FEATURE_BALLOT_BIT           = SubgroupFeatureFlagBits 0x00000008
--- | #features-subgroup-shuffle# 'SUBGROUP_FEATURE_SHUFFLE_BIT' specifies the
--- device will accept SPIR-V shader modules containing the
--- @GroupNonUniformShuffle@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_SHUFFLE_BIT"
 pattern SUBGROUP_FEATURE_SHUFFLE_BIT          = SubgroupFeatureFlagBits 0x00000010
--- | #features-subgroup-shuffle-relative#
--- 'SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT' specifies the device will accept
--- SPIR-V shader modules containing the @GroupNonUniformShuffleRelative@
--- capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT"
 pattern SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT = SubgroupFeatureFlagBits 0x00000020
--- | #features-subgroup-clustered# 'SUBGROUP_FEATURE_CLUSTERED_BIT' specifies
--- the device will accept SPIR-V shader modules containing the
--- @GroupNonUniformClustered@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_CLUSTERED_BIT"
 pattern SUBGROUP_FEATURE_CLUSTERED_BIT        = SubgroupFeatureFlagBits 0x00000040
--- | #features-subgroup-quad# 'SUBGROUP_FEATURE_QUAD_BIT' specifies the
--- device will accept SPIR-V shader modules containing the
--- @GroupNonUniformQuad@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_QUAD_BIT"
 pattern SUBGROUP_FEATURE_QUAD_BIT             = SubgroupFeatureFlagBits 0x00000080
--- | #features-subgroup-partitioned# 'SUBGROUP_FEATURE_PARTITIONED_BIT_NV'
--- specifies the device will accept SPIR-V shader modules containing the
--- @GroupNonUniformPartitionedNV@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV"
 pattern SUBGROUP_FEATURE_PARTITIONED_BIT_NV   = SubgroupFeatureFlagBits 0x00000100
 
 conNameSubgroupFeatureFlagBits :: String
@@ -93,12 +69,14 @@ showTableSubgroupFeatureFlagBits =
   , (SUBGROUP_FEATURE_PARTITIONED_BIT_NV  , "PARTITIONED_BIT_NV")
   ]
 
+
 instance Show SubgroupFeatureFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSubgroupFeatureFlagBits
-                            showTableSubgroupFeatureFlagBits
-                            conNameSubgroupFeatureFlagBits
-                            (\(SubgroupFeatureFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixSubgroupFeatureFlagBits
+                          showTableSubgroupFeatureFlagBits
+                          conNameSubgroupFeatureFlagBits
+                          (\(SubgroupFeatureFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read SubgroupFeatureFlagBits where
   readPrec = enumReadPrec enumPrefixSubgroupFeatureFlagBits

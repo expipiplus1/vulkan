@@ -13,21 +13,13 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkDescriptorUpdateTemplateType - Indicates the valid usage of the
--- descriptor update template
---
--- = See Also
---
--- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateCreateInfo'
+-- No documentation found for TopLevel "VkDescriptorUpdateTemplateType"
 newtype DescriptorUpdateTemplateType = DescriptorUpdateTemplateType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET' specifies that the
--- descriptor update template will be used for descriptor set updates only.
+-- No documentation found for Nested "VkDescriptorUpdateTemplateType" "VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET"
 pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET       = DescriptorUpdateTemplateType 0
--- | 'DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR' specifies that
--- the descriptor update template will be used for push descriptor updates
--- only.
+-- No documentation found for Nested "VkDescriptorUpdateTemplateType" "VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR"
 pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = DescriptorUpdateTemplateType 1
 {-# complete DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET,
              DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR :: DescriptorUpdateTemplateType #-}
@@ -44,12 +36,14 @@ showTableDescriptorUpdateTemplateType =
   , (DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR, "PUSH_DESCRIPTORS_KHR")
   ]
 
+
 instance Show DescriptorUpdateTemplateType where
-  showsPrec = enumShowsPrec enumPrefixDescriptorUpdateTemplateType
-                            showTableDescriptorUpdateTemplateType
-                            conNameDescriptorUpdateTemplateType
-                            (\(DescriptorUpdateTemplateType x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixDescriptorUpdateTemplateType
+                          showTableDescriptorUpdateTemplateType
+                          conNameDescriptorUpdateTemplateType
+                          (\(DescriptorUpdateTemplateType x) -> x)
+                          (showsPrec 11)
+
 
 instance Read DescriptorUpdateTemplateType where
   readPrec = enumReadPrec enumPrefixDescriptorUpdateTemplateType

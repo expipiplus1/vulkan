@@ -21,26 +21,15 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type CommandBufferUsageFlags = CommandBufferUsageFlagBits
 
--- | VkCommandBufferUsageFlagBits - Bitmask specifying usage behavior for
--- command buffer
---
--- = See Also
---
--- 'CommandBufferUsageFlags'
+-- No documentation found for TopLevel "VkCommandBufferUsageFlagBits"
 newtype CommandBufferUsageFlagBits = CommandBufferUsageFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT' specifies that each recording
--- of the command buffer will only be submitted once, and the command
--- buffer will be reset and recorded again between each submission.
+-- No documentation found for Nested "VkCommandBufferUsageFlagBits" "VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT"
 pattern COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT      = CommandBufferUsageFlagBits 0x00000001
--- | 'COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT' specifies that a
--- secondary command buffer is considered to be entirely inside a render
--- pass. If this is a primary command buffer, then this bit is ignored.
+-- No documentation found for Nested "VkCommandBufferUsageFlagBits" "VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT"
 pattern COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = CommandBufferUsageFlagBits 0x00000002
--- | 'COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT' specifies that a command
--- buffer /can/ be resubmitted to a queue while it is in the /pending
--- state/, and recorded into multiple primary command buffers.
+-- No documentation found for Nested "VkCommandBufferUsageFlagBits" "VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT"
 pattern COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT     = CommandBufferUsageFlagBits 0x00000004
 
 conNameCommandBufferUsageFlagBits :: String
@@ -56,12 +45,14 @@ showTableCommandBufferUsageFlagBits =
   , (COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT    , "SIMULTANEOUS_USE_BIT")
   ]
 
+
 instance Show CommandBufferUsageFlagBits where
-  showsPrec = enumShowsPrec enumPrefixCommandBufferUsageFlagBits
-                            showTableCommandBufferUsageFlagBits
-                            conNameCommandBufferUsageFlagBits
-                            (\(CommandBufferUsageFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixCommandBufferUsageFlagBits
+                          showTableCommandBufferUsageFlagBits
+                          conNameCommandBufferUsageFlagBits
+                          (\(CommandBufferUsageFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read CommandBufferUsageFlagBits where
   readPrec = enumReadPrec enumPrefixCommandBufferUsageFlagBits

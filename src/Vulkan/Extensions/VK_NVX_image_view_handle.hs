@@ -1,96 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_NVX_image_view_handle - device extension
---
--- == VK_NVX_image_view_handle
---
--- [__Name String__]
---     @VK_NVX_image_view_handle@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     31
---
--- [__Revision__]
---     2
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
--- [__Contact__]
---
---     -   Eric Werness
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NVX_image_view_handle:%20&body=@ewerness%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2020-04-03
---
--- [__Contributors__]
---
---     -   Eric Werness, NVIDIA
---
---     -   Jeff Bolz, NVIDIA
---
---     -   Daniel Koch, NVIDIA
---
--- == Description
---
--- This extension allows applications to query an opaque handle from an
--- image view for use as a sampled image or storage image. This provides no
--- direct functionality itself.
---
--- == New Commands
---
--- -   'getImageViewAddressNVX'
---
--- -   'getImageViewHandleNVX'
---
--- == New Structures
---
--- -   'ImageViewAddressPropertiesNVX'
---
--- -   'ImageViewHandleInfoNVX'
---
--- == New Enum Constants
---
--- -   'NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME'
---
--- -   'NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX'
---
--- == Version History
---
--- -   Revision 2, 2020-04-03 (Piers Daniell)
---
---     -   Add 'getImageViewAddressNVX'
---
--- -   Revision 1, 2018-12-07 (Eric Werness)
---
---     -   Internal revisions
---
--- = See Also
---
--- 'ImageViewAddressPropertiesNVX', 'ImageViewHandleInfoNVX',
--- 'getImageViewAddressNVX', 'getImageViewHandleNVX'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_NVX_image_view_handle"
 module Vulkan.Extensions.VK_NVX_image_view_handle  ( getImageViewHandleNVX
                                                    , getImageViewAddressNVX
                                                    , ImageViewHandleInfoNVX(..)
@@ -156,25 +65,12 @@ foreign import ccall
   "dynamic" mkVkGetImageViewHandleNVX
   :: FunPtr (Ptr Device_T -> Ptr ImageViewHandleInfoNVX -> IO Word32) -> Ptr Device_T -> Ptr ImageViewHandleInfoNVX -> IO Word32
 
--- | vkGetImageViewHandleNVX - Get the handle for an image view for a
--- specific descriptor type
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'ImageViewHandleInfoNVX'
+-- No documentation found for TopLevel "vkGetImageViewHandleNVX"
 getImageViewHandleNVX :: forall io
                        . (MonadIO io)
-                      => -- | @device@ is the logical device that owns the image view.
-                         --
-                         -- #VUID-vkGetImageViewHandleNVX-device-parameter# @device@ /must/ be a
-                         -- valid 'Vulkan.Core10.Handles.Device' handle
+                      => -- No documentation found for Nested "vkGetImageViewHandleNVX" "device"
                          Device
-                      -> -- | @pInfo@ describes the image view to query and type of handle.
-                         --
-                         -- #VUID-vkGetImageViewHandleNVX-pInfo-parameter# @pInfo@ /must/ be a valid
-                         -- pointer to a valid 'ImageViewHandleInfoNVX' structure
+                      -> -- No documentation found for Nested "vkGetImageViewHandleNVX" "pInfo"
                          ImageViewHandleInfoNVX
                       -> io (Word32)
 getImageViewHandleNVX device info = liftIO . evalContT $ do
@@ -194,38 +90,12 @@ foreign import ccall
   "dynamic" mkVkGetImageViewAddressNVX
   :: FunPtr (Ptr Device_T -> ImageView -> Ptr ImageViewAddressPropertiesNVX -> IO Result) -> Ptr Device_T -> ImageView -> Ptr ImageViewAddressPropertiesNVX -> IO Result
 
--- | vkGetImageViewAddressNVX - Get the device address of an image view
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ImageView',
--- 'ImageViewAddressPropertiesNVX'
+-- No documentation found for TopLevel "vkGetImageViewAddressNVX"
 getImageViewAddressNVX :: forall io
                         . (MonadIO io)
-                       => -- | @device@ is the logical device that owns the image view.
-                          --
-                          -- #VUID-vkGetImageViewAddressNVX-device-parameter# @device@ /must/ be a
-                          -- valid 'Vulkan.Core10.Handles.Device' handle
+                       => -- No documentation found for Nested "vkGetImageViewAddressNVX" "device"
                           Device
-                       -> -- | @imageView@ is a handle to the image view.
-                          --
-                          -- #VUID-vkGetImageViewAddressNVX-imageView-parameter# @imageView@ /must/
-                          -- be a valid 'Vulkan.Core10.Handles.ImageView' handle
-                          --
-                          -- #VUID-vkGetImageViewAddressNVX-imageView-parent# @imageView@ /must/ have
-                          -- been created, allocated, or retrieved from @device@
+                       -> -- No documentation found for Nested "vkGetImageViewAddressNVX" "imageView"
                           ImageView
                        -> io (ImageViewAddressPropertiesNVX)
 getImageViewAddressNVX device imageView = liftIO . evalContT $ do
@@ -240,74 +110,14 @@ getImageViewAddressNVX device imageView = liftIO . evalContT $ do
   pure $ (pProperties)
 
 
--- | VkImageViewHandleInfoNVX - Structure specifying the image view for
--- handle queries
---
--- == Valid Usage
---
--- -   #VUID-VkImageViewHandleInfoNVX-descriptorType-02654#
---     @descriptorType@ /must/ be
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---
--- -   #VUID-VkImageViewHandleInfoNVX-sampler-02655# @sampler@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Sampler' if @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---
--- -   #VUID-VkImageViewHandleInfoNVX-imageView-02656# If descriptorType is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     the image that @imageView@ was created from /must/ have been created
---     with the
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
---     usage bit set
---
--- -   #VUID-VkImageViewHandleInfoNVX-imageView-02657# If descriptorType is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     the image that @imageView@ was created from /must/ have been created
---     with the
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT'
---     usage bit set
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkImageViewHandleInfoNVX-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX'
---
--- -   #VUID-VkImageViewHandleInfoNVX-pNext-pNext# @pNext@ /must/ be @NULL@
---
--- -   #VUID-VkImageViewHandleInfoNVX-imageView-parameter# @imageView@
---     /must/ be a valid 'Vulkan.Core10.Handles.ImageView' handle
---
--- -   #VUID-VkImageViewHandleInfoNVX-descriptorType-parameter#
---     @descriptorType@ /must/ be a valid
---     'Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
---
--- -   #VUID-VkImageViewHandleInfoNVX-sampler-parameter# If @sampler@ is
---     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @sampler@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Sampler' handle
---
--- -   #VUID-VkImageViewHandleInfoNVX-commonparent# Both of @imageView@,
---     and @sampler@ that are valid handles of non-ignored parameters
---     /must/ have been created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Device'
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
--- 'Vulkan.Core10.Handles.ImageView', 'Vulkan.Core10.Handles.Sampler',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getImageViewHandleNVX'
+
+-- No documentation found for TopLevel "VkImageViewHandleInfoNVX"
 data ImageViewHandleInfoNVX = ImageViewHandleInfoNVX
-  { -- | @imageView@ is the image view to query.
+  { -- No documentation found for Nested "VkImageViewHandleInfoNVX" "imageView"
     imageView :: ImageView
-  , -- | @descriptorType@ is the type of descriptor for which to query a handle.
+  , -- No documentation found for Nested "VkImageViewHandleInfoNVX" "descriptorType"
     descriptorType :: DescriptorType
-  , -- | @sampler@ is the sampler to combine with the image view when generating
-    -- the handle.
+  , -- No documentation found for Nested "VkImageViewHandleInfoNVX" "sampler"
     sampler :: Sampler
   }
   deriving (Typeable, Eq)
@@ -342,6 +152,7 @@ instance FromCStruct ImageViewHandleInfoNVX where
     pure $ ImageViewHandleInfoNVX
              imageView descriptorType sampler
 
+
 instance Storable ImageViewHandleInfoNVX where
   sizeOf ~_ = 40
   alignment ~_ = 8
@@ -355,21 +166,12 @@ instance Zero ImageViewHandleInfoNVX where
            zero
 
 
--- | VkImageViewAddressPropertiesNVX - Structure specifying the image view
--- for handle queries
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getImageViewAddressNVX'
+
+-- No documentation found for TopLevel "VkImageViewAddressPropertiesNVX"
 data ImageViewAddressPropertiesNVX = ImageViewAddressPropertiesNVX
-  { -- | @deviceAddress@ is the device address of the image view.
+  { -- No documentation found for Nested "VkImageViewAddressPropertiesNVX" "deviceAddress"
     deviceAddress :: DeviceAddress
-  , -- | @size@ is the size in bytes of the image view device memory.
+  , -- No documentation found for Nested "VkImageViewAddressPropertiesNVX" "size"
     size :: DeviceSize
   }
   deriving (Typeable, Eq)
@@ -401,6 +203,7 @@ instance FromCStruct ImageViewAddressPropertiesNVX where
     size <- peek @DeviceSize ((p `plusPtr` 24 :: Ptr DeviceSize))
     pure $ ImageViewAddressPropertiesNVX
              deviceAddress size
+
 
 instance Storable ImageViewAddressPropertiesNVX where
   sizeOf ~_ = 32

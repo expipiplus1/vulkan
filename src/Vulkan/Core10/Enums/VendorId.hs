@@ -16,24 +16,7 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkVendorId - Khronos vendor IDs
---
--- = Description
---
--- Note
---
--- Khronos vendor IDs may be allocated by vendors at any time. Only the
--- latest canonical versions of this Specification, of the corresponding
--- @vk.xml@ API Registry, and of the corresponding @vulkan_core.h@ header
--- file /must/ contain all reserved Khronos vendor IDs.
---
--- Only Khronos vendor IDs are given symbolic names at present. PCI vendor
--- IDs returned by the implementation can be looked up in the PCI-SIG
--- database.
---
--- = See Also
---
--- No cross-references are available
+-- No documentation found for TopLevel "VkVendorId"
 newtype VendorId = VendorId Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
@@ -69,8 +52,10 @@ showTableVendorId =
   , (VENDOR_ID_MESA    , "MESA")
   ]
 
+
 instance Show VendorId where
-  showsPrec = enumShowsPrec enumPrefixVendorId showTableVendorId conNameVendorId (\(VendorId x) -> x) (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixVendorId showTableVendorId conNameVendorId (\(VendorId x) -> x) (showsPrec 11)
+
 
 instance Read VendorId where
   readPrec = enumReadPrec enumPrefixVendorId showTableVendorId conNameVendorId VendorId

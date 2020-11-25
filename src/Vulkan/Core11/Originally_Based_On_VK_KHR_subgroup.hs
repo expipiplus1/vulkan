@@ -33,69 +33,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(..))
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
--- | VkPhysicalDeviceSubgroupProperties - Structure describing subgroup
--- support for an implementation
---
--- = Members
---
--- The members of the 'PhysicalDeviceSubgroupProperties' structure describe
--- the following implementation-dependent limits:
---
--- = Description
---
--- If the 'PhysicalDeviceSubgroupProperties' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
--- If @supportedOperations@ includes
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroup-quad >,
--- @subgroupSize@ /must/ be greater than or equal to 4.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlags'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceSubgroupProperties"
 data PhysicalDeviceSubgroupProperties = PhysicalDeviceSubgroupProperties
-  { -- | #extension-limits-subgroup-size# @subgroupSize@ is the default number of
-    -- invocations in each subgroup. @subgroupSize@ is at least 1 if any of the
-    -- physical device’s queues support
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @subgroupSize@ is
-    -- a power-of-two.
+  { -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "subgroupSize"
     subgroupSize :: Word32
-  , -- | #limits-subgroup-supportedStages# @supportedStages@ is a bitfield of
-    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' describing
-    -- the shader stages that
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
-    -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
-    -- are supported in. @supportedStages@ will have the
-    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT' bit
-    -- set if any of the physical device’s queues support
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "supportedStages"
     supportedStages :: ShaderStageFlags
-  , -- | #limits-subgroupSupportedOperations# @supportedOperations@ is a bitmask
-    -- of 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits'
-    -- specifying the sets of
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
-    -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
-    -- supported on this device. @supportedOperations@ will have the
-    -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_BASIC_BIT'
-    -- bit set if any of the physical device’s queues support
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "supportedOperations"
     supportedOperations :: SubgroupFeatureFlags
-  , -- | #limits-subgroup-quadOperationsInAllStages# @quadOperationsInAllStages@
-    -- is a boolean specifying whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-quad-operations quad group operations>
-    -- are available in all stages, or are restricted to fragment and compute
-    -- stages.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "quadOperationsInAllStages"
     quadOperationsInAllStages :: Bool
   }
   deriving (Typeable, Eq)
@@ -133,6 +80,7 @@ instance FromCStruct PhysicalDeviceSubgroupProperties where
     quadOperationsInAllStages <- peek @Bool32 ((p `plusPtr` 28 :: Ptr Bool32))
     pure $ PhysicalDeviceSubgroupProperties
              subgroupSize supportedStages supportedOperations (bool32ToBool quadOperationsInAllStages)
+
 
 instance Storable PhysicalDeviceSubgroupProperties where
   sizeOf ~_ = 32

@@ -1,96 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_metal_surface - instance extension
---
--- == VK_EXT_metal_surface
---
--- [__Name String__]
---     @VK_EXT_metal_surface@
---
--- [__Extension Type__]
---     Instance extension
---
--- [__Registered Extension Number__]
---     218
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_surface@
---
--- [__Contact__]
---
---     -   Dzmitry Malyshau
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_metal_surface:%20&body=@kvark%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2018-10-01
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Dzmitry Malyshau, Mozilla Corp.
---
--- == Description
---
--- The @VK_EXT_metal_surface@ extension is an instance extension. It
--- provides a mechanism to create a 'Vulkan.Extensions.Handles.SurfaceKHR'
--- object (defined by the @VK_KHR_surface@ extension) from 'CAMetalLayer',
--- which is the native rendering surface of Apple’s Metal framework.
---
--- == New Base Types
---
--- -   'CAMetalLayer'
---
--- == New Commands
---
--- -   'createMetalSurfaceEXT'
---
--- == New Structures
---
--- -   'MetalSurfaceCreateInfoEXT'
---
--- == New Bitmasks
---
--- -   'MetalSurfaceCreateFlagsEXT'
---
--- == New Enum Constants
---
--- -   'EXT_METAL_SURFACE_EXTENSION_NAME'
---
--- -   'EXT_METAL_SURFACE_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT'
---
--- == Version History
---
--- -   Revision 1, 2018-10-01 (Dzmitry Malyshau)
---
---     -   Initial version
---
--- = See Also
---
--- 'CAMetalLayer', 'MetalSurfaceCreateFlagsEXT',
--- 'MetalSurfaceCreateInfoEXT', 'createMetalSurfaceEXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_metal_surface Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_metal_surface"
 module Vulkan.Extensions.VK_EXT_metal_surface  ( createMetalSurfaceEXT
                                                , MetalSurfaceCreateInfoEXT(..)
                                                , MetalSurfaceCreateFlagsEXT(..)
@@ -166,54 +75,14 @@ foreign import ccall
   "dynamic" mkVkCreateMetalSurfaceEXT
   :: FunPtr (Ptr Instance_T -> Ptr MetalSurfaceCreateInfoEXT -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result) -> Ptr Instance_T -> Ptr MetalSurfaceCreateInfoEXT -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
 
--- | vkCreateMetalSurfaceEXT - Create a VkSurfaceKHR object for CAMetalLayer
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateMetalSurfaceEXT-instance-parameter# @instance@ /must/
---     be a valid 'Vulkan.Core10.Handles.Instance' handle
---
--- -   #VUID-vkCreateMetalSurfaceEXT-pCreateInfo-parameter# @pCreateInfo@
---     /must/ be a valid pointer to a valid 'MetalSurfaceCreateInfoEXT'
---     structure
---
--- -   #VUID-vkCreateMetalSurfaceEXT-pAllocator-parameter# If @pAllocator@
---     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkCreateMetalSurfaceEXT-pSurface-parameter# @pSurface@ /must/
---     be a valid pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Instance', 'MetalSurfaceCreateInfoEXT',
--- 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- No documentation found for TopLevel "vkCreateMetalSurfaceEXT"
 createMetalSurfaceEXT :: forall io
                        . (MonadIO io)
-                      => -- | @instance@ is the instance with which to associate the surface.
+                      => -- No documentation found for Nested "vkCreateMetalSurfaceEXT" "instance"
                          Instance
-                      -> -- | @pCreateInfo@ is a pointer to a 'MetalSurfaceCreateInfoEXT' structure
-                         -- specifying parameters affecting the creation of the surface object.
+                      -> -- No documentation found for Nested "vkCreateMetalSurfaceEXT" "pCreateInfo"
                          MetalSurfaceCreateInfoEXT
-                      -> -- | @pAllocator@ is the allocator used for host memory allocated for the
-                         -- surface object when there is no more specific allocator available (see
-                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                      -> -- No documentation found for Nested "vkCreateMetalSurfaceEXT" "pAllocator"
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io (SurfaceKHR)
 createMetalSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
@@ -232,24 +101,12 @@ createMetalSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
   pure $ (pSurface)
 
 
--- | VkMetalSurfaceCreateInfoEXT - Structure specifying parameters of a newly
--- created Metal surface object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'MetalSurfaceCreateFlagsEXT',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'createMetalSurfaceEXT'
+
+-- No documentation found for TopLevel "VkMetalSurfaceCreateInfoEXT"
 data MetalSurfaceCreateInfoEXT = MetalSurfaceCreateInfoEXT
-  { -- | @flags@ is reserved for future use.
-    --
-    -- #VUID-VkMetalSurfaceCreateInfoEXT-flags-zerobitmask# @flags@ /must/ be
-    -- @0@
+  { -- No documentation found for Nested "VkMetalSurfaceCreateInfoEXT" "flags"
     flags :: MetalSurfaceCreateFlagsEXT
-  , -- | @pLayer@ is a reference to a 'CAMetalLayer' object representing a
-    -- renderable surface.
+  , -- No documentation found for Nested "VkMetalSurfaceCreateInfoEXT" "pLayer"
     layer :: Ptr CAMetalLayer
   }
   deriving (Typeable, Eq)
@@ -281,6 +138,7 @@ instance FromCStruct MetalSurfaceCreateInfoEXT where
     pure $ MetalSurfaceCreateInfoEXT
              flags pLayer
 
+
 instance Storable MetalSurfaceCreateInfoEXT where
   sizeOf ~_ = 32
   alignment ~_ = 8
@@ -293,16 +151,7 @@ instance Zero MetalSurfaceCreateInfoEXT where
            zero
 
 
--- | VkMetalSurfaceCreateFlagsEXT - Reserved for future use
---
--- = Description
---
--- 'MetalSurfaceCreateFlagsEXT' is a bitmask type for setting a mask, but
--- is currently reserved for future use.
---
--- = See Also
---
--- 'MetalSurfaceCreateInfoEXT'
+-- No documentation found for TopLevel "VkMetalSurfaceCreateFlagsEXT"
 newtype MetalSurfaceCreateFlagsEXT = MetalSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -317,12 +166,14 @@ enumPrefixMetalSurfaceCreateFlagsEXT = ""
 showTableMetalSurfaceCreateFlagsEXT :: [(MetalSurfaceCreateFlagsEXT, String)]
 showTableMetalSurfaceCreateFlagsEXT = []
 
+
 instance Show MetalSurfaceCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixMetalSurfaceCreateFlagsEXT
-                            showTableMetalSurfaceCreateFlagsEXT
-                            conNameMetalSurfaceCreateFlagsEXT
-                            (\(MetalSurfaceCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixMetalSurfaceCreateFlagsEXT
+                          showTableMetalSurfaceCreateFlagsEXT
+                          conNameMetalSurfaceCreateFlagsEXT
+                          (\(MetalSurfaceCreateFlagsEXT x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read MetalSurfaceCreateFlagsEXT where
   readPrec = enumReadPrec enumPrefixMetalSurfaceCreateFlagsEXT

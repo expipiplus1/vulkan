@@ -26,40 +26,10 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
--- | VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures - Structure
--- describing the extended types subgroups support feature for an
--- implementation
---
--- = Members
---
--- The members of the 'PhysicalDeviceShaderSubgroupExtendedTypesFeatures'
--- structure describe the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceShaderSubgroupExtendedTypesFeatures' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceShaderSubgroupExtendedTypesFeatures' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures"
 data PhysicalDeviceShaderSubgroupExtendedTypesFeatures = PhysicalDeviceShaderSubgroupExtendedTypesFeatures
-  { -- | #extension-features-subgroup-extended-types#
-    -- @shaderSubgroupExtendedTypes@ is a boolean that specifies whether
-    -- subgroup operations can use 8-bit integer, 16-bit integer, 64-bit
-    -- integer, 16-bit floating-point, and vectors of these types in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
-    -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>if
-    -- the implementation supports the types.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures" "shaderSubgroupExtendedTypes"
     shaderSubgroupExtendedTypes :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -87,6 +57,7 @@ instance FromCStruct PhysicalDeviceShaderSubgroupExtendedTypesFeatures where
     shaderSubgroupExtendedTypes <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     pure $ PhysicalDeviceShaderSubgroupExtendedTypesFeatures
              (bool32ToBool shaderSubgroupExtendedTypes)
+
 
 instance Storable PhysicalDeviceShaderSubgroupExtendedTypesFeatures where
   sizeOf ~_ = 24

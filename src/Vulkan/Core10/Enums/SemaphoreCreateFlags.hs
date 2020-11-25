@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkSemaphoreCreateFlags - Reserved for future use
---
--- = Description
---
--- 'SemaphoreCreateFlags' is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'
+-- No documentation found for TopLevel "VkSemaphoreCreateFlags"
 newtype SemaphoreCreateFlags = SemaphoreCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixSemaphoreCreateFlags = ""
 showTableSemaphoreCreateFlags :: [(SemaphoreCreateFlags, String)]
 showTableSemaphoreCreateFlags = []
 
+
 instance Show SemaphoreCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixSemaphoreCreateFlags
-                            showTableSemaphoreCreateFlags
-                            conNameSemaphoreCreateFlags
-                            (\(SemaphoreCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixSemaphoreCreateFlags
+                          showTableSemaphoreCreateFlags
+                          conNameSemaphoreCreateFlags
+                          (\(SemaphoreCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read SemaphoreCreateFlags where
   readPrec = enumReadPrec enumPrefixSemaphoreCreateFlags

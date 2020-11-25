@@ -1,115 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_MVK_ios_surface - instance extension
---
--- == VK_MVK_ios_surface
---
--- [__Name String__]
---     @VK_MVK_ios_surface@
---
--- [__Extension Type__]
---     Instance extension
---
--- [__Registered Extension Number__]
---     123
---
--- [__Revision__]
---     3
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_surface@
---
--- [__Deprecation state__]
---
---     -   /Deprecated/ by @VK_EXT_metal_surface@ extension
---
--- [__Contact__]
---
---     -   Bill Hollings
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_MVK_ios_surface:%20&body=@billhollings%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2020-07-31
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Bill Hollings, The Brenwill Workshop Ltd.
---
--- == Description
---
--- The @VK_MVK_ios_surface@ extension is an instance extension. It provides
--- a mechanism to create a 'Vulkan.Extensions.Handles.SurfaceKHR' object
--- (defined by the @VK_KHR_surface@ extension) based on a @UIView@, the
--- native surface type of iOS, which is underpinned by a
--- 'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer', to support
--- rendering to the surface using Apple’s Metal framework.
---
--- == Deprecation by @VK_EXT_metal_surface@
---
--- The @VK_MVK_ios_surface@ extension is considered deprecated and has been
--- superseded by the @VK_EXT_metal_surface@ extension.
---
--- == New Commands
---
--- -   'createIOSSurfaceMVK'
---
--- == New Structures
---
--- -   'IOSSurfaceCreateInfoMVK'
---
--- == New Bitmasks
---
--- -   'IOSSurfaceCreateFlagsMVK'
---
--- == New Enum Constants
---
--- -   'MVK_IOS_SURFACE_EXTENSION_NAME'
---
--- -   'MVK_IOS_SURFACE_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK'
---
--- == Version History
---
--- -   Revision 1, 2017-02-15 (Bill Hollings)
---
---     -   Initial draft.
---
--- -   Revision 2, 2017-02-24 (Bill Hollings)
---
---     -   Minor syntax fix to emphasize firm requirement for @UIView@ to
---         be backed by a
---         'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
---
--- -   Revision 3, 2020-07-31 (Bill Hollings)
---
---     -   Update documentation on requirements for UIView.
---
---     -   Mark as deprecated by @VK_EXT_metal_surface@.
---
--- = See Also
---
--- 'IOSSurfaceCreateFlagsMVK', 'IOSSurfaceCreateInfoMVK',
--- 'createIOSSurfaceMVK'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_ios_surface Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_MVK_ios_surface"
 module Vulkan.Extensions.VK_MVK_ios_surface  ( createIOSSurfaceMVK
                                              , IOSSurfaceCreateInfoMVK(..)
                                              , IOSSurfaceCreateFlagsMVK(..)
@@ -184,67 +74,7 @@ foreign import ccall
   "dynamic" mkVkCreateIOSSurfaceMVK
   :: FunPtr (Ptr Instance_T -> Ptr IOSSurfaceCreateInfoMVK -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result) -> Ptr Instance_T -> Ptr IOSSurfaceCreateInfoMVK -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
 
--- | vkCreateIOSSurfaceMVK - Create a VkSurfaceKHR object for an iOS UIView
---
--- = Parameters
---
--- Note
---
--- The 'createIOSSurfaceMVK' function is considered deprecated and has been
--- superseded by
--- 'Vulkan.Extensions.VK_EXT_metal_surface.createMetalSurfaceEXT' from the
--- @VK_EXT_metal_surface@ extension.
---
--- = Description
---
--- -   @instance@ is the instance with which to associate the surface.
---
--- -   @pCreateInfo@ is a pointer to a 'IOSSurfaceCreateInfoMVK' structure
---     containing parameters affecting the creation of the surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateIOSSurfaceMVK-instance-parameter# @instance@ /must/ be
---     a valid 'Vulkan.Core10.Handles.Instance' handle
---
--- -   #VUID-vkCreateIOSSurfaceMVK-pCreateInfo-parameter# @pCreateInfo@
---     /must/ be a valid pointer to a valid 'IOSSurfaceCreateInfoMVK'
---     structure
---
--- -   #VUID-vkCreateIOSSurfaceMVK-pAllocator-parameter# If @pAllocator@ is
---     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkCreateIOSSurfaceMVK-pSurface-parameter# @pSurface@ /must/ be
---     a valid pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'IOSSurfaceCreateInfoMVK', 'Vulkan.Core10.Handles.Instance',
--- 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- No documentation found for TopLevel "vkCreateIOSSurfaceMVK"
 createIOSSurfaceMVK :: forall io
                      . (MonadIO io)
                     => -- No documentation found for Nested "vkCreateIOSSurfaceMVK" "instance"
@@ -270,43 +100,12 @@ createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
   pure $ (pSurface)
 
 
--- | VkIOSSurfaceCreateInfoMVK - Structure specifying parameters of a newly
--- created iOS surface object
---
--- == Valid Usage
---
--- -   #VUID-VkIOSSurfaceCreateInfoMVK-pView-04143# If @pView@ is a
---     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer' object, it
---     /must/ be a valid
---     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
---
--- -   #VUID-VkIOSSurfaceCreateInfoMVK-pView-01316# If @pView@ is a
---     @UIView@ object, it /must/ be a valid @UIView@, /must/ be backed by
---     a @CALayer@ object of type
---     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer', and
---     'createIOSSurfaceMVK' /must/ be called on the main thread.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkIOSSurfaceCreateInfoMVK-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK'
---
--- -   #VUID-VkIOSSurfaceCreateInfoMVK-pNext-pNext# @pNext@ /must/ be
---     @NULL@
---
--- -   #VUID-VkIOSSurfaceCreateInfoMVK-flags-zerobitmask# @flags@ /must/ be
---     @0@
---
--- = See Also
---
--- 'IOSSurfaceCreateFlagsMVK',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createIOSSurfaceMVK'
+
+-- No documentation found for TopLevel "VkIOSSurfaceCreateInfoMVK"
 data IOSSurfaceCreateInfoMVK = IOSSurfaceCreateInfoMVK
-  { -- | @flags@ is reserved for future use.
+  { -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "flags"
     flags :: IOSSurfaceCreateFlagsMVK
-  , -- | @pView@ is a reference to either a
-    -- 'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer' object or a
-    -- @UIView@ object.
+  , -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "pView"
     view :: Ptr ()
   }
   deriving (Typeable)
@@ -338,6 +137,7 @@ instance FromCStruct IOSSurfaceCreateInfoMVK where
     pure $ IOSSurfaceCreateInfoMVK
              flags pView
 
+
 instance Storable IOSSurfaceCreateInfoMVK where
   sizeOf ~_ = 32
   alignment ~_ = 8
@@ -350,16 +150,7 @@ instance Zero IOSSurfaceCreateInfoMVK where
            zero
 
 
--- | VkIOSSurfaceCreateFlagsMVK - Reserved for future use
---
--- = Description
---
--- 'IOSSurfaceCreateFlagsMVK' is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'IOSSurfaceCreateInfoMVK'
+-- No documentation found for TopLevel "VkIOSSurfaceCreateFlagsMVK"
 newtype IOSSurfaceCreateFlagsMVK = IOSSurfaceCreateFlagsMVK Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -374,12 +165,14 @@ enumPrefixIOSSurfaceCreateFlagsMVK = ""
 showTableIOSSurfaceCreateFlagsMVK :: [(IOSSurfaceCreateFlagsMVK, String)]
 showTableIOSSurfaceCreateFlagsMVK = []
 
+
 instance Show IOSSurfaceCreateFlagsMVK where
-  showsPrec = enumShowsPrec enumPrefixIOSSurfaceCreateFlagsMVK
-                            showTableIOSSurfaceCreateFlagsMVK
-                            conNameIOSSurfaceCreateFlagsMVK
-                            (\(IOSSurfaceCreateFlagsMVK x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixIOSSurfaceCreateFlagsMVK
+                          showTableIOSSurfaceCreateFlagsMVK
+                          conNameIOSSurfaceCreateFlagsMVK
+                          (\(IOSSurfaceCreateFlagsMVK x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read IOSSurfaceCreateFlagsMVK where
   readPrec = enumReadPrec enumPrefixIOSSurfaceCreateFlagsMVK

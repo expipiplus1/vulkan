@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkPipelineLayoutCreateFlags - Reserved for future use
---
--- = Description
---
--- 'PipelineLayoutCreateFlags' is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'
+-- No documentation found for TopLevel "VkPipelineLayoutCreateFlags"
 newtype PipelineLayoutCreateFlags = PipelineLayoutCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixPipelineLayoutCreateFlags = ""
 showTablePipelineLayoutCreateFlags :: [(PipelineLayoutCreateFlags, String)]
 showTablePipelineLayoutCreateFlags = []
 
+
 instance Show PipelineLayoutCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineLayoutCreateFlags
-                            showTablePipelineLayoutCreateFlags
-                            conNamePipelineLayoutCreateFlags
-                            (\(PipelineLayoutCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineLayoutCreateFlags
+                          showTablePipelineLayoutCreateFlags
+                          conNamePipelineLayoutCreateFlags
+                          (\(PipelineLayoutCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineLayoutCreateFlags where
   readPrec = enumReadPrec enumPrefixPipelineLayoutCreateFlags

@@ -12,17 +12,11 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkInternalAllocationType - Allocation type
---
--- = See Also
---
--- 'Vulkan.Core10.FuncPointers.PFN_vkInternalAllocationNotification',
--- 'Vulkan.Core10.FuncPointers.PFN_vkInternalFreeNotification'
+-- No documentation found for TopLevel "VkInternalAllocationType"
 newtype InternalAllocationType = InternalAllocationType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'INTERNAL_ALLOCATION_TYPE_EXECUTABLE' specifies that the allocation is
--- intended for execution by the host.
+-- No documentation found for Nested "VkInternalAllocationType" "VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE"
 pattern INTERNAL_ALLOCATION_TYPE_EXECUTABLE = InternalAllocationType 0
 {-# complete INTERNAL_ALLOCATION_TYPE_EXECUTABLE :: InternalAllocationType #-}
 
@@ -35,12 +29,14 @@ enumPrefixInternalAllocationType = "INTERNAL_ALLOCATION_TYPE_EXECUTABLE"
 showTableInternalAllocationType :: [(InternalAllocationType, String)]
 showTableInternalAllocationType = [(INTERNAL_ALLOCATION_TYPE_EXECUTABLE, "")]
 
+
 instance Show InternalAllocationType where
-  showsPrec = enumShowsPrec enumPrefixInternalAllocationType
-                            showTableInternalAllocationType
-                            conNameInternalAllocationType
-                            (\(InternalAllocationType x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixInternalAllocationType
+                          showTableInternalAllocationType
+                          conNameInternalAllocationType
+                          (\(InternalAllocationType x) -> x)
+                          (showsPrec 11)
+
 
 instance Read InternalAllocationType where
   readPrec = enumReadPrec enumPrefixInternalAllocationType

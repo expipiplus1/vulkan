@@ -1,96 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_directfb_surface - instance extension
---
--- == VK_EXT_directfb_surface
---
--- [__Name String__]
---     @VK_EXT_directfb_surface@
---
--- [__Extension Type__]
---     Instance extension
---
--- [__Registered Extension Number__]
---     347
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_surface@
---
--- [__Contact__]
---
---     -   Nicolas Caramelli
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_directfb_surface:%20&body=@caramelli%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2020-06-16
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Nicolas Caramelli
---
--- == Description
---
--- The @VK_EXT_directfb_surface@ extension is an instance extension. It
--- provides a mechanism to create a 'Vulkan.Extensions.Handles.SurfaceKHR'
--- object (defined by the @VK_KHR_surface@ extension) that refers to a
--- DirectFB 'IDirectFBSurface', as well as a query to determine support for
--- rendering via DirectFB.
---
--- == New Commands
---
--- -   'createDirectFBSurfaceEXT'
---
--- -   'getPhysicalDeviceDirectFBPresentationSupportEXT'
---
--- == New Structures
---
--- -   'DirectFBSurfaceCreateInfoEXT'
---
--- == New Bitmasks
---
--- -   'DirectFBSurfaceCreateFlagsEXT'
---
--- == New Enum Constants
---
--- -   'EXT_DIRECTFB_SURFACE_EXTENSION_NAME'
---
--- -   'EXT_DIRECTFB_SURFACE_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT'
---
--- == Version History
---
--- -   Revision 1, 2020-06-16 (Nicolas Caramelli)
---
---     -   Initial version
---
--- = See Also
---
--- 'DirectFBSurfaceCreateFlagsEXT', 'DirectFBSurfaceCreateInfoEXT',
--- 'createDirectFBSurfaceEXT',
--- 'getPhysicalDeviceDirectFBPresentationSupportEXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_directfb_surface"
 module Vulkan.Extensions.VK_EXT_directfb_surface  ( createDirectFBSurfaceEXT
                                                   , getPhysicalDeviceDirectFBPresentationSupportEXT
                                                   , DirectFBSurfaceCreateInfoEXT(..)
@@ -176,54 +85,14 @@ foreign import ccall
   "dynamic" mkVkCreateDirectFBSurfaceEXT
   :: FunPtr (Ptr Instance_T -> Ptr DirectFBSurfaceCreateInfoEXT -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result) -> Ptr Instance_T -> Ptr DirectFBSurfaceCreateInfoEXT -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
 
--- | vkCreateDirectFBSurfaceEXT - Create a
--- 'Vulkan.Extensions.Handles.SurfaceKHR' object for a DirectFB surface
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateDirectFBSurfaceEXT-instance-parameter# @instance@
---     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
---
--- -   #VUID-vkCreateDirectFBSurfaceEXT-pCreateInfo-parameter#
---     @pCreateInfo@ /must/ be a valid pointer to a valid
---     'DirectFBSurfaceCreateInfoEXT' structure
---
--- -   #VUID-vkCreateDirectFBSurfaceEXT-pAllocator-parameter# If
---     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
---     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     structure
---
--- -   #VUID-vkCreateDirectFBSurfaceEXT-pSurface-parameter# @pSurface@
---     /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'DirectFBSurfaceCreateInfoEXT', 'Vulkan.Core10.Handles.Instance',
--- 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- No documentation found for TopLevel "vkCreateDirectFBSurfaceEXT"
 createDirectFBSurfaceEXT :: forall io
                           . (MonadIO io)
-                         => -- | @instance@ is the instance to associate the surface with.
+                         => -- No documentation found for Nested "vkCreateDirectFBSurfaceEXT" "instance"
                             Instance
-                         -> -- | @pCreateInfo@ is a pointer to a 'DirectFBSurfaceCreateInfoEXT' structure
-                            -- containing parameters affecting the creation of the surface object.
+                         -> -- No documentation found for Nested "vkCreateDirectFBSurfaceEXT" "pCreateInfo"
                             DirectFBSurfaceCreateInfoEXT
-                         -> -- | @pAllocator@ is the allocator used for host memory allocated for the
-                            -- surface object when there is no more specific allocator available (see
-                            -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                         -> -- No documentation found for Nested "vkCreateDirectFBSurfaceEXT" "pAllocator"
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (SurfaceKHR)
 createDirectFBSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
@@ -249,39 +118,14 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceDirectFBPresentationSupportEXT
   :: FunPtr (Ptr PhysicalDevice_T -> Word32 -> Ptr IDirectFB -> IO Bool32) -> Ptr PhysicalDevice_T -> Word32 -> Ptr IDirectFB -> IO Bool32
 
--- | vkGetPhysicalDeviceDirectFBPresentationSupportEXT - Query physical
--- device for presentation with DirectFB
---
--- = Description
---
--- This platform-specific function /can/ be called prior to creating a
--- surface.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceDirectFBPresentationSupportEXT"
 getPhysicalDeviceDirectFBPresentationSupportEXT :: forall io
                                                  . (MonadIO io)
-                                                => -- | @physicalDevice@ is the physical device.
-                                                   --
-                                                   -- #VUID-vkGetPhysicalDeviceDirectFBPresentationSupportEXT-physicalDevice-parameter#
-                                                   -- @physicalDevice@ /must/ be a valid
-                                                   -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                                => -- No documentation found for Nested "vkGetPhysicalDeviceDirectFBPresentationSupportEXT" "physicalDevice"
                                                    PhysicalDevice
-                                                -> -- | @queueFamilyIndex@ is the queue family index.
-                                                   --
-                                                   -- #VUID-vkGetPhysicalDeviceDirectFBPresentationSupportEXT-queueFamilyIndex-04119#
-                                                   -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
-                                                   -- returned by
-                                                   -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
-                                                   -- for the given @physicalDevice@
+                                                -> -- No documentation found for Nested "vkGetPhysicalDeviceDirectFBPresentationSupportEXT" "queueFamilyIndex"
                                                    ("queueFamilyIndex" ::: Word32)
-                                                -> -- | @dfb@ is a pointer to the 'IDirectFB' main interface of DirectFB.
-                                                   --
-                                                   -- #VUID-vkGetPhysicalDeviceDirectFBPresentationSupportEXT-dfb-parameter#
-                                                   -- @dfb@ /must/ be a valid pointer to an 'IDirectFB' value
+                                                -> -- No documentation found for Nested "vkGetPhysicalDeviceDirectFBPresentationSupportEXT" "dfb"
                                                    ("dfb" ::: Ptr IDirectFB)
                                                 -> io (Bool)
 getPhysicalDeviceDirectFBPresentationSupportEXT physicalDevice queueFamilyIndex dfb = liftIO $ do
@@ -293,31 +137,14 @@ getPhysicalDeviceDirectFBPresentationSupportEXT physicalDevice queueFamilyIndex 
   pure $ ((bool32ToBool r))
 
 
--- | VkDirectFBSurfaceCreateInfoEXT - Structure specifying parameters of a
--- newly created DirectFB surface object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'DirectFBSurfaceCreateFlagsEXT',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'createDirectFBSurfaceEXT'
+
+-- No documentation found for TopLevel "VkDirectFBSurfaceCreateInfoEXT"
 data DirectFBSurfaceCreateInfoEXT = DirectFBSurfaceCreateInfoEXT
-  { -- | @flags@ is reserved for future use.
-    --
-    -- #VUID-VkDirectFBSurfaceCreateInfoEXT-flags-zerobitmask# @flags@ /must/
-    -- be @0@
+  { -- No documentation found for Nested "VkDirectFBSurfaceCreateInfoEXT" "flags"
     flags :: DirectFBSurfaceCreateFlagsEXT
-  , -- | @dfb@ is a pointer to the 'IDirectFB' main interface of DirectFB.
-    --
-    -- #VUID-VkDirectFBSurfaceCreateInfoEXT-dfb-04117# @dfb@ /must/ point to a
-    -- valid DirectFB 'IDirectFB'
+  , -- No documentation found for Nested "VkDirectFBSurfaceCreateInfoEXT" "dfb"
     dfb :: Ptr IDirectFB
-  , -- | @surface@ is a pointer to a 'IDirectFBSurface' surface interface.
-    --
-    -- #VUID-VkDirectFBSurfaceCreateInfoEXT-surface-04118# @surface@ /must/
-    -- point to a valid DirectFB 'IDirectFBSurface'
+  , -- No documentation found for Nested "VkDirectFBSurfaceCreateInfoEXT" "surface"
     surface :: Ptr IDirectFBSurface
   }
   deriving (Typeable, Eq)
@@ -352,6 +179,7 @@ instance FromCStruct DirectFBSurfaceCreateInfoEXT where
     pure $ DirectFBSurfaceCreateInfoEXT
              flags dfb surface
 
+
 instance Storable DirectFBSurfaceCreateInfoEXT where
   sizeOf ~_ = 40
   alignment ~_ = 8
@@ -365,16 +193,7 @@ instance Zero DirectFBSurfaceCreateInfoEXT where
            zero
 
 
--- | VkDirectFBSurfaceCreateFlagsEXT - Reserved for future use
---
--- = Description
---
--- 'DirectFBSurfaceCreateFlagsEXT' is a bitmask type for setting a mask,
--- but is currently reserved for future use.
---
--- = See Also
---
--- 'DirectFBSurfaceCreateInfoEXT'
+-- No documentation found for TopLevel "VkDirectFBSurfaceCreateFlagsEXT"
 newtype DirectFBSurfaceCreateFlagsEXT = DirectFBSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -389,12 +208,14 @@ enumPrefixDirectFBSurfaceCreateFlagsEXT = ""
 showTableDirectFBSurfaceCreateFlagsEXT :: [(DirectFBSurfaceCreateFlagsEXT, String)]
 showTableDirectFBSurfaceCreateFlagsEXT = []
 
+
 instance Show DirectFBSurfaceCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixDirectFBSurfaceCreateFlagsEXT
-                            showTableDirectFBSurfaceCreateFlagsEXT
-                            conNameDirectFBSurfaceCreateFlagsEXT
-                            (\(DirectFBSurfaceCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixDirectFBSurfaceCreateFlagsEXT
+                          showTableDirectFBSurfaceCreateFlagsEXT
+                          conNameDirectFBSurfaceCreateFlagsEXT
+                          (\(DirectFBSurfaceCreateFlagsEXT x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read DirectFBSurfaceCreateFlagsEXT where
   readPrec = enumReadPrec enumPrefixDirectFBSurfaceCreateFlagsEXT

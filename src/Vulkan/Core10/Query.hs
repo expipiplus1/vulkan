@@ -99,50 +99,14 @@ foreign import ccall
   "dynamic" mkVkCreateQueryPool
   :: FunPtr (Ptr Device_T -> Ptr (SomeStruct QueryPoolCreateInfo) -> Ptr AllocationCallbacks -> Ptr QueryPool -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct QueryPoolCreateInfo) -> Ptr AllocationCallbacks -> Ptr QueryPool -> IO Result
 
--- | vkCreateQueryPool - Create a new query pool object
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateQueryPool-device-parameter# @device@ /must/ be a valid
---     'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkCreateQueryPool-pCreateInfo-parameter# @pCreateInfo@ /must/
---     be a valid pointer to a valid 'QueryPoolCreateInfo' structure
---
--- -   #VUID-vkCreateQueryPool-pAllocator-parameter# If @pAllocator@ is not
---     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkCreateQueryPool-pQueryPool-parameter# @pQueryPool@ /must/ be
---     a valid pointer to a 'Vulkan.Core10.Handles.QueryPool' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool',
--- 'QueryPoolCreateInfo'
+-- No documentation found for TopLevel "vkCreateQueryPool"
 createQueryPool :: forall a io
                  . (Extendss QueryPoolCreateInfo a, PokeChain a, MonadIO io)
-                => -- | @device@ is the logical device that creates the query pool.
+                => -- No documentation found for Nested "vkCreateQueryPool" "device"
                    Device
-                -> -- | @pCreateInfo@ is a pointer to a 'QueryPoolCreateInfo' structure
-                   -- containing the number and type of queries to be managed by the pool.
+                -> -- No documentation found for Nested "vkCreateQueryPool" "pCreateInfo"
                    (QueryPoolCreateInfo a)
-                -> -- | @pAllocator@ controls host memory allocation as described in the
-                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                   -- chapter.
+                -> -- No documentation found for Nested "vkCreateQueryPool" "pAllocator"
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (QueryPool)
 createQueryPool device createInfo allocator = liftIO . evalContT $ do
@@ -181,56 +145,14 @@ foreign import ccall
   "dynamic" mkVkDestroyQueryPool
   :: FunPtr (Ptr Device_T -> QueryPool -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> QueryPool -> Ptr AllocationCallbacks -> IO ()
 
--- | vkDestroyQueryPool - Destroy a query pool object
---
--- == Valid Usage
---
--- -   #VUID-vkDestroyQueryPool-queryPool-00793# All submitted commands
---     that refer to @queryPool@ /must/ have completed execution
---
--- -   #VUID-vkDestroyQueryPool-queryPool-00794# If
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @queryPool@ was created, a compatible set of callbacks
---     /must/ be provided here
---
--- -   #VUID-vkDestroyQueryPool-queryPool-00795# If no
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @queryPool@ was created, @pAllocator@ /must/ be @NULL@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDestroyQueryPool-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDestroyQueryPool-queryPool-parameter# If @queryPool@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @queryPool@ /must/ be a
---     valid 'Vulkan.Core10.Handles.QueryPool' handle
---
--- -   #VUID-vkDestroyQueryPool-pAllocator-parameter# If @pAllocator@ is
---     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkDestroyQueryPool-queryPool-parent# If @queryPool@ is a valid
---     handle, it /must/ have been created, allocated, or retrieved from
---     @device@
---
--- == Host Synchronization
---
--- -   Host access to @queryPool@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool'
+-- No documentation found for TopLevel "vkDestroyQueryPool"
 destroyQueryPool :: forall io
                   . (MonadIO io)
-                 => -- | @device@ is the logical device that destroys the query pool.
+                 => -- No documentation found for Nested "vkDestroyQueryPool" "device"
                     Device
-                 -> -- | @queryPool@ is the query pool to destroy.
+                 -> -- No documentation found for Nested "vkDestroyQueryPool" "queryPool"
                     QueryPool
-                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                    -- chapter.
+                 -> -- No documentation found for Nested "vkDestroyQueryPool" "pAllocator"
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
 destroyQueryPool device queryPool allocator = liftIO . evalContT $ do
@@ -252,232 +174,24 @@ foreign import ccall
   "dynamic" mkVkGetQueryPoolResults
   :: FunPtr (Ptr Device_T -> QueryPool -> Word32 -> Word32 -> CSize -> Ptr () -> DeviceSize -> QueryResultFlags -> IO Result) -> Ptr Device_T -> QueryPool -> Word32 -> Word32 -> CSize -> Ptr () -> DeviceSize -> QueryResultFlags -> IO Result
 
--- | vkGetQueryPoolResults - Copy results of queries in a query pool to a
--- host memory region
---
--- = Description
---
--- The range of queries read is defined by [@firstQuery@, @firstQuery@ +
--- @queryCount@ - 1]. For pipeline statistics queries, each query index in
--- the pool contains one integer value for each bit that is enabled in
--- 'QueryPoolCreateInfo'::@pipelineStatistics@ when the pool is created.
---
--- If no bits are set in @flags@, and all requested queries are in the
--- available state, results are written as an array of 32-bit unsigned
--- integer values. The behavior when not all queries are available, is
--- described
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-wait-bit-not-set below>.
---
--- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is not
--- set and the result overflows a 32-bit value, the value /may/ either wrap
--- or saturate. Similarly, if
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is set and
--- the result overflows a 64-bit value, the value /may/ either wrap or
--- saturate.
---
--- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' is
--- set, Vulkan will wait for each query to be in the available state before
--- retrieving the numerical results for that query. In this case,
--- 'getQueryPoolResults' is guaranteed to succeed and return
--- 'Vulkan.Core10.Enums.Result.SUCCESS' if the queries become available in
--- a finite time (i.e. if they have been issued and not reset). If queries
--- will never finish (e.g. due to being reset but not issued), then
--- 'getQueryPoolResults' /may/ not return in finite time.
---
--- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' and
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT' are
--- both not set then no result values are written to @pData@ for queries
--- that are in the unavailable state at the time of the call, and
--- 'getQueryPoolResults' returns 'Vulkan.Core10.Enums.Result.NOT_READY'.
--- However, availability state is still written to @pData@ for those
--- queries if
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
--- is set.
---
--- Note
---
--- Applications /must/ take care to ensure that use of the
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' bit has
--- the desired effect.
---
--- For example, if a query has been used previously and a command buffer
--- records the commands
--- 'Vulkan.Core10.CommandBufferBuilding.cmdResetQueryPool',
--- 'Vulkan.Core10.CommandBufferBuilding.cmdBeginQuery', and
--- 'Vulkan.Core10.CommandBufferBuilding.cmdEndQuery' for that query, then
--- the query will remain in the available state until
--- 'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.resetQueryPool' is
--- called or the 'Vulkan.Core10.CommandBufferBuilding.cmdResetQueryPool'
--- command executes on a queue. Applications /can/ use fences or events to
--- ensure that a query has already been reset before checking for its
--- results or availability status. Otherwise, a stale value could be
--- returned from a previous use of the query.
---
--- The above also applies when
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' is used
--- in combination with
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'.
--- In this case, the returned availability status /may/ reflect the result
--- of a previous use of the query unless
--- 'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.resetQueryPool' is
--- called or the 'Vulkan.Core10.CommandBufferBuilding.cmdResetQueryPool'
--- command has been executed since the last use of the query.
---
--- Note
---
--- Applications /can/ double-buffer query pool usage, with a pool per
--- frame, and reset queries at the end of the frame in which they are read.
---
--- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT' is
--- set, 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' is
--- not set, and the query’s status is unavailable, an intermediate result
--- value between zero and the final result value is written to @pData@ for
--- that query.
---
--- If
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
--- is set, the final integer value written for each query is non-zero if
--- the query’s status was available or zero if the status was unavailable.
--- When
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
--- is used, implementations /must/ guarantee that if they return a non-zero
--- availability value then the numerical results /must/ be valid, assuming
--- the results are not reset by a subsequent command.
---
--- Note
---
--- Satisfying this guarantee /may/ require careful ordering by the
--- application, e.g. to read the availability status before reading the
--- results.
---
--- == Valid Usage
---
--- -   #VUID-vkGetQueryPoolResults-firstQuery-00813# @firstQuery@ /must/ be
---     less than the number of queries in @queryPool@
---
--- -   #VUID-vkGetQueryPoolResults-flags-02827# If
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is not
---     set in @flags@, then @pData@ and @stride@ /must/ be multiples of @4@
---
--- -   #VUID-vkGetQueryPoolResults-flags-02828# If
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is not
---     set in @flags@ and the @queryType@ used to create @queryPool@ was
---     not
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     then @pData@ and @stride@ /must/ be multiples of @4@
---
--- -   #VUID-vkGetQueryPoolResults-flags-00815# If
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is set
---     in @flags@ then @pData@ and @stride@ /must/ be multiples of @8@
---
--- -   #VUID-vkGetQueryPoolResults-queryType-03229# If the @queryType@ used
---     to create @queryPool@ was
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     then @pData@ and @stride@ /must/ be multiples of the size of
---     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'
---
--- -   #VUID-vkGetQueryPoolResults-queryType-04519# If the @queryType@ used
---     to create @queryPool@ was
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     then @stride@ /must/ be large enough to contain
---     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'::@counterIndexCount@
---     used to create @queryPool@ times the size of
---     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'.
---
--- -   #VUID-vkGetQueryPoolResults-firstQuery-00816# The sum of
---     @firstQuery@ and @queryCount@ /must/ be less than or equal to the
---     number of queries in @queryPool@
---
--- -   #VUID-vkGetQueryPoolResults-dataSize-00817# @dataSize@ /must/ be
---     large enough to contain the result of each query, as described
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-memorylayout here>
---
--- -   #VUID-vkGetQueryPoolResults-queryType-00818# If the @queryType@ used
---     to create @queryPool@ was
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIMESTAMP', @flags@ /must/
---     not contain
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT'
---
--- -   #VUID-vkGetQueryPoolResults-queryType-03230# If the @queryType@ used
---     to create @queryPool@ was
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     @flags@ /must/ not contain
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT',
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT'
---     or 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT'
---
--- -   #VUID-vkGetQueryPoolResults-queryType-03231# If the @queryType@ used
---     to create @queryPool@ was
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     the @queryPool@ /must/ have been recorded once for each pass as
---     retrieved via a call to
---     'Vulkan.Extensions.VK_KHR_performance_query.getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetQueryPoolResults-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkGetQueryPoolResults-queryPool-parameter# @queryPool@ /must/
---     be a valid 'Vulkan.Core10.Handles.QueryPool' handle
---
--- -   #VUID-vkGetQueryPoolResults-pData-parameter# @pData@ /must/ be a
---     valid pointer to an array of @dataSize@ bytes
---
--- -   #VUID-vkGetQueryPoolResults-flags-parameter# @flags@ /must/ be a
---     valid combination of
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlagBits' values
---
--- -   #VUID-vkGetQueryPoolResults-dataSize-arraylength# @dataSize@ /must/
---     be greater than @0@
---
--- -   #VUID-vkGetQueryPoolResults-queryPool-parent# @queryPool@ /must/
---     have been created, allocated, or retrieved from @device@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.NOT_READY'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device',
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
--- 'Vulkan.Core10.Handles.QueryPool',
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlags'
+-- No documentation found for TopLevel "vkGetQueryPoolResults"
 getQueryPoolResults :: forall io
                      . (MonadIO io)
-                    => -- | @device@ is the logical device that owns the query pool.
+                    => -- No documentation found for Nested "vkGetQueryPoolResults" "device"
                        Device
-                    -> -- | @queryPool@ is the query pool managing the queries containing the
-                       -- desired results.
+                    -> -- No documentation found for Nested "vkGetQueryPoolResults" "queryPool"
                        QueryPool
-                    -> -- | @firstQuery@ is the initial query index.
+                    -> -- No documentation found for Nested "vkGetQueryPoolResults" "firstQuery"
                        ("firstQuery" ::: Word32)
-                    -> -- | @queryCount@ is the number of queries to read.
+                    -> -- No documentation found for Nested "vkGetQueryPoolResults" "queryCount"
                        ("queryCount" ::: Word32)
-                    -> -- | @dataSize@ is the size in bytes of the buffer pointed to by @pData@.
+                    -> -- No documentation found for Nested "vkGetQueryPoolResults" "dataSize"
                        ("dataSize" ::: Word64)
-                    -> -- | @pData@ is a pointer to a user-allocated buffer where the results will
-                       -- be written
+                    -> -- No documentation found for Nested "vkGetQueryPoolResults" "pData"
                        ("data" ::: Ptr ())
-                    -> -- | @stride@ is the stride in bytes between results for individual queries
-                       -- within @pData@.
+                    -> -- No documentation found for Nested "vkGetQueryPoolResults" "stride"
                        ("stride" ::: DeviceSize)
-                    -> -- | @flags@ is a bitmask of
-                       -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlagBits' specifying
-                       -- how and when results are returned.
+                    -> -- No documentation found for Nested "vkGetQueryPoolResults" "flags"
                        QueryResultFlags
                     -> io (Result)
 getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride flags = liftIO $ do
@@ -490,76 +204,18 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
   pure $ (r)
 
 
--- | VkQueryPoolCreateInfo - Structure specifying parameters of a newly
--- created query pool
---
--- = Description
---
--- @pipelineStatistics@ is ignored if @queryType@ is not
--- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'.
---
--- == Valid Usage
---
--- -   #VUID-VkQueryPoolCreateInfo-queryType-00791# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
---     feature is not enabled, @queryType@ /must/ not be
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'
---
--- -   #VUID-VkQueryPoolCreateInfo-queryType-00792# If @queryType@ is
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS',
---     @pipelineStatistics@ /must/ be a valid combination of
---     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlagBits'
---     values
---
--- -   #VUID-VkQueryPoolCreateInfo-queryType-03222# If @queryType@ is
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     the @pNext@ chain /must/ include a structure of type
---     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'
---
--- -   #VUID-VkQueryPoolCreateInfo-queryCount-02763# @queryCount@ /must/ be
---     greater than 0
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkQueryPoolCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO'
---
--- -   #VUID-VkQueryPoolCreateInfo-pNext-pNext# Each @pNext@ member of any
---     structure (including this one) in the @pNext@ chain /must/ be either
---     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'
---     or
---     'Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL'
---
--- -   #VUID-VkQueryPoolCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkQueryPoolCreateInfo-flags-zerobitmask# @flags@ /must/ be @0@
---
--- -   #VUID-VkQueryPoolCreateInfo-queryType-parameter# @queryType@ /must/
---     be a valid 'Vulkan.Core10.Enums.QueryType.QueryType' value
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlags',
--- 'Vulkan.Core10.Enums.QueryPoolCreateFlags.QueryPoolCreateFlags',
--- 'Vulkan.Core10.Enums.QueryType.QueryType',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createQueryPool'
+
+-- No documentation found for TopLevel "VkQueryPoolCreateInfo"
 data QueryPoolCreateInfo (es :: [Type]) = QueryPoolCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkQueryPoolCreateInfo" "pNext"
     next :: Chain es
-  , -- | @flags@ is reserved for future use.
+  , -- No documentation found for Nested "VkQueryPoolCreateInfo" "flags"
     flags :: QueryPoolCreateFlags
-  , -- | @queryType@ is a 'Vulkan.Core10.Enums.QueryType.QueryType' value
-    -- specifying the type of queries managed by the pool.
+  , -- No documentation found for Nested "VkQueryPoolCreateInfo" "queryType"
     queryType :: QueryType
-  , -- | @queryCount@ is the number of queries managed by the pool.
+  , -- No documentation found for Nested "VkQueryPoolCreateInfo" "queryCount"
     queryCount :: Word32
-  , -- | @pipelineStatistics@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlagBits'
-    -- specifying which counters will be returned in queries on the new pool,
-    -- as described below in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-pipestats>.
+  , -- No documentation found for Nested "VkQueryPoolCreateInfo" "pipelineStatistics"
     pipelineStatistics :: QueryPipelineStatisticFlags
   }
   deriving (Typeable)

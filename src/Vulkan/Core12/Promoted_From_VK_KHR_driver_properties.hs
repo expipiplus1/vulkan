@@ -44,21 +44,16 @@ import Vulkan.Core10.APIConstants (MAX_DRIVER_NAME_SIZE)
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 import Vulkan.Core10.APIConstants (pattern MAX_DRIVER_INFO_SIZE)
 import Vulkan.Core10.APIConstants (pattern MAX_DRIVER_NAME_SIZE)
--- | VkConformanceVersion - Structure containing the conformance test suite
--- version the implementation is compliant with
---
--- = See Also
---
--- 'PhysicalDeviceDriverProperties',
--- 'Vulkan.Core12.PhysicalDeviceVulkan12Properties'
+
+-- No documentation found for TopLevel "VkConformanceVersion"
 data ConformanceVersion = ConformanceVersion
-  { -- | @major@ is the major version number of the conformance test suite.
+  { -- No documentation found for Nested "VkConformanceVersion" "major"
     major :: Word8
-  , -- | @minor@ is the minor version number of the conformance test suite.
+  , -- No documentation found for Nested "VkConformanceVersion" "minor"
     minor :: Word8
-  , -- | @subminor@ is the subminor version number of the conformance test suite.
+  , -- No documentation found for Nested "VkConformanceVersion" "subminor"
     subminor :: Word8
-  , -- | @patch@ is the patch version number of the conformance test suite.
+  , -- No documentation found for Nested "VkConformanceVersion" "patch"
     patch :: Word8
   }
   deriving (Typeable, Eq)
@@ -93,6 +88,7 @@ instance FromCStruct ConformanceVersion where
     pure $ ConformanceVersion
              major minor subminor patch
 
+
 instance Storable ConformanceVersion where
   sizeOf ~_ = 4
   alignment ~_ = 1
@@ -107,34 +103,16 @@ instance Zero ConformanceVersion where
            zero
 
 
--- | VkPhysicalDeviceDriverProperties - Structure containing driver
--- identification information
---
--- = Description
---
--- @driverID@ /must/ be immutable for a given driver across instances,
--- processes, driver versions, and system reboots.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'ConformanceVersion', 'Vulkan.Core12.Enums.DriverId.DriverId',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceDriverProperties"
 data PhysicalDeviceDriverProperties = PhysicalDeviceDriverProperties
-  { -- | @driverID@ is a unique identifier for the driver of the physical device.
+  { -- No documentation found for Nested "VkPhysicalDeviceDriverProperties" "driverID"
     driverID :: DriverId
-  , -- | @driverName@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string which is the name of the driver.
+  , -- No documentation found for Nested "VkPhysicalDeviceDriverProperties" "driverName"
     driverName :: ByteString
-  , -- | @driverInfo@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string with additional information about the
-    -- driver.
+  , -- No documentation found for Nested "VkPhysicalDeviceDriverProperties" "driverInfo"
     driverInfo :: ByteString
-  , -- | @conformanceVersion@ is the version of the Vulkan conformance test this
-    -- driver is conformant against (see 'ConformanceVersion').
+  , -- No documentation found for Nested "VkPhysicalDeviceDriverProperties" "conformanceVersion"
     conformanceVersion :: ConformanceVersion
   }
   deriving (Typeable)
@@ -172,6 +150,7 @@ instance FromCStruct PhysicalDeviceDriverProperties where
     conformanceVersion <- peekCStruct @ConformanceVersion ((p `plusPtr` 532 :: Ptr ConformanceVersion))
     pure $ PhysicalDeviceDriverProperties
              driverID driverName driverInfo conformanceVersion
+
 
 instance Storable PhysicalDeviceDriverProperties where
   sizeOf ~_ = 536

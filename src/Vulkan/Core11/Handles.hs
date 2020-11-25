@@ -39,18 +39,7 @@ import Vulkan.Core10.Handles (PhysicalDevice(..))
 import Vulkan.Core10.Handles (PipelineLayout(..))
 import Vulkan.Core10.Handles (Queue(..))
 import Vulkan.Core10.Handles (Sampler(..))
--- | VkDescriptorUpdateTemplate - Opaque handle to a descriptor update
--- template
---
--- = See Also
---
--- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetWithTemplateKHR',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.createDescriptorUpdateTemplate',
--- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.createDescriptorUpdateTemplateKHR',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.destroyDescriptorUpdateTemplate',
--- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.destroyDescriptorUpdateTemplateKHR',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplate',
--- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplateKHR'
+-- No documentation found for TopLevel "VkDescriptorUpdateTemplate"
 newtype DescriptorUpdateTemplate = DescriptorUpdateTemplate Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -60,16 +49,7 @@ instance Show DescriptorUpdateTemplate where
   showsPrec p (DescriptorUpdateTemplate x) = showParen (p >= 11) (showString "DescriptorUpdateTemplate 0x" . showHex x)
 
 
--- | VkSamplerYcbcrConversion - Opaque handle to a device-specific sampler
--- Y′CBCR conversion description
---
--- = See Also
---
--- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.createSamplerYcbcrConversion',
--- 'Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion.createSamplerYcbcrConversionKHR',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.destroySamplerYcbcrConversion',
--- 'Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion.destroySamplerYcbcrConversionKHR'
+-- No documentation found for TopLevel "VkSamplerYcbcrConversion"
 newtype SamplerYcbcrConversion = SamplerYcbcrConversion Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)

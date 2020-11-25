@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkDeviceCreateFlags - Reserved for future use
---
--- = Description
---
--- 'DeviceCreateFlags' is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.Device.DeviceCreateInfo'
+-- No documentation found for TopLevel "VkDeviceCreateFlags"
 newtype DeviceCreateFlags = DeviceCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixDeviceCreateFlags = ""
 showTableDeviceCreateFlags :: [(DeviceCreateFlags, String)]
 showTableDeviceCreateFlags = []
 
+
 instance Show DeviceCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixDeviceCreateFlags
-                            showTableDeviceCreateFlags
-                            conNameDeviceCreateFlags
-                            (\(DeviceCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixDeviceCreateFlags
+                          showTableDeviceCreateFlags
+                          conNameDeviceCreateFlags
+                          (\(DeviceCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read DeviceCreateFlags where
   readPrec =

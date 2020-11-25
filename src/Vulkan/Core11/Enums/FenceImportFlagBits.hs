@@ -19,19 +19,11 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type FenceImportFlags = FenceImportFlagBits
 
--- | VkFenceImportFlagBits - Bitmask specifying additional parameters of
--- fence payload import
---
--- = See Also
---
--- 'FenceImportFlags'
+-- No documentation found for TopLevel "VkFenceImportFlagBits"
 newtype FenceImportFlagBits = FenceImportFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'FENCE_IMPORT_TEMPORARY_BIT' specifies that the fence payload will be
--- imported only temporarily, as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>,
--- regardless of the permanence of @handleType@.
+-- No documentation found for Nested "VkFenceImportFlagBits" "VK_FENCE_IMPORT_TEMPORARY_BIT"
 pattern FENCE_IMPORT_TEMPORARY_BIT = FenceImportFlagBits 0x00000001
 
 conNameFenceImportFlagBits :: String
@@ -43,12 +35,14 @@ enumPrefixFenceImportFlagBits = "FENCE_IMPORT_TEMPORARY_BIT"
 showTableFenceImportFlagBits :: [(FenceImportFlagBits, String)]
 showTableFenceImportFlagBits = [(FENCE_IMPORT_TEMPORARY_BIT, "")]
 
+
 instance Show FenceImportFlagBits where
-  showsPrec = enumShowsPrec enumPrefixFenceImportFlagBits
-                            showTableFenceImportFlagBits
-                            conNameFenceImportFlagBits
-                            (\(FenceImportFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixFenceImportFlagBits
+                          showTableFenceImportFlagBits
+                          conNameFenceImportFlagBits
+                          (\(FenceImportFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read FenceImportFlagBits where
   readPrec = enumReadPrec enumPrefixFenceImportFlagBits

@@ -18,22 +18,7 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkImageViewType - Image view types
---
--- = Description
---
--- The exact image view type is partially implicit, based on the image’s
--- type and sample count, as well as the view creation parameters as
--- described in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-compatibility image view compatibility table>
--- for 'Vulkan.Core10.ImageView.createImageView'. This table also shows
--- which SPIR-V @OpTypeImage@ @Dim@ and @Arrayed@ parameters correspond to
--- each image view type.
---
--- = See Also
---
--- 'Vulkan.Core10.ImageView.ImageViewCreateInfo',
--- 'Vulkan.Extensions.VK_EXT_filter_cubic.PhysicalDeviceImageViewImageFormatInfoEXT'
+-- No documentation found for TopLevel "VkImageViewType"
 newtype ImageViewType = ImageViewType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -76,12 +61,14 @@ showTableImageViewType =
   , (IMAGE_VIEW_TYPE_CUBE_ARRAY, "CUBE_ARRAY")
   ]
 
+
 instance Show ImageViewType where
-  showsPrec = enumShowsPrec enumPrefixImageViewType
-                            showTableImageViewType
-                            conNameImageViewType
-                            (\(ImageViewType x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixImageViewType
+                          showTableImageViewType
+                          conNameImageViewType
+                          (\(ImageViewType x) -> x)
+                          (showsPrec 11)
+
 
 instance Read ImageViewType where
   readPrec = enumReadPrec enumPrefixImageViewType showTableImageViewType conNameImageViewType ImageViewType

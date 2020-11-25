@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkPipelineInputAssemblyStateCreateFlags - Reserved for future use
---
--- = Description
---
--- 'PipelineInputAssemblyStateCreateFlags' is a bitmask type for setting a
--- mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'
+-- No documentation found for TopLevel "VkPipelineInputAssemblyStateCreateFlags"
 newtype PipelineInputAssemblyStateCreateFlags = PipelineInputAssemblyStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixPipelineInputAssemblyStateCreateFlags = ""
 showTablePipelineInputAssemblyStateCreateFlags :: [(PipelineInputAssemblyStateCreateFlags, String)]
 showTablePipelineInputAssemblyStateCreateFlags = []
 
+
 instance Show PipelineInputAssemblyStateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineInputAssemblyStateCreateFlags
-                            showTablePipelineInputAssemblyStateCreateFlags
-                            conNamePipelineInputAssemblyStateCreateFlags
-                            (\(PipelineInputAssemblyStateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineInputAssemblyStateCreateFlags
+                          showTablePipelineInputAssemblyStateCreateFlags
+                          conNamePipelineInputAssemblyStateCreateFlags
+                          (\(PipelineInputAssemblyStateCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineInputAssemblyStateCreateFlags where
   readPrec = enumReadPrec enumPrefixPipelineInputAssemblyStateCreateFlags

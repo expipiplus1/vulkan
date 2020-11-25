@@ -19,19 +19,11 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type FramebufferCreateFlags = FramebufferCreateFlagBits
 
--- | VkFramebufferCreateFlagBits - Bitmask specifying framebuffer properties
---
--- = See Also
---
--- 'FramebufferCreateFlags'
+-- No documentation found for TopLevel "VkFramebufferCreateFlagBits"
 newtype FramebufferCreateFlagBits = FramebufferCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'FRAMEBUFFER_CREATE_IMAGELESS_BIT' specifies that image views are not
--- specified, and only attachment compatibility information will be
--- provided via a
--- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentImageInfo'
--- structure.
+-- No documentation found for Nested "VkFramebufferCreateFlagBits" "VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT"
 pattern FRAMEBUFFER_CREATE_IMAGELESS_BIT = FramebufferCreateFlagBits 0x00000001
 
 conNameFramebufferCreateFlagBits :: String
@@ -43,12 +35,14 @@ enumPrefixFramebufferCreateFlagBits = "FRAMEBUFFER_CREATE_IMAGELESS_BIT"
 showTableFramebufferCreateFlagBits :: [(FramebufferCreateFlagBits, String)]
 showTableFramebufferCreateFlagBits = [(FRAMEBUFFER_CREATE_IMAGELESS_BIT, "")]
 
+
 instance Show FramebufferCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixFramebufferCreateFlagBits
-                            showTableFramebufferCreateFlagBits
-                            conNameFramebufferCreateFlagBits
-                            (\(FramebufferCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixFramebufferCreateFlagBits
+                          showTableFramebufferCreateFlagBits
+                          conNameFramebufferCreateFlagBits
+                          (\(FramebufferCreateFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read FramebufferCreateFlagBits where
   readPrec = enumReadPrec enumPrefixFramebufferCreateFlagBits

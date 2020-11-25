@@ -79,65 +79,10 @@ foreign import ccall
   "dynamic" mkVkEnumeratePhysicalDeviceGroups
   :: FunPtr (Ptr Instance_T -> Ptr Word32 -> Ptr PhysicalDeviceGroupProperties -> IO Result) -> Ptr Instance_T -> Ptr Word32 -> Ptr PhysicalDeviceGroupProperties -> IO Result
 
--- | vkEnumeratePhysicalDeviceGroups - Enumerates groups of physical devices
--- that can be used to create a single logical device
---
--- = Description
---
--- If @pPhysicalDeviceGroupProperties@ is @NULL@, then the number of device
--- groups available is returned in @pPhysicalDeviceGroupCount@. Otherwise,
--- @pPhysicalDeviceGroupCount@ /must/ point to a variable set by the user
--- to the number of elements in the @pPhysicalDeviceGroupProperties@ array,
--- and on return the variable is overwritten with the number of structures
--- actually written to @pPhysicalDeviceGroupProperties@. If
--- @pPhysicalDeviceGroupCount@ is less than the number of device groups
--- available, at most @pPhysicalDeviceGroupCount@ structures will be
--- written. If @pPhysicalDeviceGroupCount@ is smaller than the number of
--- device groups available, 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
--- that not all the available device groups were returned.
---
--- Every physical device /must/ be in exactly one device group.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkEnumeratePhysicalDeviceGroups-instance-parameter# @instance@
---     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
---
--- -   #VUID-vkEnumeratePhysicalDeviceGroups-pPhysicalDeviceGroupCount-parameter#
---     @pPhysicalDeviceGroupCount@ /must/ be a valid pointer to a
---     @uint32_t@ value
---
--- -   #VUID-vkEnumeratePhysicalDeviceGroups-pPhysicalDeviceGroupProperties-parameter#
---     If the value referenced by @pPhysicalDeviceGroupCount@ is not @0@,
---     and @pPhysicalDeviceGroupProperties@ is not @NULL@,
---     @pPhysicalDeviceGroupProperties@ /must/ be a valid pointer to an
---     array of @pPhysicalDeviceGroupCount@ 'PhysicalDeviceGroupProperties'
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Instance', 'PhysicalDeviceGroupProperties'
+-- No documentation found for TopLevel "vkEnumeratePhysicalDeviceGroups"
 enumeratePhysicalDeviceGroups :: forall io
                                . (MonadIO io)
-                              => -- | @instance@ is a handle to a Vulkan instance previously created with
-                                 -- 'Vulkan.Core10.DeviceInitialization.createInstance'.
+                              => -- No documentation found for Nested "vkEnumeratePhysicalDeviceGroups" "instance"
                                  Instance
                               -> io (Result, ("physicalDeviceGroupProperties" ::: Vector PhysicalDeviceGroupProperties))
 enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
@@ -159,35 +104,14 @@ enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
   pure $ ((r'), pPhysicalDeviceGroupProperties')
 
 
--- | VkPhysicalDeviceGroupProperties - Structure specifying physical device
--- group properties
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Handles.PhysicalDevice',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'enumeratePhysicalDeviceGroups',
--- 'Vulkan.Extensions.VK_KHR_device_group_creation.enumeratePhysicalDeviceGroupsKHR'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceGroupProperties"
 data PhysicalDeviceGroupProperties = PhysicalDeviceGroupProperties
-  { -- | @physicalDeviceCount@ is the number of physical devices in the group.
+  { -- No documentation found for Nested "VkPhysicalDeviceGroupProperties" "physicalDeviceCount"
     physicalDeviceCount :: Word32
-  , -- | @physicalDevices@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DEVICE_GROUP_SIZE'
-    -- 'Vulkan.Core10.Handles.PhysicalDevice' handles representing all physical
-    -- devices in the group. The first @physicalDeviceCount@ elements of the
-    -- array will be valid.
+  , -- No documentation found for Nested "VkPhysicalDeviceGroupProperties" "physicalDevices"
     physicalDevices :: Vector (Ptr PhysicalDevice_T)
-  , -- | @subsetAllocation@ specifies whether logical devices created from the
-    -- group support allocating device memory on a subset of devices, via the
-    -- @deviceMask@ member of the
-    -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'.
-    -- If this is 'Vulkan.Core10.FundamentalTypes.FALSE', then all device
-    -- memory allocations are made across all physical devices in the group. If
-    -- @physicalDeviceCount@ is @1@, then @subsetAllocation@ /must/ be
-    -- 'Vulkan.Core10.FundamentalTypes.FALSE'.
+  , -- No documentation found for Nested "VkPhysicalDeviceGroupProperties" "subsetAllocation"
     subsetAllocation :: Bool
   }
   deriving (Typeable)
@@ -227,6 +151,7 @@ instance FromCStruct PhysicalDeviceGroupProperties where
     pure $ PhysicalDeviceGroupProperties
              physicalDeviceCount physicalDevices (bool32ToBool subsetAllocation)
 
+
 instance Storable PhysicalDeviceGroupProperties where
   sizeOf ~_ = 288
   alignment ~_ = 8
@@ -240,57 +165,10 @@ instance Zero PhysicalDeviceGroupProperties where
            zero
 
 
--- | VkDeviceGroupDeviceCreateInfo - Create a logical device from multiple
--- physical devices
---
--- = Description
---
--- The elements of the @pPhysicalDevices@ array are an ordered list of the
--- physical devices that the logical device represents. These /must/ be a
--- subset of a single device group, and need not be in the same order as
--- they were enumerated. The order of the physical devices in the
--- @pPhysicalDevices@ array determines the /device index/ of each physical
--- device, with element i being assigned a device index of i. Certain
--- commands and structures refer to one or more physical devices by using
--- device indices or /device masks/ formed using device indices.
---
--- A logical device created without using 'DeviceGroupDeviceCreateInfo', or
--- with @physicalDeviceCount@ equal to zero, is equivalent to a
--- @physicalDeviceCount@ of one and @pPhysicalDevices@ pointing to the
--- @physicalDevice@ parameter to 'Vulkan.Core10.Device.createDevice'. In
--- particular, the device index of that physical device is zero.
---
--- == Valid Usage
---
--- -   #VUID-VkDeviceGroupDeviceCreateInfo-pPhysicalDevices-00375# Each
---     element of @pPhysicalDevices@ /must/ be unique
---
--- -   #VUID-VkDeviceGroupDeviceCreateInfo-pPhysicalDevices-00376# All
---     elements of @pPhysicalDevices@ /must/ be in the same device group as
---     enumerated by 'enumeratePhysicalDeviceGroups'
---
--- -   #VUID-VkDeviceGroupDeviceCreateInfo-physicalDeviceCount-00377# If
---     @physicalDeviceCount@ is not @0@, the @physicalDevice@ parameter of
---     'Vulkan.Core10.Device.createDevice' /must/ be an element of
---     @pPhysicalDevices@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDeviceGroupDeviceCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO'
---
--- -   #VUID-VkDeviceGroupDeviceCreateInfo-pPhysicalDevices-parameter# If
---     @physicalDeviceCount@ is not @0@, @pPhysicalDevices@ /must/ be a
---     valid pointer to an array of @physicalDeviceCount@ valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handles
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkDeviceGroupDeviceCreateInfo"
 data DeviceGroupDeviceCreateInfo = DeviceGroupDeviceCreateInfo
-  { -- | @pPhysicalDevices@ is a pointer to an array of physical device handles
-    -- belonging to the same device group.
+  { -- No documentation found for Nested "VkDeviceGroupDeviceCreateInfo" "pPhysicalDevices"
     physicalDevices :: Vector (Ptr PhysicalDevice_T) }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)

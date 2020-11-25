@@ -1,157 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_AMD_shader_info - device extension
---
--- == VK_AMD_shader_info
---
--- [__Name String__]
---     @VK_AMD_shader_info@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     43
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
--- [__Special Use__]
---
---     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
---
--- [__Contact__]
---
---     -   Jaakko Konttinen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_info:%20&body=@jaakkoamd%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2017-10-09
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Jaakko Konttinen, AMD
---
--- == Description
---
--- This extension adds a way to query certain information about a compiled
--- shader which is part of a pipeline. This information may include shader
--- disassembly, shader binary and various statistics about a shader’s
--- resource usage.
---
--- While this extension provides a mechanism for extracting this
--- information, the details regarding the contents or format of this
--- information are not specified by this extension and may be provided by
--- the vendor externally.
---
--- Furthermore, all information types are optionally supported, and users
--- should not assume every implementation supports querying every type of
--- information.
---
--- == New Commands
---
--- -   'getShaderInfoAMD'
---
--- == New Structures
---
--- -   'ShaderResourceUsageAMD'
---
--- -   'ShaderStatisticsInfoAMD'
---
--- == New Enums
---
--- -   'ShaderInfoTypeAMD'
---
--- == New Enum Constants
---
--- -   'AMD_SHADER_INFO_EXTENSION_NAME'
---
--- -   'AMD_SHADER_INFO_SPEC_VERSION'
---
--- == Examples
---
--- This example extracts the register usage of a fragment shader within a
--- particular graphics pipeline:
---
--- > extern VkDevice device;
--- > extern VkPipeline gfxPipeline;
--- >
--- > PFN_vkGetShaderInfoAMD pfnGetShaderInfoAMD = (PFN_vkGetShaderInfoAMD)vkGetDeviceProcAddr(
--- >     device, "vkGetShaderInfoAMD");
--- >
--- > VkShaderStatisticsInfoAMD statistics = {};
--- >
--- > size_t dataSize = sizeof(statistics);
--- >
--- > if (pfnGetShaderInfoAMD(device,
--- >     gfxPipeline,
--- >     VK_SHADER_STAGE_FRAGMENT_BIT,
--- >     VK_SHADER_INFO_TYPE_STATISTICS_AMD,
--- >     &dataSize,
--- >     &statistics) == VK_SUCCESS)
--- > {
--- >     printf("VGPR usage: %d\n", statistics.resourceUsage.numUsedVgprs);
--- >     printf("SGPR usage: %d\n", statistics.resourceUsage.numUsedSgprs);
--- > }
---
--- The following example continues the previous example by subsequently
--- attempting to query and print shader disassembly about the fragment
--- shader:
---
--- > // Query disassembly size (if available)
--- > if (pfnGetShaderInfoAMD(device,
--- >     gfxPipeline,
--- >     VK_SHADER_STAGE_FRAGMENT_BIT,
--- >     VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD,
--- >     &dataSize,
--- >     nullptr) == VK_SUCCESS)
--- > {
--- >     printf("Fragment shader disassembly:\n");
--- >
--- >     void* disassembly = malloc(dataSize);
--- >
--- >     // Query disassembly and print
--- >     if (pfnGetShaderInfoAMD(device,
--- >         gfxPipeline,
--- >         VK_SHADER_STAGE_FRAGMENT_BIT,
--- >         VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD,
--- >         &dataSize,
--- >         disassembly) == VK_SUCCESS)
--- >     {
--- >         printf((char*)disassembly);
--- >     }
--- >
--- >     free(disassembly);
--- > }
---
--- == Version History
---
--- -   Revision 1, 2017-10-09 (Jaakko Konttinen)
---
---     -   Initial revision
---
--- = See Also
---
--- 'ShaderInfoTypeAMD', 'ShaderResourceUsageAMD',
--- 'ShaderStatisticsInfoAMD', 'getShaderInfoAMD'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_info Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_AMD_shader_info"
 module Vulkan.Extensions.VK_AMD_shader_info  ( getShaderInfoAMD
                                              , ShaderResourceUsageAMD(..)
                                              , ShaderStatisticsInfoAMD(..)
@@ -238,100 +86,16 @@ foreign import ccall
   "dynamic" mkVkGetShaderInfoAMD
   :: FunPtr (Ptr Device_T -> Pipeline -> ShaderStageFlagBits -> ShaderInfoTypeAMD -> Ptr CSize -> Ptr () -> IO Result) -> Ptr Device_T -> Pipeline -> ShaderStageFlagBits -> ShaderInfoTypeAMD -> Ptr CSize -> Ptr () -> IO Result
 
--- | vkGetShaderInfoAMD - Get information about a shader in a pipeline
---
--- = Description
---
--- If @pInfo@ is @NULL@, then the maximum size of the information that
--- /can/ be retrieved about the shader, in bytes, is returned in
--- @pInfoSize@. Otherwise, @pInfoSize@ /must/ point to a variable set by
--- the user to the size of the buffer, in bytes, pointed to by @pInfo@, and
--- on return the variable is overwritten with the amount of data actually
--- written to @pInfo@.
---
--- If @pInfoSize@ is less than the maximum size that /can/ be retrieved by
--- the pipeline cache, then at most @pInfoSize@ bytes will be written to
--- @pInfo@, and 'getShaderInfoAMD' will return
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE'.
---
--- Not all information is available for every shader and implementations
--- may not support all kinds of information for any shader. When a certain
--- type of information is unavailable, the function returns
--- 'Vulkan.Core10.Enums.Result.ERROR_FEATURE_NOT_PRESENT'.
---
--- If information is successfully and fully queried, the function will
--- return 'Vulkan.Core10.Enums.Result.SUCCESS'.
---
--- For @infoType@ 'SHADER_INFO_TYPE_STATISTICS_AMD', a
--- 'ShaderStatisticsInfoAMD' structure will be written to the buffer
--- pointed to by @pInfo@. This structure will be populated with statistics
--- regarding the physical device resources used by that shader along with
--- other miscellaneous information and is described in further detail
--- below.
---
--- For @infoType@ 'SHADER_INFO_TYPE_DISASSEMBLY_AMD', @pInfo@ is a pointer
--- to a UTF-8 null-terminated string containing human-readable disassembly.
--- The exact formatting and contents of the disassembly string are
--- vendor-specific.
---
--- The formatting and contents of all other types of information, including
--- @infoType@ 'SHADER_INFO_TYPE_BINARY_AMD', are left to the vendor and are
--- not further specified by this extension.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetShaderInfoAMD-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkGetShaderInfoAMD-pipeline-parameter# @pipeline@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Pipeline' handle
---
--- -   #VUID-vkGetShaderInfoAMD-shaderStage-parameter# @shaderStage@ /must/
---     be a valid
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' value
---
--- -   #VUID-vkGetShaderInfoAMD-infoType-parameter# @infoType@ /must/ be a
---     valid 'ShaderInfoTypeAMD' value
---
--- -   #VUID-vkGetShaderInfoAMD-pInfoSize-parameter# @pInfoSize@ /must/ be
---     a valid pointer to a @size_t@ value
---
--- -   #VUID-vkGetShaderInfoAMD-pInfo-parameter# If the value referenced by
---     @pInfoSize@ is not @0@, and @pInfo@ is not @NULL@, @pInfo@ /must/ be
---     a valid pointer to an array of @pInfoSize@ bytes
---
--- -   #VUID-vkGetShaderInfoAMD-pipeline-parent# @pipeline@ /must/ have
---     been created, allocated, or retrieved from @device@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_FEATURE_NOT_PRESENT'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline',
--- 'ShaderInfoTypeAMD',
--- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
+-- No documentation found for TopLevel "vkGetShaderInfoAMD"
 getShaderInfoAMD :: forall io
                   . (MonadIO io)
-                 => -- | @device@ is the device that created @pipeline@.
+                 => -- No documentation found for Nested "vkGetShaderInfoAMD" "device"
                     Device
-                 -> -- | @pipeline@ is the target of the query.
+                 -> -- No documentation found for Nested "vkGetShaderInfoAMD" "pipeline"
                     Pipeline
-                 -> -- | @shaderStage@ identifies the particular shader within the pipeline about
-                    -- which information is being queried.
+                 -> -- No documentation found for Nested "vkGetShaderInfoAMD" "shaderStage"
                     ShaderStageFlagBits
-                 -> -- | @infoType@ describes what kind of information is being queried.
+                 -> -- No documentation found for Nested "vkGetShaderInfoAMD" "infoType"
                     ShaderInfoTypeAMD
                  -> io (Result, ("info" ::: ByteString))
 getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
@@ -352,27 +116,18 @@ getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
   pure $ ((r'), pInfo')
 
 
--- | VkShaderResourceUsageAMD - Resource usage information about a particular
--- shader within a pipeline
---
--- = See Also
---
--- 'ShaderStatisticsInfoAMD'
+
+-- No documentation found for TopLevel "VkShaderResourceUsageAMD"
 data ShaderResourceUsageAMD = ShaderResourceUsageAMD
-  { -- | @numUsedVgprs@ is the number of vector instruction general-purpose
-    -- registers used by this shader.
+  { -- No documentation found for Nested "VkShaderResourceUsageAMD" "numUsedVgprs"
     numUsedVgprs :: Word32
-  , -- | @numUsedSgprs@ is the number of scalar instruction general-purpose
-    -- registers used by this shader.
+  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "numUsedSgprs"
     numUsedSgprs :: Word32
-  , -- | @ldsSizePerLocalWorkGroup@ is the maximum local data store size per work
-    -- group in bytes.
+  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "ldsSizePerLocalWorkGroup"
     ldsSizePerLocalWorkGroup :: Word32
-  , -- | @ldsUsageSizeInBytes@ is the LDS usage size in bytes per work group by
-    -- this shader.
+  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "ldsUsageSizeInBytes"
     ldsUsageSizeInBytes :: Word64
-  , -- | @scratchMemUsageInBytes@ is the scratch memory usage in bytes by this
-    -- shader.
+  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "scratchMemUsageInBytes"
     scratchMemUsageInBytes :: Word64
   }
   deriving (Typeable, Eq)
@@ -410,6 +165,7 @@ instance FromCStruct ShaderResourceUsageAMD where
     pure $ ShaderResourceUsageAMD
              numUsedVgprs numUsedSgprs ldsSizePerLocalWorkGroup ((\(CSize a) -> a) ldsUsageSizeInBytes) ((\(CSize a) -> a) scratchMemUsageInBytes)
 
+
 instance Storable ShaderResourceUsageAMD where
   sizeOf ~_ = 32
   alignment ~_ = 8
@@ -425,49 +181,22 @@ instance Zero ShaderResourceUsageAMD where
            zero
 
 
--- | VkShaderStatisticsInfoAMD - Statistical information about a particular
--- shader within a pipeline
---
--- = Description
---
--- Some implementations may merge multiple logical shader stages together
--- in a single shader. In such cases, @shaderStageMask@ will contain a
--- bitmask of all of the stages that are active within that shader.
--- Consequently, if specifying those stages as input to 'getShaderInfoAMD',
--- the same output information /may/ be returned for all such shader stage
--- queries.
---
--- The number of available VGPRs and SGPRs (@numAvailableVgprs@ and
--- @numAvailableSgprs@ respectively) are the shader-addressable subset of
--- physical registers that is given as a limit to the compiler for register
--- assignment. These values /may/ further be limited by implementations due
--- to performance optimizations where register pressure is a bottleneck.
---
--- = See Also
---
--- 'ShaderResourceUsageAMD',
--- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
+
+-- No documentation found for TopLevel "VkShaderStatisticsInfoAMD"
 data ShaderStatisticsInfoAMD = ShaderStatisticsInfoAMD
-  { -- | @shaderStageMask@ are the combination of logical shader stages contained
-    -- within this shader.
+  { -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "shaderStageMask"
     shaderStageMask :: ShaderStageFlags
-  , -- | @resourceUsage@ is a 'ShaderResourceUsageAMD' structure describing
-    -- internal physical device resources used by this shader.
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "resourceUsage"
     resourceUsage :: ShaderResourceUsageAMD
-  , -- | @numPhysicalVgprs@ is the maximum number of vector instruction
-    -- general-purpose registers (VGPRs) available to the physical device.
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "numPhysicalVgprs"
     numPhysicalVgprs :: Word32
-  , -- | @numPhysicalSgprs@ is the maximum number of scalar instruction
-    -- general-purpose registers (SGPRs) available to the physical device.
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "numPhysicalSgprs"
     numPhysicalSgprs :: Word32
-  , -- | @numAvailableVgprs@ is the maximum limit of VGPRs made available to the
-    -- shader compiler.
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "numAvailableVgprs"
     numAvailableVgprs :: Word32
-  , -- | @numAvailableSgprs@ is the maximum limit of SGPRs made available to the
-    -- shader compiler.
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "numAvailableSgprs"
     numAvailableSgprs :: Word32
-  , -- | @computeWorkGroupSize@ is the local workgroup size of this shader in {
-    -- X, Y, Z } dimensions.
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "computeWorkGroupSize"
     computeWorkGroupSize :: (Word32, Word32, Word32)
   }
   deriving (Typeable)
@@ -524,6 +253,7 @@ instance FromCStruct ShaderStatisticsInfoAMD where
     pure $ ShaderStatisticsInfoAMD
              shaderStageMask resourceUsage numPhysicalVgprs numPhysicalSgprs numAvailableVgprs numAvailableSgprs ((computeWorkGroupSize0, computeWorkGroupSize1, computeWorkGroupSize2))
 
+
 instance Storable ShaderStatisticsInfoAMD where
   sizeOf ~_ = 72
   alignment ~_ = 8
@@ -541,22 +271,15 @@ instance Zero ShaderStatisticsInfoAMD where
            (zero, zero, zero)
 
 
--- | VkShaderInfoTypeAMD - Enum specifying which type of shader info to query
---
--- = See Also
---
--- 'getShaderInfoAMD'
+-- No documentation found for TopLevel "VkShaderInfoTypeAMD"
 newtype ShaderInfoTypeAMD = ShaderInfoTypeAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SHADER_INFO_TYPE_STATISTICS_AMD' specifies that device resources used
--- by a shader will be queried.
+-- No documentation found for Nested "VkShaderInfoTypeAMD" "VK_SHADER_INFO_TYPE_STATISTICS_AMD"
 pattern SHADER_INFO_TYPE_STATISTICS_AMD  = ShaderInfoTypeAMD 0
--- | 'SHADER_INFO_TYPE_BINARY_AMD' specifies that implementation-specific
--- information will be queried.
+-- No documentation found for Nested "VkShaderInfoTypeAMD" "VK_SHADER_INFO_TYPE_BINARY_AMD"
 pattern SHADER_INFO_TYPE_BINARY_AMD      = ShaderInfoTypeAMD 1
--- | 'SHADER_INFO_TYPE_DISASSEMBLY_AMD' specifies that human-readable
--- dissassembly of a shader.
+-- No documentation found for Nested "VkShaderInfoTypeAMD" "VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD"
 pattern SHADER_INFO_TYPE_DISASSEMBLY_AMD = ShaderInfoTypeAMD 2
 {-# complete SHADER_INFO_TYPE_STATISTICS_AMD,
              SHADER_INFO_TYPE_BINARY_AMD,
@@ -575,12 +298,14 @@ showTableShaderInfoTypeAMD =
   , (SHADER_INFO_TYPE_DISASSEMBLY_AMD, "DISASSEMBLY_AMD")
   ]
 
+
 instance Show ShaderInfoTypeAMD where
-  showsPrec = enumShowsPrec enumPrefixShaderInfoTypeAMD
-                            showTableShaderInfoTypeAMD
-                            conNameShaderInfoTypeAMD
-                            (\(ShaderInfoTypeAMD x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixShaderInfoTypeAMD
+                          showTableShaderInfoTypeAMD
+                          conNameShaderInfoTypeAMD
+                          (\(ShaderInfoTypeAMD x) -> x)
+                          (showsPrec 11)
+
 
 instance Read ShaderInfoTypeAMD where
   readPrec =

@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkDescriptorPoolResetFlags - Reserved for future use
---
--- = Description
---
--- 'DescriptorPoolResetFlags' is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.DescriptorSet.resetDescriptorPool'
+-- No documentation found for TopLevel "VkDescriptorPoolResetFlags"
 newtype DescriptorPoolResetFlags = DescriptorPoolResetFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixDescriptorPoolResetFlags = ""
 showTableDescriptorPoolResetFlags :: [(DescriptorPoolResetFlags, String)]
 showTableDescriptorPoolResetFlags = []
 
+
 instance Show DescriptorPoolResetFlags where
-  showsPrec = enumShowsPrec enumPrefixDescriptorPoolResetFlags
-                            showTableDescriptorPoolResetFlags
-                            conNameDescriptorPoolResetFlags
-                            (\(DescriptorPoolResetFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixDescriptorPoolResetFlags
+                          showTableDescriptorPoolResetFlags
+                          conNameDescriptorPoolResetFlags
+                          (\(DescriptorPoolResetFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read DescriptorPoolResetFlags where
   readPrec = enumReadPrec enumPrefixDescriptorPoolResetFlags

@@ -19,21 +19,11 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type CommandBufferResetFlags = CommandBufferResetFlagBits
 
--- | VkCommandBufferResetFlagBits - Bitmask controlling behavior of a command
--- buffer reset
---
--- = See Also
---
--- 'CommandBufferResetFlags'
+-- No documentation found for TopLevel "VkCommandBufferResetFlagBits"
 newtype CommandBufferResetFlagBits = CommandBufferResetFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT' specifies that most or all
--- memory resources currently owned by the command buffer /should/ be
--- returned to the parent command pool. If this flag is not set, then the
--- command buffer /may/ hold onto memory resources and reuse them when
--- recording commands. @commandBuffer@ is moved to the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
+-- No documentation found for Nested "VkCommandBufferResetFlagBits" "VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"
 pattern COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = CommandBufferResetFlagBits 0x00000001
 
 conNameCommandBufferResetFlagBits :: String
@@ -45,12 +35,14 @@ enumPrefixCommandBufferResetFlagBits = "COMMAND_BUFFER_RESET_RELEASE_RESOURCES_B
 showTableCommandBufferResetFlagBits :: [(CommandBufferResetFlagBits, String)]
 showTableCommandBufferResetFlagBits = [(COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT, "")]
 
+
 instance Show CommandBufferResetFlagBits where
-  showsPrec = enumShowsPrec enumPrefixCommandBufferResetFlagBits
-                            showTableCommandBufferResetFlagBits
-                            conNameCommandBufferResetFlagBits
-                            (\(CommandBufferResetFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixCommandBufferResetFlagBits
+                          showTableCommandBufferResetFlagBits
+                          conNameCommandBufferResetFlagBits
+                          (\(CommandBufferResetFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read CommandBufferResetFlagBits where
   readPrec = enumReadPrec enumPrefixCommandBufferResetFlagBits

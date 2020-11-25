@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkPipelineDynamicStateCreateFlags - Reserved for future use
---
--- = Description
---
--- 'PipelineDynamicStateCreateFlags' is a bitmask type for setting a mask,
--- but is currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'
+-- No documentation found for TopLevel "VkPipelineDynamicStateCreateFlags"
 newtype PipelineDynamicStateCreateFlags = PipelineDynamicStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixPipelineDynamicStateCreateFlags = ""
 showTablePipelineDynamicStateCreateFlags :: [(PipelineDynamicStateCreateFlags, String)]
 showTablePipelineDynamicStateCreateFlags = []
 
+
 instance Show PipelineDynamicStateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineDynamicStateCreateFlags
-                            showTablePipelineDynamicStateCreateFlags
-                            conNamePipelineDynamicStateCreateFlags
-                            (\(PipelineDynamicStateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineDynamicStateCreateFlags
+                          showTablePipelineDynamicStateCreateFlags
+                          conNamePipelineDynamicStateCreateFlags
+                          (\(PipelineDynamicStateCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineDynamicStateCreateFlags where
   readPrec = enumReadPrec enumPrefixPipelineDynamicStateCreateFlags

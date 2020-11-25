@@ -1,318 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_INTEL_performance_query - device extension
---
--- == VK_INTEL_performance_query
---
--- [__Name String__]
---     @VK_INTEL_performance_query@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     211
---
--- [__Revision__]
---     2
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
--- [__Special Use__]
---
---     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
---
--- [__Contact__]
---
---     -   Lionel Landwerlin
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_INTEL_performance_query:%20&body=@llandwerlin%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2018-05-16
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Lionel Landwerlin, Intel
---
---     -   Piotr Maciejewski, Intel
---
--- == Description
---
--- This extension allows an application to capture performance data to be
--- interpreted by a external application or library.
---
--- Such a library is available at :
--- <https://github.com/intel/metrics-discovery>
---
--- Performance analysis tools such as
--- <https://software.intel.com/content/www/us/en/develop/tools/graphics-performance-analyzers.html Graphics Performance Analyzers>
--- make use of this extension and the metrics-discovery library to present
--- the data in a human readable way.
---
--- == New Object Types
---
--- -   'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
---
--- == New Commands
---
--- -   'acquirePerformanceConfigurationINTEL'
---
--- -   'cmdSetPerformanceMarkerINTEL'
---
--- -   'cmdSetPerformanceOverrideINTEL'
---
--- -   'cmdSetPerformanceStreamMarkerINTEL'
---
--- -   'getPerformanceParameterINTEL'
---
--- -   'initializePerformanceApiINTEL'
---
--- -   'queueSetPerformanceConfigurationINTEL'
---
--- -   'releasePerformanceConfigurationINTEL'
---
--- -   'uninitializePerformanceApiINTEL'
---
--- == New Structures
---
--- -   'InitializePerformanceApiInfoINTEL'
---
--- -   'PerformanceConfigurationAcquireInfoINTEL'
---
--- -   'PerformanceMarkerInfoINTEL'
---
--- -   'PerformanceOverrideInfoINTEL'
---
--- -   'PerformanceStreamMarkerInfoINTEL'
---
--- -   'PerformanceValueINTEL'
---
--- -   Extending 'Vulkan.Core10.Query.QueryPoolCreateInfo':
---
---     -   'QueryPoolPerformanceQueryCreateInfoINTEL'
---
--- == New Unions
---
--- -   'PerformanceValueDataINTEL'
---
--- == New Enums
---
--- -   'PerformanceConfigurationTypeINTEL'
---
--- -   'PerformanceOverrideTypeINTEL'
---
--- -   'PerformanceParameterTypeINTEL'
---
--- -   'PerformanceValueTypeINTEL'
---
--- -   'QueryPoolSamplingModeINTEL'
---
--- == New Enum Constants
---
--- -   'INTEL_PERFORMANCE_QUERY_EXTENSION_NAME'
---
--- -   'INTEL_PERFORMANCE_QUERY_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
---
---     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL'
---
--- -   Extending 'Vulkan.Core10.Enums.QueryType.QueryType':
---
---     -   'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_INTEL'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_CONFIGURATION_ACQUIRE_INFO_INTEL'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_OVERRIDE_INFO_INTEL'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL'
---
--- == Example Code
---
--- > // A previously created device
--- > VkDevice device;
--- >
--- > // A queue derived from the device
--- > VkQueue queue;
--- >
--- > VkInitializePerformanceApiInfoINTEL performanceApiInfoIntel = {
--- >   VK_STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL,
--- >   NULL,
--- >   NULL
--- > };
--- >
--- > vkInitializePerformanceApiINTEL(
--- >   device,
--- >   &performanceApiInfoIntel);
--- >
--- > VkQueryPoolPerformanceQueryCreateInfoINTEL queryPoolIntel = {
--- >   VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL,
--- >   NULL,
--- >   VK_QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL,
--- > };
--- >
--- > VkQueryPoolCreateInfo queryPoolCreateInfo = {
--- >   VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO,
--- >   &queryPoolIntel,
--- >   0,
--- >   VK_QUERY_TYPE_PERFORMANCE_QUERY_INTEL,
--- >   1,
--- >   0
--- > };
--- >
--- > VkQueryPool queryPool;
--- >
--- > VkResult result = vkCreateQueryPool(
--- >   device,
--- >   &queryPoolCreateInfo,
--- >   NULL,
--- >   &queryPool);
--- >
--- > assert(VK_SUCCESS == result);
--- >
--- > // A command buffer we want to record counters on
--- > VkCommandBuffer commandBuffer;
--- >
--- > VkCommandBufferBeginInfo commandBufferBeginInfo = {
--- >   VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
--- >   NULL,
--- >   VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
--- >   NULL
--- > };
--- >
--- > result = vkBeginCommandBuffer(commandBuffer, &commandBufferBeginInfo);
--- >
--- > assert(VK_SUCCESS == result);
--- >
--- > vkCmdResetQueryPool(
--- >   commandBuffer,
--- >   queryPool,
--- >   0,
--- >   1);
--- >
--- > vkCmdBeginQuery(
--- >   commandBuffer,
--- >   queryPool,
--- >   0,
--- >   0);
--- >
--- > // Perform the commands you want to get performance information on
--- > // ...
--- >
--- > // Perform a barrier to ensure all previous commands were complete before
--- > // ending the query
--- > vkCmdPipelineBarrier(commandBuffer,
--- >   VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
--- >   VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
--- >   0,
--- >   0,
--- >   NULL,
--- >   0,
--- >   NULL,
--- >   0,
--- >   NULL);
--- >
--- > vkCmdEndQuery(
--- >   commandBuffer,
--- >   queryPool,
--- >   0);
--- >
--- > result = vkEndCommandBuffer(commandBuffer);
--- >
--- > assert(VK_SUCCESS == result);
--- >
--- > VkPerformanceConfigurationAcquireInfoINTEL performanceConfigurationAcquireInfo = {
--- >   VK_STRUCTURE_TYPE_PERFORMANCE_CONFIGURATION_ACQUIRE_INFO_INTEL,
--- >   NULL,
--- >   VK_PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL
--- > };
--- >
--- > VkPerformanceConfigurationINTEL performanceConfigurationIntel;
--- >
--- > result = vkAcquirePerformanceConfigurationINTEL(
--- >   device,
--- >   &performanceConfigurationAcquireInfo,
--- >   &performanceConfigurationIntel);
--- >
--- > vkQueueSetPerformanceConfigurationINTEL(queue, performanceConfigurationIntel);
--- >
--- > assert(VK_SUCCESS == result);
--- >
--- > // Submit the command buffer and wait for its completion
--- > // ...
--- >
--- > result = vkReleasePerformanceConfigurationINTEL(
--- >   device,
--- >   performanceConfigurationIntel);
--- >
--- > assert(VK_SUCCESS == result);
--- >
--- > // Get the report size from metrics-discovery's QueryReportSize
--- >
--- > result = vkGetQueryPoolResults(
--- >   device,
--- >   queryPool,
--- >   0, 1, QueryReportSize,
--- >   data, QueryReportSize, 0);
--- >
--- > assert(VK_SUCCESS == result);
--- >
--- > // The data can then be passed back to metrics-discovery from which
--- > // human readable values can be queried.
---
--- == Version History
---
--- -   Revision 2, 2020-03-06 (Lionel Landwerlin)
---
---     -   Rename VkQueryPoolCreateInfoINTEL in
---         VkQueryPoolPerformanceQueryCreateInfoINTEL
---
--- -   Revision 1, 2018-05-16 (Lionel Landwerlin)
---
---     -   Initial revision
---
--- = See Also
---
--- 'InitializePerformanceApiInfoINTEL',
--- 'PerformanceConfigurationAcquireInfoINTEL',
--- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL',
--- 'PerformanceConfigurationTypeINTEL', 'PerformanceMarkerInfoINTEL',
--- 'PerformanceOverrideInfoINTEL', 'PerformanceOverrideTypeINTEL',
--- 'PerformanceParameterTypeINTEL', 'PerformanceStreamMarkerInfoINTEL',
--- 'PerformanceValueDataINTEL', 'PerformanceValueINTEL',
--- 'PerformanceValueTypeINTEL', 'QueryPoolCreateInfoINTEL',
--- 'QueryPoolPerformanceQueryCreateInfoINTEL',
--- 'QueryPoolSamplingModeINTEL', 'acquirePerformanceConfigurationINTEL',
--- 'cmdSetPerformanceMarkerINTEL', 'cmdSetPerformanceOverrideINTEL',
--- 'cmdSetPerformanceStreamMarkerINTEL', 'getPerformanceParameterINTEL',
--- 'initializePerformanceApiINTEL',
--- 'queueSetPerformanceConfigurationINTEL',
--- 'releasePerformanceConfigurationINTEL',
--- 'uninitializePerformanceApiINTEL'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_INTEL_performance_query"
 module Vulkan.Extensions.VK_INTEL_performance_query  ( initializePerformanceApiINTEL
                                                      , uninitializePerformanceApiINTEL
                                                      , cmdSetPerformanceMarkerINTEL
@@ -453,37 +140,12 @@ foreign import ccall
   "dynamic" mkVkInitializePerformanceApiINTEL
   :: FunPtr (Ptr Device_T -> Ptr InitializePerformanceApiInfoINTEL -> IO Result) -> Ptr Device_T -> Ptr InitializePerformanceApiInfoINTEL -> IO Result
 
--- | vkInitializePerformanceApiINTEL - Initialize a device for performance
--- queries
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'InitializePerformanceApiInfoINTEL'
+-- No documentation found for TopLevel "vkInitializePerformanceApiINTEL"
 initializePerformanceApiINTEL :: forall io
                                . (MonadIO io)
-                              => -- | @device@ is the logical device used for the queries.
-                                 --
-                                 -- #VUID-vkInitializePerformanceApiINTEL-device-parameter# @device@ /must/
-                                 -- be a valid 'Vulkan.Core10.Handles.Device' handle
+                              => -- No documentation found for Nested "vkInitializePerformanceApiINTEL" "device"
                                  Device
-                              -> -- | @pInitializeInfo@ is a pointer to a 'InitializePerformanceApiInfoINTEL'
-                                 -- structure specifying initialization parameters.
-                                 --
-                                 -- #VUID-vkInitializePerformanceApiINTEL-pInitializeInfo-parameter#
-                                 -- @pInitializeInfo@ /must/ be a valid pointer to a valid
-                                 -- 'InitializePerformanceApiInfoINTEL' structure
+                              -> -- No documentation found for Nested "vkInitializePerformanceApiINTEL" "pInitializeInfo"
                                  ("initializeInfo" ::: InitializePerformanceApiInfoINTEL)
                               -> io ()
 initializePerformanceApiINTEL device initializeInfo = liftIO . evalContT $ do
@@ -503,20 +165,10 @@ foreign import ccall
   "dynamic" mkVkUninitializePerformanceApiINTEL
   :: FunPtr (Ptr Device_T -> IO ()) -> Ptr Device_T -> IO ()
 
--- | vkUninitializePerformanceApiINTEL - Uninitialize a device for
--- performance queries
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkUninitializePerformanceApiINTEL"
 uninitializePerformanceApiINTEL :: forall io
                                  . (MonadIO io)
-                                => -- | @device@ is the logical device used for the queries.
-                                   --
-                                   -- #VUID-vkUninitializePerformanceApiINTEL-device-parameter# @device@
-                                   -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                => -- No documentation found for Nested "vkUninitializePerformanceApiINTEL" "device"
                                    Device
                                 -> io ()
 uninitializePerformanceApiINTEL device = liftIO $ do
@@ -535,66 +187,7 @@ foreign import ccall
   "dynamic" mkVkCmdSetPerformanceMarkerINTEL
   :: FunPtr (Ptr CommandBuffer_T -> Ptr PerformanceMarkerInfoINTEL -> IO Result) -> Ptr CommandBuffer_T -> Ptr PerformanceMarkerInfoINTEL -> IO Result
 
--- | vkCmdSetPerformanceMarkerINTEL - Markers
---
--- = Parameters
---
--- The last marker set onto a command buffer before the end of a query will
--- be part of the query result.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdSetPerformanceMarkerINTEL-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdSetPerformanceMarkerINTEL-pMarkerInfo-parameter#
---     @pMarkerInfo@ /must/ be a valid pointer to a valid
---     'PerformanceMarkerInfoINTEL' structure
---
--- -   #VUID-vkCmdSetPerformanceMarkerINTEL-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdSetPerformanceMarkerINTEL-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, compute, or transfer
---     operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer', 'PerformanceMarkerInfoINTEL'
+-- No documentation found for TopLevel "vkCmdSetPerformanceMarkerINTEL"
 cmdSetPerformanceMarkerINTEL :: forall io
                               . (MonadIO io)
                              => -- No documentation found for Nested "vkCmdSetPerformanceMarkerINTEL" "commandBuffer"
@@ -619,62 +212,7 @@ foreign import ccall
   "dynamic" mkVkCmdSetPerformanceStreamMarkerINTEL
   :: FunPtr (Ptr CommandBuffer_T -> Ptr PerformanceStreamMarkerInfoINTEL -> IO Result) -> Ptr CommandBuffer_T -> Ptr PerformanceStreamMarkerInfoINTEL -> IO Result
 
--- | vkCmdSetPerformanceStreamMarkerINTEL - Markers
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdSetPerformanceStreamMarkerINTEL-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdSetPerformanceStreamMarkerINTEL-pMarkerInfo-parameter#
---     @pMarkerInfo@ /must/ be a valid pointer to a valid
---     'PerformanceStreamMarkerInfoINTEL' structure
---
--- -   #VUID-vkCmdSetPerformanceStreamMarkerINTEL-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdSetPerformanceStreamMarkerINTEL-commandBuffer-cmdpool#
---     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, compute, or transfer
---     operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer',
--- 'PerformanceStreamMarkerInfoINTEL'
+-- No documentation found for TopLevel "vkCmdSetPerformanceStreamMarkerINTEL"
 cmdSetPerformanceStreamMarkerINTEL :: forall io
                                     . (MonadIO io)
                                    => -- No documentation found for Nested "vkCmdSetPerformanceStreamMarkerINTEL" "commandBuffer"
@@ -699,74 +237,12 @@ foreign import ccall
   "dynamic" mkVkCmdSetPerformanceOverrideINTEL
   :: FunPtr (Ptr CommandBuffer_T -> Ptr PerformanceOverrideInfoINTEL -> IO Result) -> Ptr CommandBuffer_T -> Ptr PerformanceOverrideInfoINTEL -> IO Result
 
--- | vkCmdSetPerformanceOverrideINTEL - Performance override settings
---
--- == Valid Usage
---
--- -   #VUID-vkCmdSetPerformanceOverrideINTEL-pOverrideInfo-02736#
---     @pOverrideInfo@ /must/ not be used with a
---     'PerformanceOverrideTypeINTEL' that is not reported available by
---     'getPerformanceParameterINTEL'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdSetPerformanceOverrideINTEL-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdSetPerformanceOverrideINTEL-pOverrideInfo-parameter#
---     @pOverrideInfo@ /must/ be a valid pointer to a valid
---     'PerformanceOverrideInfoINTEL' structure
---
--- -   #VUID-vkCmdSetPerformanceOverrideINTEL-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdSetPerformanceOverrideINTEL-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, compute, or transfer
---     operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer', 'PerformanceOverrideInfoINTEL'
+-- No documentation found for TopLevel "vkCmdSetPerformanceOverrideINTEL"
 cmdSetPerformanceOverrideINTEL :: forall io
                                 . (MonadIO io)
-                               => -- | @commandBuffer@ is the command buffer where the override takes place.
+                               => -- No documentation found for Nested "vkCmdSetPerformanceOverrideINTEL" "commandBuffer"
                                   CommandBuffer
-                               -> -- | @pOverrideInfo@ is a pointer to a 'PerformanceOverrideInfoINTEL'
-                                  -- structure selecting the parameter to override.
+                               -> -- No documentation found for Nested "vkCmdSetPerformanceOverrideINTEL" "pOverrideInfo"
                                   PerformanceOverrideInfoINTEL
                                -> io ()
 cmdSetPerformanceOverrideINTEL commandBuffer overrideInfo = liftIO . evalContT $ do
@@ -786,41 +262,12 @@ foreign import ccall
   "dynamic" mkVkAcquirePerformanceConfigurationINTEL
   :: FunPtr (Ptr Device_T -> Ptr PerformanceConfigurationAcquireInfoINTEL -> Ptr PerformanceConfigurationINTEL -> IO Result) -> Ptr Device_T -> Ptr PerformanceConfigurationAcquireInfoINTEL -> Ptr PerformanceConfigurationINTEL -> IO Result
 
--- | vkAcquirePerformanceConfigurationINTEL - Acquire the performance query
--- capability
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device',
--- 'PerformanceConfigurationAcquireInfoINTEL',
--- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
+-- No documentation found for TopLevel "vkAcquirePerformanceConfigurationINTEL"
 acquirePerformanceConfigurationINTEL :: forall io
                                       . (MonadIO io)
-                                     => -- | @device@ is the logical device that the performance query commands will
-                                        -- be submitted to.
-                                        --
-                                        -- #VUID-vkAcquirePerformanceConfigurationINTEL-device-parameter# @device@
-                                        -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                     => -- No documentation found for Nested "vkAcquirePerformanceConfigurationINTEL" "device"
                                         Device
-                                     -> -- | @pAcquireInfo@ is a pointer to a
-                                        -- 'PerformanceConfigurationAcquireInfoINTEL' structure, specifying the
-                                        -- performance configuration to acquire.
-                                        --
-                                        -- #VUID-vkAcquirePerformanceConfigurationINTEL-pAcquireInfo-parameter#
-                                        -- @pAcquireInfo@ /must/ be a valid pointer to a valid
-                                        -- 'PerformanceConfigurationAcquireInfoINTEL' structure
+                                     -> -- No documentation found for Nested "vkAcquirePerformanceConfigurationINTEL" "pAcquireInfo"
                                         PerformanceConfigurationAcquireInfoINTEL
                                      -> io (PerformanceConfigurationINTEL)
 acquirePerformanceConfigurationINTEL device acquireInfo = liftIO . evalContT $ do
@@ -843,56 +290,12 @@ foreign import ccall
   "dynamic" mkVkReleasePerformanceConfigurationINTEL
   :: FunPtr (Ptr Device_T -> PerformanceConfigurationINTEL -> IO Result) -> Ptr Device_T -> PerformanceConfigurationINTEL -> IO Result
 
--- | vkReleasePerformanceConfigurationINTEL - Release a configuration to
--- capture performance data
---
--- == Valid Usage
---
--- -   #VUID-vkReleasePerformanceConfigurationINTEL-configuration-02737#
---     @configuration@ /must/ not be released before all command buffers
---     submitted while the configuration was set are in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkReleasePerformanceConfigurationINTEL-device-parameter#
---     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkReleasePerformanceConfigurationINTEL-configuration-parameter#
---     If @configuration@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @configuration@ /must/ be a valid
---     'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' handle
---
--- -   #VUID-vkReleasePerformanceConfigurationINTEL-configuration-parent#
---     If @configuration@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @configuration@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device',
--- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
+-- No documentation found for TopLevel "vkReleasePerformanceConfigurationINTEL"
 releasePerformanceConfigurationINTEL :: forall io
                                       . (MonadIO io)
-                                     => -- | @device@ is the device associated to the configuration object to
-                                        -- release.
+                                     => -- No documentation found for Nested "vkReleasePerformanceConfigurationINTEL" "device"
                                         Device
-                                     -> -- | @configuration@ is the configuration object to release.
+                                     -> -- No documentation found for Nested "vkReleasePerformanceConfigurationINTEL" "configuration"
                                         PerformanceConfigurationINTEL
                                      -> io ()
 releasePerformanceConfigurationINTEL device configuration = liftIO $ do
@@ -911,52 +314,12 @@ foreign import ccall
   "dynamic" mkVkQueueSetPerformanceConfigurationINTEL
   :: FunPtr (Ptr Queue_T -> PerformanceConfigurationINTEL -> IO Result) -> Ptr Queue_T -> PerformanceConfigurationINTEL -> IO Result
 
--- | vkQueueSetPerformanceConfigurationINTEL - Set a performance query
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkQueueSetPerformanceConfigurationINTEL-queue-parameter#
---     @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
---
--- -   #VUID-vkQueueSetPerformanceConfigurationINTEL-configuration-parameter#
---     @configuration@ /must/ be a valid
---     'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' handle
---
--- -   #VUID-vkQueueSetPerformanceConfigurationINTEL-commonparent# Both of
---     @configuration@, and @queue@ /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Device'
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   | -                                                                                                                                   |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL',
--- 'Vulkan.Core10.Handles.Queue'
+-- No documentation found for TopLevel "vkQueueSetPerformanceConfigurationINTEL"
 queueSetPerformanceConfigurationINTEL :: forall io
                                        . (MonadIO io)
-                                      => -- | @queue@ is the queue on which the configuration will be used.
+                                      => -- No documentation found for Nested "vkQueueSetPerformanceConfigurationINTEL" "queue"
                                          Queue
-                                      -> -- | @configuration@ is the configuration to use.
+                                      -> -- No documentation found for Nested "vkQueueSetPerformanceConfigurationINTEL" "configuration"
                                          PerformanceConfigurationINTEL
                                       -> io ()
 queueSetPerformanceConfigurationINTEL queue configuration = liftIO $ do
@@ -975,36 +338,12 @@ foreign import ccall
   "dynamic" mkVkGetPerformanceParameterINTEL
   :: FunPtr (Ptr Device_T -> PerformanceParameterTypeINTEL -> Ptr PerformanceValueINTEL -> IO Result) -> Ptr Device_T -> PerformanceParameterTypeINTEL -> Ptr PerformanceValueINTEL -> IO Result
 
--- | vkGetPerformanceParameterINTEL - Query performance capabilities of the
--- device
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device', 'PerformanceParameterTypeINTEL',
--- 'PerformanceValueINTEL'
+-- No documentation found for TopLevel "vkGetPerformanceParameterINTEL"
 getPerformanceParameterINTEL :: forall io
                               . (MonadIO io)
-                             => -- | @device@ is the logical device to query.
-                                --
-                                -- #VUID-vkGetPerformanceParameterINTEL-device-parameter# @device@ /must/
-                                -- be a valid 'Vulkan.Core10.Handles.Device' handle
+                             => -- No documentation found for Nested "vkGetPerformanceParameterINTEL" "device"
                                 Device
-                             -> -- | @parameter@ is the parameter to query.
-                                --
-                                -- #VUID-vkGetPerformanceParameterINTEL-parameter-parameter# @parameter@
-                                -- /must/ be a valid 'PerformanceParameterTypeINTEL' value
+                             -> -- No documentation found for Nested "vkGetPerformanceParameterINTEL" "parameter"
                                 PerformanceParameterTypeINTEL
                              -> io (PerformanceValueINTEL)
 getPerformanceParameterINTEL device parameter = liftIO . evalContT $ do
@@ -1023,28 +362,12 @@ getPerformanceParameterINTEL device parameter = liftIO . evalContT $ do
 pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL = STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL
 
 
--- | VkPerformanceValueINTEL - Container for value and types of parameters
--- that can be queried
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPerformanceValueINTEL-type-parameter# @type@ /must/ be a
---     valid 'PerformanceValueTypeINTEL' value
---
--- -   #VUID-VkPerformanceValueINTEL-valueString-parameter# If @type@ is
---     'PERFORMANCE_VALUE_TYPE_STRING_INTEL', the @valueString@ member of
---     @data@ /must/ be a null-terminated UTF-8 string
---
--- = See Also
---
--- 'PerformanceValueDataINTEL', 'PerformanceValueTypeINTEL',
--- 'getPerformanceParameterINTEL'
+
+-- No documentation found for TopLevel "VkPerformanceValueINTEL"
 data PerformanceValueINTEL = PerformanceValueINTEL
-  { -- | @type@ is a 'PerformanceValueTypeINTEL' value specifying the type of the
-    -- returned data.
+  { -- No documentation found for Nested "VkPerformanceValueINTEL" "type"
     type' :: PerformanceValueTypeINTEL
-  , -- | @data@ is a 'PerformanceValueDataINTEL' union specifying the value of
-    -- the returned data.
+  , -- No documentation found for Nested "VkPerformanceValueINTEL" "data"
     data' :: PerformanceValueDataINTEL
   }
   deriving (Typeable)
@@ -1079,17 +402,10 @@ instance Zero PerformanceValueINTEL where
            zero
 
 
--- | VkInitializePerformanceApiInfoINTEL - Structure specifying parameters of
--- initialize of the device
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'initializePerformanceApiINTEL'
+
+-- No documentation found for TopLevel "VkInitializePerformanceApiInfoINTEL"
 data InitializePerformanceApiInfoINTEL = InitializePerformanceApiInfoINTEL
-  { -- | @pUserData@ is a pointer for application data.
+  { -- No documentation found for Nested "VkInitializePerformanceApiInfoINTEL" "pUserData"
     userData :: Ptr () }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -1117,6 +433,7 @@ instance FromCStruct InitializePerformanceApiInfoINTEL where
     pure $ InitializePerformanceApiInfoINTEL
              pUserData
 
+
 instance Storable InitializePerformanceApiInfoINTEL where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -1128,31 +445,10 @@ instance Zero InitializePerformanceApiInfoINTEL where
            zero
 
 
--- | VkQueryPoolPerformanceQueryCreateInfoINTEL - Structure specifying
--- parameters to create a pool of performance queries
---
--- = Members
---
--- To create a pool for Intel performance queries, set
--- 'Vulkan.Core10.Query.QueryPoolCreateInfo'::@queryType@ to
--- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_INTEL' and
--- add a 'QueryPoolPerformanceQueryCreateInfoINTEL' structure to the
--- @pNext@ chain of the 'Vulkan.Core10.Query.QueryPoolCreateInfo'
--- structure.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'QueryPoolSamplingModeINTEL',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkQueryPoolPerformanceQueryCreateInfoINTEL"
 data QueryPoolPerformanceQueryCreateInfoINTEL = QueryPoolPerformanceQueryCreateInfoINTEL
-  { -- | @performanceCountersSampling@ describe how performance queries should be
-    -- captured.
-    --
-    -- #VUID-VkQueryPoolPerformanceQueryCreateInfoINTEL-performanceCountersSampling-parameter#
-    -- @performanceCountersSampling@ /must/ be a valid
-    -- 'QueryPoolSamplingModeINTEL' value
+  { -- No documentation found for Nested "VkQueryPoolPerformanceQueryCreateInfoINTEL" "performanceCountersSampling"
     performanceCountersSampling :: QueryPoolSamplingModeINTEL }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1181,6 +477,7 @@ instance FromCStruct QueryPoolPerformanceQueryCreateInfoINTEL where
     pure $ QueryPoolPerformanceQueryCreateInfoINTEL
              performanceCountersSampling
 
+
 instance Storable QueryPoolPerformanceQueryCreateInfoINTEL where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -1192,17 +489,10 @@ instance Zero QueryPoolPerformanceQueryCreateInfoINTEL where
            zero
 
 
--- | VkPerformanceMarkerInfoINTEL - Structure specifying performance markers
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'cmdSetPerformanceMarkerINTEL'
+
+-- No documentation found for TopLevel "VkPerformanceMarkerInfoINTEL"
 data PerformanceMarkerInfoINTEL = PerformanceMarkerInfoINTEL
-  { -- | @marker@ is the marker value that will be recorded into the opaque query
-    -- results.
+  { -- No documentation found for Nested "VkPerformanceMarkerInfoINTEL" "marker"
     marker :: Word64 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1231,6 +521,7 @@ instance FromCStruct PerformanceMarkerInfoINTEL where
     pure $ PerformanceMarkerInfoINTEL
              marker
 
+
 instance Storable PerformanceMarkerInfoINTEL where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -1242,32 +533,10 @@ instance Zero PerformanceMarkerInfoINTEL where
            zero
 
 
--- | VkPerformanceStreamMarkerInfoINTEL - Structure specifying stream
--- performance markers
---
--- == Valid Usage
---
--- -   #VUID-VkPerformanceStreamMarkerInfoINTEL-marker-02735# The value
---     written by the application into @marker@ /must/ only used the valid
---     bits as reported by 'getPerformanceParameterINTEL' with the
---     'PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPerformanceStreamMarkerInfoINTEL-sType-sType# @sType@ /must/
---     be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL'
---
--- -   #VUID-VkPerformanceStreamMarkerInfoINTEL-pNext-pNext# @pNext@ /must/
---     be @NULL@
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'cmdSetPerformanceStreamMarkerINTEL'
+
+-- No documentation found for TopLevel "VkPerformanceStreamMarkerInfoINTEL"
 data PerformanceStreamMarkerInfoINTEL = PerformanceStreamMarkerInfoINTEL
-  { -- | @marker@ is the marker value that will be recorded into the reports
-    -- consumed by an external application.
+  { -- No documentation found for Nested "VkPerformanceStreamMarkerInfoINTEL" "marker"
     marker :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1296,6 +565,7 @@ instance FromCStruct PerformanceStreamMarkerInfoINTEL where
     pure $ PerformanceStreamMarkerInfoINTEL
              marker
 
+
 instance Storable PerformanceStreamMarkerInfoINTEL where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -1307,24 +577,14 @@ instance Zero PerformanceStreamMarkerInfoINTEL where
            zero
 
 
--- | VkPerformanceOverrideInfoINTEL - Performance override info
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32', 'PerformanceOverrideTypeINTEL',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'cmdSetPerformanceOverrideINTEL'
+
+-- No documentation found for TopLevel "VkPerformanceOverrideInfoINTEL"
 data PerformanceOverrideInfoINTEL = PerformanceOverrideInfoINTEL
-  { -- | @type@ is the particular 'PerformanceOverrideTypeINTEL' to set.
-    --
-    -- #VUID-VkPerformanceOverrideInfoINTEL-type-parameter# @type@ /must/ be a
-    -- valid 'PerformanceOverrideTypeINTEL' value
+  { -- No documentation found for Nested "VkPerformanceOverrideInfoINTEL" "type"
     type' :: PerformanceOverrideTypeINTEL
-  , -- | @enable@ defines whether the override is enabled.
+  , -- No documentation found for Nested "VkPerformanceOverrideInfoINTEL" "enable"
     enable :: Bool
-  , -- | @parameter@ is a potential required parameter for the override.
+  , -- No documentation found for Nested "VkPerformanceOverrideInfoINTEL" "parameter"
     parameter :: Word64
   }
   deriving (Typeable, Eq)
@@ -1360,6 +620,7 @@ instance FromCStruct PerformanceOverrideInfoINTEL where
     pure $ PerformanceOverrideInfoINTEL
              type' (bool32ToBool enable) parameter
 
+
 instance Storable PerformanceOverrideInfoINTEL where
   sizeOf ~_ = 32
   alignment ~_ = 8
@@ -1373,22 +634,10 @@ instance Zero PerformanceOverrideInfoINTEL where
            zero
 
 
--- | VkPerformanceConfigurationAcquireInfoINTEL - Acquire a configuration to
--- capture performance data
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'PerformanceConfigurationTypeINTEL',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'acquirePerformanceConfigurationINTEL'
+
+-- No documentation found for TopLevel "VkPerformanceConfigurationAcquireInfoINTEL"
 data PerformanceConfigurationAcquireInfoINTEL = PerformanceConfigurationAcquireInfoINTEL
-  { -- | @type@ is one of the 'PerformanceConfigurationTypeINTEL' type of
-    -- performance configuration that will be acquired.
-    --
-    -- #VUID-VkPerformanceConfigurationAcquireInfoINTEL-type-parameter# @type@
-    -- /must/ be a valid 'PerformanceConfigurationTypeINTEL' value
+  { -- No documentation found for Nested "VkPerformanceConfigurationAcquireInfoINTEL" "type"
     type' :: PerformanceConfigurationTypeINTEL }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1416,6 +665,7 @@ instance FromCStruct PerformanceConfigurationAcquireInfoINTEL where
     type' <- peek @PerformanceConfigurationTypeINTEL ((p `plusPtr` 16 :: Ptr PerformanceConfigurationTypeINTEL))
     pure $ PerformanceConfigurationAcquireInfoINTEL
              type'
+
 
 instance Storable PerformanceConfigurationAcquireInfoINTEL where
   sizeOf ~_ = 24
@@ -1468,11 +718,7 @@ peekPerformanceValueDataINTEL tag p = case tag of
   PERFORMANCE_VALUE_TYPE_STRING_INTEL -> ValueString <$> (packCString =<< peek (castPtr @_ @(Ptr CChar) p))
 
 
--- | VkPerformanceConfigurationTypeINTEL - Type of performance configuration
---
--- = See Also
---
--- 'PerformanceConfigurationAcquireInfoINTEL'
+-- No documentation found for TopLevel "VkPerformanceConfigurationTypeINTEL"
 newtype PerformanceConfigurationTypeINTEL = PerformanceConfigurationTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -1492,12 +738,14 @@ showTablePerformanceConfigurationTypeINTEL :: [(PerformanceConfigurationTypeINTE
 showTablePerformanceConfigurationTypeINTEL =
   [(PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL, "")]
 
+
 instance Show PerformanceConfigurationTypeINTEL where
-  showsPrec = enumShowsPrec enumPrefixPerformanceConfigurationTypeINTEL
-                            showTablePerformanceConfigurationTypeINTEL
-                            conNamePerformanceConfigurationTypeINTEL
-                            (\(PerformanceConfigurationTypeINTEL x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixPerformanceConfigurationTypeINTEL
+                          showTablePerformanceConfigurationTypeINTEL
+                          conNamePerformanceConfigurationTypeINTEL
+                          (\(PerformanceConfigurationTypeINTEL x) -> x)
+                          (showsPrec 11)
+
 
 instance Read PerformanceConfigurationTypeINTEL where
   readPrec = enumReadPrec enumPrefixPerformanceConfigurationTypeINTEL
@@ -1506,19 +754,11 @@ instance Read PerformanceConfigurationTypeINTEL where
                           PerformanceConfigurationTypeINTEL
 
 
--- | VkQueryPoolSamplingModeINTEL - Enum specifying how performance queries
--- should be captured
---
--- = See Also
---
--- 'QueryPoolPerformanceQueryCreateInfoINTEL'
+-- No documentation found for TopLevel "VkQueryPoolSamplingModeINTEL"
 newtype QueryPoolSamplingModeINTEL = QueryPoolSamplingModeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL' is the default mode in which the
--- application calls 'Vulkan.Core10.CommandBufferBuilding.cmdBeginQuery'
--- and 'Vulkan.Core10.CommandBufferBuilding.cmdEndQuery' to record
--- performance data.
+-- No documentation found for Nested "VkQueryPoolSamplingModeINTEL" "VK_QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL"
 pattern QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL = QueryPoolSamplingModeINTEL 0
 {-# complete QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL :: QueryPoolSamplingModeINTEL #-}
 
@@ -1531,12 +771,14 @@ enumPrefixQueryPoolSamplingModeINTEL = "QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL"
 showTableQueryPoolSamplingModeINTEL :: [(QueryPoolSamplingModeINTEL, String)]
 showTableQueryPoolSamplingModeINTEL = [(QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL, "")]
 
+
 instance Show QueryPoolSamplingModeINTEL where
-  showsPrec = enumShowsPrec enumPrefixQueryPoolSamplingModeINTEL
-                            showTableQueryPoolSamplingModeINTEL
-                            conNameQueryPoolSamplingModeINTEL
-                            (\(QueryPoolSamplingModeINTEL x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixQueryPoolSamplingModeINTEL
+                          showTableQueryPoolSamplingModeINTEL
+                          conNameQueryPoolSamplingModeINTEL
+                          (\(QueryPoolSamplingModeINTEL x) -> x)
+                          (showsPrec 11)
+
 
 instance Read QueryPoolSamplingModeINTEL where
   readPrec = enumReadPrec enumPrefixQueryPoolSamplingModeINTEL
@@ -1545,20 +787,13 @@ instance Read QueryPoolSamplingModeINTEL where
                           QueryPoolSamplingModeINTEL
 
 
--- | VkPerformanceOverrideTypeINTEL - Performance override type
---
--- = See Also
---
--- 'PerformanceOverrideInfoINTEL'
+-- No documentation found for TopLevel "VkPerformanceOverrideTypeINTEL"
 newtype PerformanceOverrideTypeINTEL = PerformanceOverrideTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL' turns all rendering
--- operations into noop.
+-- No documentation found for Nested "VkPerformanceOverrideTypeINTEL" "VK_PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL"
 pattern PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL    = PerformanceOverrideTypeINTEL 0
--- | 'PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL' stalls the stream of
--- commands until all previously emitted commands have completed and all
--- caches been flushed and invalidated.
+-- No documentation found for Nested "VkPerformanceOverrideTypeINTEL" "VK_PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL"
 pattern PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL = PerformanceOverrideTypeINTEL 1
 {-# complete PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL,
              PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL :: PerformanceOverrideTypeINTEL #-}
@@ -1575,12 +810,14 @@ showTablePerformanceOverrideTypeINTEL =
   , (PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL, "FLUSH_GPU_CACHES_INTEL")
   ]
 
+
 instance Show PerformanceOverrideTypeINTEL where
-  showsPrec = enumShowsPrec enumPrefixPerformanceOverrideTypeINTEL
-                            showTablePerformanceOverrideTypeINTEL
-                            conNamePerformanceOverrideTypeINTEL
-                            (\(PerformanceOverrideTypeINTEL x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixPerformanceOverrideTypeINTEL
+                          showTablePerformanceOverrideTypeINTEL
+                          conNamePerformanceOverrideTypeINTEL
+                          (\(PerformanceOverrideTypeINTEL x) -> x)
+                          (showsPrec 11)
+
 
 instance Read PerformanceOverrideTypeINTEL where
   readPrec = enumReadPrec enumPrefixPerformanceOverrideTypeINTEL
@@ -1589,20 +826,13 @@ instance Read PerformanceOverrideTypeINTEL where
                           PerformanceOverrideTypeINTEL
 
 
--- | VkPerformanceParameterTypeINTEL - Parameters that can be queried
---
--- = See Also
---
--- 'getPerformanceParameterINTEL'
+-- No documentation found for TopLevel "VkPerformanceParameterTypeINTEL"
 newtype PerformanceParameterTypeINTEL = PerformanceParameterTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL' has a boolean
--- result which tells whether hardware counters can be captured.
+-- No documentation found for Nested "VkPerformanceParameterTypeINTEL" "VK_PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL"
 pattern PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL    = PerformanceParameterTypeINTEL 0
--- | 'PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL' has a 32
--- bits integer result which tells how many bits can be written into the
--- 'PerformanceValueINTEL' value.
+-- No documentation found for Nested "VkPerformanceParameterTypeINTEL" "VK_PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL"
 pattern PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL = PerformanceParameterTypeINTEL 1
 {-# complete PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL,
              PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL :: PerformanceParameterTypeINTEL #-}
@@ -1619,12 +849,14 @@ showTablePerformanceParameterTypeINTEL =
   , (PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL, "STREAM_MARKER_VALID_BITS_INTEL")
   ]
 
+
 instance Show PerformanceParameterTypeINTEL where
-  showsPrec = enumShowsPrec enumPrefixPerformanceParameterTypeINTEL
-                            showTablePerformanceParameterTypeINTEL
-                            conNamePerformanceParameterTypeINTEL
-                            (\(PerformanceParameterTypeINTEL x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixPerformanceParameterTypeINTEL
+                          showTablePerformanceParameterTypeINTEL
+                          conNamePerformanceParameterTypeINTEL
+                          (\(PerformanceParameterTypeINTEL x) -> x)
+                          (showsPrec 11)
+
 
 instance Read PerformanceParameterTypeINTEL where
   readPrec = enumReadPrec enumPrefixPerformanceParameterTypeINTEL
@@ -1633,11 +865,7 @@ instance Read PerformanceParameterTypeINTEL where
                           PerformanceParameterTypeINTEL
 
 
--- | VkPerformanceValueTypeINTEL - Type of the parameters that can be queried
---
--- = See Also
---
--- 'PerformanceValueINTEL'
+-- No documentation found for TopLevel "VkPerformanceValueTypeINTEL"
 newtype PerformanceValueTypeINTEL = PerformanceValueTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -1672,12 +900,14 @@ showTablePerformanceValueTypeINTEL =
   , (PERFORMANCE_VALUE_TYPE_STRING_INTEL, "STRING_INTEL")
   ]
 
+
 instance Show PerformanceValueTypeINTEL where
-  showsPrec = enumShowsPrec enumPrefixPerformanceValueTypeINTEL
-                            showTablePerformanceValueTypeINTEL
-                            conNamePerformanceValueTypeINTEL
-                            (\(PerformanceValueTypeINTEL x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixPerformanceValueTypeINTEL
+                          showTablePerformanceValueTypeINTEL
+                          conNamePerformanceValueTypeINTEL
+                          (\(PerformanceValueTypeINTEL x) -> x)
+                          (showsPrec 11)
+
 
 instance Read PerformanceValueTypeINTEL where
   readPrec = enumReadPrec enumPrefixPerformanceValueTypeINTEL

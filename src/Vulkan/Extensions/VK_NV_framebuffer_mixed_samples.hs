@@ -1,125 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_NV_framebuffer_mixed_samples - device extension
---
--- == VK_NV_framebuffer_mixed_samples
---
--- [__Name String__]
---     @VK_NV_framebuffer_mixed_samples@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     153
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
--- [__Contact__]
---
---     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_framebuffer_mixed_samples:%20&body=@jeffbolznv%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2017-06-04
---
--- [__Contributors__]
---
---     -   Jeff Bolz, NVIDIA
---
--- == Description
---
--- This extension allows multisample rendering with a raster and
--- depth\/stencil sample count that is larger than the color sample count.
--- Rasterization and the results of the depth and stencil tests together
--- determine the portion of a pixel that is “covered”. It can be useful to
--- evaluate coverage at a higher frequency than color samples are stored.
--- This coverage is then “reduced” to a collection of covered color
--- samples, each having an opacity value corresponding to the fraction of
--- the color sample covered. The opacity can optionally be blended into
--- individual color samples.
---
--- Rendering with fewer color samples than depth\/stencil samples greatly
--- reduces the amount of memory and bandwidth consumed by the color buffer.
--- However, converting the coverage values into opacity introduces
--- artifacts where triangles share edges and /may/ not be suitable for
--- normal triangle mesh rendering.
---
--- One expected use case for this functionality is Stencil-then-Cover path
--- rendering (similar to the OpenGL GL_NV_path_rendering extension). The
--- stencil step determines the coverage (in the stencil buffer) for an
--- entire path at the higher sample frequency, and then the cover step
--- draws the path into the lower frequency color buffer using the coverage
--- information to antialias path edges. With this two-step process,
--- internal edges are fully covered when antialiasing is applied and there
--- is no corruption on these edges.
---
--- The key features of this extension are:
---
--- -   It allows render pass and framebuffer objects to be created where
---     the number of samples in the depth\/stencil attachment in a subpass
---     is a multiple of the number of samples in the color attachments in
---     the subpass.
---
--- -   A coverage reduction step is added to Fragment Operations which
---     converts a set of covered raster\/depth\/stencil samples to a set of
---     color samples that perform blending and color writes. The coverage
---     reduction step also includes an optional coverage modulation step,
---     multiplying color values by a fractional opacity corresponding to
---     the number of associated raster\/depth\/stencil samples covered.
---
--- == New Structures
---
--- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
---
---     -   'PipelineCoverageModulationStateCreateInfoNV'
---
--- == New Enums
---
--- -   'CoverageModulationModeNV'
---
--- == New Bitmasks
---
--- -   'PipelineCoverageModulationStateCreateFlagsNV'
---
--- == New Enum Constants
---
--- -   'NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME'
---
--- -   'NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV'
---
--- == Version History
---
--- -   Revision 1, 2017-06-04 (Jeff Bolz)
---
---     -   Internal revisions
---
--- = See Also
---
--- 'CoverageModulationModeNV',
--- 'PipelineCoverageModulationStateCreateFlagsNV',
--- 'PipelineCoverageModulationStateCreateInfoNV'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_NV_framebuffer_mixed_samples"
 module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  ( PipelineCoverageModulationStateCreateInfoNV(..)
                                                           , PipelineCoverageModulationStateCreateFlagsNV(..)
                                                           , CoverageModulationModeNV( COVERAGE_MODULATION_MODE_NONE_NV
@@ -183,97 +63,18 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV))
--- | VkPipelineCoverageModulationStateCreateInfoNV - Structure specifying
--- parameters controlling coverage modulation
---
--- = Description
---
--- If @coverageModulationTableEnable@ is
--- 'Vulkan.Core10.FundamentalTypes.FALSE', then for each color sample the
--- associated bits of the pixel coverage are counted and divided by the
--- number of associated bits to produce a modulation factor R in the range
--- (0,1] (a value of zero would have been killed due to a color coverage of
--- 0). Specifically:
---
--- -   N = value of @rasterizationSamples@
---
--- -   M = value of 'Vulkan.Core10.Pass.AttachmentDescription'::@samples@
---     for any color attachments
---
--- -   R = popcount(associated coverage bits) \/ (N \/ M)
---
--- If @coverageModulationTableEnable@ is
--- 'Vulkan.Core10.FundamentalTypes.TRUE', the value R is computed using a
--- programmable lookup table. The lookup table has N \/ M elements, and the
--- element of the table is selected by:
---
--- -   R = @pCoverageModulationTable@[popcount(associated coverage bits)-1]
---
--- Note that the table does not have an entry for popcount(associated
--- coverage bits) = 0, because such samples would have been killed.
---
--- The values of @pCoverageModulationTable@ /may/ be rounded to an
--- implementation-dependent precision, which is at least as fine as 1 \/ N,
--- and clamped to [0,1].
---
--- For each color attachment with a floating point or normalized color
--- format, each fragment output color value is replicated to M values which
--- /can/ each be modulated (multiplied) by that color sample’s associated
--- value of R. Which components are modulated is controlled by
--- @coverageModulationMode@.
---
--- If this structure is not present, it is as if @coverageModulationMode@
--- is 'COVERAGE_MODULATION_MODE_NONE_NV'.
---
--- If the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-coverage-reduction coverage reduction mode>
--- is
--- 'Vulkan.Extensions.VK_NV_coverage_reduction_mode.COVERAGE_REDUCTION_MODE_TRUNCATE_NV',
--- each color sample is associated with only a single coverage sample. In
--- this case, it is as if @coverageModulationMode@ is
--- 'COVERAGE_MODULATION_MODE_NONE_NV'.
---
--- == Valid Usage
---
--- -   #VUID-VkPipelineCoverageModulationStateCreateInfoNV-coverageModulationTableEnable-01405#
---     If @coverageModulationTableEnable@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE',
---     @coverageModulationTableCount@ /must/ be equal to the number of
---     rasterization samples divided by the number of color samples in the
---     subpass
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPipelineCoverageModulationStateCreateInfoNV-sType-sType#
---     @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV'
---
--- -   #VUID-VkPipelineCoverageModulationStateCreateInfoNV-flags-zerobitmask#
---     @flags@ /must/ be @0@
---
--- -   #VUID-VkPipelineCoverageModulationStateCreateInfoNV-coverageModulationMode-parameter#
---     @coverageModulationMode@ /must/ be a valid
---     'CoverageModulationModeNV' value
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32', 'CoverageModulationModeNV',
--- 'PipelineCoverageModulationStateCreateFlagsNV',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPipelineCoverageModulationStateCreateInfoNV"
 data PipelineCoverageModulationStateCreateInfoNV = PipelineCoverageModulationStateCreateInfoNV
-  { -- | @flags@ is reserved for future use.
+  { -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "flags"
     flags :: PipelineCoverageModulationStateCreateFlagsNV
-  , -- | @coverageModulationMode@ is a 'CoverageModulationModeNV' value
-    -- controlling which color components are modulated.
+  , -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "coverageModulationMode"
     coverageModulationMode :: CoverageModulationModeNV
-  , -- | @coverageModulationTableEnable@ controls whether the modulation factor
-    -- is looked up from a table in @pCoverageModulationTable@.
+  , -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "coverageModulationTableEnable"
     coverageModulationTableEnable :: Bool
-  , -- | @coverageModulationTableCount@ is the number of elements in
-    -- @pCoverageModulationTable@.
+  , -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "coverageModulationTableCount"
     coverageModulationTableCount :: Word32
-  , -- | @pCoverageModulationTable@ is a table of modulation factors containing a
-    -- value for each number of covered samples.
+  , -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "pCoverageModulationTable"
     coverageModulationTable :: Vector Float
   }
   deriving (Typeable)
@@ -338,16 +139,7 @@ instance Zero PipelineCoverageModulationStateCreateInfoNV where
            mempty
 
 
--- | VkPipelineCoverageModulationStateCreateFlagsNV - Reserved for future use
---
--- = Description
---
--- 'PipelineCoverageModulationStateCreateFlagsNV' is a bitmask type for
--- setting a mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'PipelineCoverageModulationStateCreateInfoNV'
+-- No documentation found for TopLevel "VkPipelineCoverageModulationStateCreateFlagsNV"
 newtype PipelineCoverageModulationStateCreateFlagsNV = PipelineCoverageModulationStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -362,12 +154,14 @@ enumPrefixPipelineCoverageModulationStateCreateFlagsNV = ""
 showTablePipelineCoverageModulationStateCreateFlagsNV :: [(PipelineCoverageModulationStateCreateFlagsNV, String)]
 showTablePipelineCoverageModulationStateCreateFlagsNV = []
 
+
 instance Show PipelineCoverageModulationStateCreateFlagsNV where
-  showsPrec = enumShowsPrec enumPrefixPipelineCoverageModulationStateCreateFlagsNV
-                            showTablePipelineCoverageModulationStateCreateFlagsNV
-                            conNamePipelineCoverageModulationStateCreateFlagsNV
-                            (\(PipelineCoverageModulationStateCreateFlagsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineCoverageModulationStateCreateFlagsNV
+                          showTablePipelineCoverageModulationStateCreateFlagsNV
+                          conNamePipelineCoverageModulationStateCreateFlagsNV
+                          (\(PipelineCoverageModulationStateCreateFlagsNV x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineCoverageModulationStateCreateFlagsNV where
   readPrec = enumReadPrec enumPrefixPipelineCoverageModulationStateCreateFlagsNV
@@ -376,25 +170,17 @@ instance Read PipelineCoverageModulationStateCreateFlagsNV where
                           PipelineCoverageModulationStateCreateFlagsNV
 
 
--- | VkCoverageModulationModeNV - Specify the coverage modulation mode
---
--- = See Also
---
--- 'PipelineCoverageModulationStateCreateInfoNV'
+-- No documentation found for TopLevel "VkCoverageModulationModeNV"
 newtype CoverageModulationModeNV = CoverageModulationModeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COVERAGE_MODULATION_MODE_NONE_NV' specifies that no components are
--- multiplied by the modulation factor.
+-- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_NONE_NV"
 pattern COVERAGE_MODULATION_MODE_NONE_NV  = CoverageModulationModeNV 0
--- | 'COVERAGE_MODULATION_MODE_RGB_NV' specifies that the red, green, and
--- blue components are multiplied by the modulation factor.
+-- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_RGB_NV"
 pattern COVERAGE_MODULATION_MODE_RGB_NV   = CoverageModulationModeNV 1
--- | 'COVERAGE_MODULATION_MODE_ALPHA_NV' specifies that the alpha component
--- is multiplied by the modulation factor.
+-- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_ALPHA_NV"
 pattern COVERAGE_MODULATION_MODE_ALPHA_NV = CoverageModulationModeNV 2
--- | 'COVERAGE_MODULATION_MODE_RGBA_NV' specifies that all components are
--- multiplied by the modulation factor.
+-- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_RGBA_NV"
 pattern COVERAGE_MODULATION_MODE_RGBA_NV  = CoverageModulationModeNV 3
 {-# complete COVERAGE_MODULATION_MODE_NONE_NV,
              COVERAGE_MODULATION_MODE_RGB_NV,
@@ -415,12 +201,14 @@ showTableCoverageModulationModeNV =
   , (COVERAGE_MODULATION_MODE_RGBA_NV , "RGBA_NV")
   ]
 
+
 instance Show CoverageModulationModeNV where
-  showsPrec = enumShowsPrec enumPrefixCoverageModulationModeNV
-                            showTableCoverageModulationModeNV
-                            conNameCoverageModulationModeNV
-                            (\(CoverageModulationModeNV x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixCoverageModulationModeNV
+                          showTableCoverageModulationModeNV
+                          conNameCoverageModulationModeNV
+                          (\(CoverageModulationModeNV x) -> x)
+                          (showsPrec 11)
+
 
 instance Read CoverageModulationModeNV where
   readPrec = enumReadPrec enumPrefixCoverageModulationModeNV

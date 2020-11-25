@@ -26,23 +26,12 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
--- | VkPhysicalDeviceShaderAtomicInt64Features - Structure describing
--- features supported by VK_KHR_shader_atomic_int64
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderAtomicInt64Features"
 data PhysicalDeviceShaderAtomicInt64Features = PhysicalDeviceShaderAtomicInt64Features
-  { -- | #extension-features-shaderBufferInt64Atomics# @shaderBufferInt64Atomics@
-    -- indicates whether shaders /can/ perform 64-bit unsigned and signed
-    -- integer atomic operations on buffers.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64Features" "shaderBufferInt64Atomics"
     shaderBufferInt64Atomics :: Bool
-  , -- | #extension-features-shaderSharedInt64Atomics# @shaderSharedInt64Atomics@
-    -- indicates whether shaders /can/ perform 64-bit unsigned and signed
-    -- integer atomic operations on shared memory.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64Features" "shaderSharedInt64Atomics"
     shaderSharedInt64Atomics :: Bool
   }
   deriving (Typeable, Eq)
@@ -74,6 +63,7 @@ instance FromCStruct PhysicalDeviceShaderAtomicInt64Features where
     shaderSharedInt64Atomics <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceShaderAtomicInt64Features
              (bool32ToBool shaderBufferInt64Atomics) (bool32ToBool shaderSharedInt64Atomics)
+
 
 instance Storable PhysicalDeviceShaderAtomicInt64Features where
   sizeOf ~_ = 24

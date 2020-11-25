@@ -52,107 +52,7 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkObjectType - Specify an enumeration to track object handle types
---
--- = Description
---
--- \'
---
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'ObjectType'                                  | Vulkan Handle Type                                        |
--- +===============================================+===========================================================+
--- | 'OBJECT_TYPE_UNKNOWN'                         | Unknown\/Undefined Handle                                 |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_INSTANCE'                        | 'Vulkan.Core10.Handles.Instance'                          |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_PHYSICAL_DEVICE'                 | 'Vulkan.Core10.Handles.PhysicalDevice'                    |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_DEVICE'                          | 'Vulkan.Core10.Handles.Device'                            |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_QUEUE'                           | 'Vulkan.Core10.Handles.Queue'                             |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_SEMAPHORE'                       | 'Vulkan.Core10.Handles.Semaphore'                         |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_COMMAND_BUFFER'                  | 'Vulkan.Core10.Handles.CommandBuffer'                     |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_FENCE'                           | 'Vulkan.Core10.Handles.Fence'                             |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_DEVICE_MEMORY'                   | 'Vulkan.Core10.Handles.DeviceMemory'                      |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_BUFFER'                          | 'Vulkan.Core10.Handles.Buffer'                            |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_IMAGE'                           | 'Vulkan.Core10.Handles.Image'                             |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_EVENT'                           | 'Vulkan.Core10.Handles.Event'                             |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_QUERY_POOL'                      | 'Vulkan.Core10.Handles.QueryPool'                         |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_BUFFER_VIEW'                     | 'Vulkan.Core10.Handles.BufferView'                        |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_IMAGE_VIEW'                      | 'Vulkan.Core10.Handles.ImageView'                         |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_SHADER_MODULE'                   | 'Vulkan.Core10.Handles.ShaderModule'                      |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_PIPELINE_CACHE'                  | 'Vulkan.Core10.Handles.PipelineCache'                     |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_PIPELINE_LAYOUT'                 | 'Vulkan.Core10.Handles.PipelineLayout'                    |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_RENDER_PASS'                     | 'Vulkan.Core10.Handles.RenderPass'                        |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_PIPELINE'                        | 'Vulkan.Core10.Handles.Pipeline'                          |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT'           | 'Vulkan.Core10.Handles.DescriptorSetLayout'               |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_SAMPLER'                         | 'Vulkan.Core10.Handles.Sampler'                           |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_DESCRIPTOR_POOL'                 | 'Vulkan.Core10.Handles.DescriptorPool'                    |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_DESCRIPTOR_SET'                  | 'Vulkan.Core10.Handles.DescriptorSet'                     |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_FRAMEBUFFER'                     | 'Vulkan.Core10.Handles.Framebuffer'                       |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_COMMAND_POOL'                    | 'Vulkan.Core10.Handles.CommandPool'                       |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION'        | 'Vulkan.Core11.Handles.SamplerYcbcrConversion'            |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE'      | 'Vulkan.Core11.Handles.DescriptorUpdateTemplate'          |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_SURFACE_KHR'                     | 'Vulkan.Extensions.Handles.SurfaceKHR'                    |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_SWAPCHAIN_KHR'                   | 'Vulkan.Extensions.Handles.SwapchainKHR'                  |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_DISPLAY_KHR'                     | 'Vulkan.Extensions.Handles.DisplayKHR'                    |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_DISPLAY_MODE_KHR'                | 'Vulkan.Extensions.Handles.DisplayModeKHR'                |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT'       | 'Vulkan.Extensions.Handles.DebugReportCallbackEXT'        |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV'     | 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV'      |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT'       | 'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT'        |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_VALIDATION_CACHE_EXT'            | 'Vulkan.Extensions.Handles.ValidationCacheEXT'            |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_ACCELERATION_STRUCTURE_NV'       | 'Vulkan.Extensions.Handles.AccelerationStructureNV'       |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR'      | 'Vulkan.Extensions.Handles.AccelerationStructureKHR'      |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL' | 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_DEFERRED_OPERATION_KHR'          | 'Vulkan.Extensions.Handles.DeferredOperationKHR'          |
--- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT'           | 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'            |
--- +-----------------------------------------------+-----------------------------------------------------------+
---
--- 'ObjectType' and Vulkan Handle Relationship
---
--- = See Also
---
--- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectNameInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectTagInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_device_memory_report.DeviceMemoryReportCallbackDataEXT',
--- 'Vulkan.Extensions.VK_EXT_private_data.getPrivateDataEXT',
--- 'Vulkan.Extensions.VK_EXT_private_data.setPrivateDataEXT'
+-- No documentation found for TopLevel "VkObjectType"
 newtype ObjectType = ObjectType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -331,9 +231,11 @@ showTableObjectType =
   , (OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION       , "SAMPLER_YCBCR_CONVERSION")
   ]
 
+
 instance Show ObjectType where
-  showsPrec =
-    enumShowsPrec enumPrefixObjectType showTableObjectType conNameObjectType (\(ObjectType x) -> x) (showsPrec 11)
+showsPrec =
+  enumShowsPrec enumPrefixObjectType showTableObjectType conNameObjectType (\(ObjectType x) -> x) (showsPrec 11)
+
 
 instance Read ObjectType where
   readPrec = enumReadPrec enumPrefixObjectType showTableObjectType conNameObjectType ObjectType

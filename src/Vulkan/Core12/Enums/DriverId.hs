@@ -25,27 +25,7 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkDriverId - Khronos driver IDs
---
--- = Description
---
--- Note
---
--- Khronos driver IDs may be allocated by vendors at any time. There may be
--- multiple driver IDs for the same vendor, representing different drivers
--- (for e.g. different platforms, proprietary or open source, etc.). Only
--- the latest canonical versions of this Specification, of the
--- corresponding @vk.xml@ API Registry, and of the corresponding
--- @vulkan_core.h@ header file /must/ contain all reserved Khronos driver
--- IDs.
---
--- Only driver IDs registered with Khronos are given symbolic names. There
--- /may/ be unregistered driver IDs returned.
---
--- = See Also
---
--- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.PhysicalDeviceDriverProperties',
--- 'Vulkan.Core12.PhysicalDeviceVulkan12Properties'
+-- No documentation found for TopLevel "VkDriverId"
 newtype DriverId = DriverId Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
@@ -117,8 +97,10 @@ showTableDriverId =
   , (DRIVER_ID_MOLTENVK                 , "MOLTENVK")
   ]
 
+
 instance Show DriverId where
-  showsPrec = enumShowsPrec enumPrefixDriverId showTableDriverId conNameDriverId (\(DriverId x) -> x) (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixDriverId showTableDriverId conNameDriverId (\(DriverId x) -> x) (showsPrec 11)
+
 
 instance Read DriverId where
   readPrec = enumReadPrec enumPrefixDriverId showTableDriverId conNameDriverId DriverId

@@ -1,277 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_debug_marker - device extension
---
--- == VK_EXT_debug_marker
---
--- [__Name String__]
---     @VK_EXT_debug_marker@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     23
---
--- [__Revision__]
---     4
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_EXT_debug_report@
---
--- [__Deprecation state__]
---
---     -   /Promoted/ to @VK_EXT_debug_utils@ extension
---
--- [__Special Use__]
---
---     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
---
--- [__Contact__]
---
---     -   Baldur Karlsson
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_marker:%20&body=@baldurk%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2017-01-31
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Baldur Karlsson
---
---     -   Dan Ginsburg, Valve
---
---     -   Jon Ashburn, LunarG
---
---     -   Kyle Spagnoli, NVIDIA
---
--- == Description
---
--- The @VK_EXT_debug_marker@ extension is a device extension. It introduces
--- concepts of object naming and tagging, for better tracking of Vulkan
--- objects, as well as additional commands for recording annotations of
--- named sections of a workload to aid organization and offline analysis in
--- external tools.
---
--- == New Commands
---
--- -   'cmdDebugMarkerBeginEXT'
---
--- -   'cmdDebugMarkerEndEXT'
---
--- -   'cmdDebugMarkerInsertEXT'
---
--- -   'debugMarkerSetObjectNameEXT'
---
--- -   'debugMarkerSetObjectTagEXT'
---
--- == New Structures
---
--- -   'DebugMarkerMarkerInfoEXT'
---
--- -   'DebugMarkerObjectNameInfoEXT'
---
--- -   'DebugMarkerObjectTagInfoEXT'
---
--- == New Enums
---
--- -   'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
---
--- == New Enum Constants
---
--- -   'EXT_DEBUG_MARKER_EXTENSION_NAME'
---
--- -   'EXT_DEBUG_MARKER_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT'
---
--- == Examples
---
--- __Example 1__
---
--- Associate a name with an image, for easier debugging in external tools
--- or with validation layers that can print a friendly name when referring
--- to objects in error messages.
---
--- >     extern VkDevice device;
--- >     extern VkImage image;
--- >
--- >     // Must call extension functions through a function pointer:
--- >     PFN_vkDebugMarkerSetObjectNameEXT pfnDebugMarkerSetObjectNameEXT = (PFN_vkDebugMarkerSetObjectNameEXT)vkGetDeviceProcAddr(device, "vkDebugMarkerSetObjectNameEXT");
--- >
--- >     // Set a name on the image
--- >     const VkDebugMarkerObjectNameInfoEXT imageNameInfo =
--- >     {
--- >         VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT, // sType
--- >         NULL,                                           // pNext
--- >         VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT,          // objectType
--- >         (uint64_t)image,                                // object
--- >         "Brick Diffuse Texture",                        // pObjectName
--- >     };
--- >
--- >     pfnDebugMarkerSetObjectNameEXT(device, &imageNameInfo);
--- >
--- >     // A subsequent error might print:
--- >     //   Image 'Brick Diffuse Texture' (0xc0dec0dedeadbeef) is used in a
--- >     //   command buffer with no memory bound to it.
---
--- __Example 2__
---
--- Annotating regions of a workload with naming information so that offline
--- analysis tools can display a more usable visualisation of the commands
--- submitted.
---
--- >     extern VkDevice device;
--- >     extern VkCommandBuffer commandBuffer;
--- >
--- >     // Must call extension functions through a function pointer:
--- >     PFN_vkCmdDebugMarkerBeginEXT pfnCmdDebugMarkerBeginEXT = (PFN_vkCmdDebugMarkerBeginEXT)vkGetDeviceProcAddr(device, "vkCmdDebugMarkerBeginEXT");
--- >     PFN_vkCmdDebugMarkerEndEXT pfnCmdDebugMarkerEndEXT = (PFN_vkCmdDebugMarkerEndEXT)vkGetDeviceProcAddr(device, "vkCmdDebugMarkerEndEXT");
--- >     PFN_vkCmdDebugMarkerInsertEXT pfnCmdDebugMarkerInsertEXT = (PFN_vkCmdDebugMarkerInsertEXT)vkGetDeviceProcAddr(device, "vkCmdDebugMarkerInsertEXT");
--- >
--- >     // Describe the area being rendered
--- >     const VkDebugMarkerMarkerInfoEXT houseMarker =
--- >     {
--- >         VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT, // sType
--- >         NULL,                                           // pNext
--- >         "Brick House",                                  // pMarkerName
--- >         { 1.0f, 0.0f, 0.0f, 1.0f },                     // color
--- >     };
--- >
--- >     // Start an annotated group of calls under the 'Brick House' name
--- >     pfnCmdDebugMarkerBeginEXT(commandBuffer, &houseMarker);
--- >     {
--- >         // A mutable structure for each part being rendered
--- >         VkDebugMarkerMarkerInfoEXT housePartMarker =
--- >         {
--- >             VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT, // sType
--- >             NULL,                                           // pNext
--- >             NULL,                                           // pMarkerName
--- >             { 0.0f, 0.0f, 0.0f, 0.0f },                     // color
--- >         };
--- >
--- >         // Set the name and insert the marker
--- >         housePartMarker.pMarkerName = "Walls";
--- >         pfnCmdDebugMarkerInsertEXT(commandBuffer, &housePartMarker);
--- >
--- >         // Insert the drawcall for the walls
--- >         vkCmdDrawIndexed(commandBuffer, 1000, 1, 0, 0, 0);
--- >
--- >         // Insert a recursive region for two sets of windows
--- >         housePartMarker.pMarkerName = "Windows";
--- >         pfnCmdDebugMarkerBeginEXT(commandBuffer, &housePartMarker);
--- >         {
--- >             vkCmdDrawIndexed(commandBuffer, 75, 6, 1000, 0, 0);
--- >             vkCmdDrawIndexed(commandBuffer, 100, 2, 1450, 0, 0);
--- >         }
--- >         pfnCmdDebugMarkerEndEXT(commandBuffer);
--- >
--- >         housePartMarker.pMarkerName = "Front Door";
--- >         pfnCmdDebugMarkerInsertEXT(commandBuffer, &housePartMarker);
--- >
--- >         vkCmdDrawIndexed(commandBuffer, 350, 1, 1650, 0, 0);
--- >
--- >         housePartMarker.pMarkerName = "Roof";
--- >         pfnCmdDebugMarkerInsertEXT(commandBuffer, &housePartMarker);
--- >
--- >         vkCmdDrawIndexed(commandBuffer, 500, 1, 2000, 0, 0);
--- >     }
--- >     // End the house annotation started above
--- >     pfnCmdDebugMarkerEndEXT(commandBuffer);
---
--- == Issues
---
--- 1) Should the tag or name for an object be specified using the @pNext@
--- parameter in the object’s @Vk*CreateInfo@ structure?
---
--- __RESOLVED__: No. While this fits with other Vulkan patterns and would
--- allow more type safety and future proofing against future objects, it
--- has notable downsides. In particular passing the name at @Vk*CreateInfo@
--- time does not allow renaming, prevents late binding of naming
--- information, and does not allow naming of implicitly created objects
--- such as queues and swapchain images.
---
--- 2) Should the command annotation functions 'cmdDebugMarkerBeginEXT' and
--- 'cmdDebugMarkerEndEXT' support the ability to specify a color?
---
--- __RESOLVED__: Yes. The functions have been expanded to take an optional
--- color which can be used at will by implementations consuming the command
--- buffer annotations in their visualisation.
---
--- 3) Should the functions added in this extension accept an extensible
--- structure as their parameter for a more flexible API, as opposed to
--- direct function parameters? If so, which functions?
---
--- __RESOLVED__: Yes. All functions have been modified to take a structure
--- type with extensible @pNext@ pointer, to allow future extensions to add
--- additional annotation information in the same commands.
---
--- == Version History
---
--- -   Revision 1, 2016-02-24 (Baldur Karlsson)
---
---     -   Initial draft, based on LunarG marker spec
---
--- -   Revision 2, 2016-02-26 (Baldur Karlsson)
---
---     -   Renamed Dbg to DebugMarker in function names
---
---     -   Allow markers in secondary command buffers under certain
---         circumstances
---
---     -   Minor language tweaks and edits
---
--- -   Revision 3, 2016-04-23 (Baldur Karlsson)
---
---     -   Reorganise spec layout to closer match desired organisation
---
---     -   Added optional color to markers (both regions and inserted
---         labels)
---
---     -   Changed functions to take extensible structs instead of direct
---         function parameters
---
--- -   Revision 4, 2017-01-31 (Baldur Karlsson)
---
---     -   Added explicit dependency on VK_EXT_debug_report
---
---     -   Moved definition of
---         'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
---         to debug report chapter.
---
---     -   Fixed typo in dates in revision history
---
--- = See Also
---
--- 'DebugMarkerMarkerInfoEXT', 'DebugMarkerObjectNameInfoEXT',
--- 'DebugMarkerObjectTagInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT',
--- 'cmdDebugMarkerBeginEXT', 'cmdDebugMarkerEndEXT',
--- 'cmdDebugMarkerInsertEXT', 'debugMarkerSetObjectNameEXT',
--- 'debugMarkerSetObjectTagEXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_debug_marker"
 module Vulkan.Extensions.VK_EXT_debug_marker  ( debugMarkerSetObjectNameEXT
                                               , debugMarkerSetObjectTagEXT
                                               , cmdDebugMarkerBeginEXT
@@ -356,42 +84,12 @@ foreign import ccall
   "dynamic" mkVkDebugMarkerSetObjectNameEXT
   :: FunPtr (Ptr Device_T -> Ptr DebugMarkerObjectNameInfoEXT -> IO Result) -> Ptr Device_T -> Ptr DebugMarkerObjectNameInfoEXT -> IO Result
 
--- | vkDebugMarkerSetObjectNameEXT - Give a user-friendly name to an object
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDebugMarkerSetObjectNameEXT-device-parameter# @device@
---     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDebugMarkerSetObjectNameEXT-pNameInfo-parameter# @pNameInfo@
---     /must/ be a valid pointer to a valid 'DebugMarkerObjectNameInfoEXT'
---     structure
---
--- == Host Synchronization
---
--- -   Host access to @pNameInfo->object@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'DebugMarkerObjectNameInfoEXT', 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkDebugMarkerSetObjectNameEXT"
 debugMarkerSetObjectNameEXT :: forall io
                              . (MonadIO io)
-                            => -- | @device@ is the device that created the object.
+                            => -- No documentation found for Nested "vkDebugMarkerSetObjectNameEXT" "device"
                                Device
-                            -> -- | @pNameInfo@ is a pointer to a 'DebugMarkerObjectNameInfoEXT' structure
-                               -- specifying the parameters of the name to set on the object.
+                            -> -- No documentation found for Nested "vkDebugMarkerSetObjectNameEXT" "pNameInfo"
                                DebugMarkerObjectNameInfoEXT
                             -> io ()
 debugMarkerSetObjectNameEXT device nameInfo = liftIO . evalContT $ do
@@ -411,42 +109,12 @@ foreign import ccall
   "dynamic" mkVkDebugMarkerSetObjectTagEXT
   :: FunPtr (Ptr Device_T -> Ptr DebugMarkerObjectTagInfoEXT -> IO Result) -> Ptr Device_T -> Ptr DebugMarkerObjectTagInfoEXT -> IO Result
 
--- | vkDebugMarkerSetObjectTagEXT - Attach arbitrary data to an object
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDebugMarkerSetObjectTagEXT-device-parameter# @device@ /must/
---     be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDebugMarkerSetObjectTagEXT-pTagInfo-parameter# @pTagInfo@
---     /must/ be a valid pointer to a valid 'DebugMarkerObjectTagInfoEXT'
---     structure
---
--- == Host Synchronization
---
--- -   Host access to @pTagInfo->object@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'DebugMarkerObjectTagInfoEXT', 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkDebugMarkerSetObjectTagEXT"
 debugMarkerSetObjectTagEXT :: forall io
                             . (MonadIO io)
-                           => -- | @device@ is the device that created the object.
+                           => -- No documentation found for Nested "vkDebugMarkerSetObjectTagEXT" "device"
                               Device
-                           -> -- | @pTagInfo@ is a pointer to a 'DebugMarkerObjectTagInfoEXT' structure
-                              -- specifying the parameters of the tag to attach to the object.
+                           -> -- No documentation found for Nested "vkDebugMarkerSetObjectTagEXT" "pTagInfo"
                               DebugMarkerObjectTagInfoEXT
                            -> io ()
 debugMarkerSetObjectTagEXT device tagInfo = liftIO . evalContT $ do
@@ -466,54 +134,12 @@ foreign import ccall
   "dynamic" mkVkCmdDebugMarkerBeginEXT
   :: FunPtr (Ptr CommandBuffer_T -> Ptr DebugMarkerMarkerInfoEXT -> IO ()) -> Ptr CommandBuffer_T -> Ptr DebugMarkerMarkerInfoEXT -> IO ()
 
--- | vkCmdDebugMarkerBeginEXT - Open a command buffer marker region
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdDebugMarkerBeginEXT-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdDebugMarkerBeginEXT-pMarkerInfo-parameter# @pMarkerInfo@
---     /must/ be a valid pointer to a valid 'DebugMarkerMarkerInfoEXT'
---     structure
---
--- -   #VUID-vkCmdDebugMarkerBeginEXT-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdDebugMarkerBeginEXT-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugMarkerMarkerInfoEXT'
+-- No documentation found for TopLevel "vkCmdDebugMarkerBeginEXT"
 cmdDebugMarkerBeginEXT :: forall io
                         . (MonadIO io)
-                       => -- | @commandBuffer@ is the command buffer into which the command is
-                          -- recorded.
+                       => -- No documentation found for Nested "vkCmdDebugMarkerBeginEXT" "commandBuffer"
                           CommandBuffer
-                       -> -- | @pMarkerInfo@ is a pointer to a 'DebugMarkerMarkerInfoEXT' structure
-                          -- specifying the parameters of the marker region to open.
+                       -> -- No documentation found for Nested "vkCmdDebugMarkerBeginEXT" "pMarkerInfo"
                           DebugMarkerMarkerInfoEXT
                        -> io ()
 cmdDebugMarkerBeginEXT commandBuffer markerInfo = liftIO . evalContT $ do
@@ -533,68 +159,10 @@ foreign import ccall
   "dynamic" mkVkCmdDebugMarkerEndEXT
   :: FunPtr (Ptr CommandBuffer_T -> IO ()) -> Ptr CommandBuffer_T -> IO ()
 
--- | vkCmdDebugMarkerEndEXT - Close a command buffer marker region
---
--- = Description
---
--- An application /may/ open a marker region in one command buffer and
--- close it in another, or otherwise split marker regions across multiple
--- command buffers or multiple queue submissions. When viewed from the
--- linear series of submissions to a single queue, the calls to
--- 'cmdDebugMarkerBeginEXT' and 'cmdDebugMarkerEndEXT' /must/ be matched
--- and balanced.
---
--- == Valid Usage
---
--- -   #VUID-vkCmdDebugMarkerEndEXT-commandBuffer-01239# There /must/ be an
---     outstanding 'cmdDebugMarkerBeginEXT' command prior to the
---     'cmdDebugMarkerEndEXT' on the queue that @commandBuffer@ is
---     submitted to
---
--- -   #VUID-vkCmdDebugMarkerEndEXT-commandBuffer-01240# If @commandBuffer@
---     is a secondary command buffer, there /must/ be an outstanding
---     'cmdDebugMarkerBeginEXT' command recorded to @commandBuffer@ that
---     has not previously been ended by a call to 'cmdDebugMarkerEndEXT'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdDebugMarkerEndEXT-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdDebugMarkerEndEXT-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdDebugMarkerEndEXT-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer'
+-- No documentation found for TopLevel "vkCmdDebugMarkerEndEXT"
 cmdDebugMarkerEndEXT :: forall io
                       . (MonadIO io)
-                     => -- | @commandBuffer@ is the command buffer into which the command is
-                        -- recorded.
+                     => -- No documentation found for Nested "vkCmdDebugMarkerEndEXT" "commandBuffer"
                         CommandBuffer
                      -> io ()
 cmdDebugMarkerEndEXT commandBuffer = liftIO $ do
@@ -613,54 +181,12 @@ foreign import ccall
   "dynamic" mkVkCmdDebugMarkerInsertEXT
   :: FunPtr (Ptr CommandBuffer_T -> Ptr DebugMarkerMarkerInfoEXT -> IO ()) -> Ptr CommandBuffer_T -> Ptr DebugMarkerMarkerInfoEXT -> IO ()
 
--- | vkCmdDebugMarkerInsertEXT - Insert a marker label into a command buffer
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdDebugMarkerInsertEXT-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdDebugMarkerInsertEXT-pMarkerInfo-parameter# @pMarkerInfo@
---     /must/ be a valid pointer to a valid 'DebugMarkerMarkerInfoEXT'
---     structure
---
--- -   #VUID-vkCmdDebugMarkerInsertEXT-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdDebugMarkerInsertEXT-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugMarkerMarkerInfoEXT'
+-- No documentation found for TopLevel "vkCmdDebugMarkerInsertEXT"
 cmdDebugMarkerInsertEXT :: forall io
                          . (MonadIO io)
-                        => -- | @commandBuffer@ is the command buffer into which the command is
-                           -- recorded.
+                        => -- No documentation found for Nested "vkCmdDebugMarkerInsertEXT" "commandBuffer"
                            CommandBuffer
-                        -> -- | @pMarkerInfo@ is a pointer to a 'DebugMarkerMarkerInfoEXT' structure
-                           -- specifying the parameters of the marker to insert.
+                        -> -- No documentation found for Nested "vkCmdDebugMarkerInsertEXT" "pMarkerInfo"
                            DebugMarkerMarkerInfoEXT
                         -> io ()
 cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
@@ -673,49 +199,14 @@ cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
   pure $ ()
 
 
--- | VkDebugMarkerObjectNameInfoEXT - Specify parameters of a name to give to
--- an object
---
--- = Description
---
--- Applications /may/ change the name associated with an object simply by
--- calling 'debugMarkerSetObjectNameEXT' again with a new string. To remove
--- a previously set name, @pObjectName@ /should/ be set to an empty string.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'debugMarkerSetObjectNameEXT'
+
+-- No documentation found for TopLevel "VkDebugMarkerObjectNameInfoEXT"
 data DebugMarkerObjectNameInfoEXT = DebugMarkerObjectNameInfoEXT
-  { -- | @objectType@ is a
-    -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
-    -- specifying the type of the object to be named.
-    --
-    -- #VUID-VkDebugMarkerObjectNameInfoEXT-objectType-01490# @objectType@
-    -- /must/ not be
-    -- 'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'
-    --
-    -- #VUID-VkDebugMarkerObjectNameInfoEXT-objectType-parameter# @objectType@
-    -- /must/ be a valid
-    -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT' value
+  { -- No documentation found for Nested "VkDebugMarkerObjectNameInfoEXT" "objectType"
     objectType :: DebugReportObjectTypeEXT
-  , -- | @object@ is the object to be named.
-    --
-    -- #VUID-VkDebugMarkerObjectNameInfoEXT-object-01491# @object@ /must/ not
-    -- be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
-    --
-    -- #VUID-VkDebugMarkerObjectNameInfoEXT-object-01492# @object@ /must/ be a
-    -- Vulkan object of the type associated with @objectType@ as defined in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
+  , -- No documentation found for Nested "VkDebugMarkerObjectNameInfoEXT" "object"
     object :: Word64
-  , -- | @pObjectName@ is a null-terminated UTF-8 string specifying the name to
-    -- apply to @object@.
-    --
-    -- #VUID-VkDebugMarkerObjectNameInfoEXT-pObjectName-parameter#
-    -- @pObjectName@ /must/ be a null-terminated UTF-8 string
+  , -- No documentation found for Nested "VkDebugMarkerObjectNameInfoEXT" "pObjectName"
     objectName :: ByteString
   }
   deriving (Typeable)
@@ -760,56 +251,18 @@ instance Zero DebugMarkerObjectNameInfoEXT where
            mempty
 
 
--- | VkDebugMarkerObjectTagInfoEXT - Specify parameters of a tag to attach to
--- an object
---
--- = Description
---
--- The @tagName@ parameter gives a name or identifier to the type of data
--- being tagged. This can be used by debugging layers to easily filter for
--- only data that can be used by that implementation.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'debugMarkerSetObjectTagEXT'
+
+-- No documentation found for TopLevel "VkDebugMarkerObjectTagInfoEXT"
 data DebugMarkerObjectTagInfoEXT = DebugMarkerObjectTagInfoEXT
-  { -- | @objectType@ is a
-    -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
-    -- specifying the type of the object to be named.
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-objectType-01493# @objectType@
-    -- /must/ not be
-    -- 'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-objectType-parameter# @objectType@
-    -- /must/ be a valid
-    -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT' value
+  { -- No documentation found for Nested "VkDebugMarkerObjectTagInfoEXT" "objectType"
     objectType :: DebugReportObjectTypeEXT
-  , -- | @object@ is the object to be tagged.
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-object-01494# @object@ /must/ not be
-    -- 'Vulkan.Core10.APIConstants.NULL_HANDLE'
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-object-01495# @object@ /must/ be a
-    -- Vulkan object of the type associated with @objectType@ as defined in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
+  , -- No documentation found for Nested "VkDebugMarkerObjectTagInfoEXT" "object"
     object :: Word64
-  , -- | @tagName@ is a numerical identifier of the tag.
+  , -- No documentation found for Nested "VkDebugMarkerObjectTagInfoEXT" "tagName"
     tagName :: Word64
-  , -- | @tagSize@ is the number of bytes of data to attach to the object.
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-tagSize-arraylength# @tagSize@
-    -- /must/ be greater than @0@
+  , -- No documentation found for Nested "VkDebugMarkerObjectTagInfoEXT" "tagSize"
     tagSize :: Word64
-  , -- | @pTag@ is a pointer to an array of @tagSize@ bytes containing the data
-    -- to be associated with the object.
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-pTag-parameter# @pTag@ /must/ be a
-    -- valid pointer to an array of @tagSize@ bytes
+  , -- No documentation found for Nested "VkDebugMarkerObjectTagInfoEXT" "pTag"
     tag :: Ptr ()
   }
   deriving (Typeable)
@@ -851,6 +304,7 @@ instance FromCStruct DebugMarkerObjectTagInfoEXT where
     pure $ DebugMarkerObjectTagInfoEXT
              objectType object tagName ((\(CSize a) -> a) tagSize) pTag
 
+
 instance Storable DebugMarkerObjectTagInfoEXT where
   sizeOf ~_ = 56
   alignment ~_ = 8
@@ -866,26 +320,12 @@ instance Zero DebugMarkerObjectTagInfoEXT where
            zero
 
 
--- | VkDebugMarkerMarkerInfoEXT - Specify parameters of a command buffer
--- marker region
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'cmdDebugMarkerBeginEXT', 'cmdDebugMarkerInsertEXT'
+
+-- No documentation found for TopLevel "VkDebugMarkerMarkerInfoEXT"
 data DebugMarkerMarkerInfoEXT = DebugMarkerMarkerInfoEXT
-  { -- | @pMarkerName@ is a pointer to a null-terminated UTF-8 string containing
-    -- the name of the marker.
-    --
-    -- #VUID-VkDebugMarkerMarkerInfoEXT-pMarkerName-parameter# @pMarkerName@
-    -- /must/ be a null-terminated UTF-8 string
+  { -- No documentation found for Nested "VkDebugMarkerMarkerInfoEXT" "pMarkerName"
     markerName :: ByteString
-  , -- | @color@ is an /optional/ RGBA color value that can be associated with
-    -- the marker. A particular implementation /may/ choose to ignore this
-    -- color value. The values contain RGBA values in order, in the range 0.0
-    -- to 1.0. If all elements in @color@ are set to 0.0 then it is ignored.
+  , -- No documentation found for Nested "VkDebugMarkerMarkerInfoEXT" "color"
     color :: (Float, Float, Float, Float)
   }
   deriving (Typeable)

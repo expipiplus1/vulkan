@@ -19,23 +19,11 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type SemaphoreImportFlags = SemaphoreImportFlagBits
 
--- | VkSemaphoreImportFlagBits - Bitmask specifying additional parameters of
--- semaphore payload import
---
--- = Description
---
--- These bits have the following meanings:
---
--- = See Also
---
--- 'SemaphoreImportFlags'
+-- No documentation found for TopLevel "VkSemaphoreImportFlagBits"
 newtype SemaphoreImportFlagBits = SemaphoreImportFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'SEMAPHORE_IMPORT_TEMPORARY_BIT' specifies that the semaphore payload
--- will be imported only temporarily, as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
--- regardless of the permanence of @handleType@.
+-- No documentation found for Nested "VkSemaphoreImportFlagBits" "VK_SEMAPHORE_IMPORT_TEMPORARY_BIT"
 pattern SEMAPHORE_IMPORT_TEMPORARY_BIT = SemaphoreImportFlagBits 0x00000001
 
 conNameSemaphoreImportFlagBits :: String
@@ -47,12 +35,14 @@ enumPrefixSemaphoreImportFlagBits = "SEMAPHORE_IMPORT_TEMPORARY_BIT"
 showTableSemaphoreImportFlagBits :: [(SemaphoreImportFlagBits, String)]
 showTableSemaphoreImportFlagBits = [(SEMAPHORE_IMPORT_TEMPORARY_BIT, "")]
 
+
 instance Show SemaphoreImportFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSemaphoreImportFlagBits
-                            showTableSemaphoreImportFlagBits
-                            conNameSemaphoreImportFlagBits
-                            (\(SemaphoreImportFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixSemaphoreImportFlagBits
+                          showTableSemaphoreImportFlagBits
+                          conNameSemaphoreImportFlagBits
+                          (\(SemaphoreImportFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read SemaphoreImportFlagBits where
   readPrec = enumReadPrec enumPrefixSemaphoreImportFlagBits

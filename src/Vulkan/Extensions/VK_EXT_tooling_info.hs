@@ -1,172 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_tooling_info - device extension
---
--- == VK_EXT_tooling_info
---
--- [__Name String__]
---     @VK_EXT_tooling_info@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     246
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
--- [__Contact__]
---
---     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_tooling_info:%20&body=@tobski%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2018-11-05
---
--- [__Contributors__]
---
---     -   Rolando Caloca
---
---     -   Matthaeus Chajdas
---
---     -   Baldur Karlsson
---
---     -   Daniel Rakos
---
--- == Description
---
--- When an error occurs during application development, a common question
--- is \"What tools are actually running right now?\" This extension adds
--- the ability to query that information directly from the Vulkan
--- implementation.
---
--- Outdated versions of one tool might not play nicely with another, or
--- perhaps a tool is not actually running when it should have been. Trying
--- to figure that out can cause headaches as it is necessary to consult
--- each known tool to figure out what is going on — in some cases the tool
--- might not even be known.
---
--- Typically, the expectation is that developers will simply print out this
--- information for visual inspection when an issue occurs, however a small
--- amount of semantic information about what the tool is doing is provided
--- to help identify it programmatically. For example, if the advertised
--- limits or features of an implementation are unexpected, is there a tool
--- active which modifies these limits? Or if an application is providing
--- debug markers, but the implementation is not actually doing anything
--- with that information, this can quickly point that out.
---
--- == New Commands
---
--- -   'getPhysicalDeviceToolPropertiesEXT'
---
--- == New Structures
---
--- -   'PhysicalDeviceToolPropertiesEXT'
---
--- == New Enums
---
--- -   'ToolPurposeFlagBitsEXT'
---
--- == New Bitmasks
---
--- -   'ToolPurposeFlagsEXT'
---
--- == New Enum Constants
---
--- -   'EXT_TOOLING_INFO_EXTENSION_NAME'
---
--- -   'EXT_TOOLING_INFO_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>
--- is supported:
---
--- -   Extending 'ToolPurposeFlagBitsEXT':
---
---     -   'TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
--- is supported:
---
--- -   Extending 'ToolPurposeFlagBitsEXT':
---
---     -   'TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>
--- is supported:
---
--- -   Extending 'ToolPurposeFlagBitsEXT':
---
---     -   'TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT'
---
---     -   'TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT'
---
--- == Examples
---
--- __Printing Tool Information__
---
--- > uint32_t num_tools;
--- > VkPhysicalDeviceToolPropertiesEXT *pToolProperties;
--- > vkGetPhysicalDeviceToolPropertiesEXT(physicalDevice, &num_tools, NULL);
--- >
--- > pToolProperties = (VkPhysicalDeviceToolPropertiesEXT*)malloc(sizeof(VkPhysicalDeviceToolPropertiesEXT) * num_tools);
--- >
--- > vkGetPhysicalDeviceToolPropertiesEXT(physicalDevice, &num_tools, pToolProperties);
--- >
--- > for (int i = 0; i < num_tools; ++i) {
--- >     printf("%s:\n", pToolProperties[i].name);
--- >     printf("Version:\n");
--- >     printf("%s:\n", pToolProperties[i].version);
--- >     printf("Description:\n");
--- >     printf("\t%s\n", pToolProperties[i].description);
--- >     printf("Purposes:\n");
--- >     printf("\t%s\n", VkToolPurposeFlagBitsEXT_to_string(pToolProperties[i].purposes));
--- >     if (strnlen_s(pToolProperties[i].layer,VK_MAX_EXTENSION_NAME_SIZE) > 0) {
--- >         printf("Corresponding Layer:\n");
--- >         printf("\t%s\n", pToolProperties[i].layer);
--- >     }
--- > }
---
--- == Issues
---
--- 1) Why is this information separate from the layer mechanism?
---
--- Some tooling may be built into a driver, or be part of the Vulkan loader
--- etc. - and so tying this information directly to layers would’ve been
--- awkward at best.
---
--- == Version History
---
--- -   Revision 1, 2018-11-05 (Tobias Hector)
---
---     -   Initial draft
---
--- = See Also
---
--- 'PhysicalDeviceToolPropertiesEXT', 'ToolPurposeFlagBitsEXT',
--- 'ToolPurposeFlagsEXT', 'getPhysicalDeviceToolPropertiesEXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_tooling_info Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_tooling_info"
 module Vulkan.Extensions.VK_EXT_tooling_info  ( getPhysicalDeviceToolPropertiesEXT
                                               , PhysicalDeviceToolPropertiesEXT(..)
                                               , ToolPurposeFlagsEXT
@@ -257,58 +90,10 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceToolPropertiesEXT
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr PhysicalDeviceToolPropertiesEXT -> IO Result) -> Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr PhysicalDeviceToolPropertiesEXT -> IO Result
 
--- | vkGetPhysicalDeviceToolPropertiesEXT - Reports properties of tools
--- active on the specified physical device
---
--- = Description
---
--- If @pToolProperties@ is @NULL@, then the number of tools currently
--- active on @physicalDevice@ is returned in @pToolCount@. Otherwise,
--- @pToolCount@ /must/ point to a variable set by the user to the number of
--- elements in the @pToolProperties@ array, and on return the variable is
--- overwritten with the number of structures actually written to
--- @pToolProperties@. If @pToolCount@ is less than the number of currently
--- active tools, at most @pToolCount@ structures will be written.
---
--- The count and properties of active tools /may/ change in response to
--- events outside the scope of the specification. An application /should/
--- assume these properties might change at any given time.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetPhysicalDeviceToolPropertiesEXT-physicalDevice-parameter#
---     @physicalDevice@ /must/ be a valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkGetPhysicalDeviceToolPropertiesEXT-pToolCount-parameter#
---     @pToolCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   #VUID-vkGetPhysicalDeviceToolPropertiesEXT-pToolProperties-parameter#
---     If the value referenced by @pToolCount@ is not @0@, and
---     @pToolProperties@ is not @NULL@, @pToolProperties@ /must/ be a valid
---     pointer to an array of @pToolCount@
---     'PhysicalDeviceToolPropertiesEXT' structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice',
--- 'PhysicalDeviceToolPropertiesEXT'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceToolPropertiesEXT"
 getPhysicalDeviceToolPropertiesEXT :: forall io
                                     . (MonadIO io)
-                                   => -- | @physicalDevice@ is the handle to the physical device to query for
-                                      -- active tools.
+                                   => -- No documentation found for Nested "vkGetPhysicalDeviceToolPropertiesEXT" "physicalDevice"
                                       PhysicalDevice
                                    -> io (Result, ("toolProperties" ::: Vector PhysicalDeviceToolPropertiesEXT))
 getPhysicalDeviceToolPropertiesEXT physicalDevice = liftIO . evalContT $ do
@@ -330,31 +115,18 @@ getPhysicalDeviceToolPropertiesEXT physicalDevice = liftIO . evalContT $ do
   pure $ ((r'), pToolProperties')
 
 
--- | VkPhysicalDeviceToolPropertiesEXT - Structure providing information
--- about an active tool
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'ToolPurposeFlagsEXT', 'getPhysicalDeviceToolPropertiesEXT'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceToolPropertiesEXT"
 data PhysicalDeviceToolPropertiesEXT = PhysicalDeviceToolPropertiesEXT
-  { -- | @name@ is a null-terminated UTF-8 string containing the name of the
-    -- tool.
+  { -- No documentation found for Nested "VkPhysicalDeviceToolPropertiesEXT" "name"
     name :: ByteString
-  , -- | @version@ is a null-terminated UTF-8 string containing the version of
-    -- the tool.
+  , -- No documentation found for Nested "VkPhysicalDeviceToolPropertiesEXT" "version"
     version :: ByteString
-  , -- | @purposes@ is a bitmask of 'ToolPurposeFlagBitsEXT' which is populated
-    -- with purposes supported by the tool.
+  , -- No documentation found for Nested "VkPhysicalDeviceToolPropertiesEXT" "purposes"
     purposes :: ToolPurposeFlagsEXT
-  , -- | @description@ is a null-terminated UTF-8 string containing a description
-    -- of the tool.
+  , -- No documentation found for Nested "VkPhysicalDeviceToolPropertiesEXT" "description"
     description :: ByteString
-  , -- | @layer@ is a null-terminated UTF-8 string that contains the name of the
-    -- layer implementing the tool, if the tool is implemented in a layer -
-    -- otherwise it /may/ be an empty string.
+  , -- No documentation found for Nested "VkPhysicalDeviceToolPropertiesEXT" "layer"
     layer :: ByteString
   }
   deriving (Typeable)
@@ -396,6 +168,7 @@ instance FromCStruct PhysicalDeviceToolPropertiesEXT where
     pure $ PhysicalDeviceToolPropertiesEXT
              name version purposes description layer
 
+
 instance Storable PhysicalDeviceToolPropertiesEXT where
   sizeOf ~_ = 1048
   alignment ~_ = 8
@@ -413,45 +186,23 @@ instance Zero PhysicalDeviceToolPropertiesEXT where
 
 type ToolPurposeFlagsEXT = ToolPurposeFlagBitsEXT
 
--- | VkToolPurposeFlagBitsEXT - Bitmask specifying the purposes of an active
--- tool
---
--- = See Also
---
--- 'ToolPurposeFlagsEXT'
+-- No documentation found for TopLevel "VkToolPurposeFlagBitsEXT"
 newtype ToolPurposeFlagBitsEXT = ToolPurposeFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'TOOL_PURPOSE_VALIDATION_BIT_EXT' specifies that the tool provides
--- validation of API usage.
+-- No documentation found for Nested "VkToolPurposeFlagBitsEXT" "VK_TOOL_PURPOSE_VALIDATION_BIT_EXT"
 pattern TOOL_PURPOSE_VALIDATION_BIT_EXT          = ToolPurposeFlagBitsEXT 0x00000001
--- | 'TOOL_PURPOSE_PROFILING_BIT_EXT' specifies that the tool provides
--- profiling of API usage.
+-- No documentation found for Nested "VkToolPurposeFlagBitsEXT" "VK_TOOL_PURPOSE_PROFILING_BIT_EXT"
 pattern TOOL_PURPOSE_PROFILING_BIT_EXT           = ToolPurposeFlagBitsEXT 0x00000002
--- | 'TOOL_PURPOSE_TRACING_BIT_EXT' specifies that the tool is capturing data
--- about the application’s API usage, including anything from simple
--- logging to capturing data for later replay.
+-- No documentation found for Nested "VkToolPurposeFlagBitsEXT" "VK_TOOL_PURPOSE_TRACING_BIT_EXT"
 pattern TOOL_PURPOSE_TRACING_BIT_EXT             = ToolPurposeFlagBitsEXT 0x00000004
--- | 'TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT' specifies that the tool
--- provides additional API features\/extensions on top of the underlying
--- implementation.
+-- No documentation found for Nested "VkToolPurposeFlagBitsEXT" "VK_TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT"
 pattern TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT = ToolPurposeFlagBitsEXT 0x00000008
--- | 'TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT' specifies that the tool
--- modifies the API features\/limits\/extensions presented to the
--- application.
+-- No documentation found for Nested "VkToolPurposeFlagBitsEXT" "VK_TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT"
 pattern TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT  = ToolPurposeFlagBitsEXT 0x00000010
--- | 'TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT' specifies that the tool consumes
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-debug-markers debug markers>
--- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-debug-annotation object debug annotation>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-queue-labels queue labels>,
--- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-command-buffer-labels command buffer labels>
+-- No documentation found for Nested "VkToolPurposeFlagBitsEXT" "VK_TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT"
 pattern TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT       = ToolPurposeFlagBitsEXT 0x00000040
--- | 'TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT' specifies that the tool reports
--- additional information to the application via callbacks specified by
--- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT' or
--- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT'
+-- No documentation found for Nested "VkToolPurposeFlagBitsEXT" "VK_TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT"
 pattern TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT     = ToolPurposeFlagBitsEXT 0x00000020
 
 conNameToolPurposeFlagBitsEXT :: String
@@ -471,12 +222,14 @@ showTableToolPurposeFlagBitsEXT =
   , (TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT    , "DEBUG_REPORTING_BIT_EXT")
   ]
 
+
 instance Show ToolPurposeFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixToolPurposeFlagBitsEXT
-                            showTableToolPurposeFlagBitsEXT
-                            conNameToolPurposeFlagBitsEXT
-                            (\(ToolPurposeFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixToolPurposeFlagBitsEXT
+                          showTableToolPurposeFlagBitsEXT
+                          conNameToolPurposeFlagBitsEXT
+                          (\(ToolPurposeFlagBitsEXT x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read ToolPurposeFlagBitsEXT where
   readPrec = enumReadPrec enumPrefixToolPurposeFlagBitsEXT

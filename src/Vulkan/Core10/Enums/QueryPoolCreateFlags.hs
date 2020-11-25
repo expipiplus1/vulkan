@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkQueryPoolCreateFlags - Reserved for future use
---
--- = Description
---
--- 'QueryPoolCreateFlags' is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.Query.QueryPoolCreateInfo'
+-- No documentation found for TopLevel "VkQueryPoolCreateFlags"
 newtype QueryPoolCreateFlags = QueryPoolCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixQueryPoolCreateFlags = ""
 showTableQueryPoolCreateFlags :: [(QueryPoolCreateFlags, String)]
 showTableQueryPoolCreateFlags = []
 
+
 instance Show QueryPoolCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixQueryPoolCreateFlags
-                            showTableQueryPoolCreateFlags
-                            conNameQueryPoolCreateFlags
-                            (\(QueryPoolCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixQueryPoolCreateFlags
+                          showTableQueryPoolCreateFlags
+                          conNameQueryPoolCreateFlags
+                          (\(QueryPoolCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read QueryPoolCreateFlags where
   readPrec = enumReadPrec enumPrefixQueryPoolCreateFlags

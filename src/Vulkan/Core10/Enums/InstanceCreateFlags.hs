@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkInstanceCreateFlags - Reserved for future use
---
--- = Description
---
--- 'InstanceCreateFlags' is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo'
+-- No documentation found for TopLevel "VkInstanceCreateFlags"
 newtype InstanceCreateFlags = InstanceCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixInstanceCreateFlags = ""
 showTableInstanceCreateFlags :: [(InstanceCreateFlags, String)]
 showTableInstanceCreateFlags = []
 
+
 instance Show InstanceCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixInstanceCreateFlags
-                            showTableInstanceCreateFlags
-                            conNameInstanceCreateFlags
-                            (\(InstanceCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixInstanceCreateFlags
+                          showTableInstanceCreateFlags
+                          conNameInstanceCreateFlags
+                          (\(InstanceCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read InstanceCreateFlags where
   readPrec = enumReadPrec enumPrefixInstanceCreateFlags

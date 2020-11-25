@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkPipelineMultisampleStateCreateFlags - Reserved for future use
---
--- = Description
---
--- 'PipelineMultisampleStateCreateFlags' is a bitmask type for setting a
--- mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
+-- No documentation found for TopLevel "VkPipelineMultisampleStateCreateFlags"
 newtype PipelineMultisampleStateCreateFlags = PipelineMultisampleStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixPipelineMultisampleStateCreateFlags = ""
 showTablePipelineMultisampleStateCreateFlags :: [(PipelineMultisampleStateCreateFlags, String)]
 showTablePipelineMultisampleStateCreateFlags = []
 
+
 instance Show PipelineMultisampleStateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineMultisampleStateCreateFlags
-                            showTablePipelineMultisampleStateCreateFlags
-                            conNamePipelineMultisampleStateCreateFlags
-                            (\(PipelineMultisampleStateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineMultisampleStateCreateFlags
+                          showTablePipelineMultisampleStateCreateFlags
+                          conNamePipelineMultisampleStateCreateFlags
+                          (\(PipelineMultisampleStateCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineMultisampleStateCreateFlags where
   readPrec = enumReadPrec enumPrefixPipelineMultisampleStateCreateFlags

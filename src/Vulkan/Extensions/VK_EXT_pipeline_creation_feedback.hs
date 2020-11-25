@@ -1,120 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_pipeline_creation_feedback - device extension
---
--- == VK_EXT_pipeline_creation_feedback
---
--- [__Name String__]
---     @VK_EXT_pipeline_creation_feedback@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     193
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
--- [__Special Use__]
---
---     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
---
--- [__Contact__]
---
---     -   Jean-Francois Roy
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_pipeline_creation_feedback:%20&body=@jfroy%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2019-03-12
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Jean-Francois Roy, Google
---
---     -   Hai Nguyen, Google
---
---     -   Andrew Ellem, Google
---
---     -   Bob Fraser, Google
---
---     -   Sujeevan Rajayogam, Google
---
---     -   Jan-Harald Fredriksen, ARM
---
---     -   Jeff Leger, Qualcomm Technologies, Inc.
---
---     -   Jeff Bolz, NVIDIA
---
---     -   Daniel Koch, NVIDIA
---
---     -   Neil Henning, AMD
---
--- == Description
---
--- This extension adds a mechanism to provide feedback to an application
--- about pipeline creation, with the specific goal of allowing a feedback
--- loop between build systems and in-the-field application executions to
--- ensure effective pipeline caches are shipped to customers.
---
--- == New Structures
---
--- -   'PipelineCreationFeedbackEXT'
---
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
---     'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
---     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR':
---
---     -   'PipelineCreationFeedbackCreateInfoEXT'
---
--- == New Enums
---
--- -   'PipelineCreationFeedbackFlagBitsEXT'
---
--- == New Bitmasks
---
--- -   'PipelineCreationFeedbackFlagsEXT'
---
--- == New Enum Constants
---
--- -   'EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME'
---
--- -   'EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT'
---
--- == Version History
---
--- -   Revision 1, 2019-03-12 (Jean-Francois Roy)
---
---     -   Initial revision
---
--- = See Also
---
--- 'PipelineCreationFeedbackCreateInfoEXT', 'PipelineCreationFeedbackEXT',
--- 'PipelineCreationFeedbackFlagBitsEXT',
--- 'PipelineCreationFeedbackFlagsEXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_pipeline_creation_feedback"
 module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback  ( PipelineCreationFeedbackEXT(..)
                                                             , PipelineCreationFeedbackCreateInfoEXT(..)
                                                             , PipelineCreationFeedbackFlagsEXT
@@ -160,27 +45,12 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT))
--- | VkPipelineCreationFeedbackEXT - Feedback about the creation of a
--- pipeline or pipeline stage
---
--- = Description
---
--- If the 'PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT' is not set in @flags@,
--- an implementation /must/ not set any other bits in @flags@, and the
--- values of all other 'PipelineCreationFeedbackEXT' data members are
--- undefined.
---
--- = See Also
---
--- 'PipelineCreationFeedbackCreateInfoEXT',
--- 'PipelineCreationFeedbackFlagBitsEXT',
--- 'PipelineCreationFeedbackFlagsEXT'
+
+-- No documentation found for TopLevel "VkPipelineCreationFeedbackEXT"
 data PipelineCreationFeedbackEXT = PipelineCreationFeedbackEXT
-  { -- | @flags@ is a bitmask of 'PipelineCreationFeedbackFlagBitsEXT' providing
-    -- feedback about the creation of a pipeline or of a pipeline stage.
+  { -- No documentation found for Nested "VkPipelineCreationFeedbackEXT" "flags"
     flags :: PipelineCreationFeedbackFlagsEXT
-  , -- | @duration@ is the duration spent creating a pipeline or pipeline stage
-    -- in nanoseconds.
+  , -- No documentation found for Nested "VkPipelineCreationFeedbackEXT" "duration"
     duration :: Word64
   }
   deriving (Typeable, Eq)
@@ -209,6 +79,7 @@ instance FromCStruct PipelineCreationFeedbackEXT where
     pure $ PipelineCreationFeedbackEXT
              flags duration
 
+
 instance Storable PipelineCreationFeedbackEXT where
   sizeOf ~_ = 16
   alignment ~_ = 8
@@ -221,99 +92,14 @@ instance Zero PipelineCreationFeedbackEXT where
            zero
 
 
--- | VkPipelineCreationFeedbackCreateInfoEXT - Request for feedback about the
--- creation of a pipeline
---
--- = Description
---
--- An implementation /should/ write pipeline creation feedback to
--- @pPipelineCreationFeedback@ and /may/ write pipeline stage creation
--- feedback to @pPipelineStageCreationFeedbacks@. An implementation /must/
--- set or clear the 'PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT' in
--- 'PipelineCreationFeedbackEXT'::@flags@ for @pPipelineCreationFeedback@
--- and every element of @pPipelineStageCreationFeedbacks@.
---
--- Note
---
--- One common scenario for an implementation to skip per-stage feedback is
--- when 'PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT'
--- is set in @pPipelineCreationFeedback@.
---
--- When chained to
--- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
--- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV', or
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', the @i@ element of
--- @pPipelineStageCreationFeedbacks@ corresponds to the @i@ element of
--- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'::@pStages@,
--- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV'::@pStages@,
--- or 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@. When
--- chained to 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo', the first
--- element of @pPipelineStageCreationFeedbacks@ corresponds to
--- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'::@stage@.
---
--- == Valid Usage
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02668#
---     When chained to 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
---     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
---     /must/ equal
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@stageCount@
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02669#
---     When chained to 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
---     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
---     /must/ equal 1
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02670#
---     When chained to
---     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
---     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
---     /must/ equal
---     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'::@stageCount@
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-02969#
---     When chained to
---     'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
---     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
---     /must/ equal
---     'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV'::@stageCount@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-sType-sType# @sType@
---     /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT'
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pPipelineCreationFeedback-parameter#
---     @pPipelineCreationFeedback@ /must/ be a valid pointer to a
---     'PipelineCreationFeedbackEXT' structure
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pPipelineStageCreationFeedbacks-parameter#
---     @pPipelineStageCreationFeedbacks@ /must/ be a valid pointer to an
---     array of @pipelineStageCreationFeedbackCount@
---     'PipelineCreationFeedbackEXT' structures
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfoEXT-pipelineStageCreationFeedbackCount-arraylength#
---     @pipelineStageCreationFeedbackCount@ /must/ be greater than @0@
---
--- = See Also
---
--- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
--- 'PipelineCreationFeedbackEXT',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
--- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPipelineCreationFeedbackCreateInfoEXT"
 data PipelineCreationFeedbackCreateInfoEXT = PipelineCreationFeedbackCreateInfoEXT
-  { -- | @pPipelineCreationFeedback@ is a pointer to a
-    -- 'PipelineCreationFeedbackEXT' structure.
+  { -- No documentation found for Nested "VkPipelineCreationFeedbackCreateInfoEXT" "pPipelineCreationFeedback"
     pipelineCreationFeedback :: Ptr PipelineCreationFeedbackEXT
-  , -- | @pipelineStageCreationFeedbackCount@ is the number of elements in
-    -- @pPipelineStageCreationFeedbacks@.
+  , -- No documentation found for Nested "VkPipelineCreationFeedbackCreateInfoEXT" "pipelineStageCreationFeedbackCount"
     pipelineStageCreationFeedbackCount :: Word32
-  , -- | @pPipelineStageCreationFeedbacks@ is a pointer to an array of
-    -- @pipelineStageCreationFeedbackCount@ 'PipelineCreationFeedbackEXT'
-    -- structures.
+  , -- No documentation found for Nested "VkPipelineCreationFeedbackCreateInfoEXT" "pPipelineStageCreationFeedbacks"
     pipelineStageCreationFeedbacks :: Ptr PipelineCreationFeedbackEXT
   }
   deriving (Typeable, Eq)
@@ -349,6 +135,7 @@ instance FromCStruct PipelineCreationFeedbackCreateInfoEXT where
     pure $ PipelineCreationFeedbackCreateInfoEXT
              pPipelineCreationFeedback pipelineStageCreationFeedbackCount pPipelineStageCreationFeedbacks
 
+
 instance Storable PipelineCreationFeedbackCreateInfoEXT where
   sizeOf ~_ = 40
   alignment ~_ = 8
@@ -364,61 +151,16 @@ instance Zero PipelineCreationFeedbackCreateInfoEXT where
 
 type PipelineCreationFeedbackFlagsEXT = PipelineCreationFeedbackFlagBitsEXT
 
--- | VkPipelineCreationFeedbackFlagBitsEXT - Bitmask specifying pipeline or
--- pipeline stage creation feedback
---
--- = See Also
---
--- 'PipelineCreationFeedbackCreateInfoEXT', 'PipelineCreationFeedbackEXT',
--- 'PipelineCreationFeedbackFlagsEXT'
+-- No documentation found for TopLevel "VkPipelineCreationFeedbackFlagBitsEXT"
 newtype PipelineCreationFeedbackFlagBitsEXT = PipelineCreationFeedbackFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT' indicates that the feedback
--- information is valid.
+-- No documentation found for Nested "VkPipelineCreationFeedbackFlagBitsEXT" "VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT"
 pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT = PipelineCreationFeedbackFlagBitsEXT 0x00000001
--- | 'PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT'
--- indicates that a readily usable pipeline or pipeline stage was found in
--- the @pipelineCache@ specified by the application in the pipeline
--- creation command.
---
--- An implementation /should/ set the
--- 'PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT' bit
--- if it was able to avoid the large majority of pipeline or pipeline stage
--- creation work by using the @pipelineCache@ parameter of
--- 'Vulkan.Core10.Pipeline.createGraphicsPipelines',
--- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.createRayTracingPipelinesKHR',
--- 'Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV', or
--- 'Vulkan.Core10.Pipeline.createComputePipelines'. When an implementation
--- sets this bit for the entire pipeline, it /may/ leave it unset for any
--- stage.
---
--- Note
---
--- Implementations are encouraged to provide a meaningful signal to
--- applications using this bit. The intention is to communicate to the
--- application that the pipeline or pipeline stage was created \"as fast as
--- it gets\" using the pipeline cache provided by the application. If an
--- implementation uses an internal cache, it is discouraged from setting
--- this bit as the feedback would be unactionable.
+-- No documentation found for Nested "VkPipelineCreationFeedbackFlagBitsEXT" "VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT"
 pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT =
   PipelineCreationFeedbackFlagBitsEXT 0x00000002
--- | 'PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT'
--- indicates that the base pipeline specified by the @basePipelineHandle@
--- or @basePipelineIndex@ member of the @Vk*PipelineCreateInfo@ structure
--- was used to accelerate the creation of the pipeline.
---
--- An implementation /should/ set the
--- 'PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT' bit if
--- it was able to avoid a significant amount of work by using the base
--- pipeline.
---
--- Note
---
--- While \"significant amount of work\" is subjective, implementations are
--- encouraged to provide a meaningful signal to applications using this
--- bit. For example, a 1% reduction in duration may not warrant setting
--- this bit, while a 50% reduction would.
+-- No documentation found for Nested "VkPipelineCreationFeedbackFlagBitsEXT" "VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT"
 pattern PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT = PipelineCreationFeedbackFlagBitsEXT 0x00000004
 
 conNamePipelineCreationFeedbackFlagBitsEXT :: String
@@ -434,12 +176,14 @@ showTablePipelineCreationFeedbackFlagBitsEXT =
   , (PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT    , "BASE_PIPELINE_ACCELERATION_BIT_EXT")
   ]
 
+
 instance Show PipelineCreationFeedbackFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixPipelineCreationFeedbackFlagBitsEXT
-                            showTablePipelineCreationFeedbackFlagBitsEXT
-                            conNamePipelineCreationFeedbackFlagBitsEXT
-                            (\(PipelineCreationFeedbackFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineCreationFeedbackFlagBitsEXT
+                          showTablePipelineCreationFeedbackFlagBitsEXT
+                          conNamePipelineCreationFeedbackFlagBitsEXT
+                          (\(PipelineCreationFeedbackFlagBitsEXT x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineCreationFeedbackFlagBitsEXT where
   readPrec = enumReadPrec enumPrefixPipelineCreationFeedbackFlagBitsEXT

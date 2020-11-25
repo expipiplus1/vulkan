@@ -19,17 +19,11 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type AttachmentDescriptionFlags = AttachmentDescriptionFlagBits
 
--- | VkAttachmentDescriptionFlagBits - Bitmask specifying additional
--- properties of an attachment
---
--- = See Also
---
--- 'AttachmentDescriptionFlags'
+-- No documentation found for TopLevel "VkAttachmentDescriptionFlagBits"
 newtype AttachmentDescriptionFlagBits = AttachmentDescriptionFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT' specifies that the attachment
--- aliases the same device memory as other attachments.
+-- No documentation found for Nested "VkAttachmentDescriptionFlagBits" "VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"
 pattern ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = AttachmentDescriptionFlagBits 0x00000001
 
 conNameAttachmentDescriptionFlagBits :: String
@@ -41,12 +35,14 @@ enumPrefixAttachmentDescriptionFlagBits = "ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"
 showTableAttachmentDescriptionFlagBits :: [(AttachmentDescriptionFlagBits, String)]
 showTableAttachmentDescriptionFlagBits = [(ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT, "")]
 
+
 instance Show AttachmentDescriptionFlagBits where
-  showsPrec = enumShowsPrec enumPrefixAttachmentDescriptionFlagBits
-                            showTableAttachmentDescriptionFlagBits
-                            conNameAttachmentDescriptionFlagBits
-                            (\(AttachmentDescriptionFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixAttachmentDescriptionFlagBits
+                          showTableAttachmentDescriptionFlagBits
+                          conNameAttachmentDescriptionFlagBits
+                          (\(AttachmentDescriptionFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read AttachmentDescriptionFlagBits where
   readPrec = enumReadPrec enumPrefixAttachmentDescriptionFlagBits

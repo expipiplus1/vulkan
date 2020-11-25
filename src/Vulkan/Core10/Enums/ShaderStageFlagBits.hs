@@ -34,61 +34,41 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type ShaderStageFlags = ShaderStageFlagBits
 
--- | VkShaderStageFlagBits - Bitmask specifying a pipeline stage
---
--- = Description
---
--- Note
---
--- 'SHADER_STAGE_ALL_GRAPHICS' only includes the original five graphics
--- stages included in Vulkan 1.0, and not any stages added by extensions.
--- Thus, it may not have the desired effect in all cases.
---
--- = See Also
---
--- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo',
--- 'ShaderStageFlags',
--- 'Vulkan.Extensions.VK_AMD_shader_info.getShaderInfoAMD'
+-- No documentation found for TopLevel "VkShaderStageFlagBits"
 newtype ShaderStageFlagBits = ShaderStageFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'SHADER_STAGE_VERTEX_BIT' specifies the vertex stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_VERTEX_BIT"
 pattern SHADER_STAGE_VERTEX_BIT                  = ShaderStageFlagBits 0x00000001
--- | 'SHADER_STAGE_TESSELLATION_CONTROL_BIT' specifies the tessellation
--- control stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT"
 pattern SHADER_STAGE_TESSELLATION_CONTROL_BIT    = ShaderStageFlagBits 0x00000002
--- | 'SHADER_STAGE_TESSELLATION_EVALUATION_BIT' specifies the tessellation
--- evaluation stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT"
 pattern SHADER_STAGE_TESSELLATION_EVALUATION_BIT = ShaderStageFlagBits 0x00000004
--- | 'SHADER_STAGE_GEOMETRY_BIT' specifies the geometry stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_GEOMETRY_BIT"
 pattern SHADER_STAGE_GEOMETRY_BIT                = ShaderStageFlagBits 0x00000008
--- | 'SHADER_STAGE_FRAGMENT_BIT' specifies the fragment stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_FRAGMENT_BIT"
 pattern SHADER_STAGE_FRAGMENT_BIT                = ShaderStageFlagBits 0x00000010
--- | 'SHADER_STAGE_COMPUTE_BIT' specifies the compute stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_COMPUTE_BIT"
 pattern SHADER_STAGE_COMPUTE_BIT                 = ShaderStageFlagBits 0x00000020
--- | 'SHADER_STAGE_ALL_GRAPHICS' is a combination of bits used as shorthand
--- to specify all graphics stages defined above (excluding the compute
--- stage).
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_ALL_GRAPHICS"
 pattern SHADER_STAGE_ALL_GRAPHICS                = ShaderStageFlagBits 0x0000001f
--- | 'SHADER_STAGE_ALL' is a combination of bits used as shorthand to specify
--- all shader stages supported by the device, including all additional
--- stages which are introduced by extensions.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_ALL"
 pattern SHADER_STAGE_ALL                         = ShaderStageFlagBits 0x7fffffff
--- | 'SHADER_STAGE_MESH_BIT_NV' specifies the mesh stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_MESH_BIT_NV"
 pattern SHADER_STAGE_MESH_BIT_NV                 = ShaderStageFlagBits 0x00000080
--- | 'SHADER_STAGE_TASK_BIT_NV' specifies the task stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_TASK_BIT_NV"
 pattern SHADER_STAGE_TASK_BIT_NV                 = ShaderStageFlagBits 0x00000040
--- | 'SHADER_STAGE_CALLABLE_BIT_KHR' specifies the callable stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_CALLABLE_BIT_KHR"
 pattern SHADER_STAGE_CALLABLE_BIT_KHR            = ShaderStageFlagBits 0x00002000
--- | 'SHADER_STAGE_INTERSECTION_BIT_KHR' specifies the intersection stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_INTERSECTION_BIT_KHR"
 pattern SHADER_STAGE_INTERSECTION_BIT_KHR        = ShaderStageFlagBits 0x00001000
--- | 'SHADER_STAGE_MISS_BIT_KHR' specifies the miss stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_MISS_BIT_KHR"
 pattern SHADER_STAGE_MISS_BIT_KHR                = ShaderStageFlagBits 0x00000800
--- | 'SHADER_STAGE_CLOSEST_HIT_BIT_KHR' specifies the closest hit stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR"
 pattern SHADER_STAGE_CLOSEST_HIT_BIT_KHR         = ShaderStageFlagBits 0x00000400
--- | 'SHADER_STAGE_ANY_HIT_BIT_KHR' specifies the any-hit stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_ANY_HIT_BIT_KHR"
 pattern SHADER_STAGE_ANY_HIT_BIT_KHR             = ShaderStageFlagBits 0x00000200
--- | 'SHADER_STAGE_RAYGEN_BIT_KHR' specifies the ray generation stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_RAYGEN_BIT_KHR"
 pattern SHADER_STAGE_RAYGEN_BIT_KHR              = ShaderStageFlagBits 0x00000100
 
 conNameShaderStageFlagBits :: String
@@ -117,12 +97,14 @@ showTableShaderStageFlagBits =
   , (SHADER_STAGE_RAYGEN_BIT_KHR             , "RAYGEN_BIT_KHR")
   ]
 
+
 instance Show ShaderStageFlagBits where
-  showsPrec = enumShowsPrec enumPrefixShaderStageFlagBits
-                            showTableShaderStageFlagBits
-                            conNameShaderStageFlagBits
-                            (\(ShaderStageFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixShaderStageFlagBits
+                          showTableShaderStageFlagBits
+                          conNameShaderStageFlagBits
+                          (\(ShaderStageFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read ShaderStageFlagBits where
   readPrec = enumReadPrec enumPrefixShaderStageFlagBits

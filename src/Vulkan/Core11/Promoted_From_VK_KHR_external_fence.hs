@@ -28,35 +28,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXPORT_FE
 import Vulkan.Core11.Enums.FenceImportFlagBits (FenceImportFlagBits(..))
 import Vulkan.Core11.Enums.FenceImportFlagBits (FenceImportFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
--- | VkExportFenceCreateInfo - Structure specifying handle types that can be
--- exported from a fence
---
--- == Valid Usage
---
--- -   #VUID-VkExportFenceCreateInfo-handleTypes-01446# The bits in
---     @handleTypes@ /must/ be supported and compatible, as reported by
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.ExternalFenceProperties'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkExportFenceCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO'
---
--- -   #VUID-VkExportFenceCreateInfo-handleTypes-parameter# @handleTypes@
---     /must/ be a valid combination of
---     'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
---     values
---
--- = See Also
---
--- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkExportFenceCreateInfo"
 data ExportFenceCreateInfo = ExportFenceCreateInfo
-  { -- | @handleTypes@ is a bitmask of
-    -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
-    -- specifying one or more fence handle types the application /can/ export
-    -- from the resulting fence. The application /can/ request multiple handle
-    -- types for the same fence.
+  { -- No documentation found for Nested "VkExportFenceCreateInfo" "handleTypes"
     handleTypes :: ExternalFenceHandleTypeFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -83,6 +58,7 @@ instance FromCStruct ExportFenceCreateInfo where
     handleTypes <- peek @ExternalFenceHandleTypeFlags ((p `plusPtr` 16 :: Ptr ExternalFenceHandleTypeFlags))
     pure $ ExportFenceCreateInfo
              handleTypes
+
 
 instance Storable ExportFenceCreateInfo where
   sizeOf ~_ = 24

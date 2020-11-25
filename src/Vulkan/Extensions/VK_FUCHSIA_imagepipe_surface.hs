@@ -1,96 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_FUCHSIA_imagepipe_surface - instance extension
---
--- == VK_FUCHSIA_imagepipe_surface
---
--- [__Name String__]
---     @VK_FUCHSIA_imagepipe_surface@
---
--- [__Extension Type__]
---     Instance extension
---
--- [__Registered Extension Number__]
---     215
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_surface@
---
--- [__Contact__]
---
---     -   Craig Stout
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_FUCHSIA_imagepipe_surface:%20&body=@cdotstout%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2018-07-27
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Craig Stout, Google
---
---     -   Ian Elliott, Google
---
---     -   Jesse Hall, Google
---
--- == Description
---
--- The @VK_FUCHSIA_imagepipe_surface@ extension is an instance extension.
--- It provides a mechanism to create a
--- 'Vulkan.Extensions.Handles.SurfaceKHR' object (defined by the
--- @VK_KHR_surface@ extension) that refers to a Fuchsia @imagePipeHandle@.
---
--- == New Commands
---
--- -   'createImagePipeSurfaceFUCHSIA'
---
--- == New Structures
---
--- -   'ImagePipeSurfaceCreateInfoFUCHSIA'
---
--- == New Bitmasks
---
--- -   'ImagePipeSurfaceCreateFlagsFUCHSIA'
---
--- == New Enum Constants
---
--- -   'FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME'
---
--- -   'FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA'
---
--- == Version History
---
--- -   Revision 1, 2018-07-27 (Craig Stout)
---
---     -   Initial draft.
---
--- = See Also
---
--- 'ImagePipeSurfaceCreateFlagsFUCHSIA',
--- 'ImagePipeSurfaceCreateInfoFUCHSIA', 'createImagePipeSurfaceFUCHSIA'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_imagepipe_surface Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_FUCHSIA_imagepipe_surface"
 module Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface  ( createImagePipeSurfaceFUCHSIA
                                                        , ImagePipeSurfaceCreateInfoFUCHSIA(..)
                                                        , ImagePipeSurfaceCreateFlagsFUCHSIA(..)
@@ -167,55 +76,14 @@ foreign import ccall
   "dynamic" mkVkCreateImagePipeSurfaceFUCHSIA
   :: FunPtr (Ptr Instance_T -> Ptr ImagePipeSurfaceCreateInfoFUCHSIA -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result) -> Ptr Instance_T -> Ptr ImagePipeSurfaceCreateInfoFUCHSIA -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
 
--- | vkCreateImagePipeSurfaceFUCHSIA - Create a
--- 'Vulkan.Extensions.Handles.SurfaceKHR' object for a Fuchsia ImagePipe
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateImagePipeSurfaceFUCHSIA-instance-parameter# @instance@
---     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
---
--- -   #VUID-vkCreateImagePipeSurfaceFUCHSIA-pCreateInfo-parameter#
---     @pCreateInfo@ /must/ be a valid pointer to a valid
---     'ImagePipeSurfaceCreateInfoFUCHSIA' structure
---
--- -   #VUID-vkCreateImagePipeSurfaceFUCHSIA-pAllocator-parameter# If
---     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
---     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     structure
---
--- -   #VUID-vkCreateImagePipeSurfaceFUCHSIA-pSurface-parameter# @pSurface@
---     /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'ImagePipeSurfaceCreateInfoFUCHSIA', 'Vulkan.Core10.Handles.Instance',
--- 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- No documentation found for TopLevel "vkCreateImagePipeSurfaceFUCHSIA"
 createImagePipeSurfaceFUCHSIA :: forall io
                                . (MonadIO io)
-                              => -- | @instance@ is the instance to associate with the surface.
+                              => -- No documentation found for Nested "vkCreateImagePipeSurfaceFUCHSIA" "instance"
                                  Instance
-                              -> -- | @pCreateInfo@ is a pointer to a 'ImagePipeSurfaceCreateInfoFUCHSIA'
-                                 -- structure containing parameters affecting the creation of the surface
-                                 -- object.
+                              -> -- No documentation found for Nested "vkCreateImagePipeSurfaceFUCHSIA" "pCreateInfo"
                                  ImagePipeSurfaceCreateInfoFUCHSIA
-                              -> -- | @pAllocator@ is the allocator used for host memory allocated for the
-                                 -- surface object when there is no more specific allocator available (see
-                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                              -> -- No documentation found for Nested "vkCreateImagePipeSurfaceFUCHSIA" "pAllocator"
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io (SurfaceKHR)
 createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalContT $ do
@@ -234,27 +102,12 @@ createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalCont
   pure $ (pSurface)
 
 
--- | VkImagePipeSurfaceCreateInfoFUCHSIA - Structure specifying parameters of
--- a newly created ImagePipe surface object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'ImagePipeSurfaceCreateFlagsFUCHSIA',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'createImagePipeSurfaceFUCHSIA'
+
+-- No documentation found for TopLevel "VkImagePipeSurfaceCreateInfoFUCHSIA"
 data ImagePipeSurfaceCreateInfoFUCHSIA = ImagePipeSurfaceCreateInfoFUCHSIA
-  { -- | @flags@ is reserved for future use.
-    --
-    -- #VUID-VkImagePipeSurfaceCreateInfoFUCHSIA-flags-zerobitmask# @flags@
-    -- /must/ be @0@
+  { -- No documentation found for Nested "VkImagePipeSurfaceCreateInfoFUCHSIA" "flags"
     flags :: ImagePipeSurfaceCreateFlagsFUCHSIA
-  , -- | @imagePipeHandle@ is a @zx_handle_t@ referring to the ImagePipe to
-    -- associate with the surface.
-    --
-    -- #VUID-VkImagePipeSurfaceCreateInfoFUCHSIA-imagePipeHandle-00000#
-    -- @imagePipeHandle@ /must/ be a valid @zx_handle_t@
+  , -- No documentation found for Nested "VkImagePipeSurfaceCreateInfoFUCHSIA" "imagePipeHandle"
     imagePipeHandle :: Zx_handle_t
   }
   deriving (Typeable, Eq)
@@ -286,6 +139,7 @@ instance FromCStruct ImagePipeSurfaceCreateInfoFUCHSIA where
     pure $ ImagePipeSurfaceCreateInfoFUCHSIA
              flags imagePipeHandle
 
+
 instance Storable ImagePipeSurfaceCreateInfoFUCHSIA where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -298,16 +152,7 @@ instance Zero ImagePipeSurfaceCreateInfoFUCHSIA where
            zero
 
 
--- | VkImagePipeSurfaceCreateFlagsFUCHSIA - Reserved for future use
---
--- = Description
---
--- 'ImagePipeSurfaceCreateFlagsFUCHSIA' is a bitmask type for setting a
--- mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'ImagePipeSurfaceCreateInfoFUCHSIA'
+-- No documentation found for TopLevel "VkImagePipeSurfaceCreateFlagsFUCHSIA"
 newtype ImagePipeSurfaceCreateFlagsFUCHSIA = ImagePipeSurfaceCreateFlagsFUCHSIA Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -322,12 +167,14 @@ enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA = ""
 showTableImagePipeSurfaceCreateFlagsFUCHSIA :: [(ImagePipeSurfaceCreateFlagsFUCHSIA, String)]
 showTableImagePipeSurfaceCreateFlagsFUCHSIA = []
 
+
 instance Show ImagePipeSurfaceCreateFlagsFUCHSIA where
-  showsPrec = enumShowsPrec enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA
-                            showTableImagePipeSurfaceCreateFlagsFUCHSIA
-                            conNameImagePipeSurfaceCreateFlagsFUCHSIA
-                            (\(ImagePipeSurfaceCreateFlagsFUCHSIA x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA
+                          showTableImagePipeSurfaceCreateFlagsFUCHSIA
+                          conNameImagePipeSurfaceCreateFlagsFUCHSIA
+                          (\(ImagePipeSurfaceCreateFlagsFUCHSIA x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read ImagePipeSurfaceCreateFlagsFUCHSIA where
   readPrec = enumReadPrec enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA

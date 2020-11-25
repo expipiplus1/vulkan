@@ -96,62 +96,14 @@ foreign import ccall
   "dynamic" mkVkCreateBuffer
   :: FunPtr (Ptr Device_T -> Ptr (SomeStruct BufferCreateInfo) -> Ptr AllocationCallbacks -> Ptr Buffer -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct BufferCreateInfo) -> Ptr AllocationCallbacks -> Ptr Buffer -> IO Result
 
--- | vkCreateBuffer - Create a new buffer object
---
--- == Valid Usage
---
--- -   #VUID-vkCreateBuffer-flags-00911# If the @flags@ member of
---     @pCreateInfo@ includes
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
---     creating this 'Vulkan.Core10.Handles.Buffer' /must/ not cause the
---     total required sparse memory for all currently valid sparse
---     resources on the device to exceed
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@sparseAddressSpaceSize@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateBuffer-device-parameter# @device@ /must/ be a valid
---     'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkCreateBuffer-pCreateInfo-parameter# @pCreateInfo@ /must/ be
---     a valid pointer to a valid 'BufferCreateInfo' structure
---
--- -   #VUID-vkCreateBuffer-pAllocator-parameter# If @pAllocator@ is not
---     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkCreateBuffer-pBuffer-parameter# @pBuffer@ /must/ be a valid
---     pointer to a 'Vulkan.Core10.Handles.Buffer' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Buffer', 'BufferCreateInfo',
--- 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkCreateBuffer"
 createBuffer :: forall a io
               . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io)
-             => -- | @device@ is the logical device that creates the buffer object.
+             => -- No documentation found for Nested "vkCreateBuffer" "device"
                 Device
-             -> -- | @pCreateInfo@ is a pointer to a 'BufferCreateInfo' structure containing
-                -- parameters affecting creation of the buffer.
+             -> -- No documentation found for Nested "vkCreateBuffer" "pCreateInfo"
                 (BufferCreateInfo a)
-             -> -- | @pAllocator@ controls host memory allocation as described in the
-                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                -- chapter.
+             -> -- No documentation found for Nested "vkCreateBuffer" "pAllocator"
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io (Buffer)
 createBuffer device createInfo allocator = liftIO . evalContT $ do
@@ -190,56 +142,14 @@ foreign import ccall
   "dynamic" mkVkDestroyBuffer
   :: FunPtr (Ptr Device_T -> Buffer -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> Buffer -> Ptr AllocationCallbacks -> IO ()
 
--- | vkDestroyBuffer - Destroy a buffer object
---
--- == Valid Usage
---
--- -   #VUID-vkDestroyBuffer-buffer-00922# All submitted commands that
---     refer to @buffer@, either directly or via a
---     'Vulkan.Core10.Handles.BufferView', /must/ have completed execution
---
--- -   #VUID-vkDestroyBuffer-buffer-00923# If
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @buffer@ was created, a compatible set of callbacks
---     /must/ be provided here
---
--- -   #VUID-vkDestroyBuffer-buffer-00924# If no
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @buffer@ was created, @pAllocator@ /must/ be @NULL@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDestroyBuffer-device-parameter# @device@ /must/ be a valid
---     'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDestroyBuffer-buffer-parameter# If @buffer@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.Buffer' handle
---
--- -   #VUID-vkDestroyBuffer-pAllocator-parameter# If @pAllocator@ is not
---     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkDestroyBuffer-buffer-parent# If @buffer@ is a valid handle,
---     it /must/ have been created, allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @buffer@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkDestroyBuffer"
 destroyBuffer :: forall io
                . (MonadIO io)
-              => -- | @device@ is the logical device that destroys the buffer.
+              => -- No documentation found for Nested "vkDestroyBuffer" "device"
                  Device
-              -> -- | @buffer@ is the buffer to destroy.
+              -> -- No documentation found for Nested "vkDestroyBuffer" "buffer"
                  Buffer
-              -> -- | @pAllocator@ controls host memory allocation as described in the
-                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                 -- chapter.
+              -> -- No documentation found for Nested "vkDestroyBuffer" "pAllocator"
                  ("allocator" ::: Maybe AllocationCallbacks)
               -> io ()
 destroyBuffer device buffer allocator = liftIO . evalContT $ do
@@ -254,167 +164,20 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
   pure $ ()
 
 
--- | VkBufferCreateInfo - Structure specifying the parameters of a newly
--- created buffer object
---
--- == Valid Usage
---
--- -   #VUID-VkBufferCreateInfo-size-00912# @size@ /must/ be greater than
---     @0@
---
--- -   #VUID-VkBufferCreateInfo-sharingMode-00913# If @sharingMode@ is
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
---     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
---     @queueFamilyIndexCount@ @uint32_t@ values
---
--- -   #VUID-VkBufferCreateInfo-sharingMode-00914# If @sharingMode@ is
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
---     @queueFamilyIndexCount@ /must/ be greater than @1@
---
--- -   #VUID-VkBufferCreateInfo-sharingMode-01419# If @sharingMode@ is
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', each
---     element of @pQueueFamilyIndices@ /must/ be unique and /must/ be less
---     than @pQueueFamilyPropertyCount@ returned by either
---     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
---     or
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'
---     for the @physicalDevice@ that was used to create @device@
---
--- -   #VUID-VkBufferCreateInfo-flags-00915# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseBinding sparse bindings>
---     feature is not enabled, @flags@ /must/ not contain
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
---
--- -   #VUID-VkBufferCreateInfo-flags-00916# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyBuffer sparse buffer residency>
---     feature is not enabled, @flags@ /must/ not contain
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
---
--- -   #VUID-VkBufferCreateInfo-flags-00917# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyAliased sparse aliased residency>
---     feature is not enabled, @flags@ /must/ not contain
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
---
--- -   #VUID-VkBufferCreateInfo-flags-00918# If @flags@ contains
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
---     or
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT',
---     it /must/ also contain
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
---
--- -   #VUID-VkBufferCreateInfo-pNext-00920# If the @pNext@ chain includes
---     a
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'
---     structure, its @handleTypes@ member /must/ only contain bits that
---     are also in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'::@externalMemoryProperties.compatibleHandleTypes@,
---     as returned by
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.getPhysicalDeviceExternalBufferProperties'
---     with @pExternalBufferInfo->handleType@ equal to any one of the
---     handle types specified in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
---
--- -   #VUID-VkBufferCreateInfo-flags-01887# If the protected memory
---     feature is not enabled, @flags@ /must/ not contain
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
---
--- -   #VUID-VkBufferCreateInfo-None-01888# If any of the bits
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT',
---     or
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
---     are set,
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
---     /must/ not also be set
---
--- -   #VUID-VkBufferCreateInfo-pNext-01571# If the @pNext@ chain includes
---     a
---     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'
---     structure, and the @dedicatedAllocation@ member of the chained
---     structure is 'Vulkan.Core10.FundamentalTypes.TRUE', then @flags@
---     /must/ not include
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT',
---     or
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
---
--- -   #VUID-VkBufferCreateInfo-deviceAddress-02604# If
---     'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT'::@deviceAddress@
---     is not zero, @flags@ /must/ include
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
---
--- -   #VUID-VkBufferCreateInfo-opaqueCaptureAddress-03337# If
---     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo'::@opaqueCaptureAddress@
---     is not zero, @flags@ /must/ include
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
---
--- -   #VUID-VkBufferCreateInfo-flags-03338# If @flags@ includes
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
---     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplayEXT ::bufferDeviceAddressCaptureReplay>
---     feature /must/ be enabled
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkBufferCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_CREATE_INFO'
---
--- -   #VUID-VkBufferCreateInfo-pNext-pNext# Each @pNext@ member of any
---     structure (including this one) in the @pNext@ chain /must/ be either
---     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
---     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo',
---     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
---     or
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'
---
--- -   #VUID-VkBufferCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkBufferCreateInfo-flags-parameter# @flags@ /must/ be a valid
---     combination of
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
---     values
---
--- -   #VUID-VkBufferCreateInfo-usage-parameter# @usage@ /must/ be a valid
---     combination of
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
---
--- -   #VUID-VkBufferCreateInfo-usage-requiredbitmask# @usage@ /must/ not
---     be @0@
---
--- -   #VUID-VkBufferCreateInfo-sharingMode-parameter# @sharingMode@ /must/
---     be a valid 'Vulkan.Core10.Enums.SharingMode.SharingMode' value
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlags',
--- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlags',
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
--- 'Vulkan.Core10.Enums.SharingMode.SharingMode',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createBuffer'
+
+-- No documentation found for TopLevel "VkBufferCreateInfo"
 data BufferCreateInfo (es :: [Type]) = BufferCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkBufferCreateInfo" "pNext"
     next :: Chain es
-  , -- | @flags@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
-    -- specifying additional parameters of the buffer.
+  , -- No documentation found for Nested "VkBufferCreateInfo" "flags"
     flags :: BufferCreateFlags
-  , -- | @size@ is the size in bytes of the buffer to be created.
+  , -- No documentation found for Nested "VkBufferCreateInfo" "size"
     size :: DeviceSize
-  , -- | @usage@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' specifying
-    -- allowed usages of the buffer.
+  , -- No documentation found for Nested "VkBufferCreateInfo" "usage"
     usage :: BufferUsageFlags
-  , -- | @sharingMode@ is a 'Vulkan.Core10.Enums.SharingMode.SharingMode' value
-    -- specifying the sharing mode of the buffer when it will be accessed by
-    -- multiple queue families.
+  , -- No documentation found for Nested "VkBufferCreateInfo" "sharingMode"
     sharingMode :: SharingMode
-  , -- | @pQueueFamilyIndices@ is a list of queue families that will access this
-    -- buffer (ignored if @sharingMode@ is not
-    -- 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT').
+  , -- No documentation found for Nested "VkBufferCreateInfo" "pQueueFamilyIndices"
     queueFamilyIndices :: Vector Word32
   }
   deriving (Typeable)

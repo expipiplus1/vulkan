@@ -1,129 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_EXT_discard_rectangles - device extension
---
--- == VK_EXT_discard_rectangles
---
--- [__Name String__]
---     @VK_EXT_discard_rectangles@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     100
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@
---
--- [__Contact__]
---
---     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_discard_rectangles:%20&body=@pdaniell-nv%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2016-12-22
---
--- [__Interactions and External Dependencies__]
---
---     -   Interacts with @VK_KHR_device_group@
---
---     -   Interacts with Vulkan 1.1
---
--- [__Contributors__]
---
---     -   Daniel Koch, NVIDIA
---
---     -   Jeff Bolz, NVIDIA
---
--- == Description
---
--- This extension provides additional orthogonally aligned “discard
--- rectangles” specified in framebuffer-space coordinates that restrict
--- rasterization of all points, lines and triangles.
---
--- From zero to an implementation-dependent limit (specified by
--- @maxDiscardRectangles@) number of discard rectangles can be operational
--- at once. When one or more discard rectangles are active, rasterized
--- fragments can either survive if the fragment is within any of the
--- operational discard rectangles ('DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT'
--- mode) or be rejected if the fragment is within any of the operational
--- discard rectangles ('DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT' mode).
---
--- These discard rectangles operate orthogonally to the existing scissor
--- test functionality. The discard rectangles can be different for each
--- physical device in a device group by specifying the device mask and
--- setting discard rectangle dynamic state.
---
--- == New Commands
---
--- -   'cmdSetDiscardRectangleEXT'
---
--- == New Structures
---
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
---
---     -   'PipelineDiscardRectangleStateCreateInfoEXT'
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
---
---     -   'PhysicalDeviceDiscardRectanglePropertiesEXT'
---
--- == New Enums
---
--- -   'DiscardRectangleModeEXT'
---
--- == New Bitmasks
---
--- -   'PipelineDiscardRectangleStateCreateFlagsEXT'
---
--- == New Enum Constants
---
--- -   'EXT_DISCARD_RECTANGLES_EXTENSION_NAME'
---
--- -   'EXT_DISCARD_RECTANGLES_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT'
---
--- == Version History
---
--- -   Revision 1, 2016-12-22 (Piers Daniell)
---
---     -   Internal revisions
---
--- = See Also
---
--- 'DiscardRectangleModeEXT',
--- 'PhysicalDeviceDiscardRectanglePropertiesEXT',
--- 'PipelineDiscardRectangleStateCreateFlagsEXT',
--- 'PipelineDiscardRectangleStateCreateInfoEXT',
--- 'cmdSetDiscardRectangleEXT'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_EXT_discard_rectangles"
 module Vulkan.Extensions.VK_EXT_discard_rectangles  ( cmdSetDiscardRectangleEXT
                                                     , PhysicalDeviceDiscardRectanglePropertiesEXT(..)
                                                     , PipelineDiscardRectangleStateCreateInfoEXT(..)
@@ -200,98 +76,14 @@ foreign import ccall
   "dynamic" mkVkCmdSetDiscardRectangleEXT
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()
 
--- | vkCmdSetDiscardRectangleEXT - Set discard rectangles dynamically
---
--- = Description
---
--- The discard rectangle taken from element i of @pDiscardRectangles@
--- replace the current state for the discard rectangle at index
--- @firstDiscardRectangle@ + i, for i in [0, @discardRectangleCount@).
---
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
--- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
--- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
---
--- == Valid Usage
---
--- -   #VUID-vkCmdSetDiscardRectangleEXT-firstDiscardRectangle-00585# The
---     sum of @firstDiscardRectangle@ and @discardRectangleCount@ /must/ be
---     less than or equal to
---     'PhysicalDeviceDiscardRectanglePropertiesEXT'::@maxDiscardRectangles@
---
--- -   #VUID-vkCmdSetDiscardRectangleEXT-x-00587# The @x@ and @y@ member of
---     @offset@ in each 'Vulkan.Core10.FundamentalTypes.Rect2D' element of
---     @pDiscardRectangles@ /must/ be greater than or equal to @0@
---
--- -   #VUID-vkCmdSetDiscardRectangleEXT-offset-00588# Evaluation of
---     (@offset.x@ + @extent.width@) in each
---     'Vulkan.Core10.FundamentalTypes.Rect2D' element of
---     @pDiscardRectangles@ /must/ not cause a signed integer addition
---     overflow
---
--- -   #VUID-vkCmdSetDiscardRectangleEXT-offset-00589# Evaluation of
---     (@offset.y@ + @extent.height@) in each
---     'Vulkan.Core10.FundamentalTypes.Rect2D' element of
---     @pDiscardRectangles@ /must/ not cause a signed integer addition
---     overflow
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdSetDiscardRectangleEXT-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdSetDiscardRectangleEXT-pDiscardRectangles-parameter#
---     @pDiscardRectangles@ /must/ be a valid pointer to an array of
---     @discardRectangleCount@ 'Vulkan.Core10.FundamentalTypes.Rect2D'
---     structures
---
--- -   #VUID-vkCmdSetDiscardRectangleEXT-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdSetDiscardRectangleEXT-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
---
--- -   #VUID-vkCmdSetDiscardRectangleEXT-discardRectangleCount-arraylength#
---     @discardRectangleCount@ /must/ be greater than @0@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.FundamentalTypes.Rect2D'
+-- No documentation found for TopLevel "vkCmdSetDiscardRectangleEXT"
 cmdSetDiscardRectangleEXT :: forall io
                            . (MonadIO io)
-                          => -- | @commandBuffer@ is the command buffer into which the command will be
-                             -- recorded.
+                          => -- No documentation found for Nested "vkCmdSetDiscardRectangleEXT" "commandBuffer"
                              CommandBuffer
-                          -> -- | @firstDiscardRectangle@ is the index of the first discard rectangle
-                             -- whose state is updated by the command.
+                          -> -- No documentation found for Nested "vkCmdSetDiscardRectangleEXT" "firstDiscardRectangle"
                              ("firstDiscardRectangle" ::: Word32)
-                          -> -- | @pDiscardRectangles@ is a pointer to an array of
-                             -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures specifying discard
-                             -- rectangles.
+                          -> -- No documentation found for Nested "vkCmdSetDiscardRectangleEXT" "pDiscardRectangles"
                              ("discardRectangles" ::: Vector Rect2D)
                           -> io ()
 cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = liftIO . evalContT $ do
@@ -305,29 +97,10 @@ cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles 
   pure $ ()
 
 
--- | VkPhysicalDeviceDiscardRectanglePropertiesEXT - Structure describing
--- discard rectangle limits that can be supported by an implementation
---
--- = Members
---
--- The members of the 'PhysicalDeviceDiscardRectanglePropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
--- = Description
---
--- If the 'PhysicalDeviceDiscardRectanglePropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceDiscardRectanglePropertiesEXT"
 data PhysicalDeviceDiscardRectanglePropertiesEXT = PhysicalDeviceDiscardRectanglePropertiesEXT
-  { -- | #limits-maxDiscardRectangles# @maxDiscardRectangles@ is the maximum
-    -- number of active discard rectangles that /can/ be specified.
+  { -- No documentation found for Nested "VkPhysicalDeviceDiscardRectanglePropertiesEXT" "maxDiscardRectangles"
     maxDiscardRectangles :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -356,6 +129,7 @@ instance FromCStruct PhysicalDeviceDiscardRectanglePropertiesEXT where
     pure $ PhysicalDeviceDiscardRectanglePropertiesEXT
              maxDiscardRectangles
 
+
 instance Storable PhysicalDeviceDiscardRectanglePropertiesEXT where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -367,45 +141,14 @@ instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
            zero
 
 
--- | VkPipelineDiscardRectangleStateCreateInfoEXT - Structure specifying
--- discard rectangle
---
--- = Description
---
--- If the
--- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
--- dynamic state is enabled for a pipeline, the @pDiscardRectangles@ member
--- is ignored.
---
--- When this structure is included in the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it defines
--- parameters of the discard rectangle test. If this structure is not
--- included in the @pNext@ chain, it is equivalent to specifying this
--- structure with a @discardRectangleCount@ of @0@.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'DiscardRectangleModeEXT',
--- 'PipelineDiscardRectangleStateCreateFlagsEXT',
--- 'Vulkan.Core10.FundamentalTypes.Rect2D',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPipelineDiscardRectangleStateCreateInfoEXT"
 data PipelineDiscardRectangleStateCreateInfoEXT = PipelineDiscardRectangleStateCreateInfoEXT
-  { -- | @flags@ is reserved for future use.
-    --
-    -- #VUID-VkPipelineDiscardRectangleStateCreateInfoEXT-flags-zerobitmask#
-    -- @flags@ /must/ be @0@
+  { -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "flags"
     flags :: PipelineDiscardRectangleStateCreateFlagsEXT
-  , -- | @discardRectangleMode@ is a 'DiscardRectangleModeEXT' value determining
-    -- whether the discard rectangle test is inclusive or exclusive.
-    --
-    -- #VUID-VkPipelineDiscardRectangleStateCreateInfoEXT-discardRectangleMode-parameter#
-    -- @discardRectangleMode@ /must/ be a valid 'DiscardRectangleModeEXT' value
+  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "discardRectangleMode"
     discardRectangleMode :: DiscardRectangleModeEXT
-  , -- | @pDiscardRectangles@ is a pointer to an array of
-    -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures defining discard
-    -- rectangles.
+  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "pDiscardRectangles"
     discardRectangles :: Vector Rect2D
   }
   deriving (Typeable)
@@ -454,16 +197,7 @@ instance Zero PipelineDiscardRectangleStateCreateInfoEXT where
            mempty
 
 
--- | VkPipelineDiscardRectangleStateCreateFlagsEXT - Reserved for future use
---
--- = Description
---
--- 'PipelineDiscardRectangleStateCreateFlagsEXT' is a bitmask type for
--- setting a mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'PipelineDiscardRectangleStateCreateInfoEXT'
+-- No documentation found for TopLevel "VkPipelineDiscardRectangleStateCreateFlagsEXT"
 newtype PipelineDiscardRectangleStateCreateFlagsEXT = PipelineDiscardRectangleStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -478,12 +212,14 @@ enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT = ""
 showTablePipelineDiscardRectangleStateCreateFlagsEXT :: [(PipelineDiscardRectangleStateCreateFlagsEXT, String)]
 showTablePipelineDiscardRectangleStateCreateFlagsEXT = []
 
+
 instance Show PipelineDiscardRectangleStateCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT
-                            showTablePipelineDiscardRectangleStateCreateFlagsEXT
-                            conNamePipelineDiscardRectangleStateCreateFlagsEXT
-                            (\(PipelineDiscardRectangleStateCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT
+                          showTablePipelineDiscardRectangleStateCreateFlagsEXT
+                          conNamePipelineDiscardRectangleStateCreateFlagsEXT
+                          (\(PipelineDiscardRectangleStateCreateFlagsEXT x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineDiscardRectangleStateCreateFlagsEXT where
   readPrec = enumReadPrec enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT
@@ -492,19 +228,13 @@ instance Read PipelineDiscardRectangleStateCreateFlagsEXT where
                           PipelineDiscardRectangleStateCreateFlagsEXT
 
 
--- | VkDiscardRectangleModeEXT - Specify the discard rectangle mode
---
--- = See Also
---
--- 'PipelineDiscardRectangleStateCreateInfoEXT'
+-- No documentation found for TopLevel "VkDiscardRectangleModeEXT"
 newtype DiscardRectangleModeEXT = DiscardRectangleModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT' specifies that the discard
--- rectangle test is inclusive.
+-- No documentation found for Nested "VkDiscardRectangleModeEXT" "VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT"
 pattern DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT = DiscardRectangleModeEXT 0
--- | 'DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT' specifies that the discard
--- rectangle test is exclusive.
+-- No documentation found for Nested "VkDiscardRectangleModeEXT" "VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT"
 pattern DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = DiscardRectangleModeEXT 1
 {-# complete DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT,
              DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT :: DiscardRectangleModeEXT #-}
@@ -519,12 +249,14 @@ showTableDiscardRectangleModeEXT :: [(DiscardRectangleModeEXT, String)]
 showTableDiscardRectangleModeEXT =
   [(DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT, "INCLUSIVE_EXT"), (DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT, "EXCLUSIVE_EXT")]
 
+
 instance Show DiscardRectangleModeEXT where
-  showsPrec = enumShowsPrec enumPrefixDiscardRectangleModeEXT
-                            showTableDiscardRectangleModeEXT
-                            conNameDiscardRectangleModeEXT
-                            (\(DiscardRectangleModeEXT x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixDiscardRectangleModeEXT
+                          showTableDiscardRectangleModeEXT
+                          conNameDiscardRectangleModeEXT
+                          (\(DiscardRectangleModeEXT x) -> x)
+                          (showsPrec 11)
+
 
 instance Read DiscardRectangleModeEXT where
   readPrec = enumReadPrec enumPrefixDiscardRectangleModeEXT

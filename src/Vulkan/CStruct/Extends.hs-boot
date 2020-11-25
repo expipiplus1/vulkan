@@ -28,6 +28,7 @@ instance Show BaseOutStructure
 instance FromCStruct BaseOutStructure
 
 
+
 class PeekChain (xs :: [Type])
 class PokeChain (xs :: [Type])
 type family Extends (p :: [Type] -> Type) (x :: Type) :: Constraint

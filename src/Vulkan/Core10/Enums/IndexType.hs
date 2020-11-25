@@ -15,28 +15,17 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkIndexType - Type of index buffer indices
---
--- = See Also
---
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR',
--- 'Vulkan.Extensions.VK_NV_device_generated_commands.BindIndexBufferIndirectCommandNV',
--- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
--- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutTokenNV',
--- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'
+-- No documentation found for TopLevel "VkIndexType"
 newtype IndexType = IndexType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'INDEX_TYPE_UINT16' specifies that indices are 16-bit unsigned integer
--- values.
+-- No documentation found for Nested "VkIndexType" "VK_INDEX_TYPE_UINT16"
 pattern INDEX_TYPE_UINT16    = IndexType 0
--- | 'INDEX_TYPE_UINT32' specifies that indices are 32-bit unsigned integer
--- values.
+-- No documentation found for Nested "VkIndexType" "VK_INDEX_TYPE_UINT32"
 pattern INDEX_TYPE_UINT32    = IndexType 1
--- | 'INDEX_TYPE_UINT8_EXT' specifies that indices are 8-bit unsigned integer
--- values.
+-- No documentation found for Nested "VkIndexType" "VK_INDEX_TYPE_UINT8_EXT"
 pattern INDEX_TYPE_UINT8_EXT = IndexType 1000265000
--- | 'INDEX_TYPE_NONE_KHR' specifies that no indices are provided.
+-- No documentation found for Nested "VkIndexType" "VK_INDEX_TYPE_NONE_KHR"
 pattern INDEX_TYPE_NONE_KHR  = IndexType 1000165000
 {-# complete INDEX_TYPE_UINT16,
              INDEX_TYPE_UINT32,
@@ -57,9 +46,10 @@ showTableIndexType =
   , (INDEX_TYPE_NONE_KHR , "NONE_KHR")
   ]
 
+
 instance Show IndexType where
-  showsPrec =
-    enumShowsPrec enumPrefixIndexType showTableIndexType conNameIndexType (\(IndexType x) -> x) (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixIndexType showTableIndexType conNameIndexType (\(IndexType x) -> x) (showsPrec 11)
+
 
 instance Read IndexType where
   readPrec = enumReadPrec enumPrefixIndexType showTableIndexType conNameIndexType IndexType

@@ -26,35 +26,12 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
--- | VkPhysicalDeviceShaderFloat16Int8Features - Structure describing
--- features supported by VK_KHR_shader_float16_int8
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderFloat16Int8Features"
 data PhysicalDeviceShaderFloat16Int8Features = PhysicalDeviceShaderFloat16Int8Features
-  { -- | #extension-features-shaderFloat16# @shaderFloat16@ indicates whether
-    -- 16-bit floats (halfs) are supported in shader code. This also indicates
-    -- whether shader modules /can/ declare the @Float16@ capability. However,
-    -- this only enables a subset of the storage classes that SPIR-V allows for
-    -- the @Float16@ SPIR-V capability: Declaring and using 16-bit floats in
-    -- the @Private@, @Workgroup@, and @Function@ storage classes is enabled,
-    -- while declaring them in the interface storage classes (e.g.,
-    -- @UniformConstant@, @Uniform@, @StorageBuffer@, @Input@, @Output@, and
-    -- @PushConstant@) is not enabled.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderFloat16Int8Features" "shaderFloat16"
     shaderFloat16 :: Bool
-  , -- | #extension-features-shaderInt8# @shaderInt8@ indicates whether 8-bit
-    -- integers (signed and unsigned) are supported in shader code. This also
-    -- indicates whether shader modules /can/ declare the @Int8@ capability.
-    -- However, this only enables a subset of the storage classes that SPIR-V
-    -- allows for the @Int8@ SPIR-V capability: Declaring and using 8-bit
-    -- integers in the @Private@, @Workgroup@, and @Function@ storage classes
-    -- is enabled, while declaring them in the interface storage classes (e.g.,
-    -- @UniformConstant@, @Uniform@, @StorageBuffer@, @Input@, @Output@, and
-    -- @PushConstant@) is not enabled.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderFloat16Int8Features" "shaderInt8"
     shaderInt8 :: Bool
   }
   deriving (Typeable, Eq)
@@ -86,6 +63,7 @@ instance FromCStruct PhysicalDeviceShaderFloat16Int8Features where
     shaderInt8 <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceShaderFloat16Int8Features
              (bool32ToBool shaderFloat16) (bool32ToBool shaderInt8)
+
 
 instance Storable PhysicalDeviceShaderFloat16Int8Features where
   sizeOf ~_ = 24

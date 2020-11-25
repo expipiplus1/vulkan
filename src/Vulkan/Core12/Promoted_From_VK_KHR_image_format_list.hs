@@ -31,32 +31,10 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
--- | VkImageFormatListCreateInfo - Specify that an image /can/ be used with a
--- particular set of formats
---
--- = Description
---
--- If @viewFormatCount@ is zero, @pViewFormats@ is ignored and the image is
--- created as if the 'ImageFormatListCreateInfo' structure were not
--- included in the @pNext@ list of 'Vulkan.Core10.Image.ImageCreateInfo'.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkImageFormatListCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO'
---
--- -   #VUID-VkImageFormatListCreateInfo-pViewFormats-parameter# If
---     @viewFormatCount@ is not @0@, @pViewFormats@ /must/ be a valid
---     pointer to an array of @viewFormatCount@ valid
---     'Vulkan.Core10.Enums.Format.Format' values
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.Format.Format',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkImageFormatListCreateInfo"
 data ImageFormatListCreateInfo = ImageFormatListCreateInfo
-  { -- | @pViewFormats@ is an array which lists of all formats which /can/ be
-    -- used when creating views of this image.
+  { -- No documentation found for Nested "VkImageFormatListCreateInfo" "pViewFormats"
     viewFormats :: Vector Format }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)

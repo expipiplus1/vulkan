@@ -1,135 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_NV_coverage_reduction_mode - device extension
---
--- == VK_NV_coverage_reduction_mode
---
--- [__Name String__]
---     @VK_NV_coverage_reduction_mode@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     251
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_NV_framebuffer_mixed_samples@
---
--- [__Contact__]
---
---     -   Kedarnath Thangudu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_coverage_reduction_mode:%20&body=@kthangudu%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2019-01-29
---
--- [__Contributors__]
---
---     -   Kedarnath Thangudu, NVIDIA
---
---     -   Jeff Bolz, NVIDIA
---
--- == Description
---
--- When using a framebuffer with mixed samples, a per-fragment coverage
--- reduction operation is performed which generates color sample coverage
--- from the pixel coverage. This extension defines the following modes to
--- control how this reduction is performed.
---
--- -   Merge: When there are more samples in the pixel coverage than color
---     samples, there is an implementation dependent association of each
---     pixel coverage sample to a color sample. In the merge mode, the
---     color sample coverage is computed such that only if any associated
---     sample in the pixel coverage is covered, the color sample is
---     covered. This is the default mode.
---
--- -   Truncate: When there are more raster samples (N) than color
---     samples(M), there is one to one association of the first M raster
---     samples to the M color samples; other raster samples are ignored.
---
--- When the number of raster samples is equal to the color samples, there
--- is a one to one mapping between them in either of the above modes.
---
--- The new command
--- 'getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' can be
--- used to query the various raster, color, depth\/stencil sample count and
--- reduction mode combinations that are supported by the implementation.
--- This extension would allow an implementation to support the behavior of
--- both @VK_NV_framebuffer_mixed_samples@ and
--- @VK_AMD_mixed_attachment_samples@ extensions simultaneously.
---
--- == New Commands
---
--- -   'getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
---
--- == New Structures
---
--- -   'FramebufferMixedSamplesCombinationNV'
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
---     'Vulkan.Core10.Device.DeviceCreateInfo':
---
---     -   'PhysicalDeviceCoverageReductionModeFeaturesNV'
---
--- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
---
---     -   'PipelineCoverageReductionStateCreateInfoNV'
---
--- == New Enums
---
--- -   'CoverageReductionModeNV'
---
--- == New Bitmasks
---
--- -   'PipelineCoverageReductionStateCreateFlagsNV'
---
--- == New Enum Constants
---
--- -   'NV_COVERAGE_REDUCTION_MODE_EXTENSION_NAME'
---
--- -   'NV_COVERAGE_REDUCTION_MODE_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FRAMEBUFFER_MIXED_SAMPLES_COMBINATION_NV'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COVERAGE_REDUCTION_MODE_FEATURES_NV'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_REDUCTION_STATE_CREATE_INFO_NV'
---
--- == Version History
---
--- -   Revision 1, 2019-01-29 (Kedarnath Thangudu)
---
---     -   Internal revisions
---
--- = See Also
---
--- 'CoverageReductionModeNV', 'FramebufferMixedSamplesCombinationNV',
--- 'PhysicalDeviceCoverageReductionModeFeaturesNV',
--- 'PipelineCoverageReductionStateCreateFlagsNV',
--- 'PipelineCoverageReductionStateCreateInfoNV',
--- 'getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_NV_coverage_reduction_mode"
 module Vulkan.Extensions.VK_NV_coverage_reduction_mode  ( getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV
                                                         , PhysicalDeviceCoverageReductionModeFeaturesNV(..)
                                                         , PipelineCoverageReductionStateCreateInfoNV(..)
@@ -218,60 +88,10 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr FramebufferMixedSamplesCombinationNV -> IO Result) -> Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr FramebufferMixedSamplesCombinationNV -> IO Result
 
--- | vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV -
--- Query supported sample count combinations
---
--- = Description
---
--- If @pCombinations@ is @NULL@, then the number of supported combinations
--- for the given @physicalDevice@ is returned in @pCombinationCount@.
--- Otherwise, @pCombinationCount@ /must/ point to a variable set by the
--- user to the number of elements in the @pCombinations@ array, and on
--- return the variable is overwritten with the number of values actually
--- written to @pCombinations@. If the value of @pCombinationCount@ is less
--- than the number of combinations supported for the given
--- @physicalDevice@, at most @pCombinationCount@ values will be written
--- @pCombinations@ and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate
--- that not all the supported values were returned.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV-physicalDevice-parameter#
---     @physicalDevice@ /must/ be a valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV-pCombinationCount-parameter#
---     @pCombinationCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   #VUID-vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV-pCombinations-parameter#
---     If the value referenced by @pCombinationCount@ is not @0@, and
---     @pCombinations@ is not @NULL@, @pCombinations@ /must/ be a valid
---     pointer to an array of @pCombinationCount@
---     'FramebufferMixedSamplesCombinationNV' structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'FramebufferMixedSamplesCombinationNV',
--- 'Vulkan.Core10.Handles.PhysicalDevice'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV"
 getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: forall io
                                                                  . (MonadIO io)
-                                                                => -- | @physicalDevice@ is the physical device from which to query the set of
-                                                                   -- combinations.
+                                                                => -- No documentation found for Nested "vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV" "physicalDevice"
                                                                    PhysicalDevice
                                                                 -> io (Result, ("combinations" ::: Vector FramebufferMixedSamplesCombinationNV))
 getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice = liftIO . evalContT $ do
@@ -293,35 +113,10 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
   pure $ ((r'), pCombinations')
 
 
--- | VkPhysicalDeviceCoverageReductionModeFeaturesNV - Structure describing
--- the coverage reduction mode features that can be supported by an
--- implementation
---
--- = Members
---
--- The members of the 'PhysicalDeviceCoverageReductionModeFeaturesNV'
--- structure describe the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceCoverageReductionModeFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceCoverageReductionModeFeaturesNV' /can/ also be included
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- enable the feature.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceCoverageReductionModeFeaturesNV"
 data PhysicalDeviceCoverageReductionModeFeaturesNV = PhysicalDeviceCoverageReductionModeFeaturesNV
-  { -- | #features-coverageReductionMode# @coverageReductionMode@ indicates
-    -- whether the implementation supports coverage reduction modes. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-coverage-reduction Coverage Reduction>.
+  { -- No documentation found for Nested "VkPhysicalDeviceCoverageReductionModeFeaturesNV" "coverageReductionMode"
     coverageReductionMode :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -350,6 +145,7 @@ instance FromCStruct PhysicalDeviceCoverageReductionModeFeaturesNV where
     pure $ PhysicalDeviceCoverageReductionModeFeaturesNV
              (bool32ToBool coverageReductionMode)
 
+
 instance Storable PhysicalDeviceCoverageReductionModeFeaturesNV where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -361,49 +157,12 @@ instance Zero PhysicalDeviceCoverageReductionModeFeaturesNV where
            zero
 
 
--- | VkPipelineCoverageReductionStateCreateInfoNV - Structure specifying
--- parameters controlling coverage reduction
---
--- = Description
---
--- If this structure is not present, or if the extension is not enabled,
--- the default coverage reduction mode is inferred as follows:
---
--- -   If the @VK_NV_framebuffer_mixed_samples@ extension is enabled, then
---     it is as if the @coverageReductionMode@ is
---     'COVERAGE_REDUCTION_MODE_MERGE_NV'.
---
--- -   If the @VK_AMD_mixed_attachment_samples@ extension is enabled, then
---     it is as if the @coverageReductionMode@ is
---     'COVERAGE_REDUCTION_MODE_TRUNCATE_NV'.
---
--- -   If both @VK_NV_framebuffer_mixed_samples@ and
---     @VK_AMD_mixed_attachment_samples@ are enabled, then the default
---     coverage reduction mode is implementation-dependent.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPipelineCoverageReductionStateCreateInfoNV-sType-sType#
---     @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_REDUCTION_STATE_CREATE_INFO_NV'
---
--- -   #VUID-VkPipelineCoverageReductionStateCreateInfoNV-flags-zerobitmask#
---     @flags@ /must/ be @0@
---
--- -   #VUID-VkPipelineCoverageReductionStateCreateInfoNV-coverageReductionMode-parameter#
---     @coverageReductionMode@ /must/ be a valid 'CoverageReductionModeNV'
---     value
---
--- = See Also
---
--- 'CoverageReductionModeNV',
--- 'PipelineCoverageReductionStateCreateFlagsNV',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPipelineCoverageReductionStateCreateInfoNV"
 data PipelineCoverageReductionStateCreateInfoNV = PipelineCoverageReductionStateCreateInfoNV
-  { -- | @flags@ is reserved for future use.
+  { -- No documentation found for Nested "VkPipelineCoverageReductionStateCreateInfoNV" "flags"
     flags :: PipelineCoverageReductionStateCreateFlagsNV
-  , -- | @coverageReductionMode@ is a 'CoverageReductionModeNV' value controlling
-    -- how color sample coverage is generated from pixel coverage.
+  , -- No documentation found for Nested "VkPipelineCoverageReductionStateCreateInfoNV" "coverageReductionMode"
     coverageReductionMode :: CoverageReductionModeNV
   }
   deriving (Typeable, Eq)
@@ -435,6 +194,7 @@ instance FromCStruct PipelineCoverageReductionStateCreateInfoNV where
     pure $ PipelineCoverageReductionStateCreateInfoNV
              flags coverageReductionMode
 
+
 instance Storable PipelineCoverageReductionStateCreateInfoNV where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -447,32 +207,16 @@ instance Zero PipelineCoverageReductionStateCreateInfoNV where
            zero
 
 
--- | VkFramebufferMixedSamplesCombinationNV - Structure specifying a
--- supported sample count combination
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'CoverageReductionModeNV',
--- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
--- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
+
+-- No documentation found for TopLevel "VkFramebufferMixedSamplesCombinationNV"
 data FramebufferMixedSamplesCombinationNV = FramebufferMixedSamplesCombinationNV
-  { -- | @coverageReductionMode@ is a 'CoverageReductionModeNV' value specifying
-    -- the coverage reduction mode.
+  { -- No documentation found for Nested "VkFramebufferMixedSamplesCombinationNV" "coverageReductionMode"
     coverageReductionMode :: CoverageReductionModeNV
-  , -- | @rasterizationSamples@ specifies the number of rasterization samples in
-    -- the supported combination.
+  , -- No documentation found for Nested "VkFramebufferMixedSamplesCombinationNV" "rasterizationSamples"
     rasterizationSamples :: SampleCountFlagBits
-  , -- | @depthStencilSamples@ specifies the number of samples in the depth
-    -- stencil attachment in the supported combination. A value of 0 indicates
-    -- the combination does not have a depth stencil attachment.
+  , -- No documentation found for Nested "VkFramebufferMixedSamplesCombinationNV" "depthStencilSamples"
     depthStencilSamples :: SampleCountFlags
-  , -- | @colorSamples@ specifies the number of color samples in a color
-    -- attachment in the supported combination. A value of 0 indicates the
-    -- combination does not have a color attachment.
+  , -- No documentation found for Nested "VkFramebufferMixedSamplesCombinationNV" "colorSamples"
     colorSamples :: SampleCountFlags
   }
   deriving (Typeable, Eq)
@@ -511,6 +255,7 @@ instance FromCStruct FramebufferMixedSamplesCombinationNV where
     pure $ FramebufferMixedSamplesCombinationNV
              coverageReductionMode rasterizationSamples depthStencilSamples colorSamples
 
+
 instance Storable FramebufferMixedSamplesCombinationNV where
   sizeOf ~_ = 32
   alignment ~_ = 8
@@ -525,16 +270,7 @@ instance Zero FramebufferMixedSamplesCombinationNV where
            zero
 
 
--- | VkPipelineCoverageReductionStateCreateFlagsNV - Reserved for future use
---
--- = Description
---
--- 'PipelineCoverageReductionStateCreateFlagsNV' is a bitmask type for
--- setting a mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'PipelineCoverageReductionStateCreateInfoNV'
+-- No documentation found for TopLevel "VkPipelineCoverageReductionStateCreateFlagsNV"
 newtype PipelineCoverageReductionStateCreateFlagsNV = PipelineCoverageReductionStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -549,12 +285,14 @@ enumPrefixPipelineCoverageReductionStateCreateFlagsNV = ""
 showTablePipelineCoverageReductionStateCreateFlagsNV :: [(PipelineCoverageReductionStateCreateFlagsNV, String)]
 showTablePipelineCoverageReductionStateCreateFlagsNV = []
 
+
 instance Show PipelineCoverageReductionStateCreateFlagsNV where
-  showsPrec = enumShowsPrec enumPrefixPipelineCoverageReductionStateCreateFlagsNV
-                            showTablePipelineCoverageReductionStateCreateFlagsNV
-                            conNamePipelineCoverageReductionStateCreateFlagsNV
-                            (\(PipelineCoverageReductionStateCreateFlagsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineCoverageReductionStateCreateFlagsNV
+                          showTablePipelineCoverageReductionStateCreateFlagsNV
+                          conNamePipelineCoverageReductionStateCreateFlagsNV
+                          (\(PipelineCoverageReductionStateCreateFlagsNV x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineCoverageReductionStateCreateFlagsNV where
   readPrec = enumReadPrec enumPrefixPipelineCoverageReductionStateCreateFlagsNV
@@ -563,25 +301,13 @@ instance Read PipelineCoverageReductionStateCreateFlagsNV where
                           PipelineCoverageReductionStateCreateFlagsNV
 
 
--- | VkCoverageReductionModeNV - Specify the coverage reduction mode
---
--- = See Also
---
--- 'FramebufferMixedSamplesCombinationNV',
--- 'PipelineCoverageReductionStateCreateInfoNV'
+-- No documentation found for TopLevel "VkCoverageReductionModeNV"
 newtype CoverageReductionModeNV = CoverageReductionModeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COVERAGE_REDUCTION_MODE_MERGE_NV' specifies that each color sample will
--- be associated with an implementation-dependent subset of samples in the
--- pixel coverage. If any of those associated samples are covered, the
--- color sample is covered.
+-- No documentation found for Nested "VkCoverageReductionModeNV" "VK_COVERAGE_REDUCTION_MODE_MERGE_NV"
 pattern COVERAGE_REDUCTION_MODE_MERGE_NV    = CoverageReductionModeNV 0
--- | 'COVERAGE_REDUCTION_MODE_TRUNCATE_NV' specifies that for color samples
--- present in the color attachments, a color sample is covered if the pixel
--- coverage sample with the same
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
--- i is covered; other pixel coverage samples are discarded.
+-- No documentation found for Nested "VkCoverageReductionModeNV" "VK_COVERAGE_REDUCTION_MODE_TRUNCATE_NV"
 pattern COVERAGE_REDUCTION_MODE_TRUNCATE_NV = CoverageReductionModeNV 1
 {-# complete COVERAGE_REDUCTION_MODE_MERGE_NV,
              COVERAGE_REDUCTION_MODE_TRUNCATE_NV :: CoverageReductionModeNV #-}
@@ -596,12 +322,14 @@ showTableCoverageReductionModeNV :: [(CoverageReductionModeNV, String)]
 showTableCoverageReductionModeNV =
   [(COVERAGE_REDUCTION_MODE_MERGE_NV, "MERGE_NV"), (COVERAGE_REDUCTION_MODE_TRUNCATE_NV, "TRUNCATE_NV")]
 
+
 instance Show CoverageReductionModeNV where
-  showsPrec = enumShowsPrec enumPrefixCoverageReductionModeNV
-                            showTableCoverageReductionModeNV
-                            conNameCoverageReductionModeNV
-                            (\(CoverageReductionModeNV x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixCoverageReductionModeNV
+                          showTableCoverageReductionModeNV
+                          conNameCoverageReductionModeNV
+                          (\(CoverageReductionModeNV x) -> x)
+                          (showsPrec 11)
+
 
 instance Read CoverageReductionModeNV where
   readPrec = enumReadPrec enumPrefixCoverageReductionModeNV

@@ -22,46 +22,17 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
 
--- | VkPeerMemoryFeatureFlagBits - Bitmask specifying supported peer memory
--- features
---
--- = Description
---
--- Note
---
--- The peer memory features of a memory heap also apply to any accesses
--- that /may/ be performed during
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transitions>.
---
--- 'PEER_MEMORY_FEATURE_COPY_DST_BIT' /must/ be supported for all host
--- local heaps and for at least one device local heap.
---
--- If a device does not support a peer memory feature, it is still valid to
--- use a resource that includes both local and peer memory bindings with
--- the corresponding access type as long as only the local bindings are
--- actually accessed. For example, an application doing split-frame
--- rendering would use framebuffer attachments that include both local and
--- peer memory bindings, but would scissor the rendering to only update
--- local memory.
---
--- = See Also
---
--- 'PeerMemoryFeatureFlags'
+-- No documentation found for TopLevel "VkPeerMemoryFeatureFlagBits"
 newtype PeerMemoryFeatureFlagBits = PeerMemoryFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'PEER_MEMORY_FEATURE_COPY_SRC_BIT' specifies that the memory /can/ be
--- accessed as the source of any @vkCmdCopy*@ command.
+-- No documentation found for Nested "VkPeerMemoryFeatureFlagBits" "VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT"
 pattern PEER_MEMORY_FEATURE_COPY_SRC_BIT    = PeerMemoryFeatureFlagBits 0x00000001
--- | 'PEER_MEMORY_FEATURE_COPY_DST_BIT' specifies that the memory /can/ be
--- accessed as the destination of any @vkCmdCopy*@ command.
+-- No documentation found for Nested "VkPeerMemoryFeatureFlagBits" "VK_PEER_MEMORY_FEATURE_COPY_DST_BIT"
 pattern PEER_MEMORY_FEATURE_COPY_DST_BIT    = PeerMemoryFeatureFlagBits 0x00000002
--- | 'PEER_MEMORY_FEATURE_GENERIC_SRC_BIT' specifies that the memory /can/ be
--- read as any memory access type.
+-- No documentation found for Nested "VkPeerMemoryFeatureFlagBits" "VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT"
 pattern PEER_MEMORY_FEATURE_GENERIC_SRC_BIT = PeerMemoryFeatureFlagBits 0x00000004
--- | 'PEER_MEMORY_FEATURE_GENERIC_DST_BIT' specifies that the memory /can/ be
--- written as any memory access type. Shader atomics are considered to be
--- writes.
+-- No documentation found for Nested "VkPeerMemoryFeatureFlagBits" "VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT"
 pattern PEER_MEMORY_FEATURE_GENERIC_DST_BIT = PeerMemoryFeatureFlagBits 0x00000008
 
 conNamePeerMemoryFeatureFlagBits :: String
@@ -78,12 +49,14 @@ showTablePeerMemoryFeatureFlagBits =
   , (PEER_MEMORY_FEATURE_GENERIC_DST_BIT, "GENERIC_DST_BIT")
   ]
 
+
 instance Show PeerMemoryFeatureFlagBits where
-  showsPrec = enumShowsPrec enumPrefixPeerMemoryFeatureFlagBits
-                            showTablePeerMemoryFeatureFlagBits
-                            conNamePeerMemoryFeatureFlagBits
-                            (\(PeerMemoryFeatureFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPeerMemoryFeatureFlagBits
+                          showTablePeerMemoryFeatureFlagBits
+                          conNamePeerMemoryFeatureFlagBits
+                          (\(PeerMemoryFeatureFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PeerMemoryFeatureFlagBits where
   readPrec = enumReadPrec enumPrefixPeerMemoryFeatureFlagBits

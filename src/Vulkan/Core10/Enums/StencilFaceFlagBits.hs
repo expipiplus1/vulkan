@@ -26,24 +26,15 @@ pattern STENCIL_FRONT_AND_BACK = STENCIL_FACE_FRONT_AND_BACK
 
 type StencilFaceFlags = StencilFaceFlagBits
 
--- | VkStencilFaceFlagBits - Bitmask specifying sets of stencil state for
--- which to update the compare mask
---
--- = See Also
---
--- 'StencilFaceFlags'
+-- No documentation found for TopLevel "VkStencilFaceFlagBits"
 newtype StencilFaceFlagBits = StencilFaceFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'STENCIL_FACE_FRONT_BIT' specifies that only the front set of stencil
--- state is updated.
+-- No documentation found for Nested "VkStencilFaceFlagBits" "VK_STENCIL_FACE_FRONT_BIT"
 pattern STENCIL_FACE_FRONT_BIT      = StencilFaceFlagBits 0x00000001
--- | 'STENCIL_FACE_BACK_BIT' specifies that only the back set of stencil
--- state is updated.
+-- No documentation found for Nested "VkStencilFaceFlagBits" "VK_STENCIL_FACE_BACK_BIT"
 pattern STENCIL_FACE_BACK_BIT       = StencilFaceFlagBits 0x00000002
--- | 'STENCIL_FACE_FRONT_AND_BACK' is the combination of
--- 'STENCIL_FACE_FRONT_BIT' and 'STENCIL_FACE_BACK_BIT', and specifies that
--- both sets of stencil state are updated.
+-- No documentation found for Nested "VkStencilFaceFlagBits" "VK_STENCIL_FACE_FRONT_AND_BACK"
 pattern STENCIL_FACE_FRONT_AND_BACK = StencilFaceFlagBits 0x00000003
 
 conNameStencilFaceFlagBits :: String
@@ -59,12 +50,14 @@ showTableStencilFaceFlagBits =
   , (STENCIL_FACE_FRONT_AND_BACK, "FRONT_AND_BACK")
   ]
 
+
 instance Show StencilFaceFlagBits where
-  showsPrec = enumShowsPrec enumPrefixStencilFaceFlagBits
-                            showTableStencilFaceFlagBits
-                            conNameStencilFaceFlagBits
-                            (\(StencilFaceFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixStencilFaceFlagBits
+                          showTableStencilFaceFlagBits
+                          conNameStencilFaceFlagBits
+                          (\(StencilFaceFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read StencilFaceFlagBits where
   readPrec = enumReadPrec enumPrefixStencilFaceFlagBits

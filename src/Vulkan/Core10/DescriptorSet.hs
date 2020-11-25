@@ -146,53 +146,14 @@ foreign import ccall
   "dynamic" mkVkCreateDescriptorSetLayout
   :: FunPtr (Ptr Device_T -> Ptr (SomeStruct DescriptorSetLayoutCreateInfo) -> Ptr AllocationCallbacks -> Ptr DescriptorSetLayout -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct DescriptorSetLayoutCreateInfo) -> Ptr AllocationCallbacks -> Ptr DescriptorSetLayout -> IO Result
 
--- | vkCreateDescriptorSetLayout - Create a new descriptor set layout
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateDescriptorSetLayout-device-parameter# @device@ /must/
---     be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkCreateDescriptorSetLayout-pCreateInfo-parameter#
---     @pCreateInfo@ /must/ be a valid pointer to a valid
---     'DescriptorSetLayoutCreateInfo' structure
---
--- -   #VUID-vkCreateDescriptorSetLayout-pAllocator-parameter# If
---     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
---     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     structure
---
--- -   #VUID-vkCreateDescriptorSetLayout-pSetLayout-parameter# @pSetLayout@
---     /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.DescriptorSetLayout' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.DescriptorSetLayout',
--- 'DescriptorSetLayoutCreateInfo', 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkCreateDescriptorSetLayout"
 createDescriptorSetLayout :: forall a io
                            . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, MonadIO io)
-                          => -- | @device@ is the logical device that creates the descriptor set layout.
+                          => -- No documentation found for Nested "vkCreateDescriptorSetLayout" "device"
                              Device
-                          -> -- | @pCreateInfo@ is a pointer to a 'DescriptorSetLayoutCreateInfo'
-                             -- structure specifying the state of the descriptor set layout object.
+                          -> -- No documentation found for Nested "vkCreateDescriptorSetLayout" "pCreateInfo"
                              (DescriptorSetLayoutCreateInfo a)
-                          -> -- | @pAllocator@ controls host memory allocation as described in the
-                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                             -- chapter.
+                          -> -- No documentation found for Nested "vkCreateDescriptorSetLayout" "pAllocator"
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io (DescriptorSetLayout)
 createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
@@ -231,58 +192,14 @@ foreign import ccall
   "dynamic" mkVkDestroyDescriptorSetLayout
   :: FunPtr (Ptr Device_T -> DescriptorSetLayout -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> DescriptorSetLayout -> Ptr AllocationCallbacks -> IO ()
 
--- | vkDestroyDescriptorSetLayout - Destroy a descriptor set layout object
---
--- == Valid Usage
---
--- -   #VUID-vkDestroyDescriptorSetLayout-descriptorSetLayout-00284# If
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @descriptorSetLayout@ was created, a compatible set of
---     callbacks /must/ be provided here
---
--- -   #VUID-vkDestroyDescriptorSetLayout-descriptorSetLayout-00285# If no
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @descriptorSetLayout@ was created, @pAllocator@ /must/
---     be @NULL@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDestroyDescriptorSetLayout-device-parameter# @device@ /must/
---     be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDestroyDescriptorSetLayout-descriptorSetLayout-parameter# If
---     @descriptorSetLayout@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @descriptorSetLayout@
---     /must/ be a valid 'Vulkan.Core10.Handles.DescriptorSetLayout' handle
---
--- -   #VUID-vkDestroyDescriptorSetLayout-pAllocator-parameter# If
---     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
---     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     structure
---
--- -   #VUID-vkDestroyDescriptorSetLayout-descriptorSetLayout-parent# If
---     @descriptorSetLayout@ is a valid handle, it /must/ have been
---     created, allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @descriptorSetLayout@ /must/ be externally
---     synchronized
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.DescriptorSetLayout',
--- 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkDestroyDescriptorSetLayout"
 destroyDescriptorSetLayout :: forall io
                             . (MonadIO io)
-                           => -- | @device@ is the logical device that destroys the descriptor set layout.
+                           => -- No documentation found for Nested "vkDestroyDescriptorSetLayout" "device"
                               Device
-                           -> -- | @descriptorSetLayout@ is the descriptor set layout to destroy.
+                           -> -- No documentation found for Nested "vkDestroyDescriptorSetLayout" "descriptorSetLayout"
                               DescriptorSetLayout
-                           -> -- | @pAllocator@ controls host memory allocation as described in the
-                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                              -- chapter.
+                           -> -- No documentation found for Nested "vkDestroyDescriptorSetLayout" "pAllocator"
                               ("allocator" ::: Maybe AllocationCallbacks)
                            -> io ()
 destroyDescriptorSetLayout device descriptorSetLayout allocator = liftIO . evalContT $ do
@@ -304,62 +221,14 @@ foreign import ccall
   "dynamic" mkVkCreateDescriptorPool
   :: FunPtr (Ptr Device_T -> Ptr (SomeStruct DescriptorPoolCreateInfo) -> Ptr AllocationCallbacks -> Ptr DescriptorPool -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct DescriptorPoolCreateInfo) -> Ptr AllocationCallbacks -> Ptr DescriptorPool -> IO Result
 
--- | vkCreateDescriptorPool - Creates a descriptor pool object
---
--- = Description
---
--- @pAllocator@ controls host memory allocation as described in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
--- chapter.
---
--- The created descriptor pool is returned in @pDescriptorPool@.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateDescriptorPool-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkCreateDescriptorPool-pCreateInfo-parameter# @pCreateInfo@
---     /must/ be a valid pointer to a valid 'DescriptorPoolCreateInfo'
---     structure
---
--- -   #VUID-vkCreateDescriptorPool-pAllocator-parameter# If @pAllocator@
---     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkCreateDescriptorPool-pDescriptorPool-parameter#
---     @pDescriptorPool@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.DescriptorPool' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Extensions.VK_EXT_descriptor_indexing.ERROR_FRAGMENTATION_EXT'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.DescriptorPool', 'DescriptorPoolCreateInfo',
--- 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkCreateDescriptorPool"
 createDescriptorPool :: forall a io
                       . (Extendss DescriptorPoolCreateInfo a, PokeChain a, MonadIO io)
-                     => -- | @device@ is the logical device that creates the descriptor pool.
+                     => -- No documentation found for Nested "vkCreateDescriptorPool" "device"
                         Device
-                     -> -- | @pCreateInfo@ is a pointer to a 'DescriptorPoolCreateInfo' structure
-                        -- specifying the state of the descriptor pool object.
+                     -> -- No documentation found for Nested "vkCreateDescriptorPool" "pCreateInfo"
                         (DescriptorPoolCreateInfo a)
-                     -> -- | @pAllocator@ controls host memory allocation as described in the
-                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                        -- chapter.
+                     -> -- No documentation found for Nested "vkCreateDescriptorPool" "pAllocator"
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (DescriptorPool)
 createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
@@ -398,66 +267,14 @@ foreign import ccall
   "dynamic" mkVkDestroyDescriptorPool
   :: FunPtr (Ptr Device_T -> DescriptorPool -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> DescriptorPool -> Ptr AllocationCallbacks -> IO ()
 
--- | vkDestroyDescriptorPool - Destroy a descriptor pool object
---
--- = Description
---
--- When a pool is destroyed, all descriptor sets allocated from the pool
--- are implicitly freed and become invalid. Descriptor sets allocated from
--- a given pool do not need to be freed before destroying that descriptor
--- pool.
---
--- == Valid Usage
---
--- -   #VUID-vkDestroyDescriptorPool-descriptorPool-00303# All submitted
---     commands that refer to @descriptorPool@ (via any allocated
---     descriptor sets) /must/ have completed execution
---
--- -   #VUID-vkDestroyDescriptorPool-descriptorPool-00304# If
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @descriptorPool@ was created, a compatible set of
---     callbacks /must/ be provided here
---
--- -   #VUID-vkDestroyDescriptorPool-descriptorPool-00305# If no
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @descriptorPool@ was created, @pAllocator@ /must/ be
---     @NULL@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDestroyDescriptorPool-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDestroyDescriptorPool-descriptorPool-parameter# If
---     @descriptorPool@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @descriptorPool@ /must/ be a valid
---     'Vulkan.Core10.Handles.DescriptorPool' handle
---
--- -   #VUID-vkDestroyDescriptorPool-pAllocator-parameter# If @pAllocator@
---     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkDestroyDescriptorPool-descriptorPool-parent# If
---     @descriptorPool@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @descriptorPool@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.DescriptorPool', 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkDestroyDescriptorPool"
 destroyDescriptorPool :: forall io
                        . (MonadIO io)
-                      => -- | @device@ is the logical device that destroys the descriptor pool.
+                      => -- No documentation found for Nested "vkDestroyDescriptorPool" "device"
                          Device
-                      -> -- | @descriptorPool@ is the descriptor pool to destroy.
+                      -> -- No documentation found for Nested "vkDestroyDescriptorPool" "descriptorPool"
                          DescriptorPool
-                      -> -- | @pAllocator@ controls host memory allocation as described in the
-                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                         -- chapter.
+                      -> -- No documentation found for Nested "vkDestroyDescriptorPool" "pAllocator"
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io ()
 destroyDescriptorPool device descriptorPool allocator = liftIO . evalContT $ do
@@ -479,59 +296,14 @@ foreign import ccall
   "dynamic" mkVkResetDescriptorPool
   :: FunPtr (Ptr Device_T -> DescriptorPool -> DescriptorPoolResetFlags -> IO Result) -> Ptr Device_T -> DescriptorPool -> DescriptorPoolResetFlags -> IO Result
 
--- | vkResetDescriptorPool - Resets a descriptor pool object
---
--- = Description
---
--- Resetting a descriptor pool recycles all of the resources from all of
--- the descriptor sets allocated from the descriptor pool back to the
--- descriptor pool, and the descriptor sets are implicitly freed.
---
--- == Valid Usage
---
--- -   #VUID-vkResetDescriptorPool-descriptorPool-00313# All uses of
---     @descriptorPool@ (via any allocated descriptor sets) /must/ have
---     completed execution
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkResetDescriptorPool-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkResetDescriptorPool-descriptorPool-parameter#
---     @descriptorPool@ /must/ be a valid
---     'Vulkan.Core10.Handles.DescriptorPool' handle
---
--- -   #VUID-vkResetDescriptorPool-flags-zerobitmask# @flags@ /must/ be @0@
---
--- -   #VUID-vkResetDescriptorPool-descriptorPool-parent# @descriptorPool@
---     /must/ have been created, allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @descriptorPool@ /must/ be externally synchronized
---
--- -   Host access to any 'Vulkan.Core10.Handles.DescriptorSet' objects
---     allocated from @descriptorPool@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.DescriptorPool',
--- 'Vulkan.Core10.Enums.DescriptorPoolResetFlags.DescriptorPoolResetFlags',
--- 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkResetDescriptorPool"
 resetDescriptorPool :: forall io
                      . (MonadIO io)
-                    => -- | @device@ is the logical device that owns the descriptor pool.
+                    => -- No documentation found for Nested "vkResetDescriptorPool" "device"
                        Device
-                    -> -- | @descriptorPool@ is the descriptor pool to be reset.
+                    -> -- No documentation found for Nested "vkResetDescriptorPool" "descriptorPool"
                        DescriptorPool
-                    -> -- | @flags@ is reserved for future use.
+                    -> -- No documentation found for Nested "vkResetDescriptorPool" "flags"
                        DescriptorPoolResetFlags
                     -> io ()
 resetDescriptorPool device descriptorPool flags = liftIO $ do
@@ -550,115 +322,12 @@ foreign import ccall
   "dynamic" mkVkAllocateDescriptorSets
   :: FunPtr (Ptr Device_T -> Ptr (SomeStruct DescriptorSetAllocateInfo) -> Ptr DescriptorSet -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct DescriptorSetAllocateInfo) -> Ptr DescriptorSet -> IO Result
 
--- | vkAllocateDescriptorSets - Allocate one or more descriptor sets
---
--- = Description
---
--- The allocated descriptor sets are returned in @pDescriptorSets@.
---
--- When a descriptor set is allocated, the initial state is largely
--- uninitialized and all descriptors are undefined. Descriptors also become
--- undefined if the underlying resource is destroyed. Descriptor sets
--- containing undefined descriptors /can/ still be bound and used, subject
--- to the following conditions:
---
--- -   For descriptor set bindings created with the
---     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT'
---     bit set, all descriptors in that binding that are dynamically used
---     /must/ have been populated before the descriptor set is
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-binding consumed>.
---
--- -   For descriptor set bindings created without the
---     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT'
---     bit set, all descriptors in that binding that are statically used
---     /must/ have been populated before the descriptor set is
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-binding consumed>.
---
--- -   Descriptor bindings with descriptor type of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     /can/ be undefined when the descriptor set is
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-binding consumed>;
---     though values in that block will be undefined.
---
--- -   Entries that are not used by a pipeline /can/ have undefined
---     descriptors.
---
--- If a call to 'allocateDescriptorSets' would cause the total number of
--- descriptor sets allocated from the pool to exceed the value of
--- 'DescriptorPoolCreateInfo'::@maxSets@ used to create
--- @pAllocateInfo->descriptorPool@, then the allocation /may/ fail due to
--- lack of space in the descriptor pool. Similarly, the allocation /may/
--- fail due to lack of space if the call to 'allocateDescriptorSets' would
--- cause the number of any given descriptor type to exceed the sum of all
--- the @descriptorCount@ members of each element of
--- 'DescriptorPoolCreateInfo'::@pPoolSizes@ with a @member@ equal to that
--- type.
---
--- Additionally, the allocation /may/ also fail if a call to
--- 'allocateDescriptorSets' would cause the total number of inline uniform
--- block bindings allocated from the pool to exceed the value of
--- 'Vulkan.Extensions.VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfoEXT'::@maxInlineUniformBlockBindings@
--- used to create the descriptor pool.
---
--- If the allocation fails due to no more space in the descriptor pool, and
--- not because of system or device memory exhaustion, then
--- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_POOL_MEMORY' /must/ be
--- returned.
---
--- 'allocateDescriptorSets' /can/ be used to create multiple descriptor
--- sets. If the creation of any of those descriptor sets fails, then the
--- implementation /must/ destroy all successfully created descriptor set
--- objects from this command, set all entries of the @pDescriptorSets@
--- array to 'Vulkan.Core10.APIConstants.NULL_HANDLE' and return the error.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkAllocateDescriptorSets-device-parameter# @device@ /must/ be
---     a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkAllocateDescriptorSets-pAllocateInfo-parameter#
---     @pAllocateInfo@ /must/ be a valid pointer to a valid
---     'DescriptorSetAllocateInfo' structure
---
--- -   #VUID-vkAllocateDescriptorSets-pDescriptorSets-parameter#
---     @pDescriptorSets@ /must/ be a valid pointer to an array of
---     @pAllocateInfo->descriptorSetCount@
---     'Vulkan.Core10.Handles.DescriptorSet' handles
---
--- -   #VUID-vkAllocateDescriptorSets-pAllocateInfo::descriptorSetCount-arraylength#
---     @pAllocateInfo->descriptorSetCount@ /must/ be greater than @0@
---
--- == Host Synchronization
---
--- -   Host access to @pAllocateInfo->descriptorPool@ /must/ be externally
---     synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_FRAGMENTED_POOL'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_POOL_MEMORY'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.DescriptorSet', 'DescriptorSetAllocateInfo',
--- 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkAllocateDescriptorSets"
 allocateDescriptorSets :: forall a io
                         . (Extendss DescriptorSetAllocateInfo a, PokeChain a, MonadIO io)
-                       => -- | @device@ is the logical device that owns the descriptor pool.
+                       => -- No documentation found for Nested "vkAllocateDescriptorSets" "device"
                           Device
-                       -> -- | @pAllocateInfo@ is a pointer to a 'DescriptorSetAllocateInfo' structure
-                          -- describing parameters of the allocation.
+                       -> -- No documentation found for Nested "vkAllocateDescriptorSets" "pAllocateInfo"
                           (DescriptorSetAllocateInfo a)
                        -> io (("descriptorSets" ::: Vector DescriptorSet))
 allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
@@ -694,75 +363,14 @@ foreign import ccall
   "dynamic" mkVkFreeDescriptorSets
   :: FunPtr (Ptr Device_T -> DescriptorPool -> Word32 -> Ptr DescriptorSet -> IO Result) -> Ptr Device_T -> DescriptorPool -> Word32 -> Ptr DescriptorSet -> IO Result
 
--- | vkFreeDescriptorSets - Free one or more descriptor sets
---
--- = Description
---
--- After calling 'freeDescriptorSets', all descriptor sets in
--- @pDescriptorSets@ are invalid.
---
--- == Valid Usage
---
--- -   #VUID-vkFreeDescriptorSets-pDescriptorSets-00309# All submitted
---     commands that refer to any element of @pDescriptorSets@ /must/ have
---     completed execution
---
--- -   #VUID-vkFreeDescriptorSets-pDescriptorSets-00310# @pDescriptorSets@
---     /must/ be a valid pointer to an array of @descriptorSetCount@
---     'Vulkan.Core10.Handles.DescriptorSet' handles, each element of which
---     /must/ either be a valid handle or
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   #VUID-vkFreeDescriptorSets-descriptorPool-00312# @descriptorPool@
---     /must/ have been created with the
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT'
---     flag
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkFreeDescriptorSets-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkFreeDescriptorSets-descriptorPool-parameter#
---     @descriptorPool@ /must/ be a valid
---     'Vulkan.Core10.Handles.DescriptorPool' handle
---
--- -   #VUID-vkFreeDescriptorSets-descriptorSetCount-arraylength#
---     @descriptorSetCount@ /must/ be greater than @0@
---
--- -   #VUID-vkFreeDescriptorSets-descriptorPool-parent# @descriptorPool@
---     /must/ have been created, allocated, or retrieved from @device@
---
--- -   #VUID-vkFreeDescriptorSets-pDescriptorSets-parent# Each element of
---     @pDescriptorSets@ that is a valid handle /must/ have been created,
---     allocated, or retrieved from @descriptorPool@
---
--- == Host Synchronization
---
--- -   Host access to @descriptorPool@ /must/ be externally synchronized
---
--- -   Host access to each member of @pDescriptorSets@ /must/ be externally
---     synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.DescriptorPool',
--- 'Vulkan.Core10.Handles.DescriptorSet', 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkFreeDescriptorSets"
 freeDescriptorSets :: forall io
                     . (MonadIO io)
-                   => -- | @device@ is the logical device that owns the descriptor pool.
+                   => -- No documentation found for Nested "vkFreeDescriptorSets" "device"
                       Device
-                   -> -- | @descriptorPool@ is the descriptor pool from which the descriptor sets
-                      -- were allocated.
+                   -> -- No documentation found for Nested "vkFreeDescriptorSets" "descriptorPool"
                       DescriptorPool
-                   -> -- | @pDescriptorSets@ is a pointer to an array of handles to
-                      -- 'Vulkan.Core10.Handles.DescriptorSet' objects.
+                   -> -- No documentation found for Nested "vkFreeDescriptorSets" "pDescriptorSets"
                       ("descriptorSets" ::: Vector DescriptorSet)
                    -> io ()
 freeDescriptorSets device descriptorPool descriptorSets = liftIO . evalContT $ do
@@ -783,81 +391,14 @@ foreign import ccall
   "dynamic" mkVkUpdateDescriptorSets
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr (SomeStruct WriteDescriptorSet) -> Word32 -> Ptr CopyDescriptorSet -> IO ()) -> Ptr Device_T -> Word32 -> Ptr (SomeStruct WriteDescriptorSet) -> Word32 -> Ptr CopyDescriptorSet -> IO ()
 
--- | vkUpdateDescriptorSets - Update the contents of a descriptor set object
---
--- = Description
---
--- The operations described by @pDescriptorWrites@ are performed first,
--- followed by the operations described by @pDescriptorCopies@. Within each
--- array, the operations are performed in the order they appear in the
--- array.
---
--- Each element in the @pDescriptorWrites@ array describes an operation
--- updating the descriptor set using descriptors for resources specified in
--- the structure.
---
--- Each element in the @pDescriptorCopies@ array is a 'CopyDescriptorSet'
--- structure describing an operation copying descriptors between sets.
---
--- If the @dstSet@ member of any element of @pDescriptorWrites@ or
--- @pDescriptorCopies@ is bound, accessed, or modified by any command that
--- was recorded to a command buffer which is currently in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>,
--- and any of the descriptor bindings that are updated were not created
--- with the
--- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
--- or
--- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
--- bits set, that command buffer becomes
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
---
--- == Valid Usage
---
--- -   #VUID-vkUpdateDescriptorSets-None-03047# Descriptor bindings updated
---     by this command which were created without the
---     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
---     or
---     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
---     bits set /must/ not be used by any command that was recorded to a
---     command buffer which is in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkUpdateDescriptorSets-device-parameter# @device@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-parameter# If
---     @descriptorWriteCount@ is not @0@, @pDescriptorWrites@ /must/ be a
---     valid pointer to an array of @descriptorWriteCount@ valid
---     'WriteDescriptorSet' structures
---
--- -   #VUID-vkUpdateDescriptorSets-pDescriptorCopies-parameter# If
---     @descriptorCopyCount@ is not @0@, @pDescriptorCopies@ /must/ be a
---     valid pointer to an array of @descriptorCopyCount@ valid
---     'CopyDescriptorSet' structures
---
--- == Host Synchronization
---
--- -   Host access to @pDescriptorWrites@[].dstSet /must/ be externally
---     synchronized
---
--- -   Host access to @pDescriptorCopies@[].dstSet /must/ be externally
---     synchronized
---
--- = See Also
---
--- 'CopyDescriptorSet', 'Vulkan.Core10.Handles.Device',
--- 'WriteDescriptorSet'
+-- No documentation found for TopLevel "vkUpdateDescriptorSets"
 updateDescriptorSets :: forall io
                       . (MonadIO io)
-                     => -- | @device@ is the logical device that updates the descriptor sets.
+                     => -- No documentation found for Nested "vkUpdateDescriptorSets" "device"
                         Device
-                     -> -- | @pDescriptorWrites@ is a pointer to an array of 'WriteDescriptorSet'
-                        -- structures describing the descriptor sets to write to.
+                     -> -- No documentation found for Nested "vkUpdateDescriptorSets" "pDescriptorWrites"
                         ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet))
-                     -> -- | @pDescriptorCopies@ is a pointer to an array of 'CopyDescriptorSet'
-                        -- structures describing the descriptor sets to copy between.
+                     -> -- No documentation found for Nested "vkUpdateDescriptorSets" "pDescriptorCopies"
                         ("descriptorCopies" ::: Vector CopyDescriptorSet)
                      -> io ()
 updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalContT $ do
@@ -873,74 +414,14 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
   pure $ ()
 
 
--- | VkDescriptorBufferInfo - Structure specifying descriptor buffer info
---
--- = Description
---
--- Note
---
--- When setting @range@ to 'Vulkan.Core10.APIConstants.WHOLE_SIZE', the
--- effective range /must/ not be larger than the maximum range for the
--- descriptor type
--- (<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxUniformBufferRange maxUniformBufferRange>
--- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxStorageBufferRange maxStorageBufferRange>).
--- This means that 'Vulkan.Core10.APIConstants.WHOLE_SIZE' is not typically
--- useful in the common case where uniform buffer descriptors are
--- suballocated from a buffer that is much larger than
--- @maxUniformBufferRange@.
---
--- For
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
--- and
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
--- descriptor types, @offset@ is the base offset from which the dynamic
--- offset is applied and @range@ is the static size used for all dynamic
--- offsets.
---
--- == Valid Usage
---
--- -   #VUID-VkDescriptorBufferInfo-offset-00340# @offset@ /must/ be less
---     than the size of @buffer@
---
--- -   #VUID-VkDescriptorBufferInfo-range-00341# If @range@ is not equal to
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be greater
---     than @0@
---
--- -   #VUID-VkDescriptorBufferInfo-range-00342# If @range@ is not equal to
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be less than
---     or equal to the size of @buffer@ minus @offset@
---
--- -   #VUID-VkDescriptorBufferInfo-buffer-02998# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
---     feature is not enabled, @buffer@ /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   #VUID-VkDescriptorBufferInfo-buffer-02999# If @buffer@ is
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @offset@ /must/ be zero
---     and @range@ /must/ be 'Vulkan.Core10.APIConstants.WHOLE_SIZE'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDescriptorBufferInfo-buffer-parameter# If @buffer@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.Buffer' handle
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Buffer',
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'WriteDescriptorSet'
+
+-- No documentation found for TopLevel "VkDescriptorBufferInfo"
 data DescriptorBufferInfo = DescriptorBufferInfo
-  { -- | @buffer@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or the buffer
-    -- resource.
+  { -- No documentation found for Nested "VkDescriptorBufferInfo" "buffer"
     buffer :: Buffer
-  , -- | @offset@ is the offset in bytes from the start of @buffer@. Access to
-    -- buffer memory via this descriptor uses addressing that is relative to
-    -- this starting offset.
+  , -- No documentation found for Nested "VkDescriptorBufferInfo" "offset"
     offset :: DeviceSize
-  , -- | @range@ is the size in bytes that is used for this descriptor update, or
-    -- 'Vulkan.Core10.APIConstants.WHOLE_SIZE' to use the range from @offset@
-    -- to the end of the buffer.
+  , -- No documentation found for Nested "VkDescriptorBufferInfo" "range"
     range :: DeviceSize
   }
   deriving (Typeable, Eq)
@@ -971,6 +452,7 @@ instance FromCStruct DescriptorBufferInfo where
     pure $ DescriptorBufferInfo
              buffer offset range
 
+
 instance Storable DescriptorBufferInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -984,84 +466,14 @@ instance Zero DescriptorBufferInfo where
            zero
 
 
--- | VkDescriptorImageInfo - Structure specifying descriptor image info
---
--- = Description
---
--- Members of 'DescriptorImageInfo' that are not used in an update (as
--- described above) are ignored.
---
--- == Valid Usage
---
--- -   #VUID-VkDescriptorImageInfo-imageView-00343# @imageView@ /must/ not
---     be 2D or 2D array image view created from a 3D image
---
--- -   #VUID-VkDescriptorImageInfo-imageView-01976# If @imageView@ is
---     created from a depth\/stencil image, the @aspectMask@ used to create
---     the @imageView@ /must/ include either
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
---     but not both
---
--- -   #VUID-VkDescriptorImageInfo-imageLayout-00344# @imageLayout@ /must/
---     match the actual 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' of
---     each subresource accessible from @imageView@ at the time this
---     descriptor is accessed as defined by the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-layouts-matching-rule image layout matching rules>
---
--- -   #VUID-VkDescriptorImageInfo-sampler-01564# If @sampler@ is used and
---     the 'Vulkan.Core10.Enums.Format.Format' of the image is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     the image /must/ have been created with
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
---     and the @aspectMask@ of the @imageView@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
---     or (for three-plane formats only)
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---
--- -   #VUID-VkDescriptorImageInfo-mutableComparisonSamplers-04450# If the
---     @VK_KHR_portability_subset@ extension is enabled, and
---     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@mutableComparisonSamplers@
---     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @sampler@ /must/
---     have been created with
---     'Vulkan.Core10.Sampler.SamplerCreateInfo'::@compareEnable@ set to
---     'Vulkan.Core10.FundamentalTypes.FALSE'.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDescriptorImageInfo-commonparent# Both of @imageView@, and
---     @sampler@ that are valid handles of non-ignored parameters /must/
---     have been created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Device'
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
--- 'Vulkan.Core10.Handles.ImageView', 'Vulkan.Core10.Handles.Sampler',
--- 'WriteDescriptorSet'
+
+-- No documentation found for TopLevel "VkDescriptorImageInfo"
 data DescriptorImageInfo = DescriptorImageInfo
-  { -- | @sampler@ is a sampler handle, and is used in descriptor updates for
-    -- types 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' and
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
-    -- if the binding being updated does not use immutable samplers.
+  { -- No documentation found for Nested "VkDescriptorImageInfo" "sampler"
     sampler :: Sampler
-  , -- | @imageView@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or an image view
-    -- handle, and is used in descriptor updates for types
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
-    -- and
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'.
+  , -- No documentation found for Nested "VkDescriptorImageInfo" "imageView"
     imageView :: ImageView
-  , -- | @imageLayout@ is the layout that the image subresources accessible from
-    -- @imageView@ will be in at the time this descriptor is accessed.
-    -- @imageLayout@ is used in descriptor updates for types
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
-    -- and
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'.
+  , -- No documentation found for Nested "VkDescriptorImageInfo" "imageLayout"
     imageLayout :: ImageLayout
   }
   deriving (Typeable, Eq)
@@ -1093,6 +505,7 @@ instance FromCStruct DescriptorImageInfo where
     pure $ DescriptorImageInfo
              sampler imageView imageLayout
 
+
 instance Storable DescriptorImageInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -1106,470 +519,26 @@ instance Zero DescriptorImageInfo where
            zero
 
 
--- | VkWriteDescriptorSet - Structure specifying the parameters of a
--- descriptor set write operation
---
--- = Description
---
--- Only one of @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
--- is used according to the descriptor type specified in the
--- @descriptorType@ member of the containing 'WriteDescriptorSet'
--- structure, or none of them in case @descriptorType@ is
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
--- in which case the source data for the descriptor writes is taken from
--- the
--- 'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
--- structure included in the @pNext@ chain of 'WriteDescriptorSet', or if
--- @descriptorType@ is
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
--- in which case the source data for the descriptor writes is taken from
--- the
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
--- structure in the @pNext@ chain of 'WriteDescriptorSet', or if
--- @descriptorType@ is
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
--- in which case the source data for the descriptor writes is taken from
--- the
--- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
--- structure in the @pNext@ chain of 'WriteDescriptorSet', as specified
--- below.
---
--- If the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
--- feature is enabled, the buffer, acceleration structure, imageView, or
--- bufferView /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'. Loads from
--- a null descriptor return zero values and stores and atomics to a null
--- descriptor are discarded. A null acceleration structure descriptor
--- results in the miss shader being invoked.
---
--- If the @dstBinding@ has fewer than @descriptorCount@ array elements
--- remaining starting from @dstArrayElement@, then the remainder will be
--- used to update the subsequent binding - @dstBinding@+1 starting at array
--- element zero. If a binding has a @descriptorCount@ of zero, it is
--- skipped. This behavior applies recursively, with the update affecting
--- consecutive bindings as needed to update all @descriptorCount@
--- descriptors.
---
--- Note
---
--- The same behavior applies to bindings with a descriptor type of
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
--- where @descriptorCount@ specifies the number of bytes to update while
--- @dstArrayElement@ specifies the starting byte offset, thus in this case
--- if the @dstBinding@ has a smaller byte size than the sum of
--- @dstArrayElement@ and @descriptorCount@, then the remainder will be used
--- to update the subsequent binding - @dstBinding@+1 starting at offset
--- zero. This falls out as a special case of the above rule.
---
--- == Valid Usage
---
--- -   #VUID-VkWriteDescriptorSet-dstBinding-00315# @dstBinding@ /must/ be
---     less than or equal to the maximum value of @binding@ of all
---     'DescriptorSetLayoutBinding' structures specified when @dstSet@’s
---     descriptor set layout was created
---
--- -   #VUID-VkWriteDescriptorSet-dstBinding-00316# @dstBinding@ /must/ be
---     a binding with a non-zero @descriptorCount@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorCount-00317# All consecutive
---     bindings updated via a single 'WriteDescriptorSet' structure, except
---     those with a @descriptorCount@ of zero, /must/ have identical
---     @descriptorType@ and @stageFlags@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorCount-00318# All consecutive
---     bindings updated via a single 'WriteDescriptorSet' structure, except
---     those with a @descriptorCount@ of zero, /must/ all either use
---     immutable samplers or /must/ all not use immutable samplers
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00319# @descriptorType@
---     /must/ match the type of @dstBinding@ within @dstSet@
---
--- -   #VUID-VkWriteDescriptorSet-dstSet-00320# @dstSet@ /must/ be a valid
---     'Vulkan.Core10.Handles.DescriptorSet' handle
---
--- -   #VUID-VkWriteDescriptorSet-dstArrayElement-00321# The sum of
---     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
---     to the number of array elements in the descriptor set binding
---     specified by @dstBinding@, and all applicable consecutive bindings,
---     as described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-02219# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @dstArrayElement@ /must/ be an integer multiple of @4@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-02220# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @descriptorCount@ /must/ be an integer multiple of @4@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00322# If @descriptorType@
---     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     @pImageInfo@ /must/ be a valid pointer to an array of
---     @descriptorCount@ valid 'DescriptorImageInfo' structures
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-02994# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
---     each element of @pTexelBufferView@ /must/ be either a valid
---     'Vulkan.Core10.Handles.BufferView' handle or
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-02995# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
---     and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
---     feature is not enabled, each element of @pTexelBufferView@ /must/
---     not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00324# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
---     @pBufferInfo@ /must/ be a valid pointer to an array of
---     @descriptorCount@ valid 'DescriptorBufferInfo' structures
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00325# If @descriptorType@
---     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     and @dstSet@ was not allocated with a layout that included immutable
---     samplers for @dstBinding@ with @descriptorType@, the @sampler@
---     member of each element of @pImageInfo@ /must/ be a valid
---     'Vulkan.Core10.Handles.Sampler' object
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-02996# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     the @imageView@ member of each element of @pImageInfo@ /must/ be
---     either a valid 'Vulkan.Core10.Handles.ImageView' handle or
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-02997# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
---     and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
---     feature is not enabled, the @imageView@ member of each element of
---     @pImageInfo@ /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-02221# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     the @pNext@ chain /must/ include a
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
---     structure whose @dataSize@ member equals @descriptorCount@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-02382# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
---     the @pNext@ chain /must/ include a
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
---     structure whose @accelerationStructureCount@ member equals
---     @descriptorCount@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-03817# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
---     the @pNext@ chain /must/ include a
---     'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
---     structure whose @accelerationStructureCount@ member equals
---     @descriptorCount@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-01946# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     then the @imageView@ member of each @pImageInfo@ element /must/ have
---     been created without a
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
---     structure in its @pNext@ chain
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-02738# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     and if any element of @pImageInfo@ has a @imageView@ member that was
---     created with a
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
---     structure in its @pNext@ chain, then @dstSet@ /must/ have been
---     allocated with a layout that included immutable samplers for
---     @dstBinding@, and the corresponding immutable sampler /must/ have
---     been created with an /identically defined/
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
---     object
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-01948# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     and @dstSet@ was allocated with a layout that included immutable
---     samplers for @dstBinding@, then the @imageView@ member of each
---     element of @pImageInfo@ which corresponds to an immutable sampler
---     that enables
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
---     /must/ have been created with a
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
---     structure in its @pNext@ chain with an /identically defined/
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
---     to the corresponding immutable sampler
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00327# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
---     the @offset@ member of each element of @pBufferInfo@ /must/ be a
---     multiple of
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minUniformBufferOffsetAlignment@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00328# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
---     the @offset@ member of each element of @pBufferInfo@ /must/ be a
---     multiple of
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minStorageBufferOffsetAlignment@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00329# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
---     and the @buffer@ member of any element of @pBufferInfo@ is the
---     handle of a non-sparse buffer, then that buffer /must/ be bound
---     completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00330# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
---     the @buffer@ member of each element of @pBufferInfo@ /must/ have
---     been created with
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_BUFFER_BIT'
---     set
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00331# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
---     the @buffer@ member of each element of @pBufferInfo@ /must/ have
---     been created with
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
---     set
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00332# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
---     the @range@ member of each element of @pBufferInfo@, or the
---     effective range if @range@ is
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE', /must/ be less than or
---     equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxUniformBufferRange@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00333# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
---     the @range@ member of each element of @pBufferInfo@, or the
---     effective range if @range@ is
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE', /must/ be less than or
---     equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxStorageBufferRange@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00334# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
---     the 'Vulkan.Core10.Handles.Buffer' that each element of
---     @pTexelBufferView@ was created from /must/ have been created with
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
---     set
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00335# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
---     the 'Vulkan.Core10.Handles.Buffer' that each element of
---     @pTexelBufferView@ was created from /must/ have been created with
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
---     set
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00336# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     the @imageView@ member of each element of @pImageInfo@ /must/ have
---     been created with the identity swizzle
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00337# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     the @imageView@ member of each element of @pImageInfo@ /must/ have
---     been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT' set
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-04149# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
---     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
---     member of the list given in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage Sampled Image>
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-04150# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
---     member of the list given in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-combinedimagesampler Combined Image Sampler>
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-04151# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
---     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
---     member of the list given in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inputattachment Input Attachment>
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-04152# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
---     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
---     member of the list given in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage Storage Image>
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00338# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     the @imageView@ member of each element of @pImageInfo@ /must/ have
---     been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
---     set
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00339# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     the @imageView@ member of each element of @pImageInfo@ /must/ have
---     been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT' set
---
--- -   #VUID-VkWriteDescriptorSet-descriptorCount-03048# All consecutive
---     bindings updated via a single 'WriteDescriptorSet' structure, except
---     those with a @descriptorCount@ of zero, /must/ have identical
---     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-02752# If @descriptorType@
---     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
---     then @dstSet@ /must/ not have been allocated with a layout that
---     included immutable samplers for @dstBinding@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkWriteDescriptorSet-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET'
---
--- -   #VUID-VkWriteDescriptorSet-pNext-pNext# Each @pNext@ member of any
---     structure (including this one) in the @pNext@ chain /must/ be either
---     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR',
---     'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV',
---     or
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
---
--- -   #VUID-VkWriteDescriptorSet-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-parameter#
---     @descriptorType@ /must/ be a valid
---     'Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
---
--- -   #VUID-VkWriteDescriptorSet-descriptorCount-arraylength#
---     @descriptorCount@ /must/ be greater than @0@
---
--- -   #VUID-VkWriteDescriptorSet-commonparent# Both of @dstSet@, and the
---     elements of @pTexelBufferView@ that are valid handles of non-ignored
---     parameters /must/ have been created, allocated, or retrieved from
---     the same 'Vulkan.Core10.Handles.Device'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.BufferView', 'DescriptorBufferInfo',
--- 'DescriptorImageInfo', 'Vulkan.Core10.Handles.DescriptorSet',
--- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR',
--- 'updateDescriptorSets'
+
+-- No documentation found for TopLevel "VkWriteDescriptorSet"
 data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkWriteDescriptorSet" "pNext"
     next :: Chain es
-  , -- | @dstSet@ is the destination descriptor set to update.
+  , -- No documentation found for Nested "VkWriteDescriptorSet" "dstSet"
     dstSet :: DescriptorSet
-  , -- | @dstBinding@ is the descriptor binding within that set.
+  , -- No documentation found for Nested "VkWriteDescriptorSet" "dstBinding"
     dstBinding :: Word32
-  , -- | @dstArrayElement@ is the starting element in that array. If the
-    -- descriptor binding identified by @dstSet@ and @dstBinding@ has a
-    -- descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
-    -- then @dstArrayElement@ specifies the starting byte offset within the
-    -- binding.
+  , -- No documentation found for Nested "VkWriteDescriptorSet" "dstArrayElement"
     dstArrayElement :: Word32
-  , -- | @descriptorCount@ is the number of descriptors to update (the number of
-    -- elements in @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ , or a
-    -- value matching the @dataSize@ member of a
-    -- 'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
-    -- structure in the @pNext@ chain , or a value matching the
-    -- @accelerationStructureCount@ of a
-    -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
-    -- structure in the @pNext@ chain ). If the descriptor binding identified
-    -- by @dstSet@ and @dstBinding@ has a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
-    -- then @descriptorCount@ specifies the number of bytes to update.
+  , -- No documentation found for Nested "VkWriteDescriptorSet" "descriptorCount"
     descriptorCount :: Word32
-  , -- | @descriptorType@ is a
-    -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' specifying the type
-    -- of each descriptor in @pImageInfo@, @pBufferInfo@, or
-    -- @pTexelBufferView@, as described below. It /must/ be the same type as
-    -- that specified in 'DescriptorSetLayoutBinding' for @dstSet@ at
-    -- @dstBinding@. The type of the descriptor also controls which array the
-    -- descriptors are taken from.
+  , -- No documentation found for Nested "VkWriteDescriptorSet" "descriptorType"
     descriptorType :: DescriptorType
-  , -- | @pImageInfo@ is a pointer to an array of 'DescriptorImageInfo'
-    -- structures or is ignored, as described below.
+  , -- No documentation found for Nested "VkWriteDescriptorSet" "pImageInfo"
     imageInfo :: Vector DescriptorImageInfo
-  , -- | @pBufferInfo@ is a pointer to an array of 'DescriptorBufferInfo'
-    -- structures or is ignored, as described below.
+  , -- No documentation found for Nested "VkWriteDescriptorSet" "pBufferInfo"
     bufferInfo :: Vector DescriptorBufferInfo
-  , -- | @pTexelBufferView@ is a pointer to an array of
-    -- 'Vulkan.Core10.Handles.BufferView' handles as described in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-buffer-views Buffer Views>
-    -- section or is ignored, as described below.
+  , -- No documentation found for Nested "VkWriteDescriptorSet" "pTexelBufferView"
     texelBufferView :: Vector BufferView
   }
   deriving (Typeable)
@@ -1677,150 +646,22 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
            mempty
 
 
--- | VkCopyDescriptorSet - Structure specifying a copy descriptor set
--- operation
---
--- == Valid Usage
---
--- -   #VUID-VkCopyDescriptorSet-srcBinding-00345# @srcBinding@ /must/ be a
---     valid binding within @srcSet@
---
--- -   #VUID-VkCopyDescriptorSet-srcArrayElement-00346# The sum of
---     @srcArrayElement@ and @descriptorCount@ /must/ be less than or equal
---     to the number of array elements in the descriptor set binding
---     specified by @srcBinding@, and all applicable consecutive bindings,
---     as described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
---
--- -   #VUID-VkCopyDescriptorSet-dstBinding-00347# @dstBinding@ /must/ be a
---     valid binding within @dstSet@
---
--- -   #VUID-VkCopyDescriptorSet-dstArrayElement-00348# The sum of
---     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
---     to the number of array elements in the descriptor set binding
---     specified by @dstBinding@, and all applicable consecutive bindings,
---     as described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
---
--- -   #VUID-VkCopyDescriptorSet-dstBinding-02632# The type of @dstBinding@
---     within @dstSet@ /must/ be equal to the type of @srcBinding@ within
---     @srcSet@
---
--- -   #VUID-VkCopyDescriptorSet-srcSet-00349# If @srcSet@ is equal to
---     @dstSet@, then the source and destination ranges of descriptors
---     /must/ not overlap, where the ranges /may/ include array elements
---     from consecutive bindings as described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
---
--- -   #VUID-VkCopyDescriptorSet-srcBinding-02223# If the descriptor type
---     of the descriptor set binding specified by @srcBinding@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @srcArrayElement@ /must/ be an integer multiple of @4@
---
--- -   #VUID-VkCopyDescriptorSet-dstBinding-02224# If the descriptor type
---     of the descriptor set binding specified by @dstBinding@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @dstArrayElement@ /must/ be an integer multiple of @4@
---
--- -   #VUID-VkCopyDescriptorSet-srcBinding-02225# If the descriptor type
---     of the descriptor set binding specified by either @srcBinding@ or
---     @dstBinding@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @descriptorCount@ /must/ be an integer multiple of @4@
---
--- -   #VUID-VkCopyDescriptorSet-srcSet-01918# If @srcSet@’s layout was
---     created with the
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     flag set, then @dstSet@’s layout /must/ also have been created with
---     the
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     flag set
---
--- -   #VUID-VkCopyDescriptorSet-srcSet-01919# If @srcSet@’s layout was
---     created without the
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     flag set, then @dstSet@’s layout /must/ also have been created
---     without the
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     flag set
---
--- -   #VUID-VkCopyDescriptorSet-srcSet-01920# If the descriptor pool from
---     which @srcSet@ was allocated was created with the
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
---     flag set, then the descriptor pool from which @dstSet@ was allocated
---     /must/ also have been created with the
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
---     flag set
---
--- -   #VUID-VkCopyDescriptorSet-srcSet-01921# If the descriptor pool from
---     which @srcSet@ was allocated was created without the
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
---     flag set, then the descriptor pool from which @dstSet@ was allocated
---     /must/ also have been created without the
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
---     flag set
---
--- -   #VUID-VkCopyDescriptorSet-dstBinding-02753# If the descriptor type
---     of the descriptor set binding specified by @dstBinding@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER', then
---     @dstSet@ /must/ not have been allocated with a layout that included
---     immutable samplers for @dstBinding@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkCopyDescriptorSet-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_DESCRIPTOR_SET'
---
--- -   #VUID-VkCopyDescriptorSet-pNext-pNext# @pNext@ /must/ be @NULL@
---
--- -   #VUID-VkCopyDescriptorSet-srcSet-parameter# @srcSet@ /must/ be a
---     valid 'Vulkan.Core10.Handles.DescriptorSet' handle
---
--- -   #VUID-VkCopyDescriptorSet-dstSet-parameter# @dstSet@ /must/ be a
---     valid 'Vulkan.Core10.Handles.DescriptorSet' handle
---
--- -   #VUID-VkCopyDescriptorSet-commonparent# Both of @dstSet@, and
---     @srcSet@ /must/ have been created, allocated, or retrieved from the
---     same 'Vulkan.Core10.Handles.Device'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.DescriptorSet',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'updateDescriptorSets'
+
+-- No documentation found for TopLevel "VkCopyDescriptorSet"
 data CopyDescriptorSet = CopyDescriptorSet
-  { -- | @srcSet@, @srcBinding@, and @srcArrayElement@ are the source set,
-    -- binding, and array element, respectively. If the descriptor binding
-    -- identified by @srcSet@ and @srcBinding@ has a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
-    -- then @srcArrayElement@ specifies the starting byte offset within the
-    -- binding to copy from.
+  { -- No documentation found for Nested "VkCopyDescriptorSet" "srcSet"
     srcSet :: DescriptorSet
   , -- No documentation found for Nested "VkCopyDescriptorSet" "srcBinding"
     srcBinding :: Word32
   , -- No documentation found for Nested "VkCopyDescriptorSet" "srcArrayElement"
     srcArrayElement :: Word32
-  , -- | @dstSet@, @dstBinding@, and @dstArrayElement@ are the destination set,
-    -- binding, and array element, respectively. If the descriptor binding
-    -- identified by @dstSet@ and @dstBinding@ has a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
-    -- then @dstArrayElement@ specifies the starting byte offset within the
-    -- binding to copy to.
+  , -- No documentation found for Nested "VkCopyDescriptorSet" "dstSet"
     dstSet :: DescriptorSet
   , -- No documentation found for Nested "VkCopyDescriptorSet" "dstBinding"
     dstBinding :: Word32
   , -- No documentation found for Nested "VkCopyDescriptorSet" "dstArrayElement"
     dstArrayElement :: Word32
-  , -- | @descriptorCount@ is the number of descriptors to copy from the source
-    -- to destination. If @descriptorCount@ is greater than the number of
-    -- remaining array elements in the source or destination binding, those
-    -- affect consecutive bindings in a manner similar to 'WriteDescriptorSet'
-    -- above. If the descriptor binding identified by @srcSet@ and @srcBinding@
-    -- has a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
-    -- then @descriptorCount@ specifies the number of bytes to copy and the
-    -- remaining array elements in the source or destination binding refer to
-    -- the remaining number of bytes in those.
+  , -- No documentation found for Nested "VkCopyDescriptorSet" "descriptorCount"
     descriptorCount :: Word32
   }
   deriving (Typeable, Eq)
@@ -1868,6 +709,7 @@ instance FromCStruct CopyDescriptorSet where
     pure $ CopyDescriptorSet
              srcSet srcBinding srcArrayElement dstSet dstBinding dstArrayElement descriptorCount
 
+
 instance Storable CopyDescriptorSet where
   sizeOf ~_ = 56
   alignment ~_ = 8
@@ -1885,129 +727,16 @@ instance Zero CopyDescriptorSet where
            zero
 
 
--- | VkDescriptorSetLayoutBinding - Structure specifying a descriptor set
--- layout binding
---
--- = Description
---
--- -   @pImmutableSamplers@ affects initialization of samplers. If
---     @descriptorType@ specifies a
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     type descriptor, then @pImmutableSamplers@ /can/ be used to
---     initialize a set of /immutable samplers/. Immutable samplers are
---     permanently bound into the set layout and /must/ not be changed;
---     updating a
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER'
---     descriptor with immutable samplers is not allowed and updates to a
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     descriptor with immutable samplers does not modify the samplers (the
---     image views are updated, but the sampler updates are ignored). If
---     @pImmutableSamplers@ is not @NULL@, then it points to an array of
---     sampler handles that will be copied into the set layout and used for
---     the corresponding binding. Only the sampler handles are copied; the
---     sampler objects /must/ not be destroyed before the final use of the
---     set layout and any descriptor pools and sets created using it. If
---     @pImmutableSamplers@ is @NULL@, then the sampler slots are dynamic
---     and sampler handles /must/ be bound into descriptor sets using this
---     layout. If @descriptorType@ is not one of these descriptor types,
---     then @pImmutableSamplers@ is ignored.
---
--- The above layout definition allows the descriptor bindings to be
--- specified sparsely such that not all binding numbers between 0 and the
--- maximum binding number need to be specified in the @pBindings@ array.
--- Bindings that are not specified have a @descriptorCount@ and
--- @stageFlags@ of zero, and the value of @descriptorType@ is undefined.
--- However, all binding numbers between 0 and the maximum binding number in
--- the 'DescriptorSetLayoutCreateInfo'::@pBindings@ array /may/ consume
--- memory in the descriptor set layout even if not all descriptor bindings
--- are used, though it /should/ not consume additional memory from the
--- descriptor pool.
---
--- Note
---
--- The maximum binding number specified /should/ be as compact as possible
--- to avoid wasted memory.
---
--- == Valid Usage
---
--- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-00282# If
---     @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     and @descriptorCount@ is not @0@ and @pImmutableSamplers@ is not
---     @NULL@, @pImmutableSamplers@ /must/ be a valid pointer to an array
---     of @descriptorCount@ valid 'Vulkan.Core10.Handles.Sampler' handles
---
--- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-02209# If
---     @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     then @descriptorCount@ /must/ be a multiple of @4@
---
--- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-02210# If
---     @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     then @descriptorCount@ /must/ be less than or equal to
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxInlineUniformBlockSize@
---
--- -   #VUID-VkDescriptorSetLayoutBinding-descriptorCount-00283# If
---     @descriptorCount@ is not @0@, @stageFlags@ /must/ be a valid
---     combination of
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' values
---
--- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-01510# If
---     @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
---     and @descriptorCount@ is not @0@, then @stageFlags@ /must/ be @0@ or
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
---
--- -   #VUID-VkDescriptorSetLayoutBinding-pImmutableSamplers-04009# The
---     sampler objects indicated by @pImmutableSamplers@ /must/ not have a
---     @borderColor@ with one of the values
---     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
---     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-parameter#
---     @descriptorType@ /must/ be a valid
---     'Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
---
--- = See Also
---
--- 'DescriptorSetLayoutCreateInfo',
--- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
--- 'Vulkan.Core10.Handles.Sampler',
--- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
+
+-- No documentation found for TopLevel "VkDescriptorSetLayoutBinding"
 data DescriptorSetLayoutBinding = DescriptorSetLayoutBinding
-  { -- | @binding@ is the binding number of this entry and corresponds to a
-    -- resource of the same binding number in the shader stages.
+  { -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "binding"
     binding :: Word32
-  , -- | @descriptorType@ is a
-    -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' specifying which
-    -- type of resource descriptors are used for this binding.
+  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "descriptorType"
     descriptorType :: DescriptorType
-  , -- | @descriptorCount@ is the number of descriptors contained in the binding,
-    -- accessed in a shader as an array , except if @descriptorType@ is
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
-    -- in which case @descriptorCount@ is the size in bytes of the inline
-    -- uniform block . If @descriptorCount@ is zero this binding entry is
-    -- reserved and the resource /must/ not be accessed from any stage via this
-    -- binding within any pipeline using the set layout.
+  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "descriptorCount"
     descriptorCount :: Word32
-  , -- | @stageFlags@ member is a bitmask of
-    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' specifying
-    -- which pipeline shader stages /can/ access a resource for this binding.
-    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_ALL' is a
-    -- shorthand specifying that all defined shader stages, including any
-    -- additional stages defined by extensions, /can/ access the resource.
-    --
-    -- If a shader stage is not included in @stageFlags@, then a resource
-    -- /must/ not be accessed from that stage via this binding within any
-    -- pipeline using the set layout. Other than input attachments which are
-    -- limited to the fragment shader, there are no limitations on what
-    -- combinations of stages /can/ use a descriptor binding, and in particular
-    -- a binding /can/ be used by both graphics stages and the compute stage.
+  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "stageFlags"
     stageFlags :: ShaderStageFlags
   , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "pImmutableSamplers"
     immutableSamplers :: Vector Sampler
@@ -2069,91 +798,14 @@ instance Zero DescriptorSetLayoutBinding where
            mempty
 
 
--- | VkDescriptorSetLayoutCreateInfo - Structure specifying parameters of a
--- newly created descriptor set layout
---
--- == Valid Usage
---
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-binding-00279# The
---     'DescriptorSetLayoutBinding'::@binding@ members of the elements of
---     the @pBindings@ array /must/ each have different values
---
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-00280# If @flags@
---     contains
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
---     then all elements of @pBindings@ /must/ not have a @descriptorType@
---     of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
---
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-02208# If @flags@
---     contains
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
---     then all elements of @pBindings@ /must/ not have a @descriptorType@
---     of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-00281# If @flags@
---     contains
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
---     then the total number of elements of all bindings /must/ be less
---     than or equal to
---     'Vulkan.Extensions.VK_KHR_push_descriptor.PhysicalDevicePushDescriptorPropertiesKHR'::@maxPushDescriptors@
---
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-03000# If any binding
---     has the
---     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
---     bit set, @flags@ /must/ include
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-descriptorType-03001# If any
---     binding has the
---     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
---     bit set, then all bindings /must/ not have @descriptorType@ of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO'
---
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-pNext-pNext# @pNext@ /must/ be
---     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetLayoutBindingFlagsCreateInfo'
---
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-sType-unique# The @sType@
---     value of each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-parameter# @flags@
---     /must/ be a valid combination of
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DescriptorSetLayoutCreateFlagBits'
---     values
---
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-pBindings-parameter# If
---     @bindingCount@ is not @0@, @pBindings@ /must/ be a valid pointer to
---     an array of @bindingCount@ valid 'DescriptorSetLayoutBinding'
---     structures
---
--- = See Also
---
--- 'DescriptorSetLayoutBinding',
--- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DescriptorSetLayoutCreateFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'createDescriptorSetLayout',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport',
--- 'Vulkan.Extensions.VK_KHR_maintenance3.getDescriptorSetLayoutSupportKHR'
+
+-- No documentation found for TopLevel "VkDescriptorSetLayoutCreateInfo"
 data DescriptorSetLayoutCreateInfo (es :: [Type]) = DescriptorSetLayoutCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkDescriptorSetLayoutCreateInfo" "pNext"
     next :: Chain es
-  , -- | @flags@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DescriptorSetLayoutCreateFlagBits'
-    -- specifying options for descriptor set layout creation.
+  , -- No documentation found for Nested "VkDescriptorSetLayoutCreateInfo" "flags"
     flags :: DescriptorSetLayoutCreateFlags
-  , -- | @pBindings@ is a pointer to an array of 'DescriptorSetLayoutBinding'
-    -- structures.
+  , -- No documentation found for Nested "VkDescriptorSetLayoutCreateInfo" "pBindings"
     bindings :: Vector DescriptorSetLayoutBinding
   }
   deriving (Typeable)
@@ -2212,44 +864,12 @@ instance es ~ '[] => Zero (DescriptorSetLayoutCreateInfo es) where
            mempty
 
 
--- | VkDescriptorPoolSize - Structure specifying descriptor pool size
---
--- = Description
---
--- Note
---
--- When creating a descriptor pool that will contain descriptors for
--- combined image samplers of multi-planar formats, an application needs to
--- account for non-trivial descriptor consumption when choosing the
--- @descriptorCount@ value, as indicated by
--- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties'::@combinedImageSamplerDescriptorCount@.
---
--- == Valid Usage
---
--- -   #VUID-VkDescriptorPoolSize-descriptorCount-00302# @descriptorCount@
---     /must/ be greater than @0@
---
--- -   #VUID-VkDescriptorPoolSize-type-02218# If @type@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     then @descriptorCount@ /must/ be a multiple of @4@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDescriptorPoolSize-type-parameter# @type@ /must/ be a valid
---     'Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
---
--- = See Also
---
--- 'DescriptorPoolCreateInfo',
--- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType'
+
+-- No documentation found for TopLevel "VkDescriptorPoolSize"
 data DescriptorPoolSize = DescriptorPoolSize
-  { -- | @type@ is the type of descriptor.
+  { -- No documentation found for Nested "VkDescriptorPoolSize" "type"
     type' :: DescriptorType
-  , -- | @descriptorCount@ is the number of descriptors of that type to allocate.
-    -- If @type@ is
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
-    -- then @descriptorCount@ is the number of bytes to allocate for
-    -- descriptors of this type.
+  , -- No documentation found for Nested "VkDescriptorPoolSize" "descriptorCount"
     descriptorCount :: Word32
   }
   deriving (Typeable, Eq)
@@ -2278,6 +898,7 @@ instance FromCStruct DescriptorPoolSize where
     pure $ DescriptorPoolSize
              type' descriptorCount
 
+
 instance Storable DescriptorPoolSize where
   sizeOf ~_ = 8
   alignment ~_ = 4
@@ -2290,94 +911,16 @@ instance Zero DescriptorPoolSize where
            zero
 
 
--- | VkDescriptorPoolCreateInfo - Structure specifying parameters of a newly
--- created descriptor pool
---
--- = Description
---
--- If multiple 'DescriptorPoolSize' structures appear in the @pPoolSizes@
--- array then the pool will be created with enough storage for the total
--- number of descriptors of each type.
---
--- Fragmentation of a descriptor pool is possible and /may/ lead to
--- descriptor set allocation failures. A failure due to fragmentation is
--- defined as failing a descriptor set allocation despite the sum of all
--- outstanding descriptor set allocations from the pool plus the requested
--- allocation requiring no more than the total number of descriptors
--- requested at pool creation. Implementations provide certain guarantees
--- of when fragmentation /must/ not cause allocation failure, as described
--- below.
---
--- If a descriptor pool has not had any descriptor sets freed since it was
--- created or most recently reset then fragmentation /must/ not cause an
--- allocation failure (note that this is always the case for a pool created
--- without the
--- 'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT'
--- bit set). Additionally, if all sets allocated from the pool since it was
--- created or most recently reset use the same number of descriptors (of
--- each type) and the requested allocation also uses that same number of
--- descriptors (of each type), then fragmentation /must/ not cause an
--- allocation failure.
---
--- If an allocation failure occurs due to fragmentation, an application
--- /can/ create an additional descriptor pool to perform further descriptor
--- set allocations.
---
--- If @flags@ has the
--- 'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
--- bit set, descriptor pool creation /may/ fail with the error
--- 'Vulkan.Core10.Enums.Result.ERROR_FRAGMENTATION' if the total number of
--- descriptors across all pools (including this one) created with this bit
--- set exceeds @maxUpdateAfterBindDescriptorsInAllPools@, or if
--- fragmentation of the underlying hardware resources occurs.
---
--- == Valid Usage
---
--- -   #VUID-VkDescriptorPoolCreateInfo-maxSets-00301# @maxSets@ /must/ be
---     greater than @0@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDescriptorPoolCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO'
---
--- -   #VUID-VkDescriptorPoolCreateInfo-pNext-pNext# @pNext@ /must/ be
---     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfoEXT'
---
--- -   #VUID-VkDescriptorPoolCreateInfo-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkDescriptorPoolCreateInfo-flags-parameter# @flags@ /must/ be
---     a valid combination of
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DescriptorPoolCreateFlagBits'
---     values
---
--- -   #VUID-VkDescriptorPoolCreateInfo-pPoolSizes-parameter# @pPoolSizes@
---     /must/ be a valid pointer to an array of @poolSizeCount@ valid
---     'DescriptorPoolSize' structures
---
--- -   #VUID-VkDescriptorPoolCreateInfo-poolSizeCount-arraylength#
---     @poolSizeCount@ /must/ be greater than @0@
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DescriptorPoolCreateFlags',
--- 'DescriptorPoolSize', 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'createDescriptorPool'
+
+-- No documentation found for TopLevel "VkDescriptorPoolCreateInfo"
 data DescriptorPoolCreateInfo (es :: [Type]) = DescriptorPoolCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkDescriptorPoolCreateInfo" "pNext"
     next :: Chain es
-  , -- | @flags@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DescriptorPoolCreateFlagBits'
-    -- specifying certain supported operations on the pool.
+  , -- No documentation found for Nested "VkDescriptorPoolCreateInfo" "flags"
     flags :: DescriptorPoolCreateFlags
-  , -- | @maxSets@ is the maximum number of descriptor sets that /can/ be
-    -- allocated from the pool.
+  , -- No documentation found for Nested "VkDescriptorPoolCreateInfo" "maxSets"
     maxSets :: Word32
-  , -- | @pPoolSizes@ is a pointer to an array of 'DescriptorPoolSize'
-    -- structures, each containing a descriptor type and number of descriptors
-    -- of that type to be allocated in the pool.
+  , -- No documentation found for Nested "VkDescriptorPoolCreateInfo" "pPoolSizes"
     poolSizes :: Vector DescriptorPoolSize
   }
   deriving (Typeable)
@@ -2440,66 +983,14 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
            mempty
 
 
--- | VkDescriptorSetAllocateInfo - Structure specifying the allocation
--- parameters for descriptor sets
---
--- == Valid Usage
---
--- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-00308# Each element of
---     @pSetLayouts@ /must/ not have been created with
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
---     set
---
--- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-03044# If any element
---     of @pSetLayouts@ was created with the
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set, @descriptorPool@ /must/ have been created with the
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
---     flag set
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDescriptorSetAllocateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO'
---
--- -   #VUID-VkDescriptorSetAllocateInfo-pNext-pNext# @pNext@ /must/ be
---     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountAllocateInfo'
---
--- -   #VUID-VkDescriptorSetAllocateInfo-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkDescriptorSetAllocateInfo-descriptorPool-parameter#
---     @descriptorPool@ /must/ be a valid
---     'Vulkan.Core10.Handles.DescriptorPool' handle
---
--- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-parameter#
---     @pSetLayouts@ /must/ be a valid pointer to an array of
---     @descriptorSetCount@ valid
---     'Vulkan.Core10.Handles.DescriptorSetLayout' handles
---
--- -   #VUID-VkDescriptorSetAllocateInfo-descriptorSetCount-arraylength#
---     @descriptorSetCount@ /must/ be greater than @0@
---
--- -   #VUID-VkDescriptorSetAllocateInfo-commonparent# Both of
---     @descriptorPool@, and the elements of @pSetLayouts@ /must/ have been
---     created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Device'
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.DescriptorPool',
--- 'Vulkan.Core10.Handles.DescriptorSetLayout',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'allocateDescriptorSets'
+
+-- No documentation found for TopLevel "VkDescriptorSetAllocateInfo"
 data DescriptorSetAllocateInfo (es :: [Type]) = DescriptorSetAllocateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkDescriptorSetAllocateInfo" "pNext"
     next :: Chain es
-  , -- | @descriptorPool@ is the pool which the sets will be allocated from.
+  , -- No documentation found for Nested "VkDescriptorSetAllocateInfo" "descriptorPool"
     descriptorPool :: DescriptorPool
-  , -- | @pSetLayouts@ is a pointer to an array of descriptor set layouts, with
-    -- each member specifying how the corresponding descriptor set is
-    -- allocated.
+  , -- No documentation found for Nested "VkDescriptorSetAllocateInfo" "pSetLayouts"
     setLayouts :: Vector DescriptorSetLayout
   }
   deriving (Typeable)

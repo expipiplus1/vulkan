@@ -27,72 +27,7 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkLogicOp - Framebuffer logical operations
---
--- = Description
---
--- The logical operations supported by Vulkan are summarized in the
--- following table in which
---
--- -   ¬ is bitwise invert,
---
--- -   ∧ is bitwise and,
---
--- -   ∨ is bitwise or,
---
--- -   ⊕ is bitwise exclusive or,
---
--- -   s is the fragment’s Rs0, Gs0, Bs0 or As0 component value for the
---     fragment output corresponding to the color attachment being updated,
---     and
---
--- -   d is the color attachment’s R, G, B or A component value:
---
--- +-----------------------------------+-----------------------------------+
--- | Mode                              | Operation                         |
--- +===================================+===================================+
--- | 'LOGIC_OP_CLEAR'                  | 0                                 |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_AND'                    | s ∧ d                             |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_AND_REVERSE'            | s ∧ ¬ d                           |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_COPY'                   | s                                 |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_AND_INVERTED'           | ¬ s ∧ d                           |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_NO_OP'                  | d                                 |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_XOR'                    | s ⊕ d                             |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_OR'                     | s ∨ d                             |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_NOR'                    | ¬ (s ∨ d)                         |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_EQUIVALENT'             | ¬ (s ⊕ d)                         |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_INVERT'                 | ¬ d                               |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_OR_REVERSE'             | s ∨ ¬ d                           |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_COPY_INVERTED'          | ¬ s                               |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_OR_INVERTED'            | ¬ s ∨ d                           |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_NAND'                   | ¬ (s ∧ d)                         |
--- +-----------------------------------+-----------------------------------+
--- | 'LOGIC_OP_SET'                    | all 1s                            |
--- +-----------------------------------+-----------------------------------+
---
--- Logical Operations
---
--- The result of the logical operation is then written to the color
--- attachment as controlled by the component write mask, described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blendoperations Blend Operations>.
---
--- = See Also
---
--- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'
+-- No documentation found for TopLevel "VkLogicOp"
 newtype LogicOp = LogicOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -171,8 +106,10 @@ showTableLogicOp =
   , (LOGIC_OP_SET          , "SET")
   ]
 
+
 instance Show LogicOp where
-  showsPrec = enumShowsPrec enumPrefixLogicOp showTableLogicOp conNameLogicOp (\(LogicOp x) -> x) (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixLogicOp showTableLogicOp conNameLogicOp (\(LogicOp x) -> x) (showsPrec 11)
+
 
 instance Read LogicOp where
   readPrec = enumReadPrec enumPrefixLogicOp showTableLogicOp conNameLogicOp LogicOp

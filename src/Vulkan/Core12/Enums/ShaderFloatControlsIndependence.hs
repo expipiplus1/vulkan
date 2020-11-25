@@ -14,25 +14,15 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Zero (Zero)
--- | VkShaderFloatControlsIndependence - Enum specifying whether, and how,
--- shader float controls can be set separately
---
--- = See Also
---
--- 'Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls.PhysicalDeviceFloatControlsProperties',
--- 'Vulkan.Core12.PhysicalDeviceVulkan12Properties'
+-- No documentation found for TopLevel "VkShaderFloatControlsIndependence"
 newtype ShaderFloatControlsIndependence = ShaderFloatControlsIndependence Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY' specifies that shader
--- float controls for 32-bit floating point /can/ be set independently;
--- other bit widths /must/ be set identically to each other.
+-- No documentation found for Nested "VkShaderFloatControlsIndependence" "VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY"
 pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY = ShaderFloatControlsIndependence 0
--- | 'SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL' specifies that shader float
--- controls for all bit widths /can/ be set independently.
+-- No documentation found for Nested "VkShaderFloatControlsIndependence" "VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL"
 pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL         = ShaderFloatControlsIndependence 1
--- | 'SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE' specifies that shader float
--- controls for all bit widths /must/ be set identically.
+-- No documentation found for Nested "VkShaderFloatControlsIndependence" "VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE"
 pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE        = ShaderFloatControlsIndependence 2
 {-# complete SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY,
              SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL,
@@ -51,12 +41,14 @@ showTableShaderFloatControlsIndependence =
   , (SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE       , "NONE")
   ]
 
+
 instance Show ShaderFloatControlsIndependence where
-  showsPrec = enumShowsPrec enumPrefixShaderFloatControlsIndependence
-                            showTableShaderFloatControlsIndependence
-                            conNameShaderFloatControlsIndependence
-                            (\(ShaderFloatControlsIndependence x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixShaderFloatControlsIndependence
+                          showTableShaderFloatControlsIndependence
+                          conNameShaderFloatControlsIndependence
+                          (\(ShaderFloatControlsIndependence x) -> x)
+                          (showsPrec 11)
+
 
 instance Read ShaderFloatControlsIndependence where
   readPrec = enumReadPrec enumPrefixShaderFloatControlsIndependence

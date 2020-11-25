@@ -32,26 +32,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES
 
 
--- | VkPhysicalDeviceShaderDrawParametersFeatures - Structure describing
--- shader draw parameter features that can be supported by an
--- implementation
---
--- = Description
---
--- If the 'PhysicalDeviceShaderDrawParametersFeatures' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with a value indicating whether the feature is supported.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderDrawParametersFeatures"
 data PhysicalDeviceShaderDrawParametersFeatures = PhysicalDeviceShaderDrawParametersFeatures
-  { -- | #extension-features-shaderDrawParameters# @shaderDrawParameters@
-    -- specifies whether shader draw parameters are supported.
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParametersFeatures" "shaderDrawParameters"
     shaderDrawParameters :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -79,6 +63,7 @@ instance FromCStruct PhysicalDeviceShaderDrawParametersFeatures where
     shaderDrawParameters <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     pure $ PhysicalDeviceShaderDrawParametersFeatures
              (bool32ToBool shaderDrawParameters)
+
 
 instance Storable PhysicalDeviceShaderDrawParametersFeatures where
   sizeOf ~_ = 24

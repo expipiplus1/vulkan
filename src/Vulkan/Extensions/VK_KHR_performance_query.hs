@@ -1,481 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_KHR_performance_query - device extension
---
--- == VK_KHR_performance_query
---
--- [__Name String__]
---     @VK_KHR_performance_query@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     117
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@
---
--- [__Special Use__]
---
---     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
---
--- [__Contact__]
---
---     -   Alon Or-bach
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_performance_query:%20&body=@alonorbach%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2019-10-08
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Jesse Barker, Unity Technologies
---
---     -   Kenneth Benzie, Codeplay
---
---     -   Jan-Harald Fredriksen, ARM
---
---     -   Jeff Leger, Qualcomm
---
---     -   Jesse Hall, Google
---
---     -   Tobias Hector, AMD
---
---     -   Neil Henning, Codeplay
---
---     -   Baldur Karlsson
---
---     -   Lionel Landwerlin, Intel
---
---     -   Peter Lohrmann, AMD
---
---     -   Alon Or-bach, Samsung
---
---     -   Daniel Rakos, AMD
---
---     -   Niklas Smedberg, Unity Technologies
---
---     -   Igor Ostrowski, Intel
---
--- == Description
---
--- The @VK_KHR_performance_query@ extension adds a mechanism to allow
--- querying of performance counters for use in applications and by
--- profiling tools.
---
--- Each queue family /may/ expose counters that /can/ be enabled on a queue
--- of that family. We extend 'Vulkan.Core10.Enums.QueryType.QueryType' to
--- add a new query type for performance queries, and chain a structure on
--- 'Vulkan.Core10.Query.QueryPoolCreateInfo' to specify the performance
--- queries to enable.
---
--- == New Commands
---
--- -   'acquireProfilingLockKHR'
---
--- -   'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'
---
--- -   'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
---
--- -   'releaseProfilingLockKHR'
---
--- == New Structures
---
--- -   'AcquireProfilingLockInfoKHR'
---
--- -   'PerformanceCounterDescriptionKHR'
---
--- -   'PerformanceCounterKHR'
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
---     'Vulkan.Core10.Device.DeviceCreateInfo':
---
---     -   'PhysicalDevicePerformanceQueryFeaturesKHR'
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
---
---     -   'PhysicalDevicePerformanceQueryPropertiesKHR'
---
--- -   Extending 'Vulkan.Core10.Query.QueryPoolCreateInfo':
---
---     -   'QueryPoolPerformanceCreateInfoKHR'
---
--- -   Extending 'Vulkan.Core10.Queue.SubmitInfo':
---
---     -   'PerformanceQuerySubmitInfoKHR'
---
--- == New Unions
---
--- -   'PerformanceCounterResultKHR'
---
--- == New Enums
---
--- -   'AcquireProfilingLockFlagBitsKHR'
---
--- -   'PerformanceCounterDescriptionFlagBitsKHR'
---
--- -   'PerformanceCounterScopeKHR'
---
--- -   'PerformanceCounterStorageKHR'
---
--- -   'PerformanceCounterUnitKHR'
---
--- == New Bitmasks
---
--- -   'AcquireProfilingLockFlagsKHR'
---
--- -   'PerformanceCounterDescriptionFlagsKHR'
---
--- == New Enum Constants
---
--- -   'KHR_PERFORMANCE_QUERY_EXTENSION_NAME'
---
--- -   'KHR_PERFORMANCE_QUERY_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.QueryType.QueryType':
---
---     -   'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACQUIRE_PROFILING_LOCK_INFO_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_COUNTER_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_FEATURES_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_PROPERTIES_KHR'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_CREATE_INFO_KHR'
---
--- == Issues
---
--- 1) Should this extension include a mechanism to begin a query in command
--- buffer /A/ and end the query in command buffer /B/?
---
--- __RESOLVED__ No - queries are tied to command buffer creation and thus
--- have to be encapsulated within a single command buffer.
---
--- 2) Should this extension include a mechanism to begin and end queries
--- globally on the queue, not using the existing command buffer commands?
---
--- __RESOLVED__ No - for the same reasoning as the resolution of 1).
---
--- 3) Should this extension expose counters that require multiple passes?
---
--- __RESOLVED__ Yes - users should re-submit a command buffer with the same
--- commands in it multiple times, specifying the pass to count as the query
--- parameter in VkPerformanceQuerySubmitInfoKHR.
---
--- 4) How to handle counters across parallel workloads?
---
--- __RESOLVED__ In the spirit of Vulkan, a counter description flag
--- 'PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR' denotes
--- that the accuracy of a counter result is affected by parallel workloads.
---
--- 5) How to handle secondary command buffers?
---
--- __RESOLVED__ Secondary command buffers inherit any counter pass index
--- specified in the parent primary command buffer. Note: this is no longer
--- an issue after change from issue 10 resolution
---
--- 6) What commands does the profiling lock have to be held for?
---
--- __RESOLVED__ For any command buffer that is being queried with a
--- performance query pool, the profiling lock /must/ be held while that
--- command buffer is in the /recording/, /executable/, or /pending state/.
---
--- 7) Should we support
--- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults'?
---
--- __RESOLVED__ Yes.
---
--- 8) Should we allow performance queries to interact with multiview?
---
--- __RESOLVED__ Yes, but the performance queries must be performed once for
--- each pass per view.
---
--- 9) Should a @queryCount > 1@ be usable for performance queries?
---
--- __RESOLVED__ Yes. Some vendors will have costly performance counter
--- query pool creation, and would rather if a certain set of counters were
--- to be used multiple times that a @queryCount > 1@ can be used to
--- amortize the instantiation cost.
---
--- 10) Should we introduce an indirect mechanism to set the counter pass
--- index?
---
--- __RESOLVED__ Specify the counter pass index at submit time instead to
--- avoid requiring re-recording of command buffers when multiple counter
--- passes needed.
---
--- == Examples
---
--- The following example shows how to find what performance counters a
--- queue family supports, setup a query pool to record these performance
--- counters, how to add the query pool to the command buffer to record
--- information, and how to get the results from the query pool.
---
--- > // A previously created physical device
--- > VkPhysicalDevice physicalDevice;
--- >
--- > // One of the queue families our device supports
--- > uint32_t queueFamilyIndex;
--- >
--- > uint32_t counterCount;
--- >
--- > // Get the count of counters supported
--- > vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(
--- >   physicalDevice,
--- >   queueFamilyIndex,
--- >   &counterCount,
--- >   NULL,
--- >   NULL);
--- >
--- > VkPerformanceCounterKHR* counters =
--- >   malloc(sizeof(VkPerformanceCounterKHR) * counterCount);
--- > VkPerformanceCounterDescriptionKHR* counterDescriptions =
--- >   malloc(sizeof(VkPerformanceCounterDescriptionKHR) * counterCount);
--- >
--- > // Get the counters supported
--- > vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(
--- >   physicalDevice,
--- >   queueFamilyIndex,
--- >   &counterCount,
--- >   counters,
--- >   counterDescriptions);
--- >
--- > // Try to enable the first 8 counters
--- > uint32_t enabledCounters[8];
--- >
--- > const uint32_t enabledCounterCount = min(counterCount, 8));
--- >
--- > for (uint32_t i = 0; i < enabledCounterCount; i++) {
--- >   enabledCounters[i] = i;
--- > }
--- >
--- > // A previously created device that had the performanceCounterQueryPools feature
--- > // set to VK_TRUE
--- > VkDevice device;
--- >
--- > VkQueryPoolPerformanceCreateInfoKHR performanceQueryCreateInfo = {
--- >   VK_STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_CREATE_INFO_KHR,
--- >   NULL,
--- >
--- >   // Specify the queue family that this performance query is performed on
--- >   queueFamilyIndex,
--- >
--- >   // The number of counters to enable
--- >   enabledCounterCount,
--- >
--- >   // The array of indices of counters to enable
--- >   enabledCounters
--- > };
--- >
--- >
--- > // Get the number of passes our counters will require.
--- > uint32_t numPasses;
--- >
--- > vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(
--- >   physicalDevice,
--- >   &performanceQueryCreateInfo,
--- >   &numPasses);
--- >
--- > VkQueryPoolCreateInfo queryPoolCreateInfo = {
--- >   VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO,
--- >   &performanceQueryCreateInfo,
--- >   0,
--- >
--- >   // Using our new query type here
--- >   VK_QUERY_TYPE_PERFORMANCE_QUERY_KHR,
--- >
--- >   1,
--- >
--- >   0
--- > };
--- >
--- > VkQueryPool queryPool;
--- >
--- > VkResult result = vkCreateQueryPool(
--- >   device,
--- >   &queryPoolCreateInfo,
--- >   NULL,
--- >   &queryPool);
--- >
--- > assert(VK_SUCCESS == result);
--- >
--- > // A queue from queueFamilyIndex
--- > VkQueue queue;
--- >
--- > // A command buffer we want to record counters on
--- > VkCommandBuffer commandBuffer;
--- >
--- > VkCommandBufferBeginInfo commandBufferBeginInfo = {
--- >   VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
--- >   NULL,
--- >   0,
--- >   NULL
--- > };
--- >
--- > VkAcquireProfilingLockInfoKHR lockInfo = {
--- >   VK_STRUCTURE_TYPE_ACQUIRE_PROFILING_LOCK_INFO_KHR,
--- >   NULL,
--- >   0,
--- >   UINT64_MAX // Wait forever for the lock
--- > };
--- >
--- > // Acquire the profiling lock before we record command buffers
--- > // that will use performance queries
--- >
--- > result = vkAcquireProfilingLockKHR(device, &lockInfo);
--- >
--- > assert(VK_SUCCESS == result);
--- >
--- > result = vkBeginCommandBuffer(commandBuffer, &commandBufferBeginInfo);
--- >
--- > assert(VK_SUCCESS == result);
--- >
--- > vkCmdResetQueryPool(
--- >   commandBuffer,
--- >   queryPool,
--- >   0,
--- >   1);
--- >
--- > vkCmdBeginQuery(
--- >   commandBuffer,
--- >   queryPool,
--- >   0,
--- >   0);
--- >
--- > // Perform the commands you want to get performance information on
--- > // ...
--- >
--- > // Perform a barrier to ensure all previous commands were complete before
--- > // ending the query
--- > vkCmdPipelineBarrier(commandBuffer,
--- >   VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
--- >   VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
--- >   0,
--- >   0,
--- >   NULL,
--- >   0,
--- >   NULL,
--- >   0,
--- >   NULL);
--- >
--- > vkCmdEndQuery(
--- >   commandBuffer,
--- >   queryPool,
--- >   0);
--- >
--- > result = vkEndCommandBuffer(commandBuffer);
--- >
--- > assert(VK_SUCCESS == result);
--- >
--- > for (uint32_t counterPass = 0; counterPass < numPasses; counterPass++) {
--- >
--- >   VkPerformanceQuerySubmitInfoKHR performanceQuerySubmitInfo = {
--- >     VK_STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR,
--- >     NULL,
--- >     counterPass
--- >   };
--- >
--- >
--- >   // Submit the command buffer and wait for its completion
--- >   // ...
--- > }
--- >
--- > // Release the profiling lock after the command buffer is no longer in the
--- > // pending state.
--- > vkReleaseProfilingLockKHR(device);
--- >
--- > result = vkResetCommandBuffer(commandBuffer, 0);
--- >
--- > assert(VK_SUCCESS == result);
--- >
--- > // Create an array to hold the results of all counters
--- > VkPerformanceCounterResultKHR* recordedCounters = malloc(
--- >   sizeof(VkPerformanceCounterResultKHR) * enabledCounterCount);
--- >
--- > result = vkGetQueryPoolResults(
--- >   device,
--- >   queryPool,
--- >   0,
--- >   1,
--- >   sizeof(VkPerformanceCounterResultKHR) * enabledCounterCount,
--- >   recordedCounters,
--- >   sizeof(VkPerformanceCounterResultKHR),
--- >   NULL);
--- >
--- > // recordedCounters is filled with our counters, we'll look at one for posterity
--- > switch (counters[0].storage) {
--- >   case VK_PERFORMANCE_COUNTER_STORAGE_INT32:
--- >     // use recordCounters[0].int32 to get at the counter result!
--- >     break;
--- >   case VK_PERFORMANCE_COUNTER_STORAGE_INT64:
--- >     // use recordCounters[0].int64 to get at the counter result!
--- >     break;
--- >   case VK_PERFORMANCE_COUNTER_STORAGE_UINT32:
--- >     // use recordCounters[0].uint32 to get at the counter result!
--- >     break;
--- >   case VK_PERFORMANCE_COUNTER_STORAGE_UINT64:
--- >     // use recordCounters[0].uint64 to get at the counter result!
--- >     break;
--- >   case VK_PERFORMANCE_COUNTER_STORAGE_FLOAT32:
--- >     // use recordCounters[0].float32 to get at the counter result!
--- >     break;
--- >   case VK_PERFORMANCE_COUNTER_STORAGE_FLOAT64:
--- >     // use recordCounters[0].float64 to get at the counter result!
--- >     break;
--- > }
---
--- == Version History
---
--- -   Revision 1, 2019-10-08
---
--- = See Also
---
--- 'AcquireProfilingLockFlagBitsKHR', 'AcquireProfilingLockFlagsKHR',
--- 'AcquireProfilingLockInfoKHR',
--- 'PerformanceCounterDescriptionFlagBitsKHR',
--- 'PerformanceCounterDescriptionFlagsKHR',
--- 'PerformanceCounterDescriptionKHR', 'PerformanceCounterKHR',
--- 'PerformanceCounterResultKHR', 'PerformanceCounterScopeKHR',
--- 'PerformanceCounterStorageKHR', 'PerformanceCounterUnitKHR',
--- 'PerformanceQuerySubmitInfoKHR',
--- 'PhysicalDevicePerformanceQueryFeaturesKHR',
--- 'PhysicalDevicePerformanceQueryPropertiesKHR',
--- 'QueryPoolPerformanceCreateInfoKHR', 'acquireProfilingLockKHR',
--- 'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR',
--- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR',
--- 'releaseProfilingLockKHR'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_KHR_performance_query"
 module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR
                                                    , getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR
                                                    , acquireProfilingLockKHR
@@ -634,69 +158,12 @@ foreign import ccall
   "dynamic" mkVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR
   :: FunPtr (Ptr PhysicalDevice_T -> Word32 -> Ptr Word32 -> Ptr PerformanceCounterKHR -> Ptr PerformanceCounterDescriptionKHR -> IO Result) -> Ptr PhysicalDevice_T -> Word32 -> Ptr Word32 -> Ptr PerformanceCounterKHR -> Ptr PerformanceCounterDescriptionKHR -> IO Result
 
--- | vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR -
--- Reports properties of the performance query counters available on a
--- queue family of a device
---
--- = Description
---
--- If @pCounters@ is @NULL@ and @pCounterDescriptions@ is @NULL@, then the
--- number of counters available is returned in @pCounterCount@. Otherwise,
--- @pCounterCount@ /must/ point to a variable set by the user to the number
--- of elements in the @pCounters@, @pCounterDescriptions@, or both arrays
--- and on return the variable is overwritten with the number of structures
--- actually written out. If @pCounterCount@ is less than the number of
--- counters available, at most @pCounterCount@ structures will be written
--- and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS'.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR-physicalDevice-parameter#
---     @physicalDevice@ /must/ be a valid
---     'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR-pCounterCount-parameter#
---     @pCounterCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   #VUID-vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR-pCounters-parameter#
---     If the value referenced by @pCounterCount@ is not @0@, and
---     @pCounters@ is not @NULL@, @pCounters@ /must/ be a valid pointer to
---     an array of @pCounterCount@ 'PerformanceCounterKHR' structures
---
--- -   #VUID-vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR-pCounterDescriptions-parameter#
---     If the value referenced by @pCounterCount@ is not @0@, and
---     @pCounterDescriptions@ is not @NULL@, @pCounterDescriptions@ /must/
---     be a valid pointer to an array of @pCounterCount@
---     'PerformanceCounterDescriptionKHR' structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
---
--- = See Also
---
--- 'PerformanceCounterDescriptionKHR', 'PerformanceCounterKHR',
--- 'Vulkan.Core10.Handles.PhysicalDevice'
+-- No documentation found for TopLevel "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR"
 enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: forall io
                                                                . (MonadIO io)
-                                                              => -- | @physicalDevice@ is the handle to the physical device whose queue family
-                                                                 -- performance query counter properties will be queried.
+                                                              => -- No documentation found for Nested "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR" "physicalDevice"
                                                                  PhysicalDevice
-                                                              -> -- | @queueFamilyIndex@ is the index into the queue family of the physical
-                                                                 -- device we want to get properties for.
+                                                              -> -- No documentation found for Nested "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR" "queueFamilyIndex"
                                                                  ("queueFamilyIndex" ::: Word32)
                                                               -> io (Result, ("counters" ::: Vector PerformanceCounterKHR), ("counterDescriptions" ::: Vector PerformanceCounterDescriptionKHR))
 enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice queueFamilyIndex = liftIO . evalContT $ do
@@ -729,40 +196,12 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr QueryPoolPerformanceCreateInfoKHR -> Ptr Word32 -> IO ()) -> Ptr PhysicalDevice_T -> Ptr QueryPoolPerformanceCreateInfoKHR -> Ptr Word32 -> IO ()
 
--- | vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR - Reports the
--- number of passes require for a performance query pool type
---
--- = Description
---
--- The @pPerformanceQueryCreateInfo@ member
--- 'QueryPoolPerformanceCreateInfoKHR'::@queueFamilyIndex@ /must/ be a
--- queue family of @physicalDevice@. The number of passes required to
--- capture the counters specified in the @pPerformanceQueryCreateInfo@
--- member 'QueryPoolPerformanceCreateInfoKHR'::@pCounters@ is returned in
--- @pNumPasses@.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.PhysicalDevice',
--- 'QueryPoolPerformanceCreateInfoKHR'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR"
 getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io
                                                        . (MonadIO io)
-                                                      => -- | @physicalDevice@ is the handle to the physical device whose queue family
-                                                         -- performance query counter properties will be queried.
-                                                         --
-                                                         -- #VUID-vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR-physicalDevice-parameter#
-                                                         -- @physicalDevice@ /must/ be a valid
-                                                         -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                                      => -- No documentation found for Nested "vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR" "physicalDevice"
                                                          PhysicalDevice
-                                                      -> -- | @pPerformanceQueryCreateInfo@ is a pointer to a
-                                                         -- 'QueryPoolPerformanceCreateInfoKHR' of the performance query that is to
-                                                         -- be created.
-                                                         --
-                                                         -- #VUID-vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR-pPerformanceQueryCreateInfo-parameter#
-                                                         -- @pPerformanceQueryCreateInfo@ /must/ be a valid pointer to a valid
-                                                         -- 'QueryPoolPerformanceCreateInfoKHR' structure
+                                                      -> -- No documentation found for Nested "vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR" "pPerformanceQueryCreateInfo"
                                                          ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR)
                                                       -> io (("numPasses" ::: Word32))
 getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performanceQueryCreateInfo = liftIO . evalContT $ do
@@ -784,40 +223,12 @@ foreign import ccall
   "dynamic" mkVkAcquireProfilingLockKHR
   :: FunPtr (Ptr Device_T -> Ptr AcquireProfilingLockInfoKHR -> IO Result) -> Ptr Device_T -> Ptr AcquireProfilingLockInfoKHR -> IO Result
 
--- | vkAcquireProfilingLockKHR - Acquires the profiling lock
---
--- = Description
---
--- Implementations /may/ allow multiple actors to hold the profiling lock
--- concurrently.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.TIMEOUT'
---
--- = See Also
---
--- 'AcquireProfilingLockInfoKHR', 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkAcquireProfilingLockKHR"
 acquireProfilingLockKHR :: forall io
                          . (MonadIO io)
-                        => -- | @device@ is the logical device to profile.
-                           --
-                           -- #VUID-vkAcquireProfilingLockKHR-device-parameter# @device@ /must/ be a
-                           -- valid 'Vulkan.Core10.Handles.Device' handle
+                        => -- No documentation found for Nested "vkAcquireProfilingLockKHR" "device"
                            Device
-                        -> -- | @pInfo@ is a pointer to a 'AcquireProfilingLockInfoKHR' structure which
-                           -- contains information about how the profiling is to be acquired.
-                           --
-                           -- #VUID-vkAcquireProfilingLockKHR-pInfo-parameter# @pInfo@ /must/ be a
-                           -- valid pointer to a valid 'AcquireProfilingLockInfoKHR' structure
+                        -> -- No documentation found for Nested "vkAcquireProfilingLockKHR" "pInfo"
                            AcquireProfilingLockInfoKHR
                         -> io ()
 acquireProfilingLockKHR device info = liftIO . evalContT $ do
@@ -837,25 +248,10 @@ foreign import ccall
   "dynamic" mkVkReleaseProfilingLockKHR
   :: FunPtr (Ptr Device_T -> IO ()) -> Ptr Device_T -> IO ()
 
--- | vkReleaseProfilingLockKHR - Releases the profiling lock
---
--- == Valid Usage
---
--- -   #VUID-vkReleaseProfilingLockKHR-device-03235# The profiling lock of
---     @device@ /must/ have been held via a previous successful call to
---     'acquireProfilingLockKHR'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkReleaseProfilingLockKHR-device-parameter# @device@ /must/ be
---     a valid 'Vulkan.Core10.Handles.Device' handle
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkReleaseProfilingLockKHR"
 releaseProfilingLockKHR :: forall io
                          . (MonadIO io)
-                        => -- | @device@ is the logical device to cease profiling on.
+                        => -- No documentation found for Nested "vkReleaseProfilingLockKHR" "device"
                            Device
                         -> io ()
 releaseProfilingLockKHR device = liftIO $ do
@@ -887,24 +283,12 @@ pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_KHR = PERFORMANCE_
 pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR = PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR
 
 
--- | VkPhysicalDevicePerformanceQueryFeaturesKHR - Structure describing
--- performance query support for an implementation
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDevicePerformanceQueryFeaturesKHR"
 data PhysicalDevicePerformanceQueryFeaturesKHR = PhysicalDevicePerformanceQueryFeaturesKHR
-  { -- | #features-performanceCounterQueryPools# @performanceCounterQueryPools@
-    -- indicates whether the implementation supports performance counter query
-    -- pools.
+  { -- No documentation found for Nested "VkPhysicalDevicePerformanceQueryFeaturesKHR" "performanceCounterQueryPools"
     performanceCounterQueryPools :: Bool
-  , -- | #features-performanceCounterMultipleQueryPools#
-    -- @performanceCounterMultipleQueryPools@ indicates whether the
-    -- implementation supports using multiple performance query pools in a
-    -- primary command buffer and secondary command buffers executed within it.
+  , -- No documentation found for Nested "VkPhysicalDevicePerformanceQueryFeaturesKHR" "performanceCounterMultipleQueryPools"
     performanceCounterMultipleQueryPools :: Bool
   }
   deriving (Typeable, Eq)
@@ -937,6 +321,7 @@ instance FromCStruct PhysicalDevicePerformanceQueryFeaturesKHR where
     pure $ PhysicalDevicePerformanceQueryFeaturesKHR
              (bool32ToBool performanceCounterQueryPools) (bool32ToBool performanceCounterMultipleQueryPools)
 
+
 instance Storable PhysicalDevicePerformanceQueryFeaturesKHR where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -949,29 +334,10 @@ instance Zero PhysicalDevicePerformanceQueryFeaturesKHR where
            zero
 
 
--- | VkPhysicalDevicePerformanceQueryPropertiesKHR - Structure describing
--- performance query properties for an implementation
---
--- = Members
---
--- The members of the 'PhysicalDevicePerformanceQueryPropertiesKHR'
--- structure describe the following implementation-dependent properties:
---
--- == Valid Usage (Implicit)
---
--- If the 'PhysicalDevicePerformanceQueryPropertiesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent properties.
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDevicePerformanceQueryPropertiesKHR"
 data PhysicalDevicePerformanceQueryPropertiesKHR = PhysicalDevicePerformanceQueryPropertiesKHR
-  { -- | @allowCommandBufferQueryCopies@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
-    -- if the performance query pools are allowed to be used with
-    -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults'.
+  { -- No documentation found for Nested "VkPhysicalDevicePerformanceQueryPropertiesKHR" "allowCommandBufferQueryCopies"
     allowCommandBufferQueryCopies :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1000,6 +366,7 @@ instance FromCStruct PhysicalDevicePerformanceQueryPropertiesKHR where
     pure $ PhysicalDevicePerformanceQueryPropertiesKHR
              (bool32ToBool allowCommandBufferQueryCopies)
 
+
 instance Storable PhysicalDevicePerformanceQueryPropertiesKHR where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -1011,30 +378,16 @@ instance Zero PhysicalDevicePerformanceQueryPropertiesKHR where
            zero
 
 
--- | VkPerformanceCounterKHR - Structure providing information about a
--- counter
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'PerformanceCounterScopeKHR', 'PerformanceCounterStorageKHR',
--- 'PerformanceCounterUnitKHR',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'
+
+-- No documentation found for TopLevel "VkPerformanceCounterKHR"
 data PerformanceCounterKHR = PerformanceCounterKHR
-  { -- | @unit@ is a 'PerformanceCounterUnitKHR' specifying the unit that the
-    -- counter data will record.
+  { -- No documentation found for Nested "VkPerformanceCounterKHR" "unit"
     unit :: PerformanceCounterUnitKHR
-  , -- | @scope@ is a 'PerformanceCounterScopeKHR' specifying the scope that the
-    -- counter belongs to.
+  , -- No documentation found for Nested "VkPerformanceCounterKHR" "scope"
     scope :: PerformanceCounterScopeKHR
-  , -- | @storage@ is a 'PerformanceCounterStorageKHR' specifying the storage
-    -- type that the counter’s data uses.
+  , -- No documentation found for Nested "VkPerformanceCounterKHR" "storage"
     storage :: PerformanceCounterStorageKHR
-  , -- | @uuid@ is an array of size 'Vulkan.Core10.APIConstants.UUID_SIZE',
-    -- containing 8-bit values that represent a universally unique identifier
-    -- for the counter of the physical device.
+  , -- No documentation found for Nested "VkPerformanceCounterKHR" "uuid"
     uuid :: ByteString
   }
   deriving (Typeable)
@@ -1073,6 +426,7 @@ instance FromCStruct PerformanceCounterKHR where
     pure $ PerformanceCounterKHR
              unit scope storage uuid
 
+
 instance Storable PerformanceCounterKHR where
   sizeOf ~_ = 48
   alignment ~_ = 8
@@ -1087,31 +441,16 @@ instance Zero PerformanceCounterKHR where
            mempty
 
 
--- | VkPerformanceCounterDescriptionKHR - Structure providing more detailed
--- information about a counter
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'PerformanceCounterDescriptionFlagsKHR',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'
+
+-- No documentation found for TopLevel "VkPerformanceCounterDescriptionKHR"
 data PerformanceCounterDescriptionKHR = PerformanceCounterDescriptionKHR
-  { -- | @flags@ is a bitmask of 'PerformanceCounterDescriptionFlagBitsKHR'
-    -- indicating the usage behavior for the counter.
+  { -- No documentation found for Nested "VkPerformanceCounterDescriptionKHR" "flags"
     flags :: PerformanceCounterDescriptionFlagsKHR
-  , -- | @name@ is an array of size
-    -- 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE', containing a
-    -- null-terminated UTF-8 string specifying the name of the counter.
+  , -- No documentation found for Nested "VkPerformanceCounterDescriptionKHR" "name"
     name :: ByteString
-  , -- | @category@ is an array of size
-    -- 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE', containing a
-    -- null-terminated UTF-8 string specifying the category of the counter.
+  , -- No documentation found for Nested "VkPerformanceCounterDescriptionKHR" "category"
     category :: ByteString
-  , -- | @description@ is an array of size
-    -- 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE', containing a
-    -- null-terminated UTF-8 string specifying the description of the counter.
+  , -- No documentation found for Nested "VkPerformanceCounterDescriptionKHR" "description"
     description :: ByteString
   }
   deriving (Typeable)
@@ -1149,6 +488,7 @@ instance FromCStruct PerformanceCounterDescriptionKHR where
     pure $ PerformanceCounterDescriptionKHR
              flags name category description
 
+
 instance Storable PerformanceCounterDescriptionKHR where
   sizeOf ~_ = 792
   alignment ~_ = 8
@@ -1163,50 +503,12 @@ instance Zero PerformanceCounterDescriptionKHR where
            mempty
 
 
--- | VkQueryPoolPerformanceCreateInfoKHR - Structure specifying parameters of
--- a newly created performance query pool
---
--- == Valid Usage
---
--- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-queueFamilyIndex-03236#
---     @queueFamilyIndex@ /must/ be a valid queue family index of the
---     device
---
--- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-performanceCounterQueryPools-03237#
---     The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-performanceCounterQueryPools performanceCounterQueryPools>
---     feature /must/ be enabled
---
--- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-pCounterIndices-03321#
---     Each element of @pCounterIndices@ /must/ be in the range of counters
---     reported by
---     'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' for
---     the queue family specified in @queueFamilyIndex@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-sType-sType# @sType@
---     /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_CREATE_INFO_KHR'
---
--- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-pCounterIndices-parameter#
---     @pCounterIndices@ /must/ be a valid pointer to an array of
---     @counterIndexCount@ @uint32_t@ values
---
--- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-counterIndexCount-arraylength#
---     @counterIndexCount@ /must/ be greater than @0@
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
+
+-- No documentation found for TopLevel "VkQueryPoolPerformanceCreateInfoKHR"
 data QueryPoolPerformanceCreateInfoKHR = QueryPoolPerformanceCreateInfoKHR
-  { -- | @queueFamilyIndex@ is the queue family index to create this performance
-    -- query pool for.
+  { -- No documentation found for Nested "VkQueryPoolPerformanceCreateInfoKHR" "queueFamilyIndex"
     queueFamilyIndex :: Word32
-  , -- | @pCounterIndices@ is the array of indices into the
-    -- 'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'::@pCounters@
-    -- to enable in this performance query pool.
+  , -- No documentation found for Nested "VkQueryPoolPerformanceCreateInfoKHR" "pCounterIndices"
     counterIndices :: Vector Word32
   }
   deriving (Typeable)
@@ -1252,28 +554,12 @@ instance Zero QueryPoolPerformanceCreateInfoKHR where
            mempty
 
 
--- | VkAcquireProfilingLockInfoKHR - Structure specifying parameters to
--- acquire the profiling lock
---
--- == Valid Usage (Implicit)
---
--- If @timeout@ is 0, 'acquireProfilingLockKHR' will not block while
--- attempting to acquire the profling lock. If @timeout@ is @UINT64_MAX@,
--- the function will not return until the profiling lock was acquired.
---
--- = See Also
---
--- 'AcquireProfilingLockFlagsKHR',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'acquireProfilingLockKHR'
+
+-- No documentation found for TopLevel "VkAcquireProfilingLockInfoKHR"
 data AcquireProfilingLockInfoKHR = AcquireProfilingLockInfoKHR
-  { -- | @flags@ is reserved for future use.
-    --
-    -- #VUID-VkAcquireProfilingLockInfoKHR-flags-zerobitmask# @flags@ /must/ be
-    -- @0@
+  { -- No documentation found for Nested "VkAcquireProfilingLockInfoKHR" "flags"
     flags :: AcquireProfilingLockFlagsKHR
-  , -- | @timeout@ indicates how long the function waits, in nanoseconds, if the
-    -- profiling lock is not available.
+  , -- No documentation found for Nested "VkAcquireProfilingLockInfoKHR" "timeout"
     timeout :: Word64
   }
   deriving (Typeable, Eq)
@@ -1305,6 +591,7 @@ instance FromCStruct AcquireProfilingLockInfoKHR where
     pure $ AcquireProfilingLockInfoKHR
              flags timeout
 
+
 instance Storable AcquireProfilingLockInfoKHR where
   sizeOf ~_ = 32
   alignment ~_ = 8
@@ -1317,27 +604,10 @@ instance Zero AcquireProfilingLockInfoKHR where
            zero
 
 
--- | VkPerformanceQuerySubmitInfoKHR - Structure indicating which counter
--- pass index is active for performance queries
---
--- = Description
---
--- If the 'Vulkan.Core10.Queue.SubmitInfo'::@pNext@ chain does not include
--- this structure, the batch defaults to use counter pass index 0.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPerformanceQuerySubmitInfoKHR"
 data PerformanceQuerySubmitInfoKHR = PerformanceQuerySubmitInfoKHR
-  { -- | @counterPassIndex@ specifies which counter pass index is active.
-    --
-    -- #VUID-VkPerformanceQuerySubmitInfoKHR-counterPassIndex-03221#
-    -- @counterPassIndex@ /must/ be less than the number of counter passes
-    -- required by any queries within the batch. The required number of counter
-    -- passes for a performance query is obtained by calling
-    -- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
+  { -- No documentation found for Nested "VkPerformanceQuerySubmitInfoKHR" "counterPassIndex"
     counterPassIndex :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1365,6 +635,7 @@ instance FromCStruct PerformanceQuerySubmitInfoKHR where
     counterPassIndex <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pure $ PerformanceQuerySubmitInfoKHR
              counterPassIndex
+
 
 instance Storable PerformanceQuerySubmitInfoKHR where
   sizeOf ~_ = 24
@@ -1405,24 +676,15 @@ instance Zero PerformanceCounterResultKHR where
   zero = Int64Counter zero
 
 
--- | VkPerformanceCounterScopeKHR - Supported counter scope types
---
--- = See Also
---
--- 'PerformanceCounterKHR'
+-- No documentation found for TopLevel "VkPerformanceCounterScopeKHR"
 newtype PerformanceCounterScopeKHR = PerformanceCounterScopeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR' - the performance counter
--- scope is a single complete command buffer.
+-- No documentation found for Nested "VkPerformanceCounterScopeKHR" "VK_PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR"
 pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR = PerformanceCounterScopeKHR 0
--- | 'PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR' - the performance counter
--- scope is zero or more complete render passes. The performance query
--- containing the performance counter /must/ begin and end outside a render
--- pass instance.
+-- No documentation found for Nested "VkPerformanceCounterScopeKHR" "VK_PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR"
 pattern PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR    = PerformanceCounterScopeKHR 1
--- | 'PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR' - the performance counter scope
--- is zero or more commands.
+-- No documentation found for Nested "VkPerformanceCounterScopeKHR" "VK_PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR"
 pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR        = PerformanceCounterScopeKHR 2
 {-# complete PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR,
              PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR,
@@ -1441,12 +703,14 @@ showTablePerformanceCounterScopeKHR =
   , (PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR       , "COMMAND_KHR")
   ]
 
+
 instance Show PerformanceCounterScopeKHR where
-  showsPrec = enumShowsPrec enumPrefixPerformanceCounterScopeKHR
-                            showTablePerformanceCounterScopeKHR
-                            conNamePerformanceCounterScopeKHR
-                            (\(PerformanceCounterScopeKHR x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixPerformanceCounterScopeKHR
+                          showTablePerformanceCounterScopeKHR
+                          conNamePerformanceCounterScopeKHR
+                          (\(PerformanceCounterScopeKHR x) -> x)
+                          (showsPrec 11)
+
 
 instance Read PerformanceCounterScopeKHR where
   readPrec = enumReadPrec enumPrefixPerformanceCounterScopeKHR
@@ -1455,46 +719,31 @@ instance Read PerformanceCounterScopeKHR where
                           PerformanceCounterScopeKHR
 
 
--- | VkPerformanceCounterUnitKHR - Supported counter unit types
---
--- = See Also
---
--- 'PerformanceCounterKHR'
+-- No documentation found for TopLevel "VkPerformanceCounterUnitKHR"
 newtype PerformanceCounterUnitKHR = PerformanceCounterUnitKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PERFORMANCE_COUNTER_UNIT_GENERIC_KHR' - the performance counter unit is
--- a generic data point.
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_GENERIC_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_GENERIC_KHR          = PerformanceCounterUnitKHR 0
--- | 'PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR' - the performance counter unit
--- is a percentage (%).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR       = PerformanceCounterUnitKHR 1
--- | 'PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR' - the performance counter
--- unit is a value of nanoseconds (ns).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR      = PerformanceCounterUnitKHR 2
--- | 'PERFORMANCE_COUNTER_UNIT_BYTES_KHR' - the performance counter unit is a
--- value of bytes.
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_BYTES_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_BYTES_KHR            = PerformanceCounterUnitKHR 3
--- | 'PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR' - the performance
--- counter unit is a value of bytes\/s.
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR = PerformanceCounterUnitKHR 4
--- | 'PERFORMANCE_COUNTER_UNIT_KELVIN_KHR' - the performance counter unit is
--- a temperature reported in Kelvin.
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_KELVIN_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_KELVIN_KHR           = PerformanceCounterUnitKHR 5
--- | 'PERFORMANCE_COUNTER_UNIT_WATTS_KHR' - the performance counter unit is a
--- value of watts (W).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_WATTS_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_WATTS_KHR            = PerformanceCounterUnitKHR 6
--- | 'PERFORMANCE_COUNTER_UNIT_VOLTS_KHR' - the performance counter unit is a
--- value of volts (V).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_VOLTS_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_VOLTS_KHR            = PerformanceCounterUnitKHR 7
--- | 'PERFORMANCE_COUNTER_UNIT_AMPS_KHR' - the performance counter unit is a
--- value of amps (A).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_AMPS_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_AMPS_KHR             = PerformanceCounterUnitKHR 8
--- | 'PERFORMANCE_COUNTER_UNIT_HERTZ_KHR' - the performance counter unit is a
--- value of hertz (Hz).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_HERTZ_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_HERTZ_KHR            = PerformanceCounterUnitKHR 9
--- | 'PERFORMANCE_COUNTER_UNIT_CYCLES_KHR' - the performance counter unit is
--- a value of cycles.
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_CYCLES_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_CYCLES_KHR           = PerformanceCounterUnitKHR 10
 {-# complete PERFORMANCE_COUNTER_UNIT_GENERIC_KHR,
              PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR,
@@ -1529,12 +778,14 @@ showTablePerformanceCounterUnitKHR =
   , (PERFORMANCE_COUNTER_UNIT_CYCLES_KHR          , "CYCLES_KHR")
   ]
 
+
 instance Show PerformanceCounterUnitKHR where
-  showsPrec = enumShowsPrec enumPrefixPerformanceCounterUnitKHR
-                            showTablePerformanceCounterUnitKHR
-                            conNamePerformanceCounterUnitKHR
-                            (\(PerformanceCounterUnitKHR x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixPerformanceCounterUnitKHR
+                          showTablePerformanceCounterUnitKHR
+                          conNamePerformanceCounterUnitKHR
+                          (\(PerformanceCounterUnitKHR x) -> x)
+                          (showsPrec 11)
+
 
 instance Read PerformanceCounterUnitKHR where
   readPrec = enumReadPrec enumPrefixPerformanceCounterUnitKHR
@@ -1543,31 +794,21 @@ instance Read PerformanceCounterUnitKHR where
                           PerformanceCounterUnitKHR
 
 
--- | VkPerformanceCounterStorageKHR - Supported counter storage types
---
--- = See Also
---
--- 'PerformanceCounterKHR'
+-- No documentation found for TopLevel "VkPerformanceCounterStorageKHR"
 newtype PerformanceCounterStorageKHR = PerformanceCounterStorageKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PERFORMANCE_COUNTER_STORAGE_INT32_KHR' - the performance counter
--- storage is a 32-bit signed integer.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_INT32_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_INT32_KHR   = PerformanceCounterStorageKHR 0
--- | 'PERFORMANCE_COUNTER_STORAGE_INT64_KHR' - the performance counter
--- storage is a 64-bit signed integer.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_INT64_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_INT64_KHR   = PerformanceCounterStorageKHR 1
--- | 'PERFORMANCE_COUNTER_STORAGE_UINT32_KHR' - the performance counter
--- storage is a 32-bit unsigned integer.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_UINT32_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_UINT32_KHR  = PerformanceCounterStorageKHR 2
--- | 'PERFORMANCE_COUNTER_STORAGE_UINT64_KHR' - the performance counter
--- storage is a 64-bit unsigned integer.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_UINT64_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_UINT64_KHR  = PerformanceCounterStorageKHR 3
--- | 'PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR' - the performance counter
--- storage is a 32-bit floating-point.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR = PerformanceCounterStorageKHR 4
--- | 'PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR' - the performance counter
--- storage is a 64-bit floating-point.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR = PerformanceCounterStorageKHR 5
 {-# complete PERFORMANCE_COUNTER_STORAGE_INT32_KHR,
              PERFORMANCE_COUNTER_STORAGE_INT64_KHR,
@@ -1592,12 +833,14 @@ showTablePerformanceCounterStorageKHR =
   , (PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR, "FLOAT64_KHR")
   ]
 
+
 instance Show PerformanceCounterStorageKHR where
-  showsPrec = enumShowsPrec enumPrefixPerformanceCounterStorageKHR
-                            showTablePerformanceCounterStorageKHR
-                            conNamePerformanceCounterStorageKHR
-                            (\(PerformanceCounterStorageKHR x) -> x)
-                            (showsPrec 11)
+showsPrec = enumShowsPrec enumPrefixPerformanceCounterStorageKHR
+                          showTablePerformanceCounterStorageKHR
+                          conNamePerformanceCounterStorageKHR
+                          (\(PerformanceCounterStorageKHR x) -> x)
+                          (showsPrec 11)
+
 
 instance Read PerformanceCounterStorageKHR where
   readPrec = enumReadPrec enumPrefixPerformanceCounterStorageKHR
@@ -1608,23 +851,14 @@ instance Read PerformanceCounterStorageKHR where
 
 type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBitsKHR
 
--- | VkPerformanceCounterDescriptionFlagBitsKHR - Bitmask specifying usage
--- behavior for a counter
---
--- = See Also
---
--- 'PerformanceCounterDescriptionFlagsKHR'
+-- No documentation found for TopLevel "VkPerformanceCounterDescriptionFlagBitsKHR"
 newtype PerformanceCounterDescriptionFlagBitsKHR = PerformanceCounterDescriptionFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR'
--- specifies that recording the counter /may/ have a noticeable performance
--- impact.
+-- No documentation found for Nested "VkPerformanceCounterDescriptionFlagBitsKHR" "VK_PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR"
 pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR =
   PerformanceCounterDescriptionFlagBitsKHR 0x00000001
--- | 'PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR'
--- specifies that concurrently recording the counter while other submitted
--- command buffers are running /may/ impact the accuracy of the recording.
+-- No documentation found for Nested "VkPerformanceCounterDescriptionFlagBitsKHR" "VK_PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR"
 pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR =
   PerformanceCounterDescriptionFlagBitsKHR 0x00000002
 
@@ -1640,12 +874,14 @@ showTablePerformanceCounterDescriptionFlagBitsKHR =
   , (PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR, "CONCURRENTLY_IMPACTED_BIT_KHR")
   ]
 
+
 instance Show PerformanceCounterDescriptionFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixPerformanceCounterDescriptionFlagBitsKHR
-                            showTablePerformanceCounterDescriptionFlagBitsKHR
-                            conNamePerformanceCounterDescriptionFlagBitsKHR
-                            (\(PerformanceCounterDescriptionFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPerformanceCounterDescriptionFlagBitsKHR
+                          showTablePerformanceCounterDescriptionFlagBitsKHR
+                          conNamePerformanceCounterDescriptionFlagBitsKHR
+                          (\(PerformanceCounterDescriptionFlagBitsKHR x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PerformanceCounterDescriptionFlagBitsKHR where
   readPrec = enumReadPrec enumPrefixPerformanceCounterDescriptionFlagBitsKHR
@@ -1656,11 +892,7 @@ instance Read PerformanceCounterDescriptionFlagBitsKHR where
 
 type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
 
--- | VkAcquireProfilingLockFlagBitsKHR - Reserved for future use
---
--- = See Also
---
--- 'AcquireProfilingLockFlagsKHR'
+-- No documentation found for TopLevel "VkAcquireProfilingLockFlagBitsKHR"
 newtype AcquireProfilingLockFlagBitsKHR = AcquireProfilingLockFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -1675,12 +907,14 @@ enumPrefixAcquireProfilingLockFlagBitsKHR = ""
 showTableAcquireProfilingLockFlagBitsKHR :: [(AcquireProfilingLockFlagBitsKHR, String)]
 showTableAcquireProfilingLockFlagBitsKHR = []
 
+
 instance Show AcquireProfilingLockFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixAcquireProfilingLockFlagBitsKHR
-                            showTableAcquireProfilingLockFlagBitsKHR
-                            conNameAcquireProfilingLockFlagBitsKHR
-                            (\(AcquireProfilingLockFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixAcquireProfilingLockFlagBitsKHR
+                          showTableAcquireProfilingLockFlagBitsKHR
+                          conNameAcquireProfilingLockFlagBitsKHR
+                          (\(AcquireProfilingLockFlagBitsKHR x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read AcquireProfilingLockFlagBitsKHR where
   readPrec = enumReadPrec enumPrefixAcquireProfilingLockFlagBitsKHR

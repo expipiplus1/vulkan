@@ -70,6 +70,7 @@ import Vulkan.Core10.Shader
 import Vulkan.Core10.SparseResourceMemoryManagement
 import Data.Word (Word32)
 import Vulkan.Version (pattern MAKE_VERSION)
+
 pattern API_VERSION_1_0 :: Word32
 pattern API_VERSION_1_0 = MAKE_VERSION 1 0 0
 

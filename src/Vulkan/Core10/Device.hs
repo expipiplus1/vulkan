@@ -184,95 +184,14 @@ foreign import ccall
   "dynamic" mkVkCreateDevice
   :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct DeviceCreateInfo) -> Ptr AllocationCallbacks -> Ptr (Ptr Device_T) -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct DeviceCreateInfo) -> Ptr AllocationCallbacks -> Ptr (Ptr Device_T) -> IO Result
 
--- | vkCreateDevice - Create a new device instance
---
--- = Description
---
--- 'createDevice' verifies that extensions and features requested in the
--- @ppEnabledExtensionNames@ and @pEnabledFeatures@ members of
--- @pCreateInfo@, respectively, are supported by the implementation. If any
--- requested extension is not supported, 'createDevice' /must/ return
--- 'Vulkan.Core10.Enums.Result.ERROR_EXTENSION_NOT_PRESENT'. If any
--- requested feature is not supported, 'createDevice' /must/ return
--- 'Vulkan.Core10.Enums.Result.ERROR_FEATURE_NOT_PRESENT'. Support for
--- extensions /can/ be checked before creating a device by querying
--- 'Vulkan.Core10.ExtensionDiscovery.enumerateDeviceExtensionProperties'.
--- Support for features /can/ similarly be checked by querying
--- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFeatures'.
---
--- After verifying and enabling the extensions the
--- 'Vulkan.Core10.Handles.Device' object is created and returned to the
--- application.
---
--- Multiple logical devices /can/ be created from the same physical device.
--- Logical device creation /may/ fail due to lack of device-specific
--- resources (in addition to the other errors). If that occurs,
--- 'createDevice' will return
--- 'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'.
---
--- == Valid Usage
---
--- -   #VUID-vkCreateDevice-ppEnabledExtensionNames-01387# All
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-extensions-extensiondependencies required extensions>
---     for each extension in the
---     'DeviceCreateInfo'::@ppEnabledExtensionNames@ list /must/ also be
---     present in that list
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCreateDevice-physicalDevice-parameter# @physicalDevice@
---     /must/ be a valid 'Vulkan.Core10.Handles.PhysicalDevice' handle
---
--- -   #VUID-vkCreateDevice-pCreateInfo-parameter# @pCreateInfo@ /must/ be
---     a valid pointer to a valid 'DeviceCreateInfo' structure
---
--- -   #VUID-vkCreateDevice-pAllocator-parameter# If @pAllocator@ is not
---     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- -   #VUID-vkCreateDevice-pDevice-parameter# @pDevice@ /must/ be a valid
---     pointer to a 'Vulkan.Core10.Handles.Device' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_EXTENSION_NOT_PRESENT'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_FEATURE_NOT_PRESENT'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Device', 'DeviceCreateInfo',
--- 'Vulkan.Core10.Handles.PhysicalDevice'
+-- No documentation found for TopLevel "vkCreateDevice"
 createDevice :: forall a io
               . (Extendss DeviceCreateInfo a, PokeChain a, MonadIO io)
-             => -- | @physicalDevice@ /must/ be one of the device handles returned from a
-                -- call to 'Vulkan.Core10.DeviceInitialization.enumeratePhysicalDevices'
-                -- (see
-                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-physical-device-enumeration Physical Device Enumeration>).
+             => -- No documentation found for Nested "vkCreateDevice" "physicalDevice"
                 PhysicalDevice
-             -> -- | @pCreateInfo@ is a pointer to a 'DeviceCreateInfo' structure containing
-                -- information about how to create the device.
+             -> -- No documentation found for Nested "vkCreateDevice" "pCreateInfo"
                 (DeviceCreateInfo a)
-             -> -- | @pAllocator@ controls host memory allocation as described in the
-                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                -- chapter.
+             -> -- No documentation found for Nested "vkCreateDevice" "pAllocator"
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io (Device)
 createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
@@ -313,65 +232,12 @@ foreign import ccall
   "dynamic" mkVkDestroyDevice
   :: FunPtr (Ptr Device_T -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> Ptr AllocationCallbacks -> IO ()
 
--- | vkDestroyDevice - Destroy a logical device
---
--- = Description
---
--- To ensure that no work is active on the device,
--- 'Vulkan.Core10.Queue.deviceWaitIdle' /can/ be used to gate the
--- destruction of the device. Prior to destroying a device, an application
--- is responsible for destroying\/freeing any Vulkan objects that were
--- created using that device as the first parameter of the corresponding
--- @vkCreate*@ or @vkAllocate*@ command.
---
--- Note
---
--- The lifetime of each of these objects is bound by the lifetime of the
--- 'Vulkan.Core10.Handles.Device' object. Therefore, to avoid resource
--- leaks, it is critical that an application explicitly free all of these
--- resources prior to calling 'destroyDevice'.
---
--- == Valid Usage
---
--- -   #VUID-vkDestroyDevice-device-00378# All child objects created on
---     @device@ /must/ have been destroyed prior to destroying @device@
---
--- -   #VUID-vkDestroyDevice-device-00379# If
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @device@ was created, a compatible set of callbacks
---     /must/ be provided here
---
--- -   #VUID-vkDestroyDevice-device-00380# If no
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @device@ was created, @pAllocator@ /must/ be @NULL@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDestroyDevice-device-parameter# If @device@ is not @NULL@,
---     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDestroyDevice-pAllocator-parameter# If @pAllocator@ is not
---     @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
---
--- == Host Synchronization
---
--- -   Host access to @device@ /must/ be externally synchronized
---
--- -   Host access to all 'Vulkan.Core10.Handles.Queue' objects received
---     from @device@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Vulkan.Core10.Handles.Device'
+-- No documentation found for TopLevel "vkDestroyDevice"
 destroyDevice :: forall io
                . (MonadIO io)
-              => -- | @device@ is the logical device to destroy.
+              => -- No documentation found for Nested "vkDestroyDevice" "device"
                  Device
-              -> -- | @pAllocator@ controls host memory allocation as described in the
-                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
-                 -- chapter.
+              -> -- No documentation found for Nested "vkDestroyDevice" "pAllocator"
                  ("allocator" ::: Maybe AllocationCallbacks)
               -> io ()
 destroyDevice device allocator = liftIO . evalContT $ do
@@ -386,77 +252,16 @@ destroyDevice device allocator = liftIO . evalContT $ do
   pure $ ()
 
 
--- | VkDeviceQueueCreateInfo - Structure specifying parameters of a newly
--- created device queue
---
--- == Valid Usage
---
--- -   #VUID-VkDeviceQueueCreateInfo-queueFamilyIndex-00381#
---     @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
---     returned by
---     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
---
--- -   #VUID-VkDeviceQueueCreateInfo-queueCount-00382# @queueCount@ /must/
---     be less than or equal to the @queueCount@ member of the
---     'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties'
---     structure, as returned by
---     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
---     in the @pQueueFamilyProperties@[queueFamilyIndex]
---
--- -   #VUID-VkDeviceQueueCreateInfo-pQueuePriorities-00383# Each element
---     of @pQueuePriorities@ /must/ be between @0.0@ and @1.0@ inclusive
---
--- -   #VUID-VkDeviceQueueCreateInfo-flags-02861# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-protectedMemory protected memory>
---     feature is not enabled, the
---     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
---     bit of @flags@ /must/ not be set
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDeviceQueueCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO'
---
--- -   #VUID-VkDeviceQueueCreateInfo-pNext-pNext# @pNext@ /must/ be @NULL@
---     or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_global_priority.DeviceQueueGlobalPriorityCreateInfoEXT'
---
--- -   #VUID-VkDeviceQueueCreateInfo-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkDeviceQueueCreateInfo-flags-parameter# @flags@ /must/ be a
---     valid combination of
---     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlagBits'
---     values
---
--- -   #VUID-VkDeviceQueueCreateInfo-pQueuePriorities-parameter#
---     @pQueuePriorities@ /must/ be a valid pointer to an array of
---     @queueCount@ @float@ values
---
--- -   #VUID-VkDeviceQueueCreateInfo-queueCount-arraylength# @queueCount@
---     /must/ be greater than @0@
---
--- = See Also
---
--- 'DeviceCreateInfo',
--- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkDeviceQueueCreateInfo"
 data DeviceQueueCreateInfo (es :: [Type]) = DeviceQueueCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkDeviceQueueCreateInfo" "pNext"
     next :: Chain es
-  , -- | @flags@ is a bitmask indicating behavior of the queue.
+  , -- No documentation found for Nested "VkDeviceQueueCreateInfo" "flags"
     flags :: DeviceQueueCreateFlags
-  , -- | @queueFamilyIndex@ is an unsigned integer indicating the index of the
-    -- queue family to create on this device. This index corresponds to the
-    -- index of an element of the @pQueueFamilyProperties@ array that was
-    -- returned by
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'.
+  , -- No documentation found for Nested "VkDeviceQueueCreateInfo" "queueFamilyIndex"
     queueFamilyIndex :: Word32
-  , -- | @pQueuePriorities@ is a pointer to an array of @queueCount@ normalized
-    -- floating point values, specifying priorities of work that will be
-    -- submitted to each created queue. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-priority Queue Priority>
-    -- for more information.
+  , -- No documentation found for Nested "VkDeviceQueueCreateInfo" "pQueuePriorities"
     queuePriorities :: Vector Float
   }
   deriving (Typeable)
@@ -521,305 +326,20 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
            mempty
 
 
--- | VkDeviceCreateInfo - Structure specifying parameters of a newly created
--- device
---
--- == Valid Usage
---
--- -   #VUID-VkDeviceCreateInfo-queueFamilyIndex-02802# The
---     @queueFamilyIndex@ member of each element of @pQueueCreateInfos@
---     /must/ be unique within @pQueueCreateInfos@, except that two members
---     can share the same @queueFamilyIndex@ if one is a protected-capable
---     queue and one is not a protected-capable queue
---
--- -   #VUID-VkDeviceCreateInfo-pNext-00373# If the @pNext@ chain includes
---     a
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
---     structure, then @pEnabledFeatures@ /must/ be @NULL@
---
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensionNames-01840#
---     @ppEnabledExtensionNames@ /must/ not contain
---     @VK_AMD_negative_viewport_height@
---
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensionNames-03328#
---     @ppEnabledExtensionNames@ /must/ not contain both
---     @VK_KHR_buffer_device_address@ and @VK_EXT_buffer_device_address@
---
--- -   #VUID-VkDeviceCreateInfo-pNext-02829# If the @pNext@ chain includes
---     a 'Vulkan.Core12.PhysicalDeviceVulkan11Features' structure, then it
---     /must/ not include a
---     'Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage.PhysicalDevice16BitStorageFeatures',
---     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewFeatures',
---     'Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers.PhysicalDeviceVariablePointersFeatures',
---     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryFeatures',
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.PhysicalDeviceSamplerYcbcrConversionFeatures',
---     or
---     'Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters.PhysicalDeviceShaderDrawParametersFeatures'
---     structure
---
--- -   #VUID-VkDeviceCreateInfo-pNext-02830# If the @pNext@ chain includes
---     a 'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure, then it
---     /must/ not include a
---     'Vulkan.Core12.Promoted_From_VK_KHR_8bit_storage.PhysicalDevice8BitStorageFeatures',
---     'Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64.PhysicalDeviceShaderAtomicInt64Features',
---     'Vulkan.Core12.Promoted_From_VK_KHR_shader_float16_int8.PhysicalDeviceShaderFloat16Int8Features',
---     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingFeatures',
---     'Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout.PhysicalDeviceScalarBlockLayoutFeatures',
---     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.PhysicalDeviceImagelessFramebufferFeatures',
---     'Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout.PhysicalDeviceUniformBufferStandardLayoutFeatures',
---     'Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types.PhysicalDeviceShaderSubgroupExtendedTypesFeatures',
---     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.PhysicalDeviceSeparateDepthStencilLayoutsFeatures',
---     'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.PhysicalDeviceHostQueryResetFeatures',
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.PhysicalDeviceTimelineSemaphoreFeatures',
---     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeatures',
---     or
---     'Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model.PhysicalDeviceVulkanMemoryModelFeatures'
---     structure
---
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-04476# If
---     @ppEnabledExtensions@ contains @\"VK_KHR_shader_draw_parameters\"@
---     and the @pNext@ chain includes a
---     'Vulkan.Core12.PhysicalDeviceVulkan11Features' structure, then
---     'Vulkan.Core12.PhysicalDeviceVulkan11Features'::@shaderDrawParameters@
---     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
---
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-02831# If
---     @ppEnabledExtensions@ contains @\"VK_KHR_draw_indirect_count\"@ and
---     the @pNext@ chain includes a
---     'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure, then
---     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@drawIndirectCount@
---     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
---
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-02832# If
---     @ppEnabledExtensions@ contains
---     @\"VK_KHR_sampler_mirror_clamp_to_edge\"@ and the @pNext@ chain
---     includes a 'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure,
---     then
---     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@samplerMirrorClampToEdge@
---     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
---
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-02833# If
---     @ppEnabledExtensions@ contains @\"VK_EXT_descriptor_indexing\"@ and
---     the @pNext@ chain includes a
---     'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure, then
---     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@descriptorIndexing@
---     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
---
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-02834# If
---     @ppEnabledExtensions@ contains @\"VK_EXT_sampler_filter_minmax\"@
---     and the @pNext@ chain includes a
---     'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure, then
---     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@samplerFilterMinmax@
---     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
---
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-02835# If
---     @ppEnabledExtensions@ contains
---     @\"VK_EXT_shader_viewport_index_layer\"@ and the @pNext@ chain
---     includes a 'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure,
---     then
---     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@shaderOutputViewportIndex@
---     and
---     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@shaderOutputLayer@
---     /must/ both be 'Vulkan.Core10.FundamentalTypes.TRUE'
---
--- -   #VUID-VkDeviceCreateInfo-pProperties-04451# If the
---     @VK_KHR_portability_subset@ extension is included in @pProperties@
---     of
---     'Vulkan.Core10.ExtensionDiscovery.enumerateDeviceExtensionProperties',
---     @ppEnabledExtensions@ /must/ include \"VK_KHR_portability_subset\".
---
--- -   #VUID-VkDeviceCreateInfo-shadingRateImage-04478# If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
---     is enabled,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
---     /must/ not be enabled
---
--- -   #VUID-VkDeviceCreateInfo-shadingRateImage-04479# If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
---     is enabled,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>
---     /must/ not be enabled
---
--- -   #VUID-VkDeviceCreateInfo-shadingRateImage-04480# If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
---     is enabled,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
---     /must/ not be enabled
---
--- -   #VUID-VkDeviceCreateInfo-fragmentDensityMap-04481# If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragmentDensityMap>
---     is enabled,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
---     /must/ not be enabled
---
--- -   #VUID-VkDeviceCreateInfo-fragmentDensityMap-04482# If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragmentDensityMap>
---     is enabled,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>
---     /must/ not be enabled
---
--- -   #VUID-VkDeviceCreateInfo-fragmentDensityMap-04483# If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragmentDensityMap>
---     is enabled,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
---     /must/ not be enabled
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDeviceCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_CREATE_INFO'
---
--- -   #VUID-VkDeviceCreateInfo-pNext-pNext# Each @pNext@ member of any
---     structure (including this one) in the @pNext@ chain /must/ be either
---     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_device_memory_report.DeviceDeviceMemoryReportCreateInfoEXT',
---     'Vulkan.Extensions.VK_NV_device_diagnostics_config.DeviceDiagnosticsConfigCreateInfoNV',
---     'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo',
---     'Vulkan.Extensions.VK_AMD_memory_overallocation_behavior.DeviceMemoryOverallocationCreateInfoAMD',
---     'Vulkan.Extensions.VK_EXT_private_data.DevicePrivateDataCreateInfoEXT',
---     'Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage.PhysicalDevice16BitStorageFeatures',
---     'Vulkan.Extensions.VK_EXT_4444_formats.PhysicalDevice4444FormatsFeaturesEXT',
---     'Vulkan.Core12.Promoted_From_VK_KHR_8bit_storage.PhysicalDevice8BitStorageFeatures',
---     'Vulkan.Extensions.VK_EXT_astc_decode_mode.PhysicalDeviceASTCDecodeFeaturesEXT',
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructureFeaturesKHR',
---     'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedFeaturesEXT',
---     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeatures',
---     'Vulkan.Extensions.VK_EXT_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeaturesEXT',
---     'Vulkan.Extensions.VK_AMD_device_coherent_memory.PhysicalDeviceCoherentMemoryFeaturesAMD',
---     'Vulkan.Extensions.VK_NV_compute_shader_derivatives.PhysicalDeviceComputeShaderDerivativesFeaturesNV',
---     'Vulkan.Extensions.VK_EXT_conditional_rendering.PhysicalDeviceConditionalRenderingFeaturesEXT',
---     'Vulkan.Extensions.VK_NV_cooperative_matrix.PhysicalDeviceCooperativeMatrixFeaturesNV',
---     'Vulkan.Extensions.VK_NV_corner_sampled_image.PhysicalDeviceCornerSampledImageFeaturesNV',
---     'Vulkan.Extensions.VK_NV_coverage_reduction_mode.PhysicalDeviceCoverageReductionModeFeaturesNV',
---     'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorFeaturesEXT',
---     'Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing.PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV',
---     'Vulkan.Extensions.VK_EXT_depth_clip_enable.PhysicalDeviceDepthClipEnableFeaturesEXT',
---     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingFeatures',
---     'Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsFeaturesNV',
---     'Vulkan.Extensions.VK_EXT_device_memory_report.PhysicalDeviceDeviceMemoryReportFeaturesEXT',
---     'Vulkan.Extensions.VK_NV_device_diagnostics_config.PhysicalDeviceDiagnosticsConfigFeaturesNV',
---     'Vulkan.Extensions.VK_NV_scissor_exclusive.PhysicalDeviceExclusiveScissorFeaturesNV',
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.PhysicalDeviceExtendedDynamicStateFeaturesEXT',
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
---     'Vulkan.Extensions.VK_EXT_fragment_density_map2.PhysicalDeviceFragmentDensityMap2FeaturesEXT',
---     'Vulkan.Extensions.VK_EXT_fragment_density_map.PhysicalDeviceFragmentDensityMapFeaturesEXT',
---     'Vulkan.Extensions.VK_NV_fragment_shader_barycentric.PhysicalDeviceFragmentShaderBarycentricFeaturesNV',
---     'Vulkan.Extensions.VK_EXT_fragment_shader_interlock.PhysicalDeviceFragmentShaderInterlockFeaturesEXT',
---     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PhysicalDeviceFragmentShadingRateEnumsFeaturesNV',
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PhysicalDeviceFragmentShadingRateFeaturesKHR',
---     'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.PhysicalDeviceHostQueryResetFeatures',
---     'Vulkan.Extensions.VK_EXT_image_robustness.PhysicalDeviceImageRobustnessFeaturesEXT',
---     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.PhysicalDeviceImagelessFramebufferFeatures',
---     'Vulkan.Extensions.VK_EXT_index_type_uint8.PhysicalDeviceIndexTypeUint8FeaturesEXT',
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockFeaturesEXT',
---     'Vulkan.Extensions.VK_EXT_line_rasterization.PhysicalDeviceLineRasterizationFeaturesEXT',
---     'Vulkan.Extensions.VK_EXT_memory_priority.PhysicalDeviceMemoryPriorityFeaturesEXT',
---     'Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderFeaturesNV',
---     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewFeatures',
---     'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
---     'Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control.PhysicalDevicePipelineCreationCacheControlFeaturesEXT',
---     'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
---     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR',
---     'Vulkan.Extensions.VK_EXT_private_data.PhysicalDevicePrivateDataFeaturesEXT',
---     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryFeatures',
---     'Vulkan.Extensions.VK_KHR_ray_query.PhysicalDeviceRayQueryFeaturesKHR',
---     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.PhysicalDeviceRayTracingPipelineFeaturesKHR',
---     'Vulkan.Extensions.VK_NV_representative_fragment_test.PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
---     'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2FeaturesEXT',
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.PhysicalDeviceSamplerYcbcrConversionFeatures',
---     'Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout.PhysicalDeviceScalarBlockLayoutFeatures',
---     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.PhysicalDeviceSeparateDepthStencilLayoutsFeatures',
---     'Vulkan.Extensions.VK_EXT_shader_atomic_float.PhysicalDeviceShaderAtomicFloatFeaturesEXT',
---     'Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64.PhysicalDeviceShaderAtomicInt64Features',
---     'Vulkan.Extensions.VK_KHR_shader_clock.PhysicalDeviceShaderClockFeaturesKHR',
---     'Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation.PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT',
---     'Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters.PhysicalDeviceShaderDrawParametersFeatures',
---     'Vulkan.Core12.Promoted_From_VK_KHR_shader_float16_int8.PhysicalDeviceShaderFloat16Int8Features',
---     'Vulkan.Extensions.VK_EXT_shader_image_atomic_int64.PhysicalDeviceShaderImageAtomicInt64FeaturesEXT',
---     'Vulkan.Extensions.VK_NV_shader_image_footprint.PhysicalDeviceShaderImageFootprintFeaturesNV',
---     'Vulkan.Extensions.VK_INTEL_shader_integer_functions2.PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL',
---     'Vulkan.Extensions.VK_NV_shader_sm_builtins.PhysicalDeviceShaderSMBuiltinsFeaturesNV',
---     'Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types.PhysicalDeviceShaderSubgroupExtendedTypesFeatures',
---     'Vulkan.Extensions.VK_KHR_shader_terminate_invocation.PhysicalDeviceShaderTerminateInvocationFeaturesKHR',
---     'Vulkan.Extensions.VK_NV_shading_rate_image.PhysicalDeviceShadingRateImageFeaturesNV',
---     'Vulkan.Extensions.VK_EXT_subgroup_size_control.PhysicalDeviceSubgroupSizeControlFeaturesEXT',
---     'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentFeaturesEXT',
---     'Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr.PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT',
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.PhysicalDeviceTimelineSemaphoreFeatures',
---     'Vulkan.Extensions.VK_EXT_transform_feedback.PhysicalDeviceTransformFeedbackFeaturesEXT',
---     'Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout.PhysicalDeviceUniformBufferStandardLayoutFeatures',
---     'Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers.PhysicalDeviceVariablePointersFeatures',
---     'Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorFeaturesEXT',
---     'Vulkan.Core12.PhysicalDeviceVulkan11Features',
---     'Vulkan.Core12.PhysicalDeviceVulkan12Features',
---     'Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model.PhysicalDeviceVulkanMemoryModelFeatures',
---     or
---     'Vulkan.Extensions.VK_EXT_ycbcr_image_arrays.PhysicalDeviceYcbcrImageArraysFeaturesEXT'
---
--- -   #VUID-VkDeviceCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique, with the exception of
---     structures of type
---     'Vulkan.Extensions.VK_EXT_device_memory_report.DeviceDeviceMemoryReportCreateInfoEXT'
---     or
---     'Vulkan.Extensions.VK_EXT_private_data.DevicePrivateDataCreateInfoEXT'
---
--- -   #VUID-VkDeviceCreateInfo-flags-zerobitmask# @flags@ /must/ be @0@
---
--- -   #VUID-VkDeviceCreateInfo-pQueueCreateInfos-parameter#
---     @pQueueCreateInfos@ /must/ be a valid pointer to an array of
---     @queueCreateInfoCount@ valid 'DeviceQueueCreateInfo' structures
---
--- -   #VUID-VkDeviceCreateInfo-ppEnabledLayerNames-parameter# If
---     @enabledLayerCount@ is not @0@, @ppEnabledLayerNames@ /must/ be a
---     valid pointer to an array of @enabledLayerCount@ null-terminated
---     UTF-8 strings
---
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensionNames-parameter# If
---     @enabledExtensionCount@ is not @0@, @ppEnabledExtensionNames@ /must/
---     be a valid pointer to an array of @enabledExtensionCount@
---     null-terminated UTF-8 strings
---
--- -   #VUID-VkDeviceCreateInfo-pEnabledFeatures-parameter# If
---     @pEnabledFeatures@ is not @NULL@, @pEnabledFeatures@ /must/ be a
---     valid pointer to a valid
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceFeatures'
---     structure
---
--- -   #VUID-VkDeviceCreateInfo-queueCreateInfoCount-arraylength#
---     @queueCreateInfoCount@ /must/ be greater than @0@
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.DeviceCreateFlags.DeviceCreateFlags',
--- 'DeviceQueueCreateInfo',
--- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceFeatures',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createDevice'
+
+-- No documentation found for TopLevel "VkDeviceCreateInfo"
 data DeviceCreateInfo (es :: [Type]) = DeviceCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+  { -- No documentation found for Nested "VkDeviceCreateInfo" "pNext"
     next :: Chain es
-  , -- | @flags@ is reserved for future use.
+  , -- No documentation found for Nested "VkDeviceCreateInfo" "flags"
     flags :: DeviceCreateFlags
-  , -- | @pQueueCreateInfos@ is a pointer to an array of 'DeviceQueueCreateInfo'
-    -- structures describing the queues that are requested to be created along
-    -- with the logical device. Refer to the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-queue-creation Queue Creation>
-    -- section below for further details.
+  , -- No documentation found for Nested "VkDeviceCreateInfo" "pQueueCreateInfos"
     queueCreateInfos :: Vector (SomeStruct DeviceQueueCreateInfo)
-  , -- | @ppEnabledLayerNames@ is deprecated and ignored. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation>.
+  , -- No documentation found for Nested "VkDeviceCreateInfo" "ppEnabledLayerNames"
     enabledLayerNames :: Vector ByteString
-  , -- | @ppEnabledExtensionNames@ is a pointer to an array of
-    -- @enabledExtensionCount@ null-terminated UTF-8 strings containing the
-    -- names of extensions to enable for the created device. See the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-extensions>
-    -- section for further details.
+  , -- No documentation found for Nested "VkDeviceCreateInfo" "ppEnabledExtensionNames"
     enabledExtensionNames :: Vector ByteString
-  , -- | @pEnabledFeatures@ is @NULL@ or a pointer to a
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceFeatures' structure
-    -- containing boolean indicators of all the features to be enabled. Refer
-    -- to the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features Features>
-    -- section for further details.
+  , -- No documentation found for Nested "VkDeviceCreateInfo" "pEnabledFeatures"
     enabledFeatures :: Maybe PhysicalDeviceFeatures
   }
   deriving (Typeable)

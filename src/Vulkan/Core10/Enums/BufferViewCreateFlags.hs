@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkBufferViewCreateFlags - Reserved for future use
---
--- = Description
---
--- 'BufferViewCreateFlags' is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core10.BufferView.BufferViewCreateInfo'
+-- No documentation found for TopLevel "VkBufferViewCreateFlags"
 newtype BufferViewCreateFlags = BufferViewCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixBufferViewCreateFlags = ""
 showTableBufferViewCreateFlags :: [(BufferViewCreateFlags, String)]
 showTableBufferViewCreateFlags = []
 
+
 instance Show BufferViewCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixBufferViewCreateFlags
-                            showTableBufferViewCreateFlags
-                            conNameBufferViewCreateFlags
-                            (\(BufferViewCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixBufferViewCreateFlags
+                          showTableBufferViewCreateFlags
+                          conNameBufferViewCreateFlags
+                          (\(BufferViewCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read BufferViewCreateFlags where
   readPrec = enumReadPrec enumPrefixBufferViewCreateFlags

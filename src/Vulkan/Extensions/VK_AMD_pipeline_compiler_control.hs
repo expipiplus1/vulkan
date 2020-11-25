@@ -1,106 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_AMD_pipeline_compiler_control - device extension
---
--- == VK_AMD_pipeline_compiler_control
---
--- [__Name String__]
---     @VK_AMD_pipeline_compiler_control@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     184
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
--- [__Contact__]
---
---     -   Matthaeus G. Chajdas
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_pipeline_compiler_control:%20&body=@anteru%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2019-07-26
---
--- [__IP Status__]
---     No known IP claims.
---
--- [__Contributors__]
---
---     -   Matthaeus G. Chajdas, AMD
---
---     -   Daniel Rakos, AMD
---
---     -   Maciej Jesionowski, AMD
---
---     -   Tobias Hector, AMD
---
--- == Description
---
--- This extension introduces 'PipelineCompilerControlCreateInfoAMD'
--- structure that can be chained to a pipeline’s create info to specify
--- additional flags that affect pipeline compilation.
---
--- == New Structures
---
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo':
---
---     -   'PipelineCompilerControlCreateInfoAMD'
---
--- == New Enums
---
--- -   'PipelineCompilerControlFlagBitsAMD'
---
--- == New Bitmasks
---
--- -   'PipelineCompilerControlFlagsAMD'
---
--- == New Enum Constants
---
--- -   'AMD_PIPELINE_COMPILER_CONTROL_EXTENSION_NAME'
---
--- -   'AMD_PIPELINE_COMPILER_CONTROL_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COMPILER_CONTROL_CREATE_INFO_AMD'
---
--- == Issues
---
--- None.
---
--- == Examples
---
--- None.
---
--- == Version History
---
--- -   Revision 1, 2019-07-26 (Tobias Hector)
---
---     -   Initial revision.
---
--- = See Also
---
--- 'PipelineCompilerControlCreateInfoAMD',
--- 'PipelineCompilerControlFlagBitsAMD', 'PipelineCompilerControlFlagsAMD'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_pipeline_compiler_control Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_AMD_pipeline_compiler_control"
 module Vulkan.Extensions.VK_AMD_pipeline_compiler_control  ( PipelineCompilerControlCreateInfoAMD(..)
                                                            , PipelineCompilerControlFlagsAMD
                                                            , PipelineCompilerControlFlagBitsAMD(..)
@@ -139,22 +38,10 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_COMPILER_CONTROL_CREATE_INFO_AMD))
--- | VkPipelineCompilerControlCreateInfoAMD - Structure used to pass
--- compilation control flags to a pipeline
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'PipelineCompilerControlFlagsAMD',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPipelineCompilerControlCreateInfoAMD"
 data PipelineCompilerControlCreateInfoAMD = PipelineCompilerControlCreateInfoAMD
-  { -- | @compilerControlFlags@ is a bitmask of
-    -- 'PipelineCompilerControlFlagBitsAMD' affecting how the pipeline will be
-    -- compiled.
-    --
-    -- #VUID-VkPipelineCompilerControlCreateInfoAMD-compilerControlFlags-zerobitmask#
-    -- @compilerControlFlags@ /must/ be @0@
+  { -- No documentation found for Nested "VkPipelineCompilerControlCreateInfoAMD" "compilerControlFlags"
     compilerControlFlags :: PipelineCompilerControlFlagsAMD }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -182,6 +69,7 @@ instance FromCStruct PipelineCompilerControlCreateInfoAMD where
     pure $ PipelineCompilerControlCreateInfoAMD
              compilerControlFlags
 
+
 instance Storable PipelineCompilerControlCreateInfoAMD where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -195,12 +83,7 @@ instance Zero PipelineCompilerControlCreateInfoAMD where
 
 type PipelineCompilerControlFlagsAMD = PipelineCompilerControlFlagBitsAMD
 
--- | VkPipelineCompilerControlFlagBitsAMD - Enum specifying available
--- compilation control flags
---
--- = See Also
---
--- 'PipelineCompilerControlFlagsAMD'
+-- No documentation found for TopLevel "VkPipelineCompilerControlFlagBitsAMD"
 newtype PipelineCompilerControlFlagBitsAMD = PipelineCompilerControlFlagBitsAMD Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -215,12 +98,14 @@ enumPrefixPipelineCompilerControlFlagBitsAMD = ""
 showTablePipelineCompilerControlFlagBitsAMD :: [(PipelineCompilerControlFlagBitsAMD, String)]
 showTablePipelineCompilerControlFlagBitsAMD = []
 
+
 instance Show PipelineCompilerControlFlagBitsAMD where
-  showsPrec = enumShowsPrec enumPrefixPipelineCompilerControlFlagBitsAMD
-                            showTablePipelineCompilerControlFlagBitsAMD
-                            conNamePipelineCompilerControlFlagBitsAMD
-                            (\(PipelineCompilerControlFlagBitsAMD x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixPipelineCompilerControlFlagBitsAMD
+                          showTablePipelineCompilerControlFlagBitsAMD
+                          conNamePipelineCompilerControlFlagBitsAMD
+                          (\(PipelineCompilerControlFlagBitsAMD x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read PipelineCompilerControlFlagBitsAMD where
   readPrec = enumReadPrec enumPrefixPipelineCompilerControlFlagBitsAMD

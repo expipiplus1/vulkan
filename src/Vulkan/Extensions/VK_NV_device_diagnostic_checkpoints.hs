@@ -1,109 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_NV_device_diagnostic_checkpoints - device extension
---
--- == VK_NV_device_diagnostic_checkpoints
---
--- [__Name String__]
---     @VK_NV_device_diagnostic_checkpoints@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     207
---
--- [__Revision__]
---     2
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@
---
--- [__Contact__]
---
---     -   Nuno Subtil
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_device_diagnostic_checkpoints:%20&body=@nsubtil%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2018-07-16
---
--- [__Contributors__]
---
---     -   Oleg Kuznetsov, NVIDIA
---
---     -   Alex Dunn, NVIDIA
---
---     -   Jeff Bolz, NVIDIA
---
---     -   Eric Werness, NVIDIA
---
---     -   Daniel Koch, NVIDIA
---
--- == Description
---
--- This extension allows applications to insert markers in the command
--- stream and associate them with custom data.
---
--- If a device lost error occurs, the application /may/ then query the
--- implementation for the last markers to cross specific
--- implementation-defined pipeline stages, in order to narrow down which
--- commands were executing at the time and might have caused the failure.
---
--- == New Commands
---
--- -   'cmdSetCheckpointNV'
---
--- -   'getQueueCheckpointDataNV'
---
--- == New Structures
---
--- -   'CheckpointDataNV'
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2':
---
---     -   'QueueFamilyCheckpointPropertiesNV'
---
--- == New Enum Constants
---
--- -   'NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME'
---
--- -   'NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CHECKPOINT_DATA_NV'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV'
---
--- == Version History
---
--- -   Revision 1, 2018-07-16 (Nuno Subtil)
---
---     -   Internal revisions
---
--- -   Revision 2, 2018-07-16 (Nuno Subtil)
---
---     -   ???
---
--- = See Also
---
--- 'CheckpointDataNV', 'QueueFamilyCheckpointPropertiesNV',
--- 'cmdSetCheckpointNV', 'getQueueCheckpointDataNV'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_NV_device_diagnostic_checkpoints"
 module Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints  ( cmdSetCheckpointNV
                                                               , getQueueCheckpointDataNV
                                                               , QueueFamilyCheckpointPropertiesNV(..)
@@ -170,50 +66,12 @@ foreign import ccall
   "dynamic" mkVkCmdSetCheckpointNV
   :: FunPtr (Ptr CommandBuffer_T -> Ptr () -> IO ()) -> Ptr CommandBuffer_T -> Ptr () -> IO ()
 
--- | vkCmdSetCheckpointNV - insert diagnostic checkpoint in command stream
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdSetCheckpointNV-commandBuffer-parameter# @commandBuffer@
---     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdSetCheckpointNV-commandBuffer-recording# @commandBuffer@
---     /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdSetCheckpointNV-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, compute, or transfer
---     operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- 'Vulkan.Core10.Handles.CommandBuffer'
+-- No documentation found for TopLevel "vkCmdSetCheckpointNV"
 cmdSetCheckpointNV :: forall io
                     . (MonadIO io)
-                   => -- | @commandBuffer@ is the command buffer that will receive the marker
+                   => -- No documentation found for Nested "vkCmdSetCheckpointNV" "commandBuffer"
                       CommandBuffer
-                   -> -- | @pCheckpointMarker@ is an opaque application-provided value that will be
-                      -- associated with the checkpoint.
+                   -> -- No documentation found for Nested "vkCmdSetCheckpointNV" "pCheckpointMarker"
                       ("checkpointMarker" ::: Ptr ())
                    -> io ()
 cmdSetCheckpointNV commandBuffer checkpointMarker = liftIO $ do
@@ -232,48 +90,10 @@ foreign import ccall
   "dynamic" mkVkGetQueueCheckpointDataNV
   :: FunPtr (Ptr Queue_T -> Ptr Word32 -> Ptr CheckpointDataNV -> IO ()) -> Ptr Queue_T -> Ptr Word32 -> Ptr CheckpointDataNV -> IO ()
 
--- | vkGetQueueCheckpointDataNV - retrieve diagnostic checkpoint data
---
--- = Description
---
--- If @pCheckpointData@ is @NULL@, then the number of checkpoint markers
--- available is returned in @pCheckpointDataCount@.
---
--- Otherwise, @pCheckpointDataCount@ /must/ point to a variable set by the
--- user to the number of elements in the @pCheckpointData@ array, and on
--- return the variable is overwritten with the number of structures
--- actually written to @pCheckpointData@.
---
--- If @pCheckpointDataCount@ is less than the number of checkpoint markers
--- available, at most @pCheckpointDataCount@ structures will be written.
---
--- == Valid Usage
---
--- -   #VUID-vkGetQueueCheckpointDataNV-queue-02025# The device that
---     @queue@ belongs to /must/ be in the lost state
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetQueueCheckpointDataNV-queue-parameter# @queue@ /must/ be
---     a valid 'Vulkan.Core10.Handles.Queue' handle
---
--- -   #VUID-vkGetQueueCheckpointDataNV-pCheckpointDataCount-parameter#
---     @pCheckpointDataCount@ /must/ be a valid pointer to a @uint32_t@
---     value
---
--- -   #VUID-vkGetQueueCheckpointDataNV-pCheckpointData-parameter# If the
---     value referenced by @pCheckpointDataCount@ is not @0@, and
---     @pCheckpointData@ is not @NULL@, @pCheckpointData@ /must/ be a valid
---     pointer to an array of @pCheckpointDataCount@ 'CheckpointDataNV'
---     structures
---
--- = See Also
---
--- 'CheckpointDataNV', 'Vulkan.Core10.Handles.Queue'
+-- No documentation found for TopLevel "vkGetQueueCheckpointDataNV"
 getQueueCheckpointDataNV :: forall io
                           . (MonadIO io)
-                         => -- | @queue@ is the 'Vulkan.Core10.Handles.Queue' object the caller would
-                            -- like to retrieve checkpoint data for
+                         => -- No documentation found for Nested "vkGetQueueCheckpointDataNV" "queue"
                             Queue
                          -> io (("checkpointData" ::: Vector CheckpointDataNV))
 getQueueCheckpointDataNV queue = liftIO . evalContT $ do
@@ -293,18 +113,10 @@ getQueueCheckpointDataNV queue = liftIO . evalContT $ do
   pure $ (pCheckpointData')
 
 
--- | VkQueueFamilyCheckpointPropertiesNV - return structure for queue family
--- checkpoint info query
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkQueueFamilyCheckpointPropertiesNV"
 data QueueFamilyCheckpointPropertiesNV = QueueFamilyCheckpointPropertiesNV
-  { -- | @checkpointExecutionStageMask@ is a mask indicating which pipeline
-    -- stages the implementation can execute checkpoint markers in.
+  { -- No documentation found for Nested "VkQueueFamilyCheckpointPropertiesNV" "checkpointExecutionStageMask"
     checkpointExecutionStageMask :: PipelineStageFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -333,6 +145,7 @@ instance FromCStruct QueueFamilyCheckpointPropertiesNV where
     pure $ QueueFamilyCheckpointPropertiesNV
              checkpointExecutionStageMask
 
+
 instance Storable QueueFamilyCheckpointPropertiesNV where
   sizeOf ~_ = 24
   alignment ~_ = 8
@@ -344,27 +157,12 @@ instance Zero QueueFamilyCheckpointPropertiesNV where
            zero
 
 
--- | VkCheckpointDataNV - return structure for command buffer checkpoint data
---
--- = Description
---
--- The stages at which a checkpoint marker /can/ be executed are
--- implementation-defined and /can/ be queried by calling
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getQueueCheckpointDataNV'
+
+-- No documentation found for TopLevel "VkCheckpointDataNV"
 data CheckpointDataNV = CheckpointDataNV
-  { -- | @stage@ indicates which pipeline stage the checkpoint marker data refers
-    -- to.
+  { -- No documentation found for Nested "VkCheckpointDataNV" "stage"
     stage :: PipelineStageFlagBits
-  , -- | @pCheckpointMarker@ contains the value of the last checkpoint marker
-    -- executed in the stage that @stage@ refers to.
+  , -- No documentation found for Nested "VkCheckpointDataNV" "pCheckpointMarker"
     checkpointMarker :: Ptr ()
   }
   deriving (Typeable)
@@ -396,6 +194,7 @@ instance FromCStruct CheckpointDataNV where
     pCheckpointMarker <- peek @(Ptr ()) ((p `plusPtr` 24 :: Ptr (Ptr ())))
     pure $ CheckpointDataNV
              stage pCheckpointMarker
+
 
 instance Storable CheckpointDataNV where
   sizeOf ~_ = 32

@@ -13,16 +13,7 @@ import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
--- | VkDescriptorUpdateTemplateCreateFlags - Reserved for future use
---
--- = Description
---
--- 'DescriptorUpdateTemplateCreateFlags' is a bitmask type for setting a
--- mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateCreateInfo'
+-- No documentation found for TopLevel "VkDescriptorUpdateTemplateCreateFlags"
 newtype DescriptorUpdateTemplateCreateFlags = DescriptorUpdateTemplateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -37,12 +28,14 @@ enumPrefixDescriptorUpdateTemplateCreateFlags = ""
 showTableDescriptorUpdateTemplateCreateFlags :: [(DescriptorUpdateTemplateCreateFlags, String)]
 showTableDescriptorUpdateTemplateCreateFlags = []
 
+
 instance Show DescriptorUpdateTemplateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixDescriptorUpdateTemplateCreateFlags
-                            showTableDescriptorUpdateTemplateCreateFlags
-                            conNameDescriptorUpdateTemplateCreateFlags
-                            (\(DescriptorUpdateTemplateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixDescriptorUpdateTemplateCreateFlags
+                          showTableDescriptorUpdateTemplateCreateFlags
+                          conNameDescriptorUpdateTemplateCreateFlags
+                          (\(DescriptorUpdateTemplateCreateFlags x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read DescriptorUpdateTemplateCreateFlags where
   readPrec = enumReadPrec enumPrefixDescriptorUpdateTemplateCreateFlags

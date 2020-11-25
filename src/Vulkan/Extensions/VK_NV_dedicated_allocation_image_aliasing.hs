@@ -1,91 +1,5 @@
 {-# language CPP #-}
--- | = Name
---
--- VK_NV_dedicated_allocation_image_aliasing - device extension
---
--- == VK_NV_dedicated_allocation_image_aliasing
---
--- [__Name String__]
---     @VK_NV_dedicated_allocation_image_aliasing@
---
--- [__Extension Type__]
---     Device extension
---
--- [__Registered Extension Number__]
---     241
---
--- [__Revision__]
---     1
---
--- [__Extension and Version Dependencies__]
---
---     -   Requires Vulkan 1.0
---
---     -   Requires @VK_KHR_dedicated_allocation@
---
--- [__Contact__]
---
---     -   Nuno Subtil
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_dedicated_allocation_image_aliasing:%20&body=@nsubtil%20 >
---
--- == Other Extension Metadata
---
--- [__Last Modified Date__]
---     2019-01-04
---
--- [__Contributors__]
---
---     -   Nuno Subtil, NVIDIA
---
---     -   Jeff Bolz, NVIDIA
---
---     -   Eric Werness, NVIDIA
---
---     -   Axel Gneiting, id Software
---
--- == Description
---
--- This extension allows applications to alias images on dedicated
--- allocations, subject to specific restrictions: the extent and the number
--- of layers in the image being aliased must be smaller than or equal to
--- those of the original image for which the allocation was created, and
--- every other image parameter must match.
---
--- == New Structures
---
--- -   Extending
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
---     'Vulkan.Core10.Device.DeviceCreateInfo':
---
---     -   'PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV'
---
--- == New Enum Constants
---
--- -   'NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_EXTENSION_NAME'
---
--- -   'NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV'
---
--- == Version History
---
--- -   Revision 1, 2019-01-04 (Nuno Subtil)
---
---     -   Internal revisions
---
--- = See Also
---
--- 'PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV'
---
--- = Document Notes
---
--- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_dedicated_allocation_image_aliasing Vulkan Specification>
---
--- This page is a generated document. Fixes and changes should be made to
--- the generator scripts, not directly.
+-- No documentation found for Chapter "VK_NV_dedicated_allocation_image_aliasing"
 module Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing  ( PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV(..)
                                                                     , NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_SPEC_VERSION
                                                                     , pattern NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_SPEC_VERSION
@@ -115,36 +29,10 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV))
--- | VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV - Structure
--- describing dedicated allocation image aliasing features that can be
--- supported by an implementation
---
--- = Members
---
--- The members of the
--- 'PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV' structure
--- describe the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV'
--- structure is included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+
+-- No documentation found for TopLevel "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV"
 data PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
-  { -- | #features-dedicatedAllocationImageAliasing#
-    -- @dedicatedAllocationImageAliasing@ indicates that the implementation
-    -- supports aliasing of compatible image objects on a dedicated allocation.
+  { -- No documentation found for Nested "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV" "dedicatedAllocationImageAliasing"
     dedicatedAllocationImageAliasing :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -172,6 +60,7 @@ instance FromCStruct PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV wh
     dedicatedAllocationImageAliasing <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     pure $ PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
              (bool32ToBool dedicatedAllocationImageAliasing)
+
 
 instance Storable PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
   sizeOf ~_ = 24

@@ -20,20 +20,13 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 type ExternalFenceFeatureFlags = ExternalFenceFeatureFlagBits
 
--- | VkExternalFenceFeatureFlagBits - Bitfield describing features of an
--- external fence handle type
---
--- = See Also
---
--- 'ExternalFenceFeatureFlags'
+-- No documentation found for TopLevel "VkExternalFenceFeatureFlagBits"
 newtype ExternalFenceFeatureFlagBits = ExternalFenceFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT' specifies handles of this type
--- /can/ be exported from Vulkan fence objects.
+-- No documentation found for Nested "VkExternalFenceFeatureFlagBits" "VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"
 pattern EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x00000001
--- | 'EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT' specifies handles of this type
--- /can/ be imported to Vulkan fence objects.
+-- No documentation found for Nested "VkExternalFenceFeatureFlagBits" "VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"
 pattern EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x00000002
 
 conNameExternalFenceFeatureFlagBits :: String
@@ -46,12 +39,14 @@ showTableExternalFenceFeatureFlagBits :: [(ExternalFenceFeatureFlagBits, String)
 showTableExternalFenceFeatureFlagBits =
   [(EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT, "EXPORTABLE_BIT"), (EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT, "IMPORTABLE_BIT")]
 
+
 instance Show ExternalFenceFeatureFlagBits where
-  showsPrec = enumShowsPrec enumPrefixExternalFenceFeatureFlagBits
-                            showTableExternalFenceFeatureFlagBits
-                            conNameExternalFenceFeatureFlagBits
-                            (\(ExternalFenceFeatureFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+showsPrec = enumShowsPrec enumPrefixExternalFenceFeatureFlagBits
+                          showTableExternalFenceFeatureFlagBits
+                          conNameExternalFenceFeatureFlagBits
+                          (\(ExternalFenceFeatureFlagBits x) -> x)
+                          (\x -> showString "0x" . showHex x)
+
 
 instance Read ExternalFenceFeatureFlagBits where
   readPrec = enumReadPrec enumPrefixExternalFenceFeatureFlagBits
