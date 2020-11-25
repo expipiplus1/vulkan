@@ -4,7 +4,7 @@ cabal-version: 1.24
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 40b19474caf8c568a72b8b684b364c91cb685df2a5029e18abc717cb7cf58581
+-- hash: 7ddd7364af40adf04f153b37ba2be1bc23d7f7362982bb59bf7cf41a76088962
 
 name:           vulkan-utils
 version:        0.2
@@ -45,7 +45,6 @@ library
       Vulkan.Utils.ShaderQQ.Shaderc
   other-modules:
       Vulkan.Utils.Internal
-      
   hs-source-dirs:
       src
   default-extensions: DataKinds DefaultSignatures DeriveAnyClass DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
