@@ -3,6 +3,7 @@ module Documentation
   , Documentee(..)
   , docBookToDocumentation
   , splitDocumentation
+  , guessDocumentee
   , iterateSuffixesM
   , iterateSuffixes
   , pattern Section
@@ -50,7 +51,6 @@ docBookToDocumentation
   -> Either Text [Documentation]
 docBookToDocumentation db name = do
   let readerOptions = def
-
   pandoc <- first show $ runPure (readDocBook readerOptions db)
 
   if "VK_" `T.isPrefixOf` name && T.any isLower name
@@ -58,23 +58,37 @@ docBookToDocumentation db name = do
     else do
       (removed, unmergedSubDocs) <- splitDocumentation (CName name) pandoc
 
-      let mergedSubDocs =
-            let sorted = sortOn dDocumentee unmergedSubDocs
-            in
-              foldr
-                (curry
-                  (\case
-                    (x, y : ys) | dDocumentee x == dDocumentee y ->
-                      Documentation (dDocumentee x)
-                                    (dDocumentation x <> dDocumentation y)
-                        : ys
-                    (x, ys) -> x : ys
-                  )
-                )
-                []
-                sorted
+      let mergedSubDocs = mergeSubDocs unmergedSubDocs
       pure $ Documentation (TopLevel (CName name)) removed : mergedSubDocs
 
+mergeSubDocs :: [Documentation] -> [Documentation]
+mergeSubDocs unmergedSubDocs =
+  let sorted = sortOn dDocumentee unmergedSubDocs
+  in  foldr
+        (curry
+          (\case
+            (x, y : ys) | dDocumentee x == dDocumentee y ->
+              Documentation (dDocumentee x)
+                            (dDocumentation x <> dDocumentation y)
+                : ys
+            (x, ys) -> x : ys
+          )
+        )
+        []
+        sorted
+
+guessDocumentee :: (Documentee -> Bool) -> Pandoc -> Either Text CName
+guessDocumentee isValid (Pandoc _ bs) = do
+  firstWord <- case bs of
+    Para (Str n : _) : _ -> pure n
+    _                    -> Left "Unable to find first word in documentation"
+  if isValid (TopLevel (CName firstWord))
+    then pure (CName firstWord)
+    -- TODO: Fix error message here.
+    else
+      Left
+      $  "First word of documentation doesn't isn't a valid documentee name: "
+      <> show firstWord
 
 -- | If the description is a bullet list of "enames" then remove those from the
 -- original documentation and return them separately.
