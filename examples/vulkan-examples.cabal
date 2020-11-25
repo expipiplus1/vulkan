@@ -3,8 +3,6 @@ cabal-version: 2.2
 -- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: c051f4aea0c23de2816e028f1846fa45d3e3688d483c5c0c9e59f68ae8e064c0
 
 name:           vulkan-examples
 version:        0.1.0.0
