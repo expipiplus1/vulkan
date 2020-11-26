@@ -12,22 +12,22 @@ module Vulkan.Utils.Initialization
   ) where
 
 import           Control.Monad.IO.Class
+import           Control.Monad.Trans.Resource
+import           Data.Bits
 import           Data.Foldable
 import           Data.Maybe
 import           Data.Ord
 import           Data.Text                      ( Text )
 import           Data.Text.Encoding             ( decodeUtf8 )
+import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Extensions.VK_EXT_validation_features
-import           Data.Bits
-import           Vulkan.Zero
-import           Vulkan.Utils.Debug
-import           Control.Monad.Trans.Resource
 import           Vulkan.Requirement
-import           Vulkan.CStruct.Extends
+import           Vulkan.Utils.Debug
 import           Vulkan.Utils.Internal
 import           Vulkan.Utils.Requirements
+import           Vulkan.Zero
 
 ----------------------------------------------------------------
 -- Instance
@@ -40,15 +40,12 @@ import           Vulkan.Utils.Requirements
 -- @VK_LAYER_KHRONOS_validation@ layer) is available is it will be enabled and
 -- best practices messages enabled.
 createDebugInstanceFromRequirements
-  :: forall m es r o
-   . ( MonadResource m
-     , Extendss InstanceCreateInfo es
-     , PokeChain es
-     , Foldable r
-     , Foldable o
-     )
-  => r InstanceRequirement
-  -> o InstanceRequirement
+  :: forall m es
+   . (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
+  => [InstanceRequirement]
+  -- ^ Required
+  -> [InstanceRequirement]
+  -- ^ Optional
   -> InstanceCreateInfo es
   -> m Instance
 createDebugInstanceFromRequirements required optional baseCreateInfo = do
@@ -99,14 +96,11 @@ createDebugInstanceFromRequirements required optional baseCreateInfo = do
 -- Will throw an 'IOError in the case of unsatisfied non-optional requirements.
 -- Unsatisfied requirements will be listed on stderr.
 createInstanceFromRequirements
-  :: ( MonadResource m
-     , Extendss InstanceCreateInfo es
-     , PokeChain es
-     , Traversable r
-     , Traversable o
-     )
-  => r InstanceRequirement
-  -> o InstanceRequirement
+  :: (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
+  => [InstanceRequirement]
+  -- ^ Required
+  -> [InstanceRequirement]
+  -- ^ Optional
   -> InstanceCreateInfo es
   -> m Instance
 createInstanceFromRequirements required optional baseCreateInfo = do
