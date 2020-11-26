@@ -8,6 +8,8 @@
 - Expose extension dependencies in `Vulkan.Extensions.Dependencies`
 - Squash some warnings
 
+Thanks to @sheaf for their help with this release!
+
 ## [3.7] - 2020-11-24
 - Bump API version to v1.2.162
   - This is a breaking change to anyone using VK_KHR_ray_tracing (which no
