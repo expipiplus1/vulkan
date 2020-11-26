@@ -139,8 +139,10 @@ executable vk
   other-modules:
       VK.AssignModules
       VK.Bracket
+      VK.ExtensionDepElements
       VK.Render
       VK.SPIRVElements
+      VK.Utils
       Paths_generate_new
   hs-source-dirs:
       vk

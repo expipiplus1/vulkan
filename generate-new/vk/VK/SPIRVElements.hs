@@ -12,7 +12,7 @@ import qualified Data.Text                     as T
 import           Data.Text.Prettyprint.Doc
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
-import           Data.Version                   ( Version(versionBranch)
+import           Data.Version                   ( Version
                                                 , makeVersion
                                                 )
 import           Error
@@ -25,6 +25,7 @@ import           Language.Haskell.TH            ( Type(ConT)
                                                 , mkName
                                                 )
 import           Polysemy.Input
+import qualified Prelude
 import           Relude
 import           Render.Element
 import           Render.SpecInfo                ( HasSpecInfo
@@ -34,8 +35,8 @@ import           Render.Type                    ( cToHsType )
 import           Render.Type.Preserve           ( Preserve(DoNotPreserve) )
 import           Spec.Types
 import           Text.InterpolatedString.Perl6.Unindented
+import           VK.Utils
 import           VkModulePrefix
-import qualified Prelude
 
 renderSPIRVElements
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -74,11 +75,13 @@ renderSPIRVThing
   -> Sem r ()
 renderSPIRVThing funName name reqs xs = do
   tellLanguageExtension (LanguageExtension "TupleSections")
-  let case' x = do
-        let mergeReqs = Prelude.head -- TODO: this is probably wrong! discarding the
-                                     -- other reqs
-        (instReqs', devReqs') <- mergeReqs <$> traverse renderReq (V.toList (reqs x))
-        pure $ viaShow (name x) <+> "-> (,)" <+> list instReqs' <+> list devReqs'
+  let
+    case' x = do
+      let mergeReqs = Prelude.head -- TODO: this is probably wrong! discarding the
+                                   -- other reqs
+      (instReqs', devReqs') <- mergeReqs
+        <$> traverse renderReq (V.toList (reqs x))
+      pure $ viaShow (name x) <+> "-> (,)" <+> list instReqs' <+> list devReqs'
   cases <- (<> ["_ -> ([],[])"]) <$> traverse case' (V.toList xs)
   tellImport ''ByteString
   tellImport (TyConName "Instance")
@@ -87,18 +90,19 @@ renderSPIRVThing funName name reqs xs = do
   tellImportWithAll (mkName "Vulkan.Requirement.InstanceRequirement")
   tellExport (ETerm (TermName funName))
   tellDoc $ vsep
-    [ pretty funName <+> ":: ByteString -> ([InstanceRequirement], [DeviceRequirement])"
+    [ pretty funName
+      <+> ":: ByteString -> ([InstanceRequirement], [DeviceRequirement])"
     , pretty funName <+> "= \\case" <> line <> indent 2 (vsep cases)
     ]
 
 renderReq
   :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)
   => SPIRVRequirement
-  -> Sem r ([Doc ()],[Doc ()])
+  -> Sem r ([Doc ()], [Doc ()])
 renderReq = \case
-  SPIRVReqVersion   v    -> ( \(iReq,devReq) -> ([iReq],[devReq]) ) <$> versionReq v
+  SPIRVReqVersion v -> (\(iReq, devReq) -> ([iReq], [devReq])) <$> versionReq v
 
-  SPIRVReqExtension p    -> minVersionAndExtensionsReqs (V.singleton p)
+  SPIRVReqExtension p -> minVersionAndExtensionsReqs (V.singleton p)
 
   SPIRVReqFeature s f rs -> do
     RenderParams {..} <- input
@@ -108,11 +112,10 @@ renderReq = \case
     sTy <- cToHsType DoNotPreserve (TypeName s)
     -- TODO: this is pretty lazy, import the accessors properly
     traverse_ tellImportWithAll (allTypeNames sTy)
-    checkTDoc <- renderType (sTy ~> ConT ''Bool)
-    sTyDoc    <- renderType sTy
+    checkTDoc                     <- renderType (sTy ~> ConT ''Bool)
+    sTyDoc                        <- renderType sTy
     (otherInstReqs, otherDevReqs) <- minVersionAndExtensionsReqs rs
-    let
-      featureMemberName = mkMemberName s f
+    let featureMemberName = mkMemberName s f
     let xs =
           [ ("featureName" , viaShow f)
           , ("checkFeature", pretty featureMemberName <+> "::" <+> checkTDoc)
@@ -124,9 +127,10 @@ renderReq = \case
               <+> sTyDoc
             )
           ]
-    pure ( otherInstReqs
-         , "RequireDeviceFeature" <> braceAssignmentList xs : otherDevReqs
-         )
+    pure
+      ( otherInstReqs
+      , "RequireDeviceFeature" <> braceAssignmentList xs : otherDevReqs
+      )
 
   SPIRVReqProperty p m v rs -> do
     RenderParams {..} <- input
@@ -141,7 +145,7 @@ renderReq = \case
         propertyValueName  = mkPatternName v
     (otherInstReqs, otherDevReqs) <- minVersionAndExtensionsReqs rs
     -- TODO, do this properly
-    checker   <- if
+    checker                       <- if
       | v == "VK_TRUE"
       -> pure $ "\\p ->" <+> pretty propertyMemberName <+> parens
         ("p ::" <+> sTyDoc)
@@ -164,14 +168,15 @@ renderReq = \case
           <+> pretty propertyMemberName
           <+> parens ("p ::" <+> sTyDoc)
     let xs = [("propertyName", viaShow p), ("checkProperty", checker)]
-    pure ( otherInstReqs
-         , "RequireDeviceProperty" <> braceAssignmentList xs : otherDevReqs
-         )
+    pure
+      ( otherInstReqs
+      , "RequireDeviceProperty" <> braceAssignmentList xs : otherDevReqs
+      )
 
 minVersionAndExtensionsReqs
   :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)
   => Vector Text
-  -> Sem r ([Doc ()],[Doc ()])
+  -> Sem r ([Doc ()], [Doc ()])
 minVersionAndExtensionsReqs rs = do
   SpecInfo {..} <- input
   let dependencies = nubOrd $ toList rs <> concatMap siExtensionDeps rs
@@ -188,44 +193,41 @@ minVersionAndExtensionsReqs rs = do
     [] -> pure Nothing
     xs -> Just <$> versionReq (maximum xs)
 
-  pure ( maybe id ((:) . fst) v
-          [ "RequireInstanceExtension" <> braceAssignmentList
-              [ ("instanceExtensionLayerName" , "Nothing")
-              , ("instanceExtensionName"      , e)
-              , ("instanceExtensionMinVersion", v)
-              ]
-          | (e, v) <- instanceExtensions
+  pure
+    ( maybe
+      id
+      ((:) . fst)
+      v
+      [ "RequireInstanceExtension" <> braceAssignmentList
+          [ ("instanceExtensionLayerName" , "Nothing")
+          , ("instanceExtensionName"      , e)
+          , ("instanceExtensionMinVersion", v)
           ]
-       , maybe id ((:) . snd) v
-          [ "RequireDeviceExtension" <> braceAssignmentList
-              [ ("deviceExtensionLayerName" , "Nothing")
-              , ("deviceExtensionName"      , e)
-              , ("deviceExtensionMinVersion", v)
-              ]
-          | (e, v) <- deviceExtensions
+      | (e, v) <- instanceExtensions
+      ]
+    , maybe
+      id
+      ((:) . snd)
+      v
+      [ "RequireDeviceExtension" <> braceAssignmentList
+          [ ("deviceExtensionLayerName" , "Nothing")
+          , ("deviceExtensionName"      , e)
+          , ("deviceExtensionMinVersion", v)
           ]
-       )
+      | (e, v) <- deviceExtensions
+      ]
+    )
 
 extensionNamePattern
   :: (HasRenderElem r, HasRenderParams r, HasErr r, HasSpecInfo r)
   => Text
   -> Sem r RequireType
 extensionNamePattern p = do
-  RenderParams {..} <- input
-  SpecInfo {..}     <- input
+  SpecInfo {..} <- input
   case parseVersion p of
     Just v  -> pure . RequireVersion $ v
     Nothing -> do
-      -- TODO: do this properly lol
-      let patternPrefix = if
-            | p == "VK_KHR_maintenance2"   -> "VK_KHR_MAINTENANCE2"
-            | p == "VK_NV_viewport_array2" -> "VK_NV_VIEWPORT_ARRAY2"
-            | "2" `T.isSuffixOf` p         -> T.toUpper (T.init p) <> "_2"
-            | otherwise                    -> T.toUpper p
-          nameName    = CName $ patternPrefix <> "_EXTENSION_NAME"
-          versionName = CName $ patternPrefix <> "_SPEC_VERSION"
-      let namePattern    = mkPatternName nameName
-          versionPattern = mkPatternName versionName
+      (namePattern, versionPattern) <- extensionPatterns p
       tellImport namePattern
       tellImport versionPattern
       case siExtensionType p of
@@ -246,27 +248,15 @@ data RequireType
   -- ^ _EXTENSION_NAME and _SPEC_VERSION
 
 versionReq
-  :: (HasRenderParams r, HasRenderElem r, HasErr r) => Version -> Sem r (Doc (), Doc())
+  :: (HasRenderParams r, HasRenderElem r, HasErr r)
+  => Version
+  -> Sem r (Doc (), Doc ())
 versionReq v = do
   tellImportWithAll (mkName "Vulkan.Requirement.DeviceRequirement")
   tellImportWithAll (mkName "Vulkan.Requirement.InstanceRequirement")
   vDoc <- versionDoc v
   pure
-    ( "RequireInstanceVersion $" <+> vDoc
-    , "RequireDeviceVersion   $" <+> vDoc
-    )
-
-versionDoc
-  :: (HasRenderParams r, HasRenderElem r, HasErr r) => Version -> Sem r (Doc ())
-versionDoc v = do
-  tellImport (ConName "MAKE_VERSION")
-  (ma, mi, pa) <- case versionBranch v of
-    [ma]         -> pure (ma, 0, 0)
-    [ma, mi]     -> pure (ma, mi, 0)
-    [ma, mi, pa] -> pure (ma, mi, pa)
-    []           -> throw "Version branch has no components"
-    _            -> throw "Version branch has more than three components"
-  pure $ "MAKE_VERSION" <+> hsep (viaShow <$> [ma, mi, pa])
+    ("RequireInstanceVersion $" <+> vDoc, "RequireDeviceVersion   $" <+> vDoc)
 
 parseVersion :: Text -> Maybe Version
 parseVersion t = do
@@ -293,4 +283,5 @@ bespokeStuff = do
 ----------------------------------------------------------------
 
 braceAssignmentList :: [(Doc ann, Doc ann)] -> Doc ann
-braceAssignmentList = encloseSep "{" "}" ", " . fmap (\(l, r) -> l <+> "=" <+> r)
+braceAssignmentList =
+  encloseSep "{" "}" ", " . fmap (\(l, r) -> l <+> "=" <+> r)

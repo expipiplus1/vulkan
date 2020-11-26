@@ -10,6 +10,7 @@ import           Polysemy
 import           Polysemy.Input
 import           Relude                  hiding ( Handle )
 
+import           Data.List.Extra                ( nubOrd )
 import qualified Data.Vector                   as V
 import           Render.Element
 import           Spec.Types
@@ -156,7 +157,7 @@ specSpecInfo Spec {..} siTypeSize =
           let immediateDeps = get n
           in  concat (immediateDeps : (close <$> immediateDeps))
       in
-        close
+        nubOrd . close
   in
     SpecInfo { .. }
 

@@ -363,7 +363,9 @@ parseExtensions parseDisabled es = V.fromList <$> sequenceV
       Nothing -> pure UnknownExtensionType
     exDependencies <- listAttr decode "requires" n
     exRequires     <- parseRequires n
-    exSupported    <- decode
+    exRequiresCore <- traverse (runReadP parseVersion)
+                               (getAttr "requiresCore" n)
+    exSupported <- decode
       =<< note "extension has no supported attr" (getAttr "supported" n)
     pure Extension { .. }
 

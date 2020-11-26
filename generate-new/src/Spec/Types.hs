@@ -47,6 +47,7 @@ data Feature = Feature
 data Extension = Extension
   { exName         :: Text
   , exNumber       :: Int
+  , exRequiresCore :: Maybe Version
   , exRequires     :: Vector Require
   , exSupported    :: Text
   , exType         :: ExtensionType
