@@ -18,6 +18,9 @@ library:
   dependencies:
     - base <5
     - bytestring
+    - containers
+    - dependent-map
+    - dependent-sum
     - extra
     - file-embed
     - filepath
@@ -49,6 +52,7 @@ custom-setup:
     - cabal-doctest >= 1 && <1.1
 
 default-extensions:
+  - ConstraintKinds
   - DataKinds
   - DefaultSignatures
   - DeriveAnyClass
@@ -64,6 +68,7 @@ default-extensions:
   - InstanceSigs
   - LambdaCase
   - MagicHash
+  - NamedFieldPuns
   - NoMonomorphismRestriction
   - OverloadedStrings
   - PartialTypeSignatures

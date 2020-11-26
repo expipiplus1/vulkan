@@ -83,10 +83,11 @@ renderSPIRVThing funName name reqs xs = do
   tellImport ''ByteString
   tellImport (TyConName "Instance")
   tellImport (TyConName "PhysicalDevice")
-  tellImport (mkName "Vulkan.Requirements.Requirement")
+  tellImportWithAll (mkName "Vulkan.Requirement.DeviceRequirement")
+  tellImportWithAll (mkName "Vulkan.Requirement.InstanceRequirement")
   tellExport (ETerm (TermName funName))
   tellDoc $ vsep
-    [ pretty funName <+> ":: ByteString -> ([Requirement Instance], [Requirement PhysicalDevice])"
+    [ pretty funName <+> ":: ByteString -> ([InstanceRequirement], [DeviceRequirement])"
     , pretty funName <+> "= \\case" <> line <> indent 2 (vsep cases)
     ]
 
@@ -101,7 +102,8 @@ renderReq = \case
 
   SPIRVReqFeature s f rs -> do
     RenderParams {..} <- input
-    tellImportWithAll (mkName "Vulkan.Requirements.Requirement")
+    tellImportWithAll (mkName "Vulkan.Requirement.DeviceRequirement")
+    tellImportWithAll (mkName "Vulkan.Requirement.InstanceRequirement")
     tellLanguageExtension (LanguageExtension "OverloadedLists")
     sTy <- cToHsType DoNotPreserve (TypeName s)
     -- TODO: this is pretty lazy, import the accessors properly
@@ -128,7 +130,8 @@ renderReq = \case
 
   SPIRVReqProperty p m v rs -> do
     RenderParams {..} <- input
-    tellImportWithAll (mkName "Vulkan.Requirements.Requirement")
+    tellImportWithAll (mkName "Vulkan.Requirement.DeviceRequirement")
+    tellImportWithAll (mkName "Vulkan.Requirement.InstanceRequirement")
     tellLanguageExtension (LanguageExtension "OverloadedLists")
     -- TODO: this is pretty lazy, import the accessors properly
     sTy <- cToHsType DoNotPreserve (TypeName p)
@@ -245,7 +248,8 @@ data RequireType
 versionReq
   :: (HasRenderParams r, HasRenderElem r, HasErr r) => Version -> Sem r (Doc (), Doc())
 versionReq v = do
-  tellImportWithAll (mkName "Vulkan.Requirements.Requirement")
+  tellImportWithAll (mkName "Vulkan.Requirement.DeviceRequirement")
+  tellImportWithAll (mkName "Vulkan.Requirement.InstanceRequirement")
   vDoc <- versionDoc v
   pure
     ( "RequireInstanceVersion $" <+> vDoc

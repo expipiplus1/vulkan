@@ -2,6 +2,8 @@
 
 ## WIP
 
+- Add `Vulkan.Requirement`, a module for specifying requirements for `Device`s
+  and `Instance`s
 - Expose SPIR-V Extensions and Capabilities in `Vulkan.SPIRVRequirements`
 - Squash some warnings
 

@@ -13,13 +13,6 @@ import           Data.Foldable
 import           Data.List                      ( intercalate
                                                 , partition
                                                 )
-import           GHC.IO                         ( throwIO )
-import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
-                                                , IOException(..)
-                                                )
-import           System.IO                      ( hPutStrLn
-                                                , stderr
-                                                )
 import           Vulkan.Utils.Internal
 
 -- | From a list of things, take all the required things and as many optional
@@ -61,7 +54,7 @@ partitionOptReqIO
   -> [a]
   -- ^ Required desired elements
   -> m ([a],[a])
-  -- ^ All the required elements and as many optional elements as possible, 
+  -- ^ All the required elements and as many optional elements as possible,
   --   as well as the missing optional elements.
 partitionOptReqIO type' available optional required = liftIO $ do
   let (optMissing, exts) = partitionOptReq available optional required

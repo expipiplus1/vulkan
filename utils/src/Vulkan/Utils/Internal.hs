@@ -2,7 +2,7 @@ module Vulkan.Utils.Internal where
 
 import           Control.Monad.IO.Class
 import           GHC.IO                         ( throwIO )
-import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
+import           GHC.IO.Exception               ( IOErrorType(..)
                                                 , IOException(..)
                                                 )
 import           System.IO                      ( hPutStrLn
@@ -12,6 +12,10 @@ import           System.IO                      ( hPutStrLn
 ----------------------------------------------------------------
 -- Internal utils
 ----------------------------------------------------------------
+
+unsatisfiedConstraints :: String -> IO a
+unsatisfiedConstraints message =
+  throwIO $ IOError Nothing UnsatisfiedConstraints "" message Nothing Nothing
 
 noSuchThing :: String -> IO a
 noSuchThing message =

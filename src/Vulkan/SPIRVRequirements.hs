@@ -6,8 +6,8 @@ module Vulkan.SPIRVRequirements  ( spirvExtensionRequirements
                                  , spirvCapabilityRequirements
                                  ) where
 
-import Vulkan.Requirements (Requirement)
-import Vulkan.Requirements (Requirement(..))
+import Vulkan.Requirement (DeviceRequirement(..))
+import Vulkan.Requirement (InstanceRequirement(..))
 import Data.Bits ((.&.))
 import Data.Bits (zeroBits)
 import Data.Bits (Bits)
@@ -213,7 +213,7 @@ import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBG
 (.&&.) :: Bits a => a -> a -> Bool
 x .&&. y = (x .&. y) /= zeroBits
 
-spirvExtensionRequirements :: ByteString -> ([Requirement Instance], [Requirement PhysicalDevice])
+spirvExtensionRequirements :: ByteString -> ([InstanceRequirement], [DeviceRequirement])
 spirvExtensionRequirements = \case
   "SPV_KHR_variable_pointers" ->
     (,) [RequireInstanceVersion $ MAKE_VERSION 1 1 0] [RequireDeviceVersion $ MAKE_VERSION 1 1 0]
@@ -669,7 +669,7 @@ spirvExtensionRequirements = \case
     ]
   _ -> ([], [])
 
-spirvCapabilityRequirements :: ByteString -> ([Requirement Instance], [Requirement PhysicalDevice])
+spirvCapabilityRequirements :: ByteString -> ([InstanceRequirement], [DeviceRequirement])
 spirvCapabilityRequirements = \case
   "Matrix"            -> (,) [RequireInstanceVersion $ MAKE_VERSION 1 0 0] [RequireDeviceVersion $ MAKE_VERSION 1 0 0]
   "Shader"            -> (,) [RequireInstanceVersion $ MAKE_VERSION 1 0 0] [RequireDeviceVersion $ MAKE_VERSION 1 0 0]

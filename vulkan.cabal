@@ -475,7 +475,7 @@ library
       Vulkan.Version
       Vulkan.Zero
       Vulkan.Internal.Utils
-      Vulkan.Requirements
+      Vulkan.Requirement
   hs-source-dirs:
       src
       src-manual
@@ -485,7 +485,6 @@ library
       base <5
     , bytestring
     , transformers
-    , unordered-containers
     , vector
   if os(windows)
     extra-libraries:
