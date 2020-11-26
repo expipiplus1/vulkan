@@ -5,6 +5,7 @@
 - Add `Vulkan.Requirement`, a module for specifying requirements for `Device`s
   and `Instance`s
 - Expose SPIR-V Extensions and Capabilities in `Vulkan.SPIRVRequirements`
+- Expose extension dependencies in `Vulkan.Extensions.Dependencies`
 - Squash some warnings
 
 ## [3.7] - 2020-11-24
