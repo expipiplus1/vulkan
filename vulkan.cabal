@@ -248,6 +248,7 @@ library
       Vulkan.Dynamic
       Vulkan.Exception
       Vulkan.Extensions
+      Vulkan.Extensions.Dependencies
       Vulkan.Extensions.Handles
       Vulkan.Extensions.VK_AMD_buffer_marker
       Vulkan.Extensions.VK_AMD_device_coherent_memory
