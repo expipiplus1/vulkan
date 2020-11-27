@@ -62,9 +62,8 @@ checkInstanceRequirements
   -> o InstanceRequirement
   -- ^ Optional requests
   -> InstanceCreateInfo es
-  -- ^ An 'InstanceCreateInfo' with no extensions. If you need elements in the
-  -- struct chain you can add them later with
-  -- 'Vulkan.CStruct.Extends.extendSomeStruct'
+  -- ^ An 'InstanceCreateInfo', this will be returned appropriately modified by
+  -- the requirements
   -> m
        ( Maybe (InstanceCreateInfo es)
        , r RequirementResult
