@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "Extensions"
-module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
+module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
+                          , module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_AMD_buffer_marker
                           , module Vulkan.Extensions.VK_AMD_device_coherent_memory
                           , module Vulkan.Extensions.VK_AMD_display_native_hdr
@@ -223,6 +224,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_QCOM_render_pass_transform
                           , module Vulkan.Extensions.VK_QCOM_rotated_copy_commands
                           ) where
+import Vulkan.Extensions.Dependencies
 import Vulkan.Extensions.Handles
 import Vulkan.Extensions.VK_AMD_buffer_marker
 import Vulkan.Extensions.VK_AMD_device_coherent_memory

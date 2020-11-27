@@ -3,8 +3,6 @@ cabal-version: 1.24
 -- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: 03fd72b5674b4b85451005687d857d0e9328528b514e5ba805729e54ad6ae761
 
 name:           vulkan-utils
 version:        0.3
@@ -40,19 +38,25 @@ library
       Vulkan.Utils.Initialization
       Vulkan.Utils.Misc
       Vulkan.Utils.QueueAssignment
+      Vulkan.Utils.Requirements
+      Vulkan.Utils.Requirements.TH
       Vulkan.Utils.ShaderQQ
       Vulkan.Utils.ShaderQQ.Interpolate
       Vulkan.Utils.ShaderQQ.Shaderc
   other-modules:
-      
+      Vulkan.Utils.Internal
   hs-source-dirs:
       src
-  default-extensions: DataKinds DefaultSignatures DeriveAnyClass DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
+  default-extensions: ConstraintKinds DataKinds DefaultSignatures DeriveAnyClass DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
+  ghc-options: -Wall
   c-sources:
       cbits/DebugCallback.c
   build-depends:
       base <5
     , bytestring
+    , containers
+    , dependent-map
+    , dependent-sum
     , extra
     , file-embed
     , filepath
@@ -62,6 +66,7 @@ library
     , text
     , transformers
     , typed-process
+    , unordered-containers
     , vector
     , vulkan >=3.6.14 && <3.8
   default-language: Haskell2010
@@ -73,7 +78,8 @@ test-suite doctests
       
   hs-source-dirs:
       test/doctest
-  default-extensions: DataKinds DefaultSignatures DeriveAnyClass DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
+  default-extensions: ConstraintKinds DataKinds DefaultSignatures DeriveAnyClass DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
+  ghc-options: -Wall
   build-depends:
       base
     , doctest

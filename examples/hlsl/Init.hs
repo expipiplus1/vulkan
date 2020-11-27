@@ -1,3 +1,4 @@
+{-# LANGUAGE QuasiQuotes #-}
 module Init
   ( Init.createInstance
   , Init.createDevice
@@ -14,8 +15,6 @@ import           Data.Word
 import           Say
 import           UnliftIO.Exception
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
-                                                ( PhysicalDeviceTimelineSemaphoreFeatures(..)
-                                                )
 import           Vulkan.Extensions.VK_KHR_timeline_semaphore
 
 import           Control.Applicative
@@ -39,8 +38,10 @@ import           Vulkan.Core10                 as Vk
 import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
+import           Vulkan.Requirement
 import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
+import qualified Vulkan.Utils.Requirements.TH  as U
 import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
                                                 , AllocatorCreateInfo(..)
@@ -65,10 +66,12 @@ createInstance win = do
                                       , apiVersion      = myApiVersion
                                       }
         }
-      extensions =
-        [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
-          <> windowExtensions
-  createDebugInstanceWithExtensions [] [] extensions [] createInfo
+      reqs =
+        (\n -> RequireInstanceExtension Nothing n minBound)
+          <$> ( KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+              : windowExtensions
+              )
+  createDebugInstanceFromRequirements reqs [] createInfo
 
 ----------------------------------------------------------------
 -- Device creation
@@ -93,11 +96,13 @@ createDevice inst win = do
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
   let deviceCreateInfo =
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
-          ::& PhysicalDeviceTimelineSemaphoreFeatures True
-          :&  ()
-      extensions =
-        [KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME, KHR_SWAPCHAIN_EXTENSION_NAME]
-  dev <- createDeviceWithExtensions phys [] extensions deviceCreateInfo
+      reqs = [U.reqs|
+          1.0
+          VK_KHR_swapchain
+          VK_KHR_timeline_semaphore
+          PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
+        |]
+  dev <- createDeviceFromRequirements reqs [] phys deviceCreateInfo
   requireCommands inst dev
   queues <- liftIO $ pdiGetQueues pdi dev
   pure (phys, dev, queues, surf)

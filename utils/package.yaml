@@ -13,10 +13,14 @@ extra-source-files:
 library:
   source-dirs: src
   c-sources: cbits/DebugCallback.c
-  other-modules: ""
+  other-modules:
+    - Vulkan.Utils.Internal
   dependencies:
     - base <5
     - bytestring
+    - containers
+    - dependent-map
+    - dependent-sum
     - extra
     - file-embed
     - filepath
@@ -26,6 +30,7 @@ library:
     - text
     - transformers
     - typed-process
+    - unordered-containers
     - vector
     - vulkan >= 3.6.14 && < 3.8
 
@@ -46,7 +51,11 @@ custom-setup:
     - Cabal
     - cabal-doctest >= 1 && <1.1
 
+ghc-options:
+  - -Wall
+
 default-extensions:
+  - ConstraintKinds
   - DataKinds
   - DefaultSignatures
   - DeriveAnyClass
@@ -62,6 +71,7 @@ default-extensions:
   - InstanceSigs
   - LambdaCase
   - MagicHash
+  - NamedFieldPuns
   - NoMonomorphismRestriction
   - OverloadedStrings
   - PartialTypeSignatures

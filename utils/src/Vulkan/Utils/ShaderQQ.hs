@@ -26,6 +26,7 @@ import           System.Exit
 import           System.FilePath
 import           System.IO.Temp
 import           System.Process.Typed
+import           Vulkan.Utils.Internal          ( badQQ )
 import           Vulkan.Utils.ShaderQQ.Interpolate
 
 -- $setup
@@ -207,17 +208,3 @@ insertLineDirective code Loc {..} =
   in  case afterVersion of
         []     -> code
         v : xs -> unlines $ beforeVersion <> [v] <> lineDirective <> xs
-
-----------------------------------------------------------------
--- Utils
-----------------------------------------------------------------
-
-badQQ :: String -> QuasiQuoter
-badQQ name = QuasiQuoter (bad "expression")
-                         (bad "pattern")
-                         (bad "type")
-                         (bad "declaration")
- where
-  bad :: String -> a
-  bad context =
-    error $ "Can't use " <> name <> " quote in a " <> context <> " context"
