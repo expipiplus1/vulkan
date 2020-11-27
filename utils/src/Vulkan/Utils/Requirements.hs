@@ -470,7 +470,7 @@ getLookupExtension mbPhys deviceExtensionLayers = do
 withDevicePropertyStructs
   :: forall a
    . [DeviceRequirement]
-  -> ChainCont PhysicalDeviceProperties2 DevicePropertyChain a
+  -> ChainCont DevicePropertyChain a
   -> a
 withDevicePropertyStructs = go @'[] []
  where
@@ -479,7 +479,7 @@ withDevicePropertyStructs = go @'[] []
      . DevicePropertyChain fs
     => [SomeTypeRep]
     -> [DeviceRequirement]
-    -> ChainCont PhysicalDeviceProperties2 DevicePropertyChain a
+    -> ChainCont DevicePropertyChain a
     -> a
   go seen reqs f = case reqs of
     -- We've been through all the reqs, call the continuation with the types
@@ -496,7 +496,7 @@ withDevicePropertyStructs = go @'[] []
 withDeviceFeatureStructs
   :: forall a
    . [DeviceRequirement]
-  -> ChainCont PhysicalDeviceFeatures2 DeviceFeatureChain a
+  -> ChainCont DeviceFeatureChain a
   -> a
 withDeviceFeatureStructs = go @'[] []
  where
@@ -505,7 +505,7 @@ withDeviceFeatureStructs = go @'[] []
      . DeviceFeatureChain fs
     => [SomeTypeRep]
     -> [DeviceRequirement]
-    -> ChainCont PhysicalDeviceFeatures2 DeviceFeatureChain a
+    -> ChainCont DeviceFeatureChain a
     -> a
   go seen reqs f = case reqs of
     -- We've been through all the reqs, call the continuation with the types
@@ -525,11 +525,7 @@ instance (KnownChain es, Extendss PhysicalDeviceFeatures2 es, Show (Chain es)) =
 class (KnownChain es, Extendss PhysicalDeviceProperties2 es) => DevicePropertyChain es where
 instance (KnownChain es, Extendss PhysicalDeviceProperties2 es) => DevicePropertyChain es where
 
-type ChainCont h c a =
-  forall (es :: [Type])
-      . (c es) --
-     => Proxy es
-     -> a
+type ChainCont c a = forall (es :: [Type]) . (c es) => Proxy es -> a
 
 ----------------------------------------------------------------
 -- Utils
