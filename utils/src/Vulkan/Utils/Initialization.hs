@@ -123,14 +123,14 @@ createInstanceFromRequirements required optional baseCreateInfo = do
 createDeviceFromRequirements
   :: forall m
    . MonadResource m
-  => PhysicalDevice
-  -> [DeviceRequirement]
+  => [DeviceRequirement]
   -- ^ Required
   -> [DeviceRequirement]
   -- ^ Optional
+  -> PhysicalDevice
   -> DeviceCreateInfo '[]
   -> m Device
-createDeviceFromRequirements phys required optional baseCreateInfo = do
+createDeviceFromRequirements required optional phys baseCreateInfo = do
   (mbDCI, rrs, ors) <- checkDeviceRequirements required
                                                optional
                                                phys
