@@ -450,11 +450,11 @@ getLookupExtension
        -> ByteString
        -> Maybe ExtensionProperties
        )
-getLookupExtension mbPhys deviceExtensionLayers = do
+getLookupExtension mbPhys extensionLayers = do
   let enumerate = maybe enumerateInstanceExtensionProperties
                         enumerateDeviceExtensionProperties
                         mbPhys
-  extensions <- for (nubOrd deviceExtensionLayers) $ \layer -> do
+  extensions <- for (nubOrd extensionLayers) $ \layer -> do
     (_, props) <- enumerate layer
     pure (layer, props)
   let extensionMap = Map.fromListWith (<>) extensions
