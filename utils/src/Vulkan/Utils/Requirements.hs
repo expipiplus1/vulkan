@@ -58,6 +58,7 @@ import           Vulkan.NamedType
 import           Vulkan.Requirement
 import           Vulkan.Version
 import           Vulkan.Zero                    ( Zero(..) )
+import Data.List (intercalate)
 
 ----------------------------------------------------------------
 -- * Instance Creation
@@ -605,7 +606,7 @@ getMaybe funPtr wrapper2 get1 get2 phys =
 ----------------------------------------------------------------
 
 showVersion :: Word32 -> String
-showVersion ver = unwords ["MAKE_VERSION", show ma, show mi, show pa]
+showVersion ver = intercalate "." [show ma, show mi, show pa]
   where MAKE_VERSION ma mi pa = ver
 
 data Has c a where
