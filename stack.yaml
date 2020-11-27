@@ -13,6 +13,7 @@ extra-deps:
 - primitive-unlifted-1.0.0.0
 - dependent-map-0.4.0.0
 - dependent-sum-0.7.1.0
+- constraints-extras-0.3.0.2
 
 nix:
   enable: false
