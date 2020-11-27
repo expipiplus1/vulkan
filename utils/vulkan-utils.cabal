@@ -39,6 +39,7 @@ library
       Vulkan.Utils.Misc
       Vulkan.Utils.QueueAssignment
       Vulkan.Utils.Requirements
+      Vulkan.Utils.Requirements.TH
       Vulkan.Utils.ShaderQQ
       Vulkan.Utils.ShaderQQ.Interpolate
       Vulkan.Utils.ShaderQQ.Shaderc

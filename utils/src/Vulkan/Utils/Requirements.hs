@@ -398,15 +398,15 @@ prettyRequirementResult = \case
     "Did not attempt to check "
       <> show n
       <> " because the 'getPhysicalDeviceFeatures' function was not loaded"
-  MissingLayer               n -> "Missing layer: " <> show n
-  UnsatisfiedInstanceVersion u -> "Unsatisfied Instance Version: " <> p u
-  UnsatisfiedDeviceVersion   u -> "Unsatisfied Device Version: " <> p u
+  MissingLayer               n -> "Couldn't find layer: " <> show n
+  UnsatisfiedInstanceVersion u -> "Unsatisfied Instance version: " <> p u
+  UnsatisfiedDeviceVersion   u -> "Unsatisfied Device version: " <> p u
   UnsatisfiedLayerVersion n u ->
     "Unsatisfied layer version for " <> show n <> ": " <> p u
   UnsatisfiedFeature           n -> "Missing feature: " <> show n
   UnsatisfiedProperty          n -> "Unsatisfied property: " <> show n
-  UnsatisfiedInstanceExtension n -> "Missing device extension: " <> show n
-  UnsatisfiedDeviceExtension   n -> "Missing instance extension: " <> show n
+  UnsatisfiedInstanceExtension n -> "Couldn't find instance extension: " <> show n
+  UnsatisfiedDeviceExtension   n -> "Couldn't find device extension: " <> show n
   where p = prettyUnsatisfied showVersion
 
 -- How I'm feeling after writing all this type level nonsense

@@ -8,6 +8,7 @@ import           GHC.IO.Exception               ( IOErrorType(..)
 import           System.IO                      ( hPutStrLn
                                                 , stderr
                                                 )
+import Language.Haskell.TH.Quote
 
 ----------------------------------------------------------------
 -- Internal utils
@@ -23,3 +24,13 @@ noSuchThing message =
 
 sayErr :: MonadIO m => String -> m ()
 sayErr = liftIO . hPutStrLn stderr
+
+badQQ :: String -> QuasiQuoter
+badQQ name = QuasiQuoter (bad "expression")
+                         (bad "pattern")
+                         (bad "type")
+                         (bad "declaration")
+ where
+  bad :: String -> a
+  bad context =
+    error $ "Can't use " <> name <> " quote in a " <> context <> " context"
