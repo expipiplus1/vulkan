@@ -1,3 +1,5 @@
+{-# LANGUAGE QuasiQuotes #-}
+
 module Init
   ( Init.createInstance
   , Init.createDevice
@@ -7,7 +9,7 @@ module Init
   ) where
 
 import           Control.Monad                  ( unless
-                                                , when
+
                                                 )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
@@ -41,31 +43,15 @@ import           Vulkan.Core10                 as Vk
                                                 , withImage
                                                 )
 import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
-import           Vulkan.Extensions.VK_EXT_descriptor_indexing
-                                                ( pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-                                                )
 import           Vulkan.Extensions.VK_KHR_acceleration_structure
-import           Vulkan.Extensions.VK_KHR_buffer_device_address
-                                                ( pattern KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-                                                )
-import           Vulkan.Extensions.VK_KHR_deferred_host_operations
-                                                ( pattern KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
-                                                )
-import           Vulkan.Extensions.VK_KHR_get_memory_requirements2
-                                                ( pattern KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME
-                                                )
 import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
-import           Vulkan.Extensions.VK_KHR_maintenance3
-                                                ( pattern KHR_MAINTENANCE3_EXTENSION_NAME
-                                                )
-import           Vulkan.Extensions.VK_KHR_pipeline_library
-                                                ( pattern KHR_PIPELINE_LIBRARY_EXTENSION_NAME
-                                                )
 import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
+import           Vulkan.Requirement
 import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
+import           Vulkan.Utils.Requirements.TH   ( reqs )
 import           Vulkan.Version                 ( pattern MAKE_VERSION )
 import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
@@ -92,10 +78,12 @@ createInstance win = do
                                       , apiVersion      = myApiVersion
                                       }
         }
-      extensions =
-        [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
-          <> windowExtensions
-  createInstanceWithExtensions [] [] extensions [] createInfo
+      requirements =
+        (\n -> RequireInstanceExtension Nothing n minBound)
+          <$> ( KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+              : windowExtensions
+              )
+  createInstanceFromRequirements requirements [] createInfo
 
 ----------------------------------------------------------------
 -- Device creation
@@ -122,26 +110,27 @@ createDevice inst win = do
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
   let deviceCreateInfo =
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
-          ::& PhysicalDeviceTimelineSemaphoreFeatures True
-          :&  zero { rayTracingPipeline = True }
-          :& (zero { accelerationStructure = True } :: PhysicalDeviceAccelerationStructureFeaturesKHR
-             )
-          :&  zero { bufferDeviceAddress = True }
-          :&  ()
-      rayTracingExtensions =
-        [ KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
-        , KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
-        , EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-        , KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-        , KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
-        , KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME
-        , KHR_MAINTENANCE3_EXTENSION_NAME
-        , KHR_PIPELINE_LIBRARY_EXTENSION_NAME
-        ]
-      extensions =
-        [KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME, KHR_SWAPCHAIN_EXTENSION_NAME]
-          <> rayTracingExtensions
-  dev <- createDeviceWithExtensions phys [] extensions deviceCreateInfo
+      requirements = [reqs|
+          VK_KHR_swapchain
+
+          VK_KHR_timeline_semaphore
+          PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
+
+          -- Ray tracing
+          1.2.162
+          PhysicalDeviceRayTracingPipelineFeaturesKHR.rayTracingPipeline
+          PhysicalDeviceAccelerationStructureFeaturesKHR.accelerationStructure
+          PhysicalDeviceBufferDeviceAddressFeatures.bufferDeviceAddress
+          VK_KHR_ray_tracing_pipeline
+          VK_KHR_acceleration_structure
+          VK_EXT_descriptor_indexing
+          VK_KHR_buffer_device_address
+          VK_KHR_deferred_host_operations
+          VK_KHR_get_memory_requirements2
+          VK_KHR_maintenance3
+          VK_KHR_pipeline_library
+      |]
+  dev <- createDeviceFromRequirements requirements [] phys deviceCreateInfo
   requireCommands inst dev
   queues <- liftIO $ pdiGetQueues pdi dev
   pure (phys, pdi, dev, queues, surf)
