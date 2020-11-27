@@ -35,6 +35,10 @@ import           Data.Typeable                  ( eqT )
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
 import           Data.Word
+import           Foreign.Ptr                    ( FunPtr
+                                                , Ptr
+                                                , nullFunPtr
+                                                )
 import           GHC.Base                       ( Proxy# )
 import           GHC.Exts                       ( proxy# )
 import           Type.Reflection
@@ -45,6 +49,11 @@ import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Core11.DeviceInitialization
 import           Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2
+import           Vulkan.Dynamic                 ( InstanceCmds
+                                                  ( pVkGetPhysicalDeviceFeatures2
+                                                  , pVkGetPhysicalDeviceProperties2
+                                                  )
+                                                )
 import           Vulkan.NamedType
 import           Vulkan.Requirement
 import           Vulkan.Version
@@ -187,8 +196,8 @@ checkDeviceRequirements required optional phys baseCreateInfo = do
       --
       -- Fetch everything
       --
-      feats           <- getPhysicalDeviceFeatures2 @fs phys
-      props           <- getPhysicalDeviceProperties2 @ps phys
+      feats           <- getPhysicalDeviceFeaturesMaybe @fs phys
+      props           <- getPhysicalDevicePropertiesMaybe @ps phys
       lookupExtension <- getLookupExtension
         (Just phys)
         [ deviceExtensionLayerName
@@ -270,8 +279,8 @@ makeDeviceCreateInfo allReqs baseCreateInfo =
 checkDeviceRequest
   :: forall fs ps
    . (KnownChain fs, KnownChain ps)
-  => PhysicalDeviceFeatures2 fs
-  -> PhysicalDeviceProperties2 ps
+  => Maybe (PhysicalDeviceFeatures2 fs)
+  -> Maybe (PhysicalDeviceProperties2 ps)
   -> (  ("layerName" ::: Maybe ByteString)
      -> ("extensionName" ::: ByteString)
      -> Maybe ExtensionProperties
@@ -281,28 +290,33 @@ checkDeviceRequest
   -- ^ The requirement to test
   -> RequirementResult
   -- ^ The result
-checkDeviceRequest feats props lookupExtension = \case
+checkDeviceRequest mbFeats mbProps lookupExtension = \case
   RequireDeviceVersion minVersion
-    | foundVersion <- apiVersion
+    | Just props <- mbProps
+    , foundVersion <- apiVersion
       (properties (props :: PhysicalDeviceProperties2 ps) :: PhysicalDeviceProperties
       )
     -> if foundVersion >= minVersion
       then Satisfied
       else UnsatisfiedDeviceVersion (Unsatisfied minVersion foundVersion)
+    | otherwise
+    -> UnattemptedProperties "apiVersion"
 
-  RequireDeviceFeature { featureName, checkFeature } ->
-    case getFeatureStruct feats of
+  RequireDeviceFeature { featureName, checkFeature }
+    | Just feats <- mbFeats -> case getFeatureStruct feats of
       Nothing ->
         error "Impossible: didn't find requested feature in struct chain"
       Just s ->
         if checkFeature s then Satisfied else UnsatisfiedFeature featureName
+    | otherwise -> UnattemptedFeatures featureName
 
-  RequireDeviceProperty { propertyName, checkProperty } ->
-    case getPropertyStruct props of
+  RequireDeviceProperty { propertyName, checkProperty }
+    | Just props <- mbProps -> case getPropertyStruct props of
       Nothing ->
         error "Impossible: didn't find requested property in struct chain"
       Just s ->
         if checkProperty s then Satisfied else UnsatisfiedProperty propertyName
+    | otherwise -> UnattemptedProperties propertyName
 
   RequireDeviceExtension { deviceExtensionLayerName, deviceExtensionName, deviceExtensionMinVersion }
     | Just eProps <- lookupExtension deviceExtensionLayerName
@@ -311,6 +325,7 @@ checkDeviceRequest feats props lookupExtension = \case
     -> Satisfied
     | otherwise
     -> UnsatisfiedDeviceExtension deviceExtensionName
+
 
 ----------------------------------------------------------------
 -- Results
@@ -321,6 +336,12 @@ checkDeviceRequest feats props lookupExtension = \case
 data RequirementResult
   = Satisfied
     -- ^ All the requirements were met
+  | UnattemptedProperties ByteString
+    -- ^ Didn't attempt this check because it required
+    -- getPhysicalDeviceProperties2 which wasn't loaded
+  | UnattemptedFeatures ByteString
+    -- ^ Didn't attempt this check because it required
+    -- getPhysicalDeviceFeatures2 which wasn't loaded
   | MissingLayer ByteString
     -- ^ A Layer was not found
   | UnsatisfiedDeviceVersion (Unsatisfied Word32)
@@ -368,7 +389,15 @@ requirementReport required optional =
 
 prettyRequirementResult :: RequirementResult -> String
 prettyRequirementResult = \case
-  Satisfied                    -> "Satisfied"
+  Satisfied -> "Satisfied"
+  UnattemptedProperties n ->
+    "Did not attempt to check "
+      <> show n
+      <> " because the 'getPhysicalDeviceProperties' function was not loaded"
+  UnattemptedFeatures n ->
+    "Did not attempt to check "
+      <> show n
+      <> " because the 'getPhysicalDeviceFeatures' function was not loaded"
   MissingLayer               n -> "Missing layer: " <> show n
   UnsatisfiedInstanceVersion u -> "Unsatisfied Instance Version: " <> p u
   UnsatisfiedDeviceVersion   u -> "Unsatisfied Device Version: " <> p u
@@ -397,9 +426,12 @@ class (PeekChain xs, PokeChain xs) => KnownChain (xs :: [Type]) where
   -- | If the given structure can be found within a chain, return a lens to it.
   -- Otherwise, return 'Nothing'.
   has :: forall a. Typeable a => Proxy# a -> Maybe (Chain xs -> a, (a -> a) -> (Chain xs -> Chain xs))
+  -- | Is this chain empty?
+  knownChainNull :: Maybe (xs :~: '[])
 
 instance KnownChain '[] where
   has _ = Nothing
+  knownChainNull = Just Refl
 
 instance (Typeable x, ToCStruct x, FromCStruct x, KnownChain xs) => KnownChain (x ': xs) where
   has (px :: Proxy# a)
@@ -407,6 +439,7 @@ instance (Typeable x, ToCStruct x, FromCStruct x, KnownChain xs) => KnownChain (
     = Just (fst,first)
     | otherwise
     = ((. snd) *** (second .)) <$> has px
+  knownChainNull = Nothing
 
 getPropertyStruct
   :: forall s es
