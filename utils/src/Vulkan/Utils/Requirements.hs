@@ -464,7 +464,7 @@ getStruct
    . (Typeable h, Typeable s, KnownChain es, Extensible h)
   => h es
   -> Maybe s
-getStruct c = ($ getNext c) . fst <$> has (proxy# @s)
+getStruct c = ($ getNext c) . fst <$> has (proxy# :: Proxy# s)
 
 ----------------------------------------------------------------
 -- Helpers for 'Device' and 'Instance' extensions
