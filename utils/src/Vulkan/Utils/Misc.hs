@@ -86,15 +86,16 @@ showBits :: forall a . (Show a, FiniteBits a) => a -> String
 showBits a = if a == zeroBits
   then "zeroBits"
   else intercalate " .|. " $ fmap show (setBits a)
- where
-  setBits :: a -> [a]
-  setBits a =
-    [ b
-    | -- lol, is this really necessary
-      p <- [countTrailingZeros a .. finiteBitSize a - countLeadingZeros a - 1]
-    , let b = bit p
-    , a .&&. b
-    ]
+
+-- | The list of bits which are set
+setBits :: FiniteBits a => a -> [a]
+setBits a =
+  [ b
+  | -- lol, is this really necessary
+    p <- [countTrailingZeros a .. finiteBitSize a - countLeadingZeros a - 1]
+  , let b = bit p
+  , a .&&. b
+  ]
 
 -- | Check if the intersection of bits is non-zero
 (.&&.) :: Bits a => a -> a -> Bool

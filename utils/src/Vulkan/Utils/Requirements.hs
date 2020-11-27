@@ -86,10 +86,10 @@ checkInstanceRequirements required optional baseCreateInfo = do
         unless (res == Satisfied) (put False)
         pure res
 
-  (o, goodOptions) <- flip runStateT mempty $ for optional $ \r ->
-    case checkInstanceRequest foundVersion layerProps lookupExtension r of
+  (o, goodOptions) <- flip runStateT mempty $ for optional $ \o ->
+    case checkInstanceRequest foundVersion layerProps lookupExtension o of
       res -> do
-        when (res == Satisfied) $ modify (r :)
+        when (res == Satisfied) $ modify (o :)
         pure res
 
   let ici = do
@@ -201,10 +201,10 @@ checkDeviceRequirements required optional phys baseCreateInfo = do
             unless (res == Satisfied) (put False)
             pure res
 
-      (o, goodOptions) <- flip runStateT mempty $ for optional $ \r ->
-        case checkDeviceRequest feats props lookupExtension r of
+      (o, goodOptions) <- flip runStateT mempty $ for optional $ \o ->
+        case checkDeviceRequest feats props lookupExtension o of
           res -> do
-            when (res == Satisfied) $ modify (r :)
+            when (res == Satisfied) $ modify (o :)
             pure res
 
       --
@@ -215,7 +215,6 @@ checkDeviceRequirements required optional phys baseCreateInfo = do
             pure $ makeDeviceCreateInfo (requiredList <> goodOptions)
                                         baseCreateInfo
       pure (dci, r, o)
-
 
 {-# ANN makeDeviceCreateInfo ("HLint: ignore Move guards forward" :: String) #-}
 -- | Generate 'DeviceCreateInfo' from some requirements.
@@ -527,12 +526,54 @@ instance (KnownChain es, Extendss PhysicalDeviceProperties2 es) => DevicePropert
 type ChainCont c a = forall (es :: [Type]) . (c es) => Proxy es -> a
 
 ----------------------------------------------------------------
+-- Helpers for getting features and properties without using the extended
+-- versions of the functions if possible.
+----------------------------------------------------------------
+
+getPhysicalDeviceFeaturesMaybe
+  :: forall fs m
+   . (MonadIO m, KnownChain fs, Extendss PhysicalDeviceFeatures2 fs)
+  => PhysicalDevice
+  -> m (Maybe (PhysicalDeviceFeatures2 fs))
+getPhysicalDeviceFeaturesMaybe = getMaybe pVkGetPhysicalDeviceFeatures2
+                                          (PhysicalDeviceFeatures2 ())
+                                          getPhysicalDeviceFeatures
+                                          getPhysicalDeviceFeatures2
+
+getPhysicalDevicePropertiesMaybe
+  :: forall fs m
+   . (MonadIO m, KnownChain fs, Extendss PhysicalDeviceProperties2 fs)
+  => PhysicalDevice
+  -> m (Maybe (PhysicalDeviceProperties2 fs))
+getPhysicalDevicePropertiesMaybe = getMaybe pVkGetPhysicalDeviceProperties2
+                                            (PhysicalDeviceProperties2 ())
+                                            getPhysicalDeviceProperties
+                                            getPhysicalDeviceProperties2
+
+getMaybe
+  :: forall fs s1 s2 m
+   . (MonadIO m, KnownChain fs, Extendss s2 fs)
+  => (  InstanceCmds
+     -> FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct s2) -> IO ())
+     )
+  -> (s1 -> s2 '[])
+  -> (PhysicalDevice -> m s1)
+  -> (PhysicalDevice -> m (s2 fs))
+  -> PhysicalDevice
+  -> m (Maybe (s2 fs))
+getMaybe funPtr wrapper2 get1 get2 phys =
+  let hasFunPtr = funPtr (instanceCmds (phys :: PhysicalDevice)) /= nullFunPtr
+  in  case knownChainNull @fs of
+        Just Refl -> Just . wrapper2 <$> get1 phys
+        Nothing   -> if hasFunPtr then Just <$> get2 phys else pure Nothing
+
+----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
 
 showVersion :: Word32 -> String
-showVersion ver = unwords ["MAKE_VERSION", show maj, show min, show patch]
-  where MAKE_VERSION maj min patch = ver
+showVersion ver = unwords ["MAKE_VERSION", show ma, show mi, show pa]
+  where MAKE_VERSION ma mi pa = ver
 
 data Has c a where
   Has :: c a => Has c a

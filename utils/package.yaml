@@ -51,6 +51,9 @@ custom-setup:
     - Cabal
     - cabal-doctest >= 1 && <1.1
 
+ghc-options:
+  - -Wall
+
 default-extensions:
   - ConstraintKinds
   - DataKinds
