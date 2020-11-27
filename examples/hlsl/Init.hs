@@ -1,3 +1,4 @@
+{-# LANGUAGE QuasiQuotes #-}
 module Init
   ( Init.createInstance
   , Init.createDevice
@@ -14,8 +15,6 @@ import           Data.Word
 import           Say
 import           UnliftIO.Exception
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
-                                                ( PhysicalDeviceTimelineSemaphoreFeatures(..)
-                                                )
 import           Vulkan.Extensions.VK_KHR_timeline_semaphore
 
 import           Control.Applicative
@@ -42,6 +41,7 @@ import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Requirement
 import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
+import qualified Vulkan.Utils.Requirements.TH  as U
 import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
                                                 , AllocatorCreateInfo(..)
@@ -96,16 +96,13 @@ createDevice inst win = do
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
   let deviceCreateInfo =
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
-      reqs =
-        [ RequireDeviceExtension Nothing KHR_SWAPCHAIN_EXTENSION_NAME minBound
-        , RequireDeviceExtension Nothing
-                                 KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME
-                                 minBound
-        , RequireDeviceFeature "timeline semaphores"
-                               timelineSemaphore
-                               (\s -> s { timelineSemaphore = True })
-        ]
-  dev <- createDeviceFromRequirements phys reqs [] deviceCreateInfo
+      reqs = [U.reqs|
+          1.0
+          VK_KHR_swapchain
+          VK_KHR_timeline_semaphore
+          PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
+        |]
+  dev <- createDeviceFromRequirements reqs [] phys deviceCreateInfo
   requireCommands inst dev
   queues <- liftIO $ pdiGetQueues pdi dev
   pure (phys, dev, queues, surf)
