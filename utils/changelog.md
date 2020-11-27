@@ -6,6 +6,7 @@
   `Requirement` types found in `Vulkan.Requirement`
 - Change the creation helpers in `Vulkan.Utils.Initialization` to use the new
   `Requirement` types.
+- Add QuasiQuoters for creating device requirements in `Vulkan.Utils.Requirements.TH`
 
 ## [0.3] - 2020-11-24
 
