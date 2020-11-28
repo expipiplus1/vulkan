@@ -132,11 +132,6 @@ executables:
       - vector
       - vulkan
       - vulkan-utils >= 0.3
-      - file-embed
-      - extra
-      - filepath
-      - temporary
-      - typed-process
     when:
       - condition: impl(ghc < 8.10.0)
         buildable: false
@@ -152,9 +147,6 @@ executables:
       - base <5
       - bytestring
       - containers
-      - extra
-      - file-embed
-      - filepath
       - lens
       - linear
       - primitive-unlifted
@@ -162,11 +154,9 @@ executables:
       - say
       - sdl2 >= 2.5.2.0
       - template-haskell
-      - temporary
       - text
       - th-utilities
       - transformers
-      - typed-process
       - unagi-chan
       - unliftio
       - vector
