@@ -37,6 +37,7 @@ import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
 import           VulkanMemoryAllocator
+import Scene
 
 -- Create the most vanilla ray tracing pipeline, returns the number of shader
 -- groups
@@ -93,16 +94,23 @@ createRTPipelineLayout descriptorSetLayout =
 
 createRTDescriptorSetLayout :: V (ReleaseKey, DescriptorSetLayout)
 createRTDescriptorSetLayout = withDescriptorSetLayout' zero
-  { bindings = [ zero { binding         = 1
+  { bindings = [ zero
+                 { binding         = 0
+                 , descriptorType  = DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
+                 , descriptorCount = 1
+                 , stageFlags      = SHADER_STAGE_RAYGEN_BIT_KHR
+                 }
+               , zero { binding         = 1
                       , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
                       , descriptorCount = 1
                       , stageFlags      = SHADER_STAGE_RAYGEN_BIT_KHR
                       }
                , zero
-                 { binding         = 0
-                 , descriptorType  = DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
+                 { binding         = 2
+                 , descriptorType  = DESCRIPTOR_TYPE_STORAGE_BUFFER
                  , descriptorCount = 1
-                 , stageFlags      = SHADER_STAGE_RAYGEN_BIT_KHR
+                 , stageFlags      = SHADER_STAGE_INTERSECTION_BIT_KHR
+                                       .|. SHADER_STAGE_CLOSEST_HIT_BIT_KHR
                  }
                ]
   }
@@ -110,34 +118,40 @@ createRTDescriptorSetLayout = withDescriptorSetLayout' zero
 createRTDescriptorSets
   :: DescriptorSetLayout
   -> AccelerationStructureKHR
+  -> SceneBuffers
   -> Word32
   -> V (Vector DescriptorSet)
-createRTDescriptorSets descriptorSetLayout tlas numDescriptorSets = do
-  let numImagesPerSet                 = 1
-      numAccelerationStructuresPerSet = 1
-  -- Create a descriptor pool
-  (_, descriptorPool) <- withDescriptorPool' zero
-    { maxSets   = numDescriptorSets
-    , poolSizes = [ DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_IMAGE
-                                       (numDescriptorSets * numImagesPerSet)
-                  , DescriptorPoolSize
-                    DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
-                    (numDescriptorSets * numAccelerationStructuresPerSet)
-                  ]
-    }
+createRTDescriptorSets descriptorSetLayout tlas SceneBuffers {..} numDescriptorSets
+  = do
+    let numImagesPerSet                 = 1
+        numAccelerationStructuresPerSet = 1
+        numStorageBuffersPerSet         = 1
+    -- Create a descriptor pool
+    (_, descriptorPool) <- withDescriptorPool' zero
+      { maxSets   = numDescriptorSets
+      , poolSizes =
+        [ DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_IMAGE
+                             (numDescriptorSets * numImagesPerSet)
+        , DescriptorPoolSize
+          DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
+          (numDescriptorSets * numAccelerationStructuresPerSet)
+        , DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_BUFFER
+                             (numDescriptorSets * numStorageBuffersPerSet)
+        ]
+      }
 
-  -- Allocate a descriptor set from the pool with that layout
-  -- Don't use `withDescriptorSets` here as the set will be cleaned up when
-  -- the pool is destroyed.
-  sets <- allocateDescriptorSets' zero
-    { descriptorPool = descriptorPool
-    , setLayouts     = V.replicate (fromIntegral numDescriptorSets)
-                                   descriptorSetLayout
-    }
+    -- Allocate a descriptor set from the pool with that layout
+    -- Don't use `withDescriptorSets` here as the set will be cleaned up when
+    -- the pool is destroyed.
+    sets <- allocateDescriptorSets' zero
+      { descriptorPool = descriptorPool
+      , setLayouts     = V.replicate (fromIntegral numDescriptorSets)
+                                     descriptorSetLayout
+      }
 
-  -- Put the static accelerationStructure into the set
-  for_ sets $ \set -> updateDescriptorSets'
-    [ SomeStruct
+    -- Put the static accelerationStructure into the set
+    for_ sets $ \set -> updateDescriptorSets'
+      [ SomeStruct
       $   zero { dstSet          = set
                , dstBinding      = 0
                , descriptorType  = DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
@@ -145,10 +159,21 @@ createRTDescriptorSets descriptorSetLayout tlas numDescriptorSets = do
                }
       ::& zero { accelerationStructures = [tlas] }
       :&  ()
-    ]
-    []
+      , SomeStruct $ zero
+        { dstSet          = set
+        , dstBinding      = 2
+        , descriptorType  = DESCRIPTOR_TYPE_STORAGE_BUFFER
+        , descriptorCount = 1
+        , bufferInfo      = [ DescriptorBufferInfo { buffer = sceneSpheres
+                                                   , offset = 0
+                                                   , range  = WHOLE_SIZE
+                                                   }
+                            ]
+        }
+      ]
+      []
 
-  pure sets
+    pure sets
 
 createRayGenerationShader
   :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
@@ -158,7 +183,7 @@ createRayGenerationShader = do
         #extension GL_EXT_ray_tracing : require
 
         layout(binding = 0, set = 0) uniform accelerationStructureEXT topLevelAS;
-        layout(binding = 1, set = 0, rgba8) uniform image2D image;
+        layout(binding = 1, set = 0, rgba8) uniform writeonly image2D image;
         layout(location = 0) rayPayloadEXT vec3 prd;
 
         void main()
@@ -166,8 +191,8 @@ createRayGenerationShader = do
             const vec2 pixelCenter = vec2(gl_LaunchIDEXT.xy) + vec2(0.5);
             const vec2 inUV = pixelCenter/vec2(gl_LaunchSizeEXT.xy);
             const vec2 d = inUV * 2.0 - 1.0;
-            const vec3 origin    = vec3(-10,0,0);
-            const vec3 direction = normalize(vec3(1,d));
+            const vec3 origin    = vec3(0,0,-10);
+            const vec3 direction = normalize(vec3(d, 1));
             const uint  rayFlags = gl_RayFlagsOpaqueEXT;
             const float tMin     = 0.001;
             const float tMax     = 10000.0;
@@ -201,11 +226,23 @@ createRayHitShader = do
         #version 460
         #extension GL_EXT_ray_tracing : require
 
-        layout(location = 0) rayPayloadInEXT vec3 hitValue;
+        layout(set = 0, location = 0) rayPayloadInEXT vec3 hitValue;
+
+        struct Sphere {
+          vec4 s;
+          vec4 color;
+        };
+
+        layout(std430, set = 0, binding = 2) readonly buffer Spheres
+        {
+          Sphere spheres[];
+        };
 
         void main()
         {
-          hitValue = vec3(0.2, 0.5, 0.5);
+          const int i = gl_PrimitiveID;
+          const Sphere sphere = spheres[i];
+          hitValue = vec3(sphere.color.xyz);
         }
       |])
 
@@ -220,12 +257,24 @@ createRayIntShader = do
         #version 460
         #extension GL_EXT_ray_tracing : require
 
+        struct Sphere {
+          vec4 s;
+          vec4 color;
+        };
+
+        layout(std430, set = 0, binding = 2) readonly buffer Spheres
+        {
+          Sphere spheres[];
+        };
+
         void main()
         {
+          const int i = gl_PrimitiveID;
           const vec3 o = gl_WorldRayOriginEXT;
           const vec3 d = gl_WorldRayDirectionEXT;
-          const vec3 s = vec3(0,0,0);
-          const float r = 1;
+          const Sphere sphere = spheres[i];
+          const vec3 s = sphere.s.xyz;
+          const float r = sphere.s.w;
 
           const vec3 diff = o - s;
 
@@ -254,7 +303,7 @@ createRayMissShader = do
 
         void main()
         {
-            hitValue = vec3(1.0, 0.1, 0.3);
+            hitValue = vec3(0.1, 0.15, 0.15);
         }
       |])
 

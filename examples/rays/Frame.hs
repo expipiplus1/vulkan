@@ -22,6 +22,7 @@ import qualified Pipeline
 import qualified SDL
 import           SDL                            ( Window )
 import qualified SDL.Video.Vulkan              as SDL
+import           Scene
 import           Swapchain
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
@@ -93,8 +94,10 @@ initialFrame fWindow fSurface = do
                                                  windowSize
                                                  fSurface
 
+  sceneBuffers                <- makeSceneBuffers
+
   -- The acceleration structure
-  (_, fAccelerationStructure) <- createTLAS
+  (_, fAccelerationStructure) <- createTLAS sceneBuffers
 
   -- Create the RT pipeline
   (_, descriptorSetLayout   ) <- Pipeline.createRTDescriptorSetLayout
@@ -108,6 +111,7 @@ initialFrame fWindow fSurface = do
   descriptorSets <- Pipeline.createRTDescriptorSets
     descriptorSetLayout
     fAccelerationStructure
+    sceneBuffers
     (fromIntegral numConcurrentFrames)
 
   -- Don't keep the release key, this semaphore lives for the lifetime of the

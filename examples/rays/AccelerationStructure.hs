@@ -9,6 +9,7 @@ import           Data.Coerce                    ( coerce )
 import           Data.Vector                    ( Vector )
 import           Foreign.Storable               ( Storable(poke, sizeOf) )
 import           MonadVulkan
+import           Scene
 import           UnliftIO.Foreign               ( castPtr )
 import           Vulkan.CStruct
 import           Vulkan.CStruct.Extends
@@ -30,12 +31,12 @@ import           VulkanMemoryAllocator          ( AllocationCreateInfo
 -- TLAS
 ----------------------------------------------------------------
 
-createTLAS :: V (ReleaseKey, AccelerationStructureKHR)
-createTLAS = do
+createTLAS :: SceneBuffers -> V (ReleaseKey, AccelerationStructureKHR)
+createTLAS sceneBuffers = do
   --
   -- Create the bottom level accelerationStructures
   --
-  (_blasReleaseKey, blas) <- createBLAS
+  (_blasReleaseKey, blas) <- createBLAS sceneBuffers
   blasAddress             <- getAccelerationStructureDeviceAddressKHR' zero
     { accelerationStructure = blas
     }
@@ -159,15 +160,15 @@ buildAccelerationStructure geom ranges sizes = do
 --
 -- Create the bottom level acceleration structure
 --
-createBLAS :: V (ReleaseKey, AccelerationStructureKHR)
-createBLAS = do
-  (_, boxGeom, boxOffsets) <- biunitBoxGeometry
+createBLAS :: SceneBuffers -> V (ReleaseKey, AccelerationStructureKHR)
+createBLAS sceneBuffers = do
+  (sceneGeom, sceneOffsets) <- sceneGeometry sceneBuffers
 
   let buildInfo = zero { type' = ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR
                        , mode = BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR -- ignored but used later
                        , srcAccelerationStructure = NULL_HANDLE -- ignored
                        , dstAccelerationStructure = NULL_HANDLE -- ignored
-                       , geometries = [boxGeom]
+                       , geometries = [sceneGeom]
                        , scratchData = zero
                        }
       maxPrimitiveCounts = [1]
@@ -177,51 +178,30 @@ createBLAS = do
     maxPrimitiveCounts
 
   (_blasBufferKey, blasKey, blas) <- buildAccelerationStructure buildInfo
-                                                                boxOffsets
+                                                                sceneOffsets
                                                                 sizes
   nameObject' blas "BLAS"
   pure (blasKey, blas)
 
---
--- The geometry for a biunit AABB on the device
---
-biunitBoxGeometry
-  :: V
-       ( ReleaseKey
-       , AccelerationStructureGeometryKHR
+sceneGeometry
+  :: SceneBuffers
+  -> V
+       ( AccelerationStructureGeometryKHR
        , Vector AccelerationStructureBuildRangeInfoKHR
        )
-biunitBoxGeometry = do
-  let -- a bounding box for the unit sphere
-      box = AabbPositionsKHR (-1) (-1) (-1) 1 1 1
-  (bufferKey, (buffer, bufferAllocation, _)) <- withBuffer'
-    zero
-      { usage =
-        BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
-          .|. BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
-      , size  = fromIntegral (sizeOf box)
-      }
-    zero
-      { requiredFlags = MEMORY_PROPERTY_HOST_VISIBLE_BIT
-                          .|. MEMORY_PROPERTY_HOST_COHERENT_BIT
-      }
-  (boxMapKey, boxMapPtr) <- withMappedMemory' bufferAllocation
-  liftIO $ poke (castPtr boxMapPtr) box
-  release boxMapKey
-  boxAddr <- getBufferDeviceAddress' zero { buffer = buffer }
+sceneGeometry SceneBuffers {..} = do
+  boxAddr <- getBufferDeviceAddress' zero { buffer = sceneAabbs }
   let boxData = AccelerationStructureGeometryAabbsDataKHR
         { data'  = DeviceAddressConst boxAddr
-        , stride = fromIntegral (sizeOf box)
+        , stride = fromIntegral (sizeOf (undefined :: AabbPositionsKHR))
         }
-  let geom :: AccelerationStructureGeometryKHR
+      geom :: AccelerationStructureGeometryKHR
       geom = zero { geometryType = GEOMETRY_TYPE_AABBS_KHR
                   , flags        = GEOMETRY_OPAQUE_BIT_KHR
                   , geometry     = Aabbs boxData
                   }
-  let offsetInfo = [zero { primitiveCount = 1, primitiveOffset = 0 }]
-  pure (bufferKey, geom, offsetInfo)
-
-
+  let offsetInfo = [zero { primitiveCount = sceneSize, primitiveOffset = 0 }]
+  pure (geom, offsetInfo)
 
 ----------------------------------------------------------------
 -- Utils

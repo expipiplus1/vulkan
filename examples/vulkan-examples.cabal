@@ -172,6 +172,7 @@ executable rays
       Pipeline
       RefCounted
       Render
+      Scene
       Swapchain
       Utils
       Window
@@ -189,6 +190,8 @@ executable rays
     , extra
     , file-embed
     , filepath
+    , lens
+    , linear
     , primitive-unlifted
     , resourcet >=1.2.4
     , say
@@ -196,6 +199,7 @@ executable rays
     , template-haskell
     , temporary
     , text
+    , th-utilities
     , transformers
     , typed-process
     , unagi-chan
