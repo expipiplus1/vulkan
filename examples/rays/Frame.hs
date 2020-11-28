@@ -3,6 +3,7 @@
 module Frame where
 
 import           AccelerationStructure
+import           Camera
 import           Control.Arrow                  ( Arrow((&&&)) )
 import           Control.Monad                  ( (<=<) )
 import           Control.Monad.IO.Class         ( MonadIO(liftIO) )
@@ -17,6 +18,8 @@ import           Data.Foldable
 import           Data.IORef
 import qualified Data.Vector                   as V
 import           Data.Word
+import           Foreign.Ptr                    ( castPtr )
+import           Foreign.Storable
 import           MonadVulkan
 import qualified Pipeline
 import qualified SDL
@@ -32,6 +35,7 @@ import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
+import           VulkanMemoryAllocator
 
 -- | Must be positive, duh
 numConcurrentFrames :: Int
@@ -77,6 +81,21 @@ initialRecycledResources fDescriptorSet = do
   (_, fCommandPool)        <- withCommandPool' zero
     { queueFamilyIndex = unQueueFamilyIndex graphicsQueueFamilyIndex
     }
+
+  (_, (fCameraMatricesBuffer, fCameraMatricesAllocation, bufferAllocInfo)) <-
+    withBuffer'
+      zero
+        { size  = fromIntegral
+                    (sizeOf (error "sizeof evaluated" :: CameraMatrices))
+        , usage = BUFFER_USAGE_UNIFORM_BUFFER_BIT
+        }
+      zero { flags         = ALLOCATION_CREATE_MAPPED_BIT
+           , usage         = MEMORY_USAGE_CPU_TO_GPU
+           , requiredFlags = MEMORY_PROPERTY_HOST_VISIBLE_BIT
+           }
+  let fCameraMatricesBufferData =
+        castPtr @() @CameraMatrices (mappedData bufferAllocInfo)
+
 
   pure RecycledResources { .. }
 

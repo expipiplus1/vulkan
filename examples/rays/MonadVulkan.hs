@@ -16,8 +16,10 @@ import           UnliftIO                       ( Async
                                                 , uninterruptibleCancel
                                                 )
 
+import           Camera
 import           Control.Concurrent.Chan.Unagi
 import           Data.Word
+import           Foreign.Ptr
 import           Language.Haskell.TH.Syntax     ( addTopDecls )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
@@ -28,6 +30,8 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
                                                 ( getBufferDeviceAddress )
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                as Timeline
+import           Vulkan.Extensions.VK_KHR_acceleration_structure
+import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.CommandCheck
@@ -35,8 +39,6 @@ import           Vulkan.Utils.Debug             ( nameObject )
 import           Vulkan.Utils.QueueAssignment
 import           VulkanMemoryAllocator         as VMA
                                          hiding ( getPhysicalDeviceProperties )
-import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
-import Vulkan.Extensions.VK_KHR_acceleration_structure
 
 ----------------------------------------------------------------
 -- Define the monad in which most of the program will run
@@ -153,15 +155,18 @@ data RTInfo = RTInfo
 -- | These are resources which are reused by a later frame when the current
 -- frame is retired
 data RecycledResources = RecycledResources
-  { fImageAvailableSemaphore :: Semaphore
+  { fImageAvailableSemaphore  :: Semaphore
     -- ^ A binary semaphore passed to 'acquireNextImageKHR'
-  , fRenderFinishedSemaphore :: Semaphore
+  , fRenderFinishedSemaphore  :: Semaphore
     -- ^ A binary semaphore to synchronize rendering and presenting
-  , fCommandPool             :: CommandPool
+  , fCommandPool              :: CommandPool
     -- ^ Pool for this frame's commands (might want more than one of these for
     -- multithreaded recording)
-  , fDescriptorSet           :: DescriptorSet
+  , fDescriptorSet            :: DescriptorSet
     -- ^ A descriptor set for ray tracing
+  , fCameraMatricesBuffer     :: Buffer
+  , fCameraMatricesAllocation :: Allocation
+  , fCameraMatricesBufferData :: Ptr CameraMatrices
   }
 
 -- | The shape of all the queues we use for our program, parameterized over the
@@ -205,6 +210,7 @@ do
         , 'VMA.withMappedMemory
         , 'VMA.withMemory
         , 'invalidateAllocation
+        , 'flushAllocation
         ]
       commands =
         [ 'acquireNextImageKHR

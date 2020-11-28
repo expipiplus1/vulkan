@@ -84,18 +84,13 @@ executable hlsl
     , base <5
     , bytestring
     , containers
-    , extra
-    , file-embed
-    , filepath
     , primitive-unlifted >=1.0
     , resourcet >=1.2.4
     , say
     , sdl2 >=2.5.2.0
     , template-haskell
-    , temporary
     , text
     , transformers
-    , typed-process
     , unagi-chan
     , unliftio
     , vector
@@ -163,6 +158,7 @@ executable rays
   other-modules:
       AccelerationStructure
       Cache
+      Camera
       DescriptorSet
       Frame
       Framebuffer
@@ -187,9 +183,6 @@ executable rays
     , base <5
     , bytestring
     , containers
-    , extra
-    , file-embed
-    , filepath
     , lens
     , linear
     , primitive-unlifted
@@ -197,11 +190,9 @@ executable rays
     , say
     , sdl2 >=2.5.2.0
     , template-haskell
-    , temporary
     , text
     , th-utilities
     , transformers
-    , typed-process
     , unagi-chan
     , unliftio
     , vector

@@ -34,9 +34,10 @@ scene :: [Sphere]
 scene =
   [ Sphere (V4 originx 0 0 radius) (V4 r g b 1)
   | radius   <- [1 .. 10]
-  | originx <- [ i*i | i <- [0 .. 10]]
+  | originx <- [ i**1.3 | i <- [0 .. 10]]
   | V3 r g b <- pastels
   ]
+
 
 pastels :: [V3 Float]
 pastels = (/ pure 256) <$> cycle

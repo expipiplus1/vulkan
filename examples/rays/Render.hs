@@ -4,15 +4,20 @@ module Render
   ( renderFrame
   ) where
 
+import           Camera
 import           Control.Exception              ( throwIO )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( MonadTrans(lift) )
 import           Data.Vector                    ( (!) )
 import           Data.Word
+import           Foreign                        ( Storable(poke) )
 import           Frame
 import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 , IOException(IOError)
                                                 )
+import           Linear.Matrix
+import           Linear.Quaternion
+import           Linear.V3
 import           MonadFrame
 import           MonadVulkan
 import           Swapchain
@@ -51,19 +56,40 @@ renderFrame = do
   -- Update the necessary descriptor sets
   updateDescriptorSets'
     [ SomeStruct zero
-        { dstSet          = fDescriptorSet
-        , dstBinding      = 1
-        , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
-        , descriptorCount = 1
-        , imageInfo       = [ DescriptorImageInfo
-                                { sampler = NULL_HANDLE
-                                , imageView = srImageViews ! fromIntegral imageIndex
-                                , imageLayout = IMAGE_LAYOUT_GENERAL
-                                }
-                            ]
-        }
+      { dstSet          = fDescriptorSet
+      , dstBinding      = 1
+      , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
+      , descriptorCount = 1
+      , imageInfo       = [ DescriptorImageInfo
+                              { sampler = NULL_HANDLE
+                              , imageView = srImageViews ! fromIntegral imageIndex
+                              , imageLayout = IMAGE_LAYOUT_GENERAL
+                              }
+                          ]
+      }
+    , SomeStruct zero -- TODO, only set this once
+      { dstSet          = fDescriptorSet
+      , dstBinding      = 3
+      , descriptorType  = DESCRIPTOR_TYPE_UNIFORM_BUFFER
+      , descriptorCount = 1
+      , bufferInfo = [ DescriptorBufferInfo { buffer = fCameraMatricesBuffer
+                                            , offset = 0
+                                            , range  = WHOLE_SIZE
+                                            }
+                     ]
+      }
     ]
     []
+
+  let spin       = axisAngle (V3 0 1 0) (realToFrac fIndex / 100)
+      forwards   = axisAngle (V3 0 0 1) 0
+      camera     = Camera (V3 0 0 (-10)) (spin * forwards) (9 / 16) 1.56
+      cameraMats = CameraMatrices
+        { cmViewInverse = transpose $ inv44 (viewMatrix camera)
+        , cmProjInverse = transpose $ inv44 (projectionMatrix camera)
+        }
+  liftIO $ poke fCameraMatricesBufferData cameraMats
+  flushAllocation' fCameraMatricesAllocation 0 WHOLE_SIZE
 
   -- Allocate a command buffer and populate it
   let commandBufferAllocateInfo = zero { commandPool = fCommandPool

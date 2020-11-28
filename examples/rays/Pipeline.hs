@@ -112,6 +112,11 @@ createRTDescriptorSetLayout = withDescriptorSetLayout' zero
                  , stageFlags      = SHADER_STAGE_INTERSECTION_BIT_KHR
                                        .|. SHADER_STAGE_CLOSEST_HIT_BIT_KHR
                  }
+               , zero { binding         = 3
+                      , descriptorType  = DESCRIPTOR_TYPE_UNIFORM_BUFFER
+                      , descriptorCount = 1
+                      , stageFlags      = SHADER_STAGE_RAYGEN_BIT_KHR
+                      }
                ]
   }
 
@@ -126,6 +131,7 @@ createRTDescriptorSets descriptorSetLayout tlas SceneBuffers {..} numDescriptorS
     let numImagesPerSet                 = 1
         numAccelerationStructuresPerSet = 1
         numStorageBuffersPerSet         = 1
+        numUniformBuffersPerSet         = 1
     -- Create a descriptor pool
     (_, descriptorPool) <- withDescriptorPool' zero
       { maxSets   = numDescriptorSets
@@ -137,6 +143,8 @@ createRTDescriptorSets descriptorSetLayout tlas SceneBuffers {..} numDescriptorS
           (numDescriptorSets * numAccelerationStructuresPerSet)
         , DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_BUFFER
                              (numDescriptorSets * numStorageBuffersPerSet)
+        , DescriptorPoolSize DESCRIPTOR_TYPE_UNIFORM_BUFFER
+                             (numDescriptorSets * numUniformBuffersPerSet)
         ]
       }
 
@@ -186,13 +194,21 @@ createRayGenerationShader = do
         layout(binding = 1, set = 0, rgba8) uniform writeonly image2D image;
         layout(location = 0) rayPayloadEXT vec3 prd;
 
+
+        layout(set = 0, binding = 3) uniform CameraBuffer
+        {
+          mat4x4 viewInverse;
+          mat4x4 projInverse;
+        };
+
         void main()
         {
             const vec2 pixelCenter = vec2(gl_LaunchIDEXT.xy) + vec2(0.5);
             const vec2 inUV = pixelCenter/vec2(gl_LaunchSizeEXT.xy);
-            const vec2 d = inUV * 2.0 - 1.0;
-            const vec3 origin    = vec3(0,0,-10);
-            const vec3 direction = normalize(vec3(d, 1));
+            const vec2 scr = inUV * 2.0 - 1.0;
+            const vec3 origin    = (viewInverse * vec4(0,0,0,1)).xyz;
+            const vec3 direction =
+              normalize((viewInverse * vec4((projInverse * vec4(scr,1,1)).xyz, 0)).xyz);
             const uint  rayFlags = gl_RayFlagsOpaqueEXT;
             const float tMin     = 0.001;
             const float tMax     = 10000.0;
