@@ -26,7 +26,8 @@ $($(derive [d|
   |]))
 
 initialCamera :: Camera
-initialCamera = Camera (V3 0 0 (-10)) (axisAngle (V3 0 0 1) 0) (16 / 9) 1.57
+initialCamera =
+  Camera (V3 0 0 (-10)) (axisAngle (V3 0 0 1) 0) (16 / 9) (pi / 4)
 
 -- >>> viewMatrix initialCamera
 -- V4 (V4 1.0 0.0 0.0 0.0) (V4 0.0 1.0 0.0 0.0) (V4 0.0 0.0 1.0 10.0) (V4 0.0 0.0 0.0 1.0)
@@ -40,24 +41,20 @@ viewMatrix Camera {..} = inv44 $ mkTransformation camOrientation camPosition
 -- 0.9315964599440725
 projectionMatrix :: Camera -> M44 Float
 projectionMatrix Camera {..} =
-  let tanFoV = tan (camFOV / 2)
-      left   = -tanFoV * camAspect
-      right  = tanFoV * camAspect
-      top    = -tanFoV
-      bottom = tanFoV
-      dx     = 1.0 / (right - left)
-      dy     = 1.0 / (bottom - top)
+  let cotFoV = 1 / tan (camFOV / 2)
+      dx     = cotFoV / camAspect
+      dy     = cotFoV
       zNear  = 0.1
-  in  V4 (V4 (2 * dx) 0 0 0) (V4 0 (2 * dy) 0 0) (V4 0 0 0 zNear) (V4 0 0 1 0)
+  in  V4 (V4 dx 0 0 0) (V4 0 dy 0 0) (V4 0 0 0 zNear) (V4 0 0 1 0)
 
 -- >>> projectRay initialCamera (V2 0 0)
 -- (V3 0.0 0.0 (-10.0),V3 0.0 0.0 1.0)
 --
 -- >>> projectRay initialCamera (V2 0 1)
--- (V3 0.0 0.0 (-10.0),V3 0.0 0.7068252 0.70738816)
+-- (V3 0.0 0.0 (-10.0),V3 0.0 0.38268346 0.9238795)
 --
 -- >>> projectRay initialCamera (V2 1 0)
--- (V3 0.0 0.0 (-10.0),V3 0.87140864 0.0 0.4905578)
+-- (V3 0.0 0.0 (-10.0),V3 0.5929577 0.0 0.8052336)
 projectRay
   :: Camera
   -> V2 Float
@@ -73,8 +70,8 @@ projectRay c scr2 =
       dir = normalize ((viewInverse !* vector (target ^. _xyz)) ^. _xyz)
   in  (origin, dir)
 
--- >>> projectToScreen initialCamera (V3 0 0 0)
--- V3 0.0 0.0 1.0000001e-2
+-- >>> projectToScreen initialCamera (V3 0 0 (-9.8))
+-- V3 0.0 0.0 0.5000005
 --
 -- >>> projectToScreen initialCamera (V3 0 0 (-10))
 -- V3 NaN NaN Infinity

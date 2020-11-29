@@ -83,7 +83,7 @@ renderFrame = do
 
   let spin       = axisAngle (V3 0 1 0) (realToFrac fIndex / 100)
       forwards   = axisAngle (V3 0 0 1) 0
-      camera     = Camera (V3 0 0 (-10)) (spin * forwards) (9 / 16) 1.56
+      camera     = Camera (V3 0 0 (-10)) (spin * forwards) (16 / 9) 1.4
       cameraMats = CameraMatrices
         { cmViewInverse = transpose $ inv44 (viewMatrix camera)
         , cmProjInverse = transpose $ inv44 (projectionMatrix camera)
