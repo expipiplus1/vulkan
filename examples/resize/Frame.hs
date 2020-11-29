@@ -4,31 +4,31 @@
 -- | This module defines the 'Frame' data type, as well as functions for using
 -- it easily. The 'F' monad is a reader for a 'Frame' and can be consumed by
 -- 'runFrame'.
-module Frame
-  where
+module Frame where
 
+import           Control.Monad                  ( void )
 import           Control.Monad.IO.Class
+import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource  as ResourceT
-import           Control.Monad.Trans.Class      ( lift )
-import           Control.Monad                  ( void )
 import qualified SDL
 import           UnliftIO                       ( MonadUnliftIO(..)
                                                 , askRunInIO
                                                 , mask
                                                 , toIO
                                                 )
-import           UnliftIO.MVar
-import           UnliftIO.Exception             ( throwString
-                                                , finally
+import           UnliftIO.Exception             ( finally
+                                                , throwString
                                                 )
+import           UnliftIO.MVar
 
 import           Data.IORef
-import           Data.Word
 import           Data.Vector                    ( Vector
                                                 , cons
                                                 )
+import           Data.Word
 
+import           Vulkan.CStruct.Extends         ( SomeStruct )
 import           Vulkan.Core10                 as Vk
                                          hiding ( createDevice
                                                 , createFramebuffer
@@ -39,7 +39,6 @@ import           Vulkan.Core10                 as Vk
                                                 )
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
-import           Vulkan.CStruct.Extends         ( SomeStruct )
 import           Vulkan.Zero
 
 import           MonadVulkan
@@ -110,8 +109,8 @@ instance MonadResource F where
 -- | Allocate a resource in the 'V' scope
 allocateGlobal :: F a -> (a -> F ()) -> F (ReleaseKey, a)
 allocateGlobal create destroy = do
-  createIO  <- toIO create
-  run       <- askRunInIO
+  createIO <- toIO create
+  run      <- askRunInIO
   F $ allocate createIO (run . destroy)
 
 -- | c.f. 'bracket' and 'bracket_'
@@ -128,8 +127,16 @@ runFrame f (F r) = runReaderT r f `finally` do
   -- Wait for this frame to be presented in another thread before retiring
   spawn_ $ do
     waitForFencesSafe' fences True 1e9 >>= \case
-      TIMEOUT -> throwString "Timed out waiting for frame to finish on the GPU"
-      _       -> pure ()
+      TIMEOUT -> do
+        -- Give the frame one last chance to complete,
+        -- It could be that the program was suspended during the preceding
+        -- wait causing it to timeout, this will check if it actually
+        -- finished.
+        waitForFencesSafe' fences True 0 >>= \case
+          TIMEOUT ->
+            throwString "Timed out waiting for frame to finish on the GPU"
+          _ -> pure ()
+      _ -> pure ()
     commandPool <- getCommandPool (commandPoolIndex f)
     resetCommandPool' commandPool zero
 
@@ -150,12 +157,11 @@ frameCommandPool = do
   F . lift . getCommandPool $ fromIntegral poolIndex
 
 commandPoolIndex :: Frame -> Int
-commandPoolIndex Frame{..} = fromIntegral fIndex `mod` numConcurrentFrames
+commandPoolIndex Frame {..} = fromIntegral fIndex `mod` numConcurrentFrames
 
 -- | Free frame resources, the frame must have finished GPU execution first.
 retireFrame :: MonadIO m => Frame -> m ()
-retireFrame Frame {..} =
-  release (fst fResources)
+retireFrame Frame {..} = release (fst fResources)
 
 -- | 'queueSubmit' and add wait for the 'Fence' before retiring the frame.
 queueSubmitFrame :: Queue -> Vector (SomeStruct SubmitInfo) -> Fence -> F ()
