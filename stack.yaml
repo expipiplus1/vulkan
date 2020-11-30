@@ -15,7 +15,9 @@ extra-deps:
 - dependent-sum-0.7.1.0
 - constraints-extras-0.3.0.2
 - derive-storable-0.3.0.0
-- derive-storable-plugin-0.2.3.1
+- github: expipiplus1/derive-storable-plugin
+  commit: e98e5835913e50a10cf8545af9a1f29f84a9d15a
+
 
 nix:
   enable: false
