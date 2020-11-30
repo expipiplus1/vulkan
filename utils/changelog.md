@@ -2,6 +2,8 @@
 
 ## WIP
 
+## [0.4] - 2020-11-30
+
 - Add `Vulkan.Utils.Requirements`, a module with several helpers for the
   `Requirement` types found in `Vulkan.Requirement`
 - Change the creation helpers in `Vulkan.Utils.Initialization` to use the new

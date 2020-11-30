@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [0.3.11] - 2020-11-30
+
+- Raise upper bound on `vulkan`
+
 ## [0.3.10] - 2020-11-24
 
 - Documentation fixes

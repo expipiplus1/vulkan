@@ -2,6 +2,8 @@
 
 ## WIP
 
+## [3.8] - 2020-11-30
+
 - Bump API version to v1.2.163
 - Add `Vulkan.Requirement`, a module for specifying requirements for `Device`s
   and `Instance`s
