@@ -11,6 +11,8 @@ import           Control.Monad.Trans.Class      ( MonadTrans(lift) )
 import           Data.Vector                    ( (!) )
 import           Data.Word
 import           Foreign                        ( Storable(poke) )
+import           Foreign.Ptr                    ( plusPtr )
+import           Foreign.Storable
 import           Frame
 import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 , IOException(IOError)
@@ -33,8 +35,8 @@ import           Vulkan.Zero
 renderFrame :: F ()
 renderFrame = do
   f@Frame {..} <- askFrame
-  let RecycledResources {..} = fRecycledResources
-  let oneSecond               = 1e9
+  let RecycledResources {..}  = fRecycledResources
+      oneSecond               = 1e9
       SwapchainResources {..} = fSwapchainResources
       SwapchainInfo {..}      = srInfo
 
@@ -72,11 +74,13 @@ renderFrame = do
       , dstBinding      = 3
       , descriptorType  = DESCRIPTOR_TYPE_UNIFORM_BUFFER
       , descriptorCount = 1
-      , bufferInfo = [ DescriptorBufferInfo { buffer = fCameraMatricesBuffer
-                                            , offset = 0
-                                            , range  = WHOLE_SIZE
-                                            }
-                     ]
+      , bufferInfo      = [ DescriptorBufferInfo
+                              { buffer = fCameraMatricesBuffer
+                              , offset = fCameraMatricesOffset
+                              , range  = fromIntegral
+                                           (sizeOf (undefined :: CameraMatrices))
+                              }
+                          ]
       }
     ]
     []
@@ -88,8 +92,12 @@ renderFrame = do
         { cmViewInverse = transpose $ inv44 (viewMatrix camera)
         , cmProjInverse = transpose $ inv44 (projectionMatrix camera)
         }
-  liftIO $ poke fCameraMatricesBufferData cameraMats
-  flushAllocation' fCameraMatricesAllocation 0 WHOLE_SIZE
+  liftIO $ poke
+    (fCameraMatricesBufferData `plusPtr` fromIntegral fCameraMatricesOffset)
+    cameraMats
+  flushAllocation' fCameraMatricesAllocation
+                   fCameraMatricesOffset
+                   (fromIntegral (sizeOf (undefined :: CameraMatrices)))
 
   -- Allocate a command buffer and populate it
   let commandBufferAllocateInfo = zero { commandPool = fCommandPool

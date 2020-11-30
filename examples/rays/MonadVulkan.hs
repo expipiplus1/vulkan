@@ -155,18 +155,16 @@ data RTInfo = RTInfo
 -- | These are resources which are reused by a later frame when the current
 -- frame is retired
 data RecycledResources = RecycledResources
-  { fImageAvailableSemaphore  :: Semaphore
+  { fImageAvailableSemaphore :: Semaphore
     -- ^ A binary semaphore passed to 'acquireNextImageKHR'
-  , fRenderFinishedSemaphore  :: Semaphore
+  , fRenderFinishedSemaphore :: Semaphore
     -- ^ A binary semaphore to synchronize rendering and presenting
-  , fCommandPool              :: CommandPool
+  , fCommandPool             :: CommandPool
     -- ^ Pool for this frame's commands (might want more than one of these for
     -- multithreaded recording)
-  , fDescriptorSet            :: DescriptorSet
+  , fDescriptorSet           :: DescriptorSet
     -- ^ A descriptor set for ray tracing
-  , fCameraMatricesBuffer     :: Buffer
-  , fCameraMatricesAllocation :: Allocation
-  , fCameraMatricesBufferData :: Ptr CameraMatrices
+  , fCameraMatricesOffset    :: Word64
   }
 
 -- | The shape of all the queues we use for our program, parameterized over the

@@ -5,7 +5,8 @@ module Frame where
 import           AccelerationStructure
 import           Camera
 import           Control.Arrow                  ( Arrow((&&&)) )
-import           Control.Monad                  ( (<=<) )
+import           Control.Monad                  ( zipWithM
+                                                )
 import           Control.Monad.IO.Class         ( MonadIO(liftIO) )
 import           Control.Monad.Trans.Reader     ( asks )
 import           Control.Monad.Trans.Resource   ( InternalState
@@ -18,7 +19,9 @@ import           Data.Foldable
 import           Data.IORef
 import qualified Data.Vector                   as V
 import           Data.Word
-import           Foreign.Ptr                    ( castPtr )
+import           Foreign.Ptr                    ( Ptr
+                                                , castPtr
+                                                )
 import           Foreign.Storable
 import           MonadVulkan
 import qualified Pipeline
@@ -38,7 +41,7 @@ import           Vulkan.Zero
 import           VulkanMemoryAllocator
 
 -- | Must be positive, duh
-numConcurrentFrames :: Int
+numConcurrentFrames :: Word64
 numConcurrentFrames = 3
 
 -- | All the information required to render a single frame
@@ -54,6 +57,9 @@ data Frame = Frame
   , fAccelerationStructure       :: AccelerationStructureKHR
   , fShaderBindingTable          :: Buffer
   , fShaderBindingTableAddress   :: DeviceAddress
+  , fCameraMatricesBuffer        :: Buffer
+  , fCameraMatricesAllocation    :: Allocation
+  , fCameraMatricesBufferData    :: Ptr CameraMatrices
   , fRenderFinishedHostSemaphore :: Semaphore
     -- ^ A timeline semaphore which increments to fIndex when this frame is
     -- done, the host can wait on this semaphore
@@ -69,8 +75,8 @@ data Frame = Frame
     -- frame is done with GPU work.
   }
 
-initialRecycledResources :: DescriptorSet -> V RecycledResources
-initialRecycledResources fDescriptorSet = do
+initialRecycledResources :: Word64 -> DescriptorSet -> V RecycledResources
+initialRecycledResources index fDescriptorSet = do
   (_, fImageAvailableSemaphore) <- withSemaphore'
     (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
 
@@ -81,21 +87,8 @@ initialRecycledResources fDescriptorSet = do
   (_, fCommandPool)        <- withCommandPool' zero
     { queueFamilyIndex = unQueueFamilyIndex graphicsQueueFamilyIndex
     }
-
-  (_, (fCameraMatricesBuffer, fCameraMatricesAllocation, bufferAllocInfo)) <-
-    withBuffer'
-      zero
-        { size  = fromIntegral
-                    (sizeOf (error "sizeof evaluated" :: CameraMatrices))
-        , usage = BUFFER_USAGE_UNIFORM_BUFFER_BIT
-        }
-      zero { flags         = ALLOCATION_CREATE_MAPPED_BIT
-           , usage         = MEMORY_USAGE_CPU_TO_GPU
-           , requiredFlags = MEMORY_PROPERTY_HOST_VISIBLE_BIT
-           }
-  let fCameraMatricesBufferData =
-        castPtr @() @CameraMatrices (mappedData bufferAllocInfo)
-
+  let fCameraMatricesOffset =
+        index * fromIntegral (sizeOf (undefined :: CameraMatrices))
 
   pure RecycledResources { .. }
 
@@ -133,6 +126,20 @@ initialFrame fWindow fSurface = do
     sceneBuffers
     (fromIntegral numConcurrentFrames)
 
+  (_, (fCameraMatricesBuffer, fCameraMatricesAllocation, bufferAllocInfo)) <-
+    withBuffer'
+      zero
+        { size  = numConcurrentFrames * fromIntegral
+                    (sizeOf (error "sizeof evaluated" :: CameraMatrices))
+        , usage = BUFFER_USAGE_UNIFORM_BUFFER_BIT
+        }
+      zero { flags         = ALLOCATION_CREATE_MAPPED_BIT
+           , usage         = MEMORY_USAGE_CPU_TO_GPU
+           , requiredFlags = MEMORY_PROPERTY_HOST_VISIBLE_BIT
+           }
+  let fCameraMatricesBufferData =
+        castPtr @() @CameraMatrices (mappedData bufferAllocInfo)
+
   -- Don't keep the release key, this semaphore lives for the lifetime of the
   -- application
   (_, fRenderFinishedHostSemaphore) <- withSemaphore'
@@ -141,10 +148,13 @@ initialFrame fWindow fSurface = do
   -- Create the 'RecycledResources' necessary to kick off the rest of the
   -- concurrent frames and push them into the chan.
   let (ourDescriptorSet, otherDescriptorSets) =
-        (V.head &&& V.tail) descriptorSets
-  fRecycledResources <- initialRecycledResources ourDescriptorSet
-  bin                <- V $ asks ghRecycleBin
-  for_ otherDescriptorSets ((liftIO . bin) <=< initialRecycledResources)
+        (V.head &&& (toList . V.tail)) descriptorSets
+  ~(fRecycledResources : otherRecycledResources) <- zipWithM
+    initialRecycledResources
+    [0 ..]
+    (ourDescriptorSet : otherDescriptorSets)
+  bin <- V $ asks ghRecycleBin
+  liftIO $ for_ otherRecycledResources bin
 
   fGPUWork   <- liftIO $ newIORef mempty
   -- Create the frame resource tracker at the global level so it's closed
@@ -179,6 +189,9 @@ advanceFrame needsNewSwapchain f = do
              , fShaderBindingTable          = fShaderBindingTable f
              , fShaderBindingTableAddress   = fShaderBindingTableAddress f
              , fAccelerationStructure       = fAccelerationStructure f
+             , fCameraMatricesBuffer        = fCameraMatricesBuffer f
+             , fCameraMatricesAllocation    = fCameraMatricesAllocation f
+             , fCameraMatricesBufferData    = fCameraMatricesBufferData f
              , fRenderFinishedHostSemaphore = fRenderFinishedHostSemaphore f
              , fGPUWork
              , fResources
