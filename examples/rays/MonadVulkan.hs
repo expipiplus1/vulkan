@@ -16,10 +16,8 @@ import           UnliftIO                       ( Async
                                                 , uninterruptibleCancel
                                                 )
 
-import           Camera
 import           Control.Concurrent.Chan.Unagi
 import           Data.Word
-import           Foreign.Ptr
 import           Language.Haskell.TH.Syntax     ( addTopDecls )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk

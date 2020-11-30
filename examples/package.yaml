@@ -155,7 +155,8 @@ executables:
       - sdl2 >= 2.5.2.0
       - template-haskell
       - text
-      - th-utilities
+      - derive-storable >= 0.3
+      - derive-storable-plugin
       - transformers
       - unagi-chan
       - unliftio

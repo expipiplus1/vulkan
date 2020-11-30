@@ -5,8 +5,7 @@ module Frame where
 import           AccelerationStructure
 import           Camera
 import           Control.Arrow                  ( Arrow((&&&)) )
-import           Control.Monad                  ( zipWithM
-                                                )
+import           Control.Monad                  ( zipWithM )
 import           Control.Monad.IO.Class         ( MonadIO(liftIO) )
 import           Control.Monad.Trans.Reader     ( asks )
 import           Control.Monad.Trans.Resource   ( InternalState

@@ -10,7 +10,6 @@ import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( MonadTrans(lift) )
 import           Data.Vector                    ( (!) )
 import           Data.Word
-import           Foreign                        ( Storable(poke) )
 import           Foreign.Ptr                    ( plusPtr )
 import           Foreign.Storable
 import           Frame

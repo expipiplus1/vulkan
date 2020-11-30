@@ -1,5 +1,8 @@
 {-# LANGUAGE ParallelListComp #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# OPTIONS_GHC -fplugin=Foreign.Storable.Generic.Plugin #-}
+{-# OPTIONS_GHC -fplugin-opt=Foreign.Storable.Generic.Plugin:-v0 #-}
 
 module Scene
   where
@@ -11,24 +14,15 @@ import           Data.Bits
 import           Data.Word
 import           Foreign.Marshal.Array
 import           Foreign.Ptr
-import           Foreign.Storable               ( Storable(..) )
+import           Foreign.Storable.Generic
+import           GHC.Generics                   ( Generic )
 import           Linear.V3
 import           Linear.V4
 import           MonadVulkan
-import           TH.Derive
 import           Vulkan.Core10
 import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Zero
 import           VulkanMemoryAllocator
-
-data Sphere = Sphere
-  { spherePos   :: V4 Float
-  , sphereColor :: V4 Float
-  }
-
-$($(derive [d|
-  instance Deriving (Storable Sphere)
-  |]))
 
 scene :: [Sphere]
 scene =
@@ -101,9 +95,14 @@ initBuffer usage xs = do
   pure buf
 
 ----------------------------------------------------------------
--- Utils
+-- Sphere
 ----------------------------------------------------------------
 
+data Sphere = Sphere
+  { spherePos   :: V4 Float
+  , sphereColor :: V4 Float
+  }
+  deriving(Generic, GStorable)
 
 sphereRadius :: Sphere -> Float
 sphereRadius = view _w . spherePos
@@ -121,5 +120,3 @@ sphereAABB s =
                        (maxi ^. _x)
                        (maxi ^. _y)
                        (maxi ^. _z)
-
-

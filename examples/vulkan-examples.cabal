@@ -183,6 +183,8 @@ executable rays
     , base <5
     , bytestring
     , containers
+    , derive-storable
+    , derive-storable-plugin
     , lens
     , linear
     , primitive-unlifted
@@ -191,7 +193,6 @@ executable rays
     , sdl2 >=2.5.2.0
     , template-haskell
     , text
-    , th-utilities
     , transformers
     , unagi-chan
     , unliftio

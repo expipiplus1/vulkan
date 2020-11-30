@@ -1,12 +1,14 @@
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE NoStrict #-} -- https://github.com/fpco/th-utilities/issues/13
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# OPTIONS_GHC -fplugin=Foreign.Storable.Generic.Plugin #-}
+{-# OPTIONS_GHC -fplugin-opt=Foreign.Storable.Generic.Plugin:-v0 #-}
 
 module Camera where
 
 import           Control.Lens
-import           Foreign.Storable
+import           Foreign.Storable.Generic
+import           GHC.Generics                   ( Generic )
 import           Linear
-import           TH.Derive
 
 data Camera = Camera
   { camPosition    :: V3 Float
@@ -20,10 +22,7 @@ data CameraMatrices = CameraMatrices
   { cmViewInverse :: M44 Float
   , cmProjInverse :: M44 Float
   }
-
-$($(derive [d|
-  instance Deriving (Storable CameraMatrices)
-  |]))
+  deriving (Generic, GStorable)
 
 initialCamera :: Camera
 initialCamera =
