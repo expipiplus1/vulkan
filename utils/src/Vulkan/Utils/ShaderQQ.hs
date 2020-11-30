@@ -113,7 +113,7 @@ vert :: QuasiQuoter
 vert = shaderQQ "vert"
 
 shaderQQ :: String -> QuasiQuoter
-shaderQQ stage = (badQQ stage) { quoteExp = compileShaderQ stage }
+shaderQQ stage = (badQQ stage) { quoteExp = compileShaderQ Nothing stage }
 
 -- * Utilities
 
@@ -121,15 +121,17 @@ shaderQQ stage = (badQQ stage) { quoteExp = compileShaderQ stage }
 --
 -- Messages are converted to GHC warnings or errors depending on compilation success.
 compileShaderQ
-  :: String
+  :: Maybe String
+  -- ^ Argument to pass to `--target-env`
+  -> String
   -- ^ stage
   -> String
   -- ^ glsl code
   -> Q Exp
   -- ^ Spir-V bytecode
-compileShaderQ stage code = do
+compileShaderQ targetEnv stage code = do
   loc                <- location
-  (warnings, result) <- compileShader (Just loc) stage code
+  (warnings, result) <- compileShader (Just loc) targetEnv stage code
   case warnings of
     []    -> pure ()
     _some -> reportWarning $ prepare warnings
@@ -156,21 +158,26 @@ compileShader
   :: MonadIO m
   => Maybe Loc
   -- ^ Source location
+  -> Maybe String
+  -- ^ Argument to pass to `--target-env`
   -> String
   -- ^ stage
   -> String
   -- ^ glsl code
   -> m ([GLSLWarning], Either [GLSLError] ByteString)
   -- ^ Spir-V bytecode with warnings or errors
-compileShader loc stage code =
+compileShader loc targetEnv stage code =
   liftIO $ withSystemTempDirectory "th-shader" $ \dir -> do
     let codeWithLineDirective = maybe code (insertLineDirective code) loc
     let shader = dir <> "/shader." <> stage
         spirv  = dir <> "/shader.spv"
     writeFile shader codeWithLineDirective
 
-    (rc, out, err) <- readProcess
-      $ proc "glslangValidator" ["-S", stage, "-V", shader, "-o", spirv]
+    let targetArgs = case targetEnv of
+          Nothing -> []
+          Just t  -> ["--target-env", t]
+        args = targetArgs ++ ["-S", stage, "-V", shader, "-o", spirv]
+    (rc, out, err) <- readProcess $ proc "glslangValidator" args
     let (warnings, errors) = processValidatorMessages (out <> err)
     case rc of
       ExitSuccess -> do
@@ -179,16 +186,15 @@ compileShader loc stage code =
       ExitFailure _rc -> pure (warnings, Left errors)
 
 processValidatorMessages :: BSL.ByteString -> ([GLSLWarning], [GLSLError])
-processValidatorMessages = foldr grep ([], []) . filter (not . null) . lines . BSL.unpack
-  where
-    grep line (ws, es)
-      | "WARNING: " `isPrefixOf` line = (cut line : ws, es)
-      | "ERROR: "   `isPrefixOf` line = (ws, cut line : es)
-      | otherwise                     = (ws, es)
+processValidatorMessages =
+  foldr grep ([], []) . filter (not . null) . lines . BSL.unpack
+ where
+  grep line (ws, es) | "WARNING: " `isPrefixOf` line = (cut line : ws, es)
+                     | "ERROR: " `isPrefixOf` line   = (ws, cut line : es)
+                     | otherwise                     = (ws, es)
 
-    cut line = takeFileName path <> msg
-      where
-        (path, msg) = break (== ':') . drop 1 $ dropWhile (/= ' ') line
+  cut line = takeFileName path <> msg
+    where (path, msg) = break (== ':') . drop 1 $ dropWhile (/= ' ') line
 
 -- If possible, insert a #line directive after the #version directive (as well
 -- as the extension which allows filenames in line directives.

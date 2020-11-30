@@ -186,7 +186,7 @@ createRTDescriptorSets descriptorSetLayout tlas SceneBuffers {..} numDescriptorS
 createRayGenerationShader
   :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
 createRayGenerationShader = do
-  let code = $(compileShaderQ "rgen" [glsl|
+  let code = $(compileShaderQ (Just "spirv1.4") "rgen" [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
 
@@ -238,7 +238,7 @@ createRayGenerationShader = do
 
 createRayHitShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
 createRayHitShader = do
-  let code = $(compileShaderQ "rchit" [glsl|
+  let code = $(compileShaderQ (Just "spirv1.4") "rchit" [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
 
@@ -269,7 +269,7 @@ createRayHitShader = do
 
 createRayIntShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
 createRayIntShader = do
-  let code = $(compileShaderQ "rint" [glsl|
+  let code = $(compileShaderQ (Just "spirv1.4") "rint" [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
 
@@ -311,7 +311,7 @@ createRayIntShader = do
 
 createRayMissShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
 createRayMissShader = do
-  let code = $(compileShaderQ "rmiss" [glsl|
+  let code = $(compileShaderQ (Just "spirv1.4") "rmiss" [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
 

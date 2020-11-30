@@ -100,7 +100,7 @@ juliaDescriptorSet descriptorSetLayout imageViews = do
 
 juliaShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
 juliaShader = do
-  let compCode = $(compileShaderQ "comp" [glsl|
+  let compCode = $(compileShaderQ (Just "vulkan1.0") "comp" [glsl|
         #version 450
         #extension GL_ARB_separate_shader_objects : enable
 
