@@ -183,7 +183,7 @@ executable rays
     , base <5
     , bytestring
     , containers
-    , derive-storable
+    , derive-storable >=0.3
     , derive-storable-plugin
     , lens
     , linear
