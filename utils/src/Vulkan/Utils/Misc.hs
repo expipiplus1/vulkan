@@ -13,13 +13,7 @@ import           Data.Foldable
 import           Data.List                      ( intercalate
                                                 , partition
                                                 )
-import           GHC.IO                         ( throwIO )
-import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
-                                                , IOException(..)
-                                                )
-import           System.IO                      ( hPutStrLn
-                                                , stderr
-                                                )
+import           Vulkan.Utils.Internal
 
 -- | From a list of things, take all the required things and as many optional
 -- things as possible.
@@ -59,8 +53,9 @@ partitionOptReqIO
   -- ^ Optional desired elements
   -> [a]
   -- ^ Required desired elements
-  -> m [a]
-  -- ^ All the required elements and as many optional elements as possible
+  -> m ([a],[a])
+  -- ^ All the required elements and as many optional elements as possible,
+  --   as well as the missing optional elements.
 partitionOptReqIO type' available optional required = liftIO $ do
   let (optMissing, exts) = partitionOptReq available optional required
   for_ optMissing
@@ -70,7 +65,7 @@ partitionOptReqIO type' available optional required = liftIO $ do
       for_ reqMissing
         $ \r -> sayErr $ "Missing required " <> type' <> ": " <> show r
       noSuchThing $ "Don't have all required " <> type' <> "s"
-    Right xs -> pure xs
+    Right xs -> pure (xs, optMissing)
 
 ----------------------------------------------------------------
 -- * Bit utils
@@ -91,27 +86,17 @@ showBits :: forall a . (Show a, FiniteBits a) => a -> String
 showBits a = if a == zeroBits
   then "zeroBits"
   else intercalate " .|. " $ fmap show (setBits a)
- where
-  setBits :: a -> [a]
-  setBits a =
-    [ b
-    | -- lol, is this really necessary
-      p <- [countTrailingZeros a .. finiteBitSize a - countLeadingZeros a - 1]
-    , let b = bit p
-    , a .&&. b
-    ]
+
+-- | The list of bits which are set
+setBits :: FiniteBits a => a -> [a]
+setBits a =
+  [ b
+  | -- lol, is this really necessary
+    p <- [countTrailingZeros a .. finiteBitSize a - countLeadingZeros a - 1]
+  , let b = bit p
+  , a .&&. b
+  ]
 
 -- | Check if the intersection of bits is non-zero
 (.&&.) :: Bits a => a -> a -> Bool
 x .&&. y = (x .&. y) /= zeroBits
-
-----------------------------------------------------------------
--- Internal utils
-----------------------------------------------------------------
-
-noSuchThing :: String -> IO a
-noSuchThing message =
-  throwIO $ IOError Nothing NoSuchThing "" message Nothing Nothing
-
-sayErr :: MonadIO m => String -> m ()
-sayErr = liftIO . hPutStrLn stderr

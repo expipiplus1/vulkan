@@ -20,3 +20,6 @@ cradle:
 
     - path: "./hlsl/"
       component: "exe:hlsl"
+
+    - path: "./rays/"
+      component: "exe:rays"

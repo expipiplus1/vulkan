@@ -64,8 +64,15 @@ runFrame f@Frame {..} (F r) = runReaderT r f `finally` do
                           , values     = V.fromList (snd <$> waits)
                           }
       waitSemaphoresSafe' waitInfo oneSecond >>= \case
-        TIMEOUT ->
-          timeoutError "Timed out (1s) waiting for frame to finish on Device"
+        TIMEOUT -> do
+          -- Give the frame one last chance to complete,
+          -- It could be that the program was suspended during the preceding
+          -- wait causing it to timeout, this will check if it actually
+          -- finished.
+          waitSemaphores' waitInfo 0 >>= \case
+            TIMEOUT -> timeoutError
+              "Timed out (1s) waiting for frame to finish on Device"
+            _ -> pure ()
         _ -> pure ()
 
     -- Free resources wanted elsewhere now, all those in RecycledResources

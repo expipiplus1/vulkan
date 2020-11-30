@@ -11,6 +11,14 @@ extra-deps:
 - resourcet-1.2.4
 - pretty-simple-3.3.0.0
 - primitive-unlifted-1.0.0.0
+- dependent-map-0.4.0.0
+- dependent-sum-0.7.1.0
+- constraints-extras-0.3.0.2
+- derive-storable-0.3.0.0
+- github: expipiplus1/derive-storable-plugin
+  commit: e98e5835913e50a10cf8545af9a1f29f84a9d15a
+
+
 nix:
   enable: false
   packages: [vulkan-loader vulkan-headers glslang pkg-config SDL2 zlib]

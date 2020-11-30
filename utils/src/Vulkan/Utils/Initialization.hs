@@ -1,141 +1,144 @@
 {-# LANGUAGE OverloadedLists #-}
 
 module Vulkan.Utils.Initialization
-  ( createDebugInstanceWithExtensions
-  , createInstanceWithExtensions
-  , pickPhysicalDevice
+  ( -- * Instance creation
+    createInstanceFromRequirements
+  , createDebugInstanceFromRequirements
+    -- * Device creation
+  , createDeviceFromRequirements
+  , -- * Physical device selection
+    pickPhysicalDevice
   , physicalDeviceName
-  , createDeviceWithExtensions
   ) where
 
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.Bits
-import           Data.ByteString                ( ByteString )
 import           Data.Foldable
 import           Data.Maybe
 import           Data.Ord
 import           Data.Text                      ( Text )
 import           Data.Text.Encoding             ( decodeUtf8 )
-import qualified Data.Vector                   as V
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Extensions.VK_EXT_validation_features
+import           Vulkan.Requirement
 import           Vulkan.Utils.Debug
-import           Vulkan.Utils.Misc
+import           Vulkan.Utils.Internal
+import           Vulkan.Utils.Requirements
 import           Vulkan.Zero
 
 ----------------------------------------------------------------
--- * Instance Creation
+-- Instance
 ----------------------------------------------------------------
 
--- | Like 'createInstanceWithExtensions' except it will create a debug utils
+-- | Like 'createInstanceFromRequirements' except it will create a debug utils
 -- messenger (from the @VK_EXT_debug_utils@ extension).
 --
 -- If the @VK_EXT_validation_features@ extension (from the
 -- @VK_LAYER_KHRONOS_validation@ layer) is available is it will be enabled and
 -- best practices messages enabled.
-createDebugInstanceWithExtensions
-  :: forall es m
-   . (Extendss InstanceCreateInfo es, PokeChain es, MonadResource m)
-  => [ByteString]
-  -- ^ Required layers
-  -> [ByteString]
-  -- ^ Optional layers
-  -> [ByteString]
-  -- ^ Required extensions
-  -> [ByteString]
-  -- ^ Optional extensions
+createDebugInstanceFromRequirements
+  :: forall m es
+   . (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
+  => [InstanceRequirement]
+  -- ^ Required
+  -> [InstanceRequirement]
+  -- ^ Optional
   -> InstanceCreateInfo es
   -> m Instance
-createDebugInstanceWithExtensions requiredLayers optionalLayers requiredExtensions optionalExtensions instanceCreateInfo
-  = do
-    let debugMessengerCreateInfo = zero
-          { messageSeverity = DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
-                                .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
-          , messageType     = DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
-                              .|. DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
-                              .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
-          , pfnUserCallback = debugCallbackPtr
-          }
-        validationFeatures = ValidationFeaturesEXT
-          [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT]
-          []
-        instanceCreateInfo'
-          :: InstanceCreateInfo
-               (DebugUtilsMessengerCreateInfoEXT : ValidationFeaturesEXT : es)
-        instanceCreateInfo' = instanceCreateInfo
-          { next = debugMessengerCreateInfo :& validationFeatures :& next
-                     (instanceCreateInfo :: InstanceCreateInfo es)
-          }
-    inst <- createInstanceWithExtensions
-      requiredLayers
-      ("VK_LAYER_KHRONOS_validation" : optionalLayers)
-      (EXT_DEBUG_UTILS_EXTENSION_NAME : requiredExtensions)
-      (EXT_VALIDATION_FEATURES_EXTENSION_NAME : optionalExtensions)
-      instanceCreateInfo'
-    _ <- withDebugUtilsMessengerEXT inst
-                                    debugMessengerCreateInfo
-                                    Nothing
-                                    allocate
-    pure inst
-
--- | Create an 'Instance' with some layers and extensions, the layers and
--- extensions will be added to the provided 'InstanceCreateInfo'.
---
--- Will throw an 'IOError in the case of missing layers or extensions. Details
--- on missing layers and extensions will be reported in stderr.
-createInstanceWithExtensions
-  :: forall es m
-   . (Extendss InstanceCreateInfo es, PokeChain es, MonadResource m)
-  => [ByteString]
-  -- ^ Required layers
-  -> [ByteString]
-  -- ^ Optional layers
-  -> [ByteString]
-  -- ^ Required extensions
-  -> [ByteString]
-  -- ^ Optional extensions
-  -> InstanceCreateInfo es
-  -> m Instance
-createInstanceWithExtensions requiredLayers optionalLayers requiredExtensions optionalExtensions instanceCreateInfo
-  = do
-    --
-    -- First get the layers, they're needed to get the list of supported
-    -- extensions, as some of them may only be present in layers.
-    --
-    availableLayerNames <-
-      toList . fmap layerName . snd <$> enumerateInstanceLayerProperties
-    layers <- partitionOptReqIO "layer"
-                                availableLayerNames
-                                optionalLayers
-                                requiredLayers
-
-    -- Run 'enumerateInstanceExtensionProperties' once for the instance itself,
-    -- and once for each layer and collect the results.
-    availableExtensionNames <- concat <$> traverse
-      ( fmap (toList . fmap extensionName . snd)
-      . enumerateInstanceExtensionProperties
-      )
-      (Nothing : (Just <$> layers))
-    extensions <- partitionOptReqIO "instance extension"
-                                    availableExtensionNames
-                                    optionalExtensions
-                                    requiredExtensions
-
-    let
-      instanceCreateInfo' :: InstanceCreateInfo es
-      instanceCreateInfo' = instanceCreateInfo
-        { enabledLayerNames     =
-          enabledLayerNames (instanceCreateInfo :: InstanceCreateInfo es)
-            <> V.fromList layers
-        , enabledExtensionNames =
-          enabledExtensionNames (instanceCreateInfo :: InstanceCreateInfo es)
-            <> V.fromList extensions
+createDebugInstanceFromRequirements required optional baseCreateInfo = do
+  let debugMessengerCreateInfo = zero
+        { messageSeverity = DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+                              .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+        , messageType     = DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+                            .|. DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+                            .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+        , pfnUserCallback = debugCallbackPtr
         }
-    (_, inst) <- withInstance instanceCreateInfo' Nothing allocate
-    pure inst
+      validationFeatures =
+        ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
+      instanceCreateInfo
+        :: InstanceCreateInfo
+             (DebugUtilsMessengerCreateInfoEXT : ValidationFeaturesEXT : es)
+      instanceCreateInfo = baseCreateInfo
+        { next = debugMessengerCreateInfo :& validationFeatures :& next
+                   (baseCreateInfo :: InstanceCreateInfo es)
+        }
+      additionalRequirements =
+        [ RequireInstanceExtension
+            { instanceExtensionLayerName  = Nothing
+            , instanceExtensionName       = EXT_DEBUG_UTILS_EXTENSION_NAME
+            , instanceExtensionMinVersion = minBound
+            }
+        ]
+      additionalOptionalRequirements =
+        [ RequireInstanceLayer
+          { instanceLayerName       = "VK_LAYER_KHRONOS_validation"
+          , instanceLayerMinVersion = minBound
+          }
+        , RequireInstanceExtension
+          { instanceExtensionLayerName  = Just "VK_LAYER_KHRONOS_validation"
+          , instanceExtensionName       = EXT_VALIDATION_FEATURES_EXTENSION_NAME
+          , instanceExtensionMinVersion = minBound
+          }
+        ]
+  inst <- createInstanceFromRequirements
+    (additionalRequirements <> toList required)
+    (additionalOptionalRequirements <> toList optional)
+    instanceCreateInfo
+  _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
+  pure inst
+
+-- | Create an 'Instance from some requirements.
+--
+-- Will throw an 'IOError in the case of unsatisfied non-optional requirements.
+-- Unsatisfied requirements will be listed on stderr.
+createInstanceFromRequirements
+  :: (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
+  => [InstanceRequirement]
+  -- ^ Required
+  -> [InstanceRequirement]
+  -- ^ Optional
+  -> InstanceCreateInfo es
+  -> m Instance
+createInstanceFromRequirements required optional baseCreateInfo = do
+  (mbICI, rrs, ors) <- checkInstanceRequirements required
+                                                 optional
+                                                 baseCreateInfo
+  traverse_ sayErr (requirementReport rrs ors)
+  case mbICI of
+    Nothing  -> liftIO $ unsatisfiedConstraints "Failed to create instance"
+    Just ici -> snd <$> withInstance ici Nothing allocate
+
+----------------------------------------------------------------
+-- * Device creation
+----------------------------------------------------------------
+
+-- | Create a 'Device' from some requirements.
+--
+-- Will throw an 'IOError in the case of unsatisfied non-optional requirements.
+-- Unsatisfied requirements will be listed on stderr.
+createDeviceFromRequirements
+  :: forall m
+   . MonadResource m
+  => [DeviceRequirement]
+  -- ^ Required
+  -> [DeviceRequirement]
+  -- ^ Optional
+  -> PhysicalDevice
+  -> DeviceCreateInfo '[]
+  -> m Device
+createDeviceFromRequirements required optional phys baseCreateInfo = do
+  (mbDCI, rrs, ors) <- checkDeviceRequirements required
+                                               optional
+                                               phys
+                                               baseCreateInfo
+  traverse_ sayErr (requirementReport rrs ors)
+  case mbDCI of
+    Nothing -> liftIO $ unsatisfiedConstraints "Failed to create instance"
+    Just (SomeStruct dci) -> snd <$> withDevice phys dci Nothing allocate
 
 ----------------------------------------------------------------
 -- * Physical device selection
@@ -152,6 +155,9 @@ createInstanceWithExtensions requiredLayers optionalLayers requiredExtensions op
 -- 'fst' to select devices based on their memory capacity. Consider using
 -- 'Vulkan.Utils.QueueAssignment.assignQueues' to find your desired queues in
 -- the suitability function.
+--
+-- Pehaps also use the functionality in 'Vulkan.Utils.Requirements' and return
+-- the 'DeviceCreateInfo' too.
 --
 -- If no devices are deemed suitable then a 'NoSuchThing' 'IOError' is thrown.
 pickPhysicalDevice
@@ -175,46 +181,6 @@ physicalDeviceName :: MonadIO m => PhysicalDevice -> m Text
 physicalDeviceName =
   fmap (decodeUtf8 . deviceName) . getPhysicalDeviceProperties
 
-----------------------------------------------------------------
--- * Device initialization
-----------------------------------------------------------------
-
--- | Create a 'Device' with some extensions, the extensions will be added to
--- the provided 'DeviceCreateInfo'.
---
--- Will throw an 'IOError in the case of missing extensions. Missing extensions
--- will be listed on stderr.
-createDeviceWithExtensions
-  :: forall es m
-   . (Extendss DeviceCreateInfo es, PokeChain es, MonadResource m)
-  => PhysicalDevice
-  -> [ByteString]
-  -- ^ Required extensions
-  -> [ByteString]
-  -- ^ Optional extensions
-  -> DeviceCreateInfo es
-  -> m Device
-createDeviceWithExtensions phys requiredExtensions optionalExtensions deviceCreateInfo
-  = do
-    availableExtensionNames <-
-      fmap extensionName
-      .   snd
-      <$> enumerateDeviceExtensionProperties phys Nothing
-    extensions <- partitionOptReqIO "device extension"
-                                    (toList availableExtensionNames)
-                                    requiredExtensions
-                                    optionalExtensions
-
-    let
-      deviceCreateInfo' :: DeviceCreateInfo es
-      deviceCreateInfo' = deviceCreateInfo
-        { enabledExtensionNames =
-          enabledExtensionNames (deviceCreateInfo :: DeviceCreateInfo es)
-            <> V.fromList extensions
-        }
-
-    (_, dev) <- withDevice phys deviceCreateInfo' Nothing allocate
-    pure dev
 
 ----------------------------------------------------------------
 -- Utils
@@ -222,3 +188,4 @@ createDeviceWithExtensions phys requiredExtensions optionalExtensions deviceCrea
 
 maximumByMay :: Foldable t => (a -> a -> Ordering) -> t a -> Maybe a
 maximumByMay f xs = if null xs then Nothing else Just (maximumBy f xs)
+

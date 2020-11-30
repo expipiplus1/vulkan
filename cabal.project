@@ -10,4 +10,9 @@ source-repository-package
     location: https://github.com/expipiplus1/brittany.git
     tag: b80f77c36bda563665c616abbdb1eaaf35b1da1c
 
+source-repository-package
+    type: git
+    location: https://github.com/expipiplus1/derive-storable-plugin.git
+    tag: e98e5835913e50a10cf8545af9a1f29f84a9d15a
+
 allow-newer: strict

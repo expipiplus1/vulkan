@@ -1,5 +1,4 @@
-module Render.SpecInfo
-  where
+module Render.SpecInfo where
 
 import           Algebra.Graph.Relation
 import           Algebra.Graph.ToGraph
@@ -11,6 +10,8 @@ import           Polysemy
 import           Polysemy.Input
 import           Relude                  hiding ( Handle )
 
+import           Data.List.Extra                ( nubOrd )
+import qualified Data.Vector                   as V
 import           Render.Element
 import           Spec.Types
 
@@ -31,6 +32,8 @@ data SpecInfo = SpecInfo
   , siAppearsInPositivePosition :: CName -> Bool
   , siAppearsInNegativePosition :: CName -> Bool
   , siGetAliases                :: CName -> [CName]
+  , siExtensionType             :: Text -> Maybe ExtensionType
+  , siExtensionDeps             :: Text -> [Text]
   }
 
 instance Semigroup SpecInfo where
@@ -48,6 +51,8 @@ instance Semigroup SpecInfo where
     , siAppearsInNegativePosition = applyBoth siAppearsInNegativePosition
                                               (liftA2 (||))
     , siGetAliases                = applyBoth siGetAliases (liftA2 (<>))
+    , siExtensionType             = first siExtensionType
+    , siExtensionDeps             = applyBoth siExtensionDeps (liftA2 (<>))
     }
    where
     first :: (SpecInfo -> (a -> Maybe b)) -> a -> Maybe b
@@ -66,6 +71,8 @@ instance Monoid SpecInfo where
                     (const Nothing)
                     (const False)
                     (const False)
+                    (const [])
+                    (const Nothing)
                     (const [])
 
 specSpecInfo :: Spec -> (CType -> Maybe (Int, Int)) -> SpecInfo
@@ -135,6 +142,22 @@ specSpecInfo Spec {..} siTypeSize =
             a <- Map.lookupDefault [] n reverseAliasMap
             a : go a
       in  go
+    siExtensionType =
+      let exMap = Map.fromList
+            [ (exName, exType) | Extension {..} <- toList specExtensions ]
+      in  (`Map.lookup` exMap)
+    siExtensionDeps =
+      let
+        depMap = Map.fromList
+          [ (exName, V.toList exDependencies)
+          | Extension {..} <- toList specExtensions
+          ]
+        get n = fromMaybe mempty (Map.lookup n depMap)
+        close n =
+          let immediateDeps = get n
+          in  concat (immediateDeps : (close <$> immediateDeps))
+      in
+        nubOrd . close
   in
     SpecInfo { .. }
 
@@ -167,7 +190,7 @@ getDisabledCommand t = ($ t) <$> inputs siIsDisabledCommand
 
 getTypeSize :: (HasErr r, HasSpecInfo r) => CType -> Sem r (Int, Int)
 getTypeSize t =
-  note ("Unable to get size for " <> show t) =<< ($ t) <$> inputs siTypeSize
+  note ("Unable to get size for " <> show t) . ($ t) =<< inputs siTypeSize
 
 appearsInPositivePosition :: HasSpecInfo r => CName -> Sem r Bool
 appearsInPositivePosition s = ($ s) <$> inputs siAppearsInPositivePosition

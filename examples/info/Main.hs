@@ -1,5 +1,4 @@
-module Main
-  where
+module Main where
 
 import           Control.Exception
 import           Data.Foldable
@@ -25,11 +24,9 @@ deviceInfo p = do
   traverse_ myPrint layers
   myPrint =<< getPhysicalDeviceFeatures p
   myPrint =<< getPhysicalDeviceProperties p
+  myPrint =<< getPhysicalDeviceMemoryProperties p
 
 myPrint :: Show a => a -> IO ()
-myPrint =
-  pPrintOpt
-    CheckColorTty
-    defaultOutputOptionsDarkBg
-      { outputOptionsStringStyle = Literal
-      }
+myPrint = pPrintOpt
+  CheckColorTty
+  defaultOutputOptionsDarkBg { outputOptionsStringStyle = Literal }

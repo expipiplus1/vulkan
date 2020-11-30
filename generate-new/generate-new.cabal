@@ -3,8 +3,6 @@ cabal-version: 1.12
 -- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: f003049e4e28f45438397824d96b59f210dce0b5135c67e24548bd9019a968f5
 
 name:           generate-new
 version:        0.0.0
@@ -141,7 +139,10 @@ executable vk
   other-modules:
       VK.AssignModules
       VK.Bracket
+      VK.ExtensionDepElements
       VK.Render
+      VK.SPIRVElements
+      VK.Utils
       Paths_generate_new
   hs-source-dirs:
       vk

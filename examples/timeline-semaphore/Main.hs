@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
@@ -29,9 +30,10 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                as Timeline
 import           Vulkan.Exception
 import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
-import           Vulkan.Extensions.VK_KHR_timeline_semaphore
+import           Vulkan.Requirement
 import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
+import qualified Vulkan.Utils.Requirements.TH  as U
 import           Vulkan.Zero
 
 main :: IO ()
@@ -86,8 +88,13 @@ createInstance =
                                       , apiVersion      = API_VERSION_1_0
                                       }
         }
-      extensions = [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
-  in  createDebugInstanceWithExtensions [] [] extensions [] createInfo
+      reqs =
+        [ RequireInstanceExtension
+            Nothing
+            KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+            minBound
+        ]
+  in  createDebugInstanceFromRequirements reqs [] createInfo
 
 createDevice
   :: forall m
@@ -101,10 +108,13 @@ createDevice inst = do
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
   let deviceCreateInfo =
         zero { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos pdi }
-          ::& PhysicalDeviceTimelineSemaphoreFeatures True
-          :&  ()
-      extensions = [KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME]
-  dev    <- createDeviceWithExtensions phys [] extensions deviceCreateInfo
+      reqs = [U.reqs|
+          1.0
+          VK_KHR_timeline_semaphore
+          PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
+          PhysicalDeviceTimelineSemaphoreProperties.maxTimelineSemaphoreValueDifference >= 1
+        |]
+  dev    <- createDeviceFromRequirements reqs [] phys deviceCreateInfo
   queues <- liftIO $ pdiGetQueues pdi dev
   pure (phys, dev, queues)
 

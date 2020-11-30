@@ -36,7 +36,8 @@ import           VulkanMemoryAllocator          ( Allocator
                                                 , withAllocator
                                                 )
 
-import           Vulkan.Utils.Initialization    ( createDebugInstanceWithExtensions
+import           Vulkan.Requirement
+import           Vulkan.Utils.Initialization    ( createDebugInstanceFromRequirements
                                                 )
 
 myApiVersion :: Word32
@@ -49,10 +50,8 @@ myApiVersion = API_VERSION_1_0
 -- | Create an instance with a debug messenger and validation
 createInstance :: forall m . MonadResource m => [ByteString] -> m Instance
 createInstance extraExtensions = do
-  createDebugInstanceWithExtensions
-    []
-    []
-    extraExtensions
+  createDebugInstanceFromRequirements
+    [RequireInstanceExtension Nothing n minBound | n <- extraExtensions]
     []
     zero
       { applicationInfo = Just zero { applicationName = Nothing

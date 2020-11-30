@@ -3,8 +3,6 @@ cabal-version: 2.2
 -- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: 07469fd86a282e5431bb11f41a2b513268d1238cb7897b4d75f8a5ecda9438f5
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -24,7 +22,12 @@ source-repository head
   location: https://github.com/expipiplus1/vulkan
 
 flag have-shaderc
-  description: Set this flag if you have shaderc (and the glslc executable) installed. It enables the examples which use HLSL shaders.
+  description: Set this flag if you have shaderc (and the glslc executable) installed. It enables building the examples which use HLSL shaders.
+  manual: True
+  default: True
+
+flag raytracing
+  description: Set this flag if you have a version of glslValidator recent enough to compile ray tracing shaders. It enables building the examples which use ray tracing.
   manual: True
   default: True
 
@@ -86,18 +89,13 @@ executable hlsl
     , base <5
     , bytestring
     , containers
-    , extra
-    , file-embed
-    , filepath
     , primitive-unlifted >=1.0
     , resourcet >=1.2.4
     , say
     , sdl2 >=2.5.2.0
     , template-haskell
-    , temporary
     , text
     , transformers
-    , typed-process
     , unagi-chan
     , unliftio
     , vector
@@ -158,6 +156,60 @@ executable offscreen
     build-depends:
         containers
       , inline-c
+  default-language: Haskell2010
+
+executable rays
+  main-is: Main.hs
+  other-modules:
+      AccelerationStructure
+      Cache
+      Camera
+      DescriptorSet
+      Frame
+      Framebuffer
+      Init
+      MonadFrame
+      MonadVulkan
+      Pipeline
+      RefCounted
+      Render
+      Scene
+      Swapchain
+      Utils
+      Window
+      Paths_vulkan_examples
+  hs-source-dirs:
+      rays
+  default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
+  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  build-depends:
+      VulkanMemoryAllocator
+    , autoapply >=0.4
+    , base <5
+    , bytestring
+    , containers
+    , derive-storable >=0.3
+    , derive-storable-plugin
+    , lens
+    , linear
+    , primitive-unlifted
+    , resourcet >=1.2.4
+    , say
+    , sdl2 >=2.5.2.0
+    , template-haskell
+    , text
+    , transformers
+    , unagi-chan
+    , unliftio
+    , vector
+    , vulkan >=3.7
+    , vulkan-utils >=0.3
+  if os(windows)
+    ghc-options: -optl-mconsole
+  if impl(ghc < 8.10.0)
+    buildable: False
+  if !flag(raytracing)
+    buildable: False
   default-language: Haskell2010
 
 executable resize

@@ -132,17 +132,42 @@ executables:
       - vector
       - vulkan
       - vulkan-utils >= 0.3
-      - file-embed
-      - extra
-      - filepath
-      - temporary
-      - typed-process
     when:
       - condition: impl(ghc < 8.10.0)
         buildable: false
       - condition: '!flag(have-shaderc)'
         buildable: false
 
+  rays:
+    main: Main.hs
+    source-dirs: rays
+    dependencies:
+      - VulkanMemoryAllocator
+      - autoapply >= 0.4
+      - base <5
+      - bytestring
+      - containers
+      - lens
+      - linear
+      - primitive-unlifted
+      - resourcet >= 1.2.4
+      - say
+      - sdl2 >= 2.5.2.0
+      - template-haskell
+      - text
+      - derive-storable >= 0.3
+      - derive-storable-plugin
+      - transformers
+      - unagi-chan
+      - unliftio
+      - vector
+      - vulkan >= 3.7
+      - vulkan-utils >= 0.3
+    when:
+      - condition: impl(ghc < 8.10.0)
+        buildable: false
+      - condition: '!flag(raytracing)'
+        buildable: false
 
 when:
   - condition: os(windows)
@@ -158,7 +183,14 @@ flags:
   have-shaderc:
     description:
       Set this flag if you have shaderc (and the glslc executable) installed.
-      It enables the examples which use HLSL shaders.
+      It enables building the examples which use HLSL shaders.
+    default: yes
+    manual: yes
+  raytracing:
+    description:
+      Set this flag if you have a version of glslValidator recent enough to
+      compile ray tracing shaders. It enables building the examples which use
+      ray tracing.
     default: yes
     manual: yes
 

@@ -1,9 +1,17 @@
 # Change Log
 
 ## WIP
-- Bump API version to v1.2.163
 
+## [3.8] - 2020-11-30
+
+- Bump API version to v1.2.163
+- Add `Vulkan.Requirement`, a module for specifying requirements for `Device`s
+  and `Instance`s
+- Expose SPIR-V Extensions and Capabilities in `Vulkan.SPIRVRequirements`
+- Expose extension dependencies in `Vulkan.Extensions.Dependencies`
 - Squash some warnings
+
+Thanks to @sheaf for their help with this release!
 
 ## [3.7] - 2020-11-24
 - Bump API version to v1.2.162

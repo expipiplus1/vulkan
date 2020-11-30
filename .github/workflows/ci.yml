@@ -119,10 +119,10 @@ jobs:
 
     - run: |
         if command -v glslc &> /dev/null; then
-          cabal configure -fgeneric-instances -fhave-shaderc
+          cabal configure -fgeneric-instances -f-raytracing -fhave-shaderc
         else
           echo "glslc could not be found"
-          cabal configure -fgeneric-instances -f-have-shaderc
+          cabal configure -fgeneric-instances -f-raytracing -f-have-shaderc
         fi
       shell: bash
 
@@ -155,7 +155,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, macOS-latest, windows-latest]
-        stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances --flag vulkan-examples:-have-shaderc --system-ghc']
+        stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances --flag vulkan-examples:-raytracing --flag vulkan-examples:-have-shaderc --system-ghc']
         exclude:
           # https://github.com/actions/setup-haskell/issues/49
           - os: windows-latest
