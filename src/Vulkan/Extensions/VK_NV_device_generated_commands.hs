@@ -1963,10 +1963,9 @@ instance Zero GraphicsShaderGroupCreateInfoNV where
 --     @pGroups@
 --
 -- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-pPipelines-02886#
---     Each element of the @pPipelines@ member of @libraries@ /must/ have
---     been created with identical state to the pipeline currently created
---     except the state that can be overriden by
---     'GraphicsShaderGroupCreateInfoNV'
+--     Each element of @pPipelines@ /must/ have been created with identical
+--     state to the pipeline currently created except the state that can be
+--     overridden by 'GraphicsShaderGroupCreateInfoNV'
 --
 -- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-deviceGeneratedCommands-02887#
 --     The
