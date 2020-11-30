@@ -490,8 +490,8 @@ getPrivateDataEXT :: forall io
                      -- the type of object data is associated with.
                      --
                      -- #VUID-vkGetPrivateDataEXT-objectType-04018# @objectType@ /must/ be
-                     -- 'Vulkan.Core10.Handles.Device' or an object type whose parent is
-                     -- 'Vulkan.Core10.Handles.Device'
+                     -- 'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_DEVICE', or an object type
+                     -- whose parent is 'Vulkan.Core10.Handles.Device'
                      --
                      -- #VUID-vkGetPrivateDataEXT-objectType-parameter# @objectType@ /must/ be a
                      -- valid 'Vulkan.Core10.Enums.ObjectType.ObjectType' value

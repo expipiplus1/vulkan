@@ -1930,205 +1930,207 @@ instance Zero CopyImageInfo2KHR where
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-pRegions-00215]] The source region specified by
---     each element of @pRegions@ /must/ be a region that is contained
---     within @srcImage@
+-- -   #VUID-VkBlitImageInfo2KHR-pRegions-00215# The source region
+--     specified by each element of @pRegions@ /must/ be a region that is
+--     contained within @srcImage@
 --
--- -   [[VUID-{refpage}-pRegions-00216]] The destination region specified
---     by each element of @pRegions@ /must/ be a region that is contained
---     within @dstImage@
+-- -   #VUID-VkBlitImageInfo2KHR-pRegions-00216# The destination region
+--     specified by each element of @pRegions@ /must/ be a region that is
+--     contained within @dstImage@
 --
--- -   [[VUID-{refpage}-pRegions-00217]] The union of all destination
---     regions, specified by the elements of @pRegions@, /must/ not overlap
---     in memory with any texel that /may/ be sampled during the blit
---     operation
+-- -   #VUID-VkBlitImageInfo2KHR-pRegions-00217# The union of all
+--     destination regions, specified by the elements of @pRegions@, /must/
+--     not overlap in memory with any texel that /may/ be sampled during
+--     the blit operation
 --
--- -   [[VUID-{refpage}-srcImage-01999]] The
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-01999# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @srcImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
 --
--- -   [[VUID-{refpage}-srcImage-01561]] @srcImage@ /must/ not use a format
---     listed in
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-01561# @srcImage@ /must/ not use
+--     a format listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
 --
--- -   [[VUID-{refpage}-srcImage-00219]] @srcImage@ /must/ have been
---     created with
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-00219# @srcImage@ /must/ have
+--     been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
 --     usage flag
 --
--- -   [[VUID-{refpage}-srcImage-00220]] If @srcImage@ is non-sparse then
---     it /must/ be bound completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-00220# If @srcImage@ is
+--     non-sparse then it /must/ be bound completely and contiguously to a
+--     single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   [[VUID-{refpage}-srcImageLayout-00221]] @srcImageLayout@ /must/
---     specify the layout of the image subresources of @srcImage@ specified
---     in @pRegions@ at the time this command is executed on a
+-- -   #VUID-VkBlitImageInfo2KHR-srcImageLayout-00221# @srcImageLayout@
+--     /must/ specify the layout of the image subresources of @srcImage@
+--     specified in @pRegions@ at the time this command is executed on a
 --     'Vulkan.Core10.Handles.Device'
 --
--- -   [[VUID-{refpage}-srcImageLayout-01398]] @srcImageLayout@ /must/ be
+-- -   #VUID-VkBlitImageInfo2KHR-srcImageLayout-01398# @srcImageLayout@
+--     /must/ be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
--- -   [[VUID-{refpage}-dstImage-02000]] The
+-- -   #VUID-VkBlitImageInfo2KHR-dstImage-02000# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_DST_BIT'
 --
--- -   [[VUID-{refpage}-dstImage-01562]] @dstImage@ /must/ not use a format
---     listed in
+-- -   #VUID-VkBlitImageInfo2KHR-dstImage-01562# @dstImage@ /must/ not use
+--     a format listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
 --
--- -   [[VUID-{refpage}-dstImage-00224]] @dstImage@ /must/ have been
---     created with
+-- -   #VUID-VkBlitImageInfo2KHR-dstImage-00224# @dstImage@ /must/ have
+--     been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --     usage flag
 --
--- -   [[VUID-{refpage}-dstImage-00225]] If @dstImage@ is non-sparse then
---     it /must/ be bound completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-VkBlitImageInfo2KHR-dstImage-00225# If @dstImage@ is
+--     non-sparse then it /must/ be bound completely and contiguously to a
+--     single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   [[VUID-{refpage}-dstImageLayout-00226]] @dstImageLayout@ /must/
---     specify the layout of the image subresources of @dstImage@ specified
---     in @pRegions@ at the time this command is executed on a
+-- -   #VUID-VkBlitImageInfo2KHR-dstImageLayout-00226# @dstImageLayout@
+--     /must/ specify the layout of the image subresources of @dstImage@
+--     specified in @pRegions@ at the time this command is executed on a
 --     'Vulkan.Core10.Handles.Device'
 --
--- -   [[VUID-{refpage}-dstImageLayout-01399]] @dstImageLayout@ /must/ be
+-- -   #VUID-VkBlitImageInfo2KHR-dstImageLayout-01399# @dstImageLayout@
+--     /must/ be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
--- -   [[VUID-{refpage}-srcImage-00229]] If either of @srcImage@ or
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-00229# If either of @srcImage@ or
 --     @dstImage@ was created with a signed integer
 --     'Vulkan.Core10.Enums.Format.Format', the other /must/ also have been
 --     created with a signed integer 'Vulkan.Core10.Enums.Format.Format'
 --
--- -   [[VUID-{refpage}-srcImage-00230]] If either of @srcImage@ or
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-00230# If either of @srcImage@ or
 --     @dstImage@ was created with an unsigned integer
 --     'Vulkan.Core10.Enums.Format.Format', the other /must/ also have been
 --     created with an unsigned integer 'Vulkan.Core10.Enums.Format.Format'
 --
--- -   [[VUID-{refpage}-srcImage-00231]] If either of @srcImage@ or
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-00231# If either of @srcImage@ or
 --     @dstImage@ was created with a depth\/stencil format, the other
 --     /must/ have exactly the same format
 --
--- -   [[VUID-{refpage}-srcImage-00232]] If @srcImage@ was created with a
---     depth\/stencil format, @filter@ /must/ be
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-00232# If @srcImage@ was created
+--     with a depth\/stencil format, @filter@ /must/ be
 --     'Vulkan.Core10.Enums.Filter.FILTER_NEAREST'
 --
--- -   [[VUID-{refpage}-srcImage-00233]] @srcImage@ /must/ have been
---     created with a @samples@ value of
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-00233# @srcImage@ /must/ have
+--     been created with a @samples@ value of
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
--- -   [[VUID-{refpage}-dstImage-00234]] @dstImage@ /must/ have been
---     created with a @samples@ value of
+-- -   #VUID-VkBlitImageInfo2KHR-dstImage-00234# @dstImage@ /must/ have
+--     been created with a @samples@ value of
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
--- -   [[VUID-{refpage}-filter-02001]] If @filter@ is
+-- -   #VUID-VkBlitImageInfo2KHR-filter-02001# If @filter@ is
 --     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR', then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @srcImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
--- -   [[VUID-{refpage}-filter-02002]] If @filter@ is
+-- -   #VUID-VkBlitImageInfo2KHR-filter-02002# If @filter@ is
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT', then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @srcImage@ /must/ contain
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
--- -   [[VUID-{refpage}-filter-00237]] If @filter@ is
+-- -   #VUID-VkBlitImageInfo2KHR-filter-00237# If @filter@ is
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT', @srcImage@
 --     /must/ be of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   [[VUID-{refpage}-srcSubresource-01705]] The
+-- -   #VUID-VkBlitImageInfo2KHR-srcSubresource-01705# The
 --     @srcSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@ was created
 --
--- -   [[VUID-{refpage}-dstSubresource-01706]] The
+-- -   #VUID-VkBlitImageInfo2KHR-dstSubresource-01706# The
 --     @dstSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@ was created
 --
--- -   [[VUID-{refpage}-srcSubresource-01707]] The
+-- -   #VUID-VkBlitImageInfo2KHR-srcSubresource-01707# The
 --     @srcSubresource.baseArrayLayer@ + @srcSubresource.layerCount@ of
 --     each element of @pRegions@ /must/ be less than or equal to the
 --     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
 --     when @srcImage@ was created
 --
--- -   [[VUID-{refpage}-dstSubresource-01708]] The
+-- -   #VUID-VkBlitImageInfo2KHR-dstSubresource-01708# The
 --     @dstSubresource.baseArrayLayer@ + @dstSubresource.layerCount@ of
 --     each element of @pRegions@ /must/ be less than or equal to the
 --     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
 --     when @dstImage@ was created
 --
--- -   [[VUID-{refpage}-dstImage-02545]] @dstImage@ and @srcImage@ /must/
---     not have been created with @flags@ containing
+-- -   #VUID-VkBlitImageInfo2KHR-dstImage-02545# @dstImage@ and @srcImage@
+--     /must/ not have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- -   [[VUID-{refpage}-srcImage-00240]] If either @srcImage@ or @dstImage@
---     is of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for
---     each element of @pRegions@, @srcSubresource.baseArrayLayer@ and
---     @dstSubresource.baseArrayLayer@ /must/ each be @0@, and
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-00240# If either @srcImage@ or
+--     @dstImage@ is of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D',
+--     then for each element of @pRegions@, @srcSubresource.baseArrayLayer@
+--     and @dstSubresource.baseArrayLayer@ /must/ each be @0@, and
 --     @srcSubresource.layerCount@ and @dstSubresource.layerCount@ /must/
 --     each be @1@.
 --
--- -   [[VUID-{refpage}-aspectMask-00241]] For each element of @pRegions@,
---     @srcSubresource.aspectMask@ /must/ specify aspects present in
---     @srcImage@
+-- -   #VUID-VkBlitImageInfo2KHR-aspectMask-00241# For each element of
+--     @pRegions@, @srcSubresource.aspectMask@ /must/ specify aspects
+--     present in @srcImage@
 --
--- -   [[VUID-{refpage}-aspectMask-00242]] For each element of @pRegions@,
---     @dstSubresource.aspectMask@ /must/ specify aspects present in
---     @dstImage@
+-- -   #VUID-VkBlitImageInfo2KHR-aspectMask-00242# For each element of
+--     @pRegions@, @dstSubresource.aspectMask@ /must/ specify aspects
+--     present in @dstImage@
 --
--- -   [[VUID-{refpage}-srcOffset-00243]] For each element of @pRegions@,
---     @srcOffset@[0].x and @srcOffset@[1].x /must/ both be greater than or
---     equal to @0@ and less than or equal to the width of the specified
---     @srcSubresource@ of @srcImage@
+-- -   #VUID-VkBlitImageInfo2KHR-srcOffset-00243# For each element of
+--     @pRegions@, @srcOffset@[0].x and @srcOffset@[1].x /must/ both be
+--     greater than or equal to @0@ and less than or equal to the width of
+--     the specified @srcSubresource@ of @srcImage@
 --
--- -   [[VUID-{refpage}-srcOffset-00244]] For each element of @pRegions@,
---     @srcOffset@[0].y and @srcOffset@[1].y /must/ both be greater than or
---     equal to @0@ and less than or equal to the height of the specified
---     @srcSubresource@ of @srcImage@
+-- -   #VUID-VkBlitImageInfo2KHR-srcOffset-00244# For each element of
+--     @pRegions@, @srcOffset@[0].y and @srcOffset@[1].y /must/ both be
+--     greater than or equal to @0@ and less than or equal to the height of
+--     the specified @srcSubresource@ of @srcImage@
 --
--- -   [[VUID-{refpage}-srcImage-00245]] If @srcImage@ is of type
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-00245# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
 --     of @pRegions@, @srcOffset@[0].y /must/ be @0@ and @srcOffset@[1].y
 --     /must/ be @1@
 --
--- -   [[VUID-{refpage}-srcOffset-00246]] For each element of @pRegions@,
---     @srcOffset@[0].z and @srcOffset@[1].z /must/ both be greater than or
---     equal to @0@ and less than or equal to the depth of the specified
---     @srcSubresource@ of @srcImage@
+-- -   #VUID-VkBlitImageInfo2KHR-srcOffset-00246# For each element of
+--     @pRegions@, @srcOffset@[0].z and @srcOffset@[1].z /must/ both be
+--     greater than or equal to @0@ and less than or equal to the depth of
+--     the specified @srcSubresource@ of @srcImage@
 --
--- -   [[VUID-{refpage}-srcImage-00247]] If @srcImage@ is of type
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-00247# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
 --     of @pRegions@, @srcOffset@[0].z /must/ be @0@ and @srcOffset@[1].z
 --     /must/ be @1@
 --
--- -   [[VUID-{refpage}-dstOffset-00248]] For each element of @pRegions@,
---     @dstOffset@[0].x and @dstOffset@[1].x /must/ both be greater than or
---     equal to @0@ and less than or equal to the width of the specified
---     @dstSubresource@ of @dstImage@
+-- -   #VUID-VkBlitImageInfo2KHR-dstOffset-00248# For each element of
+--     @pRegions@, @dstOffset@[0].x and @dstOffset@[1].x /must/ both be
+--     greater than or equal to @0@ and less than or equal to the width of
+--     the specified @dstSubresource@ of @dstImage@
 --
--- -   [[VUID-{refpage}-dstOffset-00249]] For each element of @pRegions@,
---     @dstOffset@[0].y and @dstOffset@[1].y /must/ both be greater than or
---     equal to @0@ and less than or equal to the height of the specified
---     @dstSubresource@ of @dstImage@
+-- -   #VUID-VkBlitImageInfo2KHR-dstOffset-00249# For each element of
+--     @pRegions@, @dstOffset@[0].y and @dstOffset@[1].y /must/ both be
+--     greater than or equal to @0@ and less than or equal to the height of
+--     the specified @dstSubresource@ of @dstImage@
 --
--- -   [[VUID-{refpage}-dstImage-00250]] If @dstImage@ is of type
+-- -   #VUID-VkBlitImageInfo2KHR-dstImage-00250# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
 --     of @pRegions@, @dstOffset@[0].y /must/ be @0@ and @dstOffset@[1].y
 --     /must/ be @1@
 --
--- -   [[VUID-{refpage}-dstOffset-00251]] For each element of @pRegions@,
---     @dstOffset@[0].z and @dstOffset@[1].z /must/ both be greater than or
---     equal to @0@ and less than or equal to the depth of the specified
---     @dstSubresource@ of @dstImage@
+-- -   #VUID-VkBlitImageInfo2KHR-dstOffset-00251# For each element of
+--     @pRegions@, @dstOffset@[0].z and @dstOffset@[1].z /must/ both be
+--     greater than or equal to @0@ and less than or equal to the depth of
+--     the specified @dstSubresource@ of @dstImage@
 --
--- -   [[VUID-{refpage}-dstImage-00252]] If @dstImage@ is of type
+-- -   #VUID-VkBlitImageInfo2KHR-dstImage-00252# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
 --     of @pRegions@, @dstOffset@[0].z /must/ be @0@ and @dstOffset@[1].z
