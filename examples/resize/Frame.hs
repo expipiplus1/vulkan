@@ -124,7 +124,7 @@ allocateGlobal_ create destroy = allocateGlobal create (const destroy)
 runFrame :: Frame -> F a -> V a
 runFrame f (F r) = runReaderT r f `finally` do
   fences <- liftIO $ readIORef (fGPUWork f)
-  -- Wait for this frame to be presented in another thread before retiring
+  -- Wait in another thread for this frame to be presented before retiring
   spawn_ $ do
     waitForFencesSafe' fences True 1e9 >>= \case
       TIMEOUT -> do

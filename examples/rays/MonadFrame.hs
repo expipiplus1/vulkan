@@ -57,26 +57,27 @@ runFrame :: Frame -> F a -> V a
 runFrame f@Frame {..} (F r) = runReaderT r f `finally` do
   waits <- liftIO $ readIORef fGPUWork
   let oneSecond = 1e9 -- one second
-  spawn_ $ do
+  spawn_ $ withSpan_ "Retire" $ do
     -- Wait for the GPU work to finish (if we have any)
     unless (null waits) $ do
       let waitInfo = zero { semaphores = V.fromList (fst <$> waits)
                           , values     = V.fromList (snd <$> waits)
                           }
-      waitTwice waitInfo oneSecond >>= \case
+      withSpan_ "QueueWait" $ waitTwice waitInfo oneSecond >>= \case
         TIMEOUT ->
           timeoutError "Timed out (1s) waiting for frame to finish on Device"
         _ -> pure ()
 
     -- Free resources wanted elsewhere now, all those in RecycledResources
-    resetCommandPool' (fCommandPool fRecycledResources) zero
+    withSpan_ "resetCommandPool"
+      $ resetCommandPool' (fCommandPool fRecycledResources) zero
 
     -- Signal we're done by making the recycled resources available
     bin <- V $ asks ghRecycleBin
     liftIO $ bin fRecycledResources
 
     -- Destroy frame-specific resources at our leisure
-    retireFrame f
+    withSpan_ "final retire" $ retireFrame f
 
 -- | 'queueSubmit' and add wait for the 'Fence' before retiring the frame.
 queueSubmitFrame

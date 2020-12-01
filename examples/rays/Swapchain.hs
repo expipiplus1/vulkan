@@ -21,7 +21,7 @@ import           Data.Vector                    ( Vector )
 import           Framebuffer
 import           GHC.Generics                   ( Generic )
 import           MonadVulkan
-import           NoThunks.Class                 ( NoThunks )
+import           NoThunks.Class
 import           Orphans                        ( )
 import           RefCounted
 import qualified SDL

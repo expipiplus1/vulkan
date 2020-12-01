@@ -175,7 +175,7 @@ advanceFrame :: Bool -> Frame -> V Frame
 advanceFrame needsNewSwapchain f = do
   -- Wait for a prior frame to finish, then we can steal it's resources!
   nib                <- V $ asks ghRecycleNib
-  fRecycledResources <- liftIO $ nib >>= \case
+  fRecycledResources <- withSpan_ "CPU is ahead" $ liftIO $ nib >>= \case
     Left  block -> block
     Right rs    -> pure rs
 

@@ -151,6 +151,7 @@ executables:
       - lens
       - linear
       - nothunks
+      - opentelemetry
       - primitive-unlifted
       - resourcet >= 1.2.4
       - say
@@ -169,6 +170,7 @@ executables:
         buildable: false
       - condition: '!flag(raytracing)'
         buildable: false
+    ghc-options: -eventlog
 
 when:
   - condition: os(windows)

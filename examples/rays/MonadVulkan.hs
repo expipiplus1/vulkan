@@ -16,18 +16,24 @@ import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
+import           Data.ByteString                ( ByteString )
 import           Data.Word
 import           GHC.Generics                   ( Generic )
 import           Language.Haskell.TH.Syntax     ( addTopDecls )
-import           NoThunks.Class                 ( NoThunks )
+import           NoThunks.Class
+import           OpenTelemetry.Eventlog         ( beginSpan
+                                                , endSpan
+                                                )
 import           Orphans                        ( )
 import           UnliftIO                       ( Async
                                                 , MonadUnliftIO(withRunInIO)
                                                 , mask
                                                 , toIO
+                                                )
+import           UnliftIO.Async                 ( asyncWithUnmask
                                                 , uninterruptibleCancel
                                                 )
-import           UnliftIO.Async                 ( asyncWithUnmask )
+import           UnliftIO.Exception             ( bracket )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -206,6 +212,10 @@ spawn a = do
 
 spawn_ :: V () -> V ()
 spawn_ = void . spawn
+
+-- Profiling span
+withSpan_ :: MonadUnliftIO m => ByteString -> m c -> m c
+withSpan_ n x = bracket (beginSpan n) endSpan (const x)
 
 ----------------------------------------------------------------
 -- Commands
