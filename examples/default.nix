@@ -19,7 +19,13 @@ in if forShell then
     packages = p: [ p.vulkan-examples ];
     buildInputs = with pkgs;
       [ vulkan-tools-lunarg vulkan-validation-layers shaderc ]
-      ++ pkgs.lib.optional withSwiftshader vulkan-extension-layer;
+      ++ pkgs.lib.optional withSwiftshader vulkan-extension-layer
+      ++ pkgs.lib.optional buildProfiling [
+        haskellPackages.eventlog2html
+        haskellPackages.hs-speedscope
+        haskellPackages.opentelemetry-extra
+        pkgs.tracy
+      ];
     withHoogle = hoogle;
   } // pkgs.lib.optionalAttrs withSwiftshader {
     VK_ICD_FILENAMES =

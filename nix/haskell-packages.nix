@@ -78,6 +78,41 @@ in self: super:
     name = "pure.patch";
     sha256 = "11fm91062slgh25na3pmjpf2sn9z1gg9lg5jr4nv2q8a2bzg32zs";
   });
+  nothunks = doJailbreak (overrideSrc super.nothunks {
+    src = pkgs.fetchFromGitHub {
+      owner = "input-output-hk";
+      repo = "nothunks";
+      rev = "bb3e23bbf143aa8e65049bd6d4b3554eeb934b90";
+      sha256 = "1p60w89ywy1wzjmy07gv20fwrkp88bg9kcrfxvc08nrgh9p4yz4f";
+    };
+  });
+  # profiling
+  eventlog2html = doJailbreak (appendPatch (overrideSrc super.eventlog2html {
+    src = pkgs.fetchFromGitHub {
+      owner = "BinderDavid";
+      repo = "eventlog2html";
+      rev =
+        "9abc05ed94fef094b3ac54d57e00664c793b5923"; # switch-to-ghc-events-0.13
+      sha256 = "0h1527zxdmail35526nn47zawsaafvsby7p50qg54wq023zazxlj";
+    };
+  }) (pkgs.fetchpatch {
+    url = "https://github.com/mpickering/eventlog2html/pull/129.patch";
+    name = "vega.patch";
+    sha256 = "1lnbdscngb5g5b6ys0xhp7izdfkz6j3llnpirbfxck3sy3ssxph5";
+  }));
+  hs-speedscope = overrideSrc super.hs-speedscope {
+    src = pkgs.fetchFromGitHub {
+      owner = "mpickering";
+      repo = "hs-speedscope";
+      rev = "9e28b303993b79f3d943ccb89b148cb9a4fb6ca5";
+      sha256 = "105zk9w5lpn0m866m8y0lhrw2x6kym2f2ryjc56zxqzfr9b76jdn";
+    };
+  };
+  hvega = doJailbreak (self.callHackageDirect {
+    pkg = "hvega";
+    ver = "0.6.0.0";
+    sha256 = "1bkwp8zlb1248w95ksw71iksgd3xfw1pnb9klv8xxsqay542970a";
+  } { });
 
   #
   # Overrides for generate
