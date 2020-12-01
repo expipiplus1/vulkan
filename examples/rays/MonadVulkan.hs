@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
@@ -15,7 +17,10 @@ import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
 import           Data.Word
+import           GHC.Generics                   ( Generic )
 import           Language.Haskell.TH.Syntax     ( addTopDecls )
+import           NoThunks.Class                 ( NoThunks )
+import           Orphans                        ( )
 import           UnliftIO                       ( Async
                                                 , MonadUnliftIO(withRunInIO)
                                                 , mask
@@ -168,6 +173,7 @@ data RecycledResources = RecycledResources
     -- ^ A descriptor set for ray tracing
   , fCameraMatricesOffset    :: Word64
   }
+  deriving (Generic, NoThunks)
 
 -- | The shape of all the queues we use for our program, parameterized over the
 -- queue type so we can use it with 'Vulkan.Utils.QueueAssignment.assignQueues'

@@ -150,6 +150,7 @@ executables:
       - derive-storable-plugin >= 0.2.3.1
       - lens
       - linear
+      - nothunks
       - primitive-unlifted
       - resourcet >= 1.2.4
       - say

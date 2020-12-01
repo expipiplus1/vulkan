@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 module Swapchain
   ( SwapchainInfo(..)
   , SwapchainResources(..)
@@ -17,10 +19,14 @@ import           Data.Ord                       ( comparing )
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
 import           Framebuffer
+import           GHC.Generics                   ( Generic )
 import           MonadVulkan
+import           NoThunks.Class                 ( NoThunks )
+import           Orphans                        ( )
 import           RefCounted
 import qualified SDL
 import qualified SDL.Video.Vulkan              as SDL
+import           Say
 import           UnliftIO.Exception             ( throwString
                                                 , tryJust
                                                 )
@@ -30,7 +36,6 @@ import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Misc
 import           Vulkan.Zero
-import Say
 
 data SwapchainInfo = SwapchainInfo
   { siSwapchain           :: SwapchainKHR
@@ -40,6 +45,7 @@ data SwapchainInfo = SwapchainInfo
   , siImageExtent         :: Extent2D
   , siSurface             :: SurfaceKHR
   }
+  deriving (Generic, NoThunks)
 
 data SwapchainResources = SwapchainResources
   { srInfo       :: SwapchainInfo
@@ -47,6 +53,7 @@ data SwapchainResources = SwapchainResources
   , srImages     :: Vector Image
   , srRelease    :: RefCounted
   }
+  deriving (Generic, NoThunks)
 
 ----------------------------------------------------------------
 -- All the resources which depend on the swapchain
