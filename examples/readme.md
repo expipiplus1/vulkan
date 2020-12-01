@@ -1,5 +1,24 @@
 # vulkan-examples
 
+```bash
+nix-shell --arg buildProfiling true
+cabal build --enabling-profiling rays
+$(cabal exec -- which rays) +RTS --nonmoving-gc
+```
+
+```
+Thread 1 "rays" received signal SIGSEGV, Segmentation fault.
+0x000000000081ed7c in resetStaticObjectForProfiling ()
+(gdb) bt
+#0  0x000000000081ed7c in resetStaticObjectForProfiling ()
+#1  0x0000000000822580 in GarbageCollect ()
+#2  0x0000000000815844 in scheduleDoGC ()
+#3  0x00000000008162cd in schedule ()
+#4  0x00000000008171fe in scheduleWaitThread ()
+#5  0x0000000000812adf in hs_main ()
+#6  0x000000000040a48a in main ()
+```
+
 ## The examples
 
 ### `info`
