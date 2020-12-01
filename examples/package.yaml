@@ -147,6 +147,8 @@ executables:
       - base <5
       - bytestring
       - containers
+      - derive-storable >= 0.3
+      - derive-storable-plugin
       - lens
       - linear
       - primitive-unlifted
@@ -155,8 +157,6 @@ executables:
       - sdl2 >= 2.5.2.0
       - template-haskell
       - text
-      - derive-storable >= 0.3
-      - derive-storable-plugin
       - transformers
       - unagi-chan
       - unliftio
