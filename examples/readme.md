@@ -2,8 +2,8 @@
 
 ```bash
 nix-shell --arg buildProfiling true
-cabal build --enabling-profiling rays
-$(cabal exec -- which rays) +RTS --nonmoving-gc
+cabal build --enabling-profiling hlsl
+$(cabal exec -- which hlsl) +RTS --nonmoving-gc
 ```
 
 ```
