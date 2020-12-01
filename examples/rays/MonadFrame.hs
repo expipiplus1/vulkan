@@ -33,6 +33,7 @@ import           UnliftIO
 import           Vulkan.CStruct.Extends         ( SomeStruct )
 import           Vulkan.Core10
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
+import           Vulkan.NamedType
 import           Vulkan.Zero                    ( Zero(zero) )
 
 newtype F a = F {unF :: ReaderT Frame V a }

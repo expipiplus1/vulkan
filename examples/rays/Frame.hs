@@ -1,3 +1,7 @@
+{-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
+
 -- | Defines the 'Frame' type, most interesting operations regarding 'Frame's
 -- can be found in 'MonadFrame'
 module Frame where
@@ -22,7 +26,10 @@ import           Foreign.Ptr                    ( Ptr
                                                 , castPtr
                                                 )
 import           Foreign.Storable
+import           GHC.Generics
 import           MonadVulkan
+import           NoThunks.Class
+import           Orphans                        ( )
 import qualified Pipeline
 import qualified SDL
 import           SDL                            ( Window )
@@ -73,6 +80,7 @@ data Frame = Frame
     -- key to release it in the global scope. This will be released when the
     -- frame is done with GPU work.
   }
+  deriving (Generic, NoThunks)
 
 initialRecycledResources :: Word64 -> DescriptorSet -> V RecycledResources
 initialRecycledResources index fDescriptorSet = do
@@ -179,20 +187,22 @@ advanceFrame needsNewSwapchain f = do
   fGPUWork   <- liftIO $ newIORef mempty
   fResources <- allocate createInternalState closeInternalState
 
-  pure Frame { fIndex                       = succ (fIndex f)
-             , fWindow                      = fWindow f
-             , fSurface                     = fSurface f
-             , fSwapchainResources
-             , fPipeline                    = fPipeline f
-             , fPipelineLayout              = fPipelineLayout f
-             , fShaderBindingTable          = fShaderBindingTable f
-             , fShaderBindingTableAddress   = fShaderBindingTableAddress f
-             , fAccelerationStructure       = fAccelerationStructure f
-             , fCameraMatricesBuffer        = fCameraMatricesBuffer f
-             , fCameraMatricesAllocation    = fCameraMatricesAllocation f
-             , fCameraMatricesBufferData    = fCameraMatricesBufferData f
-             , fRenderFinishedHostSemaphore = fRenderFinishedHostSemaphore f
-             , fGPUWork
-             , fResources
-             , fRecycledResources
-             }
+  let f' = Frame
+        { fIndex                       = succ (fIndex f)
+        , fWindow                      = fWindow f
+        , fSurface                     = fSurface f
+        , fSwapchainResources
+        , fPipeline                    = fPipeline f
+        , fPipelineLayout              = fPipelineLayout f
+        , fShaderBindingTable          = fShaderBindingTable f
+        , fShaderBindingTableAddress   = fShaderBindingTableAddress f
+        , fAccelerationStructure       = fAccelerationStructure f
+        , fCameraMatricesBuffer        = fCameraMatricesBuffer f
+        , fCameraMatricesAllocation    = fCameraMatricesAllocation f
+        , fCameraMatricesBufferData    = fCameraMatricesBufferData f
+        , fRenderFinishedHostSemaphore = fRenderFinishedHostSemaphore f
+        , fGPUWork
+        , fResources
+        , fRecycledResources
+        }
+  pure f'
