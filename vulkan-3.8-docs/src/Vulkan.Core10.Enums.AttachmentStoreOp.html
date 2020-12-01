@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;AttachmentStoreOp&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.AttachmentStoreOp</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-identifier">AttachmentStoreOp</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#ATTACHMENT_STORE_OP_STORE"><span class="hs-identifier">ATTACHMENT_STORE_OP_STORE</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#ATTACHMENT_STORE_OP_DONT_CARE"><span class="hs-identifier">ATTACHMENT_STORE_OP_DONT_CARE</span></a></span><span>
+</span><span id="line-5"></span><span>                                                                </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#ATTACHMENT_STORE_OP_NONE_QCOM"><span class="hs-identifier">ATTACHMENT_STORE_OP_NONE_QCOM</span></a></span><span>
+</span><span id="line-6"></span><span>                                                                </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-7"></span><span>                                                                </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- | VkAttachmentStoreOp - Specify how contents of an attachment are treated</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- at the end of a subpass</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- 'ATTACHMENT_STORE_OP_DONT_CARE' /can/ cause contents generated during</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- previous render passes to be discarded before reaching memory, even if</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- no write to the attachment occurs during the current render pass.</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- 'Vulkan.Core10.Pass.AttachmentDescription',</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2'</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">newtype</span><span> </span><span id="AttachmentStoreOp"><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-identifier hs-var">AttachmentStoreOp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="AttachmentStoreOp"><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-identifier hs-var">AttachmentStoreOp</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-33"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680149589"><span id="local-6989586621680149591"><span class="annot"><span class="annottext">AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+(AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool)
+-&gt; (AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool)
+-&gt; Eq AttachmentStoreOp
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+$c/= :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+== :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+$c== :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680149573"><span id="local-6989586621680149575"><span id="local-6989586621680149577"><span id="local-6989586621680149579"><span id="local-6989586621680149581"><span id="local-6989586621680149583"><span id="local-6989586621680149585"><span class="annot"><span class="annottext">Eq AttachmentStoreOp
+Eq AttachmentStoreOp =&gt;
+(AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Ordering)
+-&gt; (AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool)
+-&gt; (AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool)
+-&gt; (AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool)
+-&gt; (AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool)
+-&gt; (AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; AttachmentStoreOp)
+-&gt; (AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; AttachmentStoreOp)
+-&gt; Ord AttachmentStoreOp
+AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Ordering
+AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; AttachmentStoreOp
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; AttachmentStoreOp
+$cmin :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; AttachmentStoreOp
+max :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; AttachmentStoreOp
+$cmax :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; AttachmentStoreOp
+&gt;= :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+$c&gt;= :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+&gt; :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+$c&gt; :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+&lt;= :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+$c&lt;= :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+&lt; :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+$c&lt; :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Bool
+compare :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Ordering
+$ccompare :: AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; Ordering
+$cp1Ord :: Eq AttachmentStoreOp
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680149556"><span id="local-6989586621680149558"><span id="local-6989586621680149560"><span id="local-6989586621680149562"><span id="local-6989586621680149564"><span id="local-6989586621680149566"><span id="local-6989586621680149568"><span id="local-6989586621680149570"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO AttachmentStoreOp
+Ptr b -&gt; Int -&gt; AttachmentStoreOp -&gt; IO ()
+Ptr AttachmentStoreOp -&gt; IO AttachmentStoreOp
+Ptr AttachmentStoreOp -&gt; Int -&gt; IO AttachmentStoreOp
+Ptr AttachmentStoreOp -&gt; Int -&gt; AttachmentStoreOp -&gt; IO ()
+Ptr AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; IO ()
+AttachmentStoreOp -&gt; Int
+(AttachmentStoreOp -&gt; Int)
+-&gt; (AttachmentStoreOp -&gt; Int)
+-&gt; (Ptr AttachmentStoreOp -&gt; Int -&gt; IO AttachmentStoreOp)
+-&gt; (Ptr AttachmentStoreOp -&gt; Int -&gt; AttachmentStoreOp -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO AttachmentStoreOp)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; AttachmentStoreOp -&gt; IO ())
+-&gt; (Ptr AttachmentStoreOp -&gt; IO AttachmentStoreOp)
+-&gt; (Ptr AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; IO ())
+-&gt; Storable AttachmentStoreOp
+forall b. Ptr b -&gt; Int -&gt; IO AttachmentStoreOp
+forall b. Ptr b -&gt; Int -&gt; AttachmentStoreOp -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; IO ()
+$cpoke :: Ptr AttachmentStoreOp -&gt; AttachmentStoreOp -&gt; IO ()
+peek :: Ptr AttachmentStoreOp -&gt; IO AttachmentStoreOp
+$cpeek :: Ptr AttachmentStoreOp -&gt; IO AttachmentStoreOp
+pokeByteOff :: Ptr b -&gt; Int -&gt; AttachmentStoreOp -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; AttachmentStoreOp -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO AttachmentStoreOp
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO AttachmentStoreOp
+pokeElemOff :: Ptr AttachmentStoreOp -&gt; Int -&gt; AttachmentStoreOp -&gt; IO ()
+$cpokeElemOff :: Ptr AttachmentStoreOp -&gt; Int -&gt; AttachmentStoreOp -&gt; IO ()
+peekElemOff :: Ptr AttachmentStoreOp -&gt; Int -&gt; IO AttachmentStoreOp
+$cpeekElemOff :: Ptr AttachmentStoreOp -&gt; Int -&gt; IO AttachmentStoreOp
+alignment :: AttachmentStoreOp -&gt; Int
+$calignment :: AttachmentStoreOp -&gt; Int
+sizeOf :: AttachmentStoreOp -&gt; Int
+$csizeOf :: AttachmentStoreOp -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680149553"><span class="annot"><span class="annottext">AttachmentStoreOp
+AttachmentStoreOp -&gt; Zero AttachmentStoreOp
+forall a. a -&gt; Zero a
+zero :: AttachmentStoreOp
+$czero :: AttachmentStoreOp
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- | 'ATTACHMENT_STORE_OP_STORE' specifies the contents generated during the</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- render pass and within the render area are written to memory. For</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- attachments with a depth\/stencil format, this uses the access type</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- For attachments with a color format, this uses the access type</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bATTACHMENT_STORE_OP_STORE"><span id="%24mATTACHMENT_STORE_OP_STORE"><span id="ATTACHMENT_STORE_OP_STORE"><span class="annot"><span class="annottext">$bATTACHMENT_STORE_OP_STORE :: AttachmentStoreOp
+$mATTACHMENT_STORE_OP_STORE :: forall r. AttachmentStoreOp -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#%24bATTACHMENT_STORE_OP_STORE"><span class="hs-identifier hs-var hs-var hs-var">ATTACHMENT_STORE_OP_STORE</span></a></span></span></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-identifier hs-type">AttachmentStoreOp</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- | 'ATTACHMENT_STORE_OP_DONT_CARE' specifies the contents within the render</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- area are not needed after rendering, and /may/ be discarded; the</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- contents of the attachment will be undefined inside the render area. For</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- attachments with a depth\/stencil format, this uses the access type</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- For attachments with a color format, this uses the access type</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bATTACHMENT_STORE_OP_DONT_CARE"><span id="%24mATTACHMENT_STORE_OP_DONT_CARE"><span id="ATTACHMENT_STORE_OP_DONT_CARE"><span class="annot"><span class="annottext">$bATTACHMENT_STORE_OP_DONT_CARE :: AttachmentStoreOp
+$mATTACHMENT_STORE_OP_DONT_CARE :: forall r. AttachmentStoreOp -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#%24bATTACHMENT_STORE_OP_DONT_CARE"><span class="hs-identifier hs-var hs-var hs-var">ATTACHMENT_STORE_OP_DONT_CARE</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-identifier hs-type">AttachmentStoreOp</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- | 'ATTACHMENT_STORE_OP_NONE_QCOM' specifies that the contents within the</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- render area were not written during rendering, and /may/ not be written</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- to memory. If the attachment was written to during the renderpass, the</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- contents of the attachment will be undefined inside the render area.</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bATTACHMENT_STORE_OP_NONE_QCOM"><span id="%24mATTACHMENT_STORE_OP_NONE_QCOM"><span id="ATTACHMENT_STORE_OP_NONE_QCOM"><span class="annot"><span class="annottext">$bATTACHMENT_STORE_OP_NONE_QCOM :: AttachmentStoreOp
+$mATTACHMENT_STORE_OP_NONE_QCOM :: forall r. AttachmentStoreOp -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#%24bATTACHMENT_STORE_OP_NONE_QCOM"><span class="hs-identifier hs-var hs-var hs-var">ATTACHMENT_STORE_OP_NONE_QCOM</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-identifier hs-type">AttachmentStoreOp</span></a></span><span> </span><span class="hs-number">1000301000</span><span>
+</span><span id="line-55"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#ATTACHMENT_STORE_OP_STORE"><span class="hs-pragma hs-type">ATTACHMENT_STORE_OP_STORE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-56"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#ATTACHMENT_STORE_OP_DONT_CARE"><span class="hs-pragma hs-type">ATTACHMENT_STORE_OP_DONT_CARE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-57"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#ATTACHMENT_STORE_OP_NONE_QCOM"><span class="hs-pragma hs-type">ATTACHMENT_STORE_OP_NONE_QCOM</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-pragma hs-type">AttachmentStoreOp</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-58"></span><span>
+</span><span id="line-59"></span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#conNameAttachmentStoreOp"><span class="hs-identifier hs-type">conNameAttachmentStoreOp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-60"></span><span id="conNameAttachmentStoreOp"><span class="annot"><span class="annottext">conNameAttachmentStoreOp :: String
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#conNameAttachmentStoreOp"><span class="hs-identifier hs-var hs-var">conNameAttachmentStoreOp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;AttachmentStoreOp&quot;</span></span><span>
+</span><span id="line-61"></span><span>
+</span><span id="line-62"></span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#enumPrefixAttachmentStoreOp"><span class="hs-identifier hs-type">enumPrefixAttachmentStoreOp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-63"></span><span id="enumPrefixAttachmentStoreOp"><span class="annot"><span class="annottext">enumPrefixAttachmentStoreOp :: String
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#enumPrefixAttachmentStoreOp"><span class="hs-identifier hs-var hs-var">enumPrefixAttachmentStoreOp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;ATTACHMENT_STORE_OP_&quot;</span></span><span>
+</span><span id="line-64"></span><span>
+</span><span id="line-65"></span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#showTableAttachmentStoreOp"><span class="hs-identifier hs-type">showTableAttachmentStoreOp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-identifier hs-type">AttachmentStoreOp</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-66"></span><span id="showTableAttachmentStoreOp"><span class="annot"><span class="annottext">showTableAttachmentStoreOp :: [(AttachmentStoreOp, String)]
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#showTableAttachmentStoreOp"><span class="hs-identifier hs-var hs-var">showTableAttachmentStoreOp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-67"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">AttachmentStoreOp
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#ATTACHMENT_STORE_OP_STORE"><span class="hs-identifier hs-var">ATTACHMENT_STORE_OP_STORE</span></a></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;STORE&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">AttachmentStoreOp
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#ATTACHMENT_STORE_OP_DONT_CARE"><span class="hs-identifier hs-var">ATTACHMENT_STORE_OP_DONT_CARE</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;DONT_CARE&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-69"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">AttachmentStoreOp
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#ATTACHMENT_STORE_OP_NONE_QCOM"><span class="hs-identifier hs-var">ATTACHMENT_STORE_OP_NONE_QCOM</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;NONE_QCOM&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-71"></span><span>
+</span><span id="line-72"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680149538"><span id="local-6989586621680149540"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-identifier hs-type">AttachmentStoreOp</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-73"></span><span>  </span><span id="local-6989586621680149536"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; AttachmentStoreOp -&gt; ShowS
+</span><a href="#local-6989586621680149536"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(AttachmentStoreOp, String)]
+-&gt; String
+-&gt; (AttachmentStoreOp -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; AttachmentStoreOp
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#enumPrefixAttachmentStoreOp"><span class="hs-identifier hs-var">enumPrefixAttachmentStoreOp</span></a></span><span>
+</span><span id="line-74"></span><span>                            </span><span class="annot"><span class="annottext">[(AttachmentStoreOp, String)]
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#showTableAttachmentStoreOp"><span class="hs-identifier hs-var">showTableAttachmentStoreOp</span></a></span><span>
+</span><span id="line-75"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#conNameAttachmentStoreOp"><span class="hs-identifier hs-var">conNameAttachmentStoreOp</span></a></span><span>
+</span><span id="line-76"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-identifier hs-type">AttachmentStoreOp</span></a></span><span> </span><span id="local-6989586621680149535"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621680149535"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680149535"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span>
+</span><span id="line-79"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680149528"><span id="local-6989586621680149531"><span id="local-6989586621680149533"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-identifier hs-type">AttachmentStoreOp</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-80"></span><span>  </span><span id="local-6989586621680149526"><span class="annot"><span class="annottext">readPrec :: ReadPrec AttachmentStoreOp
+</span><a href="#local-6989586621680149526"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-81"></span><span>    </span><span class="annot"><span class="annottext">String
+-&gt; [(AttachmentStoreOp, String)]
+-&gt; String
+-&gt; (Int32 -&gt; AttachmentStoreOp)
+-&gt; ReadPrec AttachmentStoreOp
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#enumPrefixAttachmentStoreOp"><span class="hs-identifier hs-var">enumPrefixAttachmentStoreOp</span></a></span><span> </span><span class="annot"><span class="annottext">[(AttachmentStoreOp, String)]
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#showTableAttachmentStoreOp"><span class="hs-identifier hs-var">showTableAttachmentStoreOp</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#conNameAttachmentStoreOp"><span class="hs-identifier hs-var">conNameAttachmentStoreOp</span></a></span><span> </span><span class="annot"><span class="annottext">Int32 -&gt; AttachmentStoreOp
+</span><a href="Vulkan.Core10.Enums.AttachmentStoreOp.html#AttachmentStoreOp"><span class="hs-identifier hs-var">AttachmentStoreOp</span></a></span><span>
+</span><span id="line-82"></span><span>
+</span><span id="line-83"></span></pre></body></html>

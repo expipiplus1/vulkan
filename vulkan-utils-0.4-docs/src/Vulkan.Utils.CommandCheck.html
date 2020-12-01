@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language TemplateHaskell #-}</span><span>
+</span><span id="line-2"></span><span class="hs-pragma">{-# language NoMonadComprehensions #-}</span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# language MultiWayIf #-}</span><span>
+</span><span id="line-4"></span><span class="hs-pragma">{-# language QuasiQuotes #-}</span><span>
+</span><span id="line-5"></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Utils.CommandCheck</span><span>
+</span><span id="line-7"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#checkCommandsExp"><span class="hs-identifier">checkCommandsExp</span></a></span><span>
+</span><span id="line-8"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Applicative</span></span><span>            </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-operator">(&lt;|&gt;)</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Arrow</span></span><span>                  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-operator">(&amp;&amp;&amp;)</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Char</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Functor</span></span><span>                   </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-operator">(&lt;&amp;&gt;)</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.List</span></span><span>                      </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">isPrefixOf</span></span><span>
+</span><span id="line-15"></span><span>                                                </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">isSuffixOf</span></span><span>
+</span><span id="line-16"></span><span>                                                </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">nub</span></span><span>
+</span><span id="line-17"></span><span>                                                </span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.List.Extra</span></span><span>                </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">dropEnd</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Maybe</span></span><span>                     </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">catMaybes</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH</span></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH.Syntax</span></span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Core10</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Instance</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">Device</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Dynamic</span></span><span>
+</span><span id="line-25"></span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- | Create an expression which checks the function pointers for all the Vulkan</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- commands depended upon by the specified list of function names.</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- It returns a list of function names corresponding to those functions with</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- null pointers.</span><span>
+</span><span id="line-31"></span><span class="hs-comment">--</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- Your program can use this function to fail early if a command couldn't be</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- loaded for some reason (missing extension or layer for example).</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- One can create a function called @checkCommands@ with the following:</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- @</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- [d| checkCommands = $(checkCommandsExp ['withInstance, 'cmdDraw, ...]) |]</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- @</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- It has the type @IsString a =&gt; Instance -&gt; Device -&gt; [a]@</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- It looks basically like</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- @</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- \inst dev -&gt;</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--   [ name</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--   | True &lt;- [ nullFunPtr == pVkCreateDevice inst</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--             , nullFunPtr == pVkCreateFence dev</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--               ..</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--             ]</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--   | name &lt;- [ &quot;vkCreateDevice&quot;</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--             , &quot;vkCreateFence&quot;</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--               ..</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--             ]</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--   ]</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- @</span><span>
+</span><span id="line-57"></span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#checkCommandsExp"><span class="hs-identifier hs-type">checkCommandsExp</span></a></span><span>
+</span><span id="line-58"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span>
+</span><span id="line-59"></span><span>  </span><span class="hs-comment">-- ^ The names of functions from the @vulkan@ package. Unknown commands are</span><span>
+</span><span id="line-60"></span><span>  </span><span class="hs-comment">-- ignored</span><span>
+</span><span id="line-61"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span>
+</span><span id="line-62"></span><span id="checkCommandsExp"><span class="annot"><span class="annottext">checkCommandsExp :: [Name] -&gt; Q Exp
+</span><a href="Vulkan.Utils.CommandCheck.html#checkCommandsExp"><span class="hs-identifier hs-var hs-var">checkCommandsExp</span></a></span></span><span> </span><span id="local-6989586621679260170"><span class="annot"><span class="annottext">requestedCommands :: [Name]
+</span><a href="#local-6989586621679260170"><span class="hs-identifier hs-var">requestedCommands</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-63"></span><span>  </span><span id="local-6989586621679260169"><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679260169"><span class="hs-identifier hs-var">instAccessors</span></a></span></span><span>   </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q [Name]
+</span><a href="Vulkan.Utils.CommandCheck.html#accessorNames"><span class="hs-identifier hs-var">accessorNames</span></a></span><span> </span><span class="hs-special">''</span><span class="hs-identifier">InstanceCmds</span><span>
+</span><span id="line-64"></span><span>  </span><span id="local-6989586621679260167"><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679260167"><span class="hs-identifier hs-var">deviceAccessors</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q [Name]
+</span><a href="Vulkan.Utils.CommandCheck.html#accessorNames"><span class="hs-identifier hs-var">accessorNames</span></a></span><span> </span><span class="hs-special">''</span><span class="hs-identifier">DeviceCmds</span><span>
+</span><span id="line-65"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679260166"><span class="annot"><span class="annottext">vkCommandNames :: [DeviceOrInstanceCommand]
+</span><a href="#local-6989586621679260166"><span class="hs-identifier hs-var hs-var">vkCommandNames</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-66"></span><span>        </span><span class="annot"><span class="annottext">[DeviceOrInstanceCommand] -&gt; [DeviceOrInstanceCommand]
+forall a. Eq a =&gt; [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">nub</span></span><span> </span><span class="annot"><span class="annottext">([DeviceOrInstanceCommand] -&gt; [DeviceOrInstanceCommand])
+-&gt; (Name -&gt; [DeviceOrInstanceCommand])
+-&gt; Name
+-&gt; [DeviceOrInstanceCommand]
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[Name] -&gt; [Name] -&gt; Name -&gt; [DeviceOrInstanceCommand]
+</span><a href="Vulkan.Utils.CommandCheck.html#commandNames"><span class="hs-identifier hs-var">commandNames</span></a></span><span> </span><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679260169"><span class="hs-identifier hs-var">instAccessors</span></a></span><span> </span><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679260167"><span class="hs-identifier hs-var">deviceAccessors</span></a></span><span> </span><span class="annot"><span class="annottext">(Name -&gt; [DeviceOrInstanceCommand])
+-&gt; [Name] -&gt; [DeviceOrInstanceCommand]
+forall (m :: * -&gt; *) a b. Monad m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
+</span><span class="hs-operator hs-var">=&lt;&lt;</span></span><span> </span><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679260170"><span class="hs-identifier hs-var">requestedCommands</span></a></span><span>
+</span><span id="line-67"></span><span>  </span><span id="local-6989586621679260162"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679260162"><span class="hs-identifier hs-var">inst</span></a></span></span><span>   </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Name
+</span><span class="hs-identifier hs-var">newName</span></span><span> </span><span class="annot"><span class="hs-string">&quot;inst&quot;</span></span><span>
+</span><span id="line-68"></span><span>  </span><span id="local-6989586621679260161"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679260161"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Name
+</span><span class="hs-identifier hs-var">newName</span></span><span> </span><span class="annot"><span class="hs-string">&quot;device&quot;</span></span><span>
+</span><span id="line-69"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679260160"><span class="annot"><span class="annottext">isNull :: DeviceOrInstanceCommand -&gt; Q Exp
+</span><a href="#local-6989586621679260160"><span class="hs-identifier hs-var hs-var">isNull</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-70"></span><span>        </span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#InstanceCmd"><span class="hs-identifier hs-type">InstanceCmd</span></a></span><span> </span><span id="local-6989586621679260158"><span class="annot"><span class="annottext">i :: Name
+</span><a href="#local-6989586621679260158"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[|</span><span class="hs-identifier">nullFunPtr</span><span> </span><span class="hs-operator">==</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">varE</span><span> </span><span class="hs-identifier">i</span><span class="hs-special">)</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">varE</span><span> </span><span class="hs-identifier">inst</span><span class="hs-special">)</span><span class="hs-special">|]</span><span>
+</span><span id="line-71"></span><span>        </span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#DeviceCmd"><span class="hs-identifier hs-type">DeviceCmd</span></a></span><span>   </span><span id="local-6989586621679260156"><span class="annot"><span class="annottext">i :: Name
+</span><a href="#local-6989586621679260156"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[|</span><span class="hs-identifier">nullFunPtr</span><span> </span><span class="hs-operator">==</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">varE</span><span> </span><span class="hs-identifier">i</span><span class="hs-special">)</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">varE</span><span> </span><span class="hs-identifier">device</span><span class="hs-special">)</span><span class="hs-special">|]</span><span>
+</span><span id="line-72"></span><span>  </span><span class="hs-special">[|</span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="hs-identifier">Instance</span><span> </span><span class="hs-identifier">_</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">varP</span><span> </span><span class="hs-identifier">inst</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">Device</span><span> </span><span class="hs-identifier">_</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">varP</span><span> </span><span class="hs-identifier">device</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-73"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="hs-identifier">name</span><span>
+</span><span id="line-74"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">True</span><span class="hs-special">,</span><span> </span><span class="hs-identifier">name</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-identifier">zip</span><span>
+</span><span id="line-75"></span><span>          </span><span class="hs-special">$(</span><span class="hs-identifier">listE</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">isNull</span><span> </span><span class="hs-operator">&lt;$&gt;</span><span> </span><span class="hs-identifier">vkCommandNames</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span>          </span><span class="hs-special">$(</span><span class="hs-identifier">lift</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">commandString</span><span> </span><span class="hs-operator">&lt;$&gt;</span><span> </span><span class="hs-identifier">vkCommandNames</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span>      </span><span class="hs-special">]</span><span>
+</span><span id="line-78"></span><span>    </span><span class="hs-special">|]</span><span>
+</span><span id="line-79"></span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- | Given instance and device accessors and a function, find the function</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- pointer accessor names which it depends on</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- &gt;&gt;&gt; commandNames ['pVkCreateDevice, 'pVkDestroyDevice] ['pVkCreateFence] (mkName &quot;withDevice&quot;)</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- [InstanceCmd Vulkan.Dynamic.pVkCreateDevice,InstanceCmd Vulkan.Dynamic.pVkDestroyDevice]</span><span>
+</span><span id="line-85"></span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#commandNames"><span class="hs-identifier hs-type">commandNames</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#DeviceOrInstanceCommand"><span class="hs-identifier hs-type">DeviceOrInstanceCommand</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-86"></span><span id="commandNames"><span class="annot"><span class="annottext">commandNames :: [Name] -&gt; [Name] -&gt; Name -&gt; [DeviceOrInstanceCommand]
+</span><a href="Vulkan.Utils.CommandCheck.html#commandNames"><span class="hs-identifier hs-var hs-var">commandNames</span></a></span></span><span> </span><span id="local-6989586621679260155"><span class="annot"><span class="annottext">instAccessors :: [Name]
+</span><a href="#local-6989586621679260155"><span class="hs-identifier hs-var">instAccessors</span></a></span></span><span> </span><span id="local-6989586621679260154"><span class="annot"><span class="annottext">deviceAccessors :: [Name]
+</span><a href="#local-6989586621679260154"><span class="hs-identifier hs-var">deviceAccessors</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-87"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679260153"><span class="annot"><span class="annottext">instNames :: [(String, Name)]
+</span><a href="#local-6989586621679260153"><span class="hs-identifier hs-var hs-var">instNames</span></a></span></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; String
+</span><span class="hs-identifier hs-var">nameBase</span></span><span> </span><span class="annot"><span class="annottext">(Name -&gt; String) -&gt; (Name -&gt; Name) -&gt; Name -&gt; (String, Name)
+forall (a :: * -&gt; * -&gt; *) b c c'.
+Arrow a =&gt;
+a b c -&gt; a b c' -&gt; a b (c, c')
+</span><span class="hs-operator hs-var">&amp;&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Name
+forall a. a -&gt; a
+</span><span class="hs-identifier hs-var">id</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Name -&gt; (String, Name)) -&gt; [Name] -&gt; [(String, Name)]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679260155"><span class="hs-identifier hs-var">instAccessors</span></a></span><span>
+</span><span id="line-88"></span><span>      </span><span id="local-6989586621679260149"><span class="annot"><span class="annottext">deviceNames :: [(String, Name)]
+</span><a href="#local-6989586621679260149"><span class="hs-identifier hs-var hs-var">deviceNames</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; String
+</span><span class="hs-identifier hs-var">nameBase</span></span><span> </span><span class="annot"><span class="annottext">(Name -&gt; String) -&gt; (Name -&gt; Name) -&gt; Name -&gt; (String, Name)
+forall (a :: * -&gt; * -&gt; *) b c c'.
+Arrow a =&gt;
+a b c -&gt; a b c' -&gt; a b (c, c')
+</span><span class="hs-operator hs-var">&amp;&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Name
+forall a. a -&gt; a
+</span><span class="hs-identifier hs-var">id</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Name -&gt; (String, Name)) -&gt; [Name] -&gt; [(String, Name)]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Name]
+</span><a href="#local-6989586621679260154"><span class="hs-identifier hs-var">deviceAccessors</span></a></span><span>
+</span><span id="line-89"></span><span>      </span><span class="annot"><a href="#local-6989586621679260148"><span class="hs-identifier hs-type">findCommand</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#DeviceOrInstanceCommand"><span class="hs-identifier hs-type">DeviceOrInstanceCommand</span></a></span><span>
+</span><span id="line-90"></span><span>      </span><span id="local-6989586621679260148"><span class="annot"><span class="annottext">findCommand :: String -&gt; Maybe DeviceOrInstanceCommand
+</span><a href="#local-6989586621679260148"><span class="hs-identifier hs-var hs-var">findCommand</span></a></span></span><span> </span><span id="local-6989586621679260147"><span class="annot"><span class="annottext">command :: String
+</span><a href="#local-6989586621679260147"><span class="hs-identifier hs-var">command</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-91"></span><span>        </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; DeviceOrInstanceCommand
+</span><a href="Vulkan.Utils.CommandCheck.html#InstanceCmd"><span class="hs-identifier hs-var">InstanceCmd</span></a></span><span> </span><span class="annot"><span class="annottext">(Name -&gt; DeviceOrInstanceCommand)
+-&gt; Maybe Name -&gt; Maybe DeviceOrInstanceCommand
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; [(String, Name)] -&gt; Maybe Name
+forall a b. Eq a =&gt; a -&gt; [(a, b)] -&gt; Maybe b
+</span><span class="hs-identifier hs-var">lookup</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260147"><span class="hs-identifier hs-var">command</span></a></span><span> </span><span class="annot"><span class="annottext">[(String, Name)]
+</span><a href="#local-6989586621679260153"><span class="hs-identifier hs-var">instNames</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-92"></span><span>          </span><span class="annot"><span class="annottext">Maybe DeviceOrInstanceCommand
+-&gt; Maybe DeviceOrInstanceCommand -&gt; Maybe DeviceOrInstanceCommand
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; DeviceOrInstanceCommand
+</span><a href="Vulkan.Utils.CommandCheck.html#DeviceCmd"><span class="hs-identifier hs-var">DeviceCmd</span></a></span><span> </span><span class="annot"><span class="annottext">(Name -&gt; DeviceOrInstanceCommand)
+-&gt; Maybe Name -&gt; Maybe DeviceOrInstanceCommand
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; [(String, Name)] -&gt; Maybe Name
+forall a b. Eq a =&gt; a -&gt; [(a, b)] -&gt; Maybe b
+</span><span class="hs-identifier hs-var">lookup</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260147"><span class="hs-identifier hs-var">command</span></a></span><span> </span><span class="annot"><span class="annottext">[(String, Name)]
+</span><a href="#local-6989586621679260149"><span class="hs-identifier hs-var">deviceNames</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span>  </span><span class="hs-keyword">in</span><span>  </span><span class="hs-glyph">\</span><span id="local-6989586621679260145"><span class="annot"><span class="annottext">n :: Name
+</span><a href="#local-6989586621679260145"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-94"></span><span>        </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679260144"><span class="annot"><span class="annottext">candidates :: [String]
+</span><a href="#local-6989586621679260144"><span class="hs-identifier hs-var hs-var">candidates</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; [String]
+</span><a href="Vulkan.Utils.CommandCheck.html#commandCandidates"><span class="hs-identifier hs-var">commandCandidates</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; String
+</span><span class="hs-identifier hs-var">nameBase</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679260145"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-95"></span><span>        </span><span class="hs-keyword">in</span><span>  </span><span class="annot"><span class="annottext">[Maybe DeviceOrInstanceCommand] -&gt; [DeviceOrInstanceCommand]
+forall a. [Maybe a] -&gt; [a]
+</span><span class="hs-identifier hs-var">catMaybes</span></span><span> </span><span class="annot"><span class="annottext">([Maybe DeviceOrInstanceCommand] -&gt; [DeviceOrInstanceCommand])
+-&gt; [Maybe DeviceOrInstanceCommand] -&gt; [DeviceOrInstanceCommand]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe DeviceOrInstanceCommand
+</span><a href="#local-6989586621679260148"><span class="hs-identifier hs-var">findCommand</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Maybe DeviceOrInstanceCommand)
+-&gt; [String] -&gt; [Maybe DeviceOrInstanceCommand]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679260144"><span class="hs-identifier hs-var">candidates</span></a></span><span>
+</span><span id="line-96"></span><span>
+</span><span id="line-97"></span><span class="hs-keyword">data</span><span> </span><span id="DeviceOrInstanceCommand"><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#DeviceOrInstanceCommand"><span class="hs-identifier hs-var">DeviceOrInstanceCommand</span></a></span></span><span>
+</span><span id="line-98"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="DeviceCmd"><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#DeviceCmd"><span class="hs-identifier hs-var">DeviceCmd</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span>
+</span><span id="line-99"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="InstanceCmd"><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#InstanceCmd"><span class="hs-identifier hs-var">InstanceCmd</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span>
+</span><span id="line-100"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679260139"><span id="local-6989586621679260141"><span class="annot"><span class="annottext">DeviceOrInstanceCommand -&gt; DeviceOrInstanceCommand -&gt; Bool
+(DeviceOrInstanceCommand -&gt; DeviceOrInstanceCommand -&gt; Bool)
+-&gt; (DeviceOrInstanceCommand -&gt; DeviceOrInstanceCommand -&gt; Bool)
+-&gt; Eq DeviceOrInstanceCommand
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DeviceOrInstanceCommand -&gt; DeviceOrInstanceCommand -&gt; Bool
+$c/= :: DeviceOrInstanceCommand -&gt; DeviceOrInstanceCommand -&gt; Bool
+== :: DeviceOrInstanceCommand -&gt; DeviceOrInstanceCommand -&gt; Bool
+$c== :: DeviceOrInstanceCommand -&gt; DeviceOrInstanceCommand -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679260132"><span id="local-6989586621679260134"><span id="local-6989586621679260136"><span class="annot"><span class="annottext">Int -&gt; DeviceOrInstanceCommand -&gt; ShowS
+[DeviceOrInstanceCommand] -&gt; ShowS
+DeviceOrInstanceCommand -&gt; String
+(Int -&gt; DeviceOrInstanceCommand -&gt; ShowS)
+-&gt; (DeviceOrInstanceCommand -&gt; String)
+-&gt; ([DeviceOrInstanceCommand] -&gt; ShowS)
+-&gt; Show DeviceOrInstanceCommand
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [DeviceOrInstanceCommand] -&gt; ShowS
+$cshowList :: [DeviceOrInstanceCommand] -&gt; ShowS
+show :: DeviceOrInstanceCommand -&gt; String
+$cshow :: DeviceOrInstanceCommand -&gt; String
+showsPrec :: Int -&gt; DeviceOrInstanceCommand -&gt; ShowS
+$cshowsPrec :: Int -&gt; DeviceOrInstanceCommand -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-101"></span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- | Get the C name of a function</span><span>
+</span><span id="line-103"></span><span class="hs-comment">--</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- &gt;&gt;&gt; commandString (DeviceCmd (mkName &quot;pVkCreateInstance&quot;))</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- &quot;vkCreateInstance&quot;</span><span>
+</span><span id="line-106"></span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#commandString"><span class="hs-identifier hs-type">commandString</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#DeviceOrInstanceCommand"><span class="hs-identifier hs-type">DeviceOrInstanceCommand</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-107"></span><span id="commandString"><span class="annot"><span class="annottext">commandString :: DeviceOrInstanceCommand -&gt; String
+</span><a href="Vulkan.Utils.CommandCheck.html#commandString"><span class="hs-identifier hs-var hs-var">commandString</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShowS
+</span><a href="Vulkan.Utils.CommandCheck.html#unPtrName"><span class="hs-identifier hs-var">unPtrName</span></a></span><span> </span><span class="annot"><span class="annottext">ShowS
+-&gt; (DeviceOrInstanceCommand -&gt; String)
+-&gt; DeviceOrInstanceCommand
+-&gt; String
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; String
+</span><span class="hs-identifier hs-var">nameBase</span></span><span> </span><span class="annot"><span class="annottext">(Name -&gt; String)
+-&gt; (DeviceOrInstanceCommand -&gt; Name)
+-&gt; DeviceOrInstanceCommand
+-&gt; String
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-108"></span><span>  </span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#InstanceCmd"><span class="hs-identifier hs-type">InstanceCmd</span></a></span><span> </span><span id="local-6989586621679260128"><span class="annot"><span class="annottext">n :: Name
+</span><a href="#local-6989586621679260128"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679260128"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><span id="line-109"></span><span>  </span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#DeviceCmd"><span class="hs-identifier hs-type">DeviceCmd</span></a></span><span>   </span><span id="local-6989586621679260127"><span class="annot"><span class="annottext">n :: Name
+</span><a href="#local-6989586621679260127"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679260127"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><span id="line-110"></span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- | A list of potential sets of vulkan commands this name depends on, not all</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- of them will be valid names.</span><span>
+</span><span id="line-113"></span><span class="hs-comment">--</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- &gt;&gt;&gt; commandCandidates &quot;withDevice&quot;</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- [&quot;pVkAllocateDevice&quot;,&quot;pVkFreeDevice&quot;,&quot;pVkCreateDevice&quot;,&quot;pVkDestroyDevice&quot;]</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- &gt;&gt;&gt; commandCandidates &quot;waitSemaphoresSafe&quot;</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- [&quot;pVkWaitSemaphores&quot;]</span><span>
+</span><span id="line-119"></span><span class="hs-comment">--</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- &gt;&gt;&gt; commandCandidates &quot;useCmdBuffer&quot;</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- [&quot;pVkBeginCmdBuffer&quot;,&quot;pVkEndCmdBuffer&quot;]</span><span>
+</span><span id="line-122"></span><span class="hs-comment">--</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- &gt;&gt;&gt; commandCandidates &quot;withSemaphore&quot;</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- [&quot;pVkAllocateSemaphore&quot;,&quot;pVkFreeSemaphore&quot;,&quot;pVkCreateSemaphore&quot;,&quot;pVkDestroySemaphore&quot;]</span><span>
+</span><span id="line-125"></span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#commandCandidates"><span class="hs-identifier hs-type">commandCandidates</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span>
+</span><span id="line-126"></span><span id="commandCandidates"><span class="annot"><span class="annottext">commandCandidates :: String -&gt; [String]
+</span><a href="Vulkan.Utils.CommandCheck.html#commandCandidates"><span class="hs-identifier hs-var hs-var">commandCandidates</span></a></span></span><span> </span><span id="local-6989586621679260126"><span class="annot"><span class="annottext">n :: String
+</span><a href="#local-6989586621679260126"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span>
+</span><span id="line-127"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-string">&quot;Safe&quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; Bool
+forall a. Eq a =&gt; [a] -&gt; [a] -&gt; Bool
+</span><span class="hs-operator hs-var">`isSuffixOf`</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260126"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><span id="line-128"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; [String]
+</span><a href="Vulkan.Utils.CommandCheck.html#commandCandidates"><span class="hs-identifier hs-var">commandCandidates</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; ShowS
+forall a. Int -&gt; [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">dropEnd</span></span><span> </span><span class="annot"><span class="hs-number">4</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260126"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-129"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679260125"><span class="annot"><span class="annottext">u :: String
+</span><a href="#local-6989586621679260125"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe String
+</span><a href="#local-6989586621679260124"><span class="hs-identifier hs-var">stripPrefix</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;with&quot;</span></span><span>
+</span><span id="line-130"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260125"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; [String] -&gt; [String]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-string">&quot;pVkAllocate&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;pVkFree&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;pVkCreate&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;pVkDestroy&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-131"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679260123"><span class="annot"><span class="annottext">u :: String
+</span><a href="#local-6989586621679260123"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe String
+</span><a href="#local-6989586621679260124"><span class="hs-identifier hs-var">stripPrefix</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;withMapped&quot;</span></span><span>
+</span><span id="line-132"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260123"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; [String] -&gt; [String]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-string">&quot;pVkMap&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;pVkUnmap&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-133"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679260122"><span class="annot"><span class="annottext">u :: String
+</span><a href="#local-6989586621679260122"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe String
+</span><a href="#local-6989586621679260124"><span class="hs-identifier hs-var">stripPrefix</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;use&quot;</span></span><span>
+</span><span id="line-134"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260122"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; [String] -&gt; [String]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-string">&quot;pVkBegin&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;pVkEnd&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-135"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679260121"><span class="annot"><span class="annottext">u :: String
+</span><a href="#local-6989586621679260121"><span class="hs-identifier hs-var">u</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe String
+</span><a href="#local-6989586621679260124"><span class="hs-identifier hs-var">stripPrefix</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;cmdUse&quot;</span></span><span>
+</span><span id="line-136"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260121"><span class="hs-identifier hs-var">u</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; [String] -&gt; [String]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-string">&quot;pVkCmdBegin&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;pVkCmdEnd&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-137"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">otherwise</span></span><span>
+</span><span id="line-138"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-string">&quot;pVk&quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">ShowS
+</span><a href="Vulkan.Utils.CommandCheck.html#upperCaseFirst"><span class="hs-identifier hs-var">upperCaseFirst</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260126"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-139"></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-140"></span><span>  </span><span id="local-6989586621679260124"><span class="annot"><span class="annottext">stripPrefix :: String -&gt; Maybe String
+</span><a href="#local-6989586621679260124"><span class="hs-identifier hs-var hs-var">stripPrefix</span></a></span></span><span> </span><span id="local-6989586621679260119"><span class="annot"><span class="annottext">p :: String
+</span><a href="#local-6989586621679260119"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260119"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; Bool
+forall a. Eq a =&gt; [a] -&gt; [a] -&gt; Bool
+</span><span class="hs-operator hs-var">`isPrefixOf`</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260126"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><span id="line-141"></span><span>    </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe String
+forall a. a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ShowS
+</span><a href="Vulkan.Utils.CommandCheck.html#upperCaseFirst"><span class="hs-identifier hs-var">upperCaseFirst</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; ShowS
+forall a. Int -&gt; [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">drop</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Int
+forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
+</span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260119"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260126"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-142"></span><span>    </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-143"></span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- | Get the record accessors of a type</span><span>
+</span><span id="line-145"></span><span class="hs-comment">--</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- &gt;&gt;&gt; $(lift . fmap show =&lt;&lt; accessorNames ''Device)</span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- [&quot;Vulkan.Core10.Handles.deviceHandle&quot;,&quot;Vulkan.Core10.Handles.deviceCmds&quot;]</span><span>
+</span><span id="line-148"></span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#accessorNames"><span class="hs-identifier hs-type">accessorNames</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">]</span><span>
+</span><span id="line-149"></span><span id="accessorNames"><span class="annot"><span class="annottext">accessorNames :: Name -&gt; Q [Name]
+</span><a href="Vulkan.Utils.CommandCheck.html#accessorNames"><span class="hs-identifier hs-var hs-var">accessorNames</span></a></span></span><span> </span><span id="local-6989586621679260116"><span class="annot"><span class="annottext">record :: Name
+</span><a href="#local-6989586621679260116"><span class="hs-identifier hs-var">record</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Info
+</span><span class="hs-identifier hs-var">reify</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679260116"><span class="hs-identifier hs-var">record</span></a></span><span> </span><span class="annot"><span class="annottext">Q Info -&gt; (Info -&gt; [Name]) -&gt; Q [Name]
+forall (f :: * -&gt; *) a b. Functor f =&gt; f a -&gt; (a -&gt; b) -&gt; f b
+</span><span class="hs-operator hs-var">&lt;&amp;&gt;</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-150"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">TyConI</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">DataD</span></span><span> </span><span class="hs-identifier">_</span><span> </span><span class="hs-identifier">_</span><span> </span><span class="hs-identifier">_</span><span> </span><span class="hs-identifier">_</span><span> </span><span class="hs-special">[</span><span id="local-6989586621679260112"><span class="annot"><span class="annottext">con :: Con
+</span><a href="#local-6989586621679260112"><span class="hs-identifier hs-var">con</span></a></span></span><span class="hs-special">]</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">)</span><span>
+</span><span id="line-151"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">RecC</span></span><span> </span><span class="hs-identifier">_</span><span> </span><span id="local-6989586621679260110"><span class="annot"><span class="annottext">vars :: [VarBangType]
+</span><a href="#local-6989586621679260110"><span class="hs-identifier hs-var">vars</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Con
+</span><a href="#local-6989586621679260112"><span class="hs-identifier hs-var">con</span></a></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">VarBangType -&gt; Name
+forall a b c. (a, b, c) -&gt; a
+</span><a href="#local-6989586621679260109"><span class="hs-identifier hs-var">firstOfThree</span></a></span><span> </span><span class="annot"><span class="annottext">(VarBangType -&gt; Name) -&gt; [VarBangType] -&gt; [Name]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">[VarBangType]
+</span><a href="#local-6989586621679260110"><span class="hs-identifier hs-var">vars</span></a></span><span>
+</span><span id="line-152"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">RecGadtC</span></span><span> </span><span class="hs-identifier">_</span><span> </span><span id="local-6989586621679260107"><span class="annot"><span class="annottext">vars :: [VarBangType]
+</span><a href="#local-6989586621679260107"><span class="hs-identifier hs-var">vars</span></a></span></span><span> </span><span class="hs-identifier">_</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Con
+</span><a href="#local-6989586621679260112"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">VarBangType -&gt; Name
+forall a b c. (a, b, c) -&gt; a
+</span><a href="#local-6989586621679260109"><span class="hs-identifier hs-var">firstOfThree</span></a></span><span> </span><span class="annot"><span class="annottext">(VarBangType -&gt; Name) -&gt; [VarBangType] -&gt; [Name]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">[VarBangType]
+</span><a href="#local-6989586621679260107"><span class="hs-identifier hs-var">vars</span></a></span><span>
+</span><span id="line-153"></span><span>  </span><span class="hs-identifier">_</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; [Name]
+forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
+</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="hs-string">&quot;Name wasn't a TyConI&quot;</span></span><span>
+</span><span id="line-154"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679260109"><span class="annot"><span class="annottext">firstOfThree :: (a, b, c) -&gt; a
+</span><a href="#local-6989586621679260109"><span class="hs-identifier hs-var hs-var">firstOfThree</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679260106"><span class="annot"><span class="annottext">a :: a
+</span><a href="#local-6989586621679260106"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">,</span><span> </span><span class="hs-identifier">_</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679260106"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-155"></span><span>
+</span><span id="line-156"></span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#unPtrName"><span class="hs-identifier hs-type">unPtrName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-157"></span><span id="unPtrName"><span class="annot"><span class="annottext">unPtrName :: ShowS
+</span><a href="Vulkan.Utils.CommandCheck.html#unPtrName"><span class="hs-identifier hs-var hs-var">unPtrName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-158"></span><span>  </span><span class="hs-char">'p'</span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span class="hs-char">'V'</span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span id="local-6989586621679260105"><span class="annot"><span class="annottext">xs :: String
+</span><a href="#local-6989586621679260105"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-char">'v'</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; ShowS
+forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260105"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><span id="line-159"></span><span>  </span><span id="local-6989586621679260104"><span class="annot"><span class="annottext">s :: String
+</span><a href="#local-6989586621679260104"><span class="hs-identifier hs-var">s</span></a></span></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260104"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-160"></span><span>
+</span><span id="line-161"></span><span class="annot"><a href="Vulkan.Utils.CommandCheck.html#upperCaseFirst"><span class="hs-identifier hs-type">upperCaseFirst</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-162"></span><span id="upperCaseFirst"><span class="annot"><span class="annottext">upperCaseFirst :: ShowS
+</span><a href="Vulkan.Utils.CommandCheck.html#upperCaseFirst"><span class="hs-identifier hs-var hs-var">upperCaseFirst</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-163"></span><span>  </span><span id="local-6989586621679260103"><span class="annot"><span class="annottext">x :: Char
+</span><a href="#local-6989586621679260103"><span class="hs-identifier hs-var">x</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679260102"><span class="annot"><span class="annottext">xs :: String
+</span><a href="#local-6989586621679260102"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char
+</span><span class="hs-identifier hs-var">toUpper</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679260103"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; ShowS
+forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260102"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><span id="line-164"></span><span>  </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-165"></span></pre></body></html>

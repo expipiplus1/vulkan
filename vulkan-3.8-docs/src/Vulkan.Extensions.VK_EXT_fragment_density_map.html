@@ -1,0 +1,1041 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- VK_EXT_fragment_density_map - device extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- == VK_EXT_fragment_density_map</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- [__Name String__]</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--     @VK_EXT_fragment_density_map@</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- [__Extension Type__]</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--     Device extension</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- [__Registered Extension Number__]</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--     219</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- [__Revision__]</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--     1</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- [__Extension and Version Dependencies__]</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--     -   Requires Vulkan 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--     -   Requires @VK_KHR_get_physical_device_properties2@</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- [__Contact__]</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--     -   Matthew Netsch</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--         &lt;https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_fragment_density_map:%20&amp;body=@mnetsch%20 &gt;</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- == Other Extension Metadata</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- [__Last Modified Date__]</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--     2018-09-25</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- [__Interactions and External Dependencies__]</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--     -   This extension requires</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--         &lt;https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_fragment_invocation_density.html SPV_EXT_fragment_invocation_density&gt;</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- [__Contributors__]</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--     -   Matthew Netsch, Qualcomm Technologies, Inc.</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--     -   Robert VanReenen, Qualcomm Technologies, Inc.</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--     -   Jonathan Wicks, Qualcomm Technologies, Inc.</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--     -   Tate Hornbeck, Qualcomm Technologies, Inc.</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--     -   Sam Holmes, Qualcomm Technologies, Inc.</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--     -   Jeff Leger, Qualcomm Technologies, Inc.</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--     -   Jan-Harald Fredriksen, ARM</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--</span><span>
+</span><span id="line-57"></span><span class="hs-comment">--     -   Jeff Bolz, NVIDIA</span><span>
+</span><span id="line-58"></span><span class="hs-comment">--</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--     -   Pat Brown, NVIDIA</span><span>
+</span><span id="line-60"></span><span class="hs-comment">--</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--     -   Daniel Rakos, AMD</span><span>
+</span><span id="line-62"></span><span class="hs-comment">--</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--     -   Piers Daniell, NVIDIA</span><span>
+</span><span id="line-64"></span><span class="hs-comment">--</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- == Description</span><span>
+</span><span id="line-66"></span><span class="hs-comment">--</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- This extension allows an application to specify areas of the render</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- target where the fragment shader may be invoked fewer times. These</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- fragments are broadcasted out to multiple pixels to cover the render</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- target.</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- The primary use of this extension is to reduce workloads in areas where</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- lower quality may not be perceived such as the distorted edges of a lens</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- or the periphery of a user&#8217;s gaze.</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- == New Structures</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',</span><span>
+</span><span id="line-80"></span><span class="hs-comment">--     'Vulkan.Core10.Device.DeviceCreateInfo':</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--     -   'PhysicalDeviceFragmentDensityMapFeaturesEXT'</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':</span><span>
+</span><span id="line-86"></span><span class="hs-comment">--</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--     -   'PhysicalDeviceFragmentDensityMapPropertiesEXT'</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Pass.RenderPassCreateInfo',</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2':</span><span>
+</span><span id="line-91"></span><span class="hs-comment">--</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--     -   'RenderPassFragmentDensityMapCreateInfoEXT'</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- == New Enum Constants</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- -   'EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME'</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- -   'EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION'</span><span>
+</span><span id="line-99"></span><span class="hs-comment">--</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':</span><span>
+</span><span id="line-101"></span><span class="hs-comment">--</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT'</span><span>
+</span><span id="line-103"></span><span class="hs-comment">--</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-105"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':</span><span>
+</span><span id="line-106"></span><span class="hs-comment">--</span><span>
+</span><span id="line-107"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT'</span><span>
+</span><span id="line-108"></span><span class="hs-comment">--</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-110"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits':</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--</span><span>
+</span><span id="line-112"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'</span><span>
+</span><span id="line-113"></span><span class="hs-comment">--</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.ImageLayout.ImageLayout':</span><span>
+</span><span id="line-115"></span><span class="hs-comment">--</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT'</span><span>
+</span><span id="line-117"></span><span class="hs-comment">--</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-119"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits':</span><span>
+</span><span id="line-120"></span><span class="hs-comment">--</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT'</span><span>
+</span><span id="line-122"></span><span class="hs-comment">--</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-124"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.ImageViewCreateFlagBits':</span><span>
+</span><span id="line-125"></span><span class="hs-comment">--</span><span>
+</span><span id="line-126"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'</span><span>
+</span><span id="line-127"></span><span class="hs-comment">--</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-129"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':</span><span>
+</span><span id="line-130"></span><span class="hs-comment">--</span><span>
+</span><span id="line-131"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'</span><span>
+</span><span id="line-132"></span><span class="hs-comment">--</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-134"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SamplerCreateFlagBits':</span><span>
+</span><span id="line-135"></span><span class="hs-comment">--</span><span>
+</span><span id="line-136"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'</span><span>
+</span><span id="line-137"></span><span class="hs-comment">--</span><span>
+</span><span id="line-138"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'</span><span>
+</span><span id="line-139"></span><span class="hs-comment">--</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':</span><span>
+</span><span id="line-141"></span><span class="hs-comment">--</span><span>
+</span><span id="line-142"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT'</span><span>
+</span><span id="line-143"></span><span class="hs-comment">--</span><span>
+</span><span id="line-144"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT'</span><span>
+</span><span id="line-145"></span><span class="hs-comment">--</span><span>
+</span><span id="line-146"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT'</span><span>
+</span><span id="line-147"></span><span class="hs-comment">--</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- == New or Modified Built-In Variables</span><span>
+</span><span id="line-149"></span><span class="hs-comment">--</span><span>
+</span><span id="line-150"></span><span class="hs-comment">-- -   &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-fraginvocationcount FragInvocationCountEXT&gt;</span><span>
+</span><span id="line-151"></span><span class="hs-comment">--</span><span>
+</span><span id="line-152"></span><span class="hs-comment">-- -   &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-fragsize FragSizeEXT&gt;</span><span>
+</span><span id="line-153"></span><span class="hs-comment">--</span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- == New SPIR-V Capabilities</span><span>
+</span><span id="line-155"></span><span class="hs-comment">--</span><span>
+</span><span id="line-156"></span><span class="hs-comment">-- -   &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-fragmentdensity FragmentDensityEXT&gt;</span><span>
+</span><span id="line-157"></span><span class="hs-comment">--</span><span>
+</span><span id="line-158"></span><span class="hs-comment">-- == Version History</span><span>
+</span><span id="line-159"></span><span class="hs-comment">--</span><span>
+</span><span id="line-160"></span><span class="hs-comment">-- -   Revision 1, 2018-09-25 (Matthew Netsch)</span><span>
+</span><span id="line-161"></span><span class="hs-comment">--</span><span>
+</span><span id="line-162"></span><span class="hs-comment">--     -   Initial version</span><span>
+</span><span id="line-163"></span><span class="hs-comment">--</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-165"></span><span class="hs-comment">--</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- 'PhysicalDeviceFragmentDensityMapFeaturesEXT',</span><span>
+</span><span id="line-167"></span><span class="hs-comment">-- 'PhysicalDeviceFragmentDensityMapPropertiesEXT',</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- 'RenderPassFragmentDensityMapCreateInfoEXT'</span><span>
+</span><span id="line-169"></span><span class="hs-comment">--</span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-171"></span><span class="hs-comment">--</span><span>
+</span><span id="line-172"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-173"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map Vulkan Specification&gt;</span><span>
+</span><span id="line-174"></span><span class="hs-comment">--</span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-177"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_EXT_fragment_density_map</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier">PhysicalDeviceFragmentDensityMapFeaturesEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-178"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier">PhysicalDeviceFragmentDensityMapPropertiesEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-179"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#RenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier">RenderPassFragmentDensityMapCreateInfoEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-180"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"><span class="hs-identifier">EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION</span></a></span><span>
+</span><span id="line-181"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"><span class="hs-identifier">EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION</span></a></span><span>
+</span><span id="line-182"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME"><span class="hs-identifier">EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-183"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME"><span class="hs-identifier">EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-184"></span><span>                                                      </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-185"></span><span>
+</span><span id="line-186"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-187"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-188"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-189"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-190"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-191"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-192"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-193"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-194"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-195"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-196"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-197"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-198"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-199"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-200"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Pass.html"><span class="hs-identifier">Vulkan.Core10.Pass</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Pass.html#AttachmentReference"><span class="hs-identifier">AttachmentReference</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-201"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-202"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Extent2D"><span class="hs-identifier">Extent2D</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-203"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-204"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-205"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-206"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-207"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-208"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-209"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-210"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-211"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT"><span class="hs-identifier">STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-212"></span><span class="hs-comment">-- | VkPhysicalDeviceFragmentDensityMapFeaturesEXT - Structure describing</span><span>
+</span><span id="line-213"></span><span class="hs-comment">-- fragment density map features that can be supported by an implementation</span><span>
+</span><span id="line-214"></span><span class="hs-comment">--</span><span>
+</span><span id="line-215"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-216"></span><span class="hs-comment">--</span><span>
+</span><span id="line-217"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceFragmentDensityMapFeaturesEXT'</span><span>
+</span><span id="line-218"></span><span class="hs-comment">-- structure describe the following features:</span><span>
+</span><span id="line-219"></span><span class="hs-comment">--</span><span>
+</span><span id="line-220"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-221"></span><span class="hs-comment">--</span><span>
+</span><span id="line-222"></span><span class="hs-comment">-- If the 'PhysicalDeviceFragmentDensityMapFeaturesEXT' structure is</span><span>
+</span><span id="line-223"></span><span class="hs-comment">-- included in the @pNext@ chain of</span><span>
+</span><span id="line-224"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',</span><span>
+</span><span id="line-225"></span><span class="hs-comment">-- it is filled with values indicating whether each feature is supported.</span><span>
+</span><span id="line-226"></span><span class="hs-comment">-- 'PhysicalDeviceFragmentDensityMapFeaturesEXT' /can/ also be included in</span><span>
+</span><span id="line-227"></span><span class="hs-comment">-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the</span><span>
+</span><span id="line-228"></span><span class="hs-comment">-- features.</span><span>
+</span><span id="line-229"></span><span class="hs-comment">--</span><span>
+</span><span id="line-230"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-231"></span><span class="hs-comment">--</span><span>
+</span><span id="line-232"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-233"></span><span class="hs-comment">--</span><span>
+</span><span id="line-234"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-235"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-236"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMapFeaturesEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMapFeaturesEXT</span></a></span></span><span>
+</span><span id="line-237"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | #features-fragmentDensityMap# @fragmentDensityMap@ specifies whether the</span><span>
+</span><span id="line-238"></span><span>    </span><span class="hs-comment">-- implementation supports render passes with a fragment density map</span><span>
+</span><span id="line-239"></span><span>    </span><span class="hs-comment">-- attachment. If this feature is not enabled and the @pNext@ chain of</span><span>
+</span><span id="line-240"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.Pass.RenderPassCreateInfo' includes a</span><span>
+</span><span id="line-241"></span><span>    </span><span class="hs-comment">-- 'RenderPassFragmentDensityMapCreateInfoEXT' structure,</span><span>
+</span><span id="line-242"></span><span>    </span><span class="hs-comment">-- @fragmentDensityMapAttachment@ /must/ be</span><span>
+</span><span id="line-243"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'.</span><span>
+</span><span id="line-244"></span><span>    </span><span id="%24sel%3AfragmentDensityMap%3APhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#%24sel%3AfragmentDensityMap%3APhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-var hs-var">fragmentDensityMap</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-245"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | #features-fragmentDensityMapDynamic# @fragmentDensityMapDynamic@</span><span>
+</span><span id="line-246"></span><span>    </span><span class="hs-comment">-- specifies whether the implementation supports dynamic fragment density</span><span>
+</span><span id="line-247"></span><span>    </span><span class="hs-comment">-- map image views. If this feature is not enabled,</span><span>
+</span><span id="line-248"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'</span><span>
+</span><span id="line-249"></span><span>    </span><span class="hs-comment">-- /must/ not be included in</span><span>
+</span><span id="line-250"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@flags@.</span><span>
+</span><span id="line-251"></span><span>    </span><span id="%24sel%3AfragmentDensityMapDynamic%3APhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#%24sel%3AfragmentDensityMapDynamic%3APhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-var hs-var">fragmentDensityMapDynamic</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-252"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | #features-fragmentDensityMapNonSubsampledImages#</span><span>
+</span><span id="line-253"></span><span>    </span><span class="hs-comment">-- @fragmentDensityMapNonSubsampledImages@ specifies whether the</span><span>
+</span><span id="line-254"></span><span>    </span><span class="hs-comment">-- implementation supports regular non-subsampled image attachments with</span><span>
+</span><span id="line-255"></span><span>    </span><span class="hs-comment">-- fragment density map render passes. If this feature is not enabled,</span><span>
+</span><span id="line-256"></span><span>    </span><span class="hs-comment">-- render passes with a</span><span>
+</span><span id="line-257"></span><span>    </span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment&gt;</span><span>
+</span><span id="line-258"></span><span>    </span><span class="hs-comment">-- /must/ only have</span><span>
+</span><span id="line-259"></span><span>    </span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-subsamplesampler subsampled attachments&gt;</span><span>
+</span><span id="line-260"></span><span>    </span><span class="hs-comment">-- bound.</span><span>
+</span><span id="line-261"></span><span>    </span><span id="%24sel%3AfragmentDensityMapNonSubsampledImages%3APhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#%24sel%3AfragmentDensityMapNonSubsampledImages%3APhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-var hs-var">fragmentDensityMapNonSubsampledImages</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-262"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-263"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680214344"><span id="local-6989586621680214346"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Bool
+(PhysicalDeviceFragmentDensityMapFeaturesEXT
+ -&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Bool)
+-&gt; (PhysicalDeviceFragmentDensityMapFeaturesEXT
+    -&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Bool)
+-&gt; Eq PhysicalDeviceFragmentDensityMapFeaturesEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Bool
+$c/= :: PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Bool
+== :: PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Bool
+$c== :: PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceFragmentDensityMapFeaturesEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680214337"><span id="local-6989586621680214339"><span id="local-6989586621680214341"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapFeaturesEXT</span></a></span></span></span></span><span>
+</span><span id="line-268"></span><span>
+</span><span id="line-269"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680214332"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapFeaturesEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-270"></span><span>  </span><span id="local-6989586621680214327"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; (Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; IO b)
+-&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680214325"><span class="annot"><span class="annottext">x :: PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214325"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680214324"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; IO b
+</span><a href="#local-6989586621680214324"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680214323"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214323"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214323"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214325"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; IO b
+</span><a href="#local-6989586621680214324"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214323"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-271"></span><span>  </span><span id="local-6989586621680214321"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680214321"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680214320"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214320"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680214317"><span id="local-6989586621680214318"><span id="local-6989586621680214319"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapFeaturesEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span></span><span> </span><span id="local-6989586621680214316"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680214316"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-272"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214320"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-273"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214320"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-274"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214320"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680214319"><span class="hs-identifier hs-var">fragmentDensityMap</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-275"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214320"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680214318"><span class="hs-identifier hs-var">fragmentDensityMapDynamic</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-276"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214320"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680214317"><span class="hs-identifier hs-var">fragmentDensityMapNonSubsampledImages</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-277"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680214316"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-278"></span><span>  </span><span id="local-6989586621680214315"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-279"></span><span>  </span><span id="local-6989586621680214313"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-280"></span><span>  </span><span id="local-6989586621680214311"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680214309"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214309"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680214308"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680214308"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-281"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214309"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-282"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214309"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-283"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214309"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-284"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214309"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-285"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214309"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-286"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680214308"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-287"></span><span>
+</span><span id="line-288"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapFeaturesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-289"></span><span>  </span><span id="local-6989586621680214304"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680214302"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214302"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-290"></span><span>    </span><span id="local-6989586621680214301"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680214301"><span class="hs-identifier hs-var">fragmentDensityMap</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214302"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-291"></span><span>    </span><span id="local-6989586621680214300"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680214300"><span class="hs-identifier hs-var">fragmentDensityMapDynamic</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214302"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-292"></span><span>    </span><span id="local-6989586621680214299"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680214299"><span class="hs-identifier hs-var">fragmentDensityMapNonSubsampledImages</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214302"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-293"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMapFeaturesEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceFragmentDensityMapFeaturesEXT
+ -&gt; IO PhysicalDeviceFragmentDensityMapFeaturesEXT)
+-&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMapFeaturesEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool -&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMapFeaturesEXT</span></a></span><span>
+</span><span id="line-294"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680214301"><span class="hs-identifier hs-var">fragmentDensityMap</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680214300"><span class="hs-identifier hs-var">fragmentDensityMapDynamic</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680214299"><span class="hs-identifier hs-var">fragmentDensityMapNonSubsampledImages</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-295"></span><span>
+</span><span id="line-296"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680214289"><span id="local-6989586621680214291"><span id="local-6989586621680214293"><span id="local-6989586621680214295"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapFeaturesEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-297"></span><span>  </span><span id="local-6989586621680214285"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-298"></span><span>  </span><span id="local-6989586621680214283"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-299"></span><span>  </span><span id="local-6989586621680214281"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214281"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMapFeaturesEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-300"></span><span>  </span><span id="local-6989586621680214280"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; IO ()
+</span><a href="#local-6989586621680214280"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680214279"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214279"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680214278"><span class="annot"><span class="annottext">poked :: PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214278"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214279"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214278"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-301"></span><span>
+</span><span id="line-302"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapFeaturesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-303"></span><span>  </span><span id="local-6989586621680214275"><span class="annot"><span class="annottext">zero :: PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="#local-6989586621680214275"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool -&gt; PhysicalDeviceFragmentDensityMapFeaturesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapFeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMapFeaturesEXT</span></a></span><span>
+</span><span id="line-304"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-305"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-306"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-307"></span><span>
+</span><span id="line-308"></span><span>
+</span><span id="line-309"></span><span class="hs-comment">-- | VkPhysicalDeviceFragmentDensityMapPropertiesEXT - Structure describing</span><span>
+</span><span id="line-310"></span><span class="hs-comment">-- fragment density map properties that can be supported by an</span><span>
+</span><span id="line-311"></span><span class="hs-comment">-- implementation</span><span>
+</span><span id="line-312"></span><span class="hs-comment">--</span><span>
+</span><span id="line-313"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-314"></span><span class="hs-comment">--</span><span>
+</span><span id="line-315"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceFragmentDensityMapPropertiesEXT'</span><span>
+</span><span id="line-316"></span><span class="hs-comment">-- structure describe the following implementation-dependent limits:</span><span>
+</span><span id="line-317"></span><span class="hs-comment">--</span><span>
+</span><span id="line-318"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-319"></span><span class="hs-comment">--</span><span>
+</span><span id="line-320"></span><span class="hs-comment">-- If the 'PhysicalDeviceFragmentDensityMapPropertiesEXT' structure is</span><span>
+</span><span id="line-321"></span><span class="hs-comment">-- included in the @pNext@ chain of</span><span>
+</span><span id="line-322"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',</span><span>
+</span><span id="line-323"></span><span class="hs-comment">-- it is filled with the implementation-dependent limits and properties.</span><span>
+</span><span id="line-324"></span><span class="hs-comment">--</span><span>
+</span><span id="line-325"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-326"></span><span class="hs-comment">--</span><span>
+</span><span id="line-327"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-328"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Extent2D',</span><span>
+</span><span id="line-329"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-330"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMapPropertiesEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMapPropertiesEXT</span></a></span></span><span>
+</span><span id="line-331"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | #limits-minfragmentdensitytexelsize# @minFragmentDensityTexelSize@ is</span><span>
+</span><span id="line-332"></span><span>    </span><span class="hs-comment">-- the minimum</span><span>
+</span><span id="line-333"></span><span>    </span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-fragment-density-texel-size fragment density texel size&gt;.</span><span>
+</span><span id="line-334"></span><span>    </span><span id="%24sel%3AminFragmentDensityTexelSize%3APhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; Extent2D
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#%24sel%3AminFragmentDensityTexelSize%3APhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-var hs-var">minFragmentDensityTexelSize</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Extent2D"><span class="hs-identifier hs-type">Extent2D</span></a></span><span>
+</span><span id="line-335"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | #limits-maxfragmentdensitytexelsize# @maxFragmentDensityTexelSize@ is</span><span>
+</span><span id="line-336"></span><span>    </span><span class="hs-comment">-- the maximum fragment density texel size.</span><span>
+</span><span id="line-337"></span><span>    </span><span id="%24sel%3AmaxFragmentDensityTexelSize%3APhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; Extent2D
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#%24sel%3AmaxFragmentDensityTexelSize%3APhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-var hs-var">maxFragmentDensityTexelSize</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Extent2D"><span class="hs-identifier hs-type">Extent2D</span></a></span><span>
+</span><span id="line-338"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | #limits-fragmentdensityinvocations# @fragmentDensityInvocations@</span><span>
+</span><span id="line-339"></span><span>    </span><span class="hs-comment">-- specifies whether the implementation /may/ invoke additional fragment</span><span>
+</span><span id="line-340"></span><span>    </span><span class="hs-comment">-- shader invocations for each covered sample.</span><span>
+</span><span id="line-341"></span><span>    </span><span id="%24sel%3AfragmentDensityInvocations%3APhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#%24sel%3AfragmentDensityInvocations%3APhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-var hs-var">fragmentDensityInvocations</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-342"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-343"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceFragmentDensityMapPropertiesEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680214265"><span id="local-6989586621680214267"><span id="local-6989586621680214269"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapPropertiesEXT</span></a></span></span></span></span><span>
+</span><span id="line-348"></span><span>
+</span><span id="line-349"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680214261"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapPropertiesEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-350"></span><span>  </span><span id="local-6989586621680214257"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; (Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; IO b)
+-&gt; IO b
+</span><a href="#local-6989586621680214257"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680214256"><span class="annot"><span class="annottext">x :: PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214256"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680214255"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; IO b
+</span><a href="#local-6989586621680214255"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">40</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; IO b)
+ -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680214254"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214254"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214254"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214256"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; IO b
+</span><a href="#local-6989586621680214255"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214254"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-351"></span><span>  </span><span id="local-6989586621680214253"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680214253"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680214252"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214252"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680214249"><span id="local-6989586621680214250"><span id="local-6989586621680214251"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapPropertiesEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span></span><span> </span><span id="local-6989586621680214248"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680214248"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-352"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214252"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-353"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214252"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-354"></span><span>    </span><span class="annot"><span class="annottext">Ptr Extent2D -&gt; Extent2D -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214252"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr Extent2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Extent2D"><span class="hs-identifier hs-type">Extent2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Extent2D
+</span><a href="#local-6989586621680214251"><span class="hs-identifier hs-var">minFragmentDensityTexelSize</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-355"></span><span>    </span><span class="annot"><span class="annottext">Ptr Extent2D -&gt; Extent2D -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214252"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr Extent2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Extent2D"><span class="hs-identifier hs-type">Extent2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Extent2D
+</span><a href="#local-6989586621680214250"><span class="hs-identifier hs-var">maxFragmentDensityTexelSize</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-356"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214252"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680214249"><span class="hs-identifier hs-var">fragmentDensityInvocations</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-357"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680214248"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-358"></span><span>  </span><span id="local-6989586621680214247"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680214247"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">40</span></span><span>
+</span><span id="line-359"></span><span>  </span><span id="local-6989586621680214246"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680214246"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-360"></span><span>  </span><span id="local-6989586621680214245"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680214245"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680214244"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214244"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680214243"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680214243"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-361"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214244"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-362"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214244"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-363"></span><span>    </span><span class="annot"><span class="annottext">Ptr Extent2D -&gt; Extent2D -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214244"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr Extent2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Extent2D"><span class="hs-identifier hs-type">Extent2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Extent2D
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-364"></span><span>    </span><span class="annot"><span class="annottext">Ptr Extent2D -&gt; Extent2D -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214244"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr Extent2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Extent2D"><span class="hs-identifier hs-type">Extent2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Extent2D
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-365"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214244"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-366"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680214243"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-367"></span><span>
+</span><span id="line-368"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapPropertiesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-369"></span><span>  </span><span id="local-6989586621680214241"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214241"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680214240"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214240"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-370"></span><span>    </span><span id="local-6989586621680214239"><span class="annot"><span class="annottext">Extent2D
+</span><a href="#local-6989586621680214239"><span class="hs-identifier hs-var">minFragmentDensityTexelSize</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Extent2D -&gt; IO Extent2D
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Extent2D"><span class="hs-identifier hs-type">Extent2D</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214240"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr Extent2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Extent2D"><span class="hs-identifier hs-type">Extent2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-371"></span><span>    </span><span id="local-6989586621680214238"><span class="annot"><span class="annottext">Extent2D
+</span><a href="#local-6989586621680214238"><span class="hs-identifier hs-var">maxFragmentDensityTexelSize</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Extent2D -&gt; IO Extent2D
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Extent2D"><span class="hs-identifier hs-type">Extent2D</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214240"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr Extent2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Extent2D"><span class="hs-identifier hs-type">Extent2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-372"></span><span>    </span><span id="local-6989586621680214237"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680214237"><span class="hs-identifier hs-var">fragmentDensityInvocations</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214240"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-373"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMapPropertiesEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceFragmentDensityMapPropertiesEXT
+ -&gt; IO PhysicalDeviceFragmentDensityMapPropertiesEXT)
+-&gt; PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMapPropertiesEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Extent2D
+-&gt; Extent2D
+-&gt; Bool
+-&gt; PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMapPropertiesEXT</span></a></span><span>
+</span><span id="line-374"></span><span>             </span><span class="annot"><span class="annottext">Extent2D
+</span><a href="#local-6989586621680214239"><span class="hs-identifier hs-var">minFragmentDensityTexelSize</span></a></span><span> </span><span class="annot"><span class="annottext">Extent2D
+</span><a href="#local-6989586621680214238"><span class="hs-identifier hs-var">maxFragmentDensityTexelSize</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680214237"><span class="hs-identifier hs-var">fragmentDensityInvocations</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-375"></span><span>
+</span><span id="line-376"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680214227"><span id="local-6989586621680214229"><span id="local-6989586621680214231"><span id="local-6989586621680214233"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapPropertiesEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-377"></span><span>  </span><span id="local-6989586621680214224"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; Int
+</span><a href="#local-6989586621680214224"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">40</span></span><span>
+</span><span id="line-378"></span><span>  </span><span id="local-6989586621680214223"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; Int
+</span><a href="#local-6989586621680214223"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-379"></span><span>  </span><span id="local-6989586621680214222"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214222"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMapPropertiesEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-380"></span><span>  </span><span id="local-6989586621680214221"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; IO ()
+</span><a href="#local-6989586621680214221"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680214220"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214220"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680214219"><span class="annot"><span class="annottext">poked :: PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214219"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMapPropertiesEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214220"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214219"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-381"></span><span>
+</span><span id="line-382"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMapPropertiesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-383"></span><span>  </span><span id="local-6989586621680214217"><span class="annot"><span class="annottext">zero :: PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="#local-6989586621680214217"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Extent2D
+-&gt; Extent2D
+-&gt; Bool
+-&gt; PhysicalDeviceFragmentDensityMapPropertiesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#PhysicalDeviceFragmentDensityMapPropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMapPropertiesEXT</span></a></span><span>
+</span><span id="line-384"></span><span>           </span><span class="annot"><span class="annottext">Extent2D
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-385"></span><span>           </span><span class="annot"><span class="annottext">Extent2D
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-386"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-387"></span><span>
+</span><span id="line-388"></span><span>
+</span><span id="line-389"></span><span class="hs-comment">-- | VkRenderPassFragmentDensityMapCreateInfoEXT - Structure containing</span><span>
+</span><span id="line-390"></span><span class="hs-comment">-- fragment density map attachment for render pass</span><span>
+</span><span id="line-391"></span><span class="hs-comment">--</span><span>
+</span><span id="line-392"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-393"></span><span class="hs-comment">--</span><span>
+</span><span id="line-394"></span><span class="hs-comment">-- The fragment density map is read at an implementation-dependent time</span><span>
+</span><span id="line-395"></span><span class="hs-comment">-- with the following constraints determined by the attachment&#8217;s image view</span><span>
+</span><span id="line-396"></span><span class="hs-comment">-- @flags@:</span><span>
+</span><span id="line-397"></span><span class="hs-comment">--</span><span>
+</span><span id="line-398"></span><span class="hs-comment">-- -   'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'</span><span>
+</span><span id="line-399"></span><span class="hs-comment">--     specifies that the fragment density map will be read by the device</span><span>
+</span><span id="line-400"></span><span class="hs-comment">--     during</span><span>
+</span><span id="line-401"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'</span><span>
+</span><span id="line-402"></span><span class="hs-comment">--</span><span>
+</span><span id="line-403"></span><span class="hs-comment">-- -   'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT'</span><span>
+</span><span id="line-404"></span><span class="hs-comment">--     specifies that the fragment density map will be read by the host</span><span>
+</span><span id="line-405"></span><span class="hs-comment">--     during 'Vulkan.Core10.CommandBuffer.endCommandBuffer' of the primary</span><span>
+</span><span id="line-406"></span><span class="hs-comment">--     command buffer that the render pass is recorded into</span><span>
+</span><span id="line-407"></span><span class="hs-comment">--</span><span>
+</span><span id="line-408"></span><span class="hs-comment">-- -   Otherwise the fragment density map will be read by the host during</span><span>
+</span><span id="line-409"></span><span class="hs-comment">--     'Vulkan.Core10.CommandBufferBuilding.cmdBeginRenderPass'</span><span>
+</span><span id="line-410"></span><span class="hs-comment">--</span><span>
+</span><span id="line-411"></span><span class="hs-comment">-- The fragment density map /may/ additionally be read by the device during</span><span>
+</span><span id="line-412"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'</span><span>
+</span><span id="line-413"></span><span class="hs-comment">-- for any mode.</span><span>
+</span><span id="line-414"></span><span class="hs-comment">--</span><span>
+</span><span id="line-415"></span><span class="hs-comment">-- If this structure is not present, it is as if</span><span>
+</span><span id="line-416"></span><span class="hs-comment">-- @fragmentDensityMapAttachment@ was given as</span><span>
+</span><span id="line-417"></span><span class="hs-comment">-- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'.</span><span>
+</span><span id="line-418"></span><span class="hs-comment">--</span><span>
+</span><span id="line-419"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-420"></span><span class="hs-comment">--</span><span>
+</span><span id="line-421"></span><span class="hs-comment">-- -   #VUID-VkRenderPassFragmentDensityMapCreateInfoEXT-fragmentDensityMapAttachment-02547#</span><span>
+</span><span id="line-422"></span><span class="hs-comment">--     If @fragmentDensityMapAttachment@ is not</span><span>
+</span><span id="line-423"></span><span class="hs-comment">--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',</span><span>
+</span><span id="line-424"></span><span class="hs-comment">--     @fragmentDensityMapAttachment@ /must/ be less than</span><span>
+</span><span id="line-425"></span><span class="hs-comment">--     'Vulkan.Core10.Pass.RenderPassCreateInfo'::@attachmentCount@</span><span>
+</span><span id="line-426"></span><span class="hs-comment">--</span><span>
+</span><span id="line-427"></span><span class="hs-comment">-- -   #VUID-VkRenderPassFragmentDensityMapCreateInfoEXT-fragmentDensityMapAttachment-02548#</span><span>
+</span><span id="line-428"></span><span class="hs-comment">--     If @fragmentDensityMapAttachment@ is not</span><span>
+</span><span id="line-429"></span><span class="hs-comment">--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',</span><span>
+</span><span id="line-430"></span><span class="hs-comment">--     @fragmentDensityMapAttachment@ /must/ not be an element of</span><span>
+</span><span id="line-431"></span><span class="hs-comment">--     'Vulkan.Core10.Pass.SubpassDescription'::@pInputAttachments@,</span><span>
+</span><span id="line-432"></span><span class="hs-comment">--     'Vulkan.Core10.Pass.SubpassDescription'::@pColorAttachments@,</span><span>
+</span><span id="line-433"></span><span class="hs-comment">--     'Vulkan.Core10.Pass.SubpassDescription'::@pResolveAttachments@,</span><span>
+</span><span id="line-434"></span><span class="hs-comment">--     'Vulkan.Core10.Pass.SubpassDescription'::@pDepthStencilAttachment@,</span><span>
+</span><span id="line-435"></span><span class="hs-comment">--     or 'Vulkan.Core10.Pass.SubpassDescription'::@pPreserveAttachments@</span><span>
+</span><span id="line-436"></span><span class="hs-comment">--     for any subpass</span><span>
+</span><span id="line-437"></span><span class="hs-comment">--</span><span>
+</span><span id="line-438"></span><span class="hs-comment">-- -   #VUID-VkRenderPassFragmentDensityMapCreateInfoEXT-fragmentDensityMapAttachment-02549#</span><span>
+</span><span id="line-439"></span><span class="hs-comment">--     If @fragmentDensityMapAttachment@ is not</span><span>
+</span><span id="line-440"></span><span class="hs-comment">--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', @layout@ /must/ be</span><span>
+</span><span id="line-441"></span><span class="hs-comment">--     equal to</span><span>
+</span><span id="line-442"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT',</span><span>
+</span><span id="line-443"></span><span class="hs-comment">--     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'</span><span>
+</span><span id="line-444"></span><span class="hs-comment">--</span><span>
+</span><span id="line-445"></span><span class="hs-comment">-- -   #VUID-VkRenderPassFragmentDensityMapCreateInfoEXT-fragmentDensityMapAttachment-02550#</span><span>
+</span><span id="line-446"></span><span class="hs-comment">--     If @fragmentDensityMapAttachment@ is not</span><span>
+</span><span id="line-447"></span><span class="hs-comment">--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',</span><span>
+</span><span id="line-448"></span><span class="hs-comment">--     @fragmentDensityMapAttachment@ /must/ reference an attachment with a</span><span>
+</span><span id="line-449"></span><span class="hs-comment">--     @loadOp@ equal to</span><span>
+</span><span id="line-450"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD' or</span><span>
+</span><span id="line-451"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_DONT_CARE'</span><span>
+</span><span id="line-452"></span><span class="hs-comment">--</span><span>
+</span><span id="line-453"></span><span class="hs-comment">-- -   #VUID-VkRenderPassFragmentDensityMapCreateInfoEXT-fragmentDensityMapAttachment-02551#</span><span>
+</span><span id="line-454"></span><span class="hs-comment">--     If @fragmentDensityMapAttachment@ is not</span><span>
+</span><span id="line-455"></span><span class="hs-comment">--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',</span><span>
+</span><span id="line-456"></span><span class="hs-comment">--     @fragmentDensityMapAttachment@ /must/ reference an attachment with a</span><span>
+</span><span id="line-457"></span><span class="hs-comment">--     @storeOp@ equal to</span><span>
+</span><span id="line-458"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_DONT_CARE'</span><span>
+</span><span id="line-459"></span><span class="hs-comment">--</span><span>
+</span><span id="line-460"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-461"></span><span class="hs-comment">--</span><span>
+</span><span id="line-462"></span><span class="hs-comment">-- -   #VUID-VkRenderPassFragmentDensityMapCreateInfoEXT-sType-sType#</span><span>
+</span><span id="line-463"></span><span class="hs-comment">--     @sType@ /must/ be</span><span>
+</span><span id="line-464"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT'</span><span>
+</span><span id="line-465"></span><span class="hs-comment">--</span><span>
+</span><span id="line-466"></span><span class="hs-comment">-- -   #VUID-VkRenderPassFragmentDensityMapCreateInfoEXT-fragmentDensityMapAttachment-parameter#</span><span>
+</span><span id="line-467"></span><span class="hs-comment">--     @fragmentDensityMapAttachment@ /must/ be a valid</span><span>
+</span><span id="line-468"></span><span class="hs-comment">--     'Vulkan.Core10.Pass.AttachmentReference' structure</span><span>
+</span><span id="line-469"></span><span class="hs-comment">--</span><span>
+</span><span id="line-470"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-471"></span><span class="hs-comment">--</span><span>
+</span><span id="line-472"></span><span class="hs-comment">-- 'Vulkan.Core10.Pass.AttachmentReference',</span><span>
+</span><span id="line-473"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-474"></span><span class="hs-keyword">data</span><span> </span><span id="RenderPassFragmentDensityMapCreateInfoEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#RenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier hs-var">RenderPassFragmentDensityMapCreateInfoEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="RenderPassFragmentDensityMapCreateInfoEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#RenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier hs-var">RenderPassFragmentDensityMapCreateInfoEXT</span></a></span></span><span>
+</span><span id="line-475"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @fragmentDensityMapAttachment@ is the fragment density map to use for</span><span>
+</span><span id="line-476"></span><span>    </span><span class="hs-comment">-- the render pass.</span><span>
+</span><span id="line-477"></span><span>    </span><span id="%24sel%3AfragmentDensityMapAttachment%3ARenderPassFragmentDensityMapCreateInfoEXT"><span class="annot"><span class="annottext">RenderPassFragmentDensityMapCreateInfoEXT -&gt; AttachmentReference
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#%24sel%3AfragmentDensityMapAttachment%3ARenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier hs-var hs-var">fragmentDensityMapAttachment</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Pass.html#AttachmentReference"><span class="hs-identifier hs-type">AttachmentReference</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-478"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">RenderPassFragmentDensityMapCreateInfoEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680214209"><span id="local-6989586621680214211"><span id="local-6989586621680214213"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#RenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier hs-type">RenderPassFragmentDensityMapCreateInfoEXT</span></a></span></span></span></span><span>
+</span><span id="line-483"></span><span>
+</span><span id="line-484"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680214205"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#RenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier hs-type">RenderPassFragmentDensityMapCreateInfoEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-485"></span><span>  </span><span id="local-6989586621680214201"><span class="annot"><span class="annottext">withCStruct :: RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; (Ptr RenderPassFragmentDensityMapCreateInfoEXT -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680214201"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680214200"><span class="annot"><span class="annottext">x :: RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214200"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680214199"><span class="annot"><span class="annottext">f :: Ptr RenderPassFragmentDensityMapCreateInfoEXT -&gt; IO b
+</span><a href="#local-6989586621680214199"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr RenderPassFragmentDensityMapCreateInfoEXT -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr RenderPassFragmentDensityMapCreateInfoEXT -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr RenderPassFragmentDensityMapCreateInfoEXT -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680214198"><span class="annot"><span class="annottext">p :: Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214198"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; RenderPassFragmentDensityMapCreateInfoEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214198"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214200"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT -&gt; IO b
+</span><a href="#local-6989586621680214199"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214198"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-486"></span><span>  </span><span id="local-6989586621680214197"><span class="annot"><span class="annottext">pokeCStruct :: Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; RenderPassFragmentDensityMapCreateInfoEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680214197"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680214196"><span class="annot"><span class="annottext">p :: Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214196"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680214195"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#RenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier hs-type">RenderPassFragmentDensityMapCreateInfoEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680214194"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680214194"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-487"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214196"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-488"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214196"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-489"></span><span>    </span><span class="annot"><span class="annottext">Ptr AttachmentReference -&gt; AttachmentReference -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214196"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; Int -&gt; Ptr AttachmentReference
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Pass.html#AttachmentReference"><span class="hs-identifier hs-type">AttachmentReference</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">AttachmentReference
+</span><a href="#local-6989586621680214195"><span class="hs-identifier hs-var">fragmentDensityMapAttachment</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-490"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680214194"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-491"></span><span>  </span><span id="local-6989586621680214193"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680214193"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-492"></span><span>  </span><span id="local-6989586621680214192"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680214192"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-493"></span><span>  </span><span id="local-6989586621680214191"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr RenderPassFragmentDensityMapCreateInfoEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680214191"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680214190"><span class="annot"><span class="annottext">p :: Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214190"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680214189"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680214189"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-494"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214190"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-495"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214190"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-496"></span><span>    </span><span class="annot"><span class="annottext">Ptr AttachmentReference -&gt; AttachmentReference -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214190"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; Int -&gt; Ptr AttachmentReference
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Pass.html#AttachmentReference"><span class="hs-identifier hs-type">AttachmentReference</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">AttachmentReference
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-497"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680214189"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-498"></span><span>
+</span><span id="line-499"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#RenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier hs-type">RenderPassFragmentDensityMapCreateInfoEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-500"></span><span>  </span><span id="local-6989586621680214187"><span class="annot"><span class="annottext">peekCStruct :: Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; IO RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214187"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680214186"><span class="annot"><span class="annottext">p :: Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214186"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-501"></span><span>    </span><span id="local-6989586621680214185"><span class="annot"><span class="annottext">AttachmentReference
+</span><a href="#local-6989586621680214185"><span class="hs-identifier hs-var">fragmentDensityMapAttachment</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr AttachmentReference -&gt; IO AttachmentReference
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.Pass.html#AttachmentReference"><span class="hs-identifier hs-type">AttachmentReference</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214186"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; Int -&gt; Ptr AttachmentReference
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Pass.html#AttachmentReference"><span class="hs-identifier hs-type">AttachmentReference</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-502"></span><span>    </span><span class="annot"><span class="annottext">RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; IO RenderPassFragmentDensityMapCreateInfoEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(RenderPassFragmentDensityMapCreateInfoEXT
+ -&gt; IO RenderPassFragmentDensityMapCreateInfoEXT)
+-&gt; RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; IO RenderPassFragmentDensityMapCreateInfoEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">AttachmentReference -&gt; RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#RenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier hs-var">RenderPassFragmentDensityMapCreateInfoEXT</span></a></span><span>
+</span><span id="line-503"></span><span>             </span><span class="annot"><span class="annottext">AttachmentReference
+</span><a href="#local-6989586621680214185"><span class="hs-identifier hs-var">fragmentDensityMapAttachment</span></a></span><span>
+</span><span id="line-504"></span><span>
+</span><span id="line-505"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680214175"><span id="local-6989586621680214177"><span id="local-6989586621680214179"><span id="local-6989586621680214181"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#RenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier hs-type">RenderPassFragmentDensityMapCreateInfoEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-506"></span><span>  </span><span id="local-6989586621680214172"><span class="annot"><span class="annottext">sizeOf :: RenderPassFragmentDensityMapCreateInfoEXT -&gt; Int
+</span><a href="#local-6989586621680214172"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">RenderPassFragmentDensityMapCreateInfoEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-507"></span><span>  </span><span id="local-6989586621680214171"><span class="annot"><span class="annottext">alignment :: RenderPassFragmentDensityMapCreateInfoEXT -&gt; Int
+</span><a href="#local-6989586621680214171"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">RenderPassFragmentDensityMapCreateInfoEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-508"></span><span>  </span><span id="local-6989586621680214170"><span class="annot"><span class="annottext">peek :: Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; IO RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214170"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; IO RenderPassFragmentDensityMapCreateInfoEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-509"></span><span>  </span><span id="local-6989586621680214169"><span class="annot"><span class="annottext">poke :: Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; RenderPassFragmentDensityMapCreateInfoEXT -&gt; IO ()
+</span><a href="#local-6989586621680214169"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680214168"><span class="annot"><span class="annottext">ptr :: Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214168"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680214167"><span class="annot"><span class="annottext">poked :: RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214167"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+-&gt; RenderPassFragmentDensityMapCreateInfoEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214168"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214167"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-510"></span><span>
+</span><span id="line-511"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#RenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier hs-type">RenderPassFragmentDensityMapCreateInfoEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-512"></span><span>  </span><span id="local-6989586621680214165"><span class="annot"><span class="annottext">zero :: RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="#local-6989586621680214165"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">AttachmentReference -&gt; RenderPassFragmentDensityMapCreateInfoEXT
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#RenderPassFragmentDensityMapCreateInfoEXT"><span class="hs-identifier hs-var">RenderPassFragmentDensityMapCreateInfoEXT</span></a></span><span>
+</span><span id="line-513"></span><span>           </span><span class="annot"><span class="annottext">AttachmentReference
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-514"></span><span>
+</span><span id="line-515"></span><span>
+</span><span id="line-516"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"><span class="hs-identifier hs-var">EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-517"></span><span>
+</span><span id="line-518"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION&quot;</span><span>
+</span><span id="line-519"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"><span class="hs-identifier hs-type">EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680214372"><span class="annot"><a href="#local-6989586621680214372"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680214372"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680214372"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-520"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"><span id="%24mEXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"><span id="EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION :: a
+$mEXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#%24bEXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-521"></span><span>
+</span><span id="line-522"></span><span>
+</span><span id="line-523"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME"><span class="hs-identifier hs-var">EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_fragment_density_map&quot;</span></span><span>
+</span><span id="line-524"></span><span>
+</span><span id="line-525"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-526"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME"><span class="hs-identifier hs-type">EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680214368"><span class="annot"><a href="#local-6989586621680214368"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680214368"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680214368"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680214368"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-527"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME"><span id="%24mEXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME"><span id="EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME :: a
+$mEXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map.html#%24bEXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_fragment_density_map&quot;</span></span><span>
+</span><span id="line-528"></span><span>
+</span><span id="line-529"></span></pre></body></html>

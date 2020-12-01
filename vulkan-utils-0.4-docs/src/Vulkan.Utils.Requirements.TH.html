@@ -1,0 +1,1015 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE TemplateHaskell #-}</span><span>
+</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE QuasiQuotes #-}</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Utils.Requirements.TH</span><span>
+</span><span id="line-5"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#req"><span class="hs-identifier">req</span></a></span><span>
+</span><span id="line-6"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#reqs"><span class="hs-identifier">reqs</span></a></span><span>
+</span><span id="line-7"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Applicative</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Category</span></span><span>               </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-operator">(&gt;&gt;&gt;)</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Char</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Foldable</span></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.List</span></span><span>                      </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">intercalate</span></span><span>
+</span><span id="line-15"></span><span>                                                </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">isPrefixOf</span></span><span>
+</span><span id="line-16"></span><span>                                                </span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.List.Extra</span></span><span>                </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">nubOrd</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Maybe</span></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Traversable</span></span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH</span></span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH.Quote</span></span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH.Syntax</span></span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span>                 </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">GT</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadP</span></span><span>
+</span><span id="line-27"></span><span>                                         </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">optional</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Text.Read</span></span><span>                      </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">readMaybe</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Requirement</span></span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Vulkan.Utils.Internal.html"><span class="hs-identifier">Vulkan.Utils.Internal</span></a></span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Vulkan.Utils.Misc.html"><span class="hs-identifier">Vulkan.Utils.Misc</span></a></span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Version</span></span><span>                 </span><span class="hs-special">(</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><span class="hs-identifier">MAKE_VERSION</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- $setup</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- &gt;&gt;&gt; import           Vulkan.Core11.Promoted_From_VK_KHR_multiview</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- &gt;&gt;&gt; import           Vulkan.Core12</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- &gt;&gt;&gt; import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- &gt;&gt;&gt; import           Vulkan.Zero</span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- | Parse a requirement and produce an appropriate 'DeviceRequirement'</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- 'DeviceVersionRequirement's are specified by in the form</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- @&lt;major&gt;.&lt;minor&gt;[.&lt;patch&gt;]@</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- 'DeviceFeatureRequirement's are specified in the form @&lt;type name&gt;.&lt;member</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- name&gt;@ and produce a 'RequireDeviceFeature' which checks and sets this</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- feature.</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- 'DevicePropertyRequirement's are specified like feature requirements except</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- with an additional description of the constraint. This may be any of</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- - @myFunctioName@: To check with an in-scope function taking the property</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--   type and returning 'Bool'</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- - @&gt; 123@: To indicate a minimum bound on a integral property</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- - @&gt;= 123@: To indicate an inclusive minimum bound on a integral property</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- - @&amp; SOMETHING_BIT@: To indicate that the specified bit must be present in</span><span>
+</span><span id="line-57"></span><span class="hs-comment">--   the bitmask value</span><span>
+</span><span id="line-58"></span><span class="hs-comment">--</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- 'DeviceExtensionRequirement's are specified in the form @&lt;extension name&gt;</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- &lt;optional version&gt;@. @&lt;extension name&gt;@ must start with @VK_@. The version</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- will be compared against the 'specVersion' field of the</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- 'ExtensionProperties' record.</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- - Names may be qualified.</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- - The separator between the type and member can be any of @.@ @::@ @:@ @-&gt;@</span><span>
+</span><span id="line-66"></span><span class="hs-comment">--   or any amount of space</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- &gt;&gt;&gt; let r = [req|PhysicalDeviceRayTracingPipelineFeaturesKHR.rayTracingPipeline|]</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- &gt;&gt;&gt; featureName r</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- &quot;PhysicalDeviceRayTracingPipelineFeaturesKHR.rayTracingPipeline&quot;</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- &gt;&gt;&gt; let r = [req|PhysicalDeviceVulkan11Features.multiview|]</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- &gt;&gt;&gt; featureName r</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- &quot;PhysicalDeviceVulkan11Features.multiview&quot;</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- &gt;&gt;&gt; let r = [req|PhysicalDeviceMultiviewFeatures.multiview|]</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- &gt;&gt;&gt; featureName r</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- &quot;PhysicalDeviceMultiviewFeatures.multiview&quot;</span><span>
+</span><span id="line-79"></span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#req"><span class="hs-identifier hs-type">req</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">QuasiQuoter</span></span><span>
+</span><span id="line-80"></span><span id="req"><span class="annot"><span class="annottext">req :: QuasiQuoter
+</span><a href="Vulkan.Utils.Requirements.TH.html#req"><span class="hs-identifier hs-var hs-var">req</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; QuasiQuoter
+</span><a href="Vulkan.Utils.Internal.html#badQQ"><span class="hs-identifier hs-var">badQQ</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;req&quot;</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">quoteExp :: String -&gt; Q Exp
+</span><span class="hs-identifier hs-var">quoteExp</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Exp
+</span><a href="Vulkan.Utils.Requirements.TH.html#reqExp"><span class="hs-identifier hs-var">reqExp</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-81"></span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- | Like 'reqs' except that this parses a list of newline separated</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- requirements</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- It ignores</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- - Blank lines</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- - Lines beginning with @--@ or @#@</span><span>
+</span><span id="line-88"></span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#reqs"><span class="hs-identifier hs-type">reqs</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">QuasiQuoter</span></span><span>
+</span><span id="line-89"></span><span id="reqs"><span class="annot"><span class="annottext">reqs :: QuasiQuoter
+</span><a href="Vulkan.Utils.Requirements.TH.html#reqs"><span class="hs-identifier hs-var hs-var">reqs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; QuasiQuoter
+</span><a href="Vulkan.Utils.Internal.html#badQQ"><span class="hs-identifier hs-var">badQQ</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;req&quot;</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">quoteExp :: String -&gt; Q Exp
+</span><span class="hs-identifier hs-var">quoteExp</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp) -&gt; [String] -&gt; Q Exp
+</span><a href="Vulkan.Utils.Requirements.TH.html#exps"><span class="hs-identifier hs-var">exps</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Exp
+</span><a href="Vulkan.Utils.Requirements.TH.html#reqExp"><span class="hs-identifier hs-var">reqExp</span></a></span><span> </span><span class="annot"><span class="annottext">([String] -&gt; Q Exp) -&gt; (String -&gt; [String]) -&gt; String -&gt; Q Exp
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; [String]
+</span><a href="Vulkan.Utils.Requirements.TH.html#filterComments"><span class="hs-identifier hs-var">filterComments</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-90"></span><span>
+</span><span id="line-91"></span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#reqExp"><span class="hs-identifier hs-type">reqExp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span>
+</span><span id="line-92"></span><span id="reqExp"><span class="annot"><span class="annottext">reqExp :: String -&gt; Q Exp
+</span><a href="Vulkan.Utils.Requirements.TH.html#reqExp"><span class="hs-identifier hs-var hs-var">reqExp</span></a></span></span><span> </span><span id="local-6989586621679261960"><span class="annot"><span class="annottext">s :: String
+</span><a href="#local-6989586621679261960"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-93"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe (Request [String] String)
+</span><a href="Vulkan.Utils.Requirements.TH.html#parse"><span class="hs-identifier hs-var">parse</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261960"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-94"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Exp
+forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
+</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp) -&gt; String -&gt; Q Exp
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="hs-string">&quot;Couldn't parse &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String
+forall a. Show a =&gt; a -&gt; String
+</span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261960"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-95"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679261957"><span class="annot"><span class="annottext">r :: Request [String] String
+</span><a href="#local-6989586621679261957"><span class="hs-identifier hs-var">r</span></a></span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-96"></span><span>      </span><span id="local-6989586621679261956"><span class="annot"><span class="annottext">Request Name Name
+</span><a href="#local-6989586621679261956"><span class="hs-identifier hs-var">r'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Request [String] String -&gt; Q (Request Name Name)
+</span><a href="Vulkan.Utils.Requirements.TH.html#nameRequest"><span class="hs-identifier hs-var">nameRequest</span></a></span><span> </span><span class="annot"><span class="annottext">Request [String] String
+</span><a href="#local-6989586621679261957"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-97"></span><span>      </span><span class="annot"><span class="annottext">String -&gt; Request Name Name -&gt; Q Exp
+</span><a href="Vulkan.Utils.Requirements.TH.html#renderRequest"><span class="hs-identifier hs-var">renderRequest</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261960"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Request Name Name
+</span><a href="#local-6989586621679261956"><span class="hs-identifier hs-var">r'</span></a></span><span>
+</span><span id="line-98"></span><span>
+</span><span id="line-99"></span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#renderRequest"><span class="hs-identifier hs-type">renderRequest</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Request"><span class="hs-identifier hs-type">Request</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ExpQ</span></span><span>
+</span><span id="line-100"></span><span id="renderRequest"><span class="annot"><span class="annottext">renderRequest :: String -&gt; Request Name Name -&gt; Q Exp
+</span><a href="Vulkan.Utils.Requirements.TH.html#renderRequest"><span class="hs-identifier hs-var hs-var">renderRequest</span></a></span></span><span> </span><span id="local-6989586621679261953"><span class="annot"><span class="annottext">input :: String
+</span><a href="#local-6989586621679261953"><span class="hs-identifier hs-var">input</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-101"></span><span>  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Feature"><span class="hs-identifier hs-type">Feature</span></a></span><span> </span><span id="local-6989586621679261951"><span class="annot"><span class="annottext">s :: Name
+</span><a href="#local-6989586621679261951"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679261950"><span class="annot"><span class="annottext">m :: Name
+</span><a href="#local-6989586621679261950"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-102"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679261949"><span class="annot"><span class="annottext">t :: TypeQ
+</span><a href="#local-6989586621679261949"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Name -&gt; TypeQ
+</span><span class="hs-identifier hs-var">conT</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679261951"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-103"></span><span>        </span><span id="local-6989586621679261948"><span class="annot"><span class="annottext">check :: Q Exp
+</span><a href="#local-6989586621679261948"><span class="hs-identifier hs-var hs-var">check</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[|</span><span class="hs-special">$(</span><span class="hs-identifier">varE</span><span> </span><span class="hs-identifier">m</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="">$t</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier">Bool</span><span class="hs-special">|]</span><span>
+</span><span id="line-104"></span><span>        </span><span id="local-6989586621679261947"><span class="annot"><span class="annottext">enable :: Q Exp
+</span><a href="#local-6989586621679261947"><span class="hs-identifier hs-var hs-var">enable</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[|</span><span class="hs-glyph">\</span><span class="hs-identifier">str</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">recUpdE</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">str</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="">$t</span><span> </span><span class="hs-special">|]</span><span> </span><span class="hs-special">[</span><span class="hs-identifier">fieldExp</span><span> </span><span class="hs-identifier">m</span><span> </span><span class="hs-special">[|</span><span class="hs-identifier">True</span><span class="hs-special">|]</span><span class="hs-special">]</span><span class="hs-special">)</span><span class="hs-special">|]</span><span>
+</span><span id="line-105"></span><span>    </span><span class="hs-keyword">in</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-keyword">let</span><span> </span><span class="hs-identifier">featureName</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">fromString</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">lift</span><span> </span><span class="hs-identifier">input</span><span class="hs-special">)</span><span>
+</span><span id="line-106"></span><span>              </span><span class="hs-identifier">checkFeature</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">check</span><span class="hs-special">)</span><span>
+</span><span id="line-107"></span><span>              </span><span class="hs-identifier">enableFeature</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">enable</span><span class="hs-special">)</span><span>
+</span><span id="line-108"></span><span>          </span><span class="hs-keyword">in</span><span> </span><span class="hs-identifier">RequireDeviceFeature</span><span> </span><span class="hs-identifier">featureName</span><span> </span><span class="hs-identifier">checkFeature</span><span> </span><span class="hs-identifier">enableFeature</span><span>
+</span><span id="line-109"></span><span>       </span><span class="hs-special">|]</span><span>
+</span><span id="line-110"></span><span>  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Property"><span class="hs-identifier hs-type">Property</span></a></span><span> </span><span id="local-6989586621679261945"><span class="annot"><span class="annottext">s :: Name
+</span><a href="#local-6989586621679261945"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679261944"><span class="annot"><span class="annottext">m :: Name
+</span><a href="#local-6989586621679261944"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679261943"><span class="annot"><span class="annottext">c :: Constraint Name
+</span><a href="#local-6989586621679261943"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-111"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679261942"><span class="annot"><span class="annottext">t :: TypeQ
+</span><a href="#local-6989586621679261942"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Name -&gt; TypeQ
+</span><span class="hs-identifier hs-var">conT</span></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679261945"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-112"></span><span>        </span><span id="local-6989586621679261941"><span class="annot"><span class="annottext">getProp :: Q Exp
+</span><a href="#local-6989586621679261941"><span class="hs-identifier hs-var hs-var">getProp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[|</span><span class="hs-glyph">\</span><span class="hs-identifier">str</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">varE</span><span> </span><span class="hs-identifier">m</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">str</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="">$t</span><span class="hs-special">)</span><span class="hs-special">|]</span><span>
+</span><span id="line-113"></span><span>        </span><span id="local-6989586621679261940"><span class="annot"><span class="annottext">checker :: Q Exp
+</span><a href="#local-6989586621679261940"><span class="hs-identifier hs-var hs-var">checker</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Constraint Name
+</span><a href="#local-6989586621679261943"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-114"></span><span>                  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#GTE"><span class="hs-identifier hs-type">GTE</span></a></span><span> </span><span id="local-6989586621679261938"><span class="annot"><span class="annottext">v :: Integer
+</span><a href="#local-6989586621679261938"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[|</span><span class="hs-special">(</span><span class="hs-operator">&gt;=</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">litE</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">IntegerL</span><span> </span><span class="hs-identifier">v</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">|]</span><span>
+</span><span id="line-115"></span><span>                  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#GT"><span class="hs-identifier hs-type">GT</span></a></span><span> </span><span id="local-6989586621679261936"><span class="annot"><span class="annottext">v :: Integer
+</span><a href="#local-6989586621679261936"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[|</span><span class="hs-special">(</span><span class="hs-operator">&gt;</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">litE</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">IntegerL</span><span> </span><span class="hs-identifier">v</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">|]</span><span>
+</span><span id="line-116"></span><span>                  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#AndBit"><span class="hs-identifier hs-type">AndBit</span></a></span><span> </span><span id="local-6989586621679261934"><span class="annot"><span class="annottext">b :: Name
+</span><a href="#local-6989586621679261934"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[|</span><span class="hs-special">(</span><span class="hs-operator">.&amp;&amp;.</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">conE</span><span> </span><span class="hs-identifier">b</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">|]</span><span>
+</span><span id="line-117"></span><span>                  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Fun"><span class="hs-identifier hs-type">Fun</span></a></span><span> </span><span id="local-6989586621679261932"><span class="annot"><span class="annottext">f :: Name
+</span><a href="#local-6989586621679261932"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[|</span><span class="hs-special">$(</span><span class="hs-identifier">varE</span><span> </span><span class="hs-identifier">f</span><span class="hs-special">)</span><span class="hs-special">|]</span><span>
+</span><span id="line-118"></span><span>        </span><span id="local-6989586621679261931"><span class="annot"><span class="annottext">check :: Q Exp
+</span><a href="#local-6989586621679261931"><span class="hs-identifier hs-var hs-var">check</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[|</span><span class="">$checker</span><span> </span><span class="hs-operator">.</span><span> </span><span class="">$getProp</span><span class="hs-special">|]</span><span>
+</span><span id="line-119"></span><span>    </span><span class="hs-keyword">in</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-keyword">let</span><span> </span><span class="hs-identifier">propertyName</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">fromString</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">lift</span><span> </span><span class="hs-identifier">input</span><span class="hs-special">)</span><span>
+</span><span id="line-120"></span><span>              </span><span class="hs-identifier">checkProperty</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">check</span><span class="hs-special">)</span><span>
+</span><span id="line-121"></span><span>          </span><span class="hs-keyword">in</span><span> </span><span class="hs-identifier">RequireDeviceProperty</span><span> </span><span class="hs-identifier">propertyName</span><span> </span><span class="hs-identifier">checkProperty</span><span>
+</span><span id="line-122"></span><span>       </span><span class="hs-special">|]</span><span>
+</span><span id="line-123"></span><span>  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Extension"><span class="hs-identifier hs-type">Extension</span></a></span><span> </span><span id="local-6989586621679261929"><span class="annot"><span class="annottext">s :: String
+</span><a href="#local-6989586621679261929"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679261928"><span class="annot"><span class="annottext">v :: Maybe Word32
+</span><a href="#local-6989586621679261928"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-124"></span><span>       </span><span class="hs-special">[|</span><span> </span><span class="hs-keyword">let</span><span> </span><span class="hs-identifier">deviceExtensionLayerName</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">Nothing</span><span>
+</span><span id="line-125"></span><span>              </span><span class="hs-identifier">deviceExtensionName</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">fromString</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">lift</span><span> </span><span class="hs-identifier">s</span><span class="hs-special">)</span><span>
+</span><span id="line-126"></span><span>              </span><span class="hs-identifier">deviceExtensionMinVersion</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">lift</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">fromMaybe</span><span> </span><span class="hs-identifier">minBound</span><span> </span><span class="hs-identifier">v</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-127"></span><span>          </span><span class="hs-keyword">in</span><span> </span><span class="hs-identifier">RequireDeviceExtension</span><span>
+</span><span id="line-128"></span><span>               </span><span class="hs-identifier">deviceExtensionLayerName</span><span>
+</span><span id="line-129"></span><span>               </span><span class="hs-identifier">deviceExtensionName</span><span>
+</span><span id="line-130"></span><span>               </span><span class="hs-identifier">deviceExtensionMinVersion</span><span>
+</span><span id="line-131"></span><span>       </span><span class="hs-special">|]</span><span>
+</span><span id="line-132"></span><span>  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Version"><span class="hs-identifier hs-type">Version</span></a></span><span> </span><span id="local-6989586621679261926"><span class="annot"><span class="annottext">v :: Word32
+</span><a href="#local-6989586621679261926"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">RequireDeviceVersion</span><span> </span><span class="hs-special">$(</span><span class="hs-identifier">lift</span><span> </span><span class="hs-identifier">v</span><span class="hs-special">)</span><span> </span><span class="hs-special">|]</span><span>
+</span><span id="line-133"></span><span>
+</span><span id="line-134"></span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#nameRequest"><span class="hs-identifier hs-type">nameRequest</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Request"><span class="hs-identifier hs-type">Request</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Request"><span class="hs-identifier hs-type">Request</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span>
+</span><span id="line-135"></span><span id="nameRequest"><span class="annot"><span class="annottext">nameRequest :: Request [String] String -&gt; Q (Request Name Name)
+</span><a href="Vulkan.Utils.Requirements.TH.html#nameRequest"><span class="hs-identifier hs-var hs-var">nameRequest</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-136"></span><span>  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Feature"><span class="hs-identifier hs-type">Feature</span></a></span><span> </span><span id="local-6989586621679261925"><span class="annot"><span class="annottext">s :: [String]
+</span><a href="#local-6989586621679261925"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679261924"><span class="annot"><span class="annottext">m :: String
+</span><a href="#local-6989586621679261924"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-137"></span><span>    </span><span id="local-6989586621679261923"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679261923"><span class="hs-identifier hs-var">sName</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">[String] -&gt; Q Name
+</span><a href="#local-6989586621679261922"><span class="hs-identifier hs-var">getQualTyName</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679261925"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-138"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679261921"><span class="annot"><span class="annottext">mName :: Name
+</span><a href="#local-6989586621679261921"><span class="hs-identifier hs-var hs-var">mName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Name
+</span><span class="hs-identifier hs-var">mkName</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261924"><span class="hs-identifier hs-var">m</span></a></span><span>
+</span><span id="line-139"></span><span>    </span><span class="annot"><span class="annottext">Request Name Name -&gt; Q (Request Name Name)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Request Name Name -&gt; Q (Request Name Name))
+-&gt; Request Name Name -&gt; Q (Request Name Name)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Name -&gt; Request Name Name
+forall qual unqual. qual -&gt; unqual -&gt; Request qual unqual
+</span><a href="Vulkan.Utils.Requirements.TH.html#Feature"><span class="hs-identifier hs-var">Feature</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679261923"><span class="hs-identifier hs-var">sName</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679261921"><span class="hs-identifier hs-var">mName</span></a></span><span>
+</span><span id="line-140"></span><span>  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Property"><span class="hs-identifier hs-type">Property</span></a></span><span> </span><span id="local-6989586621679261920"><span class="annot"><span class="annottext">s :: [String]
+</span><a href="#local-6989586621679261920"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679261919"><span class="annot"><span class="annottext">m :: String
+</span><a href="#local-6989586621679261919"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679261918"><span class="annot"><span class="annottext">c :: Constraint [String]
+</span><a href="#local-6989586621679261918"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-141"></span><span>    </span><span id="local-6989586621679261917"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679261917"><span class="hs-identifier hs-var">sName</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">[String] -&gt; Q Name
+</span><a href="#local-6989586621679261922"><span class="hs-identifier hs-var">getQualTyName</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679261920"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-142"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679261916"><span class="annot"><span class="annottext">mName :: Name
+</span><a href="#local-6989586621679261916"><span class="hs-identifier hs-var hs-var">mName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Name
+</span><span class="hs-identifier hs-var">mkName</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261919"><span class="hs-identifier hs-var">m</span></a></span><span>
+</span><span id="line-143"></span><span>    </span><span id="local-6989586621679261915"><span class="annot"><span class="annottext">Constraint Name
+</span><a href="#local-6989586621679261915"><span class="hs-identifier hs-var">c'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Constraint [String] -&gt; ([String] -&gt; Q Name) -&gt; Q (Constraint Name)
+forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
+(Traversable t, Applicative f) =&gt;
+t a -&gt; (a -&gt; f b) -&gt; f (t b)
+</span><span class="hs-identifier hs-var">for</span></span><span> </span><span class="annot"><span class="annottext">Constraint [String]
+</span><a href="#local-6989586621679261918"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">[String] -&gt; Q Name
+</span><a href="#local-6989586621679261913"><span class="hs-identifier hs-var">getQualValueName</span></a></span><span>
+</span><span id="line-144"></span><span>    </span><span class="annot"><span class="annottext">Request Name Name -&gt; Q (Request Name Name)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Request Name Name -&gt; Q (Request Name Name))
+-&gt; Request Name Name -&gt; Q (Request Name Name)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Name -&gt; Constraint Name -&gt; Request Name Name
+forall qual unqual.
+qual -&gt; unqual -&gt; Constraint qual -&gt; Request qual unqual
+</span><a href="Vulkan.Utils.Requirements.TH.html#Property"><span class="hs-identifier hs-var">Property</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679261917"><span class="hs-identifier hs-var">sName</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679261916"><span class="hs-identifier hs-var">mName</span></a></span><span> </span><span class="annot"><span class="annottext">Constraint Name
+</span><a href="#local-6989586621679261915"><span class="hs-identifier hs-var">c'</span></a></span><span>
+</span><span id="line-145"></span><span>  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Extension"><span class="hs-identifier hs-type">Extension</span></a></span><span> </span><span id="local-6989586621679261912"><span class="annot"><span class="annottext">s :: String
+</span><a href="#local-6989586621679261912"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679261911"><span class="annot"><span class="annottext">v :: Maybe Word32
+</span><a href="#local-6989586621679261911"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Request Name Name -&gt; Q (Request Name Name)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Request Name Name -&gt; Q (Request Name Name))
+-&gt; Request Name Name -&gt; Q (Request Name Name)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe Word32 -&gt; Request Name Name
+forall qual unqual. String -&gt; Maybe Word32 -&gt; Request qual unqual
+</span><a href="Vulkan.Utils.Requirements.TH.html#Extension"><span class="hs-identifier hs-var">Extension</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261912"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Word32
+</span><a href="#local-6989586621679261911"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><span id="line-146"></span><span>  </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Version"><span class="hs-identifier hs-type">Version</span></a></span><span> </span><span id="local-6989586621679261910"><span class="annot"><span class="annottext">v :: Word32
+</span><a href="#local-6989586621679261910"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Request Name Name -&gt; Q (Request Name Name)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Request Name Name -&gt; Q (Request Name Name))
+-&gt; Request Name Name -&gt; Q (Request Name Name)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Request Name Name
+forall qual unqual. Word32 -&gt; Request qual unqual
+</span><a href="Vulkan.Utils.Requirements.TH.html#Version"><span class="hs-identifier hs-var">Version</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679261910"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><span id="line-147"></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-148"></span><span>   </span><span id="local-6989586621679261922"><span class="annot"><span class="annottext">getQualTyName :: [String] -&gt; Q Name
+</span><a href="#local-6989586621679261922"><span class="hs-identifier hs-var hs-var">getQualTyName</span></a></span></span><span> </span><span id="local-6989586621679261909"><span class="annot"><span class="annottext">n :: [String]
+</span><a href="#local-6989586621679261909"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-149"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679261908"><span class="annot"><span class="annottext">q :: String
+</span><a href="#local-6989586621679261908"><span class="hs-identifier hs-var hs-var">q</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; String
+forall a. [a] -&gt; [[a]] -&gt; [a]
+</span><span class="hs-identifier hs-var">intercalate</span></span><span> </span><span class="annot"><span class="hs-string">&quot;.&quot;</span></span><span> </span><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679261909"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><span id="line-150"></span><span>      </span><span class="annot"><span class="annottext">Q Name -&gt; (Name -&gt; Q Name) -&gt; Maybe Name -&gt; Q Name
+forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
+</span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Q Name
+forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
+</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Name) -&gt; String -&gt; Q Name
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="hs-string">&quot;Couldn't find type name &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String
+forall a. Show a =&gt; a -&gt; String
+</span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261908"><span class="hs-identifier hs-var">q</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Name
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span>
+</span><span id="line-151"></span><span>        </span><span class="annot"><span class="annottext">(Maybe Name -&gt; Q Name) -&gt; Q (Maybe Name) -&gt; Q Name
+forall (m :: * -&gt; *) a b. Monad m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
+</span><span class="hs-operator hs-var">=&lt;&lt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q (Maybe Name)
+</span><span class="hs-identifier hs-var">lookupTypeName</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261908"><span class="hs-identifier hs-var">q</span></a></span><span>
+</span><span id="line-152"></span><span>   </span><span id="local-6989586621679261913"><span class="annot"><span class="annottext">getQualValueName :: [String] -&gt; Q Name
+</span><a href="#local-6989586621679261913"><span class="hs-identifier hs-var hs-var">getQualValueName</span></a></span></span><span> </span><span id="local-6989586621679261904"><span class="annot"><span class="annottext">n :: [String]
+</span><a href="#local-6989586621679261904"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-153"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679261903"><span class="annot"><span class="annottext">q :: String
+</span><a href="#local-6989586621679261903"><span class="hs-identifier hs-var hs-var">q</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; String
+forall a. [a] -&gt; [[a]] -&gt; [a]
+</span><span class="hs-identifier hs-var">intercalate</span></span><span> </span><span class="annot"><span class="hs-string">&quot;.&quot;</span></span><span> </span><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679261904"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><span id="line-154"></span><span>      </span><span class="annot"><span class="annottext">Q Name -&gt; (Name -&gt; Q Name) -&gt; Maybe Name -&gt; Q Name
+forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
+</span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Q Name
+forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
+</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Name) -&gt; String -&gt; Q Name
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="hs-string">&quot;Couldn't find value name &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String
+forall a. Show a =&gt; a -&gt; String
+</span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261903"><span class="hs-identifier hs-var">q</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Name
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span>
+</span><span id="line-155"></span><span>        </span><span class="annot"><span class="annottext">(Maybe Name -&gt; Q Name) -&gt; Q (Maybe Name) -&gt; Q Name
+forall (m :: * -&gt; *) a b. Monad m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
+</span><span class="hs-operator hs-var">=&lt;&lt;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q (Maybe Name)
+</span><span class="hs-identifier hs-var">lookupValueName</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261903"><span class="hs-identifier hs-var">q</span></a></span><span>
+</span><span id="line-156"></span><span>
+</span><span id="line-157"></span><span class="hs-keyword">data</span><span> </span><span id="Request"><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Request"><span class="hs-identifier hs-var">Request</span></a></span></span><span> </span><span id="local-6989586621679262107"><span class="annot"><a href="#local-6989586621679262107"><span class="hs-identifier hs-type">qual</span></a></span></span><span> </span><span id="local-6989586621679262106"><span class="annot"><a href="#local-6989586621679262106"><span class="hs-identifier hs-type">unqual</span></a></span></span><span>
+</span><span id="line-158"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="Version"><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Version"><span class="hs-identifier hs-var">Version</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-159"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Feature"><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Feature"><span class="hs-identifier hs-var">Feature</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621679262107"><span class="hs-identifier hs-type">qual</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679262106"><span class="hs-identifier hs-type">unqual</span></a></span><span>
+</span><span id="line-160"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Property"><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Property"><span class="hs-identifier hs-var">Property</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621679262107"><span class="hs-identifier hs-type">qual</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679262106"><span class="hs-identifier hs-type">unqual</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Constraint"><span class="hs-identifier hs-type">Constraint</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679262107"><span class="hs-identifier hs-type">qual</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-161"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Extension"><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Extension"><span class="hs-identifier hs-var">Extension</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-162"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679261896"><span id="local-6989586621679261898"><span id="local-6989586621679261900"><span class="annot"><span class="annottext">Int -&gt; Request qual unqual -&gt; String -&gt; String
+[Request qual unqual] -&gt; String -&gt; String
+Request qual unqual -&gt; String
+(Int -&gt; Request qual unqual -&gt; String -&gt; String)
+-&gt; (Request qual unqual -&gt; String)
+-&gt; ([Request qual unqual] -&gt; String -&gt; String)
+-&gt; Show (Request qual unqual)
+forall a.
+(Int -&gt; a -&gt; String -&gt; String)
+-&gt; (a -&gt; String) -&gt; ([a] -&gt; String -&gt; String) -&gt; Show a
+forall qual unqual.
+(Show qual, Show unqual) =&gt;
+Int -&gt; Request qual unqual -&gt; String -&gt; String
+forall qual unqual.
+(Show qual, Show unqual) =&gt;
+[Request qual unqual] -&gt; String -&gt; String
+forall qual unqual.
+(Show qual, Show unqual) =&gt;
+Request qual unqual -&gt; String
+showList :: [Request qual unqual] -&gt; String -&gt; String
+$cshowList :: forall qual unqual.
+(Show qual, Show unqual) =&gt;
+[Request qual unqual] -&gt; String -&gt; String
+show :: Request qual unqual -&gt; String
+$cshow :: forall qual unqual.
+(Show qual, Show unqual) =&gt;
+Request qual unqual -&gt; String
+showsPrec :: Int -&gt; Request qual unqual -&gt; String -&gt; String
+$cshowsPrec :: forall qual unqual.
+(Show qual, Show unqual) =&gt;
+Int -&gt; Request qual unqual -&gt; String -&gt; String
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-163"></span><span>
+</span><span id="line-164"></span><span class="hs-keyword">data</span><span> </span><span id="Constraint"><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Constraint"><span class="hs-identifier hs-var">Constraint</span></a></span></span><span> </span><span id="local-6989586621679261999"><span class="annot"><a href="#local-6989586621679261999"><span class="hs-identifier hs-type">qual</span></a></span></span><span>
+</span><span id="line-165"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="GTE"><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#GTE"><span class="hs-identifier hs-var">GTE</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-166"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="GT"><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#GT"><span class="hs-identifier hs-var">GT</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
+</span><span id="line-167"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="AndBit"><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#AndBit"><span class="hs-identifier hs-var">AndBit</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621679261999"><span class="hs-identifier hs-type">qual</span></a></span><span>
+</span><span id="line-168"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Fun"><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Fun"><span class="hs-identifier hs-var">Fun</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621679261999"><span class="hs-identifier hs-type">qual</span></a></span><span>
+</span><span id="line-169"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679261889"><span id="local-6989586621679261891"><span id="local-6989586621679261893"><span class="annot"><span class="annottext">Int -&gt; Constraint qual -&gt; String -&gt; String
+[Constraint qual] -&gt; String -&gt; String
+Constraint qual -&gt; String
+(Int -&gt; Constraint qual -&gt; String -&gt; String)
+-&gt; (Constraint qual -&gt; String)
+-&gt; ([Constraint qual] -&gt; String -&gt; String)
+-&gt; Show (Constraint qual)
+forall qual.
+Show qual =&gt;
+Int -&gt; Constraint qual -&gt; String -&gt; String
+forall qual. Show qual =&gt; [Constraint qual] -&gt; String -&gt; String
+forall qual. Show qual =&gt; Constraint qual -&gt; String
+forall a.
+(Int -&gt; a -&gt; String -&gt; String)
+-&gt; (a -&gt; String) -&gt; ([a] -&gt; String -&gt; String) -&gt; Show a
+showList :: [Constraint qual] -&gt; String -&gt; String
+$cshowList :: forall qual. Show qual =&gt; [Constraint qual] -&gt; String -&gt; String
+show :: Constraint qual -&gt; String
+$cshow :: forall qual. Show qual =&gt; Constraint qual -&gt; String
+showsPrec :: Int -&gt; Constraint qual -&gt; String -&gt; String
+$cshowsPrec :: forall qual.
+Show qual =&gt;
+Int -&gt; Constraint qual -&gt; String -&gt; String
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679261885"><span id="local-6989586621679261887"><span class="annot"><span class="annottext">a -&gt; Constraint b -&gt; Constraint a
+(a -&gt; b) -&gt; Constraint a -&gt; Constraint b
+(forall a b. (a -&gt; b) -&gt; Constraint a -&gt; Constraint b)
+-&gt; (forall a b. a -&gt; Constraint b -&gt; Constraint a)
+-&gt; Functor Constraint
+forall a b. a -&gt; Constraint b -&gt; Constraint a
+forall a b. (a -&gt; b) -&gt; Constraint a -&gt; Constraint b
+forall (f :: * -&gt; *).
+(forall a b. (a -&gt; b) -&gt; f a -&gt; f b)
+-&gt; (forall a b. a -&gt; f b -&gt; f a) -&gt; Functor f
+&lt;$ :: a -&gt; Constraint b -&gt; Constraint a
+$c&lt;$ :: forall a b. a -&gt; Constraint b -&gt; Constraint a
+fmap :: (a -&gt; b) -&gt; Constraint a -&gt; Constraint b
+$cfmap :: forall a b. (a -&gt; b) -&gt; Constraint a -&gt; Constraint b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Functor</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679261850"><span id="local-6989586621679261852"><span id="local-6989586621679261854"><span id="local-6989586621679261856"><span id="local-6989586621679261858"><span id="local-6989586621679261860"><span id="local-6989586621679261862"><span id="local-6989586621679261864"><span id="local-6989586621679261866"><span id="local-6989586621679261868"><span id="local-6989586621679261870"><span id="local-6989586621679261872"><span id="local-6989586621679261874"><span id="local-6989586621679261876"><span id="local-6989586621679261878"><span id="local-6989586621679261880"><span id="local-6989586621679261882"><span class="annot"><span class="annottext">Constraint a -&gt; Bool
+(a -&gt; m) -&gt; Constraint a -&gt; m
+(a -&gt; b -&gt; b) -&gt; b -&gt; Constraint a -&gt; b
+(forall m. Monoid m =&gt; Constraint m -&gt; m)
+-&gt; (forall m a. Monoid m =&gt; (a -&gt; m) -&gt; Constraint a -&gt; m)
+-&gt; (forall m a. Monoid m =&gt; (a -&gt; m) -&gt; Constraint a -&gt; m)
+-&gt; (forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; Constraint a -&gt; b)
+-&gt; (forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; Constraint a -&gt; b)
+-&gt; (forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; Constraint a -&gt; b)
+-&gt; (forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; Constraint a -&gt; b)
+-&gt; (forall a. (a -&gt; a -&gt; a) -&gt; Constraint a -&gt; a)
+-&gt; (forall a. (a -&gt; a -&gt; a) -&gt; Constraint a -&gt; a)
+-&gt; (forall a. Constraint a -&gt; [a])
+-&gt; (forall a. Constraint a -&gt; Bool)
+-&gt; (forall a. Constraint a -&gt; Int)
+-&gt; (forall a. Eq a =&gt; a -&gt; Constraint a -&gt; Bool)
+-&gt; (forall a. Ord a =&gt; Constraint a -&gt; a)
+-&gt; (forall a. Ord a =&gt; Constraint a -&gt; a)
+-&gt; (forall a. Num a =&gt; Constraint a -&gt; a)
+-&gt; (forall a. Num a =&gt; Constraint a -&gt; a)
+-&gt; Foldable Constraint
+forall a. Eq a =&gt; a -&gt; Constraint a -&gt; Bool
+forall a. Num a =&gt; Constraint a -&gt; a
+forall a. Ord a =&gt; Constraint a -&gt; a
+forall m. Monoid m =&gt; Constraint m -&gt; m
+forall a. Constraint a -&gt; Bool
+forall a. Constraint a -&gt; Int
+forall a. Constraint a -&gt; [a]
+forall a. (a -&gt; a -&gt; a) -&gt; Constraint a -&gt; a
+forall m a. Monoid m =&gt; (a -&gt; m) -&gt; Constraint a -&gt; m
+forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; Constraint a -&gt; b
+forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; Constraint a -&gt; b
+forall (t :: * -&gt; *).
+(forall m. Monoid m =&gt; t m -&gt; m)
+-&gt; (forall m a. Monoid m =&gt; (a -&gt; m) -&gt; t a -&gt; m)
+-&gt; (forall m a. Monoid m =&gt; (a -&gt; m) -&gt; t a -&gt; m)
+-&gt; (forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b)
+-&gt; (forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b)
+-&gt; (forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b)
+-&gt; (forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b)
+-&gt; (forall a. (a -&gt; a -&gt; a) -&gt; t a -&gt; a)
+-&gt; (forall a. (a -&gt; a -&gt; a) -&gt; t a -&gt; a)
+-&gt; (forall a. t a -&gt; [a])
+-&gt; (forall a. t a -&gt; Bool)
+-&gt; (forall a. t a -&gt; Int)
+-&gt; (forall a. Eq a =&gt; a -&gt; t a -&gt; Bool)
+-&gt; (forall a. Ord a =&gt; t a -&gt; a)
+-&gt; (forall a. Ord a =&gt; t a -&gt; a)
+-&gt; (forall a. Num a =&gt; t a -&gt; a)
+-&gt; (forall a. Num a =&gt; t a -&gt; a)
+-&gt; Foldable t
+product :: Constraint a -&gt; a
+$cproduct :: forall a. Num a =&gt; Constraint a -&gt; a
+sum :: Constraint a -&gt; a
+$csum :: forall a. Num a =&gt; Constraint a -&gt; a
+minimum :: Constraint a -&gt; a
+$cminimum :: forall a. Ord a =&gt; Constraint a -&gt; a
+maximum :: Constraint a -&gt; a
+$cmaximum :: forall a. Ord a =&gt; Constraint a -&gt; a
+elem :: a -&gt; Constraint a -&gt; Bool
+$celem :: forall a. Eq a =&gt; a -&gt; Constraint a -&gt; Bool
+length :: Constraint a -&gt; Int
+$clength :: forall a. Constraint a -&gt; Int
+null :: Constraint a -&gt; Bool
+$cnull :: forall a. Constraint a -&gt; Bool
+toList :: Constraint a -&gt; [a]
+$ctoList :: forall a. Constraint a -&gt; [a]
+foldl1 :: (a -&gt; a -&gt; a) -&gt; Constraint a -&gt; a
+$cfoldl1 :: forall a. (a -&gt; a -&gt; a) -&gt; Constraint a -&gt; a
+foldr1 :: (a -&gt; a -&gt; a) -&gt; Constraint a -&gt; a
+$cfoldr1 :: forall a. (a -&gt; a -&gt; a) -&gt; Constraint a -&gt; a
+foldl' :: (b -&gt; a -&gt; b) -&gt; b -&gt; Constraint a -&gt; b
+$cfoldl' :: forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; Constraint a -&gt; b
+foldl :: (b -&gt; a -&gt; b) -&gt; b -&gt; Constraint a -&gt; b
+$cfoldl :: forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; Constraint a -&gt; b
+foldr' :: (a -&gt; b -&gt; b) -&gt; b -&gt; Constraint a -&gt; b
+$cfoldr' :: forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; Constraint a -&gt; b
+foldr :: (a -&gt; b -&gt; b) -&gt; b -&gt; Constraint a -&gt; b
+$cfoldr :: forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; Constraint a -&gt; b
+foldMap' :: (a -&gt; m) -&gt; Constraint a -&gt; m
+$cfoldMap' :: forall m a. Monoid m =&gt; (a -&gt; m) -&gt; Constraint a -&gt; m
+foldMap :: (a -&gt; m) -&gt; Constraint a -&gt; m
+$cfoldMap :: forall m a. Monoid m =&gt; (a -&gt; m) -&gt; Constraint a -&gt; m
+fold :: Constraint m -&gt; m
+$cfold :: forall m. Monoid m =&gt; Constraint m -&gt; m
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Foldable</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679261839"><span id="local-6989586621679261841"><span id="local-6989586621679261843"><span id="local-6989586621679261845"><span class="annot"><span class="annottext">Functor Constraint
+Foldable Constraint
+(Functor Constraint, Foldable Constraint) =&gt;
+(forall (f :: * -&gt; *) a b.
+ Applicative f =&gt;
+ (a -&gt; f b) -&gt; Constraint a -&gt; f (Constraint b))
+-&gt; (forall (f :: * -&gt; *) a.
+    Applicative f =&gt;
+    Constraint (f a) -&gt; f (Constraint a))
+-&gt; (forall (m :: * -&gt; *) a b.
+    Monad m =&gt;
+    (a -&gt; m b) -&gt; Constraint a -&gt; m (Constraint b))
+-&gt; (forall (m :: * -&gt; *) a.
+    Monad m =&gt;
+    Constraint (m a) -&gt; m (Constraint a))
+-&gt; Traversable Constraint
+(a -&gt; f b) -&gt; Constraint a -&gt; f (Constraint b)
+forall (t :: * -&gt; *).
+(Functor t, Foldable t) =&gt;
+(forall (f :: * -&gt; *) a b.
+ Applicative f =&gt;
+ (a -&gt; f b) -&gt; t a -&gt; f (t b))
+-&gt; (forall (f :: * -&gt; *) a. Applicative f =&gt; t (f a) -&gt; f (t a))
+-&gt; (forall (m :: * -&gt; *) a b.
+    Monad m =&gt;
+    (a -&gt; m b) -&gt; t a -&gt; m (t b))
+-&gt; (forall (m :: * -&gt; *) a. Monad m =&gt; t (m a) -&gt; m (t a))
+-&gt; Traversable t
+forall (m :: * -&gt; *) a.
+Monad m =&gt;
+Constraint (m a) -&gt; m (Constraint a)
+forall (f :: * -&gt; *) a.
+Applicative f =&gt;
+Constraint (f a) -&gt; f (Constraint a)
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(a -&gt; m b) -&gt; Constraint a -&gt; m (Constraint b)
+forall (f :: * -&gt; *) a b.
+Applicative f =&gt;
+(a -&gt; f b) -&gt; Constraint a -&gt; f (Constraint b)
+sequence :: Constraint (m a) -&gt; m (Constraint a)
+$csequence :: forall (m :: * -&gt; *) a.
+Monad m =&gt;
+Constraint (m a) -&gt; m (Constraint a)
+mapM :: (a -&gt; m b) -&gt; Constraint a -&gt; m (Constraint b)
+$cmapM :: forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(a -&gt; m b) -&gt; Constraint a -&gt; m (Constraint b)
+sequenceA :: Constraint (f a) -&gt; f (Constraint a)
+$csequenceA :: forall (f :: * -&gt; *) a.
+Applicative f =&gt;
+Constraint (f a) -&gt; f (Constraint a)
+traverse :: (a -&gt; f b) -&gt; Constraint a -&gt; f (Constraint b)
+$ctraverse :: forall (f :: * -&gt; *) a b.
+Applicative f =&gt;
+(a -&gt; f b) -&gt; Constraint a -&gt; f (Constraint b)
+$cp2Traversable :: Foldable Constraint
+$cp1Traversable :: Functor Constraint
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Traversable</span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-170"></span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- |</span><span>
+</span><span id="line-172"></span><span class="hs-comment">-- &gt;&gt;&gt; parse &quot;&quot;</span><span>
+</span><span id="line-173"></span><span class="hs-comment">-- Nothing</span><span>
+</span><span id="line-174"></span><span class="hs-comment">--</span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- &gt;&gt;&gt; parse &quot;Foo-&gt;bar&quot;</span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- Just (Feature [&quot;Foo&quot;] &quot;bar&quot;)</span><span>
+</span><span id="line-177"></span><span class="hs-comment">--</span><span>
+</span><span id="line-178"></span><span class="hs-comment">-- &gt;&gt;&gt; parse &quot;V.Foo.bar&quot;</span><span>
+</span><span id="line-179"></span><span class="hs-comment">-- Just (Feature [&quot;V&quot;,&quot;Foo&quot;] &quot;bar&quot;)</span><span>
+</span><span id="line-180"></span><span class="hs-comment">--</span><span>
+</span><span id="line-181"></span><span class="hs-comment">-- &gt;&gt;&gt; parse &quot;V.E.Foo bar&quot;</span><span>
+</span><span id="line-182"></span><span class="hs-comment">-- Just (Feature [&quot;V&quot;,&quot;E&quot;,&quot;Foo&quot;] &quot;bar&quot;)</span><span>
+</span><span id="line-183"></span><span class="hs-comment">--</span><span>
+</span><span id="line-184"></span><span class="hs-comment">-- &gt;&gt;&gt; parse &quot;1.2&quot;</span><span>
+</span><span id="line-185"></span><span class="hs-comment">-- Just (Version 4202496)</span><span>
+</span><span id="line-186"></span><span class="hs-comment">--</span><span>
+</span><span id="line-187"></span><span class="hs-comment">-- &gt;&gt;&gt; parse &quot;1 2 1&quot;</span><span>
+</span><span id="line-188"></span><span class="hs-comment">-- Just (Version 4202497)</span><span>
+</span><span id="line-189"></span><span class="hs-comment">--</span><span>
+</span><span id="line-190"></span><span class="hs-comment">-- &gt;&gt;&gt; parse &quot;Foo.bar &gt;= 10&quot;</span><span>
+</span><span id="line-191"></span><span class="hs-comment">-- Just (Property [&quot;Foo&quot;] &quot;bar&quot; (GTE 10))</span><span>
+</span><span id="line-192"></span><span class="hs-comment">--</span><span>
+</span><span id="line-193"></span><span class="hs-comment">-- &gt;&gt;&gt; parse &quot;V.Foo.bar &amp; A.B.C_BIT&quot;</span><span>
+</span><span id="line-194"></span><span class="hs-comment">-- Just (Property [&quot;V&quot;,&quot;Foo&quot;] &quot;bar&quot; (AndBit [&quot;A&quot;,&quot;B&quot;,&quot;C_BIT&quot;]))</span><span>
+</span><span id="line-195"></span><span class="hs-comment">--</span><span>
+</span><span id="line-196"></span><span class="hs-comment">-- &gt;&gt;&gt; parse &quot;V.Foo.bar even&quot;</span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- Just (Property [&quot;V&quot;,&quot;Foo&quot;] &quot;bar&quot; (Fun [&quot;even&quot;]))</span><span>
+</span><span id="line-198"></span><span class="hs-comment">--</span><span>
+</span><span id="line-199"></span><span class="hs-comment">-- &gt;&gt;&gt; parse &quot;V.Foo.bar Prelude.even&quot;</span><span>
+</span><span id="line-200"></span><span class="hs-comment">-- Just (Property [&quot;V&quot;,&quot;Foo&quot;] &quot;bar&quot; (Fun [&quot;Prelude&quot;,&quot;even&quot;]))</span><span>
+</span><span id="line-201"></span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#parse"><span class="hs-identifier hs-type">parse</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#Request"><span class="hs-identifier hs-type">Request</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span>
+</span><span id="line-202"></span><span id="parse"><span class="annot"><span class="annottext">parse :: String -&gt; Maybe (Request [String] String)
+</span><a href="Vulkan.Utils.Requirements.TH.html#parse"><span class="hs-identifier hs-var hs-var">parse</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-203"></span><span>  </span><span class="hs-keyword">let</span><span>
+</span><span id="line-204"></span><span>    </span><span id="local-6989586621679261837"><span class="annot"><span class="annottext">varRemChars :: ReadP String
+</span><a href="#local-6989586621679261837"><span class="hs-identifier hs-var hs-var">varRemChars</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; ReadP String
+</span><span class="hs-identifier hs-var">munch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span class="hs-identifier hs-var">isAlphaNum</span></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; (Char -&gt; Bool) -&gt; Char -&gt; Bool
+forall (f :: * -&gt; *). Applicative f =&gt; f Bool -&gt; f Bool -&gt; f Bool
+</span><a href="Vulkan.Utils.Requirements.TH.html#%3C%7C%7C%3E"><span class="hs-operator hs-var">&lt;||&gt;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="hs-char">'\''</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; (Char -&gt; Bool) -&gt; Char -&gt; Bool
+forall (f :: * -&gt; *). Applicative f =&gt; f Bool -&gt; f Bool -&gt; f Bool
+</span><a href="Vulkan.Utils.Requirements.TH.html#%3C%7C%7C%3E"><span class="hs-operator hs-var">&lt;||&gt;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="hs-char">'_'</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-205"></span><span>    </span><span id="local-6989586621679261833"><span class="annot"><span class="annottext">var :: ReadP String
+</span><a href="#local-6989586621679261833"><span class="hs-identifier hs-var hs-var">var</span></a></span></span><span>         </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; String -&gt; String)
+-&gt; ReadP Char -&gt; ReadP (String -&gt; String)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; ReadP Char
+</span><span class="hs-identifier hs-var">satisfy</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span class="hs-identifier hs-var">isLower</span></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; (Char -&gt; Bool) -&gt; Char -&gt; Bool
+forall (f :: * -&gt; *). Applicative f =&gt; f Bool -&gt; f Bool -&gt; f Bool
+</span><a href="Vulkan.Utils.Requirements.TH.html#%3C%7C%7C%3E"><span class="hs-operator hs-var">&lt;||&gt;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="hs-char">'_'</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">ReadP (String -&gt; String) -&gt; ReadP String -&gt; ReadP String
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261837"><span class="hs-identifier hs-var">varRemChars</span></a></span><span>
+</span><span id="line-206"></span><span>    </span><span id="local-6989586621679261829"><span class="annot"><span class="annottext">con :: ReadP String
+</span><a href="#local-6989586621679261829"><span class="hs-identifier hs-var hs-var">con</span></a></span></span><span>         </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; String -&gt; String)
+-&gt; ReadP Char -&gt; ReadP (String -&gt; String)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; ReadP Char
+</span><span class="hs-identifier hs-var">satisfy</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span class="hs-identifier hs-var">isUpper</span></span><span> </span><span class="annot"><span class="annottext">ReadP (String -&gt; String) -&gt; ReadP String -&gt; ReadP String
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261837"><span class="hs-identifier hs-var">varRemChars</span></a></span><span>
+</span><span id="line-207"></span><span>    </span><span id="local-6989586621679261827"><span class="annot"><span class="annottext">mod' :: ReadP String
+</span><a href="#local-6989586621679261827"><span class="hs-identifier hs-var hs-var">mod'</span></a></span></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261829"><span class="hs-identifier hs-var">con</span></a></span><span>
+</span><span id="line-208"></span><span>    </span><span class="annot"><a href="#local-6989586621679261826"><span class="hs-identifier hs-type">qual</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ReadP</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ReadP</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span>
+</span><span id="line-209"></span><span>    </span><span id="local-6989586621679261826"><span class="annot"><span class="annottext">qual :: ReadP String -&gt; ReadP [String]
+</span><a href="#local-6989586621679261826"><span class="hs-identifier hs-var hs-var">qual</span></a></span></span><span> </span><span id="local-6989586621679261825"><span class="annot"><span class="annottext">x :: ReadP String
+</span><a href="#local-6989586621679261825"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; [String]
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; [String]) -&gt; ReadP String -&gt; ReadP [String]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261825"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">ReadP [String] -&gt; ReadP [String] -&gt; ReadP [String]
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(String -&gt; [String] -&gt; [String])
+-&gt; ReadP String -&gt; ReadP ([String] -&gt; [String])
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261827"><span class="hs-identifier hs-var">mod'</span></a></span><span> </span><span class="annot"><span class="annottext">ReadP String -&gt; ReadP Char -&gt; ReadP String
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f a
+</span><span class="hs-operator hs-var">&lt;*</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; ReadP Char
+</span><span class="hs-identifier hs-var">char</span></span><span> </span><span class="annot"><span class="hs-char">'.'</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">ReadP ([String] -&gt; [String]) -&gt; ReadP [String] -&gt; ReadP [String]
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">ReadP String -&gt; ReadP [String]
+</span><a href="#local-6989586621679261826"><span class="hs-identifier hs-var">qual</span></a></span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261825"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-210"></span><span>    </span><span id="local-6989586621679261821"><span class="annot"><span class="annottext">separator :: ReadP ()
+</span><a href="#local-6989586621679261821"><span class="hs-identifier hs-var hs-var">separator</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ReadP ()] -&gt; ReadP ()
+forall (t :: * -&gt; *) (f :: * -&gt; *) a.
+(Foldable t, Alternative f) =&gt;
+t (f a) -&gt; f a
+</span><span class="hs-identifier hs-var">asum</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ReadP ()
+</span><span class="hs-identifier hs-var">skipSpaces</span></span><span> </span><span class="annot"><span class="annottext">ReadP () -&gt; [ReadP ()] -&gt; [ReadP ()]
+forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ReadP String -&gt; ReadP ()
+forall (f :: * -&gt; *) a. Functor f =&gt; f a -&gt; f ()
+</span><span class="hs-identifier hs-var">void</span></span><span> </span><span class="annot"><span class="annottext">(ReadP String -&gt; ReadP ())
+-&gt; (String -&gt; ReadP String) -&gt; String -&gt; ReadP ()
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ReadP String
+</span><span class="hs-identifier hs-var">string</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; ReadP ()) -&gt; [String] -&gt; [ReadP ()]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-string">&quot;.&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;-&gt;&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;::&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;:&quot;</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-211"></span><span>
+</span><span id="line-212"></span><span>    </span><span id="local-6989586621679261816"><span class="annot"><span class="annottext">digits :: ReadP String
+</span><a href="#local-6989586621679261816"><span class="hs-identifier hs-var hs-var">digits</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; ReadP String
+</span><span class="hs-identifier hs-var">munch1</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span class="hs-identifier hs-var">isDigit</span></span><span>
+</span><span id="line-213"></span><span>    </span><span id="local-6989586621679261813"><span class="annot"><span class="annottext">integer :: ReadP Integer
+</span><a href="#local-6989586621679261813"><span class="hs-identifier hs-var hs-var">integer</span></a></span></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadS Integer -&gt; ReadP Integer
+forall a. ReadS a -&gt; ReadP a
+</span><span class="hs-identifier hs-var">readS_to_P</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Read Integer =&gt; ReadS Integer
+forall a. Read a =&gt; ReadS a
+</span><span class="hs-identifier hs-var">reads</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span class="hs-special">)</span><span>
+</span><span id="line-214"></span><span>    </span><span id="local-6989586621679261810"><span class="annot"><span class="annottext">word :: ReadP b
+</span><a href="#local-6989586621679261810"><span class="hs-identifier hs-var hs-var">word</span></a></span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-215"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679261809"><span class="annot"><span class="annottext">w :: b
+</span><a href="#local-6989586621679261809"><span class="hs-identifier hs-var">w</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe b
+forall a. Read a =&gt; String -&gt; Maybe a
+</span><span class="hs-identifier hs-var">readMaybe</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Maybe b) -&gt; ReadP String -&gt; ReadP (Maybe b)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261816"><span class="hs-identifier hs-var">digits</span></a></span><span>
+</span><span id="line-216"></span><span>      </span><span class="annot"><span class="annottext">b -&gt; ReadP b
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621679261809"><span class="hs-identifier hs-var">w</span></a></span><span>
+</span><span id="line-217"></span><span>
+</span><span id="line-218"></span><span>    </span><span id="local-6989586621679261808"><span class="annot"><span class="annottext">comp :: ReadP (Constraint qual)
+</span><a href="#local-6989586621679261808"><span class="hs-identifier hs-var hs-var">comp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-219"></span><span>      </span><span id="local-6989586621679261807"><span class="annot"><span class="annottext">Integer -&gt; Constraint qual
+</span><a href="#local-6989586621679261807"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Constraint qual
+forall qual. Integer -&gt; Constraint qual
+</span><a href="Vulkan.Utils.Requirements.TH.html#GT"><span class="hs-identifier hs-var">GT</span></a></span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Constraint qual)
+-&gt; ReadP String -&gt; ReadP (Integer -&gt; Constraint qual)
+forall (f :: * -&gt; *) a b. Functor f =&gt; a -&gt; f b -&gt; f a
+</span><span class="hs-operator hs-var">&lt;$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ReadP String
+</span><span class="hs-identifier hs-var">string</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&gt;&quot;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">ReadP (Integer -&gt; Constraint qual)
+-&gt; ReadP (Integer -&gt; Constraint qual)
+-&gt; ReadP (Integer -&gt; Constraint qual)
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Constraint qual
+forall qual. Integer -&gt; Constraint qual
+</span><a href="Vulkan.Utils.Requirements.TH.html#GTE"><span class="hs-identifier hs-var">GTE</span></a></span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Constraint qual)
+-&gt; ReadP String -&gt; ReadP (Integer -&gt; Constraint qual)
+forall (f :: * -&gt; *) a b. Functor f =&gt; a -&gt; f b -&gt; f a
+</span><span class="hs-operator hs-var">&lt;$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ReadP String
+</span><span class="hs-identifier hs-var">string</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&gt;=&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-220"></span><span>      </span><span class="annot"><span class="annottext">ReadP ()
+</span><span class="hs-identifier hs-var">skipSpaces</span></span><span>
+</span><span id="line-221"></span><span>      </span><span id="local-6989586621679261805"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679261805"><span class="hs-identifier hs-var">w</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP Integer
+</span><a href="#local-6989586621679261813"><span class="hs-identifier hs-var">integer</span></a></span><span>
+</span><span id="line-222"></span><span>      </span><span class="annot"><span class="annottext">Constraint qual -&gt; ReadP (Constraint qual)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Constraint qual -&gt; ReadP (Constraint qual))
+-&gt; Constraint qual -&gt; ReadP (Constraint qual)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Constraint qual
+</span><a href="#local-6989586621679261807"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679261805"><span class="hs-identifier hs-var">w</span></a></span><span>
+</span><span id="line-223"></span><span>    </span><span id="local-6989586621679261804"><span class="annot"><span class="annottext">andBit :: ReadP (Constraint [String])
+</span><a href="#local-6989586621679261804"><span class="hs-identifier hs-var hs-var">andBit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-224"></span><span>      </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; ReadP String
+</span><span class="hs-identifier hs-var">string</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&amp;&quot;</span></span><span>
+</span><span id="line-225"></span><span>      </span><span class="annot"><span class="annottext">ReadP ()
+</span><span class="hs-identifier hs-var">skipSpaces</span></span><span>
+</span><span id="line-226"></span><span>      </span><span id="local-6989586621679261803"><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679261803"><span class="hs-identifier hs-var">q</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP String -&gt; ReadP [String]
+</span><a href="#local-6989586621679261826"><span class="hs-identifier hs-var">qual</span></a></span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261829"><span class="hs-identifier hs-var">con</span></a></span><span>
+</span><span id="line-227"></span><span>      </span><span class="annot"><span class="annottext">Constraint [String] -&gt; ReadP (Constraint [String])
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Constraint [String] -&gt; ReadP (Constraint [String]))
+-&gt; Constraint [String] -&gt; ReadP (Constraint [String])
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[String] -&gt; Constraint [String]
+forall qual. qual -&gt; Constraint qual
+</span><a href="Vulkan.Utils.Requirements.TH.html#AndBit"><span class="hs-identifier hs-var">AndBit</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679261803"><span class="hs-identifier hs-var">q</span></a></span><span>
+</span><span id="line-228"></span><span>    </span><span id="local-6989586621679261802"><span class="annot"><span class="annottext">fun :: ReadP (Constraint [String])
+</span><a href="#local-6989586621679261802"><span class="hs-identifier hs-var hs-var">fun</span></a></span></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[String] -&gt; Constraint [String]
+forall qual. qual -&gt; Constraint qual
+</span><a href="Vulkan.Utils.Requirements.TH.html#Fun"><span class="hs-identifier hs-var">Fun</span></a></span><span> </span><span class="annot"><span class="annottext">([String] -&gt; Constraint [String])
+-&gt; ReadP [String] -&gt; ReadP (Constraint [String])
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">ReadP String -&gt; ReadP [String]
+</span><a href="#local-6989586621679261826"><span class="hs-identifier hs-var">qual</span></a></span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261833"><span class="hs-identifier hs-var">var</span></a></span><span>
+</span><span id="line-229"></span><span>    </span><span id="local-6989586621679261801"><span class="annot"><span class="annottext">constraint :: ReadP (Constraint [String])
+</span><a href="#local-6989586621679261801"><span class="hs-identifier hs-var hs-var">constraint</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadP (Constraint [String])
+forall qual. ReadP (Constraint qual)
+</span><a href="#local-6989586621679261808"><span class="hs-identifier hs-var">comp</span></a></span><span> </span><span class="annot"><span class="annottext">ReadP (Constraint [String])
+-&gt; ReadP (Constraint [String]) -&gt; ReadP (Constraint [String])
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">ReadP (Constraint [String])
+</span><a href="#local-6989586621679261804"><span class="hs-identifier hs-var">andBit</span></a></span><span> </span><span class="annot"><span class="annottext">ReadP (Constraint [String])
+-&gt; ReadP (Constraint [String]) -&gt; ReadP (Constraint [String])
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">ReadP (Constraint [String])
+</span><a href="#local-6989586621679261802"><span class="hs-identifier hs-var">fun</span></a></span><span>
+</span><span id="line-230"></span><span>
+</span><span id="line-231"></span><span>    </span><span id="local-6989586621679261800"><span class="annot"><span class="annottext">version :: ReadP (Request qual unqual)
+</span><a href="#local-6989586621679261800"><span class="hs-identifier hs-var hs-var">version</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-232"></span><span>      </span><span id="local-6989586621679261799"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679261799"><span class="hs-identifier hs-var">ma</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP Word32
+forall b. Read b =&gt; ReadP b
+</span><a href="#local-6989586621679261810"><span class="hs-identifier hs-var">word</span></a></span><span>
+</span><span id="line-233"></span><span>      </span><span class="annot"><span class="annottext">ReadP ()
+</span><a href="#local-6989586621679261821"><span class="hs-identifier hs-var">separator</span></a></span><span>
+</span><span id="line-234"></span><span>      </span><span id="local-6989586621679261798"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679261798"><span class="hs-identifier hs-var">mi</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP Word32
+forall b. Read b =&gt; ReadP b
+</span><a href="#local-6989586621679261810"><span class="hs-identifier hs-var">word</span></a></span><span>
+</span><span id="line-235"></span><span>      </span><span id="local-6989586621679261797"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679261797"><span class="hs-identifier hs-var">pa</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Maybe Word32 -&gt; Word32
+forall a. a -&gt; Maybe a -&gt; a
+</span><span class="hs-identifier hs-var">fromMaybe</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">(Maybe Word32 -&gt; Word32) -&gt; ReadP (Maybe Word32) -&gt; ReadP Word32
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ReadP ()
+</span><a href="#local-6989586621679261821"><span class="hs-identifier hs-var">separator</span></a></span><span> </span><span class="annot"><span class="annottext">ReadP () -&gt; ReadP (Maybe Word32) -&gt; ReadP (Maybe Word32)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
+</span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">ReadP Word32 -&gt; ReadP (Maybe Word32)
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f (Maybe a)
+</span><span class="hs-identifier hs-var">optional</span></span><span> </span><span class="annot"><span class="annottext">ReadP Word32
+forall b. Read b =&gt; ReadP b
+</span><a href="#local-6989586621679261810"><span class="hs-identifier hs-var">word</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-236"></span><span>      </span><span class="annot"><span class="annottext">Request qual unqual -&gt; ReadP (Request qual unqual)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Request qual unqual -&gt; ReadP (Request qual unqual))
+-&gt; Request qual unqual -&gt; ReadP (Request qual unqual)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Request qual unqual
+forall qual unqual. Word32 -&gt; Request qual unqual
+</span><a href="Vulkan.Utils.Requirements.TH.html#Version"><span class="hs-identifier hs-var">Version</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32 -&gt; Word32
+</span><span class="hs-identifier hs-var">MAKE_VERSION</span></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679261799"><span class="hs-identifier hs-var">ma</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679261798"><span class="hs-identifier hs-var">mi</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621679261797"><span class="hs-identifier hs-var">pa</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-237"></span><span>
+</span><span id="line-238"></span><span>    </span><span id="local-6989586621679261794"><span class="annot"><span class="annottext">feature :: ReadP (Request [String] String)
+</span><a href="#local-6989586621679261794"><span class="hs-identifier hs-var hs-var">feature</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-239"></span><span>      </span><span id="local-6989586621679261793"><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679261793"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP String -&gt; ReadP [String]
+</span><a href="#local-6989586621679261826"><span class="hs-identifier hs-var">qual</span></a></span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261829"><span class="hs-identifier hs-var">con</span></a></span><span>
+</span><span id="line-240"></span><span>      </span><span class="annot"><span class="annottext">()
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP ()
+</span><a href="#local-6989586621679261821"><span class="hs-identifier hs-var">separator</span></a></span><span>
+</span><span id="line-241"></span><span>      </span><span id="local-6989586621679261792"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261792"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261833"><span class="hs-identifier hs-var">var</span></a></span><span>
+</span><span id="line-242"></span><span>      </span><span class="annot"><span class="annottext">Request [String] String -&gt; ReadP (Request [String] String)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Request [String] String -&gt; ReadP (Request [String] String))
+-&gt; Request [String] String -&gt; ReadP (Request [String] String)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[String] -&gt; String -&gt; Request [String] String
+forall qual unqual. qual -&gt; unqual -&gt; Request qual unqual
+</span><a href="Vulkan.Utils.Requirements.TH.html#Feature"><span class="hs-identifier hs-var">Feature</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679261793"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261792"><span class="hs-identifier hs-var">m</span></a></span><span>
+</span><span id="line-243"></span><span>
+</span><span id="line-244"></span><span>    </span><span id="local-6989586621679261791"><span class="annot"><span class="annottext">property :: ReadP (Request [String] String)
+</span><a href="#local-6989586621679261791"><span class="hs-identifier hs-var hs-var">property</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-245"></span><span>      </span><span id="local-6989586621679261790"><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679261790"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP String -&gt; ReadP [String]
+</span><a href="#local-6989586621679261826"><span class="hs-identifier hs-var">qual</span></a></span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261829"><span class="hs-identifier hs-var">con</span></a></span><span>
+</span><span id="line-246"></span><span>      </span><span class="annot"><span class="annottext">()
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP ()
+</span><a href="#local-6989586621679261821"><span class="hs-identifier hs-var">separator</span></a></span><span>
+</span><span id="line-247"></span><span>      </span><span id="local-6989586621679261789"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261789"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP String
+</span><a href="#local-6989586621679261833"><span class="hs-identifier hs-var">var</span></a></span><span>
+</span><span id="line-248"></span><span>      </span><span class="annot"><span class="annottext">ReadP ()
+</span><span class="hs-identifier hs-var">skipSpaces</span></span><span>
+</span><span id="line-249"></span><span>      </span><span id="local-6989586621679261788"><span class="annot"><span class="annottext">Constraint [String]
+</span><a href="#local-6989586621679261788"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP (Constraint [String])
+</span><a href="#local-6989586621679261801"><span class="hs-identifier hs-var">constraint</span></a></span><span>
+</span><span id="line-250"></span><span>      </span><span class="annot"><span class="annottext">Request [String] String -&gt; ReadP (Request [String] String)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Request [String] String -&gt; ReadP (Request [String] String))
+-&gt; Request [String] String -&gt; ReadP (Request [String] String)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[String]
+-&gt; String -&gt; Constraint [String] -&gt; Request [String] String
+forall qual unqual.
+qual -&gt; unqual -&gt; Constraint qual -&gt; Request qual unqual
+</span><a href="Vulkan.Utils.Requirements.TH.html#Property"><span class="hs-identifier hs-var">Property</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679261790"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261789"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">Constraint [String]
+</span><a href="#local-6989586621679261788"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><span id="line-251"></span><span>
+</span><span id="line-252"></span><span>    </span><span id="local-6989586621679261787"><span class="annot"><span class="annottext">extension :: ReadP (Request qual unqual)
+</span><a href="#local-6989586621679261787"><span class="hs-identifier hs-var hs-var">extension</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-253"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679261786"><span class="annot"><span class="annottext">prefix :: p
+</span><a href="#local-6989586621679261786"><span class="hs-identifier hs-var hs-var">prefix</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_&quot;</span></span><span>
+</span><span id="line-254"></span><span>      </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; ReadP String
+</span><span class="hs-identifier hs-var">string</span></span><span> </span><span class="annot"><span class="annottext">String
+forall p. IsString p =&gt; p
+</span><a href="#local-6989586621679261786"><span class="hs-identifier hs-var">prefix</span></a></span><span>
+</span><span id="line-255"></span><span>      </span><span id="local-6989586621679261785"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261785"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
+forall p. IsString p =&gt; p
+</span><a href="#local-6989586621679261786"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; ReadP String -&gt; ReadP String
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; ReadP String
+</span><span class="hs-identifier hs-var">munch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span class="hs-identifier hs-var">isAlphaNum</span></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; (Char -&gt; Bool) -&gt; Char -&gt; Bool
+forall (f :: * -&gt; *). Applicative f =&gt; f Bool -&gt; f Bool -&gt; f Bool
+</span><a href="Vulkan.Utils.Requirements.TH.html#%3C%7C%7C%3E"><span class="hs-operator hs-var">&lt;||&gt;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="hs-char">'_'</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-256"></span><span>      </span><span class="annot"><span class="annottext">ReadP ()
+</span><span class="hs-identifier hs-var">skipSpaces</span></span><span>
+</span><span id="line-257"></span><span>      </span><span id="local-6989586621679261784"><span class="annot"><span class="annottext">Maybe Word32
+</span><a href="#local-6989586621679261784"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadP Word32 -&gt; ReadP (Maybe Word32)
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f (Maybe a)
+</span><span class="hs-identifier hs-var">optional</span></span><span> </span><span class="annot"><span class="annottext">ReadP Word32
+forall b. Read b =&gt; ReadP b
+</span><a href="#local-6989586621679261810"><span class="hs-identifier hs-var">word</span></a></span><span>
+</span><span id="line-258"></span><span>      </span><span class="annot"><span class="annottext">Request qual unqual -&gt; ReadP (Request qual unqual)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Request qual unqual -&gt; ReadP (Request qual unqual))
+-&gt; Request qual unqual -&gt; ReadP (Request qual unqual)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe Word32 -&gt; Request qual unqual
+forall qual unqual. String -&gt; Maybe Word32 -&gt; Request qual unqual
+</span><a href="Vulkan.Utils.Requirements.TH.html#Extension"><span class="hs-identifier hs-var">Extension</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679261785"><span class="hs-identifier hs-var">e</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Word32
+</span><a href="#local-6989586621679261784"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><span id="line-259"></span><span>
+</span><span id="line-260"></span><span>    </span><span id="local-6989586621679261783"><span class="annot"><span class="annottext">request :: ReadP (Request [String] String)
+</span><a href="#local-6989586621679261783"><span class="hs-identifier hs-var hs-var">request</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-261"></span><span>      </span><span class="annot"><span class="annottext">ReadP ()
+</span><span class="hs-identifier hs-var">skipSpaces</span></span><span>
+</span><span id="line-262"></span><span>      </span><span class="annot"><span class="annottext">[ReadP (Request [String] String)]
+-&gt; ReadP (Request [String] String)
+forall (t :: * -&gt; *) (f :: * -&gt; *) a.
+(Foldable t, Alternative f) =&gt;
+t (f a) -&gt; f a
+</span><span class="hs-identifier hs-var">asum</span></span><span>
+</span><span id="line-263"></span><span>        </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">ReadP (Request [String] String)
+</span><a href="#local-6989586621679261782"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">ReadP (Request [String] String)
+-&gt; ReadP () -&gt; ReadP (Request [String] String)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f a
+</span><span class="hs-operator hs-var">&lt;*</span></span><span> </span><span class="annot"><span class="annottext">ReadP ()
+</span><span class="hs-identifier hs-var">skipSpaces</span></span><span> </span><span class="annot"><span class="annottext">ReadP (Request [String] String)
+-&gt; ReadP () -&gt; ReadP (Request [String] String)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f a
+</span><span class="hs-operator hs-var">&lt;*</span></span><span> </span><span class="annot"><span class="annottext">ReadP ()
+</span><span class="hs-identifier hs-var">eof</span></span><span>
+</span><span id="line-264"></span><span>        </span><span class="hs-glyph">|</span><span> </span><span id="local-6989586621679261782"><span class="annot"><span class="annottext">ReadP (Request [String] String)
+</span><a href="#local-6989586621679261782"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">ReadP (Request [String] String)
+forall qual unqual. ReadP (Request qual unqual)
+</span><a href="#local-6989586621679261800"><span class="hs-identifier hs-var">version</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ReadP (Request [String] String)
+</span><a href="#local-6989586621679261794"><span class="hs-identifier hs-var">feature</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ReadP (Request [String] String)
+</span><a href="#local-6989586621679261791"><span class="hs-identifier hs-var">property</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ReadP (Request [String] String)
+forall qual unqual. ReadP (Request qual unqual)
+</span><a href="#local-6989586621679261787"><span class="hs-identifier hs-var">extension</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-265"></span><span>        </span><span class="hs-special">]</span><span>
+</span><span id="line-266"></span><span>  </span><span class="hs-keyword">in</span><span>
+</span><span id="line-267"></span><span>    </span><span class="annot"><span class="annottext">ReadP (Request [String] String) -&gt; ReadS (Request [String] String)
+forall a. ReadP a -&gt; ReadS a
+</span><span class="hs-identifier hs-var">readP_to_S</span></span><span> </span><span class="annot"><span class="annottext">ReadP (Request [String] String)
+</span><a href="#local-6989586621679261783"><span class="hs-identifier hs-var">request</span></a></span><span> </span><span class="annot"><span class="annottext">ReadS (Request [String] String)
+-&gt; ([(Request [String] String, String)]
+    -&gt; Maybe (Request [String] String))
+-&gt; String
+-&gt; Maybe (Request [String] String)
+forall k (cat :: k -&gt; k -&gt; *) (a :: k) (b :: k) (c :: k).
+Category cat =&gt;
+cat a b -&gt; cat b c -&gt; cat a c
+</span><span class="hs-operator hs-var">&gt;&gt;&gt;</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-268"></span><span>      </span><span class="hs-comment">-- xs        -&gt; pure $ Feature [] (show xs)</span><span>
+</span><span id="line-269"></span><span>      </span><span class="hs-special">[</span><span class="hs-special">(</span><span id="local-6989586621679261779"><span class="annot"><span class="annottext">r :: Request [String] String
+</span><a href="#local-6989586621679261779"><span class="hs-identifier hs-var">r</span></a></span></span><span class="hs-special">,</span><span> </span><span class="hs-string">&quot;&quot;</span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Request [String] String -&gt; Maybe (Request [String] String)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Request [String] String
+</span><a href="#local-6989586621679261779"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-270"></span><span>      </span><span class="hs-identifier">_</span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe (Request [String] String)
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-271"></span><span class="hs-pragma">{-# ANN</span><span> </span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#parse"><span class="hs-pragma hs-type">parse</span></a></span><span> </span><span class="hs-pragma">(</span><span class="annot"><span class="hs-pragma">&quot;HLint: ignore Use &lt;$&gt;&quot;</span></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><span class="hs-pragma hs-type">String</span></span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-272"></span><span>
+</span><span id="line-273"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-274"></span><span class="hs-comment">-- Utils</span><span>
+</span><span id="line-275"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-276"></span><span>
+</span><span id="line-277"></span><span class="hs-comment">-- | Filters blank or commented lines, remove duplicates</span><span>
+</span><span id="line-278"></span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#filterComments"><span class="hs-identifier hs-type">filterComments</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span>
+</span><span id="line-279"></span><span id="filterComments"><span class="annot"><span class="annottext">filterComments :: String -&gt; [String]
+</span><a href="Vulkan.Utils.Requirements.TH.html#filterComments"><span class="hs-identifier hs-var hs-var">filterComments</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-280"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679261778"><span class="annot"><span class="annottext">bad :: String -&gt; Bool
+</span><a href="#local-6989586621679261778"><span class="hs-identifier hs-var hs-var">bad</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;--&quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; Bool
+forall a. Eq a =&gt; [a] -&gt; [a] -&gt; Bool
+</span><span class="hs-operator hs-var">`isPrefixOf`</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Bool) -&gt; (String -&gt; Bool) -&gt; String -&gt; Bool
+forall (f :: * -&gt; *). Applicative f =&gt; f Bool -&gt; f Bool -&gt; f Bool
+</span><a href="Vulkan.Utils.Requirements.TH.html#%3C%7C%7C%3E"><span class="hs-operator hs-var">&lt;||&gt;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; Bool
+forall a. Eq a =&gt; [a] -&gt; [a] -&gt; Bool
+</span><span class="hs-operator hs-var">`isPrefixOf`</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Bool) -&gt; (String -&gt; Bool) -&gt; String -&gt; Bool
+forall (f :: * -&gt; *). Applicative f =&gt; f Bool -&gt; f Bool -&gt; f Bool
+</span><a href="Vulkan.Utils.Requirements.TH.html#%3C%7C%7C%3E"><span class="hs-operator hs-var">&lt;||&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Bool
+forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Bool
+</span><span class="hs-identifier hs-var">null</span></span><span class="hs-special">)</span><span>
+</span><span id="line-281"></span><span>  </span><span class="hs-keyword">in</span><span>  </span><span class="annot"><span class="annottext">[String] -&gt; [String]
+forall a. Ord a =&gt; [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">nubOrd</span></span><span> </span><span class="annot"><span class="annottext">([String] -&gt; [String])
+-&gt; (String -&gt; [String]) -&gt; String -&gt; [String]
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Bool) -&gt; [String] -&gt; [String]
+forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">filter</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool
+</span><span class="hs-identifier hs-var">not</span></span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Bool) -&gt; (String -&gt; Bool) -&gt; String -&gt; Bool
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Bool
+</span><a href="#local-6989586621679261778"><span class="hs-identifier hs-var">bad</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([String] -&gt; [String])
+-&gt; (String -&gt; [String]) -&gt; String -&gt; [String]
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; [String] -&gt; [String]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; String -&gt; String
+forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">dropWhile</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span class="hs-identifier hs-var">isSpace</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([String] -&gt; [String])
+-&gt; (String -&gt; [String]) -&gt; String -&gt; [String]
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; [String]
+</span><span class="hs-identifier hs-var">lines</span></span><span>
+</span><span id="line-282"></span><span>
+</span><span id="line-283"></span><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#exps"><span class="hs-identifier hs-type">exps</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ExpQ</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ExpQ</span></span><span>
+</span><span id="line-284"></span><span id="exps"><span class="annot"><span class="annottext">exps :: (String -&gt; Q Exp) -&gt; [String] -&gt; Q Exp
+</span><a href="Vulkan.Utils.Requirements.TH.html#exps"><span class="hs-identifier hs-var hs-var">exps</span></a></span></span><span> </span><span id="local-6989586621679261772"><span class="annot"><span class="annottext">f :: String -&gt; Q Exp
+</span><a href="#local-6989586621679261772"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Q Exp] -&gt; Q Exp
+</span><span class="hs-identifier hs-var">listE</span></span><span> </span><span class="annot"><span class="annottext">([Q Exp] -&gt; Q Exp) -&gt; ([String] -&gt; [Q Exp]) -&gt; [String] -&gt; Q Exp
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp) -&gt; [String] -&gt; [Q Exp]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Exp
+</span><a href="#local-6989586621679261772"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-285"></span><span>
+</span><span id="line-286"></span><span id="local-6989586621679262023"><span class="annot"><a href="Vulkan.Utils.Requirements.TH.html#%3C%7C%7C%3E"><span class="hs-operator hs-type">(&lt;||&gt;)</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679262023"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679262023"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679262023"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679262023"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span></span><span>
+</span><span id="line-287"></span><span id="%3C%7C%7C%3E"><span class="annot"><span class="annottext">&lt;||&gt; :: f Bool -&gt; f Bool -&gt; f Bool
+</span><a href="Vulkan.Utils.Requirements.TH.html#%3C%7C%7C%3E"><span class="hs-operator hs-var hs-var">(&lt;||&gt;)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Bool -&gt; Bool) -&gt; f Bool -&gt; f Bool -&gt; f Bool
+forall (f :: * -&gt; *) a b c.
+Applicative f =&gt;
+(a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c
+</span><span class="hs-identifier hs-var">liftA2</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><span class="hs-operator hs-var">(||)</span></span><span>
+</span><span id="line-288"></span><span>
+</span><span id="line-289"></span></pre></body></html>

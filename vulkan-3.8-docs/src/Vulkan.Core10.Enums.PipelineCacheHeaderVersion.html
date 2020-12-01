@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;PipelineCacheHeaderVersion&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.PipelineCacheHeaderVersion</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PipelineCacheHeaderVersion"><span class="hs-identifier">PipelineCacheHeaderVersion</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PIPELINE_CACHE_HEADER_VERSION_ONE"><span class="hs-identifier">PIPELINE_CACHE_HEADER_VERSION_ONE</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-5"></span><span>                                                                                  </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-6"></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-comment">-- | VkPipelineCacheHeaderVersion - Encode pipeline cache version</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--</span><span>
+</span><span id="line-19"></span><span class="hs-comment">-- 'Vulkan.Core10.PipelineCache.createPipelineCache',</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- 'Vulkan.Core10.PipelineCache.getPipelineCacheData'</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">newtype</span><span> </span><span id="PipelineCacheHeaderVersion"><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PipelineCacheHeaderVersion"><span class="hs-identifier hs-var">PipelineCacheHeaderVersion</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PipelineCacheHeaderVersion"><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PipelineCacheHeaderVersion"><span class="hs-identifier hs-var">PipelineCacheHeaderVersion</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-22"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680134118"><span id="local-6989586621680134120"><span class="annot"><span class="annottext">PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+(PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool)
+-&gt; (PipelineCacheHeaderVersion
+    -&gt; PipelineCacheHeaderVersion -&gt; Bool)
+-&gt; Eq PipelineCacheHeaderVersion
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+$c/= :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+== :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+$c== :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680134102"><span id="local-6989586621680134104"><span id="local-6989586621680134106"><span id="local-6989586621680134108"><span id="local-6989586621680134110"><span id="local-6989586621680134112"><span id="local-6989586621680134114"><span class="annot"><span class="annottext">Eq PipelineCacheHeaderVersion
+Eq PipelineCacheHeaderVersion =&gt;
+(PipelineCacheHeaderVersion
+ -&gt; PipelineCacheHeaderVersion -&gt; Ordering)
+-&gt; (PipelineCacheHeaderVersion
+    -&gt; PipelineCacheHeaderVersion -&gt; Bool)
+-&gt; (PipelineCacheHeaderVersion
+    -&gt; PipelineCacheHeaderVersion -&gt; Bool)
+-&gt; (PipelineCacheHeaderVersion
+    -&gt; PipelineCacheHeaderVersion -&gt; Bool)
+-&gt; (PipelineCacheHeaderVersion
+    -&gt; PipelineCacheHeaderVersion -&gt; Bool)
+-&gt; (PipelineCacheHeaderVersion
+    -&gt; PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion)
+-&gt; (PipelineCacheHeaderVersion
+    -&gt; PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion)
+-&gt; Ord PipelineCacheHeaderVersion
+PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+PipelineCacheHeaderVersion
+-&gt; PipelineCacheHeaderVersion -&gt; Ordering
+PipelineCacheHeaderVersion
+-&gt; PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: PipelineCacheHeaderVersion
+-&gt; PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion
+$cmin :: PipelineCacheHeaderVersion
+-&gt; PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion
+max :: PipelineCacheHeaderVersion
+-&gt; PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion
+$cmax :: PipelineCacheHeaderVersion
+-&gt; PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion
+&gt;= :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+$c&gt;= :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+&gt; :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+$c&gt; :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+&lt;= :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+$c&lt;= :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+&lt; :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+$c&lt; :: PipelineCacheHeaderVersion -&gt; PipelineCacheHeaderVersion -&gt; Bool
+compare :: PipelineCacheHeaderVersion
+-&gt; PipelineCacheHeaderVersion -&gt; Ordering
+$ccompare :: PipelineCacheHeaderVersion
+-&gt; PipelineCacheHeaderVersion -&gt; Ordering
+$cp1Ord :: Eq PipelineCacheHeaderVersion
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680134085"><span id="local-6989586621680134087"><span id="local-6989586621680134089"><span id="local-6989586621680134091"><span id="local-6989586621680134093"><span id="local-6989586621680134095"><span id="local-6989586621680134097"><span id="local-6989586621680134099"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO PipelineCacheHeaderVersion
+Ptr b -&gt; Int -&gt; PipelineCacheHeaderVersion -&gt; IO ()
+Ptr PipelineCacheHeaderVersion -&gt; IO PipelineCacheHeaderVersion
+Ptr PipelineCacheHeaderVersion
+-&gt; Int -&gt; IO PipelineCacheHeaderVersion
+Ptr PipelineCacheHeaderVersion
+-&gt; Int -&gt; PipelineCacheHeaderVersion -&gt; IO ()
+Ptr PipelineCacheHeaderVersion
+-&gt; PipelineCacheHeaderVersion -&gt; IO ()
+PipelineCacheHeaderVersion -&gt; Int
+(PipelineCacheHeaderVersion -&gt; Int)
+-&gt; (PipelineCacheHeaderVersion -&gt; Int)
+-&gt; (Ptr PipelineCacheHeaderVersion
+    -&gt; Int -&gt; IO PipelineCacheHeaderVersion)
+-&gt; (Ptr PipelineCacheHeaderVersion
+    -&gt; Int -&gt; PipelineCacheHeaderVersion -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO PipelineCacheHeaderVersion)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; PipelineCacheHeaderVersion -&gt; IO ())
+-&gt; (Ptr PipelineCacheHeaderVersion
+    -&gt; IO PipelineCacheHeaderVersion)
+-&gt; (Ptr PipelineCacheHeaderVersion
+    -&gt; PipelineCacheHeaderVersion -&gt; IO ())
+-&gt; Storable PipelineCacheHeaderVersion
+forall b. Ptr b -&gt; Int -&gt; IO PipelineCacheHeaderVersion
+forall b. Ptr b -&gt; Int -&gt; PipelineCacheHeaderVersion -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr PipelineCacheHeaderVersion
+-&gt; PipelineCacheHeaderVersion -&gt; IO ()
+$cpoke :: Ptr PipelineCacheHeaderVersion
+-&gt; PipelineCacheHeaderVersion -&gt; IO ()
+peek :: Ptr PipelineCacheHeaderVersion -&gt; IO PipelineCacheHeaderVersion
+$cpeek :: Ptr PipelineCacheHeaderVersion -&gt; IO PipelineCacheHeaderVersion
+pokeByteOff :: Ptr b -&gt; Int -&gt; PipelineCacheHeaderVersion -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; PipelineCacheHeaderVersion -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO PipelineCacheHeaderVersion
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO PipelineCacheHeaderVersion
+pokeElemOff :: Ptr PipelineCacheHeaderVersion
+-&gt; Int -&gt; PipelineCacheHeaderVersion -&gt; IO ()
+$cpokeElemOff :: Ptr PipelineCacheHeaderVersion
+-&gt; Int -&gt; PipelineCacheHeaderVersion -&gt; IO ()
+peekElemOff :: Ptr PipelineCacheHeaderVersion
+-&gt; Int -&gt; IO PipelineCacheHeaderVersion
+$cpeekElemOff :: Ptr PipelineCacheHeaderVersion
+-&gt; Int -&gt; IO PipelineCacheHeaderVersion
+alignment :: PipelineCacheHeaderVersion -&gt; Int
+$calignment :: PipelineCacheHeaderVersion -&gt; Int
+sizeOf :: PipelineCacheHeaderVersion -&gt; Int
+$csizeOf :: PipelineCacheHeaderVersion -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680134082"><span class="annot"><span class="annottext">PipelineCacheHeaderVersion
+PipelineCacheHeaderVersion -&gt; Zero PipelineCacheHeaderVersion
+forall a. a -&gt; Zero a
+zero :: PipelineCacheHeaderVersion
+$czero :: PipelineCacheHeaderVersion
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error</span><span>
+</span><span id="line-24"></span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- | 'PIPELINE_CACHE_HEADER_VERSION_ONE' specifies version one of the</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- pipeline cache.</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bPIPELINE_CACHE_HEADER_VERSION_ONE"><span id="%24mPIPELINE_CACHE_HEADER_VERSION_ONE"><span id="PIPELINE_CACHE_HEADER_VERSION_ONE"><span class="annot"><span class="annottext">$bPIPELINE_CACHE_HEADER_VERSION_ONE :: PipelineCacheHeaderVersion
+$mPIPELINE_CACHE_HEADER_VERSION_ONE :: forall r.
+PipelineCacheHeaderVersion -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#%24bPIPELINE_CACHE_HEADER_VERSION_ONE"><span class="hs-identifier hs-var hs-var hs-var">PIPELINE_CACHE_HEADER_VERSION_ONE</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PipelineCacheHeaderVersion"><span class="hs-identifier hs-type">PipelineCacheHeaderVersion</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-28"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PIPELINE_CACHE_HEADER_VERSION_ONE"><span class="hs-pragma hs-type">PIPELINE_CACHE_HEADER_VERSION_ONE</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PipelineCacheHeaderVersion"><span class="hs-pragma hs-type">PipelineCacheHeaderVersion</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#conNamePipelineCacheHeaderVersion"><span class="hs-identifier hs-type">conNamePipelineCacheHeaderVersion</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-31"></span><span id="conNamePipelineCacheHeaderVersion"><span class="annot"><span class="annottext">conNamePipelineCacheHeaderVersion :: String
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#conNamePipelineCacheHeaderVersion"><span class="hs-identifier hs-var hs-var">conNamePipelineCacheHeaderVersion</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;PipelineCacheHeaderVersion&quot;</span></span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#enumPrefixPipelineCacheHeaderVersion"><span class="hs-identifier hs-type">enumPrefixPipelineCacheHeaderVersion</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-34"></span><span id="enumPrefixPipelineCacheHeaderVersion"><span class="annot"><span class="annottext">enumPrefixPipelineCacheHeaderVersion :: String
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#enumPrefixPipelineCacheHeaderVersion"><span class="hs-identifier hs-var hs-var">enumPrefixPipelineCacheHeaderVersion</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;PIPELINE_CACHE_HEADER_VERSION_ONE&quot;</span></span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#showTablePipelineCacheHeaderVersion"><span class="hs-identifier hs-type">showTablePipelineCacheHeaderVersion</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PipelineCacheHeaderVersion"><span class="hs-identifier hs-type">PipelineCacheHeaderVersion</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-37"></span><span id="showTablePipelineCacheHeaderVersion"><span class="annot"><span class="annottext">showTablePipelineCacheHeaderVersion :: [(PipelineCacheHeaderVersion, String)]
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#showTablePipelineCacheHeaderVersion"><span class="hs-identifier hs-var hs-var">showTablePipelineCacheHeaderVersion</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="annottext">PipelineCacheHeaderVersion
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PIPELINE_CACHE_HEADER_VERSION_ONE"><span class="hs-identifier hs-var">PIPELINE_CACHE_HEADER_VERSION_ONE</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680134071"><span id="local-6989586621680134073"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PipelineCacheHeaderVersion"><span class="hs-identifier hs-type">PipelineCacheHeaderVersion</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-40"></span><span>  </span><span id="local-6989586621680134069"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; PipelineCacheHeaderVersion -&gt; ShowS
+</span><a href="#local-6989586621680134069"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(PipelineCacheHeaderVersion, String)]
+-&gt; String
+-&gt; (PipelineCacheHeaderVersion -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; PipelineCacheHeaderVersion
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#enumPrefixPipelineCacheHeaderVersion"><span class="hs-identifier hs-var">enumPrefixPipelineCacheHeaderVersion</span></a></span><span>
+</span><span id="line-41"></span><span>                            </span><span class="annot"><span class="annottext">[(PipelineCacheHeaderVersion, String)]
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#showTablePipelineCacheHeaderVersion"><span class="hs-identifier hs-var">showTablePipelineCacheHeaderVersion</span></a></span><span>
+</span><span id="line-42"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#conNamePipelineCacheHeaderVersion"><span class="hs-identifier hs-var">conNamePipelineCacheHeaderVersion</span></a></span><span>
+</span><span id="line-43"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PipelineCacheHeaderVersion"><span class="hs-identifier hs-type">PipelineCacheHeaderVersion</span></a></span><span> </span><span id="local-6989586621680134068"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621680134068"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680134068"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680134061"><span id="local-6989586621680134064"><span id="local-6989586621680134066"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PipelineCacheHeaderVersion"><span class="hs-identifier hs-type">PipelineCacheHeaderVersion</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-47"></span><span>  </span><span id="local-6989586621680134059"><span class="annot"><span class="annottext">readPrec :: ReadPrec PipelineCacheHeaderVersion
+</span><a href="#local-6989586621680134059"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(PipelineCacheHeaderVersion, String)]
+-&gt; String
+-&gt; (Int32 -&gt; PipelineCacheHeaderVersion)
+-&gt; ReadPrec PipelineCacheHeaderVersion
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#enumPrefixPipelineCacheHeaderVersion"><span class="hs-identifier hs-var">enumPrefixPipelineCacheHeaderVersion</span></a></span><span>
+</span><span id="line-48"></span><span>                          </span><span class="annot"><span class="annottext">[(PipelineCacheHeaderVersion, String)]
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#showTablePipelineCacheHeaderVersion"><span class="hs-identifier hs-var">showTablePipelineCacheHeaderVersion</span></a></span><span>
+</span><span id="line-49"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#conNamePipelineCacheHeaderVersion"><span class="hs-identifier hs-var">conNamePipelineCacheHeaderVersion</span></a></span><span>
+</span><span id="line-50"></span><span>                          </span><span class="annot"><span class="annottext">Int32 -&gt; PipelineCacheHeaderVersion
+</span><a href="Vulkan.Core10.Enums.PipelineCacheHeaderVersion.html#PipelineCacheHeaderVersion"><span class="hs-identifier hs-var">PipelineCacheHeaderVersion</span></a></span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span></pre></body></html>

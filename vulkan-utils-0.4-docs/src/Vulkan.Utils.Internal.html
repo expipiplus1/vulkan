@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Utils.Internal</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span>                         </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">throwIO</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span>               </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>                                                </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span>                                                </span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">System.IO</span></span><span>                      </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">hPutStrLn</span></span><span>
+</span><span id="line-9"></span><span>                                                </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">stderr</span></span><span>
+</span><span id="line-10"></span><span>                                                </span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH.Quote</span></span><span>
+</span><span id="line-12"></span><span>
+</span><span id="line-13"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- Internal utils</span><span>
+</span><span id="line-15"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span id="local-6989586621679260407"><span class="annot"><a href="Vulkan.Utils.Internal.html#unsatisfiedConstraints"><span class="hs-identifier hs-type">unsatisfiedConstraints</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679260407"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-18"></span><span id="unsatisfiedConstraints"><span class="annot"><span class="annottext">unsatisfiedConstraints :: String -&gt; IO a
+</span><a href="Vulkan.Utils.Internal.html#unsatisfiedConstraints"><span class="hs-identifier hs-var hs-var">unsatisfiedConstraints</span></a></span></span><span> </span><span id="local-6989586621679260405"><span class="annot"><span class="annottext">message :: String
+</span><a href="#local-6989586621679260405"><span class="hs-identifier hs-var">message</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-19"></span><span>  </span><span class="annot"><span class="annottext">IOException -&gt; IO a
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO a) -&gt; IOException -&gt; IO a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">UnsatisfiedConstraints</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260405"><span class="hs-identifier hs-var">message</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-20"></span><span>
+</span><span id="line-21"></span><span id="local-6989586621679260402"><span class="annot"><a href="Vulkan.Utils.Internal.html#noSuchThing"><span class="hs-identifier hs-type">noSuchThing</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679260402"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-22"></span><span id="noSuchThing"><span class="annot"><span class="annottext">noSuchThing :: String -&gt; IO a
+</span><a href="Vulkan.Utils.Internal.html#noSuchThing"><span class="hs-identifier hs-var hs-var">noSuchThing</span></a></span></span><span> </span><span id="local-6989586621679260400"><span class="annot"><span class="annottext">message :: String
+</span><a href="#local-6989586621679260400"><span class="hs-identifier hs-var">message</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-23"></span><span>  </span><span class="annot"><span class="annottext">IOException -&gt; IO a
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO a) -&gt; IOException -&gt; IO a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">NoSuchThing</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260400"><span class="hs-identifier hs-var">message</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-24"></span><span>
+</span><span id="line-25"></span><span id="local-6989586621679260398"><span class="annot"><a href="Vulkan.Utils.Internal.html#sayErr"><span class="hs-identifier hs-type">sayErr</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679260398"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679260398"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
+</span><span id="line-26"></span><span id="sayErr"><span class="annot"><span class="annottext">sayErr :: String -&gt; m ()
+</span><a href="Vulkan.Utils.Internal.html#sayErr"><span class="hs-identifier hs-var hs-var">sayErr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; m ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; m ()) -&gt; (String -&gt; IO ()) -&gt; String -&gt; m ()
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Handle -&gt; String -&gt; IO ()
+</span><span class="hs-identifier hs-var">hPutStrLn</span></span><span> </span><span class="annot"><span class="annottext">Handle
+</span><span class="hs-identifier hs-var">stderr</span></span><span>
+</span><span id="line-27"></span><span>
+</span><span id="line-28"></span><span class="annot"><a href="Vulkan.Utils.Internal.html#badQQ"><span class="hs-identifier hs-type">badQQ</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">QuasiQuoter</span></span><span>
+</span><span id="line-29"></span><span id="badQQ"><span class="annot"><span class="annottext">badQQ :: String -&gt; QuasiQuoter
+</span><a href="Vulkan.Utils.Internal.html#badQQ"><span class="hs-identifier hs-var hs-var">badQQ</span></a></span></span><span> </span><span id="local-6989586621679260393"><span class="annot"><span class="annottext">name :: String
+</span><a href="#local-6989586621679260393"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp)
+-&gt; (String -&gt; Q Pat)
+-&gt; (String -&gt; Q Type)
+-&gt; (String -&gt; Q [Dec])
+-&gt; QuasiQuoter
+</span><span class="hs-identifier hs-var">QuasiQuoter</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; String -&gt; Q Exp
+forall a. String -&gt; a
+</span><a href="#local-6989586621679260391"><span class="hs-identifier hs-var">bad</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;expression&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span>                         </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; String -&gt; Q Pat
+forall a. String -&gt; a
+</span><a href="#local-6989586621679260391"><span class="hs-identifier hs-var">bad</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;pattern&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>                         </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; String -&gt; Q Type
+forall a. String -&gt; a
+</span><a href="#local-6989586621679260391"><span class="hs-identifier hs-var">bad</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;type&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span>                         </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; String -&gt; Q [Dec]
+forall a. String -&gt; a
+</span><a href="#local-6989586621679260391"><span class="hs-identifier hs-var">bad</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;declaration&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-34"></span><span>  </span><span id="local-6989586621679260416"><span class="annot"><a href="#local-6989586621679260391"><span class="hs-identifier hs-type">bad</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679260416"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-35"></span><span>  </span><span id="local-6989586621679260391"><span class="annot"><span class="annottext">bad :: String -&gt; a
+</span><a href="#local-6989586621679260391"><span class="hs-identifier hs-var hs-var">bad</span></a></span></span><span> </span><span id="local-6989586621679260390"><span class="annot"><span class="annottext">context :: String
+</span><a href="#local-6989586621679260390"><span class="hs-identifier hs-var">context</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-36"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; a
+forall a. HasCallStack =&gt; String -&gt; a
+</span><span class="hs-identifier hs-var">error</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; a) -&gt; String -&gt; a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="hs-string">&quot;Can't use &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260393"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="hs-string">&quot; quote in a &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679260390"><span class="hs-identifier hs-var">context</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="hs-string">&quot; context&quot;</span></span><span>
+</span><span id="line-37"></span></pre></body></html>

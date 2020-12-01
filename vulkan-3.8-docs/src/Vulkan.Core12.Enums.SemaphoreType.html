@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;SemaphoreType&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core12.Enums.SemaphoreType</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SemaphoreType"><span class="hs-identifier">SemaphoreType</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SEMAPHORE_TYPE_BINARY"><span class="hs-identifier">SEMAPHORE_TYPE_BINARY</span></a></span><span>
+</span><span id="line-4"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SEMAPHORE_TYPE_TIMELINE"><span class="hs-identifier">SEMAPHORE_TYPE_TIMELINE</span></a></span><span>
+</span><span id="line-5"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-6"></span><span>                                                        </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- | VkSemaphoreType - Sepcifies the type of a semaphore object</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">newtype</span><span> </span><span id="SemaphoreType"><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SemaphoreType"><span class="hs-identifier hs-var">SemaphoreType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SemaphoreType"><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SemaphoreType"><span class="hs-identifier hs-var">SemaphoreType</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-22"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680102317"><span id="local-6989586621680102319"><span class="annot"><span class="annottext">SemaphoreType -&gt; SemaphoreType -&gt; Bool
+(SemaphoreType -&gt; SemaphoreType -&gt; Bool)
+-&gt; (SemaphoreType -&gt; SemaphoreType -&gt; Bool) -&gt; Eq SemaphoreType
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+$c/= :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+== :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+$c== :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680102301"><span id="local-6989586621680102303"><span id="local-6989586621680102305"><span id="local-6989586621680102307"><span id="local-6989586621680102309"><span id="local-6989586621680102311"><span id="local-6989586621680102313"><span class="annot"><span class="annottext">Eq SemaphoreType
+Eq SemaphoreType =&gt;
+(SemaphoreType -&gt; SemaphoreType -&gt; Ordering)
+-&gt; (SemaphoreType -&gt; SemaphoreType -&gt; Bool)
+-&gt; (SemaphoreType -&gt; SemaphoreType -&gt; Bool)
+-&gt; (SemaphoreType -&gt; SemaphoreType -&gt; Bool)
+-&gt; (SemaphoreType -&gt; SemaphoreType -&gt; Bool)
+-&gt; (SemaphoreType -&gt; SemaphoreType -&gt; SemaphoreType)
+-&gt; (SemaphoreType -&gt; SemaphoreType -&gt; SemaphoreType)
+-&gt; Ord SemaphoreType
+SemaphoreType -&gt; SemaphoreType -&gt; Bool
+SemaphoreType -&gt; SemaphoreType -&gt; Ordering
+SemaphoreType -&gt; SemaphoreType -&gt; SemaphoreType
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SemaphoreType -&gt; SemaphoreType -&gt; SemaphoreType
+$cmin :: SemaphoreType -&gt; SemaphoreType -&gt; SemaphoreType
+max :: SemaphoreType -&gt; SemaphoreType -&gt; SemaphoreType
+$cmax :: SemaphoreType -&gt; SemaphoreType -&gt; SemaphoreType
+&gt;= :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+$c&gt;= :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+&gt; :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+$c&gt; :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+&lt;= :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+$c&lt;= :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+&lt; :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+$c&lt; :: SemaphoreType -&gt; SemaphoreType -&gt; Bool
+compare :: SemaphoreType -&gt; SemaphoreType -&gt; Ordering
+$ccompare :: SemaphoreType -&gt; SemaphoreType -&gt; Ordering
+$cp1Ord :: Eq SemaphoreType
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680102284"><span id="local-6989586621680102286"><span id="local-6989586621680102288"><span id="local-6989586621680102290"><span id="local-6989586621680102292"><span id="local-6989586621680102294"><span id="local-6989586621680102296"><span id="local-6989586621680102298"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SemaphoreType
+Ptr b -&gt; Int -&gt; SemaphoreType -&gt; IO ()
+Ptr SemaphoreType -&gt; IO SemaphoreType
+Ptr SemaphoreType -&gt; Int -&gt; IO SemaphoreType
+Ptr SemaphoreType -&gt; Int -&gt; SemaphoreType -&gt; IO ()
+Ptr SemaphoreType -&gt; SemaphoreType -&gt; IO ()
+SemaphoreType -&gt; Int
+(SemaphoreType -&gt; Int)
+-&gt; (SemaphoreType -&gt; Int)
+-&gt; (Ptr SemaphoreType -&gt; Int -&gt; IO SemaphoreType)
+-&gt; (Ptr SemaphoreType -&gt; Int -&gt; SemaphoreType -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SemaphoreType)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SemaphoreType -&gt; IO ())
+-&gt; (Ptr SemaphoreType -&gt; IO SemaphoreType)
+-&gt; (Ptr SemaphoreType -&gt; SemaphoreType -&gt; IO ())
+-&gt; Storable SemaphoreType
+forall b. Ptr b -&gt; Int -&gt; IO SemaphoreType
+forall b. Ptr b -&gt; Int -&gt; SemaphoreType -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SemaphoreType -&gt; SemaphoreType -&gt; IO ()
+$cpoke :: Ptr SemaphoreType -&gt; SemaphoreType -&gt; IO ()
+peek :: Ptr SemaphoreType -&gt; IO SemaphoreType
+$cpeek :: Ptr SemaphoreType -&gt; IO SemaphoreType
+pokeByteOff :: Ptr b -&gt; Int -&gt; SemaphoreType -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SemaphoreType -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SemaphoreType
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SemaphoreType
+pokeElemOff :: Ptr SemaphoreType -&gt; Int -&gt; SemaphoreType -&gt; IO ()
+$cpokeElemOff :: Ptr SemaphoreType -&gt; Int -&gt; SemaphoreType -&gt; IO ()
+peekElemOff :: Ptr SemaphoreType -&gt; Int -&gt; IO SemaphoreType
+$cpeekElemOff :: Ptr SemaphoreType -&gt; Int -&gt; IO SemaphoreType
+alignment :: SemaphoreType -&gt; Int
+$calignment :: SemaphoreType -&gt; Int
+sizeOf :: SemaphoreType -&gt; Int
+$csizeOf :: SemaphoreType -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680102281"><span class="annot"><span class="annottext">SemaphoreType
+SemaphoreType -&gt; Zero SemaphoreType
+forall a. a -&gt; Zero a
+zero :: SemaphoreType
+$czero :: SemaphoreType
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- | 'SEMAPHORE_TYPE_BINARY' specifies a /binary semaphore/ type that has a</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- boolean payload indicating whether the semaphore is currently signaled</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- or unsignaled. When created, the semaphore is in the unsignaled state.</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSEMAPHORE_TYPE_BINARY"><span id="%24mSEMAPHORE_TYPE_BINARY"><span id="SEMAPHORE_TYPE_BINARY"><span class="annot"><span class="annottext">$bSEMAPHORE_TYPE_BINARY :: SemaphoreType
+$mSEMAPHORE_TYPE_BINARY :: forall r. SemaphoreType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#%24bSEMAPHORE_TYPE_BINARY"><span class="hs-identifier hs-var hs-var hs-var">SEMAPHORE_TYPE_BINARY</span></a></span></span></span></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SemaphoreType"><span class="hs-identifier hs-type">SemaphoreType</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- | 'SEMAPHORE_TYPE_TIMELINE' specifies a /timeline semaphore/ type that has</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- a monotonically increasing 64-bit unsigned integer payload indicating</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- whether the semaphore is signaled with respect to a particular reference</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- value. When created, the semaphore payload has the value given by the</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- @initialValue@ field of</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'.</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSEMAPHORE_TYPE_TIMELINE"><span id="%24mSEMAPHORE_TYPE_TIMELINE"><span id="SEMAPHORE_TYPE_TIMELINE"><span class="annot"><span class="annottext">$bSEMAPHORE_TYPE_TIMELINE :: SemaphoreType
+$mSEMAPHORE_TYPE_TIMELINE :: forall r. SemaphoreType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#%24bSEMAPHORE_TYPE_TIMELINE"><span class="hs-identifier hs-var hs-var hs-var">SEMAPHORE_TYPE_TIMELINE</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SemaphoreType"><span class="hs-identifier hs-type">SemaphoreType</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-35"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SEMAPHORE_TYPE_BINARY"><span class="hs-pragma hs-type">SEMAPHORE_TYPE_BINARY</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-36"></span><span>             </span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SEMAPHORE_TYPE_TIMELINE"><span class="hs-pragma hs-type">SEMAPHORE_TYPE_TIMELINE</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SemaphoreType"><span class="hs-pragma hs-type">SemaphoreType</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#conNameSemaphoreType"><span class="hs-identifier hs-type">conNameSemaphoreType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-39"></span><span id="conNameSemaphoreType"><span class="annot"><span class="annottext">conNameSemaphoreType :: String
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#conNameSemaphoreType"><span class="hs-identifier hs-var hs-var">conNameSemaphoreType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;SemaphoreType&quot;</span></span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#enumPrefixSemaphoreType"><span class="hs-identifier hs-type">enumPrefixSemaphoreType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-42"></span><span id="enumPrefixSemaphoreType"><span class="annot"><span class="annottext">enumPrefixSemaphoreType :: String
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#enumPrefixSemaphoreType"><span class="hs-identifier hs-var hs-var">enumPrefixSemaphoreType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;SEMAPHORE_TYPE_&quot;</span></span><span>
+</span><span id="line-43"></span><span>
+</span><span id="line-44"></span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#showTableSemaphoreType"><span class="hs-identifier hs-type">showTableSemaphoreType</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SemaphoreType"><span class="hs-identifier hs-type">SemaphoreType</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-45"></span><span id="showTableSemaphoreType"><span class="annot"><span class="annottext">showTableSemaphoreType :: [(SemaphoreType, String)]
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#showTableSemaphoreType"><span class="hs-identifier hs-var hs-var">showTableSemaphoreType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="annottext">SemaphoreType
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#SEMAPHORE_TYPE_BINARY"><span class="hs-identifier hs-var">SEMAPHORE_TYPE_BINARY</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;BINARY&quot;</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SemaphoreType
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#SEMAPHORE_TYPE_TIMELINE"><span class="hs-identifier hs-var">SEMAPHORE_TYPE_TIMELINE</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;TIMELINE&quot;</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680102268"><span id="local-6989586621680102270"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SemaphoreType"><span class="hs-identifier hs-type">SemaphoreType</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-48"></span><span>  </span><span id="local-6989586621680102266"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SemaphoreType -&gt; ShowS
+</span><a href="#local-6989586621680102266"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SemaphoreType, String)]
+-&gt; String
+-&gt; (SemaphoreType -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; SemaphoreType
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#enumPrefixSemaphoreType"><span class="hs-identifier hs-var">enumPrefixSemaphoreType</span></a></span><span>
+</span><span id="line-49"></span><span>                            </span><span class="annot"><span class="annottext">[(SemaphoreType, String)]
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#showTableSemaphoreType"><span class="hs-identifier hs-var">showTableSemaphoreType</span></a></span><span>
+</span><span id="line-50"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#conNameSemaphoreType"><span class="hs-identifier hs-var">conNameSemaphoreType</span></a></span><span>
+</span><span id="line-51"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SemaphoreType"><span class="hs-identifier hs-type">SemaphoreType</span></a></span><span> </span><span id="local-6989586621680102265"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621680102265"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680102265"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680102258"><span id="local-6989586621680102261"><span id="local-6989586621680102263"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.SemaphoreType.html#SemaphoreType"><span class="hs-identifier hs-type">SemaphoreType</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-55"></span><span>  </span><span id="local-6989586621680102256"><span class="annot"><span class="annottext">readPrec :: ReadPrec SemaphoreType
+</span><a href="#local-6989586621680102256"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SemaphoreType, String)]
+-&gt; String
+-&gt; (Int32 -&gt; SemaphoreType)
+-&gt; ReadPrec SemaphoreType
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#enumPrefixSemaphoreType"><span class="hs-identifier hs-var">enumPrefixSemaphoreType</span></a></span><span> </span><span class="annot"><span class="annottext">[(SemaphoreType, String)]
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#showTableSemaphoreType"><span class="hs-identifier hs-var">showTableSemaphoreType</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#conNameSemaphoreType"><span class="hs-identifier hs-var">conNameSemaphoreType</span></a></span><span> </span><span class="annot"><span class="annottext">Int32 -&gt; SemaphoreType
+</span><a href="Vulkan.Core12.Enums.SemaphoreType.html#SemaphoreType"><span class="hs-identifier hs-var">SemaphoreType</span></a></span><span>
+</span><span id="line-56"></span><span>
+</span><span id="line-57"></span></pre></body></html>

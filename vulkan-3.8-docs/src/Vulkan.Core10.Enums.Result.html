@@ -1,0 +1,564 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;Result&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.Result</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier">SUCCESS</span></a></span><span>
+</span><span id="line-4"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#NOT_READY"><span class="hs-identifier">NOT_READY</span></a></span><span>
+</span><span id="line-5"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#TIMEOUT"><span class="hs-identifier">TIMEOUT</span></a></span><span>
+</span><span id="line-6"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#EVENT_SET"><span class="hs-identifier">EVENT_SET</span></a></span><span>
+</span><span id="line-7"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#EVENT_RESET"><span class="hs-identifier">EVENT_RESET</span></a></span><span>
+</span><span id="line-8"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#INCOMPLETE"><span class="hs-identifier">INCOMPLETE</span></a></span><span>
+</span><span id="line-9"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_HOST_MEMORY"><span class="hs-identifier">ERROR_OUT_OF_HOST_MEMORY</span></a></span><span>
+</span><span id="line-10"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_DEVICE_MEMORY"><span class="hs-identifier">ERROR_OUT_OF_DEVICE_MEMORY</span></a></span><span>
+</span><span id="line-11"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INITIALIZATION_FAILED"><span class="hs-identifier">ERROR_INITIALIZATION_FAILED</span></a></span><span>
+</span><span id="line-12"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_DEVICE_LOST"><span class="hs-identifier">ERROR_DEVICE_LOST</span></a></span><span>
+</span><span id="line-13"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_MEMORY_MAP_FAILED"><span class="hs-identifier">ERROR_MEMORY_MAP_FAILED</span></a></span><span>
+</span><span id="line-14"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_LAYER_NOT_PRESENT"><span class="hs-identifier">ERROR_LAYER_NOT_PRESENT</span></a></span><span>
+</span><span id="line-15"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_EXTENSION_NOT_PRESENT"><span class="hs-identifier">ERROR_EXTENSION_NOT_PRESENT</span></a></span><span>
+</span><span id="line-16"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FEATURE_NOT_PRESENT"><span class="hs-identifier">ERROR_FEATURE_NOT_PRESENT</span></a></span><span>
+</span><span id="line-17"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INCOMPATIBLE_DRIVER"><span class="hs-identifier">ERROR_INCOMPATIBLE_DRIVER</span></a></span><span>
+</span><span id="line-18"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_TOO_MANY_OBJECTS"><span class="hs-identifier">ERROR_TOO_MANY_OBJECTS</span></a></span><span>
+</span><span id="line-19"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FORMAT_NOT_SUPPORTED"><span class="hs-identifier">ERROR_FORMAT_NOT_SUPPORTED</span></a></span><span>
+</span><span id="line-20"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FRAGMENTED_POOL"><span class="hs-identifier">ERROR_FRAGMENTED_POOL</span></a></span><span>
+</span><span id="line-21"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_UNKNOWN"><span class="hs-identifier">ERROR_UNKNOWN</span></a></span><span>
+</span><span id="line-22"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#PIPELINE_COMPILE_REQUIRED_EXT"><span class="hs-identifier">PIPELINE_COMPILE_REQUIRED_EXT</span></a></span><span>
+</span><span id="line-23"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#OPERATION_NOT_DEFERRED_KHR"><span class="hs-identifier">OPERATION_NOT_DEFERRED_KHR</span></a></span><span>
+</span><span id="line-24"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#OPERATION_DEFERRED_KHR"><span class="hs-identifier">OPERATION_DEFERRED_KHR</span></a></span><span>
+</span><span id="line-25"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#THREAD_DONE_KHR"><span class="hs-identifier">THREAD_DONE_KHR</span></a></span><span>
+</span><span id="line-26"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#THREAD_IDLE_KHR"><span class="hs-identifier">THREAD_IDLE_KHR</span></a></span><span>
+</span><span id="line-27"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"><span class="hs-identifier">ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT</span></a></span><span>
+</span><span id="line-28"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_NOT_PERMITTED_EXT"><span class="hs-identifier">ERROR_NOT_PERMITTED_EXT</span></a></span><span>
+</span><span id="line-29"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"><span class="hs-identifier">ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT</span></a></span><span>
+</span><span id="line-30"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_SHADER_NV"><span class="hs-identifier">ERROR_INVALID_SHADER_NV</span></a></span><span>
+</span><span id="line-31"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_VALIDATION_FAILED_EXT"><span class="hs-identifier">ERROR_VALIDATION_FAILED_EXT</span></a></span><span>
+</span><span id="line-32"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INCOMPATIBLE_DISPLAY_KHR"><span class="hs-identifier">ERROR_INCOMPATIBLE_DISPLAY_KHR</span></a></span><span>
+</span><span id="line-33"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_DATE_KHR"><span class="hs-identifier">ERROR_OUT_OF_DATE_KHR</span></a></span><span>
+</span><span id="line-34"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUBOPTIMAL_KHR"><span class="hs-identifier">SUBOPTIMAL_KHR</span></a></span><span>
+</span><span id="line-35"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_NATIVE_WINDOW_IN_USE_KHR"><span class="hs-identifier">ERROR_NATIVE_WINDOW_IN_USE_KHR</span></a></span><span>
+</span><span id="line-36"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_SURFACE_LOST_KHR"><span class="hs-identifier">ERROR_SURFACE_LOST_KHR</span></a></span><span>
+</span><span id="line-37"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS"><span class="hs-identifier">ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS</span></a></span><span>
+</span><span id="line-38"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FRAGMENTATION"><span class="hs-identifier">ERROR_FRAGMENTATION</span></a></span><span>
+</span><span id="line-39"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_EXTERNAL_HANDLE"><span class="hs-identifier">ERROR_INVALID_EXTERNAL_HANDLE</span></a></span><span>
+</span><span id="line-40"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_POOL_MEMORY"><span class="hs-identifier">ERROR_OUT_OF_POOL_MEMORY</span></a></span><span>
+</span><span id="line-41"></span><span>                                          </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-42"></span><span>                                          </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-43"></span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- | VkResult - Vulkan command return codes</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- If a command returns a runtime error, unless otherwise specified any</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- output parameters will have undefined contents, except that if the</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- output parameter is a structure with @sType@ and @pNext@ fields, those</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- fields will be unmodified. Any structures chained from @pNext@ will also</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- have undefined contents, except that @sType@ and @pNext@ will be</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- unmodified.</span><span>
+</span><span id="line-62"></span><span class="hs-comment">--</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- @VK_ERROR_OUT_OF_*_MEMORY@ errors do not modify any currently existing</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- Vulkan objects. Objects that have already been successfully created</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- /can/ still be used by the application.</span><span>
+</span><span id="line-66"></span><span class="hs-comment">--</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-68"></span><span class="hs-comment">--</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- As a general rule, @Free@, @Release@, and @Reset@ commands do not return</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- 'ERROR_OUT_OF_HOST_MEMORY', while any other command with a return code</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- /may/ return it. Any exceptions from this rule are described for those</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- commands.</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- 'ERROR_UNKNOWN' will be returned by an implementation when an unexpected</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- error occurs that cannot be attributed to valid behavior of the</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- application and implementation. Under these conditions, it /may/ be</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- returned from any command returning a 'Result'.</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-80"></span><span class="hs-comment">--</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- 'ERROR_UNKNOWN' is not expected to ever be returned if the application</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- behavior is valid, and if the implementation is bug-free. If</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- 'ERROR_UNKNOWN' is received, the application should be checked against</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- the latest validation layers to verify correct behavior as much as</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- possible. If no issues are identified it could be an implementation</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- issue, and the implementor should be contacted for support.</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- Performance-critical commands generally do not have return codes. If a</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- runtime error occurs in such commands, the implementation will defer</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- reporting the error until a specified point. For commands that record</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- into command buffers (@vkCmd*@) runtime errors are reported by</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBuffer.endCommandBuffer'.</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'</span><span>
+</span><span id="line-97"></span><span class="hs-keyword">newtype</span><span> </span><span id="Result"><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-var">Result</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Result"><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-var">Result</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-98"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680107248"><span id="local-6989586621680107250"><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+(Result -&gt; Result -&gt; Bool)
+-&gt; (Result -&gt; Result -&gt; Bool) -&gt; Eq Result
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: Result -&gt; Result -&gt; Bool
+$c/= :: Result -&gt; Result -&gt; Bool
+== :: Result -&gt; Result -&gt; Bool
+$c== :: Result -&gt; Result -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680107232"><span id="local-6989586621680107234"><span id="local-6989586621680107236"><span id="local-6989586621680107238"><span id="local-6989586621680107240"><span id="local-6989586621680107242"><span id="local-6989586621680107244"><span class="annot"><span class="annottext">Eq Result
+Eq Result =&gt;
+(Result -&gt; Result -&gt; Ordering)
+-&gt; (Result -&gt; Result -&gt; Bool)
+-&gt; (Result -&gt; Result -&gt; Bool)
+-&gt; (Result -&gt; Result -&gt; Bool)
+-&gt; (Result -&gt; Result -&gt; Bool)
+-&gt; (Result -&gt; Result -&gt; Result)
+-&gt; (Result -&gt; Result -&gt; Result)
+-&gt; Ord Result
+Result -&gt; Result -&gt; Bool
+Result -&gt; Result -&gt; Ordering
+Result -&gt; Result -&gt; Result
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: Result -&gt; Result -&gt; Result
+$cmin :: Result -&gt; Result -&gt; Result
+max :: Result -&gt; Result -&gt; Result
+$cmax :: Result -&gt; Result -&gt; Result
+&gt;= :: Result -&gt; Result -&gt; Bool
+$c&gt;= :: Result -&gt; Result -&gt; Bool
+&gt; :: Result -&gt; Result -&gt; Bool
+$c&gt; :: Result -&gt; Result -&gt; Bool
+&lt;= :: Result -&gt; Result -&gt; Bool
+$c&lt;= :: Result -&gt; Result -&gt; Bool
+&lt; :: Result -&gt; Result -&gt; Bool
+$c&lt; :: Result -&gt; Result -&gt; Bool
+compare :: Result -&gt; Result -&gt; Ordering
+$ccompare :: Result -&gt; Result -&gt; Ordering
+$cp1Ord :: Eq Result
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680107215"><span id="local-6989586621680107217"><span id="local-6989586621680107219"><span id="local-6989586621680107221"><span id="local-6989586621680107223"><span id="local-6989586621680107225"><span id="local-6989586621680107227"><span id="local-6989586621680107229"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO Result
+Ptr b -&gt; Int -&gt; Result -&gt; IO ()
+Ptr Result -&gt; IO Result
+Ptr Result -&gt; Int -&gt; IO Result
+Ptr Result -&gt; Int -&gt; Result -&gt; IO ()
+Ptr Result -&gt; Result -&gt; IO ()
+Result -&gt; Int
+(Result -&gt; Int)
+-&gt; (Result -&gt; Int)
+-&gt; (Ptr Result -&gt; Int -&gt; IO Result)
+-&gt; (Ptr Result -&gt; Int -&gt; Result -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO Result)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; Result -&gt; IO ())
+-&gt; (Ptr Result -&gt; IO Result)
+-&gt; (Ptr Result -&gt; Result -&gt; IO ())
+-&gt; Storable Result
+forall b. Ptr b -&gt; Int -&gt; IO Result
+forall b. Ptr b -&gt; Int -&gt; Result -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr Result -&gt; Result -&gt; IO ()
+$cpoke :: Ptr Result -&gt; Result -&gt; IO ()
+peek :: Ptr Result -&gt; IO Result
+$cpeek :: Ptr Result -&gt; IO Result
+pokeByteOff :: Ptr b -&gt; Int -&gt; Result -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; Result -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO Result
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO Result
+pokeElemOff :: Ptr Result -&gt; Int -&gt; Result -&gt; IO ()
+$cpokeElemOff :: Ptr Result -&gt; Int -&gt; Result -&gt; IO ()
+peekElemOff :: Ptr Result -&gt; Int -&gt; IO Result
+$cpeekElemOff :: Ptr Result -&gt; Int -&gt; IO Result
+alignment :: Result -&gt; Int
+$calignment :: Result -&gt; Int
+sizeOf :: Result -&gt; Int
+$csizeOf :: Result -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680107212"><span class="annot"><span class="annottext">Result
+Result -&gt; Zero Result
+forall a. a -&gt; Zero a
+zero :: Result
+$czero :: Result
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-99"></span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- | 'SUCCESS' Command successfully completed</span><span>
+</span><span id="line-101"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSUCCESS"><span id="%24mSUCCESS"><span id="SUCCESS"><span class="annot"><span class="annottext">$bSUCCESS :: Result
+$mSUCCESS :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bSUCCESS"><span class="hs-identifier hs-var hs-var hs-var">SUCCESS</span></a></span></span></span></span><span>                              </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- | 'NOT_READY' A fence or query has not yet completed</span><span>
+</span><span id="line-103"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNOT_READY"><span id="%24mNOT_READY"><span id="NOT_READY"><span class="annot"><span class="annottext">$bNOT_READY :: Result
+$mNOT_READY :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bNOT_READY"><span class="hs-identifier hs-var hs-var hs-var">NOT_READY</span></a></span></span></span></span><span>                            </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- | 'TIMEOUT' A wait operation has not completed in the specified time</span><span>
+</span><span id="line-105"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bTIMEOUT"><span id="%24mTIMEOUT"><span id="TIMEOUT"><span class="annot"><span class="annottext">$bTIMEOUT :: Result
+$mTIMEOUT :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bTIMEOUT"><span class="hs-identifier hs-var hs-var hs-var">TIMEOUT</span></a></span></span></span></span><span>                              </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">2</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- | 'EVENT_SET' An event is signaled</span><span>
+</span><span id="line-107"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEVENT_SET"><span id="%24mEVENT_SET"><span id="EVENT_SET"><span class="annot"><span class="annottext">$bEVENT_SET :: Result
+$mEVENT_SET :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bEVENT_SET"><span class="hs-identifier hs-var hs-var hs-var">EVENT_SET</span></a></span></span></span></span><span>                            </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">3</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- | 'EVENT_RESET' An event is unsignaled</span><span>
+</span><span id="line-109"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEVENT_RESET"><span id="%24mEVENT_RESET"><span id="EVENT_RESET"><span class="annot"><span class="annottext">$bEVENT_RESET :: Result
+$mEVENT_RESET :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bEVENT_RESET"><span class="hs-identifier hs-var hs-var hs-var">EVENT_RESET</span></a></span></span></span></span><span>                          </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">4</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- | 'INCOMPLETE' A return array was too small for the result</span><span>
+</span><span id="line-111"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bINCOMPLETE"><span id="%24mINCOMPLETE"><span id="INCOMPLETE"><span class="annot"><span class="annottext">$bINCOMPLETE :: Result
+$mINCOMPLETE :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bINCOMPLETE"><span class="hs-identifier hs-var hs-var hs-var">INCOMPLETE</span></a></span></span></span></span><span>                           </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">5</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- | 'ERROR_OUT_OF_HOST_MEMORY' A host memory allocation has failed.</span><span>
+</span><span id="line-113"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_OUT_OF_HOST_MEMORY"><span id="%24mERROR_OUT_OF_HOST_MEMORY"><span id="ERROR_OUT_OF_HOST_MEMORY"><span class="annot"><span class="annottext">$bERROR_OUT_OF_HOST_MEMORY :: Result
+$mERROR_OUT_OF_HOST_MEMORY :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_OUT_OF_HOST_MEMORY"><span class="hs-identifier hs-var hs-var hs-var">ERROR_OUT_OF_HOST_MEMORY</span></a></span></span></span></span><span>             </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1</span><span class="hs-special">)</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- | 'ERROR_OUT_OF_DEVICE_MEMORY' A device memory allocation has failed.</span><span>
+</span><span id="line-115"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_OUT_OF_DEVICE_MEMORY"><span id="%24mERROR_OUT_OF_DEVICE_MEMORY"><span id="ERROR_OUT_OF_DEVICE_MEMORY"><span class="annot"><span class="annottext">$bERROR_OUT_OF_DEVICE_MEMORY :: Result
+$mERROR_OUT_OF_DEVICE_MEMORY :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_OUT_OF_DEVICE_MEMORY"><span class="hs-identifier hs-var hs-var hs-var">ERROR_OUT_OF_DEVICE_MEMORY</span></a></span></span></span></span><span>           </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">2</span><span class="hs-special">)</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- | 'ERROR_INITIALIZATION_FAILED' Initialization of an object could not be</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- completed for implementation-specific reasons.</span><span>
+</span><span id="line-118"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_INITIALIZATION_FAILED"><span id="%24mERROR_INITIALIZATION_FAILED"><span id="ERROR_INITIALIZATION_FAILED"><span class="annot"><span class="annottext">$bERROR_INITIALIZATION_FAILED :: Result
+$mERROR_INITIALIZATION_FAILED :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_INITIALIZATION_FAILED"><span class="hs-identifier hs-var hs-var hs-var">ERROR_INITIALIZATION_FAILED</span></a></span></span></span></span><span>          </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">3</span><span class="hs-special">)</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- | 'ERROR_DEVICE_LOST' The logical or physical device has been lost. See</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device&gt;</span><span>
+</span><span id="line-121"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_DEVICE_LOST"><span id="%24mERROR_DEVICE_LOST"><span id="ERROR_DEVICE_LOST"><span class="annot"><span class="annottext">$bERROR_DEVICE_LOST :: Result
+$mERROR_DEVICE_LOST :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_DEVICE_LOST"><span class="hs-identifier hs-var hs-var hs-var">ERROR_DEVICE_LOST</span></a></span></span></span></span><span>                    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">4</span><span class="hs-special">)</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- | 'ERROR_MEMORY_MAP_FAILED' Mapping of a memory object has failed.</span><span>
+</span><span id="line-123"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_MEMORY_MAP_FAILED"><span id="%24mERROR_MEMORY_MAP_FAILED"><span id="ERROR_MEMORY_MAP_FAILED"><span class="annot"><span class="annottext">$bERROR_MEMORY_MAP_FAILED :: Result
+$mERROR_MEMORY_MAP_FAILED :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_MEMORY_MAP_FAILED"><span class="hs-identifier hs-var hs-var hs-var">ERROR_MEMORY_MAP_FAILED</span></a></span></span></span></span><span>              </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">5</span><span class="hs-special">)</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- | 'ERROR_LAYER_NOT_PRESENT' A requested layer is not present or could not</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- be loaded.</span><span>
+</span><span id="line-126"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_LAYER_NOT_PRESENT"><span id="%24mERROR_LAYER_NOT_PRESENT"><span id="ERROR_LAYER_NOT_PRESENT"><span class="annot"><span class="annottext">$bERROR_LAYER_NOT_PRESENT :: Result
+$mERROR_LAYER_NOT_PRESENT :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_LAYER_NOT_PRESENT"><span class="hs-identifier hs-var hs-var hs-var">ERROR_LAYER_NOT_PRESENT</span></a></span></span></span></span><span>              </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">6</span><span class="hs-special">)</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- | 'ERROR_EXTENSION_NOT_PRESENT' A requested extension is not supported.</span><span>
+</span><span id="line-128"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_EXTENSION_NOT_PRESENT"><span id="%24mERROR_EXTENSION_NOT_PRESENT"><span id="ERROR_EXTENSION_NOT_PRESENT"><span class="annot"><span class="annottext">$bERROR_EXTENSION_NOT_PRESENT :: Result
+$mERROR_EXTENSION_NOT_PRESENT :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_EXTENSION_NOT_PRESENT"><span class="hs-identifier hs-var hs-var hs-var">ERROR_EXTENSION_NOT_PRESENT</span></a></span></span></span></span><span>          </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">7</span><span class="hs-special">)</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- | 'ERROR_FEATURE_NOT_PRESENT' A requested feature is not supported.</span><span>
+</span><span id="line-130"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_FEATURE_NOT_PRESENT"><span id="%24mERROR_FEATURE_NOT_PRESENT"><span id="ERROR_FEATURE_NOT_PRESENT"><span class="annot"><span class="annottext">$bERROR_FEATURE_NOT_PRESENT :: Result
+$mERROR_FEATURE_NOT_PRESENT :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_FEATURE_NOT_PRESENT"><span class="hs-identifier hs-var hs-var hs-var">ERROR_FEATURE_NOT_PRESENT</span></a></span></span></span></span><span>            </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">8</span><span class="hs-special">)</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- | 'ERROR_INCOMPATIBLE_DRIVER' The requested version of Vulkan is not</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- supported by the driver or is otherwise incompatible for</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- implementation-specific reasons.</span><span>
+</span><span id="line-134"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_INCOMPATIBLE_DRIVER"><span id="%24mERROR_INCOMPATIBLE_DRIVER"><span id="ERROR_INCOMPATIBLE_DRIVER"><span class="annot"><span class="annottext">$bERROR_INCOMPATIBLE_DRIVER :: Result
+$mERROR_INCOMPATIBLE_DRIVER :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_INCOMPATIBLE_DRIVER"><span class="hs-identifier hs-var hs-var hs-var">ERROR_INCOMPATIBLE_DRIVER</span></a></span></span></span></span><span>            </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">9</span><span class="hs-special">)</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- | 'ERROR_TOO_MANY_OBJECTS' Too many objects of the type have already been</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- created.</span><span>
+</span><span id="line-137"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_TOO_MANY_OBJECTS"><span id="%24mERROR_TOO_MANY_OBJECTS"><span id="ERROR_TOO_MANY_OBJECTS"><span class="annot"><span class="annottext">$bERROR_TOO_MANY_OBJECTS :: Result
+$mERROR_TOO_MANY_OBJECTS :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_TOO_MANY_OBJECTS"><span class="hs-identifier hs-var hs-var hs-var">ERROR_TOO_MANY_OBJECTS</span></a></span></span></span></span><span>               </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">10</span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- | 'ERROR_FORMAT_NOT_SUPPORTED' A requested format is not supported on this</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- device.</span><span>
+</span><span id="line-140"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_FORMAT_NOT_SUPPORTED"><span id="%24mERROR_FORMAT_NOT_SUPPORTED"><span id="ERROR_FORMAT_NOT_SUPPORTED"><span class="annot"><span class="annottext">$bERROR_FORMAT_NOT_SUPPORTED :: Result
+$mERROR_FORMAT_NOT_SUPPORTED :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_FORMAT_NOT_SUPPORTED"><span class="hs-identifier hs-var hs-var hs-var">ERROR_FORMAT_NOT_SUPPORTED</span></a></span></span></span></span><span>           </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">11</span><span class="hs-special">)</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- | 'ERROR_FRAGMENTED_POOL' A pool allocation has failed due to</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- fragmentation of the pool&#8217;s memory. This /must/ only be returned if no</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- attempt to allocate host or device memory was made to accommodate the</span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- new allocation. This /should/ be returned in preference to</span><span>
+</span><span id="line-145"></span><span class="hs-comment">-- 'ERROR_OUT_OF_POOL_MEMORY', but only if the implementation is certain</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- that the pool allocation failure was due to fragmentation.</span><span>
+</span><span id="line-147"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_FRAGMENTED_POOL"><span id="%24mERROR_FRAGMENTED_POOL"><span id="ERROR_FRAGMENTED_POOL"><span class="annot"><span class="annottext">$bERROR_FRAGMENTED_POOL :: Result
+$mERROR_FRAGMENTED_POOL :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_FRAGMENTED_POOL"><span class="hs-identifier hs-var hs-var hs-var">ERROR_FRAGMENTED_POOL</span></a></span></span></span></span><span>                </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">12</span><span class="hs-special">)</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- | 'ERROR_UNKNOWN' An unknown error has occurred; either the application</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- has provided invalid input, or an implementation failure has occurred.</span><span>
+</span><span id="line-150"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_UNKNOWN"><span id="%24mERROR_UNKNOWN"><span id="ERROR_UNKNOWN"><span class="annot"><span class="annottext">$bERROR_UNKNOWN :: Result
+$mERROR_UNKNOWN :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_UNKNOWN"><span class="hs-identifier hs-var hs-var hs-var">ERROR_UNKNOWN</span></a></span></span></span></span><span>                        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">13</span><span class="hs-special">)</span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- | 'PIPELINE_COMPILE_REQUIRED_EXT' A requested pipeline creation would have</span><span>
+</span><span id="line-152"></span><span class="hs-comment">-- required compilation, but the application requested compilation to not</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- be performed.</span><span>
+</span><span id="line-154"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bPIPELINE_COMPILE_REQUIRED_EXT"><span id="%24mPIPELINE_COMPILE_REQUIRED_EXT"><span id="PIPELINE_COMPILE_REQUIRED_EXT"><span class="annot"><span class="annottext">$bPIPELINE_COMPILE_REQUIRED_EXT :: Result
+$mPIPELINE_COMPILE_REQUIRED_EXT :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bPIPELINE_COMPILE_REQUIRED_EXT"><span class="hs-identifier hs-var hs-var hs-var">PIPELINE_COMPILE_REQUIRED_EXT</span></a></span></span></span></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">1000297000</span><span>
+</span><span id="line-155"></span><span class="hs-comment">-- | 'OPERATION_NOT_DEFERRED_KHR' A deferred operation was requested and no</span><span>
+</span><span id="line-156"></span><span class="hs-comment">-- operations were deferred.</span><span>
+</span><span id="line-157"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOPERATION_NOT_DEFERRED_KHR"><span id="%24mOPERATION_NOT_DEFERRED_KHR"><span id="OPERATION_NOT_DEFERRED_KHR"><span class="annot"><span class="annottext">$bOPERATION_NOT_DEFERRED_KHR :: Result
+$mOPERATION_NOT_DEFERRED_KHR :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bOPERATION_NOT_DEFERRED_KHR"><span class="hs-identifier hs-var hs-var hs-var">OPERATION_NOT_DEFERRED_KHR</span></a></span></span></span></span><span>           </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">1000268003</span><span>
+</span><span id="line-158"></span><span class="hs-comment">-- | 'OPERATION_DEFERRED_KHR' A deferred operation was requested and at least</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- some of the work was deferred.</span><span>
+</span><span id="line-160"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bOPERATION_DEFERRED_KHR"><span id="%24mOPERATION_DEFERRED_KHR"><span id="OPERATION_DEFERRED_KHR"><span class="annot"><span class="annottext">$bOPERATION_DEFERRED_KHR :: Result
+$mOPERATION_DEFERRED_KHR :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bOPERATION_DEFERRED_KHR"><span class="hs-identifier hs-var hs-var hs-var">OPERATION_DEFERRED_KHR</span></a></span></span></span></span><span>               </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">1000268002</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- | 'THREAD_DONE_KHR' A deferred operation is not complete but there is no</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- work remaining to assign to additional threads.</span><span>
+</span><span id="line-163"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bTHREAD_DONE_KHR"><span id="%24mTHREAD_DONE_KHR"><span id="THREAD_DONE_KHR"><span class="annot"><span class="annottext">$bTHREAD_DONE_KHR :: Result
+$mTHREAD_DONE_KHR :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bTHREAD_DONE_KHR"><span class="hs-identifier hs-var hs-var hs-var">THREAD_DONE_KHR</span></a></span></span></span></span><span>                      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">1000268001</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- | 'THREAD_IDLE_KHR' A deferred operation is not complete but there is</span><span>
+</span><span id="line-165"></span><span class="hs-comment">-- currently no work for this thread to do at the time of this call.</span><span>
+</span><span id="line-166"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bTHREAD_IDLE_KHR"><span id="%24mTHREAD_IDLE_KHR"><span id="THREAD_IDLE_KHR"><span class="annot"><span class="annottext">$bTHREAD_IDLE_KHR :: Result
+$mTHREAD_IDLE_KHR :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bTHREAD_IDLE_KHR"><span class="hs-identifier hs-var hs-var hs-var">THREAD_IDLE_KHR</span></a></span></span></span></span><span>                      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">1000268000</span><span>
+</span><span id="line-167"></span><span class="hs-comment">-- | 'ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT' An operation on a swapchain</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- created with</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'</span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- failed as it did not have exlusive full-screen access. This /may/ occur</span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- due to implementation-dependent reasons, outside of the application&#8217;s</span><span>
+</span><span id="line-172"></span><span class="hs-comment">-- control.</span><span>
+</span><span id="line-173"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"><span id="%24mERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"><span id="ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"><span class="annot"><span class="annottext">$bERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT :: Result
+$mERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"><span class="hs-identifier hs-var hs-var hs-var">ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000255000</span><span class="hs-special">)</span><span>
+</span><span id="line-174"></span><span class="hs-comment">-- No documentation found for Nested &quot;VkResult&quot; &quot;VK_ERROR_NOT_PERMITTED_EXT&quot;</span><span>
+</span><span id="line-175"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_NOT_PERMITTED_EXT"><span id="%24mERROR_NOT_PERMITTED_EXT"><span id="ERROR_NOT_PERMITTED_EXT"><span class="annot"><span class="annottext">$bERROR_NOT_PERMITTED_EXT :: Result
+$mERROR_NOT_PERMITTED_EXT :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_NOT_PERMITTED_EXT"><span class="hs-identifier hs-var hs-var hs-var">ERROR_NOT_PERMITTED_EXT</span></a></span></span></span></span><span>              </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000174001</span><span class="hs-special">)</span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- No documentation found for Nested &quot;VkResult&quot; &quot;VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT&quot;</span><span>
+</span><span id="line-177"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"><span id="%24mERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"><span id="ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"><span class="annot"><span class="annottext">$bERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT :: Result
+$mERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"><span class="hs-identifier hs-var hs-var hs-var">ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000158000</span><span class="hs-special">)</span><span>
+</span><span id="line-178"></span><span class="hs-comment">-- | 'ERROR_INVALID_SHADER_NV' One or more shaders failed to compile or link.</span><span>
+</span><span id="line-179"></span><span class="hs-comment">-- More details are reported back to the application via</span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- @VK_EXT_debug_report@ if enabled.</span><span>
+</span><span id="line-181"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_INVALID_SHADER_NV"><span id="%24mERROR_INVALID_SHADER_NV"><span id="ERROR_INVALID_SHADER_NV"><span class="annot"><span class="annottext">$bERROR_INVALID_SHADER_NV :: Result
+$mERROR_INVALID_SHADER_NV :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_INVALID_SHADER_NV"><span class="hs-identifier hs-var hs-var hs-var">ERROR_INVALID_SHADER_NV</span></a></span></span></span></span><span>              </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000012000</span><span class="hs-special">)</span><span>
+</span><span id="line-182"></span><span class="hs-comment">-- No documentation found for Nested &quot;VkResult&quot; &quot;VK_ERROR_VALIDATION_FAILED_EXT&quot;</span><span>
+</span><span id="line-183"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_VALIDATION_FAILED_EXT"><span id="%24mERROR_VALIDATION_FAILED_EXT"><span id="ERROR_VALIDATION_FAILED_EXT"><span class="annot"><span class="annottext">$bERROR_VALIDATION_FAILED_EXT :: Result
+$mERROR_VALIDATION_FAILED_EXT :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_VALIDATION_FAILED_EXT"><span class="hs-identifier hs-var hs-var hs-var">ERROR_VALIDATION_FAILED_EXT</span></a></span></span></span></span><span>          </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000011001</span><span class="hs-special">)</span><span>
+</span><span id="line-184"></span><span class="hs-comment">-- | 'ERROR_INCOMPATIBLE_DISPLAY_KHR' The display used by a swapchain does</span><span>
+</span><span id="line-185"></span><span class="hs-comment">-- not use the same presentable image layout, or is incompatible in a way</span><span>
+</span><span id="line-186"></span><span class="hs-comment">-- that prevents sharing an image.</span><span>
+</span><span id="line-187"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_INCOMPATIBLE_DISPLAY_KHR"><span id="%24mERROR_INCOMPATIBLE_DISPLAY_KHR"><span id="ERROR_INCOMPATIBLE_DISPLAY_KHR"><span class="annot"><span class="annottext">$bERROR_INCOMPATIBLE_DISPLAY_KHR :: Result
+$mERROR_INCOMPATIBLE_DISPLAY_KHR :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_INCOMPATIBLE_DISPLAY_KHR"><span class="hs-identifier hs-var hs-var hs-var">ERROR_INCOMPATIBLE_DISPLAY_KHR</span></a></span></span></span></span><span>       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000003001</span><span class="hs-special">)</span><span>
+</span><span id="line-188"></span><span class="hs-comment">-- | 'ERROR_OUT_OF_DATE_KHR' A surface has changed in such a way that it is</span><span>
+</span><span id="line-189"></span><span class="hs-comment">-- no longer compatible with the swapchain, and further presentation</span><span>
+</span><span id="line-190"></span><span class="hs-comment">-- requests using the swapchain will fail. Applications /must/ query the</span><span>
+</span><span id="line-191"></span><span class="hs-comment">-- new surface properties and recreate their swapchain if they wish to</span><span>
+</span><span id="line-192"></span><span class="hs-comment">-- continue presenting to the surface.</span><span>
+</span><span id="line-193"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_OUT_OF_DATE_KHR"><span id="%24mERROR_OUT_OF_DATE_KHR"><span id="ERROR_OUT_OF_DATE_KHR"><span class="annot"><span class="annottext">$bERROR_OUT_OF_DATE_KHR :: Result
+$mERROR_OUT_OF_DATE_KHR :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_OUT_OF_DATE_KHR"><span class="hs-identifier hs-var hs-var hs-var">ERROR_OUT_OF_DATE_KHR</span></a></span></span></span></span><span>                </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000001004</span><span class="hs-special">)</span><span>
+</span><span id="line-194"></span><span class="hs-comment">-- | 'SUBOPTIMAL_KHR' A swapchain no longer matches the surface properties</span><span>
+</span><span id="line-195"></span><span class="hs-comment">-- exactly, but /can/ still be used to present to the surface successfully.</span><span>
+</span><span id="line-196"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSUBOPTIMAL_KHR"><span id="%24mSUBOPTIMAL_KHR"><span id="SUBOPTIMAL_KHR"><span class="annot"><span class="annottext">$bSUBOPTIMAL_KHR :: Result
+$mSUBOPTIMAL_KHR :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bSUBOPTIMAL_KHR"><span class="hs-identifier hs-var hs-var hs-var">SUBOPTIMAL_KHR</span></a></span></span></span></span><span>                       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-number">1000001003</span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- | 'ERROR_NATIVE_WINDOW_IN_USE_KHR' The requested window is already in use</span><span>
+</span><span id="line-198"></span><span class="hs-comment">-- by Vulkan or another API in a manner which prevents it from being used</span><span>
+</span><span id="line-199"></span><span class="hs-comment">-- again.</span><span>
+</span><span id="line-200"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_NATIVE_WINDOW_IN_USE_KHR"><span id="%24mERROR_NATIVE_WINDOW_IN_USE_KHR"><span id="ERROR_NATIVE_WINDOW_IN_USE_KHR"><span class="annot"><span class="annottext">$bERROR_NATIVE_WINDOW_IN_USE_KHR :: Result
+$mERROR_NATIVE_WINDOW_IN_USE_KHR :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_NATIVE_WINDOW_IN_USE_KHR"><span class="hs-identifier hs-var hs-var hs-var">ERROR_NATIVE_WINDOW_IN_USE_KHR</span></a></span></span></span></span><span>       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000000001</span><span class="hs-special">)</span><span>
+</span><span id="line-201"></span><span class="hs-comment">-- | 'ERROR_SURFACE_LOST_KHR' A surface is no longer available.</span><span>
+</span><span id="line-202"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_SURFACE_LOST_KHR"><span id="%24mERROR_SURFACE_LOST_KHR"><span id="ERROR_SURFACE_LOST_KHR"><span class="annot"><span class="annottext">$bERROR_SURFACE_LOST_KHR :: Result
+$mERROR_SURFACE_LOST_KHR :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_SURFACE_LOST_KHR"><span class="hs-identifier hs-var hs-var hs-var">ERROR_SURFACE_LOST_KHR</span></a></span></span></span></span><span>               </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000000000</span><span class="hs-special">)</span><span>
+</span><span id="line-203"></span><span class="hs-comment">-- | 'ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS' A buffer creation or memory</span><span>
+</span><span id="line-204"></span><span class="hs-comment">-- allocation failed because the requested address is not available. A</span><span>
+</span><span id="line-205"></span><span class="hs-comment">-- shader group handle assignment failed because the requested shader group</span><span>
+</span><span id="line-206"></span><span class="hs-comment">-- handle information is no longer valid.</span><span>
+</span><span id="line-207"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_INVALID_OPAQUE_CAPTURE_ADDRESS"><span id="%24mERROR_INVALID_OPAQUE_CAPTURE_ADDRESS"><span id="ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS"><span class="annot"><span class="annottext">$bERROR_INVALID_OPAQUE_CAPTURE_ADDRESS :: Result
+$mERROR_INVALID_OPAQUE_CAPTURE_ADDRESS :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_INVALID_OPAQUE_CAPTURE_ADDRESS"><span class="hs-identifier hs-var hs-var hs-var">ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000257000</span><span class="hs-special">)</span><span>
+</span><span id="line-208"></span><span class="hs-comment">-- | 'ERROR_FRAGMENTATION' A descriptor pool creation has failed due to</span><span>
+</span><span id="line-209"></span><span class="hs-comment">-- fragmentation.</span><span>
+</span><span id="line-210"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_FRAGMENTATION"><span id="%24mERROR_FRAGMENTATION"><span id="ERROR_FRAGMENTATION"><span class="annot"><span class="annottext">$bERROR_FRAGMENTATION :: Result
+$mERROR_FRAGMENTATION :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_FRAGMENTATION"><span class="hs-identifier hs-var hs-var hs-var">ERROR_FRAGMENTATION</span></a></span></span></span></span><span>                  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000161000</span><span class="hs-special">)</span><span>
+</span><span id="line-211"></span><span class="hs-comment">-- | 'ERROR_INVALID_EXTERNAL_HANDLE' An external handle is not a valid handle</span><span>
+</span><span id="line-212"></span><span class="hs-comment">-- of the specified type.</span><span>
+</span><span id="line-213"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_INVALID_EXTERNAL_HANDLE"><span id="%24mERROR_INVALID_EXTERNAL_HANDLE"><span id="ERROR_INVALID_EXTERNAL_HANDLE"><span class="annot"><span class="annottext">$bERROR_INVALID_EXTERNAL_HANDLE :: Result
+$mERROR_INVALID_EXTERNAL_HANDLE :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_INVALID_EXTERNAL_HANDLE"><span class="hs-identifier hs-var hs-var hs-var">ERROR_INVALID_EXTERNAL_HANDLE</span></a></span></span></span></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000072003</span><span class="hs-special">)</span><span>
+</span><span id="line-214"></span><span class="hs-comment">-- | 'ERROR_OUT_OF_POOL_MEMORY' A pool memory allocation has failed. This</span><span>
+</span><span id="line-215"></span><span class="hs-comment">-- /must/ only be returned if no attempt to allocate host or device memory</span><span>
+</span><span id="line-216"></span><span class="hs-comment">-- was made to accommodate the new allocation. If the failure was</span><span>
+</span><span id="line-217"></span><span class="hs-comment">-- definitely due to fragmentation of the pool, 'ERROR_FRAGMENTED_POOL'</span><span>
+</span><span id="line-218"></span><span class="hs-comment">-- /should/ be returned instead.</span><span>
+</span><span id="line-219"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bERROR_OUT_OF_POOL_MEMORY"><span id="%24mERROR_OUT_OF_POOL_MEMORY"><span id="ERROR_OUT_OF_POOL_MEMORY"><span class="annot"><span class="annottext">$bERROR_OUT_OF_POOL_MEMORY :: Result
+$mERROR_OUT_OF_POOL_MEMORY :: forall r. Result -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.Result.html#%24bERROR_OUT_OF_POOL_MEMORY"><span class="hs-identifier hs-var hs-var hs-var">ERROR_OUT_OF_POOL_MEMORY</span></a></span></span></span></span><span>             </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-number">1000069000</span><span class="hs-special">)</span><span>
+</span><span id="line-220"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-pragma hs-type">SUCCESS</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-221"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#NOT_READY"><span class="hs-pragma hs-type">NOT_READY</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-222"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#TIMEOUT"><span class="hs-pragma hs-type">TIMEOUT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-223"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#EVENT_SET"><span class="hs-pragma hs-type">EVENT_SET</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-224"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#EVENT_RESET"><span class="hs-pragma hs-type">EVENT_RESET</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-225"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#INCOMPLETE"><span class="hs-pragma hs-type">INCOMPLETE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-226"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_HOST_MEMORY"><span class="hs-pragma hs-type">ERROR_OUT_OF_HOST_MEMORY</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-227"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_DEVICE_MEMORY"><span class="hs-pragma hs-type">ERROR_OUT_OF_DEVICE_MEMORY</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-228"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INITIALIZATION_FAILED"><span class="hs-pragma hs-type">ERROR_INITIALIZATION_FAILED</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-229"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_DEVICE_LOST"><span class="hs-pragma hs-type">ERROR_DEVICE_LOST</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-230"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_MEMORY_MAP_FAILED"><span class="hs-pragma hs-type">ERROR_MEMORY_MAP_FAILED</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-231"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_LAYER_NOT_PRESENT"><span class="hs-pragma hs-type">ERROR_LAYER_NOT_PRESENT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-232"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_EXTENSION_NOT_PRESENT"><span class="hs-pragma hs-type">ERROR_EXTENSION_NOT_PRESENT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-233"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FEATURE_NOT_PRESENT"><span class="hs-pragma hs-type">ERROR_FEATURE_NOT_PRESENT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-234"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INCOMPATIBLE_DRIVER"><span class="hs-pragma hs-type">ERROR_INCOMPATIBLE_DRIVER</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-235"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_TOO_MANY_OBJECTS"><span class="hs-pragma hs-type">ERROR_TOO_MANY_OBJECTS</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-236"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FORMAT_NOT_SUPPORTED"><span class="hs-pragma hs-type">ERROR_FORMAT_NOT_SUPPORTED</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-237"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FRAGMENTED_POOL"><span class="hs-pragma hs-type">ERROR_FRAGMENTED_POOL</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-238"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_UNKNOWN"><span class="hs-pragma hs-type">ERROR_UNKNOWN</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-239"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#PIPELINE_COMPILE_REQUIRED_EXT"><span class="hs-pragma hs-type">PIPELINE_COMPILE_REQUIRED_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-240"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#OPERATION_NOT_DEFERRED_KHR"><span class="hs-pragma hs-type">OPERATION_NOT_DEFERRED_KHR</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-241"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#OPERATION_DEFERRED_KHR"><span class="hs-pragma hs-type">OPERATION_DEFERRED_KHR</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-242"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#THREAD_DONE_KHR"><span class="hs-pragma hs-type">THREAD_DONE_KHR</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-243"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#THREAD_IDLE_KHR"><span class="hs-pragma hs-type">THREAD_IDLE_KHR</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-244"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"><span class="hs-pragma hs-type">ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-245"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_NOT_PERMITTED_EXT"><span class="hs-pragma hs-type">ERROR_NOT_PERMITTED_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-246"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"><span class="hs-pragma hs-type">ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-247"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_SHADER_NV"><span class="hs-pragma hs-type">ERROR_INVALID_SHADER_NV</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-248"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_VALIDATION_FAILED_EXT"><span class="hs-pragma hs-type">ERROR_VALIDATION_FAILED_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-249"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INCOMPATIBLE_DISPLAY_KHR"><span class="hs-pragma hs-type">ERROR_INCOMPATIBLE_DISPLAY_KHR</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-250"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_DATE_KHR"><span class="hs-pragma hs-type">ERROR_OUT_OF_DATE_KHR</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-251"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUBOPTIMAL_KHR"><span class="hs-pragma hs-type">SUBOPTIMAL_KHR</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-252"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_NATIVE_WINDOW_IN_USE_KHR"><span class="hs-pragma hs-type">ERROR_NATIVE_WINDOW_IN_USE_KHR</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-253"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_SURFACE_LOST_KHR"><span class="hs-pragma hs-type">ERROR_SURFACE_LOST_KHR</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-254"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS"><span class="hs-pragma hs-type">ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-255"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FRAGMENTATION"><span class="hs-pragma hs-type">ERROR_FRAGMENTATION</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-256"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_EXTERNAL_HANDLE"><span class="hs-pragma hs-type">ERROR_INVALID_EXTERNAL_HANDLE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-257"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_POOL_MEMORY"><span class="hs-pragma hs-type">ERROR_OUT_OF_POOL_MEMORY</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-pragma hs-type">Result</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-258"></span><span>
+</span><span id="line-259"></span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#conNameResult"><span class="hs-identifier hs-type">conNameResult</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-260"></span><span id="conNameResult"><span class="annot"><span class="annottext">conNameResult :: String
+</span><a href="Vulkan.Core10.Enums.Result.html#conNameResult"><span class="hs-identifier hs-var hs-var">conNameResult</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;Result&quot;</span></span><span>
+</span><span id="line-261"></span><span>
+</span><span id="line-262"></span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#enumPrefixResult"><span class="hs-identifier hs-type">enumPrefixResult</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-263"></span><span id="enumPrefixResult"><span class="annot"><span class="annottext">enumPrefixResult :: String
+</span><a href="Vulkan.Core10.Enums.Result.html#enumPrefixResult"><span class="hs-identifier hs-var hs-var">enumPrefixResult</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-264"></span><span>
+</span><span id="line-265"></span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#showTableResult"><span class="hs-identifier hs-type">showTableResult</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-266"></span><span id="showTableResult"><span class="annot"><span class="annottext">showTableResult :: [(Result, String)]
+</span><a href="Vulkan.Core10.Enums.Result.html#showTableResult"><span class="hs-identifier hs-var hs-var">showTableResult</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-267"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span>                             </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;SUCCESS&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-268"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#NOT_READY"><span class="hs-identifier hs-var">NOT_READY</span></a></span><span>                           </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;NOT_READY&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-269"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#TIMEOUT"><span class="hs-identifier hs-var">TIMEOUT</span></a></span><span>                             </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;TIMEOUT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-270"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#EVENT_SET"><span class="hs-identifier hs-var">EVENT_SET</span></a></span><span>                           </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;EVENT_SET&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-271"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#EVENT_RESET"><span class="hs-identifier hs-var">EVENT_RESET</span></a></span><span>                         </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;EVENT_RESET&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-272"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#INCOMPLETE"><span class="hs-identifier hs-var">INCOMPLETE</span></a></span><span>                          </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;INCOMPLETE&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-273"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_HOST_MEMORY"><span class="hs-identifier hs-var">ERROR_OUT_OF_HOST_MEMORY</span></a></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_OUT_OF_HOST_MEMORY&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-274"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_DEVICE_MEMORY"><span class="hs-identifier hs-var">ERROR_OUT_OF_DEVICE_MEMORY</span></a></span><span>          </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_OUT_OF_DEVICE_MEMORY&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-275"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_INITIALIZATION_FAILED"><span class="hs-identifier hs-var">ERROR_INITIALIZATION_FAILED</span></a></span><span>         </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_INITIALIZATION_FAILED&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-276"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_DEVICE_LOST"><span class="hs-identifier hs-var">ERROR_DEVICE_LOST</span></a></span><span>                   </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_DEVICE_LOST&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-277"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_MEMORY_MAP_FAILED"><span class="hs-identifier hs-var">ERROR_MEMORY_MAP_FAILED</span></a></span><span>             </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_MEMORY_MAP_FAILED&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-278"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_LAYER_NOT_PRESENT"><span class="hs-identifier hs-var">ERROR_LAYER_NOT_PRESENT</span></a></span><span>             </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_LAYER_NOT_PRESENT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-279"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_EXTENSION_NOT_PRESENT"><span class="hs-identifier hs-var">ERROR_EXTENSION_NOT_PRESENT</span></a></span><span>         </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_EXTENSION_NOT_PRESENT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-280"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_FEATURE_NOT_PRESENT"><span class="hs-identifier hs-var">ERROR_FEATURE_NOT_PRESENT</span></a></span><span>           </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_FEATURE_NOT_PRESENT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-281"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_INCOMPATIBLE_DRIVER"><span class="hs-identifier hs-var">ERROR_INCOMPATIBLE_DRIVER</span></a></span><span>           </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_INCOMPATIBLE_DRIVER&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-282"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_TOO_MANY_OBJECTS"><span class="hs-identifier hs-var">ERROR_TOO_MANY_OBJECTS</span></a></span><span>              </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_TOO_MANY_OBJECTS&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-283"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_FORMAT_NOT_SUPPORTED"><span class="hs-identifier hs-var">ERROR_FORMAT_NOT_SUPPORTED</span></a></span><span>          </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_FORMAT_NOT_SUPPORTED&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-284"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_FRAGMENTED_POOL"><span class="hs-identifier hs-var">ERROR_FRAGMENTED_POOL</span></a></span><span>               </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_FRAGMENTED_POOL&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-285"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_UNKNOWN"><span class="hs-identifier hs-var">ERROR_UNKNOWN</span></a></span><span>                       </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_UNKNOWN&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-286"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#PIPELINE_COMPILE_REQUIRED_EXT"><span class="hs-identifier hs-var">PIPELINE_COMPILE_REQUIRED_EXT</span></a></span><span>       </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;PIPELINE_COMPILE_REQUIRED_EXT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-287"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#OPERATION_NOT_DEFERRED_KHR"><span class="hs-identifier hs-var">OPERATION_NOT_DEFERRED_KHR</span></a></span><span>          </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;OPERATION_NOT_DEFERRED_KHR&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-288"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#OPERATION_DEFERRED_KHR"><span class="hs-identifier hs-var">OPERATION_DEFERRED_KHR</span></a></span><span>              </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;OPERATION_DEFERRED_KHR&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-289"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#THREAD_DONE_KHR"><span class="hs-identifier hs-var">THREAD_DONE_KHR</span></a></span><span>                     </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;THREAD_DONE_KHR&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-290"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#THREAD_IDLE_KHR"><span class="hs-identifier hs-var">THREAD_IDLE_KHR</span></a></span><span>                     </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;THREAD_IDLE_KHR&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-291"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"><span class="hs-identifier hs-var">ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-292"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_NOT_PERMITTED_EXT"><span class="hs-identifier hs-var">ERROR_NOT_PERMITTED_EXT</span></a></span><span>             </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_NOT_PERMITTED_EXT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-293"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"><span class="hs-identifier hs-var">ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-294"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_SHADER_NV"><span class="hs-identifier hs-var">ERROR_INVALID_SHADER_NV</span></a></span><span>             </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_INVALID_SHADER_NV&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-295"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_VALIDATION_FAILED_EXT"><span class="hs-identifier hs-var">ERROR_VALIDATION_FAILED_EXT</span></a></span><span>         </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_VALIDATION_FAILED_EXT&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-296"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_INCOMPATIBLE_DISPLAY_KHR"><span class="hs-identifier hs-var">ERROR_INCOMPATIBLE_DISPLAY_KHR</span></a></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_INCOMPATIBLE_DISPLAY_KHR&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-297"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_DATE_KHR"><span class="hs-identifier hs-var">ERROR_OUT_OF_DATE_KHR</span></a></span><span>               </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_OUT_OF_DATE_KHR&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-298"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUBOPTIMAL_KHR"><span class="hs-identifier hs-var">SUBOPTIMAL_KHR</span></a></span><span>                      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;SUBOPTIMAL_KHR&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-299"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_NATIVE_WINDOW_IN_USE_KHR"><span class="hs-identifier hs-var">ERROR_NATIVE_WINDOW_IN_USE_KHR</span></a></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_NATIVE_WINDOW_IN_USE_KHR&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-300"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_SURFACE_LOST_KHR"><span class="hs-identifier hs-var">ERROR_SURFACE_LOST_KHR</span></a></span><span>              </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_SURFACE_LOST_KHR&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-301"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS"><span class="hs-identifier hs-var">ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-302"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_FRAGMENTATION"><span class="hs-identifier hs-var">ERROR_FRAGMENTATION</span></a></span><span>                 </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_FRAGMENTATION&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-303"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_EXTERNAL_HANDLE"><span class="hs-identifier hs-var">ERROR_INVALID_EXTERNAL_HANDLE</span></a></span><span>       </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_INVALID_EXTERNAL_HANDLE&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-304"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_POOL_MEMORY"><span class="hs-identifier hs-var">ERROR_OUT_OF_POOL_MEMORY</span></a></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ERROR_OUT_OF_POOL_MEMORY&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-305"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-306"></span><span>
+</span><span id="line-307"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680107127"><span id="local-6989586621680107129"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-308"></span><span>  </span><span id="local-6989586621680107125"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; Result -&gt; ShowS
+</span><a href="#local-6989586621680107125"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(Result, String)]
+-&gt; String
+-&gt; (Result -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; Result
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.Result.html#enumPrefixResult"><span class="hs-identifier hs-var">enumPrefixResult</span></a></span><span> </span><span class="annot"><span class="annottext">[(Result, String)]
+</span><a href="Vulkan.Core10.Enums.Result.html#showTableResult"><span class="hs-identifier hs-var">showTableResult</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.Result.html#conNameResult"><span class="hs-identifier hs-var">conNameResult</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span id="local-6989586621680107124"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621680107124"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680107124"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-309"></span><span>
+</span><span id="line-310"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680107117"><span id="local-6989586621680107120"><span id="local-6989586621680107122"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-311"></span><span>  </span><span id="local-6989586621680107115"><span class="annot"><span class="annottext">readPrec :: ReadPrec Result
+</span><a href="#local-6989586621680107115"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(Result, String)]
+-&gt; String
+-&gt; (Int32 -&gt; Result)
+-&gt; ReadPrec Result
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.Result.html#enumPrefixResult"><span class="hs-identifier hs-var">enumPrefixResult</span></a></span><span> </span><span class="annot"><span class="annottext">[(Result, String)]
+</span><a href="Vulkan.Core10.Enums.Result.html#showTableResult"><span class="hs-identifier hs-var">showTableResult</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.Result.html#conNameResult"><span class="hs-identifier hs-var">conNameResult</span></a></span><span> </span><span class="annot"><span class="annottext">Int32 -&gt; Result
+</span><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-var">Result</span></a></span><span>
+</span><span id="line-312"></span><span>
+</span><span id="line-313"></span></pre></body></html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE OverloadedLists #-}</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Utils.Initialization</span><span>
+</span><span id="line-4"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-comment">-- * Instance creation</span></span><span>
+</span><span id="line-5"></span><span>    </span><span class="annot"><a href="Vulkan.Utils.Initialization.html#createInstanceFromRequirements"><span class="hs-identifier">createInstanceFromRequirements</span></a></span><span>
+</span><span id="line-6"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Utils.Initialization.html#createDebugInstanceFromRequirements"><span class="hs-identifier">createDebugInstanceFromRequirements</span></a></span><span>
+</span><span id="line-7"></span><span>    </span><span class="annot"><span class="hs-comment">-- * Device creation</span></span><span>
+</span><span id="line-8"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Utils.Initialization.html#createDeviceFromRequirements"><span class="hs-identifier">createDeviceFromRequirements</span></a></span><span>
+</span><span id="line-9"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-comment">-- * Physical device selection</span></span><span>
+</span><span id="line-10"></span><span>    </span><span class="annot"><a href="Vulkan.Utils.Initialization.html#pickPhysicalDevice"><span class="hs-identifier">pickPhysicalDevice</span></a></span><span>
+</span><span id="line-11"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Utils.Initialization.html#physicalDeviceName"><span class="hs-identifier">physicalDeviceName</span></a></span><span>
+</span><span id="line-12"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-13"></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Resource</span></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Foldable</span></span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Maybe</span></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Ord</span></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Text</span></span><span>                      </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">Text</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Text.Encoding</span></span><span>             </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">decodeUtf8</span></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.CStruct.Extends</span></span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Core10</span></span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Extensions.VK_EXT_debug_utils</span></span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Extensions.VK_EXT_validation_features</span></span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Requirement</span></span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Vulkan.Utils.Debug.html"><span class="hs-identifier">Vulkan.Utils.Debug</span></a></span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Vulkan.Utils.Internal.html"><span class="hs-identifier">Vulkan.Utils.Internal</span></a></span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Vulkan.Utils.Requirements.html"><span class="hs-identifier">Vulkan.Utils.Requirements</span></a></span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Zero</span></span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- Instance</span><span>
+</span><span id="line-34"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- | Like 'createInstanceFromRequirements' except it will create a debug utils</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- messenger (from the @VK_EXT_debug_utils@ extension).</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- If the @VK_EXT_validation_features@ extension (from the</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- @VK_LAYER_KHRONOS_validation@ layer) is available is it will be enabled and</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- best practices messages enabled.</span><span>
+</span><span id="line-42"></span><span class="annot"><a href="Vulkan.Utils.Initialization.html#createDebugInstanceFromRequirements"><span class="hs-identifier hs-type">createDebugInstanceFromRequirements</span></a></span><span>
+</span><span id="line-43"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679261644"><span class="annot"><a href="#local-6989586621679261644"><span class="hs-identifier hs-type">m</span></a></span></span><span> </span><span id="local-6989586621679261643"><span class="annot"><a href="#local-6989586621679261643"><span class="hs-identifier hs-type">es</span></a></span></span><span>
+</span><span id="line-44"></span><span>   </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadResource</span></span><span> </span><span class="annot"><a href="#local-6989586621679261644"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Extendss</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">InstanceCreateInfo</span></span><span> </span><span class="annot"><a href="#local-6989586621679261643"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">PokeChain</span></span><span> </span><span class="annot"><a href="#local-6989586621679261643"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>  </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">InstanceRequirement</span></span><span class="hs-special">]</span><span>
+</span><span id="line-46"></span><span>  </span><span class="hs-comment">-- ^ Required</span><span>
+</span><span id="line-47"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">InstanceRequirement</span></span><span class="hs-special">]</span><span>
+</span><span id="line-48"></span><span>  </span><span class="hs-comment">-- ^ Optional</span><span>
+</span><span id="line-49"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">InstanceCreateInfo</span></span><span> </span><span class="annot"><a href="#local-6989586621679261643"><span class="hs-identifier hs-type">es</span></a></span><span>
+</span><span id="line-50"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679261644"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Instance</span></span><span>
+</span><span id="line-51"></span><span id="createDebugInstanceFromRequirements"><span class="annot"><span class="annottext">createDebugInstanceFromRequirements :: [InstanceRequirement]
+-&gt; [InstanceRequirement] -&gt; InstanceCreateInfo es -&gt; m Instance
+</span><a href="Vulkan.Utils.Initialization.html#createDebugInstanceFromRequirements"><span class="hs-identifier hs-var hs-var">createDebugInstanceFromRequirements</span></a></span></span><span> </span><span id="local-6989586621679261642"><span class="annot"><span class="annottext">required :: [InstanceRequirement]
+</span><a href="#local-6989586621679261642"><span class="hs-identifier hs-var">required</span></a></span></span><span> </span><span id="local-6989586621679261641"><span class="annot"><span class="annottext">optional :: [InstanceRequirement]
+</span><a href="#local-6989586621679261641"><span class="hs-identifier hs-var">optional</span></a></span></span><span> </span><span id="local-6989586621679261640"><span class="annot"><span class="annottext">baseCreateInfo :: InstanceCreateInfo es
+</span><a href="#local-6989586621679261640"><span class="hs-identifier hs-var">baseCreateInfo</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-52"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679261639"><span class="annot"><span class="annottext">debugMessengerCreateInfo :: DebugUtilsMessengerCreateInfoEXT
+</span><a href="#local-6989586621679261639"><span class="hs-identifier hs-var hs-var">debugMessengerCreateInfo</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DebugUtilsMessengerCreateInfoEXT
+forall a. Zero a =&gt; a
+</span><span class="hs-identifier hs-var">zero</span></span><span>
+</span><span id="line-53"></span><span>        </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:messageSeverity:DebugUtilsMessengerCreateInfoEXT :: DebugUtilsMessageSeverityFlagsEXT
+</span><a href="#local-6989586621679261637"><span class="hs-identifier hs-var">messageSeverity</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DebugUtilsMessageSeverityFlagsEXT
+</span><span class="hs-identifier hs-var">DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT</span></span><span>
+</span><span id="line-54"></span><span>                              </span><span class="annot"><span class="annottext">DebugUtilsMessageSeverityFlagsEXT
+-&gt; DebugUtilsMessageSeverityFlagsEXT
+-&gt; DebugUtilsMessageSeverityFlagsEXT
+forall a. Bits a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">.|.</span></span><span> </span><span class="annot"><span class="annottext">DebugUtilsMessageSeverityFlagsEXT
+</span><span class="hs-identifier hs-var">DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT</span></span><span>
+</span><span id="line-55"></span><span>        </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:messageType:DebugUtilsMessengerCreateInfoEXT :: DebugUtilsMessageTypeFlagsEXT
+</span><a href="#local-6989586621679261633"><span class="hs-identifier hs-var">messageType</span></a></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DebugUtilsMessageTypeFlagsEXT
+</span><span class="hs-identifier hs-var">DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT</span></span><span>
+</span><span id="line-56"></span><span>                            </span><span class="annot"><span class="annottext">DebugUtilsMessageTypeFlagsEXT
+-&gt; DebugUtilsMessageTypeFlagsEXT -&gt; DebugUtilsMessageTypeFlagsEXT
+forall a. Bits a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">.|.</span></span><span> </span><span class="annot"><span class="annottext">DebugUtilsMessageTypeFlagsEXT
+</span><span class="hs-identifier hs-var">DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT</span></span><span>
+</span><span id="line-57"></span><span>                            </span><span class="annot"><span class="annottext">DebugUtilsMessageTypeFlagsEXT
+-&gt; DebugUtilsMessageTypeFlagsEXT -&gt; DebugUtilsMessageTypeFlagsEXT
+forall a. Bits a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">.|.</span></span><span> </span><span class="annot"><span class="annottext">DebugUtilsMessageTypeFlagsEXT
+</span><span class="hs-identifier hs-var">DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT</span></span><span>
+</span><span id="line-58"></span><span>        </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:pfnUserCallback:DebugUtilsMessengerCreateInfoEXT :: PFN_vkDebugUtilsMessengerCallbackEXT
+</span><a href="#local-6989586621679261629"><span class="hs-identifier hs-var">pfnUserCallback</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">PFN_vkDebugUtilsMessengerCallbackEXT
+</span><a href="Vulkan.Utils.Debug.html#debugCallbackPtr"><span class="hs-identifier hs-var">debugCallbackPtr</span></a></span><span>
+</span><span id="line-59"></span><span>        </span><span class="hs-special">}</span><span>
+</span><span id="line-60"></span><span>      </span><span id="local-6989586621679261627"><span class="annot"><span class="annottext">validationFeatures :: ValidationFeaturesEXT
+</span><a href="#local-6989586621679261627"><span class="hs-identifier hs-var hs-var">validationFeatures</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-61"></span><span>        </span><span class="annot"><span class="annottext">Vector ValidationFeatureEnableEXT
+-&gt; Vector ValidationFeatureDisableEXT -&gt; ValidationFeaturesEXT
+</span><span class="hs-identifier hs-var">ValidationFeaturesEXT</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Item (Vector ValidationFeatureEnableEXT)
+ValidationFeatureEnableEXT
+</span><span class="hs-identifier hs-var">VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT</span></span><span class="hs-special">]</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-62"></span><span>      </span><span class="annot"><a href="#local-6989586621679261624"><span class="hs-identifier hs-type">instanceCreateInfo</span></a></span><span>
+</span><span id="line-63"></span><span>        </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">InstanceCreateInfo</span></span><span>
+</span><span id="line-64"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">DebugUtilsMessengerCreateInfoEXT</span></span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ValidationFeaturesEXT</span></span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span class="annot"><a href="#local-6989586621679261643"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span>      </span><span id="local-6989586621679261624"><span class="annot"><span class="annottext">instanceCreateInfo :: InstanceCreateInfo
+  (DebugUtilsMessengerCreateInfoEXT : ValidationFeaturesEXT : es)
+</span><a href="#local-6989586621679261624"><span class="hs-identifier hs-var hs-var">instanceCreateInfo</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">InstanceCreateInfo es
+</span><a href="#local-6989586621679261640"><span class="hs-identifier hs-var">baseCreateInfo</span></a></span><span>
+</span><span id="line-66"></span><span>        </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:next:InstanceCreateInfo :: Chain
+  (DebugUtilsMessengerCreateInfoEXT : ValidationFeaturesEXT : es)
+</span><span class="hs-identifier hs-var">next</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DebugUtilsMessengerCreateInfoEXT
+</span><a href="#local-6989586621679261639"><span class="hs-identifier hs-var">debugMessengerCreateInfo</span></a></span><span> </span><span class="annot"><span class="annottext">DebugUtilsMessengerCreateInfoEXT
+-&gt; Chain (ValidationFeaturesEXT : es)
+-&gt; Chain
+     (DebugUtilsMessengerCreateInfoEXT : ValidationFeaturesEXT : es)
+forall e (es :: [*]). e -&gt; Chain es -&gt; Chain (e : es)
+</span><span class="hs-operator hs-var">:&amp;</span></span><span> </span><span class="annot"><span class="annottext">ValidationFeaturesEXT
+</span><a href="#local-6989586621679261627"><span class="hs-identifier hs-var">validationFeatures</span></a></span><span> </span><span class="annot"><span class="annottext">ValidationFeaturesEXT
+-&gt; Chain es -&gt; Chain (ValidationFeaturesEXT : es)
+forall e (es :: [*]). e -&gt; Chain es -&gt; Chain (e : es)
+</span><span class="hs-operator hs-var">:&amp;</span></span><span> </span><span class="annot"><span class="annottext">InstanceCreateInfo es -&gt; Chain es
+forall (es :: [*]). InstanceCreateInfo es -&gt; Chain es
+</span><span class="hs-identifier hs-var">next</span></span><span>
+</span><span id="line-67"></span><span>                   </span><span class="hs-special">(</span><span class="annot"><span class="annottext">InstanceCreateInfo es
+</span><a href="#local-6989586621679261640"><span class="hs-identifier hs-var">baseCreateInfo</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">InstanceCreateInfo</span></span><span> </span><span class="annot"><a href="#local-6989586621679261643"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span>        </span><span class="hs-special">}</span><span>
+</span><span id="line-69"></span><span>      </span><span id="local-6989586621679261621"><span class="annot"><span class="annottext">additionalRequirements :: l
+</span><a href="#local-6989586621679261621"><span class="hs-identifier hs-var hs-var">additionalRequirements</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-70"></span><span>        </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">$WRequireInstanceExtension :: Maybe ByteString -&gt; ByteString -&gt; Word32 -&gt; InstanceRequirement
+</span><span class="hs-identifier hs-type hs-type">RequireInstanceExtension</span></span><span>
+</span><span id="line-71"></span><span>            </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:instanceExtensionLayerName:RequireInstanceVersion :: Maybe ByteString
+</span><span class="hs-identifier hs-var">instanceExtensionLayerName</span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe ByteString
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-72"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:instanceExtensionName:RequireInstanceVersion :: ByteString
+</span><a href="#local-6989586621679261617"><span class="hs-identifier hs-var">instanceExtensionName</span></a></span><span>       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString
+forall a. (Eq a, IsString a) =&gt; a
+</span><span class="hs-identifier hs-var">EXT_DEBUG_UTILS_EXTENSION_NAME</span></span><span>
+</span><span id="line-73"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:instanceExtensionMinVersion:RequireInstanceVersion :: Word32
+</span><a href="#local-6989586621679261615"><span class="hs-identifier hs-var">instanceExtensionMinVersion</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32
+forall a. Bounded a =&gt; a
+</span><span class="hs-identifier hs-var">minBound</span></span><span>
+</span><span id="line-74"></span><span>            </span><span class="hs-special">}</span><span>
+</span><span id="line-75"></span><span>        </span><span class="hs-special">]</span><span>
+</span><span id="line-76"></span><span>      </span><span id="local-6989586621679261613"><span class="annot"><span class="annottext">additionalOptionalRequirements :: l
+</span><a href="#local-6989586621679261613"><span class="hs-identifier hs-var hs-var">additionalOptionalRequirements</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-77"></span><span>        </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">$WRequireInstanceLayer :: ByteString -&gt; Word32 -&gt; InstanceRequirement
+</span><span class="hs-identifier hs-type hs-type">RequireInstanceLayer</span></span><span>
+</span><span id="line-78"></span><span>          </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:instanceLayerName:RequireInstanceVersion :: ByteString
+</span><span class="hs-identifier hs-var">instanceLayerName</span></span><span>       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_LAYER_KHRONOS_validation&quot;</span></span><span>
+</span><span id="line-79"></span><span>          </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:instanceLayerMinVersion:RequireInstanceVersion :: Word32
+</span><span class="hs-identifier hs-var">instanceLayerMinVersion</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32
+forall a. Bounded a =&gt; a
+</span><span class="hs-identifier hs-var">minBound</span></span><span>
+</span><span id="line-80"></span><span>          </span><span class="hs-special">}</span><span>
+</span><span id="line-81"></span><span>        </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$WRequireInstanceExtension :: Maybe ByteString -&gt; ByteString -&gt; Word32 -&gt; InstanceRequirement
+</span><span class="hs-identifier hs-type hs-type">RequireInstanceExtension</span></span><span>
+</span><span id="line-82"></span><span>          </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:instanceExtensionLayerName:RequireInstanceVersion :: Maybe ByteString
+</span><span class="hs-identifier hs-var">instanceExtensionLayerName</span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Maybe ByteString
+forall a. a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="hs-string">&quot;VK_LAYER_KHRONOS_validation&quot;</span></span><span>
+</span><span id="line-83"></span><span>          </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:instanceExtensionName:RequireInstanceVersion :: ByteString
+</span><a href="#local-6989586621679261617"><span class="hs-identifier hs-var">instanceExtensionName</span></a></span><span>       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString
+forall a. (Eq a, IsString a) =&gt; a
+</span><span class="hs-identifier hs-var">EXT_VALIDATION_FEATURES_EXTENSION_NAME</span></span><span>
+</span><span id="line-84"></span><span>          </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:instanceExtensionMinVersion:RequireInstanceVersion :: Word32
+</span><a href="#local-6989586621679261615"><span class="hs-identifier hs-var">instanceExtensionMinVersion</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32
+forall a. Bounded a =&gt; a
+</span><span class="hs-identifier hs-var">minBound</span></span><span>
+</span><span id="line-85"></span><span>          </span><span class="hs-special">}</span><span>
+</span><span id="line-86"></span><span>        </span><span class="hs-special">]</span><span>
+</span><span id="line-87"></span><span>  </span><span id="local-6989586621679261607"><span class="annot"><span class="annottext">Instance
+</span><a href="#local-6989586621679261607"><span class="hs-identifier hs-var">inst</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">[InstanceRequirement]
+-&gt; [InstanceRequirement]
+-&gt; InstanceCreateInfo
+     (DebugUtilsMessengerCreateInfoEXT : ValidationFeaturesEXT : es)
+-&gt; m Instance
+forall (m :: * -&gt; *) (es :: [*]).
+(MonadResource m, Extendss InstanceCreateInfo es, PokeChain es) =&gt;
+[InstanceRequirement]
+-&gt; [InstanceRequirement] -&gt; InstanceCreateInfo es -&gt; m Instance
+</span><a href="Vulkan.Utils.Initialization.html#createInstanceFromRequirements"><span class="hs-identifier hs-var">createInstanceFromRequirements</span></a></span><span>
+</span><span id="line-88"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[InstanceRequirement]
+forall l. (IsList l, Item l ~ InstanceRequirement) =&gt; l
+</span><a href="#local-6989586621679261621"><span class="hs-identifier hs-var">additionalRequirements</span></a></span><span> </span><span class="annot"><span class="annottext">[InstanceRequirement]
+-&gt; [InstanceRequirement] -&gt; [InstanceRequirement]
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[InstanceRequirement] -&gt; [InstanceRequirement]
+forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; [a]
+</span><span class="hs-identifier hs-var">toList</span></span><span> </span><span class="annot"><span class="annottext">[InstanceRequirement]
+</span><a href="#local-6989586621679261642"><span class="hs-identifier hs-var">required</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-89"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[InstanceRequirement]
+forall l. (IsList l, Item l ~ InstanceRequirement) =&gt; l
+</span><a href="#local-6989586621679261613"><span class="hs-identifier hs-var">additionalOptionalRequirements</span></a></span><span> </span><span class="annot"><span class="annottext">[InstanceRequirement]
+-&gt; [InstanceRequirement] -&gt; [InstanceRequirement]
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[InstanceRequirement] -&gt; [InstanceRequirement]
+forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; [a]
+</span><span class="hs-identifier hs-var">toList</span></span><span> </span><span class="annot"><span class="annottext">[InstanceRequirement]
+</span><a href="#local-6989586621679261641"><span class="hs-identifier hs-var">optional</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-90"></span><span>    </span><span class="annot"><span class="annottext">InstanceCreateInfo
+  (DebugUtilsMessengerCreateInfoEXT : ValidationFeaturesEXT : es)
+</span><a href="#local-6989586621679261624"><span class="hs-identifier hs-var">instanceCreateInfo</span></a></span><span>
+</span><span id="line-91"></span><span>  </span><span class="annot"><span class="annottext">(ReleaseKey, DebugUtilsMessengerEXT)
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Instance
+-&gt; DebugUtilsMessengerCreateInfoEXT
+-&gt; Maybe AllocationCallbacks
+-&gt; (IO DebugUtilsMessengerEXT
+    -&gt; (DebugUtilsMessengerEXT -&gt; IO ())
+    -&gt; m (ReleaseKey, DebugUtilsMessengerEXT))
+-&gt; m (ReleaseKey, DebugUtilsMessengerEXT)
+forall (io :: * -&gt; *) r.
+MonadIO io =&gt;
+Instance
+-&gt; DebugUtilsMessengerCreateInfoEXT
+-&gt; Maybe AllocationCallbacks
+-&gt; (io DebugUtilsMessengerEXT
+    -&gt; (DebugUtilsMessengerEXT -&gt; io ()) -&gt; r)
+-&gt; r
+</span><span class="hs-identifier hs-var">withDebugUtilsMessengerEXT</span></span><span> </span><span class="annot"><span class="annottext">Instance
+</span><a href="#local-6989586621679261607"><span class="hs-identifier hs-var">inst</span></a></span><span> </span><span class="annot"><span class="annottext">DebugUtilsMessengerCreateInfoEXT
+</span><a href="#local-6989586621679261639"><span class="hs-identifier hs-var">debugMessengerCreateInfo</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe AllocationCallbacks
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IO DebugUtilsMessengerEXT
+-&gt; (DebugUtilsMessengerEXT -&gt; IO ())
+-&gt; m (ReleaseKey, DebugUtilsMessengerEXT)
+forall (m :: * -&gt; *) a.
+MonadResource m =&gt;
+IO a -&gt; (a -&gt; IO ()) -&gt; m (ReleaseKey, a)
+</span><span class="hs-identifier hs-var">allocate</span></span><span>
+</span><span id="line-92"></span><span>  </span><span class="annot"><span class="annottext">Instance -&gt; m Instance
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Instance
+</span><a href="#local-6989586621679261607"><span class="hs-identifier hs-var">inst</span></a></span><span>
+</span><span id="line-93"></span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- | Create an 'Instance from some requirements.</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- Will throw an 'IOError in the case of unsatisfied non-optional requirements.</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- Unsatisfied requirements will be listed on stderr.</span><span>
+</span><span id="line-98"></span><span id="local-6989586621679261739"><span id="local-6989586621679261741"><span class="annot"><a href="Vulkan.Utils.Initialization.html#createInstanceFromRequirements"><span class="hs-identifier hs-type">createInstanceFromRequirements</span></a></span><span>
+</span><span id="line-99"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadResource</span></span><span> </span><span class="annot"><a href="#local-6989586621679261741"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Extendss</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">InstanceCreateInfo</span></span><span> </span><span class="annot"><a href="#local-6989586621679261739"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">PokeChain</span></span><span> </span><span class="annot"><a href="#local-6989586621679261739"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-100"></span><span>  </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">InstanceRequirement</span></span><span class="hs-special">]</span><span>
+</span><span id="line-101"></span><span>  </span><span class="hs-comment">-- ^ Required</span><span>
+</span><span id="line-102"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">InstanceRequirement</span></span><span class="hs-special">]</span><span>
+</span><span id="line-103"></span><span>  </span><span class="hs-comment">-- ^ Optional</span><span>
+</span><span id="line-104"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">InstanceCreateInfo</span></span><span> </span><span class="annot"><a href="#local-6989586621679261739"><span class="hs-identifier hs-type">es</span></a></span><span>
+</span><span id="line-105"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679261741"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Instance</span></span></span></span><span>
+</span><span id="line-106"></span><span id="createInstanceFromRequirements"><span class="annot"><span class="annottext">createInstanceFromRequirements :: [InstanceRequirement]
+-&gt; [InstanceRequirement] -&gt; InstanceCreateInfo es -&gt; m Instance
+</span><a href="Vulkan.Utils.Initialization.html#createInstanceFromRequirements"><span class="hs-identifier hs-var hs-var">createInstanceFromRequirements</span></a></span></span><span> </span><span id="local-6989586621679261603"><span class="annot"><span class="annottext">required :: [InstanceRequirement]
+</span><a href="#local-6989586621679261603"><span class="hs-identifier hs-var">required</span></a></span></span><span> </span><span id="local-6989586621679261602"><span class="annot"><span class="annottext">optional :: [InstanceRequirement]
+</span><a href="#local-6989586621679261602"><span class="hs-identifier hs-var">optional</span></a></span></span><span> </span><span id="local-6989586621679261601"><span class="annot"><span class="annottext">baseCreateInfo :: InstanceCreateInfo es
+</span><a href="#local-6989586621679261601"><span class="hs-identifier hs-var">baseCreateInfo</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-107"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679261600"><span class="annot"><span class="annottext">mbICI :: Maybe (InstanceCreateInfo es)
+</span><a href="#local-6989586621679261600"><span class="hs-identifier hs-var">mbICI</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679261599"><span class="annot"><span class="annottext">rrs :: [RequirementResult]
+</span><a href="#local-6989586621679261599"><span class="hs-identifier hs-var">rrs</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679261598"><span class="annot"><span class="annottext">ors :: [RequirementResult]
+</span><a href="#local-6989586621679261598"><span class="hs-identifier hs-var">ors</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">[InstanceRequirement]
+-&gt; [InstanceRequirement]
+-&gt; InstanceCreateInfo es
+-&gt; m (Maybe (InstanceCreateInfo es), [RequirementResult],
+      [RequirementResult])
+forall (m :: * -&gt; *) (o :: * -&gt; *) (r :: * -&gt; *) (es :: [*]).
+(MonadIO m, Traversable r, Traversable o) =&gt;
+r InstanceRequirement
+-&gt; o InstanceRequirement
+-&gt; InstanceCreateInfo es
+-&gt; m (Maybe (InstanceCreateInfo es), r RequirementResult,
+      o RequirementResult)
+</span><a href="Vulkan.Utils.Requirements.html#checkInstanceRequirements"><span class="hs-identifier hs-var">checkInstanceRequirements</span></a></span><span> </span><span class="annot"><span class="annottext">[InstanceRequirement]
+</span><a href="#local-6989586621679261603"><span class="hs-identifier hs-var">required</span></a></span><span>
+</span><span id="line-108"></span><span>                                                 </span><span class="annot"><span class="annottext">[InstanceRequirement]
+</span><a href="#local-6989586621679261602"><span class="hs-identifier hs-var">optional</span></a></span><span>
+</span><span id="line-109"></span><span>                                                 </span><span class="annot"><span class="annottext">InstanceCreateInfo es
+</span><a href="#local-6989586621679261601"><span class="hs-identifier hs-var">baseCreateInfo</span></a></span><span>
+</span><span id="line-110"></span><span>  </span><span class="annot"><span class="annottext">(String -&gt; m ()) -&gt; Maybe String -&gt; m ()
+forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
+(Foldable t, Applicative f) =&gt;
+(a -&gt; f b) -&gt; t a -&gt; f ()
+</span><span class="hs-identifier hs-var">traverse_</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; m ()
+forall (m :: * -&gt; *). MonadIO m =&gt; String -&gt; m ()
+</span><a href="Vulkan.Utils.Internal.html#sayErr"><span class="hs-identifier hs-var">sayErr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[RequirementResult] -&gt; [RequirementResult] -&gt; Maybe String
+forall (r :: * -&gt; *) (o :: * -&gt; *).
+(Foldable r, Foldable o) =&gt;
+r RequirementResult -&gt; o RequirementResult -&gt; Maybe String
+</span><a href="Vulkan.Utils.Requirements.html#requirementReport"><span class="hs-identifier hs-var">requirementReport</span></a></span><span> </span><span class="annot"><span class="annottext">[RequirementResult]
+</span><a href="#local-6989586621679261599"><span class="hs-identifier hs-var">rrs</span></a></span><span> </span><span class="annot"><span class="annottext">[RequirementResult]
+</span><a href="#local-6989586621679261598"><span class="hs-identifier hs-var">ors</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-111"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe (InstanceCreateInfo es)
+</span><a href="#local-6989586621679261600"><span class="hs-identifier hs-var">mbICI</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-112"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Nothing</span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">IO Instance -&gt; m Instance
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO Instance -&gt; m Instance) -&gt; IO Instance -&gt; m Instance
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Instance
+forall a. String -&gt; IO a
+</span><a href="Vulkan.Utils.Internal.html#unsatisfiedConstraints"><span class="hs-identifier hs-var">unsatisfiedConstraints</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;Failed to create instance&quot;</span></span><span>
+</span><span id="line-113"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679261591"><span class="annot"><span class="annottext">ici :: InstanceCreateInfo es
+</span><a href="#local-6989586621679261591"><span class="hs-identifier hs-var">ici</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(ReleaseKey, Instance) -&gt; Instance
+forall a b. (a, b) -&gt; b
+</span><span class="hs-identifier hs-var">snd</span></span><span> </span><span class="annot"><span class="annottext">((ReleaseKey, Instance) -&gt; Instance)
+-&gt; m (ReleaseKey, Instance) -&gt; m Instance
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">InstanceCreateInfo es
+-&gt; Maybe AllocationCallbacks
+-&gt; (IO Instance -&gt; (Instance -&gt; IO ()) -&gt; m (ReleaseKey, Instance))
+-&gt; m (ReleaseKey, Instance)
+forall (a :: [*]) (io :: * -&gt; *) r.
+(Extendss InstanceCreateInfo a, PokeChain a, MonadIO io) =&gt;
+InstanceCreateInfo a
+-&gt; Maybe AllocationCallbacks
+-&gt; (io Instance -&gt; (Instance -&gt; io ()) -&gt; r)
+-&gt; r
+</span><span class="hs-identifier hs-var">withInstance</span></span><span> </span><span class="annot"><span class="annottext">InstanceCreateInfo es
+</span><a href="#local-6989586621679261591"><span class="hs-identifier hs-var">ici</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe AllocationCallbacks
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IO Instance -&gt; (Instance -&gt; IO ()) -&gt; m (ReleaseKey, Instance)
+forall (m :: * -&gt; *) a.
+MonadResource m =&gt;
+IO a -&gt; (a -&gt; IO ()) -&gt; m (ReleaseKey, a)
+</span><span class="hs-identifier hs-var">allocate</span></span><span>
+</span><span id="line-114"></span><span>
+</span><span id="line-115"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- * Device creation</span><span>
+</span><span id="line-117"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-118"></span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- | Create a 'Device' from some requirements.</span><span>
+</span><span id="line-120"></span><span class="hs-comment">--</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- Will throw an 'IOError in the case of unsatisfied non-optional requirements.</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- Unsatisfied requirements will be listed on stderr.</span><span>
+</span><span id="line-123"></span><span class="annot"><a href="Vulkan.Utils.Initialization.html#createDeviceFromRequirements"><span class="hs-identifier hs-type">createDeviceFromRequirements</span></a></span><span>
+</span><span id="line-124"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679261588"><span class="annot"><a href="#local-6989586621679261588"><span class="hs-identifier hs-type">m</span></a></span></span><span>
+</span><span id="line-125"></span><span>   </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadResource</span></span><span> </span><span class="annot"><a href="#local-6989586621679261588"><span class="hs-identifier hs-type">m</span></a></span><span>
+</span><span id="line-126"></span><span>  </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">DeviceRequirement</span></span><span class="hs-special">]</span><span>
+</span><span id="line-127"></span><span>  </span><span class="hs-comment">-- ^ Required</span><span>
+</span><span id="line-128"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">DeviceRequirement</span></span><span class="hs-special">]</span><span>
+</span><span id="line-129"></span><span>  </span><span class="hs-comment">-- ^ Optional</span><span>
+</span><span id="line-130"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">PhysicalDevice</span></span><span>
+</span><span id="line-131"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DeviceCreateInfo</span></span><span> </span><span class="hs-special">'</span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-132"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679261588"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Device</span></span><span>
+</span><span id="line-133"></span><span id="createDeviceFromRequirements"><span class="annot"><span class="annottext">createDeviceFromRequirements :: [DeviceRequirement]
+-&gt; [DeviceRequirement]
+-&gt; PhysicalDevice
+-&gt; DeviceCreateInfo '[]
+-&gt; m Device
+</span><a href="Vulkan.Utils.Initialization.html#createDeviceFromRequirements"><span class="hs-identifier hs-var hs-var">createDeviceFromRequirements</span></a></span></span><span> </span><span id="local-6989586621679261587"><span class="annot"><span class="annottext">required :: [DeviceRequirement]
+</span><a href="#local-6989586621679261587"><span class="hs-identifier hs-var">required</span></a></span></span><span> </span><span id="local-6989586621679261586"><span class="annot"><span class="annottext">optional :: [DeviceRequirement]
+</span><a href="#local-6989586621679261586"><span class="hs-identifier hs-var">optional</span></a></span></span><span> </span><span id="local-6989586621679261585"><span class="annot"><span class="annottext">phys :: PhysicalDevice
+</span><a href="#local-6989586621679261585"><span class="hs-identifier hs-var">phys</span></a></span></span><span> </span><span id="local-6989586621679261584"><span class="annot"><span class="annottext">baseCreateInfo :: DeviceCreateInfo '[]
+</span><a href="#local-6989586621679261584"><span class="hs-identifier hs-var">baseCreateInfo</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-134"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679261583"><span class="annot"><span class="annottext">mbDCI :: Maybe (SomeStruct DeviceCreateInfo)
+</span><a href="#local-6989586621679261583"><span class="hs-identifier hs-var">mbDCI</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679261582"><span class="annot"><span class="annottext">rrs :: [RequirementResult]
+</span><a href="#local-6989586621679261582"><span class="hs-identifier hs-var">rrs</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679261581"><span class="annot"><span class="annottext">ors :: [RequirementResult]
+</span><a href="#local-6989586621679261581"><span class="hs-identifier hs-var">ors</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">[DeviceRequirement]
+-&gt; [DeviceRequirement]
+-&gt; PhysicalDevice
+-&gt; DeviceCreateInfo '[]
+-&gt; m (Maybe (SomeStruct DeviceCreateInfo), [RequirementResult],
+      [RequirementResult])
+forall (m :: * -&gt; *) (o :: * -&gt; *) (r :: * -&gt; *).
+(MonadIO m, Traversable r, Traversable o) =&gt;
+r DeviceRequirement
+-&gt; o DeviceRequirement
+-&gt; PhysicalDevice
+-&gt; DeviceCreateInfo '[]
+-&gt; m (Maybe (SomeStruct DeviceCreateInfo), r RequirementResult,
+      o RequirementResult)
+</span><a href="Vulkan.Utils.Requirements.html#checkDeviceRequirements"><span class="hs-identifier hs-var">checkDeviceRequirements</span></a></span><span> </span><span class="annot"><span class="annottext">[DeviceRequirement]
+</span><a href="#local-6989586621679261587"><span class="hs-identifier hs-var">required</span></a></span><span>
+</span><span id="line-135"></span><span>                                               </span><span class="annot"><span class="annottext">[DeviceRequirement]
+</span><a href="#local-6989586621679261586"><span class="hs-identifier hs-var">optional</span></a></span><span>
+</span><span id="line-136"></span><span>                                               </span><span class="annot"><span class="annottext">PhysicalDevice
+</span><a href="#local-6989586621679261585"><span class="hs-identifier hs-var">phys</span></a></span><span>
+</span><span id="line-137"></span><span>                                               </span><span class="annot"><span class="annottext">DeviceCreateInfo '[]
+</span><a href="#local-6989586621679261584"><span class="hs-identifier hs-var">baseCreateInfo</span></a></span><span>
+</span><span id="line-138"></span><span>  </span><span class="annot"><span class="annottext">(String -&gt; m ()) -&gt; Maybe String -&gt; m ()
+forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
+(Foldable t, Applicative f) =&gt;
+(a -&gt; f b) -&gt; t a -&gt; f ()
+</span><span class="hs-identifier hs-var">traverse_</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; m ()
+forall (m :: * -&gt; *). MonadIO m =&gt; String -&gt; m ()
+</span><a href="Vulkan.Utils.Internal.html#sayErr"><span class="hs-identifier hs-var">sayErr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[RequirementResult] -&gt; [RequirementResult] -&gt; Maybe String
+forall (r :: * -&gt; *) (o :: * -&gt; *).
+(Foldable r, Foldable o) =&gt;
+r RequirementResult -&gt; o RequirementResult -&gt; Maybe String
+</span><a href="Vulkan.Utils.Requirements.html#requirementReport"><span class="hs-identifier hs-var">requirementReport</span></a></span><span> </span><span class="annot"><span class="annottext">[RequirementResult]
+</span><a href="#local-6989586621679261582"><span class="hs-identifier hs-var">rrs</span></a></span><span> </span><span class="annot"><span class="annottext">[RequirementResult]
+</span><a href="#local-6989586621679261581"><span class="hs-identifier hs-var">ors</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-139"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe (SomeStruct DeviceCreateInfo)
+</span><a href="#local-6989586621679261583"><span class="hs-identifier hs-var">mbDCI</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-140"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">IO Device -&gt; m Device
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO Device -&gt; m Device) -&gt; IO Device -&gt; m Device
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Device
+forall a. String -&gt; IO a
+</span><a href="Vulkan.Utils.Internal.html#unsatisfiedConstraints"><span class="hs-identifier hs-var">unsatisfiedConstraints</span></a></span><span> </span><span class="annot"><span class="hs-string">&quot;Failed to create instance&quot;</span></span><span>
+</span><span id="line-141"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">SomeStruct</span></span><span> </span><span id="local-6989586621679261578"><span class="annot"><span class="annottext">dci :: DeviceCreateInfo es
+</span><a href="#local-6989586621679261578"><span class="hs-identifier hs-var">dci</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(ReleaseKey, Device) -&gt; Device
+forall a b. (a, b) -&gt; b
+</span><span class="hs-identifier hs-var">snd</span></span><span> </span><span class="annot"><span class="annottext">((ReleaseKey, Device) -&gt; Device)
+-&gt; m (ReleaseKey, Device) -&gt; m Device
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">PhysicalDevice
+-&gt; DeviceCreateInfo es
+-&gt; Maybe AllocationCallbacks
+-&gt; (IO Device -&gt; (Device -&gt; IO ()) -&gt; m (ReleaseKey, Device))
+-&gt; m (ReleaseKey, Device)
+forall (a :: [*]) (io :: * -&gt; *) r.
+(Extendss DeviceCreateInfo a, PokeChain a, MonadIO io) =&gt;
+PhysicalDevice
+-&gt; DeviceCreateInfo a
+-&gt; Maybe AllocationCallbacks
+-&gt; (io Device -&gt; (Device -&gt; io ()) -&gt; r)
+-&gt; r
+</span><span class="hs-identifier hs-var">withDevice</span></span><span> </span><span class="annot"><span class="annottext">PhysicalDevice
+</span><a href="#local-6989586621679261585"><span class="hs-identifier hs-var">phys</span></a></span><span> </span><span class="annot"><span class="annottext">DeviceCreateInfo es
+</span><a href="#local-6989586621679261578"><span class="hs-identifier hs-var">dci</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe AllocationCallbacks
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IO Device -&gt; (Device -&gt; IO ()) -&gt; m (ReleaseKey, Device)
+forall (m :: * -&gt; *) a.
+MonadResource m =&gt;
+IO a -&gt; (a -&gt; IO ()) -&gt; m (ReleaseKey, a)
+</span><span class="hs-identifier hs-var">allocate</span></span><span>
+</span><span id="line-142"></span><span>
+</span><span id="line-143"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- * Physical device selection</span><span>
+</span><span id="line-145"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-146"></span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- | Get a single 'PhysicalDevice' deciding with a scoring function</span><span>
+</span><span id="line-148"></span><span class="hs-comment">--</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- Pass a function which will extract any required values from a device in the</span><span>
+</span><span id="line-150"></span><span class="hs-comment">-- spirit of parse-don't-validate. Also provide a function to compare these</span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- results for sorting multiple suitable devices.</span><span>
+</span><span id="line-152"></span><span class="hs-comment">--</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- As an example, the suitability function could return a tuple of device</span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- memory and the compute queue family index, and the scoring function could be</span><span>
+</span><span id="line-155"></span><span class="hs-comment">-- 'fst' to select devices based on their memory capacity. Consider using</span><span>
+</span><span id="line-156"></span><span class="hs-comment">-- 'Vulkan.Utils.QueueAssignment.assignQueues' to find your desired queues in</span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- the suitability function.</span><span>
+</span><span id="line-158"></span><span class="hs-comment">--</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- Pehaps also use the functionality in 'Vulkan.Utils.Requirements' and return</span><span>
+</span><span id="line-160"></span><span class="hs-comment">-- the 'DeviceCreateInfo' too.</span><span>
+</span><span id="line-161"></span><span class="hs-comment">--</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- If no devices are deemed suitable then a 'NoSuchThing' 'IOError' is thrown.</span><span>
+</span><span id="line-163"></span><span id="local-6989586621679261574"><span id="local-6989586621679261575"><span id="local-6989586621679261576"><span class="annot"><a href="Vulkan.Utils.Initialization.html#pickPhysicalDevice"><span class="hs-identifier hs-type">pickPhysicalDevice</span></a></span><span>
+</span><span id="line-164"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679261576"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679261575"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-165"></span><span>  </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Instance</span></span><span>
+</span><span id="line-166"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">PhysicalDevice</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679261576"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679261574"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-167"></span><span>  </span><span class="hs-comment">-- ^ A suitability funcion for a 'PhysicalDevice', 'Nothing' if it is not to</span><span>
+</span><span id="line-168"></span><span>  </span><span class="hs-comment">-- be chosen.</span><span>
+</span><span id="line-169"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679261574"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679261575"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-170"></span><span>  </span><span class="hs-comment">-- ^ Scoring function to rate this result</span><span>
+</span><span id="line-171"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679261576"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679261574"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">PhysicalDevice</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-172"></span><span>  </span><span class="hs-comment">-- ^ The score and the device</span></span></span></span><span>
+</span><span id="line-173"></span><span id="pickPhysicalDevice"><span class="annot"><span class="annottext">pickPhysicalDevice :: Instance
+-&gt; (PhysicalDevice -&gt; m (Maybe a))
+-&gt; (a -&gt; b)
+-&gt; m (Maybe (a, PhysicalDevice))
+</span><a href="Vulkan.Utils.Initialization.html#pickPhysicalDevice"><span class="hs-identifier hs-var hs-var">pickPhysicalDevice</span></a></span></span><span> </span><span id="local-6989586621679261573"><span class="annot"><span class="annottext">inst :: Instance
+</span><a href="#local-6989586621679261573"><span class="hs-identifier hs-var">inst</span></a></span></span><span> </span><span id="local-6989586621679261572"><span class="annot"><span class="annottext">devInfo :: PhysicalDevice -&gt; m (Maybe a)
+</span><a href="#local-6989586621679261572"><span class="hs-identifier hs-var">devInfo</span></a></span></span><span> </span><span id="local-6989586621679261571"><span class="annot"><span class="annottext">score :: a -&gt; b
+</span><a href="#local-6989586621679261571"><span class="hs-identifier hs-var">score</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-174"></span><span>  </span><span class="hs-special">(</span><span class="hs-identifier">_</span><span class="hs-special">,</span><span> </span><span id="local-6989586621679261570"><span class="annot"><span class="annottext">devs :: &quot;physicalDevices&quot; ::: Vector PhysicalDevice
+</span><a href="#local-6989586621679261570"><span class="hs-identifier hs-var">devs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Instance -&gt; m (Result, &quot;physicalDevices&quot; ::: Vector PhysicalDevice)
+forall (io :: * -&gt; *).
+MonadIO io =&gt;
+Instance
+-&gt; io (Result, &quot;physicalDevices&quot; ::: Vector PhysicalDevice)
+</span><span class="hs-identifier hs-var">enumeratePhysicalDevices</span></span><span> </span><span class="annot"><span class="annottext">Instance
+</span><a href="#local-6989586621679261573"><span class="hs-identifier hs-var">inst</span></a></span><span>
+</span><span id="line-175"></span><span>  </span><span id="local-6989586621679261568"><span class="annot"><span class="annottext">[(a, PhysicalDevice)]
+</span><a href="#local-6989586621679261568"><span class="hs-identifier hs-var">infos</span></a></span></span><span>     </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">[Maybe (a, PhysicalDevice)] -&gt; [(a, PhysicalDevice)]
+forall a. [Maybe a] -&gt; [a]
+</span><span class="hs-identifier hs-var">catMaybes</span></span><span>
+</span><span id="line-176"></span><span>    </span><span class="annot"><span class="annottext">([Maybe (a, PhysicalDevice)] -&gt; [(a, PhysicalDevice)])
+-&gt; m [Maybe (a, PhysicalDevice)] -&gt; m [(a, PhysicalDevice)]
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">[m (Maybe (a, PhysicalDevice))] -&gt; m [Maybe (a, PhysicalDevice)]
+forall (t :: * -&gt; *) (m :: * -&gt; *) a.
+(Traversable t, Monad m) =&gt;
+t (m a) -&gt; m (t a)
+</span><span class="hs-identifier hs-var">sequence</span></span><span> </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">(a -&gt; (a, PhysicalDevice)) -&gt; Maybe a -&gt; Maybe (a, PhysicalDevice)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-special">,</span></span><span> </span><span class="annot"><span class="annottext">PhysicalDevice
+</span><a href="#local-6989586621679261565"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Maybe a -&gt; Maybe (a, PhysicalDevice))
+-&gt; m (Maybe a) -&gt; m (Maybe (a, PhysicalDevice))
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">PhysicalDevice -&gt; m (Maybe a)
+</span><a href="#local-6989586621679261572"><span class="hs-identifier hs-var">devInfo</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDevice
+</span><a href="#local-6989586621679261565"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="local-6989586621679261565"><span class="annot"><span class="annottext">PhysicalDevice
+</span><a href="#local-6989586621679261565"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(&quot;physicalDevices&quot; ::: Vector PhysicalDevice) -&gt; [PhysicalDevice]
+forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; [a]
+</span><span class="hs-identifier hs-var">toList</span></span><span> </span><span class="annot"><span class="annottext">&quot;physicalDevices&quot; ::: Vector PhysicalDevice
+</span><a href="#local-6989586621679261570"><span class="hs-identifier hs-var">devs</span></a></span><span> </span><span class="hs-special">]</span><span>
+</span><span id="line-177"></span><span>  </span><span class="annot"><span class="annottext">Maybe (a, PhysicalDevice) -&gt; m (Maybe (a, PhysicalDevice))
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Maybe (a, PhysicalDevice) -&gt; m (Maybe (a, PhysicalDevice)))
+-&gt; Maybe (a, PhysicalDevice) -&gt; m (Maybe (a, PhysicalDevice))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">((a, PhysicalDevice) -&gt; (a, PhysicalDevice) -&gt; Ordering)
+-&gt; [(a, PhysicalDevice)] -&gt; Maybe (a, PhysicalDevice)
+forall (t :: * -&gt; *) a.
+Foldable t =&gt;
+(a -&gt; a -&gt; Ordering) -&gt; t a -&gt; Maybe a
+</span><a href="Vulkan.Utils.Initialization.html#maximumByMay"><span class="hs-identifier hs-var">maximumByMay</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">((a, PhysicalDevice) -&gt; b)
+-&gt; (a, PhysicalDevice) -&gt; (a, PhysicalDevice) -&gt; Ordering
+forall a b. Ord a =&gt; (b -&gt; a) -&gt; b -&gt; b -&gt; Ordering
+</span><span class="hs-identifier hs-var">comparing</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679261571"><span class="hs-identifier hs-var">score</span></a></span><span> </span><span class="annot"><span class="annottext">(a -&gt; b) -&gt; ((a, PhysicalDevice) -&gt; a) -&gt; (a, PhysicalDevice) -&gt; b
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(a, PhysicalDevice) -&gt; a
+forall a b. (a, b) -&gt; a
+</span><span class="hs-identifier hs-var">fst</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[(a, PhysicalDevice)]
+</span><a href="#local-6989586621679261568"><span class="hs-identifier hs-var">infos</span></a></span><span>
+</span><span id="line-178"></span><span>
+</span><span id="line-179"></span><span class="hs-comment">-- | Extract the name of a 'PhysicalDevice' with 'getPhysicalDeviceProperties'</span><span>
+</span><span id="line-180"></span><span id="local-6989586621679261561"><span class="annot"><a href="Vulkan.Utils.Initialization.html#physicalDeviceName"><span class="hs-identifier hs-type">physicalDeviceName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679261561"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">PhysicalDevice</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679261561"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span></span><span>
+</span><span id="line-181"></span><span id="physicalDeviceName"><span class="annot"><span class="annottext">physicalDeviceName :: PhysicalDevice -&gt; m Text
+</span><a href="Vulkan.Utils.Initialization.html#physicalDeviceName"><span class="hs-identifier hs-var hs-var">physicalDeviceName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-182"></span><span>  </span><span class="annot"><span class="annottext">(PhysicalDeviceProperties -&gt; Text)
+-&gt; m PhysicalDeviceProperties -&gt; m Text
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString -&gt; Text
+</span><span class="hs-identifier hs-var">decodeUtf8</span></span><span> </span><span class="annot"><span class="annottext">(ByteString -&gt; Text)
+-&gt; (PhysicalDeviceProperties -&gt; ByteString)
+-&gt; PhysicalDeviceProperties
+-&gt; Text
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceProperties -&gt; ByteString
+</span><span class="hs-identifier hs-var hs-var">deviceName</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(m PhysicalDeviceProperties -&gt; m Text)
+-&gt; (PhysicalDevice -&gt; m PhysicalDeviceProperties)
+-&gt; PhysicalDevice
+-&gt; m Text
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">PhysicalDevice -&gt; m PhysicalDeviceProperties
+forall (io :: * -&gt; *).
+MonadIO io =&gt;
+PhysicalDevice -&gt; io PhysicalDeviceProperties
+</span><span class="hs-identifier hs-var">getPhysicalDeviceProperties</span></span><span>
+</span><span id="line-183"></span><span>
+</span><span id="line-184"></span><span>
+</span><span id="line-185"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-186"></span><span class="hs-comment">-- Utils</span><span>
+</span><span id="line-187"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
+</span><span id="line-188"></span><span>
+</span><span id="line-189"></span><span id="local-6989586621679261667"><span id="local-6989586621679261668"><span class="annot"><a href="Vulkan.Utils.Initialization.html#maximumByMay"><span class="hs-identifier hs-type">maximumByMay</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Foldable</span></span><span> </span><span class="annot"><a href="#local-6989586621679261668"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679261667"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679261667"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ordering</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679261668"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679261667"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679261667"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
+</span><span id="line-190"></span><span id="maximumByMay"><span class="annot"><span class="annottext">maximumByMay :: (a -&gt; a -&gt; Ordering) -&gt; t a -&gt; Maybe a
+</span><a href="Vulkan.Utils.Initialization.html#maximumByMay"><span class="hs-identifier hs-var hs-var">maximumByMay</span></a></span></span><span> </span><span id="local-6989586621679261558"><span class="annot"><span class="annottext">f :: a -&gt; a -&gt; Ordering
+</span><a href="#local-6989586621679261558"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679261557"><span class="annot"><span class="annottext">xs :: t a
+</span><a href="#local-6989586621679261557"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">t a -&gt; Bool
+forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Bool
+</span><span class="hs-identifier hs-var">null</span></span><span> </span><span class="annot"><span class="annottext">t a
+</span><a href="#local-6989586621679261557"><span class="hs-identifier hs-var">xs</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Maybe a
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">a -&gt; Maybe a
+forall a. a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(a -&gt; a -&gt; Ordering) -&gt; t a -&gt; a
+forall (t :: * -&gt; *) a.
+Foldable t =&gt;
+(a -&gt; a -&gt; Ordering) -&gt; t a -&gt; a
+</span><span class="hs-identifier hs-var">maximumBy</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; Ordering
+</span><a href="#local-6989586621679261558"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">t a
+</span><a href="#local-6989586621679261557"><span class="hs-identifier hs-var">xs</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-191"></span><span>
+</span><span id="line-192"></span></pre></body></html>

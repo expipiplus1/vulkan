@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;SemaphoreCreateFlags&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.SemaphoreCreateFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#SemaphoreCreateFlags"><span class="hs-identifier">SemaphoreCreateFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- | VkSemaphoreCreateFlags - Reserved for future use</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- 'SemaphoreCreateFlags' is a bitmask type for setting a mask, but is</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- currently reserved for future use.</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">newtype</span><span> </span><span id="SemaphoreCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#SemaphoreCreateFlags"><span class="hs-identifier hs-var">SemaphoreCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SemaphoreCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#SemaphoreCreateFlags"><span class="hs-identifier hs-var">SemaphoreCreateFlags</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680130181"><span id="local-6989586621680130183"><span class="annot"><span class="annottext">SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+(SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool)
+-&gt; (SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool)
+-&gt; Eq SemaphoreCreateFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+$c/= :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+== :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+$c== :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680130165"><span id="local-6989586621680130167"><span id="local-6989586621680130169"><span id="local-6989586621680130171"><span id="local-6989586621680130173"><span id="local-6989586621680130175"><span id="local-6989586621680130177"><span class="annot"><span class="annottext">Eq SemaphoreCreateFlags
+Eq SemaphoreCreateFlags =&gt;
+(SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Ordering)
+-&gt; (SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool)
+-&gt; (SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool)
+-&gt; (SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool)
+-&gt; (SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool)
+-&gt; (SemaphoreCreateFlags
+    -&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags
+    -&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags)
+-&gt; Ord SemaphoreCreateFlags
+SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Ordering
+SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+$cmin :: SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+max :: SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+$cmax :: SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+&gt;= :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+$c&gt;= :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+&gt; :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+$c&gt; :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+&lt;= :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+$c&lt;= :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+&lt; :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+$c&lt; :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Bool
+compare :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Ordering
+$ccompare :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; Ordering
+$cp1Ord :: Eq SemaphoreCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680130148"><span id="local-6989586621680130150"><span id="local-6989586621680130152"><span id="local-6989586621680130154"><span id="local-6989586621680130156"><span id="local-6989586621680130158"><span id="local-6989586621680130160"><span id="local-6989586621680130162"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SemaphoreCreateFlags
+Ptr b -&gt; Int -&gt; SemaphoreCreateFlags -&gt; IO ()
+Ptr SemaphoreCreateFlags -&gt; IO SemaphoreCreateFlags
+Ptr SemaphoreCreateFlags -&gt; Int -&gt; IO SemaphoreCreateFlags
+Ptr SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags -&gt; IO ()
+Ptr SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; IO ()
+SemaphoreCreateFlags -&gt; Int
+(SemaphoreCreateFlags -&gt; Int)
+-&gt; (SemaphoreCreateFlags -&gt; Int)
+-&gt; (Ptr SemaphoreCreateFlags -&gt; Int -&gt; IO SemaphoreCreateFlags)
+-&gt; (Ptr SemaphoreCreateFlags
+    -&gt; Int -&gt; SemaphoreCreateFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SemaphoreCreateFlags)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SemaphoreCreateFlags -&gt; IO ())
+-&gt; (Ptr SemaphoreCreateFlags -&gt; IO SemaphoreCreateFlags)
+-&gt; (Ptr SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; IO ())
+-&gt; Storable SemaphoreCreateFlags
+forall b. Ptr b -&gt; Int -&gt; IO SemaphoreCreateFlags
+forall b. Ptr b -&gt; Int -&gt; SemaphoreCreateFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; IO ()
+$cpoke :: Ptr SemaphoreCreateFlags -&gt; SemaphoreCreateFlags -&gt; IO ()
+peek :: Ptr SemaphoreCreateFlags -&gt; IO SemaphoreCreateFlags
+$cpeek :: Ptr SemaphoreCreateFlags -&gt; IO SemaphoreCreateFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; SemaphoreCreateFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SemaphoreCreateFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SemaphoreCreateFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SemaphoreCreateFlags
+pokeElemOff :: Ptr SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags -&gt; IO ()
+$cpokeElemOff :: Ptr SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags -&gt; IO ()
+peekElemOff :: Ptr SemaphoreCreateFlags -&gt; Int -&gt; IO SemaphoreCreateFlags
+$cpeekElemOff :: Ptr SemaphoreCreateFlags -&gt; Int -&gt; IO SemaphoreCreateFlags
+alignment :: SemaphoreCreateFlags -&gt; Int
+$calignment :: SemaphoreCreateFlags -&gt; Int
+sizeOf :: SemaphoreCreateFlags -&gt; Int
+$csizeOf :: SemaphoreCreateFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680130145"><span class="annot"><span class="annottext">SemaphoreCreateFlags
+SemaphoreCreateFlags -&gt; Zero SemaphoreCreateFlags
+forall a. a -&gt; Zero a
+zero :: SemaphoreCreateFlags
+$czero :: SemaphoreCreateFlags
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680130099"><span id="local-6989586621680130101"><span id="local-6989586621680130103"><span id="local-6989586621680130105"><span id="local-6989586621680130107"><span id="local-6989586621680130109"><span id="local-6989586621680130111"><span id="local-6989586621680130113"><span id="local-6989586621680130115"><span id="local-6989586621680130117"><span id="local-6989586621680130119"><span id="local-6989586621680130121"><span id="local-6989586621680130123"><span id="local-6989586621680130125"><span id="local-6989586621680130127"><span id="local-6989586621680130129"><span id="local-6989586621680130131"><span id="local-6989586621680130133"><span id="local-6989586621680130135"><span id="local-6989586621680130137"><span id="local-6989586621680130139"><span id="local-6989586621680130141"><span class="annot"><span class="annottext">Eq SemaphoreCreateFlags
+SemaphoreCreateFlags
+Eq SemaphoreCreateFlags =&gt;
+(SemaphoreCreateFlags
+ -&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags
+    -&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags
+    -&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags)
+-&gt; SemaphoreCreateFlags
+-&gt; (Int -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; Bool)
+-&gt; (SemaphoreCreateFlags -&gt; Maybe Int)
+-&gt; (SemaphoreCreateFlags -&gt; Int)
+-&gt; (SemaphoreCreateFlags -&gt; Bool)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags)
+-&gt; (SemaphoreCreateFlags -&gt; Int)
+-&gt; Bits SemaphoreCreateFlags
+Int -&gt; SemaphoreCreateFlags
+SemaphoreCreateFlags -&gt; Bool
+SemaphoreCreateFlags -&gt; Int
+SemaphoreCreateFlags -&gt; Maybe Int
+SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+SemaphoreCreateFlags -&gt; Int -&gt; Bool
+SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: SemaphoreCreateFlags -&gt; Int
+$cpopCount :: SemaphoreCreateFlags -&gt; Int
+rotateR :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+$crotateR :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+rotateL :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+$crotateL :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+unsafeShiftR :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+$cunsafeShiftR :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+shiftR :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+$cshiftR :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+unsafeShiftL :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+$cunsafeShiftL :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+shiftL :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+$cshiftL :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+isSigned :: SemaphoreCreateFlags -&gt; Bool
+$cisSigned :: SemaphoreCreateFlags -&gt; Bool
+bitSize :: SemaphoreCreateFlags -&gt; Int
+$cbitSize :: SemaphoreCreateFlags -&gt; Int
+bitSizeMaybe :: SemaphoreCreateFlags -&gt; Maybe Int
+$cbitSizeMaybe :: SemaphoreCreateFlags -&gt; Maybe Int
+testBit :: SemaphoreCreateFlags -&gt; Int -&gt; Bool
+$ctestBit :: SemaphoreCreateFlags -&gt; Int -&gt; Bool
+complementBit :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+$ccomplementBit :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+clearBit :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+$cclearBit :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+setBit :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+$csetBit :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+bit :: Int -&gt; SemaphoreCreateFlags
+$cbit :: Int -&gt; SemaphoreCreateFlags
+zeroBits :: SemaphoreCreateFlags
+$czeroBits :: SemaphoreCreateFlags
+rotate :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+$crotate :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+shift :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+$cshift :: SemaphoreCreateFlags -&gt; Int -&gt; SemaphoreCreateFlags
+complement :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+$ccomplement :: SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+xor :: SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+$cxor :: SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+.|. :: SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+$c.|. :: SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+.&amp;. :: SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+$c.&amp;. :: SemaphoreCreateFlags
+-&gt; SemaphoreCreateFlags -&gt; SemaphoreCreateFlags
+$cp1Bits :: Eq SemaphoreCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680130091"><span id="local-6989586621680130093"><span id="local-6989586621680130095"><span class="annot"><span class="annottext">Bits SemaphoreCreateFlags
+Bits SemaphoreCreateFlags =&gt;
+(SemaphoreCreateFlags -&gt; Int)
+-&gt; (SemaphoreCreateFlags -&gt; Int)
+-&gt; (SemaphoreCreateFlags -&gt; Int)
+-&gt; FiniteBits SemaphoreCreateFlags
+SemaphoreCreateFlags -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: SemaphoreCreateFlags -&gt; Int
+$ccountTrailingZeros :: SemaphoreCreateFlags -&gt; Int
+countLeadingZeros :: SemaphoreCreateFlags -&gt; Int
+$ccountLeadingZeros :: SemaphoreCreateFlags -&gt; Int
+finiteBitSize :: SemaphoreCreateFlags -&gt; Int
+$cfiniteBitSize :: SemaphoreCreateFlags -&gt; Int
+$cp1FiniteBits :: Bits SemaphoreCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span class="annot"><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#conNameSemaphoreCreateFlags"><span class="hs-identifier hs-type">conNameSemaphoreCreateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-32"></span><span id="conNameSemaphoreCreateFlags"><span class="annot"><span class="annottext">conNameSemaphoreCreateFlags :: String
+</span><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#conNameSemaphoreCreateFlags"><span class="hs-identifier hs-var hs-var">conNameSemaphoreCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;SemaphoreCreateFlags&quot;</span></span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="annot"><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#enumPrefixSemaphoreCreateFlags"><span class="hs-identifier hs-type">enumPrefixSemaphoreCreateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-35"></span><span id="enumPrefixSemaphoreCreateFlags"><span class="annot"><span class="annottext">enumPrefixSemaphoreCreateFlags :: String
+</span><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#enumPrefixSemaphoreCreateFlags"><span class="hs-identifier hs-var hs-var">enumPrefixSemaphoreCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-36"></span><span>
+</span><span id="line-37"></span><span class="annot"><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#showTableSemaphoreCreateFlags"><span class="hs-identifier hs-type">showTableSemaphoreCreateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#SemaphoreCreateFlags"><span class="hs-identifier hs-type">SemaphoreCreateFlags</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-38"></span><span id="showTableSemaphoreCreateFlags"><span class="annot"><span class="annottext">showTableSemaphoreCreateFlags :: [(SemaphoreCreateFlags, String)]
+</span><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#showTableSemaphoreCreateFlags"><span class="hs-identifier hs-var hs-var">showTableSemaphoreCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680130082"><span id="local-6989586621680130084"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#SemaphoreCreateFlags"><span class="hs-identifier hs-type">SemaphoreCreateFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-41"></span><span>  </span><span id="local-6989586621680130080"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SemaphoreCreateFlags -&gt; ShowS
+</span><a href="#local-6989586621680130080"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SemaphoreCreateFlags, String)]
+-&gt; String
+-&gt; (SemaphoreCreateFlags -&gt; Flags)
+-&gt; (Flags -&gt; ShowS)
+-&gt; Int
+-&gt; SemaphoreCreateFlags
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#enumPrefixSemaphoreCreateFlags"><span class="hs-identifier hs-var">enumPrefixSemaphoreCreateFlags</span></a></span><span>
+</span><span id="line-42"></span><span>                            </span><span class="annot"><span class="annottext">[(SemaphoreCreateFlags, String)]
+</span><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#showTableSemaphoreCreateFlags"><span class="hs-identifier hs-var">showTableSemaphoreCreateFlags</span></a></span><span>
+</span><span id="line-43"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#conNameSemaphoreCreateFlags"><span class="hs-identifier hs-var">conNameSemaphoreCreateFlags</span></a></span><span>
+</span><span id="line-44"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#SemaphoreCreateFlags"><span class="hs-identifier hs-type">SemaphoreCreateFlags</span></a></span><span> </span><span id="local-6989586621680130079"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680130079"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680130079"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680130078"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680130078"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680130078"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680130070"><span id="local-6989586621680130073"><span id="local-6989586621680130075"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#SemaphoreCreateFlags"><span class="hs-identifier hs-type">SemaphoreCreateFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-48"></span><span>  </span><span id="local-6989586621680130068"><span class="annot"><span class="annottext">readPrec :: ReadPrec SemaphoreCreateFlags
+</span><a href="#local-6989586621680130068"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(SemaphoreCreateFlags, String)]
+-&gt; String
+-&gt; (Flags -&gt; SemaphoreCreateFlags)
+-&gt; ReadPrec SemaphoreCreateFlags
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#enumPrefixSemaphoreCreateFlags"><span class="hs-identifier hs-var">enumPrefixSemaphoreCreateFlags</span></a></span><span>
+</span><span id="line-49"></span><span>                          </span><span class="annot"><span class="annottext">[(SemaphoreCreateFlags, String)]
+</span><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#showTableSemaphoreCreateFlags"><span class="hs-identifier hs-var">showTableSemaphoreCreateFlags</span></a></span><span>
+</span><span id="line-50"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#conNameSemaphoreCreateFlags"><span class="hs-identifier hs-var">conNameSemaphoreCreateFlags</span></a></span><span>
+</span><span id="line-51"></span><span>                          </span><span class="annot"><span class="annottext">Flags -&gt; SemaphoreCreateFlags
+</span><a href="Vulkan.Core10.Enums.SemaphoreCreateFlags.html#SemaphoreCreateFlags"><span class="hs-identifier hs-var">SemaphoreCreateFlags</span></a></span><span>
+</span><span id="line-52"></span><span>
+</span><span id="line-53"></span></pre></body></html>

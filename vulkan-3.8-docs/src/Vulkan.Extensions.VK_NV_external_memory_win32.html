@@ -1,0 +1,1051 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- VK_NV_external_memory_win32 - device extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- == VK_NV_external_memory_win32</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- [__Name String__]</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--     @VK_NV_external_memory_win32@</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- [__Extension Type__]</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--     Device extension</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- [__Registered Extension Number__]</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--     58</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- [__Revision__]</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--     1</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- [__Extension and Version Dependencies__]</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--     -   Requires Vulkan 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--     -   Requires @VK_NV_external_memory@</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- [__Deprecation state__]</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--     -   /Deprecated/ by @VK_KHR_external_memory_win32@ extension</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- [__Contact__]</span><span>
+</span><span id="line-31"></span><span class="hs-comment">--</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--     -   James Jones</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--         &lt;https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_external_memory_win32:%20&amp;body=@cubanismo%20 &gt;</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- == Other Extension Metadata</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- [__Last Modified Date__]</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--     2016-08-19</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- [__IP Status__]</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--     No known IP claims.</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- [__Contributors__]</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--     -   James Jones, NVIDIA</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--     -   Carsten Rohde, NVIDIA</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- == Description</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- Applications may wish to export memory to other Vulkan instances or</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- other APIs, or import memory from other Vulkan instances or other APIs</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- to enable Vulkan workloads to be split up across application module,</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- process, or API boundaries. This extension enables win32 applications to</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- export win32 handles from Vulkan memory objects such that the underlying</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- resources can be referenced outside the Vulkan instance that created</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- them, and import win32 handles created in the Direct3D API to Vulkan</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- memory objects.</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- == New Commands</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- -   'getMemoryWin32HandleNV'</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- == New Structures</span><span>
+</span><span id="line-65"></span><span class="hs-comment">--</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Memory.MemoryAllocateInfo':</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--</span><span>
+</span><span id="line-68"></span><span class="hs-comment">--     -   'ExportMemoryWin32HandleInfoNV'</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">--     -   'ImportMemoryWin32HandleInfoNV'</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- == New Enum Constants</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- -   'NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME'</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- -   'NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION'</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV'</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV'</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- == Issues</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- 1) If memory objects are shared between processes and APIs, is this</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- considered aliasing according to the rules outlined in the</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing Memory Aliasing&gt;</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- section?</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- __RESOLVED__: Yes, but strict exceptions to the rules are added to allow</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- some forms of aliasing in these cases. Further, other extensions may</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- build upon these new aliasing rules to define specific support usage</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- within Vulkan for imported native memory objects, or memory objects from</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- other APIs.</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- 2) Are new image layouts or metadata required to specify image layouts</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- and layout transitions compatible with non-Vulkan APIs, or with other</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- instances of the same Vulkan driver?</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- __RESOLVED__: No. Separate instances of the same Vulkan driver running</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- on the same GPU should have identical internal layout semantics, so</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- applictions have the tools they need to ensure views of images are</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- consistent between the two instances. Other APIs will fall into two</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- categories: Those that are Vulkan compatible (a term to be defined by</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- subsequent interopability extensions), or Vulkan incompatible. When</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- sharing images with Vulkan incompatible APIs, the Vulkan image must be</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- transitioned to the</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' layout before</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- handing it off to the external API.</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- Note this does not attempt to address cross-device transitions, nor</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- transitions to engines on the same device which are not visible within</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- the Vulkan API. Both of these are beyond the scope of this extension.</span><span>
+</span><span id="line-115"></span><span class="hs-comment">--</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- 3) Do applications need to call @CloseHandle@() on the values returned</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- from 'getMemoryWin32HandleNV' when @handleType@ is</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV'?</span><span>
+</span><span id="line-119"></span><span class="hs-comment">--</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- __RESOLVED__: Yes, unless it is passed back in to another driver</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- instance to import the object. A successful get call transfers ownership</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- of the handle to the application, while an import transfers ownership to</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- the associated driver. Destroying the memory object will not destroy the</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- handle or the handle&#8217;s reference to the underlying memory resource.</span><span>
+</span><span id="line-125"></span><span class="hs-comment">--</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- == Examples</span><span>
+</span><span id="line-127"></span><span class="hs-comment">--</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- &gt;     //</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- &gt;     // Create an exportable memory object and export an external</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- &gt;     // handle from it.</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- &gt;     //</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- &gt;     // Pick an external format and handle type.</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- &gt;     static const VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- &gt;     static const VkExternalMemoryHandleTypeFlagsNV handleType =</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- &gt;         VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV;</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- &gt;     extern VkPhysicalDevice physicalDevice;</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- &gt;     extern VkDevice device;</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- &gt;     VkPhysicalDeviceMemoryProperties memoryProperties;</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- &gt;     VkExternalImageFormatPropertiesNV properties;</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- &gt;     VkExternalMemoryImageCreateInfoNV externalMemoryImageCreateInfo;</span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- &gt;     VkDedicatedAllocationImageCreateInfoNV dedicatedImageCreateInfo;</span><span>
+</span><span id="line-145"></span><span class="hs-comment">-- &gt;     VkImageCreateInfo imageCreateInfo;</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- &gt;     VkImage image;</span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- &gt;     VkMemoryRequirements imageMemoryRequirements;</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- &gt;     uint32_t numMemoryTypes;</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- &gt;     uint32_t memoryType;</span><span>
+</span><span id="line-150"></span><span class="hs-comment">-- &gt;     VkExportMemoryAllocateInfoNV exportMemoryAllocateInfo;</span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- &gt;     VkDedicatedAllocationMemoryAllocateInfoNV dedicatedAllocationInfo;</span><span>
+</span><span id="line-152"></span><span class="hs-comment">-- &gt;     VkMemoryAllocateInfo memoryAllocateInfo;</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- &gt;     VkDeviceMemory memory;</span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- &gt;     VkResult result;</span><span>
+</span><span id="line-155"></span><span class="hs-comment">-- &gt;     HANDLE memoryHnd;</span><span>
+</span><span id="line-156"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- &gt;     // Figure out how many memory types the device supports</span><span>
+</span><span id="line-158"></span><span class="hs-comment">-- &gt;     vkGetPhysicalDeviceMemoryProperties(physicalDevice,</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- &gt;                                         &amp;memoryProperties);</span><span>
+</span><span id="line-160"></span><span class="hs-comment">-- &gt;     numMemoryTypes = memoryProperties.memoryTypeCount;</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- &gt;     // Check the external handle type capabilities for the chosen format</span><span>
+</span><span id="line-163"></span><span class="hs-comment">-- &gt;     // Exportable 2D image support with at least 1 mip level, 1 array</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- &gt;     // layer, and VK_SAMPLE_COUNT_1_BIT using optimal tiling and supporting</span><span>
+</span><span id="line-165"></span><span class="hs-comment">-- &gt;     // texturing and color rendering is required.</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- &gt;     result = vkGetPhysicalDeviceExternalImageFormatPropertiesNV(</span><span>
+</span><span id="line-167"></span><span class="hs-comment">-- &gt;         physicalDevice,</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- &gt;         format,</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- &gt;         VK_IMAGE_TYPE_2D,</span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- &gt;         VK_IMAGE_TILING_OPTIMAL,</span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- &gt;         VK_IMAGE_USAGE_SAMPLED_BIT |</span><span>
+</span><span id="line-172"></span><span class="hs-comment">-- &gt;         VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,</span><span>
+</span><span id="line-173"></span><span class="hs-comment">-- &gt;         0,</span><span>
+</span><span id="line-174"></span><span class="hs-comment">-- &gt;         handleType,</span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- &gt;         &amp;properties);</span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-177"></span><span class="hs-comment">-- &gt;     if ((result != VK_SUCCESS) ||</span><span>
+</span><span id="line-178"></span><span class="hs-comment">-- &gt;         !(properties.externalMemoryFeatures &amp;</span><span>
+</span><span id="line-179"></span><span class="hs-comment">-- &gt;           VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV)) {</span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- &gt;         abort();</span><span>
+</span><span id="line-181"></span><span class="hs-comment">-- &gt;     }</span><span>
+</span><span id="line-182"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-183"></span><span class="hs-comment">-- &gt;     // Set up the external memory image creation info</span><span>
+</span><span id="line-184"></span><span class="hs-comment">-- &gt;     memset(&amp;externalMemoryImageCreateInfo,</span><span>
+</span><span id="line-185"></span><span class="hs-comment">-- &gt;            0, sizeof(externalMemoryImageCreateInfo));</span><span>
+</span><span id="line-186"></span><span class="hs-comment">-- &gt;     externalMemoryImageCreateInfo.sType =</span><span>
+</span><span id="line-187"></span><span class="hs-comment">-- &gt;         VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV;</span><span>
+</span><span id="line-188"></span><span class="hs-comment">-- &gt;     externalMemoryImageCreateInfo.handleTypes = handleType;</span><span>
+</span><span id="line-189"></span><span class="hs-comment">-- &gt;     if (properties.externalMemoryFeatures &amp;</span><span>
+</span><span id="line-190"></span><span class="hs-comment">-- &gt;         VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV) {</span><span>
+</span><span id="line-191"></span><span class="hs-comment">-- &gt;         memset(&amp;dedicatedImageCreateInfo, 0, sizeof(dedicatedImageCreateInfo));</span><span>
+</span><span id="line-192"></span><span class="hs-comment">-- &gt;         dedicatedImageCreateInfo.sType =</span><span>
+</span><span id="line-193"></span><span class="hs-comment">-- &gt;             VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV;</span><span>
+</span><span id="line-194"></span><span class="hs-comment">-- &gt;         dedicatedImageCreateInfo.dedicatedAllocation = VK_TRUE;</span><span>
+</span><span id="line-195"></span><span class="hs-comment">-- &gt;         externalMemoryImageCreateInfo.pNext = &amp;dedicatedImageCreateInfo;</span><span>
+</span><span id="line-196"></span><span class="hs-comment">-- &gt;     }</span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- &gt;     // Set up the  core image creation info</span><span>
+</span><span id="line-198"></span><span class="hs-comment">-- &gt;     memset(&amp;imageCreateInfo, 0, sizeof(imageCreateInfo));</span><span>
+</span><span id="line-199"></span><span class="hs-comment">-- &gt;     imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;</span><span>
+</span><span id="line-200"></span><span class="hs-comment">-- &gt;     imageCreateInfo.pNext = &amp;externalMemoryImageCreateInfo;</span><span>
+</span><span id="line-201"></span><span class="hs-comment">-- &gt;     imageCreateInfo.format = format;</span><span>
+</span><span id="line-202"></span><span class="hs-comment">-- &gt;     imageCreateInfo.extent.width = 64;</span><span>
+</span><span id="line-203"></span><span class="hs-comment">-- &gt;     imageCreateInfo.extent.height = 64;</span><span>
+</span><span id="line-204"></span><span class="hs-comment">-- &gt;     imageCreateInfo.extent.depth = 1;</span><span>
+</span><span id="line-205"></span><span class="hs-comment">-- &gt;     imageCreateInfo.mipLevels = 1;</span><span>
+</span><span id="line-206"></span><span class="hs-comment">-- &gt;     imageCreateInfo.arrayLayers = 1;</span><span>
+</span><span id="line-207"></span><span class="hs-comment">-- &gt;     imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;</span><span>
+</span><span id="line-208"></span><span class="hs-comment">-- &gt;     imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;</span><span>
+</span><span id="line-209"></span><span class="hs-comment">-- &gt;     imageCreateInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT |</span><span>
+</span><span id="line-210"></span><span class="hs-comment">-- &gt;         VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;</span><span>
+</span><span id="line-211"></span><span class="hs-comment">-- &gt;     imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;</span><span>
+</span><span id="line-212"></span><span class="hs-comment">-- &gt;     imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;</span><span>
+</span><span id="line-213"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-214"></span><span class="hs-comment">-- &gt;     vkCreateImage(device, &amp;imageCreateInfo, NULL, &amp;image);</span><span>
+</span><span id="line-215"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-216"></span><span class="hs-comment">-- &gt;     vkGetImageMemoryRequirements(device,</span><span>
+</span><span id="line-217"></span><span class="hs-comment">-- &gt;                                  image,</span><span>
+</span><span id="line-218"></span><span class="hs-comment">-- &gt;                                  &amp;imageMemoryRequirements);</span><span>
+</span><span id="line-219"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-220"></span><span class="hs-comment">-- &gt;     // For simplicity, just pick the first compatible memory type.</span><span>
+</span><span id="line-221"></span><span class="hs-comment">-- &gt;     for (memoryType = 0; memoryType &lt; numMemoryTypes; memoryType++) {</span><span>
+</span><span id="line-222"></span><span class="hs-comment">-- &gt;         if ((1 &lt;&lt; memoryType) &amp; imageMemoryRequirements.memoryTypeBits) {</span><span>
+</span><span id="line-223"></span><span class="hs-comment">-- &gt;             break;</span><span>
+</span><span id="line-224"></span><span class="hs-comment">-- &gt;         }</span><span>
+</span><span id="line-225"></span><span class="hs-comment">-- &gt;     }</span><span>
+</span><span id="line-226"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-227"></span><span class="hs-comment">-- &gt;     // At least one memory type must be supported given the prior external</span><span>
+</span><span id="line-228"></span><span class="hs-comment">-- &gt;     // handle capability check.</span><span>
+</span><span id="line-229"></span><span class="hs-comment">-- &gt;     assert(memoryType &lt; numMemoryTypes);</span><span>
+</span><span id="line-230"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-231"></span><span class="hs-comment">-- &gt;     // Allocate the external memory object.</span><span>
+</span><span id="line-232"></span><span class="hs-comment">-- &gt;     memset(&amp;exportMemoryAllocateInfo, 0, sizeof(exportMemoryAllocateInfo));</span><span>
+</span><span id="line-233"></span><span class="hs-comment">-- &gt;     exportMemoryAllocateInfo.sType =</span><span>
+</span><span id="line-234"></span><span class="hs-comment">-- &gt;         VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV;</span><span>
+</span><span id="line-235"></span><span class="hs-comment">-- &gt;     exportMemoryAllocateInfo.handleTypes = handleType;</span><span>
+</span><span id="line-236"></span><span class="hs-comment">-- &gt;     if (properties.externalMemoryFeatures &amp;</span><span>
+</span><span id="line-237"></span><span class="hs-comment">-- &gt;         VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV) {</span><span>
+</span><span id="line-238"></span><span class="hs-comment">-- &gt;         memset(&amp;dedicatedAllocationInfo, 0, sizeof(dedicatedAllocationInfo));</span><span>
+</span><span id="line-239"></span><span class="hs-comment">-- &gt;         dedicatedAllocationInfo.sType =</span><span>
+</span><span id="line-240"></span><span class="hs-comment">-- &gt;             VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV;</span><span>
+</span><span id="line-241"></span><span class="hs-comment">-- &gt;         dedicatedAllocationInfo.image = image;</span><span>
+</span><span id="line-242"></span><span class="hs-comment">-- &gt;         exportMemoryAllocateInfo.pNext = &amp;dedicatedAllocationInfo;</span><span>
+</span><span id="line-243"></span><span class="hs-comment">-- &gt;     }</span><span>
+</span><span id="line-244"></span><span class="hs-comment">-- &gt;     memset(&amp;memoryAllocateInfo, 0, sizeof(memoryAllocateInfo));</span><span>
+</span><span id="line-245"></span><span class="hs-comment">-- &gt;     memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;</span><span>
+</span><span id="line-246"></span><span class="hs-comment">-- &gt;     memoryAllocateInfo.pNext = &amp;exportMemoryAllocateInfo;</span><span>
+</span><span id="line-247"></span><span class="hs-comment">-- &gt;     memoryAllocateInfo.allocationSize = imageMemoryRequirements.size;</span><span>
+</span><span id="line-248"></span><span class="hs-comment">-- &gt;     memoryAllocateInfo.memoryTypeIndex = memoryType;</span><span>
+</span><span id="line-249"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-250"></span><span class="hs-comment">-- &gt;     vkAllocateMemory(device, &amp;memoryAllocateInfo, NULL, &amp;memory);</span><span>
+</span><span id="line-251"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-252"></span><span class="hs-comment">-- &gt;     if (!(properties.externalMemoryFeatures &amp;</span><span>
+</span><span id="line-253"></span><span class="hs-comment">-- &gt;           VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV)) {</span><span>
+</span><span id="line-254"></span><span class="hs-comment">-- &gt;         vkBindImageMemory(device, image, memory, 0);</span><span>
+</span><span id="line-255"></span><span class="hs-comment">-- &gt;     }</span><span>
+</span><span id="line-256"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-257"></span><span class="hs-comment">-- &gt;     // Get the external memory opaque FD handle</span><span>
+</span><span id="line-258"></span><span class="hs-comment">-- &gt;     vkGetMemoryWin32HandleNV(device, memory, &amp;memoryHnd);</span><span>
+</span><span id="line-259"></span><span class="hs-comment">--</span><span>
+</span><span id="line-260"></span><span class="hs-comment">-- == Version History</span><span>
+</span><span id="line-261"></span><span class="hs-comment">--</span><span>
+</span><span id="line-262"></span><span class="hs-comment">-- -   Revision 1, 2016-08-11 (James Jones)</span><span>
+</span><span id="line-263"></span><span class="hs-comment">--</span><span>
+</span><span id="line-264"></span><span class="hs-comment">--     -   Initial draft</span><span>
+</span><span id="line-265"></span><span class="hs-comment">--</span><span>
+</span><span id="line-266"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-267"></span><span class="hs-comment">--</span><span>
+</span><span id="line-268"></span><span class="hs-comment">-- 'ExportMemoryWin32HandleInfoNV', 'ImportMemoryWin32HandleInfoNV',</span><span>
+</span><span id="line-269"></span><span class="hs-comment">-- 'getMemoryWin32HandleNV'</span><span>
+</span><span id="line-270"></span><span class="hs-comment">--</span><span>
+</span><span id="line-271"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-272"></span><span class="hs-comment">--</span><span>
+</span><span id="line-273"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-274"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_win32 Vulkan Specification&gt;</span><span>
+</span><span id="line-275"></span><span class="hs-comment">--</span><span>
+</span><span id="line-276"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-277"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-278"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_NV_external_memory_win32</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#getMemoryWin32HandleNV"><span class="hs-identifier">getMemoryWin32HandleNV</span></a></span><span>
+</span><span id="line-279"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ImportMemoryWin32HandleInfoNV"><span class="hs-identifier">ImportMemoryWin32HandleInfoNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-280"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ExportMemoryWin32HandleInfoNV"><span class="hs-identifier">ExportMemoryWin32HandleInfoNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-281"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"><span class="hs-identifier">NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION</span></a></span><span>
+</span><span id="line-282"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"><span class="hs-identifier">NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION</span></a></span><span>
+</span><span id="line-283"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"><span class="hs-identifier">NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-284"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"><span class="hs-identifier">NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-285"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#HANDLE"><span class="hs-identifier">HANDLE</span></a></span><span>
+</span><span id="line-286"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#DWORD"><span class="hs-identifier">DWORD</span></a></span><span>
+</span><span id="line-287"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#SECURITY_ATTRIBUTES"><span class="hs-identifier">SECURITY_ATTRIBUTES</span></a></span><span>
+</span><span id="line-288"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagBitsNV"><span class="hs-identifier">ExternalMemoryHandleTypeFlagBitsNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-289"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagsNV"><span class="hs-identifier">ExternalMemoryHandleTypeFlagsNV</span></a></span><span>
+</span><span id="line-290"></span><span>                                                      </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-291"></span><span>
+</span><span id="line-292"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Exception.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">bracket</span></span><span class="hs-special">)</span><span>
+</span><span id="line-293"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-294"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-295"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-296"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">callocBytes</span></span><span class="hs-special">)</span><span>
+</span><span id="line-297"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">free</span></span><span class="hs-special">)</span><span>
+</span><span id="line-298"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">when</span></span><span class="hs-special">)</span><span>
+</span><span id="line-299"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-300"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-301"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-302"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-303"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-304"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-305"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-306"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-307"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-308"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-309"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-310"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-311"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-312"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-313"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-314"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-315"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-316"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-317"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-318"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-319"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-320"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-321"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-322"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#pVkGetMemoryWin32HandleNV"><span class="hs-identifier">pVkGetMemoryWin32HandleNV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-323"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier">DeviceMemory</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-324"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier">DeviceMemory</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-325"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier">Device_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-326"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html"><span class="hs-identifier">Vulkan.Extensions.VK_NV_external_memory_capabilities</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagBitsNV"><span class="hs-identifier">ExternalMemoryHandleTypeFlagBitsNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-327"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html"><span class="hs-identifier">Vulkan.Extensions.VK_NV_external_memory_capabilities</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagsNV"><span class="hs-identifier">ExternalMemoryHandleTypeFlagsNV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-328"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-329"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-330"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-331"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-332"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-333"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-334"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-335"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Exception.html"><span class="hs-identifier">Vulkan.Exception</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier">VulkanException</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-336"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-337"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV"><span class="hs-identifier">STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-338"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV"><span class="hs-identifier">STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-339"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier">SUCCESS</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-340"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html"><span class="hs-identifier">Vulkan.Extensions.VK_NV_external_memory_capabilities</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagBitsNV"><span class="hs-identifier">ExternalMemoryHandleTypeFlagBitsNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-341"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html"><span class="hs-identifier">Vulkan.Extensions.VK_NV_external_memory_capabilities</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagsNV"><span class="hs-identifier">ExternalMemoryHandleTypeFlagsNV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-342"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkGetMemoryWin32HandleNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#mkVkGetMemoryWin32HandleNV"><span class="hs-identifier hs-var">mkVkGetMemoryWin32HandleNV</span></a></span></span><span>
+</span><span id="line-347"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier hs-type">DeviceMemory</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagsNV"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagsNV</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#HANDLE"><span class="hs-identifier hs-type">HANDLE</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier hs-type">DeviceMemory</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagsNV"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagsNV</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#HANDLE"><span class="hs-identifier hs-type">HANDLE</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-348"></span><span>
+</span><span id="line-349"></span><span class="hs-comment">-- | vkGetMemoryWin32HandleNV - retrieve Win32 handle to a device memory</span><span>
+</span><span id="line-350"></span><span class="hs-comment">-- object</span><span>
+</span><span id="line-351"></span><span class="hs-comment">--</span><span>
+</span><span id="line-352"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-353"></span><span class="hs-comment">--</span><span>
+</span><span id="line-354"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-355"></span><span class="hs-comment">--</span><span>
+</span><span id="line-356"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-357"></span><span class="hs-comment">--</span><span>
+</span><span id="line-358"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-359"></span><span class="hs-comment">--</span><span>
+</span><span id="line-360"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'</span><span>
+</span><span id="line-361"></span><span class="hs-comment">--</span><span>
+</span><span id="line-362"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'</span><span>
+</span><span id="line-363"></span><span class="hs-comment">--</span><span>
+</span><span id="line-364"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-365"></span><span class="hs-comment">--</span><span>
+</span><span id="line-366"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',</span><span>
+</span><span id="line-367"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV'</span><span>
+</span><span id="line-368"></span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#getMemoryWin32HandleNV"><span class="hs-identifier hs-type">getMemoryWin32HandleNV</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680223089"><span class="annot"><a href="#local-6989586621680223089"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-369"></span><span>                        </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680223089"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-370"></span><span>                       </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that owns the memory.</span><span>
+</span><span id="line-371"></span><span>                          </span><span class="hs-comment">--</span><span>
+</span><span id="line-372"></span><span>                          </span><span class="hs-comment">-- #VUID-vkGetMemoryWin32HandleNV-device-parameter# @device@ /must/ be a</span><span>
+</span><span id="line-373"></span><span>                          </span><span class="hs-comment">-- valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-374"></span><span>                          </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-375"></span><span>                       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object.</span><span>
+</span><span id="line-376"></span><span>                          </span><span class="hs-comment">--</span><span>
+</span><span id="line-377"></span><span>                          </span><span class="hs-comment">-- #VUID-vkGetMemoryWin32HandleNV-memory-parameter# @memory@ /must/ be a</span><span>
+</span><span id="line-378"></span><span>                          </span><span class="hs-comment">-- valid 'Vulkan.Core10.Handles.DeviceMemory' handle</span><span>
+</span><span id="line-379"></span><span>                          </span><span class="hs-comment">--</span><span>
+</span><span id="line-380"></span><span>                          </span><span class="hs-comment">-- #VUID-vkGetMemoryWin32HandleNV-memory-parent# @memory@ /must/ have been</span><span>
+</span><span id="line-381"></span><span>                          </span><span class="hs-comment">-- created, allocated, or retrieved from @device@</span><span>
+</span><span id="line-382"></span><span>                          </span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier hs-type">DeviceMemory</span></a></span><span>
+</span><span id="line-383"></span><span>                       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @handleType@ is a bitmask of</span><span>
+</span><span id="line-384"></span><span>                          </span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'</span><span>
+</span><span id="line-385"></span><span>                          </span><span class="hs-comment">-- containing a single bit specifying the type of handle requested.</span><span>
+</span><span id="line-386"></span><span>                          </span><span class="hs-comment">--</span><span>
+</span><span id="line-387"></span><span>                          </span><span class="hs-comment">-- #VUID-vkGetMemoryWin32HandleNV-handleType-01326# @handleType@ /must/ be</span><span>
+</span><span id="line-388"></span><span>                          </span><span class="hs-comment">-- a flag specified in</span><span>
+</span><span id="line-389"></span><span>                          </span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_external_memory.ExportMemoryAllocateInfoNV'::@handleTypes@</span><span>
+</span><span id="line-390"></span><span>                          </span><span class="hs-comment">-- when allocating @memory@</span><span>
+</span><span id="line-391"></span><span>                          </span><span class="hs-comment">--</span><span>
+</span><span id="line-392"></span><span>                          </span><span class="hs-comment">-- #VUID-vkGetMemoryWin32HandleNV-handleType-parameter# @handleType@ /must/</span><span>
+</span><span id="line-393"></span><span>                          </span><span class="hs-comment">-- be a valid combination of</span><span>
+</span><span id="line-394"></span><span>                          </span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'</span><span>
+</span><span id="line-395"></span><span>                          </span><span class="hs-comment">-- values</span><span>
+</span><span id="line-396"></span><span>                          </span><span class="hs-comment">--</span><span>
+</span><span id="line-397"></span><span>                          </span><span class="hs-comment">-- #VUID-vkGetMemoryWin32HandleNV-handleType-requiredbitmask# @handleType@</span><span>
+</span><span id="line-398"></span><span>                          </span><span class="hs-comment">-- /must/ not be @0@</span><span>
+</span><span id="line-399"></span><span>                          </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagsNV"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagsNV</span></a></span><span>
+</span><span id="line-400"></span><span>                       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680223089"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#HANDLE"><span class="hs-identifier hs-type">HANDLE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-401"></span><span id="getMemoryWin32HandleNV"><span class="annot"><span class="annottext">getMemoryWin32HandleNV :: Device
+-&gt; DeviceMemory -&gt; ExternalMemoryHandleTypeFlagsNV -&gt; io HANDLE
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#getMemoryWin32HandleNV"><span class="hs-identifier hs-var hs-var">getMemoryWin32HandleNV</span></a></span></span><span> </span><span id="local-6989586621680223088"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680223088"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680223087"><span class="annot"><span class="annottext">memory :: DeviceMemory
+</span><a href="#local-6989586621680223087"><span class="hs-identifier hs-var">memory</span></a></span></span><span> </span><span id="local-6989586621680223086"><span class="annot"><span class="annottext">handleType :: ExternalMemoryHandleTypeFlagsNV
+</span><a href="#local-6989586621680223086"><span class="hs-identifier hs-var">handleType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO HANDLE -&gt; io HANDLE
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO HANDLE -&gt; io HANDLE)
+-&gt; (ContT HANDLE IO HANDLE -&gt; IO HANDLE)
+-&gt; ContT HANDLE IO HANDLE
+-&gt; io HANDLE
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT HANDLE IO HANDLE -&gt; IO HANDLE
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT HANDLE IO HANDLE -&gt; io HANDLE)
+-&gt; ContT HANDLE IO HANDLE -&gt; io HANDLE
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-402"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680223084"><span class="annot"><span class="annottext">vkGetMemoryWin32HandleNVPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; DeviceMemory
+   -&gt; ExternalMemoryHandleTypeFlagsNV
+   -&gt; (&quot;pHandle&quot; ::: Ptr HANDLE)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680223084"><span class="hs-identifier hs-var hs-var">vkGetMemoryWin32HandleNVPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; DeviceMemory
+      -&gt; ExternalMemoryHandleTypeFlagsNV
+      -&gt; (&quot;pHandle&quot; ::: Ptr HANDLE)
+      -&gt; IO Result)
+</span><a href="Vulkan.Dynamic.html#pVkGetMemoryWin32HandleNV"><span class="hs-identifier hs-var hs-var">pVkGetMemoryWin32HandleNV</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680223088"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-403"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT HANDLE IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT HANDLE IO ()) -&gt; IO () -&gt; ContT HANDLE IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; DeviceMemory
+   -&gt; ExternalMemoryHandleTypeFlagsNV
+   -&gt; (&quot;pHandle&quot; ::: Ptr HANDLE)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680223084"><span class="hs-identifier hs-var">vkGetMemoryWin32HandleNVPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; DeviceMemory
+   -&gt; ExternalMemoryHandleTypeFlagsNV
+   -&gt; (&quot;pHandle&quot; ::: Ptr HANDLE)
+   -&gt; IO Result)
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; DeviceMemory
+      -&gt; ExternalMemoryHandleTypeFlagsNV
+      -&gt; (&quot;pHandle&quot; ::: Ptr HANDLE)
+      -&gt; IO Result)
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; DeviceMemory
+   -&gt; ExternalMemoryHandleTypeFlagsNV
+   -&gt; (&quot;pHandle&quot; ::: Ptr HANDLE)
+   -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-404"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkGetMemoryWin32HandleNV is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-405"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680223079"><span class="annot"><span class="annottext">vkGetMemoryWin32HandleNV' :: Ptr Device_T
+-&gt; DeviceMemory
+-&gt; ExternalMemoryHandleTypeFlagsNV
+-&gt; (&quot;pHandle&quot; ::: Ptr HANDLE)
+-&gt; IO Result
+</span><a href="#local-6989586621680223079"><span class="hs-identifier hs-var hs-var">vkGetMemoryWin32HandleNV'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; DeviceMemory
+   -&gt; ExternalMemoryHandleTypeFlagsNV
+   -&gt; (&quot;pHandle&quot; ::: Ptr HANDLE)
+   -&gt; IO Result)
+-&gt; Ptr Device_T
+-&gt; DeviceMemory
+-&gt; ExternalMemoryHandleTypeFlagsNV
+-&gt; (&quot;pHandle&quot; ::: Ptr HANDLE)
+-&gt; IO Result
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#mkVkGetMemoryWin32HandleNV"><span class="hs-identifier hs-var">mkVkGetMemoryWin32HandleNV</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; DeviceMemory
+   -&gt; ExternalMemoryHandleTypeFlagsNV
+   -&gt; (&quot;pHandle&quot; ::: Ptr HANDLE)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680223084"><span class="hs-identifier hs-var">vkGetMemoryWin32HandleNVPtr</span></a></span><span>
+</span><span id="line-406"></span><span>  </span><span id="local-6989586621680223078"><span class="annot"><span class="annottext">&quot;pHandle&quot; ::: Ptr HANDLE
+</span><a href="#local-6989586621680223078"><span class="hs-identifier hs-var">pPHandle</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; IO HANDLE) -&gt; IO HANDLE)
+-&gt; ContT HANDLE IO (&quot;pHandle&quot; ::: Ptr HANDLE)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; IO HANDLE) -&gt; IO HANDLE)
+ -&gt; ContT HANDLE IO (&quot;pHandle&quot; ::: Ptr HANDLE))
+-&gt; (((&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; IO HANDLE) -&gt; IO HANDLE)
+-&gt; ContT HANDLE IO (&quot;pHandle&quot; ::: Ptr HANDLE)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO (&quot;pHandle&quot; ::: Ptr HANDLE)
+-&gt; ((&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; IO ())
+-&gt; ((&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; IO HANDLE)
+-&gt; IO HANDLE
+forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
+</span><span class="hs-identifier hs-var">bracket</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; IO (&quot;pHandle&quot; ::: Ptr HANDLE)
+forall a. Int -&gt; IO (Ptr a)
+</span><span class="hs-identifier hs-var">callocBytes</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#HANDLE"><span class="hs-identifier hs-type">HANDLE</span></a></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; IO ()
+forall a. Ptr a -&gt; IO ()
+</span><span class="hs-identifier hs-var">free</span></span><span>
+</span><span id="line-407"></span><span>  </span><span id="local-6989586621680223076"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680223076"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Result -&gt; ContT HANDLE IO Result
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO Result -&gt; ContT HANDLE IO Result)
+-&gt; IO Result -&gt; ContT HANDLE IO Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; DeviceMemory
+-&gt; ExternalMemoryHandleTypeFlagsNV
+-&gt; (&quot;pHandle&quot; ::: Ptr HANDLE)
+-&gt; IO Result
+</span><a href="#local-6989586621680223079"><span class="hs-identifier hs-var">vkGetMemoryWin32HandleNV'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680223088"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceMemory
+</span><a href="#local-6989586621680223087"><span class="hs-identifier hs-var">memory</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagsNV
+</span><a href="#local-6989586621680223086"><span class="hs-identifier hs-var">handleType</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pHandle&quot; ::: Ptr HANDLE
+</span><a href="#local-6989586621680223078"><span class="hs-identifier hs-var">pPHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-408"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT HANDLE IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT HANDLE IO ()) -&gt; IO () -&gt; ContT HANDLE IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680223076"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VulkanException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; VulkanException
+</span><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680223076"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-409"></span><span>  </span><span id="local-6989586621680223072"><span class="annot"><span class="annottext">HANDLE
+</span><a href="#local-6989586621680223072"><span class="hs-identifier hs-var">pHandle</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO HANDLE -&gt; ContT HANDLE IO HANDLE
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO HANDLE -&gt; ContT HANDLE IO HANDLE)
+-&gt; IO HANDLE -&gt; ContT HANDLE IO HANDLE
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; IO HANDLE
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#HANDLE"><span class="hs-identifier hs-type">HANDLE</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pHandle&quot; ::: Ptr HANDLE
+</span><a href="#local-6989586621680223078"><span class="hs-identifier hs-var">pPHandle</span></a></span><span>
+</span><span id="line-410"></span><span>  </span><span class="annot"><span class="annottext">HANDLE -&gt; ContT HANDLE IO HANDLE
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(HANDLE -&gt; ContT HANDLE IO HANDLE)
+-&gt; HANDLE -&gt; ContT HANDLE IO HANDLE
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">HANDLE
+</span><a href="#local-6989586621680223072"><span class="hs-identifier hs-var">pHandle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-411"></span><span>
+</span><span id="line-412"></span><span>
+</span><span id="line-413"></span><span class="hs-comment">-- | VkImportMemoryWin32HandleInfoNV - import Win32 memory created on the</span><span>
+</span><span id="line-414"></span><span class="hs-comment">-- same physical device</span><span>
+</span><span id="line-415"></span><span class="hs-comment">--</span><span>
+</span><span id="line-416"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-417"></span><span class="hs-comment">--</span><span>
+</span><span id="line-418"></span><span class="hs-comment">-- If @handleType@ is @0@, this structure is ignored by consumers of the</span><span>
+</span><span id="line-419"></span><span class="hs-comment">-- 'Vulkan.Core10.Memory.MemoryAllocateInfo' structure it is chained from.</span><span>
+</span><span id="line-420"></span><span class="hs-comment">--</span><span>
+</span><span id="line-421"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-422"></span><span class="hs-comment">--</span><span>
+</span><span id="line-423"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-424"></span><span class="hs-comment">--</span><span>
+</span><span id="line-425"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',</span><span>
+</span><span id="line-426"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-427"></span><span class="hs-keyword">data</span><span> </span><span id="ImportMemoryWin32HandleInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var">ImportMemoryWin32HandleInfoNV</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ImportMemoryWin32HandleInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var">ImportMemoryWin32HandleInfoNV</span></a></span></span><span>
+</span><span id="line-428"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @handleType@ is @0@ or a</span><span>
+</span><span id="line-429"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'</span><span>
+</span><span id="line-430"></span><span>    </span><span class="hs-comment">-- value specifying the type of memory handle in @handle@.</span><span>
+</span><span id="line-431"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-432"></span><span>    </span><span class="hs-comment">-- #VUID-VkImportMemoryWin32HandleInfoNV-handleType-01327# @handleType@</span><span>
+</span><span id="line-433"></span><span>    </span><span class="hs-comment">-- /must/ not have more than one bit set</span><span>
+</span><span id="line-434"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-435"></span><span>    </span><span class="hs-comment">-- #VUID-VkImportMemoryWin32HandleInfoNV-handleType-parameter# @handleType@</span><span>
+</span><span id="line-436"></span><span>    </span><span class="hs-comment">-- /must/ be a valid combination of</span><span>
+</span><span id="line-437"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'</span><span>
+</span><span id="line-438"></span><span>    </span><span class="hs-comment">-- values</span><span>
+</span><span id="line-439"></span><span>    </span><span id="%24sel%3AhandleType%3AImportMemoryWin32HandleInfoNV"><span class="annot"><span class="annottext">ImportMemoryWin32HandleInfoNV -&gt; ExternalMemoryHandleTypeFlagsNV
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#%24sel%3AhandleType%3AImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var hs-var">handleType</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagsNV"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagsNV</span></a></span><span>
+</span><span id="line-440"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @handle@ is a Windows 'HANDLE' referring to the memory.</span><span>
+</span><span id="line-441"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-442"></span><span>    </span><span class="hs-comment">-- #VUID-VkImportMemoryWin32HandleInfoNV-handle-01328# @handle@ /must/ be a</span><span>
+</span><span id="line-443"></span><span>    </span><span class="hs-comment">-- valid handle to memory, obtained as specified by @handleType@</span><span>
+</span><span id="line-444"></span><span>    </span><span id="%24sel%3Ahandle%3AImportMemoryWin32HandleInfoNV"><span class="annot"><span class="annottext">ImportMemoryWin32HandleInfoNV -&gt; HANDLE
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#%24sel%3Ahandle%3AImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var hs-var">handle</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#HANDLE"><span class="hs-identifier hs-type">HANDLE</span></a></span><span>
+</span><span id="line-445"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-446"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680223065"><span id="local-6989586621680223067"><span class="annot"><span class="annottext">ImportMemoryWin32HandleInfoNV
+-&gt; ImportMemoryWin32HandleInfoNV -&gt; Bool
+(ImportMemoryWin32HandleInfoNV
+ -&gt; ImportMemoryWin32HandleInfoNV -&gt; Bool)
+-&gt; (ImportMemoryWin32HandleInfoNV
+    -&gt; ImportMemoryWin32HandleInfoNV -&gt; Bool)
+-&gt; Eq ImportMemoryWin32HandleInfoNV
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ImportMemoryWin32HandleInfoNV
+-&gt; ImportMemoryWin32HandleInfoNV -&gt; Bool
+$c/= :: ImportMemoryWin32HandleInfoNV
+-&gt; ImportMemoryWin32HandleInfoNV -&gt; Bool
+== :: ImportMemoryWin32HandleInfoNV
+-&gt; ImportMemoryWin32HandleInfoNV -&gt; Bool
+$c== :: ImportMemoryWin32HandleInfoNV
+-&gt; ImportMemoryWin32HandleInfoNV -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">ImportMemoryWin32HandleInfoNV</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680223058"><span id="local-6989586621680223060"><span id="local-6989586621680223062"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ImportMemoryWin32HandleInfoNV</span></a></span></span></span></span><span>
+</span><span id="line-451"></span><span>
+</span><span id="line-452"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680223053"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ImportMemoryWin32HandleInfoNV</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-453"></span><span>  </span><span id="local-6989586621680223048"><span class="annot"><span class="annottext">withCStruct :: ImportMemoryWin32HandleInfoNV
+-&gt; (Ptr ImportMemoryWin32HandleInfoNV -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680223046"><span class="annot"><span class="annottext">x :: ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223046"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680223045"><span class="annot"><span class="annottext">f :: Ptr ImportMemoryWin32HandleInfoNV -&gt; IO b
+</span><a href="#local-6989586621680223045"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr ImportMemoryWin32HandleInfoNV -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr ImportMemoryWin32HandleInfoNV -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr ImportMemoryWin32HandleInfoNV -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680223044"><span class="annot"><span class="annottext">p :: Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223044"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+-&gt; ImportMemoryWin32HandleInfoNV -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223044"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223046"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV -&gt; IO b
+</span><a href="#local-6989586621680223045"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223044"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-454"></span><span>  </span><span id="local-6989586621680223042"><span class="annot"><span class="annottext">pokeCStruct :: Ptr ImportMemoryWin32HandleInfoNV
+-&gt; ImportMemoryWin32HandleInfoNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680223042"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680223041"><span class="annot"><span class="annottext">p :: Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223041"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680223039"><span id="local-6989586621680223040"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ImportMemoryWin32HandleInfoNV</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621680223038"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680223038"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-455"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223041"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-456"></span><span>    </span><span class="annot"><span class="annottext">(&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; HANDLE -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223041"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+-&gt; Int -&gt; &quot;pHandle&quot; ::: Ptr HANDLE
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">HANDLE
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-457"></span><span>    </span><span class="annot"><span class="annottext">Ptr ExternalMemoryHandleTypeFlagsNV
+-&gt; ExternalMemoryHandleTypeFlagsNV -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223041"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+-&gt; Int -&gt; Ptr ExternalMemoryHandleTypeFlagsNV
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagsNV"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagsNV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagsNV
+</span><a href="#local-6989586621680223040"><span class="hs-identifier hs-var">handleType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-458"></span><span>    </span><span class="annot"><span class="annottext">(&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; HANDLE -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223041"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+-&gt; Int -&gt; &quot;pHandle&quot; ::: Ptr HANDLE
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#HANDLE"><span class="hs-identifier hs-type">HANDLE</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">HANDLE
+</span><a href="#local-6989586621680223039"><span class="hs-identifier hs-var">handle</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-459"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680223038"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-460"></span><span>  </span><span id="local-6989586621680223037"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-461"></span><span>  </span><span id="local-6989586621680223035"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-462"></span><span>  </span><span id="local-6989586621680223033"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr ImportMemoryWin32HandleInfoNV -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680223031"><span class="annot"><span class="annottext">p :: Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223031"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680223030"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680223030"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-463"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223031"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-464"></span><span>    </span><span class="annot"><span class="annottext">(&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; HANDLE -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223031"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+-&gt; Int -&gt; &quot;pHandle&quot; ::: Ptr HANDLE
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">HANDLE
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-465"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680223030"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-466"></span><span>
+</span><span id="line-467"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ImportMemoryWin32HandleInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-468"></span><span>  </span><span id="local-6989586621680223027"><span class="annot"><span class="annottext">peekCStruct :: Ptr ImportMemoryWin32HandleInfoNV
+-&gt; IO ImportMemoryWin32HandleInfoNV
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680223025"><span class="annot"><span class="annottext">p :: Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223025"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-469"></span><span>    </span><span id="local-6989586621680223024"><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagsNV
+</span><a href="#local-6989586621680223024"><span class="hs-identifier hs-var">handleType</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr ExternalMemoryHandleTypeFlagsNV
+-&gt; IO ExternalMemoryHandleTypeFlagsNV
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagsNV"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagsNV</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223025"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+-&gt; Int -&gt; Ptr ExternalMemoryHandleTypeFlagsNV
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_capabilities.html#ExternalMemoryHandleTypeFlagsNV"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagsNV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-470"></span><span>    </span><span id="local-6989586621680223023"><span class="annot"><span class="annottext">HANDLE
+</span><a href="#local-6989586621680223023"><span class="hs-identifier hs-var">handle</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; IO HANDLE
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#HANDLE"><span class="hs-identifier hs-type">HANDLE</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223025"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+-&gt; Int -&gt; &quot;pHandle&quot; ::: Ptr HANDLE
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#HANDLE"><span class="hs-identifier hs-type">HANDLE</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-471"></span><span>    </span><span class="annot"><span class="annottext">ImportMemoryWin32HandleInfoNV -&gt; IO ImportMemoryWin32HandleInfoNV
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(ImportMemoryWin32HandleInfoNV -&gt; IO ImportMemoryWin32HandleInfoNV)
+-&gt; ImportMemoryWin32HandleInfoNV
+-&gt; IO ImportMemoryWin32HandleInfoNV
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagsNV
+-&gt; HANDLE -&gt; ImportMemoryWin32HandleInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var">ImportMemoryWin32HandleInfoNV</span></a></span><span>
+</span><span id="line-472"></span><span>             </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagsNV
+</span><a href="#local-6989586621680223024"><span class="hs-identifier hs-var">handleType</span></a></span><span> </span><span class="annot"><span class="annottext">HANDLE
+</span><a href="#local-6989586621680223023"><span class="hs-identifier hs-var">handle</span></a></span><span>
+</span><span id="line-473"></span><span>
+</span><span id="line-474"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680223013"><span id="local-6989586621680223015"><span id="local-6989586621680223017"><span id="local-6989586621680223019"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ImportMemoryWin32HandleInfoNV</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-475"></span><span>  </span><span id="local-6989586621680223009"><span class="annot"><span class="annottext">sizeOf :: ImportMemoryWin32HandleInfoNV -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">ImportMemoryWin32HandleInfoNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-476"></span><span>  </span><span id="local-6989586621680223007"><span class="annot"><span class="annottext">alignment :: ImportMemoryWin32HandleInfoNV -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">ImportMemoryWin32HandleInfoNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-477"></span><span>  </span><span id="local-6989586621680223005"><span class="annot"><span class="annottext">peek :: Ptr ImportMemoryWin32HandleInfoNV
+-&gt; IO ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223005"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+-&gt; IO ImportMemoryWin32HandleInfoNV
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-478"></span><span>  </span><span id="local-6989586621680223004"><span class="annot"><span class="annottext">poke :: Ptr ImportMemoryWin32HandleInfoNV
+-&gt; ImportMemoryWin32HandleInfoNV -&gt; IO ()
+</span><a href="#local-6989586621680223004"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680223003"><span class="annot"><span class="annottext">ptr :: Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223003"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680223002"><span class="annot"><span class="annottext">poked :: ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223002"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+-&gt; ImportMemoryWin32HandleInfoNV -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223003"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">ImportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680223002"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-479"></span><span>
+</span><span id="line-480"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ImportMemoryWin32HandleInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-481"></span><span>  </span><span id="local-6989586621680222999"><span class="annot"><span class="annottext">zero :: ImportMemoryWin32HandleInfoNV
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagsNV
+-&gt; HANDLE -&gt; ImportMemoryWin32HandleInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ImportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var">ImportMemoryWin32HandleInfoNV</span></a></span><span>
+</span><span id="line-482"></span><span>           </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagsNV
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-483"></span><span>           </span><span class="annot"><span class="annottext">HANDLE
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-484"></span><span>
+</span><span id="line-485"></span><span>
+</span><span id="line-486"></span><span class="hs-comment">-- | VkExportMemoryWin32HandleInfoNV - specify security attributes and access</span><span>
+</span><span id="line-487"></span><span class="hs-comment">-- rights for Win32 memory handles</span><span>
+</span><span id="line-488"></span><span class="hs-comment">--</span><span>
+</span><span id="line-489"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-490"></span><span class="hs-comment">--</span><span>
+</span><span id="line-491"></span><span class="hs-comment">-- If this structure is not present, or if @pAttributes@ is set to @NULL@,</span><span>
+</span><span id="line-492"></span><span class="hs-comment">-- default security descriptor values will be used, and child processes</span><span>
+</span><span id="line-493"></span><span class="hs-comment">-- created by the application will not inherit the handle, as described in</span><span>
+</span><span id="line-494"></span><span class="hs-comment">-- the MSDN documentation for &#8220;Synchronization Object Security and Access</span><span>
+</span><span id="line-495"></span><span class="hs-comment">-- Rights&#8221;1. Further, if the structure is not present, the access rights</span><span>
+</span><span id="line-496"></span><span class="hs-comment">-- will be</span><span>
+</span><span id="line-497"></span><span class="hs-comment">--</span><span>
+</span><span id="line-498"></span><span class="hs-comment">-- @DXGI_SHARED_RESOURCE_READ@ | @DXGI_SHARED_RESOURCE_WRITE@</span><span>
+</span><span id="line-499"></span><span class="hs-comment">--</span><span>
+</span><span id="line-500"></span><span class="hs-comment">-- [1]</span><span>
+</span><span id="line-501"></span><span class="hs-comment">--     &lt;https://docs.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights&gt;</span><span>
+</span><span id="line-502"></span><span class="hs-comment">--</span><span>
+</span><span id="line-503"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-504"></span><span class="hs-comment">--</span><span>
+</span><span id="line-505"></span><span class="hs-comment">-- -   #VUID-VkExportMemoryWin32HandleInfoNV-sType-sType# @sType@ /must/ be</span><span>
+</span><span id="line-506"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV'</span><span>
+</span><span id="line-507"></span><span class="hs-comment">--</span><span>
+</span><span id="line-508"></span><span class="hs-comment">-- -   #VUID-VkExportMemoryWin32HandleInfoNV-pAttributes-parameter# If</span><span>
+</span><span id="line-509"></span><span class="hs-comment">--     @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid pointer</span><span>
+</span><span id="line-510"></span><span class="hs-comment">--     to a valid 'SECURITY_ATTRIBUTES' value</span><span>
+</span><span id="line-511"></span><span class="hs-comment">--</span><span>
+</span><span id="line-512"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-513"></span><span class="hs-comment">--</span><span>
+</span><span id="line-514"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-515"></span><span class="hs-keyword">data</span><span> </span><span id="ExportMemoryWin32HandleInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var">ExportMemoryWin32HandleInfoNV</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ExportMemoryWin32HandleInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var">ExportMemoryWin32HandleInfoNV</span></a></span></span><span>
+</span><span id="line-516"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @pAttributes@ is a pointer to a Windows 'SECURITY_ATTRIBUTES' structure</span><span>
+</span><span id="line-517"></span><span>    </span><span class="hs-comment">-- specifying security attributes of the handle.</span><span>
+</span><span id="line-518"></span><span>    </span><span id="%24sel%3Aattributes%3AExportMemoryWin32HandleInfoNV"><span class="annot"><span class="annottext">ExportMemoryWin32HandleInfoNV -&gt; Ptr SECURITY_ATTRIBUTES
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#%24sel%3Aattributes%3AExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var hs-var">attributes</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#SECURITY_ATTRIBUTES"><span class="hs-identifier hs-type">SECURITY_ATTRIBUTES</span></a></span><span>
+</span><span id="line-519"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @dwAccess@ is a 'DWORD' specifying access rights of the handle.</span><span>
+</span><span id="line-520"></span><span>    </span><span id="%24sel%3AdwAccess%3AExportMemoryWin32HandleInfoNV"><span class="annot"><span class="annottext">ExportMemoryWin32HandleInfoNV -&gt; DWORD
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#%24sel%3AdwAccess%3AExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var hs-var">dwAccess</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#DWORD"><span class="hs-identifier hs-type">DWORD</span></a></span><span>
+</span><span id="line-521"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-522"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680222991"><span id="local-6989586621680222993"><span class="annot"><span class="annottext">ExportMemoryWin32HandleInfoNV
+-&gt; ExportMemoryWin32HandleInfoNV -&gt; Bool
+(ExportMemoryWin32HandleInfoNV
+ -&gt; ExportMemoryWin32HandleInfoNV -&gt; Bool)
+-&gt; (ExportMemoryWin32HandleInfoNV
+    -&gt; ExportMemoryWin32HandleInfoNV -&gt; Bool)
+-&gt; Eq ExportMemoryWin32HandleInfoNV
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ExportMemoryWin32HandleInfoNV
+-&gt; ExportMemoryWin32HandleInfoNV -&gt; Bool
+$c/= :: ExportMemoryWin32HandleInfoNV
+-&gt; ExportMemoryWin32HandleInfoNV -&gt; Bool
+== :: ExportMemoryWin32HandleInfoNV
+-&gt; ExportMemoryWin32HandleInfoNV -&gt; Bool
+$c== :: ExportMemoryWin32HandleInfoNV
+-&gt; ExportMemoryWin32HandleInfoNV -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">ExportMemoryWin32HandleInfoNV</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680222985"><span id="local-6989586621680222987"><span id="local-6989586621680222989"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ExportMemoryWin32HandleInfoNV</span></a></span></span></span></span><span>
+</span><span id="line-527"></span><span>
+</span><span id="line-528"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680222981"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ExportMemoryWin32HandleInfoNV</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-529"></span><span>  </span><span id="local-6989586621680222977"><span class="annot"><span class="annottext">withCStruct :: ExportMemoryWin32HandleInfoNV
+-&gt; (Ptr ExportMemoryWin32HandleInfoNV -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680222977"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680222976"><span class="annot"><span class="annottext">x :: ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222976"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680222975"><span class="annot"><span class="annottext">f :: Ptr ExportMemoryWin32HandleInfoNV -&gt; IO b
+</span><a href="#local-6989586621680222975"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr ExportMemoryWin32HandleInfoNV -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr ExportMemoryWin32HandleInfoNV -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr ExportMemoryWin32HandleInfoNV -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680222974"><span class="annot"><span class="annottext">p :: Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222974"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+-&gt; ExportMemoryWin32HandleInfoNV -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222974"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222976"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV -&gt; IO b
+</span><a href="#local-6989586621680222975"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222974"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-530"></span><span>  </span><span id="local-6989586621680222973"><span class="annot"><span class="annottext">pokeCStruct :: Ptr ExportMemoryWin32HandleInfoNV
+-&gt; ExportMemoryWin32HandleInfoNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680222973"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680222972"><span class="annot"><span class="annottext">p :: Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222972"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680222970"><span id="local-6989586621680222971"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ExportMemoryWin32HandleInfoNV</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621680222969"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680222969"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-531"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222972"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-532"></span><span>    </span><span class="annot"><span class="annottext">(&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; HANDLE -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222972"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+-&gt; Int -&gt; &quot;pHandle&quot; ::: Ptr HANDLE
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">HANDLE
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-533"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr SECURITY_ATTRIBUTES) -&gt; Ptr SECURITY_ATTRIBUTES -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222972"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+-&gt; Int -&gt; Ptr (Ptr SECURITY_ATTRIBUTES)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#SECURITY_ATTRIBUTES"><span class="hs-identifier hs-type">SECURITY_ATTRIBUTES</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SECURITY_ATTRIBUTES
+</span><a href="#local-6989586621680222971"><span class="hs-identifier hs-var">attributes</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-534"></span><span>    </span><span class="annot"><span class="annottext">Ptr DWORD -&gt; DWORD -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222972"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV -&gt; Int -&gt; Ptr DWORD
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#DWORD"><span class="hs-identifier hs-type">DWORD</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DWORD
+</span><a href="#local-6989586621680222970"><span class="hs-identifier hs-var">dwAccess</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-535"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680222969"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-536"></span><span>  </span><span id="local-6989586621680222968"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680222968"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-537"></span><span>  </span><span id="local-6989586621680222967"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680222967"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-538"></span><span>  </span><span id="local-6989586621680222966"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr ExportMemoryWin32HandleInfoNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680222966"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680222965"><span class="annot"><span class="annottext">p :: Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222965"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680222964"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680222964"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-539"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222965"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-540"></span><span>    </span><span class="annot"><span class="annottext">(&quot;pHandle&quot; ::: Ptr HANDLE) -&gt; HANDLE -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222965"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+-&gt; Int -&gt; &quot;pHandle&quot; ::: Ptr HANDLE
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">HANDLE
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-541"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680222964"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-542"></span><span>
+</span><span id="line-543"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ExportMemoryWin32HandleInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-544"></span><span>  </span><span id="local-6989586621680222962"><span class="annot"><span class="annottext">peekCStruct :: Ptr ExportMemoryWin32HandleInfoNV
+-&gt; IO ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222962"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680222961"><span class="annot"><span class="annottext">p :: Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222961"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-545"></span><span>    </span><span id="local-6989586621680222960"><span class="annot"><span class="annottext">Ptr SECURITY_ATTRIBUTES
+</span><a href="#local-6989586621680222960"><span class="hs-identifier hs-var">pAttributes</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr SECURITY_ATTRIBUTES) -&gt; IO (Ptr SECURITY_ATTRIBUTES)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#SECURITY_ATTRIBUTES"><span class="hs-identifier hs-type">SECURITY_ATTRIBUTES</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222961"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+-&gt; Int -&gt; Ptr (Ptr SECURITY_ATTRIBUTES)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#SECURITY_ATTRIBUTES"><span class="hs-identifier hs-type">SECURITY_ATTRIBUTES</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-546"></span><span>    </span><span id="local-6989586621680222959"><span class="annot"><span class="annottext">DWORD
+</span><a href="#local-6989586621680222959"><span class="hs-identifier hs-var">dwAccess</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr DWORD -&gt; IO DWORD
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#DWORD"><span class="hs-identifier hs-type">DWORD</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222961"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV -&gt; Int -&gt; Ptr DWORD
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#DWORD"><span class="hs-identifier hs-type">DWORD</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-547"></span><span>    </span><span class="annot"><span class="annottext">ExportMemoryWin32HandleInfoNV -&gt; IO ExportMemoryWin32HandleInfoNV
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(ExportMemoryWin32HandleInfoNV -&gt; IO ExportMemoryWin32HandleInfoNV)
+-&gt; ExportMemoryWin32HandleInfoNV
+-&gt; IO ExportMemoryWin32HandleInfoNV
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr SECURITY_ATTRIBUTES -&gt; DWORD -&gt; ExportMemoryWin32HandleInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var">ExportMemoryWin32HandleInfoNV</span></a></span><span>
+</span><span id="line-548"></span><span>             </span><span class="annot"><span class="annottext">Ptr SECURITY_ATTRIBUTES
+</span><a href="#local-6989586621680222960"><span class="hs-identifier hs-var">pAttributes</span></a></span><span> </span><span class="annot"><span class="annottext">DWORD
+</span><a href="#local-6989586621680222959"><span class="hs-identifier hs-var">dwAccess</span></a></span><span>
+</span><span id="line-549"></span><span>
+</span><span id="line-550"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680222949"><span id="local-6989586621680222951"><span id="local-6989586621680222953"><span id="local-6989586621680222955"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ExportMemoryWin32HandleInfoNV</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-551"></span><span>  </span><span id="local-6989586621680222946"><span class="annot"><span class="annottext">sizeOf :: ExportMemoryWin32HandleInfoNV -&gt; Int
+</span><a href="#local-6989586621680222946"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">ExportMemoryWin32HandleInfoNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-552"></span><span>  </span><span id="local-6989586621680222945"><span class="annot"><span class="annottext">alignment :: ExportMemoryWin32HandleInfoNV -&gt; Int
+</span><a href="#local-6989586621680222945"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">ExportMemoryWin32HandleInfoNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-553"></span><span>  </span><span id="local-6989586621680222944"><span class="annot"><span class="annottext">peek :: Ptr ExportMemoryWin32HandleInfoNV
+-&gt; IO ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222944"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+-&gt; IO ExportMemoryWin32HandleInfoNV
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-554"></span><span>  </span><span id="local-6989586621680222943"><span class="annot"><span class="annottext">poke :: Ptr ExportMemoryWin32HandleInfoNV
+-&gt; ExportMemoryWin32HandleInfoNV -&gt; IO ()
+</span><a href="#local-6989586621680222943"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680222942"><span class="annot"><span class="annottext">ptr :: Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222942"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680222941"><span class="annot"><span class="annottext">poked :: ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222941"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+-&gt; ExportMemoryWin32HandleInfoNV -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222942"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222941"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-555"></span><span>
+</span><span id="line-556"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-type">ExportMemoryWin32HandleInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-557"></span><span>  </span><span id="local-6989586621680222939"><span class="annot"><span class="annottext">zero :: ExportMemoryWin32HandleInfoNV
+</span><a href="#local-6989586621680222939"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SECURITY_ATTRIBUTES -&gt; DWORD -&gt; ExportMemoryWin32HandleInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#ExportMemoryWin32HandleInfoNV"><span class="hs-identifier hs-var">ExportMemoryWin32HandleInfoNV</span></a></span><span>
+</span><span id="line-558"></span><span>           </span><span class="annot"><span class="annottext">Ptr SECURITY_ATTRIBUTES
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-559"></span><span>           </span><span class="annot"><span class="annottext">DWORD
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-560"></span><span>
+</span><span id="line-561"></span><span>
+</span><span id="line-562"></span><span class="hs-keyword">type</span><span> </span><span id="NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"><span class="hs-identifier hs-var">NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-563"></span><span>
+</span><span id="line-564"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION&quot;</span><span>
+</span><span id="line-565"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"><span class="hs-identifier hs-type">NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680223122"><span class="annot"><a href="#local-6989586621680223122"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680223122"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680223122"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-566"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"><span id="%24mNV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"><span id="NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"><span class="annot"><span class="annottext">$bNV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION :: a
+$mNV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#%24bNV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-567"></span><span>
+</span><span id="line-568"></span><span>
+</span><span id="line-569"></span><span class="hs-keyword">type</span><span> </span><span id="NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"><span class="hs-identifier hs-var">NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NV_external_memory_win32&quot;</span></span><span>
+</span><span id="line-570"></span><span>
+</span><span id="line-571"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-572"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"><span class="hs-identifier hs-type">NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680223118"><span class="annot"><a href="#local-6989586621680223118"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680223118"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680223118"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680223118"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-573"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"><span id="%24mNV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"><span id="NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"><span class="annot"><span class="annottext">$bNV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME :: a
+$mNV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#%24bNV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NV_external_memory_win32&quot;</span></span><span>
+</span><span id="line-574"></span><span>
+</span><span id="line-575"></span><span>
+</span><span id="line-576"></span><span class="hs-keyword">type</span><span> </span><span id="HANDLE"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#HANDLE"><span class="hs-identifier hs-var">HANDLE</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-577"></span><span>
+</span><span id="line-578"></span><span>
+</span><span id="line-579"></span><span class="hs-keyword">type</span><span> </span><span id="DWORD"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#DWORD"><span class="hs-identifier hs-var">DWORD</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-580"></span><span>
+</span><span id="line-581"></span><span>
+</span><span id="line-582"></span><span class="hs-keyword">data</span><span> </span><span id="SECURITY_ATTRIBUTES"><span class="annot"><a href="Vulkan.Extensions.VK_NV_external_memory_win32.html#SECURITY_ATTRIBUTES"><span class="hs-identifier hs-var">SECURITY_ATTRIBUTES</span></a></span></span><span>
+</span><span id="line-583"></span><span>
+</span><span id="line-584"></span></pre></body></html>

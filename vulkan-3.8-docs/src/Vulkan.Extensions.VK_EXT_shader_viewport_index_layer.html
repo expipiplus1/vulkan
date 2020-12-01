@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- VK_EXT_shader_viewport_index_layer - device extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- == VK_EXT_shader_viewport_index_layer</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- [__Name String__]</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--     @VK_EXT_shader_viewport_index_layer@</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- [__Extension Type__]</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--     Device extension</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- [__Registered Extension Number__]</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--     163</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- [__Revision__]</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--     1</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- [__Extension and Version Dependencies__]</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--     -   Requires Vulkan 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- [__Deprecation state__]</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--     -   /Promoted/ to</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--         &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2&gt;</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- [__Contact__]</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">--     -   Daniel Koch</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--         &lt;https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_viewport_index_layer:%20&amp;body=@dgkoch%20 &gt;</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- == Other Extension Metadata</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- [__Last Modified Date__]</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--     2017-08-08</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- [__Interactions and External Dependencies__]</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--     -   Promoted to Vulkan 1.2 Core</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--     -   This extension requires</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--         &lt;https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_viewport_index_layer.html SPV_EXT_shader_viewport_index_layer&gt;</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--     -   This extension provides API support for</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--         &lt;https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_viewport_layer_array.txt GL_ARB_shader_viewport_layer_array&gt;,</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--         &lt;https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_vertex_shader_layer.txt GL_AMD_vertex_shader_layer&gt;,</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--         &lt;https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_vertex_shader_viewport_index.txt GL_AMD_vertex_shader_viewport_index&gt;,</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--         and</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--         &lt;https://www.khronos.org/registry/OpenGL/extensions/NV/NV_viewport_array2.txt GL_NV_viewport_array2&gt;</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--     -   This extension requires the @multiViewport@ feature.</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--     -   This extension interacts with the @tessellationShader@ feature.</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- [__Contributors__]</span><span>
+</span><span id="line-58"></span><span class="hs-comment">--</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--     -   Piers Daniell, NVIDIA</span><span>
+</span><span id="line-60"></span><span class="hs-comment">--</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--     -   Jeff Bolz, NVIDIA</span><span>
+</span><span id="line-62"></span><span class="hs-comment">--</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--     -   Jan-Harald Fredriksen, ARM</span><span>
+</span><span id="line-64"></span><span class="hs-comment">--</span><span>
+</span><span id="line-65"></span><span class="hs-comment">--     -   Daniel Rakos, AMD</span><span>
+</span><span id="line-66"></span><span class="hs-comment">--</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--     -   Slawomir Grajeswki, Intel</span><span>
+</span><span id="line-68"></span><span class="hs-comment">--</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- == Description</span><span>
+</span><span id="line-70"></span><span class="hs-comment">--</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- This extension adds support for the @ShaderViewportIndexLayerEXT@</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- capability from the @SPV_EXT_shader_viewport_index_layer@ extension in</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- Vulkan.</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- This extension allows variables decorated with the @Layer@ and</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- @ViewportIndex@ built-ins to be exported from vertex or tessellation</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- shaders, using the @ShaderViewportIndexLayerEXT@ capability.</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- When using GLSL source-based shading languages, the @gl_ViewportIndex@</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- and @gl_Layer@ built-in variables map to the SPIR-V @ViewportIndex@ and</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- @Layer@ built-in decorations, respectively. Behaviour of these variables</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- is extended as described in the @GL_ARB_shader_viewport_layer_array@ (or</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- the precursor @GL_AMD_vertex_shader_layer@,</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- @GL_AMD_vertex_shader_viewport_index@, and @GL_NV_viewport_array2@</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- extensions).</span><span>
+</span><span id="line-86"></span><span class="hs-comment">--</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- The @ShaderViewportIndexLayerEXT@ capability is equivalent to the</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- @ShaderViewportIndexLayerNV@ capability added by</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- @VK_NV_viewport_array2@.</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- == Promotion to Vulkan 1.2</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- All functionality in this extension is included in core Vulkan 1.2.</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- The single @ShaderViewportIndexLayerEXT@ capability from the</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- @SPV_EXT_shader_viewport_index_layer@ extension is replaced by the</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-shader-viewport-index ShaderViewportIndex&gt;</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- and</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-shader-layer ShaderLayer&gt;</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- capabilities from SPIR-V 1.5 which are enabled by the</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderOutputViewportIndex shaderOutputViewportIndex&gt;</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- and</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderOutputLayer shaderOutputLayer&gt;</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- features, respectively. Additionally, if Vulkan 1.2 is supported but</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- this extension is not, these capabilities are optional.</span><span>
+</span><span id="line-108"></span><span class="hs-comment">--</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- Enabling both features is equivalent to enabling the</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- @VK_EXT_shader_viewport_index_layer@ extension.</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- == New Enum Constants</span><span>
+</span><span id="line-113"></span><span class="hs-comment">--</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- -   'EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME'</span><span>
+</span><span id="line-115"></span><span class="hs-comment">--</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- -   'EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION'</span><span>
+</span><span id="line-117"></span><span class="hs-comment">--</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- == New or Modified Built-In Variables</span><span>
+</span><span id="line-119"></span><span class="hs-comment">--</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- -   (modified)</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-layer Layer&gt;</span><span>
+</span><span id="line-122"></span><span class="hs-comment">--</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- -   (modified)</span><span>
+</span><span id="line-124"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-viewportindex ViewportIndex&gt;</span><span>
+</span><span id="line-125"></span><span class="hs-comment">--</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- == New SPIR-V Capabilities</span><span>
+</span><span id="line-127"></span><span class="hs-comment">--</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- -   &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-shader-viewport-index-layer ShaderViewportIndexLayerEXT&gt;</span><span>
+</span><span id="line-129"></span><span class="hs-comment">--</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- == Version History</span><span>
+</span><span id="line-131"></span><span class="hs-comment">--</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- -   Revision 1, 2017-08-08 (Daniel Koch)</span><span>
+</span><span id="line-133"></span><span class="hs-comment">--</span><span>
+</span><span id="line-134"></span><span class="hs-comment">--     -   Internal drafts</span><span>
+</span><span id="line-135"></span><span class="hs-comment">--</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-137"></span><span class="hs-comment">--</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- No cross-references are available</span><span>
+</span><span id="line-139"></span><span class="hs-comment">--</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-141"></span><span class="hs-comment">--</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_viewport_index_layer Vulkan Specification&gt;</span><span>
+</span><span id="line-144"></span><span class="hs-comment">--</span><span>
+</span><span id="line-145"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-147"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_EXT_shader_viewport_index_layer</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_shader_viewport_index_layer.html#EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION"><span class="hs-identifier">EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION</span></a></span><span>
+</span><span id="line-148"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_shader_viewport_index_layer.html#EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION"><span class="hs-identifier">EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION</span></a></span><span>
+</span><span id="line-149"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_shader_viewport_index_layer.html#EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME"><span class="hs-identifier">EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-150"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_shader_viewport_index_layer.html#EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME"><span class="hs-identifier">EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-151"></span><span>                                                             </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-152"></span><span>
+</span><span id="line-153"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-154"></span><span>
+</span><span id="line-155"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_shader_viewport_index_layer.html#EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION"><span class="hs-identifier hs-var">EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-156"></span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION&quot;</span><span>
+</span><span id="line-158"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_shader_viewport_index_layer.html#EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION"><span class="hs-identifier hs-type">EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680101713"><span class="annot"><a href="#local-6989586621680101713"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680101713"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680101713"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-159"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION"><span id="%24mEXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION"><span id="EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION :: a
+$mEXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_shader_viewport_index_layer.html#%24bEXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-160"></span><span>
+</span><span id="line-161"></span><span>
+</span><span id="line-162"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_shader_viewport_index_layer.html#EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME"><span class="hs-identifier hs-var">EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_shader_viewport_index_layer&quot;</span></span><span>
+</span><span id="line-163"></span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-165"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_shader_viewport_index_layer.html#EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME"><span class="hs-identifier hs-type">EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680101709"><span class="annot"><a href="#local-6989586621680101709"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680101709"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680101709"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680101709"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-166"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME"><span id="%24mEXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME"><span id="EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME :: a
+$mEXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_shader_viewport_index_layer.html#%24bEXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_shader_viewport_index_layer&quot;</span></span><span>
+</span><span id="line-167"></span><span>
+</span><span id="line-168"></span></pre></body></html>

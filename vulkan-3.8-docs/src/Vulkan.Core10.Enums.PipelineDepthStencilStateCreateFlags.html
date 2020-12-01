@@ -1,0 +1,434 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- No documentation found for Chapter &quot;PipelineDepthStencilStateCreateFlags&quot;</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#PipelineDepthStencilStateCreateFlags"><span class="hs-identifier">PipelineDepthStencilStateCreateFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FiniteBits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- | VkPipelineDepthStencilStateCreateFlags - Reserved for future use</span><span>
+</span><span id="line-17"></span><span class="hs-comment">--</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- 'PipelineDepthStencilStateCreateFlags' is a bitmask type for setting a</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- mask, but is currently reserved for future use.</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">newtype</span><span> </span><span id="PipelineDepthStencilStateCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#PipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var">PipelineDepthStencilStateCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PipelineDepthStencilStateCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#PipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var">PipelineDepthStencilStateCreateFlags</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680133650"><span id="local-6989586621680133652"><span class="annot"><span class="annottext">PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+(PipelineDepthStencilStateCreateFlags
+ -&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool)
+-&gt; Eq PipelineDepthStencilStateCreateFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+$c/= :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+== :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+$c== :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680133634"><span id="local-6989586621680133636"><span id="local-6989586621680133638"><span id="local-6989586621680133640"><span id="local-6989586621680133642"><span id="local-6989586621680133644"><span id="local-6989586621680133646"><span class="annot"><span class="annottext">Eq PipelineDepthStencilStateCreateFlags
+Eq PipelineDepthStencilStateCreateFlags =&gt;
+(PipelineDepthStencilStateCreateFlags
+ -&gt; PipelineDepthStencilStateCreateFlags -&gt; Ordering)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; Ord PipelineDepthStencilStateCreateFlags
+PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Ordering
+PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+$cmin :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+max :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+$cmax :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+&gt;= :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+$c&gt;= :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+&gt; :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+$c&gt; :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+&lt;= :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+$c&lt;= :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+&lt; :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+$c&lt; :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Bool
+compare :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Ordering
+$ccompare :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; Ordering
+$cp1Ord :: Eq PipelineDepthStencilStateCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680133617"><span id="local-6989586621680133619"><span id="local-6989586621680133621"><span id="local-6989586621680133623"><span id="local-6989586621680133625"><span id="local-6989586621680133627"><span id="local-6989586621680133629"><span id="local-6989586621680133631"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO PipelineDepthStencilStateCreateFlags
+Ptr b -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ()
+Ptr PipelineDepthStencilStateCreateFlags
+-&gt; IO PipelineDepthStencilStateCreateFlags
+Ptr PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; IO PipelineDepthStencilStateCreateFlags
+Ptr PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ()
+Ptr PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ()
+PipelineDepthStencilStateCreateFlags -&gt; Int
+(PipelineDepthStencilStateCreateFlags -&gt; Int)
+-&gt; (PipelineDepthStencilStateCreateFlags -&gt; Int)
+-&gt; (Ptr PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; IO PipelineDepthStencilStateCreateFlags)
+-&gt; (Ptr PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ())
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; IO PipelineDepthStencilStateCreateFlags)
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ())
+-&gt; (Ptr PipelineDepthStencilStateCreateFlags
+    -&gt; IO PipelineDepthStencilStateCreateFlags)
+-&gt; (Ptr PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ())
+-&gt; Storable PipelineDepthStencilStateCreateFlags
+forall b. Ptr b -&gt; Int -&gt; IO PipelineDepthStencilStateCreateFlags
+forall b.
+Ptr b -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ()
+$cpoke :: Ptr PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ()
+peek :: Ptr PipelineDepthStencilStateCreateFlags
+-&gt; IO PipelineDepthStencilStateCreateFlags
+$cpeek :: Ptr PipelineDepthStencilStateCreateFlags
+-&gt; IO PipelineDepthStencilStateCreateFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ()
+$cpokeByteOff :: forall b.
+Ptr b -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO PipelineDepthStencilStateCreateFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO PipelineDepthStencilStateCreateFlags
+pokeElemOff :: Ptr PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ()
+$cpokeElemOff :: Ptr PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags -&gt; IO ()
+peekElemOff :: Ptr PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; IO PipelineDepthStencilStateCreateFlags
+$cpeekElemOff :: Ptr PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; IO PipelineDepthStencilStateCreateFlags
+alignment :: PipelineDepthStencilStateCreateFlags -&gt; Int
+$calignment :: PipelineDepthStencilStateCreateFlags -&gt; Int
+sizeOf :: PipelineDepthStencilStateCreateFlags -&gt; Int
+$csizeOf :: PipelineDepthStencilStateCreateFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680133614"><span class="annot"><span class="annottext">PipelineDepthStencilStateCreateFlags
+PipelineDepthStencilStateCreateFlags
+-&gt; Zero PipelineDepthStencilStateCreateFlags
+forall a. a -&gt; Zero a
+zero :: PipelineDepthStencilStateCreateFlags
+$czero :: PipelineDepthStencilStateCreateFlags
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680133568"><span id="local-6989586621680133570"><span id="local-6989586621680133572"><span id="local-6989586621680133574"><span id="local-6989586621680133576"><span id="local-6989586621680133578"><span id="local-6989586621680133580"><span id="local-6989586621680133582"><span id="local-6989586621680133584"><span id="local-6989586621680133586"><span id="local-6989586621680133588"><span id="local-6989586621680133590"><span id="local-6989586621680133592"><span id="local-6989586621680133594"><span id="local-6989586621680133596"><span id="local-6989586621680133598"><span id="local-6989586621680133600"><span id="local-6989586621680133602"><span id="local-6989586621680133604"><span id="local-6989586621680133606"><span id="local-6989586621680133608"><span id="local-6989586621680133610"><span class="annot"><span class="annottext">Eq PipelineDepthStencilStateCreateFlags
+PipelineDepthStencilStateCreateFlags
+Eq PipelineDepthStencilStateCreateFlags =&gt;
+(PipelineDepthStencilStateCreateFlags
+ -&gt; PipelineDepthStencilStateCreateFlags
+ -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; (Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags -&gt; Int -&gt; Bool)
+-&gt; (PipelineDepthStencilStateCreateFlags -&gt; Maybe Int)
+-&gt; (PipelineDepthStencilStateCreateFlags -&gt; Int)
+-&gt; (PipelineDepthStencilStateCreateFlags -&gt; Bool)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags
+    -&gt; Int -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; (PipelineDepthStencilStateCreateFlags -&gt; Int)
+-&gt; Bits PipelineDepthStencilStateCreateFlags
+Int -&gt; PipelineDepthStencilStateCreateFlags
+PipelineDepthStencilStateCreateFlags -&gt; Bool
+PipelineDepthStencilStateCreateFlags -&gt; Int
+PipelineDepthStencilStateCreateFlags -&gt; Maybe Int
+PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+PipelineDepthStencilStateCreateFlags -&gt; Int -&gt; Bool
+PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: PipelineDepthStencilStateCreateFlags -&gt; Int
+$cpopCount :: PipelineDepthStencilStateCreateFlags -&gt; Int
+rotateR :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+$crotateR :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+rotateL :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+$crotateL :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+unsafeShiftR :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+$cunsafeShiftR :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+shiftR :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+$cshiftR :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+unsafeShiftL :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+$cunsafeShiftL :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+shiftL :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+$cshiftL :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+isSigned :: PipelineDepthStencilStateCreateFlags -&gt; Bool
+$cisSigned :: PipelineDepthStencilStateCreateFlags -&gt; Bool
+bitSize :: PipelineDepthStencilStateCreateFlags -&gt; Int
+$cbitSize :: PipelineDepthStencilStateCreateFlags -&gt; Int
+bitSizeMaybe :: PipelineDepthStencilStateCreateFlags -&gt; Maybe Int
+$cbitSizeMaybe :: PipelineDepthStencilStateCreateFlags -&gt; Maybe Int
+testBit :: PipelineDepthStencilStateCreateFlags -&gt; Int -&gt; Bool
+$ctestBit :: PipelineDepthStencilStateCreateFlags -&gt; Int -&gt; Bool
+complementBit :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+$ccomplementBit :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+clearBit :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+$cclearBit :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+setBit :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+$csetBit :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+bit :: Int -&gt; PipelineDepthStencilStateCreateFlags
+$cbit :: Int -&gt; PipelineDepthStencilStateCreateFlags
+zeroBits :: PipelineDepthStencilStateCreateFlags
+$czeroBits :: PipelineDepthStencilStateCreateFlags
+rotate :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+$crotate :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+shift :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+$cshift :: PipelineDepthStencilStateCreateFlags
+-&gt; Int -&gt; PipelineDepthStencilStateCreateFlags
+complement :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+$ccomplement :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+xor :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+$cxor :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+.|. :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+$c.|. :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+.&amp;. :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+$c.&amp;. :: PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; PipelineDepthStencilStateCreateFlags
+$cp1Bits :: Eq PipelineDepthStencilStateCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680133560"><span id="local-6989586621680133562"><span id="local-6989586621680133564"><span class="annot"><span class="annottext">Bits PipelineDepthStencilStateCreateFlags
+Bits PipelineDepthStencilStateCreateFlags =&gt;
+(PipelineDepthStencilStateCreateFlags -&gt; Int)
+-&gt; (PipelineDepthStencilStateCreateFlags -&gt; Int)
+-&gt; (PipelineDepthStencilStateCreateFlags -&gt; Int)
+-&gt; FiniteBits PipelineDepthStencilStateCreateFlags
+PipelineDepthStencilStateCreateFlags -&gt; Int
+forall b.
+Bits b =&gt;
+(b -&gt; Int) -&gt; (b -&gt; Int) -&gt; (b -&gt; Int) -&gt; FiniteBits b
+countTrailingZeros :: PipelineDepthStencilStateCreateFlags -&gt; Int
+$ccountTrailingZeros :: PipelineDepthStencilStateCreateFlags -&gt; Int
+countLeadingZeros :: PipelineDepthStencilStateCreateFlags -&gt; Int
+$ccountLeadingZeros :: PipelineDepthStencilStateCreateFlags -&gt; Int
+finiteBitSize :: PipelineDepthStencilStateCreateFlags -&gt; Int
+$cfiniteBitSize :: PipelineDepthStencilStateCreateFlags -&gt; Int
+$cp1FiniteBits :: Bits PipelineDepthStencilStateCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">FiniteBits</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#conNamePipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-type">conNamePipelineDepthStencilStateCreateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-32"></span><span id="conNamePipelineDepthStencilStateCreateFlags"><span class="annot"><span class="annottext">conNamePipelineDepthStencilStateCreateFlags :: String
+</span><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#conNamePipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var hs-var">conNamePipelineDepthStencilStateCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;PipelineDepthStencilStateCreateFlags&quot;</span></span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#enumPrefixPipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-type">enumPrefixPipelineDepthStencilStateCreateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-35"></span><span id="enumPrefixPipelineDepthStencilStateCreateFlags"><span class="annot"><span class="annottext">enumPrefixPipelineDepthStencilStateCreateFlags :: String
+</span><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#enumPrefixPipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var hs-var">enumPrefixPipelineDepthStencilStateCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-36"></span><span>
+</span><span id="line-37"></span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#showTablePipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-type">showTablePipelineDepthStencilStateCreateFlags</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#PipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-type">PipelineDepthStencilStateCreateFlags</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-38"></span><span id="showTablePipelineDepthStencilStateCreateFlags"><span class="annot"><span class="annottext">showTablePipelineDepthStencilStateCreateFlags :: [(PipelineDepthStencilStateCreateFlags, String)]
+</span><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#showTablePipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var hs-var">showTablePipelineDepthStencilStateCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680133551"><span id="local-6989586621680133553"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#PipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-type">PipelineDepthStencilStateCreateFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-41"></span><span>  </span><span id="local-6989586621680133549"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; PipelineDepthStencilStateCreateFlags -&gt; ShowS
+</span><a href="#local-6989586621680133549"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(PipelineDepthStencilStateCreateFlags, String)]
+-&gt; String
+-&gt; (PipelineDepthStencilStateCreateFlags -&gt; Flags)
+-&gt; (Flags -&gt; ShowS)
+-&gt; Int
+-&gt; PipelineDepthStencilStateCreateFlags
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#enumPrefixPipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var">enumPrefixPipelineDepthStencilStateCreateFlags</span></a></span><span>
+</span><span id="line-42"></span><span>                            </span><span class="annot"><span class="annottext">[(PipelineDepthStencilStateCreateFlags, String)]
+</span><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#showTablePipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var">showTablePipelineDepthStencilStateCreateFlags</span></a></span><span>
+</span><span id="line-43"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#conNamePipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var">conNamePipelineDepthStencilStateCreateFlags</span></a></span><span>
+</span><span id="line-44"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#PipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-type">PipelineDepthStencilStateCreateFlags</span></a></span><span> </span><span id="local-6989586621680133548"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680133548"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680133548"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680133547"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680133547"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680133547"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680133539"><span id="local-6989586621680133542"><span id="local-6989586621680133544"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#PipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-type">PipelineDepthStencilStateCreateFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-48"></span><span>  </span><span id="local-6989586621680133537"><span class="annot"><span class="annottext">readPrec :: ReadPrec PipelineDepthStencilStateCreateFlags
+</span><a href="#local-6989586621680133537"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(PipelineDepthStencilStateCreateFlags, String)]
+-&gt; String
+-&gt; (Flags -&gt; PipelineDepthStencilStateCreateFlags)
+-&gt; ReadPrec PipelineDepthStencilStateCreateFlags
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#enumPrefixPipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var">enumPrefixPipelineDepthStencilStateCreateFlags</span></a></span><span>
+</span><span id="line-49"></span><span>                          </span><span class="annot"><span class="annottext">[(PipelineDepthStencilStateCreateFlags, String)]
+</span><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#showTablePipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var">showTablePipelineDepthStencilStateCreateFlags</span></a></span><span>
+</span><span id="line-50"></span><span>                          </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#conNamePipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var">conNamePipelineDepthStencilStateCreateFlags</span></a></span><span>
+</span><span id="line-51"></span><span>                          </span><span class="annot"><span class="annottext">Flags -&gt; PipelineDepthStencilStateCreateFlags
+</span><a href="Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.html#PipelineDepthStencilStateCreateFlags"><span class="hs-identifier hs-var">PipelineDepthStencilStateCreateFlags</span></a></span><span>
+</span><span id="line-52"></span><span>
+</span><span id="line-53"></span></pre></body></html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- VK_EXT_validation_flags - instance extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- == VK_EXT_validation_flags</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- [__Name String__]</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--     @VK_EXT_validation_flags@</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- [__Extension Type__]</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--     Instance extension</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- [__Registered Extension Number__]</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--     62</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- [__Revision__]</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--     2</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- [__Extension and Version Dependencies__]</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--     -   Requires Vulkan 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- [__Deprecation state__]</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--     -   /Deprecated/ by @VK_EXT_validation_features@ extension</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- [__Special Use__]</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--     -   &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools&gt;</span><span>
+</span><span id="line-31"></span><span class="hs-comment">--</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- [__Contact__]</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--     -   Tobin Ehlis</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--         &lt;https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_flags:%20&amp;body=@tobine%20 &gt;</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- == Other Extension Metadata</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- [__Last Modified Date__]</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--     2019-08-19</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- [__IP Status__]</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--     No known IP claims.</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- [__Contributors__]</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--     -   Tobin Ehlis, Google</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--     -   Courtney Goeltzenleuchter, Google</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- == Description</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- This extension provides the 'ValidationFlagsEXT' struct that can be</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- included in the @pNext@ chain of the</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure passed</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- as the @pCreateInfo@ parameter of</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- 'Vulkan.Core10.DeviceInitialization.createInstance'. The structure</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- contains an array of 'ValidationCheckEXT' values that will be disabled</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- by the validation layers.</span><span>
+</span><span id="line-60"></span><span class="hs-comment">--</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- == Deprecation by @VK_EXT_validation_features@</span><span>
+</span><span id="line-62"></span><span class="hs-comment">--</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- Functionality in this extension is subsumed into the</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- @VK_EXT_validation_features@ extension.</span><span>
+</span><span id="line-65"></span><span class="hs-comment">--</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- == New Structures</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">--     -   'ValidationFlagsEXT'</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- == New Enums</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- -   'ValidationCheckEXT'</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- == New Enum Constants</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- -   'EXT_VALIDATION_FLAGS_EXTENSION_NAME'</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- -   'EXT_VALIDATION_FLAGS_SPEC_VERSION'</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VALIDATION_FLAGS_EXT'</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- == Version History</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- -   Revision 2, 2019-08-19 (Mark Lobodzinski)</span><span>
+</span><span id="line-89"></span><span class="hs-comment">--</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--     -   Marked as deprecated</span><span>
+</span><span id="line-91"></span><span class="hs-comment">--</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- -   Revision 1, 2016-08-26 (Courtney Goeltzenleuchter)</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--     -   Initial draft</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- 'ValidationCheckEXT', 'ValidationFlagsEXT'</span><span>
+</span><span id="line-99"></span><span class="hs-comment">--</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-101"></span><span class="hs-comment">--</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_flags Vulkan Specification&gt;</span><span>
+</span><span id="line-104"></span><span class="hs-comment">--</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-107"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_EXT_validation_flags</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationFlagsEXT"><span class="hs-identifier">ValidationFlagsEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-108"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier">ValidationCheckEXT</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#VALIDATION_CHECK_ALL_EXT"><span class="hs-identifier">VALIDATION_CHECK_ALL_EXT</span></a></span><span>
+</span><span id="line-109"></span><span>                                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#VALIDATION_CHECK_SHADERS_EXT"><span class="hs-identifier">VALIDATION_CHECK_SHADERS_EXT</span></a></span><span>
+</span><span id="line-110"></span><span>                                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-111"></span><span>                                                                      </span><span class="hs-special">)</span><span>
+</span><span id="line-112"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#EXT_VALIDATION_FLAGS_SPEC_VERSION"><span class="hs-identifier">EXT_VALIDATION_FLAGS_SPEC_VERSION</span></a></span><span>
+</span><span id="line-113"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#EXT_VALIDATION_FLAGS_SPEC_VERSION"><span class="hs-identifier">EXT_VALIDATION_FLAGS_SPEC_VERSION</span></a></span><span>
+</span><span id="line-114"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#EXT_VALIDATION_FLAGS_EXTENSION_NAME"><span class="hs-identifier">EXT_VALIDATION_FLAGS_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-115"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#EXT_VALIDATION_FLAGS_EXTENSION_NAME"><span class="hs-identifier">EXT_VALIDATION_FLAGS_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-116"></span><span>                                                  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-117"></span><span>
+</span><span id="line-118"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier">enumReadPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-119"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Internal.Utils.html"><span class="hs-identifier">Vulkan.Internal.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier">enumShowsPrec</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-120"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-121"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-122"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-123"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-124"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-125"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-126"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">generateM</span></span><span class="hs-special">)</span><span>
+</span><span id="line-127"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">imapM_</span></span><span class="hs-special">)</span><span>
+</span><span id="line-128"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">length</span></span><span class="hs-special">)</span><span>
+</span><span id="line-129"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-130"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-131"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-133"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-134"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-135"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-136"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-137"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Show</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-139"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-140"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-141"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-142"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Vector</span></span><span class="hs-special">)</span><span>
+</span><span id="line-143"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Utils.html"><span class="hs-identifier">Vulkan.CStruct.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#advancePtrBytes"><span class="hs-identifier">advancePtrBytes</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-144"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-145"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-146"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-147"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-148"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-149"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-150"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-151"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_VALIDATION_FLAGS_EXT"><span class="hs-identifier">STRUCTURE_TYPE_VALIDATION_FLAGS_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-152"></span><span class="hs-comment">-- | VkValidationFlagsEXT - Specify validation checks to disable for a Vulkan</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- instance</span><span>
+</span><span id="line-154"></span><span class="hs-comment">--</span><span>
+</span><span id="line-155"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-156"></span><span class="hs-comment">--</span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-158"></span><span class="hs-comment">--</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType', 'ValidationCheckEXT'</span><span>
+</span><span id="line-160"></span><span class="hs-keyword">data</span><span> </span><span id="ValidationFlagsEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationFlagsEXT"><span class="hs-identifier hs-var">ValidationFlagsEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ValidationFlagsEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationFlagsEXT"><span class="hs-identifier hs-var">ValidationFlagsEXT</span></a></span></span><span>
+</span><span id="line-161"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @pDisabledValidationChecks@ is a pointer to an array of</span><span>
+</span><span id="line-162"></span><span>    </span><span class="hs-comment">-- 'ValidationCheckEXT' values specifying the validation checks to be</span><span>
+</span><span id="line-163"></span><span>    </span><span class="hs-comment">-- disabled.</span><span>
+</span><span id="line-164"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-165"></span><span>    </span><span class="hs-comment">-- #VUID-VkValidationFlagsEXT-pDisabledValidationChecks-parameter#</span><span>
+</span><span id="line-166"></span><span>    </span><span class="hs-comment">-- @pDisabledValidationChecks@ /must/ be a valid pointer to an array of</span><span>
+</span><span id="line-167"></span><span>    </span><span class="hs-comment">-- @disabledValidationCheckCount@ valid 'ValidationCheckEXT' values</span><span>
+</span><span id="line-168"></span><span>    </span><span id="%24sel%3AdisabledValidationChecks%3AValidationFlagsEXT"><span class="annot"><span class="annottext">ValidationFlagsEXT -&gt; Vector ValidationCheckEXT
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#%24sel%3AdisabledValidationChecks%3AValidationFlagsEXT"><span class="hs-identifier hs-var hs-var">disabledValidationChecks</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Vector</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-169"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">ValidationFlagsEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680105305"><span id="local-6989586621680105307"><span id="local-6989586621680105309"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationFlagsEXT"><span class="hs-identifier hs-type">ValidationFlagsEXT</span></a></span></span></span></span><span>
+</span><span id="line-174"></span><span>
+</span><span id="line-175"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680105300"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationFlagsEXT"><span class="hs-identifier hs-type">ValidationFlagsEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-176"></span><span>  </span><span id="local-6989586621680105295"><span class="annot"><span class="annottext">withCStruct :: ValidationFlagsEXT -&gt; (Ptr ValidationFlagsEXT -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680105293"><span class="annot"><span class="annottext">x :: ValidationFlagsEXT
+</span><a href="#local-6989586621680105293"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680105292"><span class="annot"><span class="annottext">f :: Ptr ValidationFlagsEXT -&gt; IO b
+</span><a href="#local-6989586621680105292"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr ValidationFlagsEXT -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr ValidationFlagsEXT -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr ValidationFlagsEXT -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680105291"><span class="annot"><span class="annottext">p :: Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105291"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT -&gt; ValidationFlagsEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105291"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">ValidationFlagsEXT
+</span><a href="#local-6989586621680105293"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT -&gt; IO b
+</span><a href="#local-6989586621680105292"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105291"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-177"></span><span>  </span><span id="local-6989586621680105289"><span class="annot"><span class="annottext">pokeCStruct :: Ptr ValidationFlagsEXT -&gt; ValidationFlagsEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680105289"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680105288"><span class="annot"><span class="annottext">p :: Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105288"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680105287"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationFlagsEXT"><span class="hs-identifier hs-type">ValidationFlagsEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680105286"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680105286"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ContT b IO b -&gt; IO b
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO b -&gt; IO b) -&gt; ContT b IO b -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-178"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105288"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_VALIDATION_FLAGS_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_VALIDATION_FLAGS_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-179"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105288"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-180"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105288"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Word32
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector ValidationCheckEXT -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="annot"><span class="annottext">(Vector ValidationCheckEXT -&gt; Int)
+-&gt; Vector ValidationCheckEXT -&gt; Int
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector ValidationCheckEXT
+</span><a href="#local-6989586621680105287"><span class="hs-identifier hs-var">disabledValidationChecks</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-181"></span><span>    </span><span id="local-6989586621680105285"><span class="annot"><span class="annottext">Ptr ValidationCheckEXT
+</span><a href="#local-6989586621680105285"><span class="hs-identifier hs-var">pPDisabledValidationChecks'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">((Ptr ValidationCheckEXT -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (Ptr ValidationCheckEXT)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((Ptr ValidationCheckEXT -&gt; IO b) -&gt; IO b)
+ -&gt; ContT b IO (Ptr ValidationCheckEXT))
+-&gt; ((Ptr ValidationCheckEXT -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (Ptr ValidationCheckEXT)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr ValidationCheckEXT -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector ValidationCheckEXT -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector ValidationCheckEXT
+</span><a href="#local-6989586621680105287"><span class="hs-identifier hs-var">disabledValidationChecks</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="hs-number">4</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-number">4</span></span><span>
+</span><span id="line-182"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(Int -&gt; ValidationCheckEXT -&gt; IO ())
+-&gt; Vector ValidationCheckEXT -&gt; IO ()
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(Int -&gt; a -&gt; m b) -&gt; Vector a -&gt; m ()
+</span><span class="hs-identifier hs-var">Data.Vector.imapM_</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680105282"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680105282"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680105281"><span class="annot"><span class="annottext">e :: ValidationCheckEXT
+</span><a href="#local-6989586621680105281"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationCheckEXT
+</span><a href="#local-6989586621680105285"><span class="hs-identifier hs-var">pPDisabledValidationChecks'</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationCheckEXT -&gt; Int -&gt; Ptr ValidationCheckEXT
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">4</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680105282"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ValidationCheckEXT
+</span><a href="#local-6989586621680105281"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector ValidationCheckEXT
+</span><a href="#local-6989586621680105287"><span class="hs-identifier hs-var">disabledValidationChecks</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-183"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ValidationCheckEXT) -&gt; Ptr ValidationCheckEXT -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105288"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT -&gt; Int -&gt; Ptr (Ptr ValidationCheckEXT)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationCheckEXT
+</span><a href="#local-6989586621680105285"><span class="hs-identifier hs-var">pPDisabledValidationChecks'</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-184"></span><span>    </span><span class="annot"><span class="annottext">IO b -&gt; ContT b IO b
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; ContT b IO b) -&gt; IO b -&gt; ContT b IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680105286"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-185"></span><span>  </span><span id="local-6989586621680105280"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-186"></span><span>  </span><span id="local-6989586621680105278"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-187"></span><span>  </span><span id="local-6989586621680105276"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr ValidationFlagsEXT -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680105274"><span class="annot"><span class="annottext">p :: Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105274"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680105273"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680105273"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ContT b IO b -&gt; IO b
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO b -&gt; IO b) -&gt; ContT b IO b -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-188"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105274"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_VALIDATION_FLAGS_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_VALIDATION_FLAGS_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-189"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105274"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-190"></span><span>    </span><span id="local-6989586621680105272"><span class="annot"><span class="annottext">Ptr ValidationCheckEXT
+</span><a href="#local-6989586621680105272"><span class="hs-identifier hs-var">pPDisabledValidationChecks'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">((Ptr ValidationCheckEXT -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (Ptr ValidationCheckEXT)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((Ptr ValidationCheckEXT -&gt; IO b) -&gt; IO b)
+ -&gt; ContT b IO (Ptr ValidationCheckEXT))
+-&gt; ((Ptr ValidationCheckEXT -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (Ptr ValidationCheckEXT)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr ValidationCheckEXT -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector Any -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector Any
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="hs-number">4</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-number">4</span></span><span>
+</span><span id="line-191"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(Int -&gt; ValidationCheckEXT -&gt; IO ())
+-&gt; Vector ValidationCheckEXT -&gt; IO ()
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(Int -&gt; a -&gt; m b) -&gt; Vector a -&gt; m ()
+</span><span class="hs-identifier hs-var">Data.Vector.imapM_</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680105271"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680105271"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680105270"><span class="annot"><span class="annottext">e :: ValidationCheckEXT
+</span><a href="#local-6989586621680105270"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationCheckEXT
+</span><a href="#local-6989586621680105272"><span class="hs-identifier hs-var">pPDisabledValidationChecks'</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationCheckEXT -&gt; Int -&gt; Ptr ValidationCheckEXT
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">4</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680105271"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ValidationCheckEXT
+</span><a href="#local-6989586621680105270"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector ValidationCheckEXT
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span>
+</span><span id="line-192"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ValidationCheckEXT) -&gt; Ptr ValidationCheckEXT -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105274"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT -&gt; Int -&gt; Ptr (Ptr ValidationCheckEXT)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationCheckEXT
+</span><a href="#local-6989586621680105272"><span class="hs-identifier hs-var">pPDisabledValidationChecks'</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-193"></span><span>    </span><span class="annot"><span class="annottext">IO b -&gt; ContT b IO b
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; ContT b IO b) -&gt; IO b -&gt; ContT b IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680105273"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-194"></span><span>
+</span><span id="line-195"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationFlagsEXT"><span class="hs-identifier hs-type">ValidationFlagsEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-196"></span><span>  </span><span id="local-6989586621680105267"><span class="annot"><span class="annottext">peekCStruct :: Ptr ValidationFlagsEXT -&gt; IO ValidationFlagsEXT
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680105265"><span class="annot"><span class="annottext">p :: Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105265"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-197"></span><span>    </span><span id="local-6989586621680105264"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680105264"><span class="hs-identifier hs-var">disabledValidationCheckCount</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; IO Word32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105265"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-198"></span><span>    </span><span id="local-6989586621680105263"><span class="annot"><span class="annottext">Ptr ValidationCheckEXT
+</span><a href="#local-6989586621680105263"><span class="hs-identifier hs-var">pDisabledValidationChecks</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ValidationCheckEXT) -&gt; IO (Ptr ValidationCheckEXT)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT
+</span><a href="#local-6989586621680105265"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationFlagsEXT -&gt; Int -&gt; Ptr (Ptr ValidationCheckEXT)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-199"></span><span>    </span><span id="local-6989586621680105262"><span class="annot"><span class="annottext">Vector ValidationCheckEXT
+</span><a href="#local-6989586621680105262"><span class="hs-identifier hs-var">pDisabledValidationChecks'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; (Int -&gt; IO ValidationCheckEXT) -&gt; IO (Vector ValidationCheckEXT)
+forall (m :: * -&gt; *) a.
+Monad m =&gt;
+Int -&gt; (Int -&gt; m a) -&gt; m (Vector a)
+</span><span class="hs-identifier hs-var">generateM</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32 -&gt; Int
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680105264"><span class="hs-identifier hs-var">disabledValidationCheckCount</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680105261"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680105261"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr ValidationCheckEXT -&gt; IO ValidationCheckEXT
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ValidationCheckEXT
+</span><a href="#local-6989586621680105263"><span class="hs-identifier hs-var">pDisabledValidationChecks</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ValidationCheckEXT -&gt; Int -&gt; Ptr ValidationCheckEXT
+forall a. Ptr a -&gt; Int -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#advancePtrBytes"><span class="hs-operator hs-var">`advancePtrBytes`</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">4</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680105261"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-200"></span><span>    </span><span class="annot"><span class="annottext">ValidationFlagsEXT -&gt; IO ValidationFlagsEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(ValidationFlagsEXT -&gt; IO ValidationFlagsEXT)
+-&gt; ValidationFlagsEXT -&gt; IO ValidationFlagsEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Vector ValidationCheckEXT -&gt; ValidationFlagsEXT
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationFlagsEXT"><span class="hs-identifier hs-var">ValidationFlagsEXT</span></a></span><span>
+</span><span id="line-201"></span><span>             </span><span class="annot"><span class="annottext">Vector ValidationCheckEXT
+</span><a href="#local-6989586621680105262"><span class="hs-identifier hs-var">pDisabledValidationChecks'</span></a></span><span>
+</span><span id="line-202"></span><span>
+</span><span id="line-203"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationFlagsEXT"><span class="hs-identifier hs-type">ValidationFlagsEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-204"></span><span>  </span><span id="local-6989586621680105258"><span class="annot"><span class="annottext">zero :: ValidationFlagsEXT
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Vector ValidationCheckEXT -&gt; ValidationFlagsEXT
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationFlagsEXT"><span class="hs-identifier hs-var">ValidationFlagsEXT</span></a></span><span>
+</span><span id="line-205"></span><span>           </span><span class="annot"><span class="annottext">Vector ValidationCheckEXT
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span>
+</span><span id="line-206"></span><span>
+</span><span id="line-207"></span><span>
+</span><span id="line-208"></span><span class="hs-comment">-- | VkValidationCheckEXT - Specify validation checks to disable</span><span>
+</span><span id="line-209"></span><span class="hs-comment">--</span><span>
+</span><span id="line-210"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-211"></span><span class="hs-comment">--</span><span>
+</span><span id="line-212"></span><span class="hs-comment">-- 'ValidationFlagsEXT'</span><span>
+</span><span id="line-213"></span><span class="hs-keyword">newtype</span><span> </span><span id="ValidationCheckEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-var">ValidationCheckEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ValidationCheckEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-var">ValidationCheckEXT</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-214"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680105252"><span id="local-6989586621680105254"><span class="annot"><span class="annottext">ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+(ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool)
+-&gt; (ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool)
+-&gt; Eq ValidationCheckEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+$c/= :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+== :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+$c== :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680105236"><span id="local-6989586621680105238"><span id="local-6989586621680105240"><span id="local-6989586621680105242"><span id="local-6989586621680105244"><span id="local-6989586621680105246"><span id="local-6989586621680105248"><span class="annot"><span class="annottext">Eq ValidationCheckEXT
+Eq ValidationCheckEXT =&gt;
+(ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Ordering)
+-&gt; (ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool)
+-&gt; (ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool)
+-&gt; (ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool)
+-&gt; (ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool)
+-&gt; (ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; ValidationCheckEXT)
+-&gt; (ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; ValidationCheckEXT)
+-&gt; Ord ValidationCheckEXT
+ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Ordering
+ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; ValidationCheckEXT
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; ValidationCheckEXT
+$cmin :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; ValidationCheckEXT
+max :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; ValidationCheckEXT
+$cmax :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; ValidationCheckEXT
+&gt;= :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+$c&gt;= :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+&gt; :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+$c&gt; :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+&lt;= :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+$c&lt;= :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+&lt; :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+$c&lt; :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Bool
+compare :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Ordering
+$ccompare :: ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; Ordering
+$cp1Ord :: Eq ValidationCheckEXT
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680105219"><span id="local-6989586621680105221"><span id="local-6989586621680105223"><span id="local-6989586621680105225"><span id="local-6989586621680105227"><span id="local-6989586621680105229"><span id="local-6989586621680105231"><span id="local-6989586621680105233"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ValidationCheckEXT
+Ptr b -&gt; Int -&gt; ValidationCheckEXT -&gt; IO ()
+Ptr ValidationCheckEXT -&gt; IO ValidationCheckEXT
+Ptr ValidationCheckEXT -&gt; Int -&gt; IO ValidationCheckEXT
+Ptr ValidationCheckEXT -&gt; Int -&gt; ValidationCheckEXT -&gt; IO ()
+Ptr ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; IO ()
+ValidationCheckEXT -&gt; Int
+(ValidationCheckEXT -&gt; Int)
+-&gt; (ValidationCheckEXT -&gt; Int)
+-&gt; (Ptr ValidationCheckEXT -&gt; Int -&gt; IO ValidationCheckEXT)
+-&gt; (Ptr ValidationCheckEXT -&gt; Int -&gt; ValidationCheckEXT -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO ValidationCheckEXT)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; ValidationCheckEXT -&gt; IO ())
+-&gt; (Ptr ValidationCheckEXT -&gt; IO ValidationCheckEXT)
+-&gt; (Ptr ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; IO ())
+-&gt; Storable ValidationCheckEXT
+forall b. Ptr b -&gt; Int -&gt; IO ValidationCheckEXT
+forall b. Ptr b -&gt; Int -&gt; ValidationCheckEXT -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; IO ()
+$cpoke :: Ptr ValidationCheckEXT -&gt; ValidationCheckEXT -&gt; IO ()
+peek :: Ptr ValidationCheckEXT -&gt; IO ValidationCheckEXT
+$cpeek :: Ptr ValidationCheckEXT -&gt; IO ValidationCheckEXT
+pokeByteOff :: Ptr b -&gt; Int -&gt; ValidationCheckEXT -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; ValidationCheckEXT -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ValidationCheckEXT
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ValidationCheckEXT
+pokeElemOff :: Ptr ValidationCheckEXT -&gt; Int -&gt; ValidationCheckEXT -&gt; IO ()
+$cpokeElemOff :: Ptr ValidationCheckEXT -&gt; Int -&gt; ValidationCheckEXT -&gt; IO ()
+peekElemOff :: Ptr ValidationCheckEXT -&gt; Int -&gt; IO ValidationCheckEXT
+$cpeekElemOff :: Ptr ValidationCheckEXT -&gt; Int -&gt; IO ValidationCheckEXT
+alignment :: ValidationCheckEXT -&gt; Int
+$calignment :: ValidationCheckEXT -&gt; Int
+sizeOf :: ValidationCheckEXT -&gt; Int
+$csizeOf :: ValidationCheckEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680105216"><span class="annot"><span class="annottext">ValidationCheckEXT
+ValidationCheckEXT -&gt; Zero ValidationCheckEXT
+forall a. a -&gt; Zero a
+zero :: ValidationCheckEXT
+$czero :: ValidationCheckEXT
+</span><a href="#local-6989586621680105216"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-215"></span><span>
+</span><span id="line-216"></span><span class="hs-comment">-- | 'VALIDATION_CHECK_ALL_EXT' specifies that all validation checks are</span><span>
+</span><span id="line-217"></span><span class="hs-comment">-- disabled.</span><span>
+</span><span id="line-218"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bVALIDATION_CHECK_ALL_EXT"><span id="%24mVALIDATION_CHECK_ALL_EXT"><span id="VALIDATION_CHECK_ALL_EXT"><span class="annot"><span class="annottext">$bVALIDATION_CHECK_ALL_EXT :: ValidationCheckEXT
+$mVALIDATION_CHECK_ALL_EXT :: forall r. ValidationCheckEXT -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#%24bVALIDATION_CHECK_ALL_EXT"><span class="hs-identifier hs-var hs-var hs-var">VALIDATION_CHECK_ALL_EXT</span></a></span></span></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-219"></span><span class="hs-comment">-- | 'VALIDATION_CHECK_SHADERS_EXT' specifies that shader validation is</span><span>
+</span><span id="line-220"></span><span class="hs-comment">-- disabled.</span><span>
+</span><span id="line-221"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bVALIDATION_CHECK_SHADERS_EXT"><span id="%24mVALIDATION_CHECK_SHADERS_EXT"><span id="VALIDATION_CHECK_SHADERS_EXT"><span class="annot"><span class="annottext">$bVALIDATION_CHECK_SHADERS_EXT :: ValidationCheckEXT
+$mVALIDATION_CHECK_SHADERS_EXT :: forall r. ValidationCheckEXT -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#%24bVALIDATION_CHECK_SHADERS_EXT"><span class="hs-identifier hs-var hs-var hs-var">VALIDATION_CHECK_SHADERS_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-222"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#VALIDATION_CHECK_ALL_EXT"><span class="hs-pragma hs-type">VALIDATION_CHECK_ALL_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-223"></span><span>             </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#VALIDATION_CHECK_SHADERS_EXT"><span class="hs-pragma hs-type">VALIDATION_CHECK_SHADERS_EXT</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-pragma hs-type">ValidationCheckEXT</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-224"></span><span>
+</span><span id="line-225"></span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#conNameValidationCheckEXT"><span class="hs-identifier hs-type">conNameValidationCheckEXT</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-226"></span><span id="conNameValidationCheckEXT"><span class="annot"><span class="annottext">conNameValidationCheckEXT :: String
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#conNameValidationCheckEXT"><span class="hs-identifier hs-var hs-var">conNameValidationCheckEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;ValidationCheckEXT&quot;</span></span><span>
+</span><span id="line-227"></span><span>
+</span><span id="line-228"></span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#enumPrefixValidationCheckEXT"><span class="hs-identifier hs-type">enumPrefixValidationCheckEXT</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-229"></span><span id="enumPrefixValidationCheckEXT"><span class="annot"><span class="annottext">enumPrefixValidationCheckEXT :: String
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#enumPrefixValidationCheckEXT"><span class="hs-identifier hs-var hs-var">enumPrefixValidationCheckEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VALIDATION_CHECK_&quot;</span></span><span>
+</span><span id="line-230"></span><span>
+</span><span id="line-231"></span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#showTableValidationCheckEXT"><span class="hs-identifier hs-type">showTableValidationCheckEXT</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-232"></span><span id="showTableValidationCheckEXT"><span class="annot"><span class="annottext">showTableValidationCheckEXT :: [(ValidationCheckEXT, String)]
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#showTableValidationCheckEXT"><span class="hs-identifier hs-var hs-var">showTableValidationCheckEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="annottext">ValidationCheckEXT
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#VALIDATION_CHECK_ALL_EXT"><span class="hs-identifier hs-var">VALIDATION_CHECK_ALL_EXT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;ALL_EXT&quot;</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ValidationCheckEXT
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#VALIDATION_CHECK_SHADERS_EXT"><span class="hs-identifier hs-var">VALIDATION_CHECK_SHADERS_EXT</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;SHADERS_EXT&quot;</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-233"></span><span>
+</span><span id="line-234"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680105204"><span id="local-6989586621680105206"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-235"></span><span>  </span><span id="local-6989586621680105203"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ValidationCheckEXT -&gt; ShowS
+</span><a href="#local-6989586621680105203"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+-&gt; [(ValidationCheckEXT, String)]
+-&gt; String
+-&gt; (ValidationCheckEXT -&gt; Int32)
+-&gt; (Int32 -&gt; ShowS)
+-&gt; Int
+-&gt; ValidationCheckEXT
+-&gt; ShowS
+forall a i.
+Eq a =&gt;
+String
+-&gt; [(a, String)]
+-&gt; String
+-&gt; (a -&gt; i)
+-&gt; (i -&gt; ShowS)
+-&gt; Int
+-&gt; a
+-&gt; ShowS
+</span><a href="Vulkan.Internal.Utils.html#enumShowsPrec"><span class="hs-identifier hs-var">enumShowsPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#enumPrefixValidationCheckEXT"><span class="hs-identifier hs-var">enumPrefixValidationCheckEXT</span></a></span><span>
+</span><span id="line-236"></span><span>                            </span><span class="annot"><span class="annottext">[(ValidationCheckEXT, String)]
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#showTableValidationCheckEXT"><span class="hs-identifier hs-var">showTableValidationCheckEXT</span></a></span><span>
+</span><span id="line-237"></span><span>                            </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#conNameValidationCheckEXT"><span class="hs-identifier hs-var">conNameValidationCheckEXT</span></a></span><span>
+</span><span id="line-238"></span><span>                            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span><span> </span><span id="local-6989586621680105202"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621680105202"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680105202"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-239"></span><span>                            </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span>
+</span><span id="line-240"></span><span>
+</span><span id="line-241"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680105195"><span id="local-6989586621680105198"><span id="local-6989586621680105200"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-type">ValidationCheckEXT</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-242"></span><span>  </span><span id="local-6989586621680105193"><span class="annot"><span class="annottext">readPrec :: ReadPrec ValidationCheckEXT
+</span><a href="#local-6989586621680105193"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-243"></span><span>    </span><span class="annot"><span class="annottext">String
+-&gt; [(ValidationCheckEXT, String)]
+-&gt; String
+-&gt; (Int32 -&gt; ValidationCheckEXT)
+-&gt; ReadPrec ValidationCheckEXT
+forall i a.
+Read i =&gt;
+String -&gt; [(a, String)] -&gt; String -&gt; (i -&gt; a) -&gt; ReadPrec a
+</span><a href="Vulkan.Internal.Utils.html#enumReadPrec"><span class="hs-identifier hs-var">enumReadPrec</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#enumPrefixValidationCheckEXT"><span class="hs-identifier hs-var">enumPrefixValidationCheckEXT</span></a></span><span> </span><span class="annot"><span class="annottext">[(ValidationCheckEXT, String)]
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#showTableValidationCheckEXT"><span class="hs-identifier hs-var">showTableValidationCheckEXT</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#conNameValidationCheckEXT"><span class="hs-identifier hs-var">conNameValidationCheckEXT</span></a></span><span> </span><span class="annot"><span class="annottext">Int32 -&gt; ValidationCheckEXT
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#ValidationCheckEXT"><span class="hs-identifier hs-var">ValidationCheckEXT</span></a></span><span>
+</span><span id="line-244"></span><span>
+</span><span id="line-245"></span><span>
+</span><span id="line-246"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_VALIDATION_FLAGS_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#EXT_VALIDATION_FLAGS_SPEC_VERSION"><span class="hs-identifier hs-var">EXT_VALIDATION_FLAGS_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">2</span></span><span>
+</span><span id="line-247"></span><span>
+</span><span id="line-248"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_VALIDATION_FLAGS_SPEC_VERSION&quot;</span><span>
+</span><span id="line-249"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#EXT_VALIDATION_FLAGS_SPEC_VERSION"><span class="hs-identifier hs-type">EXT_VALIDATION_FLAGS_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680105341"><span class="annot"><a href="#local-6989586621680105341"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680105341"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680105341"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-250"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_VALIDATION_FLAGS_SPEC_VERSION"><span id="%24mEXT_VALIDATION_FLAGS_SPEC_VERSION"><span id="EXT_VALIDATION_FLAGS_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXT_VALIDATION_FLAGS_SPEC_VERSION :: a
+$mEXT_VALIDATION_FLAGS_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#%24bEXT_VALIDATION_FLAGS_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXT_VALIDATION_FLAGS_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">2</span></span><span>
+</span><span id="line-251"></span><span>
+</span><span id="line-252"></span><span>
+</span><span id="line-253"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_VALIDATION_FLAGS_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#EXT_VALIDATION_FLAGS_EXTENSION_NAME"><span class="hs-identifier hs-var">EXT_VALIDATION_FLAGS_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_validation_flags&quot;</span></span><span>
+</span><span id="line-254"></span><span>
+</span><span id="line-255"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-256"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#EXT_VALIDATION_FLAGS_EXTENSION_NAME"><span class="hs-identifier hs-type">EXT_VALIDATION_FLAGS_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680105337"><span class="annot"><a href="#local-6989586621680105337"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680105337"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680105337"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680105337"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-257"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_VALIDATION_FLAGS_EXTENSION_NAME"><span id="%24mEXT_VALIDATION_FLAGS_EXTENSION_NAME"><span id="EXT_VALIDATION_FLAGS_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXT_VALIDATION_FLAGS_EXTENSION_NAME :: a
+$mEXT_VALIDATION_FLAGS_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_validation_flags.html#%24bEXT_VALIDATION_FLAGS_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXT_VALIDATION_FLAGS_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_validation_flags&quot;</span></span><span>
+</span><span id="line-258"></span><span>
+</span><span id="line-259"></span></pre></body></html>

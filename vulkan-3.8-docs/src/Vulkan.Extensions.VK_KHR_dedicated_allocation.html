@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">-- | = Name</span><span>
+</span><span id="line-3"></span><span class="hs-comment">--</span><span>
+</span><span id="line-4"></span><span class="hs-comment">-- VK_KHR_dedicated_allocation - device extension</span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- == VK_KHR_dedicated_allocation</span><span>
+</span><span id="line-7"></span><span class="hs-comment">--</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- [__Name String__]</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--     @VK_KHR_dedicated_allocation@</span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- [__Extension Type__]</span><span>
+</span><span id="line-12"></span><span class="hs-comment">--     Device extension</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- [__Registered Extension Number__]</span><span>
+</span><span id="line-15"></span><span class="hs-comment">--     128</span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- [__Revision__]</span><span>
+</span><span id="line-18"></span><span class="hs-comment">--     3</span><span>
+</span><span id="line-19"></span><span class="hs-comment">--</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- [__Extension and Version Dependencies__]</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--     -   Requires Vulkan 1.0</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--     -   Requires @VK_KHR_get_memory_requirements2@</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- [__Deprecation state__]</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--     -   /Promoted/ to</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--         &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1&gt;</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- [__Contact__]</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--     -   James Jones</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--         &lt;https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_dedicated_allocation:%20&amp;body=@cubanismo%20 &gt;</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- == Other Extension Metadata</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- [__Last Modified Date__]</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--     2017-09-05</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- [__IP Status__]</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--     No known IP claims.</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- [__Interactions and External Dependencies__]</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--     -   Promoted to Vulkan 1.1 Core</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- [__Contributors__]</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--     -   Jeff Bolz, NVIDIA</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--     -   Jason Ekstrand, Intel</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- == Description</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- This extension enables resources to be bound to a dedicated allocation,</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- rather than suballocated. For any particular resource, applications</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- /can/ query whether a dedicated allocation is recommended, in which case</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- using a dedicated allocation /may/ improve the performance of access to</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- that resource. Normal device memory allocations must support multiple</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- resources per allocation, memory aliasing and sparse binding, which</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- could interfere with some optimizations. Applications should query the</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- implementation for when a dedicated allocation /may/ be beneficial by</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- adding a 'MemoryDedicatedRequirementsKHR' structure to the @pNext@ chain</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- of the</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- structure passed as the @pMemoryRequirements@ parameter of a call to</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- or</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'.</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- Certain external handle types and external images or buffers /may/ also</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- depend on dedicated allocations on implementations that associate image</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- or buffer metadata with OS-level memory objects.</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- This extension adds a two small structures to memory requirements</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- querying and memory allocation: a new structure that flags whether an</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- image\/buffer should have a dedicated allocation, and a structure</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- indicating the image or buffer that an allocation will be bound to.</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- == Promotion to Vulkan 1.1</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- All functionality in this extension is included in core Vulkan 1.1, with</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- the KHR suffix omitted. The original type, enum and command names are</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- still available as aliases of the core functionality.</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- == New Structures</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Memory.MemoryAllocateInfo':</span><span>
+</span><span id="line-89"></span><span class="hs-comment">--</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--     -   'MemoryDedicatedAllocateInfoKHR'</span><span>
+</span><span id="line-91"></span><span class="hs-comment">--</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- -   Extending</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2':</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--     -   'MemoryDedicatedRequirementsKHR'</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- == New Enum Constants</span><span>
+</span><span id="line-98"></span><span class="hs-comment">--</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- -   'KHR_DEDICATED_ALLOCATION_EXTENSION_NAME'</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- -   'KHR_DEDICATED_ALLOCATION_SPEC_VERSION'</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':</span><span>
+</span><span id="line-104"></span><span class="hs-comment">--</span><span>
+</span><span id="line-105"></span><span class="hs-comment">--     -   'STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR'</span><span>
+</span><span id="line-106"></span><span class="hs-comment">--</span><span>
+</span><span id="line-107"></span><span class="hs-comment">--     -   'STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR'</span><span>
+</span><span id="line-108"></span><span class="hs-comment">--</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- == Examples</span><span>
+</span><span id="line-110"></span><span class="hs-comment">--</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- &gt;     // Create an image with a dedicated allocation based on the</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- &gt;     // implementation's preference</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- &gt;     VkImageCreateInfo imageCreateInfo =</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- &gt;     {</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- &gt;         // Image creation parameters</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- &gt;     };</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- &gt;     VkImage image;</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- &gt;     VkResult result = vkCreateImage(</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- &gt;         device,</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- &gt;         &amp;imageCreateInfo,</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- &gt;         NULL,                               // pAllocator</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- &gt;         &amp;image);</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- &gt;     VkMemoryDedicatedRequirementsKHR dedicatedRequirements =</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- &gt;     {</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- &gt;         VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR,</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- &gt;         NULL,                               // pNext</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- &gt;     };</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- &gt;     VkMemoryRequirements2 memoryRequirements =</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- &gt;     {</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- &gt;         VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- &gt;         &amp;dedicatedRequirements,             // pNext</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- &gt;     };</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- &gt;     const VkImageMemoryRequirementsInfo2 imageRequirementsInfo =</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- &gt;     {</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- &gt;         VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- &gt;         NULL,                               // pNext</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- &gt;         image</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- &gt;     };</span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-145"></span><span class="hs-comment">-- &gt;     vkGetImageMemoryRequirements2(</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- &gt;         device,</span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- &gt;         &amp;imageRequirementsInfo,</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- &gt;         &amp;memoryRequirements);</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-150"></span><span class="hs-comment">-- &gt;     if (dedicatedRequirements.prefersDedicatedAllocation) {</span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- &gt;         // Allocate memory with VkMemoryDedicatedAllocateInfoKHR::image</span><span>
+</span><span id="line-152"></span><span class="hs-comment">-- &gt;         // pointing to the image we are allocating the memory for</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- &gt;         VkMemoryDedicatedAllocateInfoKHR dedicatedInfo =</span><span>
+</span><span id="line-155"></span><span class="hs-comment">-- &gt;         {</span><span>
+</span><span id="line-156"></span><span class="hs-comment">-- &gt;             VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR,   // sType</span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- &gt;             NULL,                                                   // pNext</span><span>
+</span><span id="line-158"></span><span class="hs-comment">-- &gt;             image,                                                  // image</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- &gt;             VK_NULL_HANDLE,                                         // buffer</span><span>
+</span><span id="line-160"></span><span class="hs-comment">-- &gt;         };</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- &gt;         VkMemoryAllocateInfo memoryAllocateInfo =</span><span>
+</span><span id="line-163"></span><span class="hs-comment">-- &gt;         {</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- &gt;             VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,                 // sType</span><span>
+</span><span id="line-165"></span><span class="hs-comment">-- &gt;             &amp;dedicatedInfo,                                         // pNext</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- &gt;             memoryRequirements.size,                                // allocationSize</span><span>
+</span><span id="line-167"></span><span class="hs-comment">-- &gt;             FindMemoryTypeIndex(memoryRequirements.memoryTypeBits), // memoryTypeIndex</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- &gt;         };</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- &gt;         VkDeviceMemory memory;</span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- &gt;         vkAllocateMemory(</span><span>
+</span><span id="line-172"></span><span class="hs-comment">-- &gt;             device,</span><span>
+</span><span id="line-173"></span><span class="hs-comment">-- &gt;             &amp;memoryAllocateInfo,</span><span>
+</span><span id="line-174"></span><span class="hs-comment">-- &gt;             NULL,                       // pAllocator</span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- &gt;             &amp;memory);</span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-177"></span><span class="hs-comment">-- &gt;         // Bind the image to the memory</span><span>
+</span><span id="line-178"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-179"></span><span class="hs-comment">-- &gt;         vkBindImageMemory(</span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- &gt;             device,</span><span>
+</span><span id="line-181"></span><span class="hs-comment">-- &gt;             image,</span><span>
+</span><span id="line-182"></span><span class="hs-comment">-- &gt;             memory,</span><span>
+</span><span id="line-183"></span><span class="hs-comment">-- &gt;             0);</span><span>
+</span><span id="line-184"></span><span class="hs-comment">-- &gt;     } else {</span><span>
+</span><span id="line-185"></span><span class="hs-comment">-- &gt;         // Take the normal memory sub-allocation path</span><span>
+</span><span id="line-186"></span><span class="hs-comment">-- &gt;     }</span><span>
+</span><span id="line-187"></span><span class="hs-comment">--</span><span>
+</span><span id="line-188"></span><span class="hs-comment">-- == Version History</span><span>
+</span><span id="line-189"></span><span class="hs-comment">--</span><span>
+</span><span id="line-190"></span><span class="hs-comment">-- -   Revision 1, 2017-02-27 (James Jones)</span><span>
+</span><span id="line-191"></span><span class="hs-comment">--</span><span>
+</span><span id="line-192"></span><span class="hs-comment">--     -   Copy content from VK_NV_dedicated_allocation</span><span>
+</span><span id="line-193"></span><span class="hs-comment">--</span><span>
+</span><span id="line-194"></span><span class="hs-comment">--     -   Add some references to external object interactions to the</span><span>
+</span><span id="line-195"></span><span class="hs-comment">--         overview.</span><span>
+</span><span id="line-196"></span><span class="hs-comment">--</span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- -   Revision 2, 2017-03-27 (Jason Ekstrand)</span><span>
+</span><span id="line-198"></span><span class="hs-comment">--</span><span>
+</span><span id="line-199"></span><span class="hs-comment">--     -   Rework the extension to be query-based</span><span>
+</span><span id="line-200"></span><span class="hs-comment">--</span><span>
+</span><span id="line-201"></span><span class="hs-comment">-- -   Revision 3, 2017-07-31 (Jason Ekstrand)</span><span>
+</span><span id="line-202"></span><span class="hs-comment">--</span><span>
+</span><span id="line-203"></span><span class="hs-comment">--     -   Clarify that memory objects created with</span><span>
+</span><span id="line-204"></span><span class="hs-comment">--         VkMemoryDedicatedAllocateInfoKHR can only have the specified</span><span>
+</span><span id="line-205"></span><span class="hs-comment">--         resource bound and no others.</span><span>
+</span><span id="line-206"></span><span class="hs-comment">--</span><span>
+</span><span id="line-207"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-208"></span><span class="hs-comment">--</span><span>
+</span><span id="line-209"></span><span class="hs-comment">-- 'MemoryDedicatedAllocateInfoKHR', 'MemoryDedicatedRequirementsKHR'</span><span>
+</span><span id="line-210"></span><span class="hs-comment">--</span><span>
+</span><span id="line-211"></span><span class="hs-comment">-- = Document Notes</span><span>
+</span><span id="line-212"></span><span class="hs-comment">--</span><span>
+</span><span id="line-213"></span><span class="hs-comment">-- For more information, see the</span><span>
+</span><span id="line-214"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation Vulkan Specification&gt;</span><span>
+</span><span id="line-215"></span><span class="hs-comment">--</span><span>
+</span><span id="line-216"></span><span class="hs-comment">-- This page is a generated document. Fixes and changes should be made to</span><span>
+</span><span id="line-217"></span><span class="hs-comment">-- the generator scripts, not directly.</span><span>
+</span><span id="line-218"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_KHR_dedicated_allocation</span><span>  </span><span class="hs-special">(</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR"><span class="hs-identifier">STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR</span></a></span><span>
+</span><span id="line-219"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR"><span class="hs-identifier">STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR</span></a></span><span>
+</span><span id="line-220"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#MemoryDedicatedRequirementsKHR"><span class="hs-identifier">MemoryDedicatedRequirementsKHR</span></a></span><span>
+</span><span id="line-221"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#MemoryDedicatedAllocateInfoKHR"><span class="hs-identifier">MemoryDedicatedAllocateInfoKHR</span></a></span><span>
+</span><span id="line-222"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="hs-identifier">KHR_DEDICATED_ALLOCATION_SPEC_VERSION</span></a></span><span>
+</span><span id="line-223"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="hs-identifier">KHR_DEDICATED_ALLOCATION_SPEC_VERSION</span></a></span><span>
+</span><span id="line-224"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="hs-identifier">KHR_DEDICATED_ALLOCATION_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-225"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="hs-identifier">KHR_DEDICATED_ALLOCATION_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-226"></span><span>                                                      </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-227"></span><span>
+</span><span id="line-228"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-229"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.html"><span class="hs-identifier">Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.html#MemoryDedicatedAllocateInfo"><span class="hs-identifier">MemoryDedicatedAllocateInfo</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-230"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.html"><span class="hs-identifier">Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.html#MemoryDedicatedRequirements"><span class="hs-identifier">MemoryDedicatedRequirements</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-231"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO"><span class="hs-identifier">STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-232"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS"><span class="hs-identifier">STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-233"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR&quot;</span><span>
+</span><span id="line-234"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSTRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR"><span id="%24mSTRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR"><span id="STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR"><span class="annot"><span class="annottext">$bSTRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR :: StructureType
+$mSTRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR :: forall r. StructureType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#%24bSTRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR"><span class="hs-identifier hs-var hs-var hs-var">STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS"><span class="hs-identifier hs-type">STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS</span></a></span><span>
+</span><span id="line-235"></span><span>
+</span><span id="line-236"></span><span>
+</span><span id="line-237"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR&quot;</span><span>
+</span><span id="line-238"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSTRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR"><span id="%24mSTRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR"><span id="STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR"><span class="annot"><span class="annottext">$bSTRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR :: StructureType
+$mSTRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR :: forall r. StructureType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#%24bSTRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR"><span class="hs-identifier hs-var hs-var hs-var">STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO"><span class="hs-identifier hs-type">STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO</span></a></span><span>
+</span><span id="line-239"></span><span>
+</span><span id="line-240"></span><span>
+</span><span id="line-241"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VkMemoryDedicatedRequirementsKHR&quot;</span><span>
+</span><span id="line-242"></span><span class="hs-keyword">type</span><span> </span><span id="MemoryDedicatedRequirementsKHR"><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#MemoryDedicatedRequirementsKHR"><span class="hs-identifier hs-var">MemoryDedicatedRequirementsKHR</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.html#MemoryDedicatedRequirements"><span class="hs-identifier hs-type">MemoryDedicatedRequirements</span></a></span><span>
+</span><span id="line-243"></span><span>
+</span><span id="line-244"></span><span>
+</span><span id="line-245"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VkMemoryDedicatedAllocateInfoKHR&quot;</span><span>
+</span><span id="line-246"></span><span class="hs-keyword">type</span><span> </span><span id="MemoryDedicatedAllocateInfoKHR"><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#MemoryDedicatedAllocateInfoKHR"><span class="hs-identifier hs-var">MemoryDedicatedAllocateInfoKHR</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.html#MemoryDedicatedAllocateInfo"><span class="hs-identifier hs-type">MemoryDedicatedAllocateInfo</span></a></span><span>
+</span><span id="line-247"></span><span>
+</span><span id="line-248"></span><span>
+</span><span id="line-249"></span><span class="hs-keyword">type</span><span> </span><span id="KHR_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="hs-identifier hs-var">KHR_DEDICATED_ALLOCATION_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">3</span></span><span>
+</span><span id="line-250"></span><span>
+</span><span id="line-251"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_KHR_DEDICATED_ALLOCATION_SPEC_VERSION&quot;</span><span>
+</span><span id="line-252"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="hs-identifier hs-type">KHR_DEDICATED_ALLOCATION_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680175899"><span class="annot"><a href="#local-6989586621680175899"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680175899"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680175899"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-253"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bKHR_DEDICATED_ALLOCATION_SPEC_VERSION"><span id="%24mKHR_DEDICATED_ALLOCATION_SPEC_VERSION"><span id="KHR_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="annot"><span class="annottext">$bKHR_DEDICATED_ALLOCATION_SPEC_VERSION :: a
+$mKHR_DEDICATED_ALLOCATION_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#%24bKHR_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">KHR_DEDICATED_ALLOCATION_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">3</span></span><span>
+</span><span id="line-254"></span><span>
+</span><span id="line-255"></span><span>
+</span><span id="line-256"></span><span class="hs-keyword">type</span><span> </span><span id="KHR_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="hs-identifier hs-var">KHR_DEDICATED_ALLOCATION_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_KHR_dedicated_allocation&quot;</span></span><span>
+</span><span id="line-257"></span><span>
+</span><span id="line-258"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-259"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#KHR_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="hs-identifier hs-type">KHR_DEDICATED_ALLOCATION_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680175895"><span class="annot"><a href="#local-6989586621680175895"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680175895"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680175895"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680175895"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-260"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bKHR_DEDICATED_ALLOCATION_EXTENSION_NAME"><span id="%24mKHR_DEDICATED_ALLOCATION_EXTENSION_NAME"><span id="KHR_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="annot"><span class="annottext">$bKHR_DEDICATED_ALLOCATION_EXTENSION_NAME :: a
+$mKHR_DEDICATED_ALLOCATION_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_KHR_dedicated_allocation.html#%24bKHR_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">KHR_DEDICATED_ALLOCATION_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_KHR_dedicated_allocation&quot;</span></span><span>
+</span><span id="line-261"></span><span>
+</span><span id="line-262"></span></pre></body></html>
