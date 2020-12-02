@@ -26,12 +26,13 @@ import           VulkanMemoryAllocator
 
 scene :: [Sphere]
 scene =
-  [ Sphere (V4 originx 0 0 radius) (V4 r g b 1)
-  | radius   <- [1 .. 10]
-  | originx <- [ i**1.3 | i <- [0 .. 10]]
+  let n = 100
+  in
+  [ Sphere (V4 (x * 10) (x * sin x) (x * cos x) radius) (V4 r g b 1)
+  | radius <- (**2) <$> [1, 1.2 ..]
+  | x <- take n [0 ..]
   | V3 r g b <- pastels
   ]
-
 
 pastels :: [V3 Float]
 pastels = (/ pure 256) <$> cycle

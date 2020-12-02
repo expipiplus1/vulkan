@@ -141,7 +141,6 @@ renderFrame = withSpan_ "renderFrame" $ do
          , swapchains          = [siSwapchain]
          , imageIndices        = [imageIndex]
          }
-  -- liftIO $ performMinorGC >> performGC
   pure ()
 
 ----------------------------------------------------------------
