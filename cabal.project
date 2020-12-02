@@ -15,4 +15,4 @@ source-repository-package
     location: https://github.com/expipiplus1/derive-storable-plugin.git
     tag: e98e5835913e50a10cf8545af9a1f29f84a9d15a
 
-allow-newer: strict
+allow-newer: strict Cabal

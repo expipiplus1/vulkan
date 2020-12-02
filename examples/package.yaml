@@ -142,13 +142,12 @@ executables:
     main: Main.hs
     source-dirs: rays
     dependencies:
-      - VulkanMemoryAllocator
       - autoapply >= 0.4
       - base <5
       - bytestring
       - containers
       - derive-storable >= 0.3
-      - derive-storable-plugin
+      - derive-storable-plugin >= 0.2.3.1
       - lens
       - linear
       - primitive-unlifted
@@ -162,6 +161,7 @@ executables:
       - unliftio
       - vector
       - vulkan >= 3.7
+      - VulkanMemoryAllocator
       - vulkan-utils >= 0.3
     when:
       - condition: impl(ghc < 8.10.0)
