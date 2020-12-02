@@ -11,14 +11,18 @@ import           Control.Concurrent.MVar        ( newEmptyMVar
                                                 , putMVar
                                                 , readMVar
                                                 )
-import           Control.Monad                  ( void )
+import           Control.Monad                  ( replicateM
+                                                , void
+                                                )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
 import           Data.ByteString                ( ByteString )
+import           Data.List                      ( isSuffixOf )
 import           Data.Word
 import           GHC.Generics                   ( Generic )
+import           Language.Haskell.TH
 import           Language.Haskell.TH.Syntax     ( addTopDecls )
 import           NoThunks.Class
 import           OpenTelemetry.Eventlog         ( beginSpan
@@ -294,8 +298,8 @@ do
         , 'withSwapchainKHR
         ]
   addTopDecls =<< [d|checkCommands = $(checkCommandsExp commands)|]
-  autoapplyDecs
-    (<> "'")
+  ds <- autoapplyDecs
+    (<> "''")
     [ 'getDevice
     , 'getPhysicalDevice
     , 'getInstance
@@ -308,3 +312,21 @@ do
     -- put it in the unifying group.
     ['allocate]
     (vmaCommands <> commands)
+  ds' <- concat <$> sequenceA [ case d of
+                FunD n [Clause ps (NormalB o) _ ]
+                  | b <- nameBase n
+                  , "''" `isSuffixOf` b
+                  -> do
+                    let n' = mkName (init b)
+                        vkName = init (init b)
+                        eArity = \case
+                          LamE ls e -> length ls + eArity e
+                          _ -> 0
+                        arity = length ps + eArity o
+                    vs <- replicateM arity (newName "x")
+                    e <- [|withSpan_ $(litE (StringL vkName)) $(foldl appE (varE n) (varE <$> vs))|]
+                    pure [FunD n' [Clause (VarP <$> vs) (NormalB e) []]]
+                _ -> pure [d]
+            | d <- ds
+            ]
+  pure (ds <> ds')
