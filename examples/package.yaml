@@ -152,7 +152,7 @@ executables:
     - derive-storable-plugin >= 0.2.3.1
     - lens
     - linear
-    - nothunks
+    - nothunks >= 0.1.2
     - opentelemetry
     - primitive-unlifted
     - resourcet >= 1.2.4
