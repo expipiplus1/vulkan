@@ -16,6 +16,7 @@ import           MonadFrame
 import           MonadVulkan
 import           Say                            ( sayErrString )
 import           Swapchain
+import           UnliftIO                       ( MonadUnliftIO )
 import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Core10
@@ -89,7 +90,7 @@ renderFrame = do
   pure ()
 
 -- | Clear and render a triangle
-myRecordCommandBuffer :: MonadIO m => Frame -> Word32 -> CmdT m ()
+myRecordCommandBuffer :: MonadUnliftIO m => Frame -> Word32 -> CmdT m ()
 myRecordCommandBuffer Frame {..} imageIndex = do
   let SwapchainResources {..} = fSwapchainResources
       SwapchainInfo {..}      = srInfo
