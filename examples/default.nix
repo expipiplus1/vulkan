@@ -17,6 +17,7 @@ in if forShell then
         haskellPackages.hs-speedscope
         haskellPackages.opentelemetry-extra
         pkgs.tracy
+        pkgs.gdb
       ];
     withHoogle = hoogle;
   } // pkgs.lib.optionalAttrs withSwiftshader {
