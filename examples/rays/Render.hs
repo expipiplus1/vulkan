@@ -46,9 +46,9 @@ renderFrame = withSpan_ "renderFrame" $ do
   imageIndex <-
     withSpan_ "acquire"
     $   acquireNextImageKHRSafe' siSwapchain
-                             oneSecond
-                             fImageAvailableSemaphore
-                             NULL_HANDLE
+                                 oneSecond
+                                 fImageAvailableSemaphore
+                                 NULL_HANDLE
     >>= \case
           (SUCCESS, imageIndex) -> pure imageIndex
           (TIMEOUT, _) ->
