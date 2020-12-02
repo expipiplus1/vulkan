@@ -224,7 +224,7 @@ selectSurfaceFormat = V.maximumBy (comparing surfaceFormatScore)
 -- | An ordered list of the present mode to be chosen for the swapchain.
 desiredPresentModes :: [PresentModeKHR]
 desiredPresentModes =
-  [PRESENT_MODE_MAILBOX_KHR, PRESENT_MODE_FIFO_KHR, PRESENT_MODE_IMMEDIATE_KHR]
+  [PRESENT_MODE_IMMEDIATE_KHR, PRESENT_MODE_MAILBOX_KHR, PRESENT_MODE_FIFO_KHR]
 
 -- | The images in the swapchain must support these flags.
 requiredUsageFlags :: [ImageUsageFlagBits]
