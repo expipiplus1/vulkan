@@ -1,19 +1,11 @@
 { pkgs ? import ../nix/nixpkgs.nix, compiler ? null
 , forShell ? pkgs.lib.inNixShell, hoogle ? forShell, withSwiftshader ? false
-, buildProfiling ? false, buildInstrumented ? false}:
+, buildProfiling ? false, buildInstrumented ? false, safeVulkanFFI ? false }:
 
 let
-  haskellPackages = let
-    hp = if compiler == null then
-      pkgs.haskellPackages
-    else
-      pkgs.haskell.packages.${compiler};
-  in hp.override {
-    overrides = import ../nix/haskell-packages.nix {
-      inherit pkgs hoogle buildProfiling;
-    };
+  haskellPackages = import ../nix/haskell-packages.nix {
+    inherit pkgs compiler hoogle buildProfiling buildInstrumented safeVulkanFFI;
   };
-
 in if forShell then
   haskellPackages.shellFor ({
     packages = p: [ p.vulkan-examples ];

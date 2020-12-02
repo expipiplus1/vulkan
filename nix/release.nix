@@ -10,17 +10,7 @@ let
   # Utils
   #
 
-  haskellPackages = let
-    hp = if compiler == null then
-      pkgs.haskellPackages
-    else
-      pkgs.haskell.packages.${compiler};
-  in hp.override {
-    overrides = import ./haskell-packages.nix {
-      inherit pkgs;
-      hoogle = false;
-    };
-  };
+  haskellPackages = import ./haskell-packages.nix { inherit pkgs compiler; };
 
   haddockInterface = pkg:
     overrideDerivation pkg (drv: {
