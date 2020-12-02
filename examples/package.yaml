@@ -5,8 +5,8 @@ category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
 github: expipiplus1/vulkan
 extra-source-files:
-  - readme.md
-  - package.yaml
+- readme.md
+- package.yaml
 license: BSD-3-Clause
 
 executables:
@@ -14,227 +14,226 @@ executables:
     main: Main.hs
     source-dirs: info
     dependencies:
-      - base <5
-      - vulkan
-      - pretty-simple >= 3.3
+    - base <5
+    - vulkan
+    - pretty-simple >= 3.3
 
   sdl-triangle:
     main: Main.hs
     source-dirs: sdl-triangle
     dependencies:
-      - base <5
-      - bytestring
-      - extra
-      - managed
-      - say
-      - sdl2 >= 2.5.2.0
-      - text
-      - transformers
-      - vector
-      - vulkan
-      - vulkan-utils
+    - base <5
+    - bytestring
+    - extra
+    - managed
+    - say
+    - sdl2 >= 2.5.2.0
+    - text
+    - transformers
+    - vector
+    - vulkan
+    - vulkan-utils
 
   offscreen:
     main: Main.hs
     source-dirs: offscreen
     dependencies:
-      - JuicyPixels
-      - VulkanMemoryAllocator
-      - autoapply >= 0.4
-      - base <5
-      - bytestring
-      - resourcet
-      - safe-exceptions
-      - say
-      - text
-      - transformers
-      - vector
-      - vulkan
-      - vulkan-utils
+    - JuicyPixels
+    - VulkanMemoryAllocator
+    - autoapply >= 0.4
+    - base <5
+    - bytestring
+    - resourcet
+    - safe-exceptions
+    - say
+    - text
+    - transformers
+    - vector
+    - vulkan
+    - vulkan-utils
     when:
-      - condition: flag(renderdoc)
-        cpp-options: -DRENDERDOC
-        dependencies:
-          - containers
-          - inline-c
-        extra-libraries: dl
+    - condition: flag(renderdoc)
+      cpp-options: -DRENDERDOC
+      dependencies:
+      - containers
+      - inline-c
+      extra-libraries: dl
 
   compute:
     main: Main.hs
     source-dirs: compute
     dependencies:
-      - JuicyPixels
-      - VulkanMemoryAllocator
-      - autoapply >= 0.4
-      - base <5
-      - bytestring
-      - resourcet
-      - safe-exceptions
-      - say
-      - text
-      - transformers
-      - vector
-      - vulkan
-      - vulkan-utils
+    - JuicyPixels
+    - VulkanMemoryAllocator
+    - autoapply >= 0.4
+    - base <5
+    - bytestring
+    - resourcet
+    - safe-exceptions
+    - say
+    - text
+    - transformers
+    - vector
+    - vulkan
+    - vulkan-utils
 
   resize:
     main: Main.hs
     source-dirs: resize
     dependencies:
-      - VulkanMemoryAllocator
-      - autoapply >= 0.4
-      - base <5
-      - bytestring
-      - extra
-      - lens
-      - linear
-      - resourcet >= 1.2.4
-      - say
-      - sdl2 >= 2.5.2.0
-      - text
-      - transformers
-      - unliftio
-      - vector
-      - vulkan
-      - vulkan-utils
+    - VulkanMemoryAllocator
+    - autoapply >= 0.4
+    - base <5
+    - bytestring
+    - extra
+    - lens
+    - linear
+    - resourcet >= 1.2.4
+    - say
+    - sdl2 >= 2.5.2.0
+    - text
+    - transformers
+    - unliftio
+    - vector
+    - vulkan
+    - vulkan-utils
 
   timeline-semaphore:
     main: Main.hs
     source-dirs: timeline-semaphore
     dependencies:
-      - base <5
-      - resourcet
-      - say
-      - transformers
-      - unliftio
-      - vector
-      - vulkan
-      - vulkan-utils >= 0.3
+    - base <5
+    - resourcet
+    - say
+    - transformers
+    - unliftio
+    - vector
+    - vulkan
+    - vulkan-utils >= 0.3
 
   hlsl:
     main: Main.hs
     source-dirs: hlsl
     dependencies:
-      - VulkanMemoryAllocator
-      - autoapply >= 0.4
-      - base <5
-      - bytestring
-      - containers
-      - primitive-unlifted >= 1.0
-      - resourcet >= 1.2.4
-      - say
-      - sdl2 >= 2.5.2.0
-      - template-haskell
-      - text
-      - transformers
-      - unagi-chan
-      - unliftio
-      - vector
-      - vulkan
-      - vulkan-utils >= 0.3
+    - VulkanMemoryAllocator
+    - autoapply >= 0.4
+    - base <5
+    - bytestring
+    - containers
+    - opentelemetry
+    - primitive-unlifted >= 1.0
+    - resourcet >= 1.2.4
+    - say
+    - sdl2 >= 2.5.2.0
+    - template-haskell
+    - text
+    - transformers
+    - unagi-chan
+    - unliftio
+    - vector
+    - vulkan
+    - vulkan-utils >= 0.3
     when:
-      - condition: impl(ghc < 8.10.0)
-        buildable: false
-      - condition: '!flag(have-shaderc)'
-        buildable: false
+    - condition: impl(ghc < 8.10.0)
+      buildable: false
+    - condition: '!flag(have-shaderc)'
+      buildable: false
+    ghc-options: -eventlog
 
   rays:
     main: Main.hs
     source-dirs: rays
     dependencies:
-      - autoapply >= 0.4
-      - base <5
-      - bytestring
-      - containers
-      - derive-storable >= 0.3
-      - derive-storable-plugin >= 0.2.3.1
-      - lens
-      - linear
-      - nothunks
-      - opentelemetry
-      - primitive-unlifted
-      - resourcet >= 1.2.4
-      - say
-      - sdl2 >= 2.5.2.0
-      - template-haskell
-      - text
-      - transformers
-      - unagi-chan
-      - unliftio
-      - vector
-      - vulkan >= 3.7
-      - VulkanMemoryAllocator
-      - vulkan-utils >= 0.3
+    - autoapply >= 0.4
+    - base <5
+    - bytestring
+    - containers
+    - derive-storable >= 0.3
+    - derive-storable-plugin >= 0.2.3.1
+    - lens
+    - linear
+    - nothunks
+    - opentelemetry
+    - primitive-unlifted
+    - resourcet >= 1.2.4
+    - say
+    - sdl2 >= 2.5.2.0
+    - template-haskell
+    - text
+    - transformers
+    - unagi-chan
+    - unliftio
+    - vector
+    - vulkan >= 3.7
+    - VulkanMemoryAllocator
+    - vulkan-utils >= 0.3
     when:
-      - condition: impl(ghc < 8.10.0)
-        buildable: false
-      - condition: '!flag(raytracing)'
-        buildable: false
+    - condition: impl(ghc < 8.10.0)
+      buildable: false
+    - condition: '!flag(raytracing)'
+      buildable: false
     ghc-options: -eventlog
 
 when:
-  - condition: os(windows)
-    ghc-options: -optl-mconsole
+- condition: os(windows)
+  ghc-options: -optl-mconsole
 
 flags:
   renderdoc:
-    description:
-      Use the renderdoc API to mark the beginning and end of the 'offscreen'
+    description: Use the renderdoc API to mark the beginning and end of the 'offscreen'
       example so that it can be captured.
     default: no
     manual: yes
   have-shaderc:
-    description:
-      Set this flag if you have shaderc (and the glslc executable) installed.
+    description: Set this flag if you have shaderc (and the glslc executable) installed.
       It enables building the examples which use HLSL shaders.
     default: yes
     manual: yes
   raytracing:
-    description:
-      Set this flag if you have a version of glslValidator recent enough to
-      compile ray tracing shaders. It enables building the examples which use
-      ray tracing.
+    description: Set this flag if you have a version of glslValidator recent enough
+      to compile ray tracing shaders. It enables building the examples which use ray
+      tracing.
     default: yes
     manual: yes
 
 default-extensions:
-  - DataKinds
-  - DefaultSignatures
-  - DeriveFoldable
-  - DeriveFunctor
-  - DeriveTraversable
-  - DerivingStrategies
-  - DuplicateRecordFields
-  - FlexibleContexts
-  - FlexibleInstances
-  - GADTs
-  - GeneralizedNewtypeDeriving
-  - InstanceSigs
-  - LambdaCase
-  - MagicHash
-  - NamedFieldPuns
-  - NoMonomorphismRestriction
-  - NumDecimals
-  - OverloadedStrings
-  - PatternSynonyms
-  - PolyKinds
-  - QuantifiedConstraints
-  - RankNTypes
-  - RecordWildCards
-  - RoleAnnotations
-  - ScopedTypeVariables
-  - StandaloneDeriving
-  - Strict
-  - TupleSections
-  - TypeApplications
-  - TypeFamilyDependencies
-  - TypeOperators
-  - TypeSynonymInstances
-  - ViewPatterns
+- DataKinds
+- DefaultSignatures
+- DeriveFoldable
+- DeriveFunctor
+- DeriveTraversable
+- DerivingStrategies
+- DuplicateRecordFields
+- FlexibleContexts
+- FlexibleInstances
+- GADTs
+- GeneralizedNewtypeDeriving
+- InstanceSigs
+- LambdaCase
+- MagicHash
+- NamedFieldPuns
+- NoMonomorphismRestriction
+- NumDecimals
+- OverloadedStrings
+- PatternSynonyms
+- PolyKinds
+- QuantifiedConstraints
+- RankNTypes
+- RecordWildCards
+- RoleAnnotations
+- ScopedTypeVariables
+- StandaloneDeriving
+- Strict
+- TupleSections
+- TypeApplications
+- TypeFamilyDependencies
+- TypeOperators
+- TypeSynonymInstances
+- ViewPatterns
 
 ghc-options:
-  - -Wall
-  - -threaded
-  - -O2
-  - -rtsopts
-  - -with-rtsopts=-N
+- -Wall
+- -threaded
+- -O2
+- -rtsopts
+- -with-rtsopts=-N
