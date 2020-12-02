@@ -82,13 +82,14 @@ executable hlsl
   hs-source-dirs:
       hlsl
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
-  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N -eventlog
   build-depends:
       VulkanMemoryAllocator
     , autoapply >=0.4
     , base <5
     , bytestring
     , containers
+    , opentelemetry
     , primitive-unlifted >=1.0
     , resourcet >=1.2.4
     , say
