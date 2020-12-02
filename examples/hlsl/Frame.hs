@@ -110,10 +110,8 @@ advanceFrame needsNewSwapchain f = do
   -- Wait for a prior frame to finish, then we can steal it's resources!
   nib                <- V $ asks ghRecycleNib
   fRecycledResources <- liftIO $ nib >>= \case
-    Left block -> do
-      sayErr "CPU is running ahead"
-      block
-    Right rs -> pure rs
+    Left  block -> block
+    Right rs    -> pure rs
 
   fSwapchainResources <- if needsNewSwapchain
     then recreateSwapchainResources (fWindow f) (fSwapchainResources f)

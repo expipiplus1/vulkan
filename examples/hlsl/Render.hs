@@ -86,7 +86,7 @@ renderFrame = do
          , swapchains          = [siSwapchain]
          , imageIndices        = [imageIndex]
          }
-  sayErrString ("submitted " <> show fIndex)
+  pure ()
 
 -- | Clear and render a triangle
 myRecordCommandBuffer :: MonadIO m => Frame -> Word32 -> CmdT m ()
