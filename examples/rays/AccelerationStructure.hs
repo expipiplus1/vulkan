@@ -171,7 +171,7 @@ createBLAS sceneBuffers = do
                        , geometries = [sceneGeom]
                        , scratchData = zero
                        }
-      maxPrimitiveCounts = [1]
+      maxPrimitiveCounts = [sceneSize sceneBuffers]
   sizes <- getAccelerationStructureBuildSizesKHR'
     ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR
     buildInfo
