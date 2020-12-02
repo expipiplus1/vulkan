@@ -14,7 +14,6 @@ import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 )
 import           MonadFrame
 import           MonadVulkan
-import           Say                            ( sayErrString )
 import           Swapchain
 import           UnliftIO                       ( MonadUnliftIO )
 import           UnliftIO.Exception             ( throwString )
