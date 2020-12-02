@@ -183,7 +183,7 @@ do
         , 'invalidateAllocation
         ]
       commands =
-        [ 'acquireNextImageKHR
+        [ 'acquireNextImageKHRSafe
         , 'allocateCommandBuffers
         , 'allocateDescriptorSets
         , 'cmdBindDescriptorSets
