@@ -32,6 +32,7 @@ module Vulkan.Core10.Pass  ( createFramebuffer
                            , FramebufferCreateFlags
                            ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -214,7 +215,7 @@ createFramebuffer device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFramebuffer <- ContT $ bracket (callocBytes @Framebuffer 8) free
-  r <- lift $ vkCreateFramebuffer' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPFramebuffer)
+  r <- lift $ traceAroundEvent "vkCreateFramebuffer" (vkCreateFramebuffer' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPFramebuffer))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFramebuffer <- lift $ peek @Framebuffer pPFramebuffer
   pure $ (pFramebuffer)
@@ -301,7 +302,7 @@ destroyFramebuffer device framebuffer allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyFramebuffer' (deviceHandle (device)) (framebuffer) pAllocator
+  lift $ traceAroundEvent "vkDestroyFramebuffer" (vkDestroyFramebuffer' (deviceHandle (device)) (framebuffer) pAllocator)
   pure $ ()
 
 
@@ -368,7 +369,7 @@ createRenderPass device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPRenderPass <- ContT $ bracket (callocBytes @RenderPass 8) free
-  r <- lift $ vkCreateRenderPass' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPRenderPass)
+  r <- lift $ traceAroundEvent "vkCreateRenderPass" (vkCreateRenderPass' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPRenderPass))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pRenderPass <- lift $ peek @RenderPass pPRenderPass
   pure $ (pRenderPass)
@@ -455,7 +456,7 @@ destroyRenderPass device renderPass allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyRenderPass' (deviceHandle (device)) (renderPass) pAllocator
+  lift $ traceAroundEvent "vkDestroyRenderPass" (vkDestroyRenderPass' (deviceHandle (device)) (renderPass) pAllocator)
   pure $ ()
 
 
@@ -531,7 +532,7 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRenderAreaGranularity is null" Nothing Nothing
   let vkGetRenderAreaGranularity' = mkVkGetRenderAreaGranularity vkGetRenderAreaGranularityPtr
   pPGranularity <- ContT (withZeroCStruct @Extent2D)
-  lift $ vkGetRenderAreaGranularity' (deviceHandle (device)) (renderPass) (pPGranularity)
+  lift $ traceAroundEvent "vkGetRenderAreaGranularity" (vkGetRenderAreaGranularity' (deviceHandle (device)) (renderPass) (pPGranularity))
   pGranularity <- lift $ peekCStruct @Extent2D pPGranularity
   pure $ (pGranularity)
 

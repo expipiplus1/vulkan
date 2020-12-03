@@ -151,6 +151,7 @@ module Vulkan.Extensions.VK_KHR_external_memory_win32  ( getMemoryWin32HandleKHR
                                                        , SECURITY_ATTRIBUTES
                                                        ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -269,7 +270,7 @@ getMemoryWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
   let vkGetMemoryWin32HandleKHR' = mkVkGetMemoryWin32HandleKHR vkGetMemoryWin32HandleKHRPtr
   pGetWin32HandleInfo <- ContT $ withCStruct (getWin32HandleInfo)
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
-  r <- lift $ vkGetMemoryWin32HandleKHR' (deviceHandle (device)) pGetWin32HandleInfo (pPHandle)
+  r <- lift $ traceAroundEvent "vkGetMemoryWin32HandleKHR" (vkGetMemoryWin32HandleKHR' (deviceHandle (device)) pGetWin32HandleInfo (pPHandle))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pHandle <- lift $ peek @HANDLE pPHandle
   pure $ (pHandle)
@@ -331,7 +332,7 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryWin32HandlePropertiesKHR is null" Nothing Nothing
   let vkGetMemoryWin32HandlePropertiesKHR' = mkVkGetMemoryWin32HandlePropertiesKHR vkGetMemoryWin32HandlePropertiesKHRPtr
   pPMemoryWin32HandleProperties <- ContT (withZeroCStruct @MemoryWin32HandlePropertiesKHR)
-  r <- lift $ vkGetMemoryWin32HandlePropertiesKHR' (deviceHandle (device)) (handleType) (handle) (pPMemoryWin32HandleProperties)
+  r <- lift $ traceAroundEvent "vkGetMemoryWin32HandlePropertiesKHR" (vkGetMemoryWin32HandlePropertiesKHR' (deviceHandle (device)) (handleType) (handle) (pPMemoryWin32HandleProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryWin32HandleProperties <- lift $ peekCStruct @MemoryWin32HandlePropertiesKHR pPMemoryWin32HandleProperties
   pure $ (pMemoryWin32HandleProperties)

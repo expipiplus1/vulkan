@@ -268,6 +268,7 @@ module Vulkan.Extensions.VK_NV_mesh_shader  ( cmdDrawMeshTasksNV
                                             ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -779,7 +780,7 @@ cmdDrawMeshTasksNV commandBuffer taskCount firstTask = liftIO $ do
   unless (vkCmdDrawMeshTasksNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksNV is null" Nothing Nothing
   let vkCmdDrawMeshTasksNV' = mkVkCmdDrawMeshTasksNV vkCmdDrawMeshTasksNVPtr
-  vkCmdDrawMeshTasksNV' (commandBufferHandle (commandBuffer)) (taskCount) (firstTask)
+  traceAroundEvent "vkCmdDrawMeshTasksNV" (vkCmdDrawMeshTasksNV' (commandBufferHandle (commandBuffer)) (taskCount) (firstTask))
   pure $ ()
 
 
@@ -1306,7 +1307,7 @@ cmdDrawMeshTasksIndirectNV commandBuffer buffer offset drawCount stride = liftIO
   unless (vkCmdDrawMeshTasksIndirectNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksIndirectNV is null" Nothing Nothing
   let vkCmdDrawMeshTasksIndirectNV' = mkVkCmdDrawMeshTasksIndirectNV vkCmdDrawMeshTasksIndirectNVPtr
-  vkCmdDrawMeshTasksIndirectNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride)
+  traceAroundEvent "vkCmdDrawMeshTasksIndirectNV" (vkCmdDrawMeshTasksIndirectNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride))
   pure $ ()
 
 
@@ -1865,7 +1866,7 @@ cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBuf
   unless (vkCmdDrawMeshTasksIndirectCountNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksIndirectCountNV is null" Nothing Nothing
   let vkCmdDrawMeshTasksIndirectCountNV' = mkVkCmdDrawMeshTasksIndirectCountNV vkCmdDrawMeshTasksIndirectCountNVPtr
-  vkCmdDrawMeshTasksIndirectCountNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride)
+  traceAroundEvent "vkCmdDrawMeshTasksIndirectCountNV" (vkCmdDrawMeshTasksIndirectCountNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride))
   pure $ ()
 
 

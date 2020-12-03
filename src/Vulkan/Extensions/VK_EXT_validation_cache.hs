@@ -142,6 +142,7 @@ module Vulkan.Extensions.VK_EXT_validation_cache  ( createValidationCacheEXT
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -309,7 +310,7 @@ createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPValidationCache <- ContT $ bracket (callocBytes @ValidationCacheEXT 8) free
-  r <- lift $ vkCreateValidationCacheEXT' (deviceHandle (device)) pCreateInfo pAllocator (pPValidationCache)
+  r <- lift $ traceAroundEvent "vkCreateValidationCacheEXT" (vkCreateValidationCacheEXT' (deviceHandle (device)) pCreateInfo pAllocator (pPValidationCache))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pValidationCache <- lift $ peek @ValidationCacheEXT pPValidationCache
   pure $ (pValidationCache)
@@ -397,7 +398,7 @@ destroyValidationCacheEXT device validationCache allocator = liftIO . evalContT 
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyValidationCacheEXT' (deviceHandle (device)) (validationCache) pAllocator
+  lift $ traceAroundEvent "vkDestroyValidationCacheEXT" (vkDestroyValidationCacheEXT' (deviceHandle (device)) (validationCache) pAllocator)
   pure $ ()
 
 
@@ -525,11 +526,11 @@ getValidationCacheDataEXT device validationCache = liftIO . evalContT $ do
   let vkGetValidationCacheDataEXT' = mkVkGetValidationCacheDataEXT vkGetValidationCacheDataEXTPtr
   let device' = deviceHandle (device)
   pPDataSize <- ContT $ bracket (callocBytes @CSize 8) free
-  r <- lift $ vkGetValidationCacheDataEXT' device' (validationCache) (pPDataSize) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetValidationCacheDataEXT" (vkGetValidationCacheDataEXT' device' (validationCache) (pPDataSize) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDataSize <- lift $ peek @CSize pPDataSize
   pPData <- ContT $ bracket (callocBytes @(()) (fromIntegral (((\(CSize a) -> a) pDataSize)))) free
-  r' <- lift $ vkGetValidationCacheDataEXT' device' (validationCache) (pPDataSize) (pPData)
+  r' <- lift $ traceAroundEvent "vkGetValidationCacheDataEXT" (vkGetValidationCacheDataEXT' device' (validationCache) (pPDataSize) (pPData))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pDataSize'' <- lift $ peek @CSize pPDataSize
   pData' <- lift $ packCStringLen  (castPtr @() @CChar pPData, (fromIntegral (((\(CSize a) -> a) pDataSize''))))
@@ -620,7 +621,7 @@ mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
   let vkMergeValidationCachesEXT' = mkVkMergeValidationCachesEXT vkMergeValidationCachesEXTPtr
   pPSrcCaches <- ContT $ allocaBytesAligned @ValidationCacheEXT ((Data.Vector.length (srcCaches)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSrcCaches `plusPtr` (8 * (i)) :: Ptr ValidationCacheEXT) (e)) (srcCaches)
-  r <- lift $ vkMergeValidationCachesEXT' (deviceHandle (device)) (dstCache) ((fromIntegral (Data.Vector.length $ (srcCaches)) :: Word32)) (pPSrcCaches)
+  r <- lift $ traceAroundEvent "vkMergeValidationCachesEXT" (vkMergeValidationCachesEXT' (deviceHandle (device)) (dstCache) ((fromIntegral (Data.Vector.length $ (srcCaches)) :: Word32)) (pPSrcCaches))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

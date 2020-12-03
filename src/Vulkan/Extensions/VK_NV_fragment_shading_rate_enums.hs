@@ -205,6 +205,7 @@ module Vulkan.Extensions.VK_NV_fragment_shading_rate_enums  ( cmdSetFragmentShad
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -397,7 +398,7 @@ cmdSetFragmentShadingRateEnumNV commandBuffer shadingRate combinerOps = liftIO .
     (e0, e1) -> do
       poke (pCombinerOps' :: Ptr FragmentShadingRateCombinerOpKHR) (e0)
       poke (pCombinerOps' `plusPtr` 4 :: Ptr FragmentShadingRateCombinerOpKHR) (e1)
-  lift $ vkCmdSetFragmentShadingRateEnumNV' (commandBufferHandle (commandBuffer)) (shadingRate) (pCombinerOps)
+  lift $ traceAroundEvent "vkCmdSetFragmentShadingRateEnumNV" (vkCmdSetFragmentShadingRateEnumNV' (commandBufferHandle (commandBuffer)) (shadingRate) (pCombinerOps))
   pure $ ()
 
 

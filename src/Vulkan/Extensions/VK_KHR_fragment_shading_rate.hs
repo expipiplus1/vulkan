@@ -226,6 +226,7 @@ module Vulkan.Extensions.VK_KHR_fragment_shading_rate  ( cmdSetFragmentShadingRa
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -450,7 +451,7 @@ cmdSetFragmentShadingRateKHR commandBuffer fragmentSize combinerOps = liftIO . e
     (e0, e1) -> do
       poke (pCombinerOps' :: Ptr FragmentShadingRateCombinerOpKHR) (e0)
       poke (pCombinerOps' `plusPtr` 4 :: Ptr FragmentShadingRateCombinerOpKHR) (e1)
-  lift $ vkCmdSetFragmentShadingRateKHR' (commandBufferHandle (commandBuffer)) pFragmentSize (pCombinerOps)
+  lift $ traceAroundEvent "vkCmdSetFragmentShadingRateKHR" (vkCmdSetFragmentShadingRateKHR' (commandBufferHandle (commandBuffer)) pFragmentSize (pCombinerOps))
   pure $ ()
 
 
@@ -584,12 +585,12 @@ getPhysicalDeviceFragmentShadingRatesKHR physicalDevice = liftIO . evalContT $ d
   let vkGetPhysicalDeviceFragmentShadingRatesKHR' = mkVkGetPhysicalDeviceFragmentShadingRatesKHR vkGetPhysicalDeviceFragmentShadingRatesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPFragmentShadingRateCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceFragmentShadingRatesKHR' physicalDevice' (pPFragmentShadingRateCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceFragmentShadingRatesKHR" (vkGetPhysicalDeviceFragmentShadingRatesKHR' physicalDevice' (pPFragmentShadingRateCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFragmentShadingRateCount <- lift $ peek @Word32 pPFragmentShadingRateCount
   pPFragmentShadingRates <- ContT $ bracket (callocBytes @PhysicalDeviceFragmentShadingRateKHR ((fromIntegral (pFragmentShadingRateCount)) * 32)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPFragmentShadingRates `advancePtrBytes` (i * 32) :: Ptr PhysicalDeviceFragmentShadingRateKHR) . ($ ())) [0..(fromIntegral (pFragmentShadingRateCount)) - 1]
-  r' <- lift $ vkGetPhysicalDeviceFragmentShadingRatesKHR' physicalDevice' (pPFragmentShadingRateCount) ((pPFragmentShadingRates))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceFragmentShadingRatesKHR" (vkGetPhysicalDeviceFragmentShadingRatesKHR' physicalDevice' (pPFragmentShadingRateCount) ((pPFragmentShadingRates)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pFragmentShadingRateCount' <- lift $ peek @Word32 pPFragmentShadingRateCount
   pFragmentShadingRates' <- lift $ generateM (fromIntegral (pFragmentShadingRateCount')) (\i -> peekCStruct @PhysicalDeviceFragmentShadingRateKHR (((pPFragmentShadingRates) `advancePtrBytes` (32 * (i)) :: Ptr PhysicalDeviceFragmentShadingRateKHR)))

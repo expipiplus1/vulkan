@@ -10,6 +10,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities  ( getPhys
                                                                        , ExternalFenceFeatureFlags
                                                                        ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -93,7 +94,7 @@ getPhysicalDeviceExternalFenceProperties physicalDevice externalFenceInfo = lift
   let vkGetPhysicalDeviceExternalFenceProperties' = mkVkGetPhysicalDeviceExternalFenceProperties vkGetPhysicalDeviceExternalFencePropertiesPtr
   pExternalFenceInfo <- ContT $ withCStruct (externalFenceInfo)
   pPExternalFenceProperties <- ContT (withZeroCStruct @ExternalFenceProperties)
-  lift $ vkGetPhysicalDeviceExternalFenceProperties' (physicalDeviceHandle (physicalDevice)) pExternalFenceInfo (pPExternalFenceProperties)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceExternalFenceProperties" (vkGetPhysicalDeviceExternalFenceProperties' (physicalDeviceHandle (physicalDevice)) pExternalFenceInfo (pPExternalFenceProperties))
   pExternalFenceProperties <- lift $ peekCStruct @ExternalFenceProperties pPExternalFenceProperties
   pure $ (pExternalFenceProperties)
 

@@ -13,6 +13,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template  ( createDe
                                                                       , ObjectType(..)
                                                                       ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -153,7 +154,7 @@ createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPDescriptorUpdateTemplate <- ContT $ bracket (callocBytes @DescriptorUpdateTemplate 8) free
-  r <- lift $ vkCreateDescriptorUpdateTemplate' (deviceHandle (device)) pCreateInfo pAllocator (pPDescriptorUpdateTemplate)
+  r <- lift $ traceAroundEvent "vkCreateDescriptorUpdateTemplate" (vkCreateDescriptorUpdateTemplate' (deviceHandle (device)) pCreateInfo pAllocator (pPDescriptorUpdateTemplate))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDescriptorUpdateTemplate <- lift $ peek @DescriptorUpdateTemplate pPDescriptorUpdateTemplate
   pure $ (pDescriptorUpdateTemplate)
@@ -244,7 +245,7 @@ destroyDescriptorUpdateTemplate device descriptorUpdateTemplate allocator = lift
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyDescriptorUpdateTemplate' (deviceHandle (device)) (descriptorUpdateTemplate) pAllocator
+  lift $ traceAroundEvent "vkDestroyDescriptorUpdateTemplate" (vkDestroyDescriptorUpdateTemplate' (deviceHandle (device)) (descriptorUpdateTemplate) pAllocator)
   pure $ ()
 
 
@@ -396,7 +397,7 @@ updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate da
   unless (vkUpdateDescriptorSetWithTemplatePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUpdateDescriptorSetWithTemplate is null" Nothing Nothing
   let vkUpdateDescriptorSetWithTemplate' = mkVkUpdateDescriptorSetWithTemplate vkUpdateDescriptorSetWithTemplatePtr
-  vkUpdateDescriptorSetWithTemplate' (deviceHandle (device)) (descriptorSet) (descriptorUpdateTemplate) (data')
+  traceAroundEvent "vkUpdateDescriptorSetWithTemplate" (vkUpdateDescriptorSetWithTemplate' (deviceHandle (device)) (descriptorSet) (descriptorUpdateTemplate) (data'))
   pure $ ()
 
 

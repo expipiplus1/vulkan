@@ -288,6 +288,7 @@ module Vulkan.Extensions.VK_EXT_debug_marker  ( debugMarkerSetObjectNameEXT
                                               ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -400,7 +401,7 @@ debugMarkerSetObjectNameEXT device nameInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugMarkerSetObjectNameEXT is null" Nothing Nothing
   let vkDebugMarkerSetObjectNameEXT' = mkVkDebugMarkerSetObjectNameEXT vkDebugMarkerSetObjectNameEXTPtr
   pNameInfo <- ContT $ withCStruct (nameInfo)
-  r <- lift $ vkDebugMarkerSetObjectNameEXT' (deviceHandle (device)) pNameInfo
+  r <- lift $ traceAroundEvent "vkDebugMarkerSetObjectNameEXT" (vkDebugMarkerSetObjectNameEXT' (deviceHandle (device)) pNameInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -455,7 +456,7 @@ debugMarkerSetObjectTagEXT device tagInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugMarkerSetObjectTagEXT is null" Nothing Nothing
   let vkDebugMarkerSetObjectTagEXT' = mkVkDebugMarkerSetObjectTagEXT vkDebugMarkerSetObjectTagEXTPtr
   pTagInfo <- ContT $ withCStruct (tagInfo)
-  r <- lift $ vkDebugMarkerSetObjectTagEXT' (deviceHandle (device)) pTagInfo
+  r <- lift $ traceAroundEvent "vkDebugMarkerSetObjectTagEXT" (vkDebugMarkerSetObjectTagEXT' (deviceHandle (device)) pTagInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -522,7 +523,7 @@ cmdDebugMarkerBeginEXT commandBuffer markerInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerBeginEXT is null" Nothing Nothing
   let vkCmdDebugMarkerBeginEXT' = mkVkCmdDebugMarkerBeginEXT vkCmdDebugMarkerBeginEXTPtr
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
-  lift $ vkCmdDebugMarkerBeginEXT' (commandBufferHandle (commandBuffer)) pMarkerInfo
+  lift $ traceAroundEvent "vkCmdDebugMarkerBeginEXT" (vkCmdDebugMarkerBeginEXT' (commandBufferHandle (commandBuffer)) pMarkerInfo)
   pure $ ()
 
 
@@ -602,7 +603,7 @@ cmdDebugMarkerEndEXT commandBuffer = liftIO $ do
   unless (vkCmdDebugMarkerEndEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerEndEXT is null" Nothing Nothing
   let vkCmdDebugMarkerEndEXT' = mkVkCmdDebugMarkerEndEXT vkCmdDebugMarkerEndEXTPtr
-  vkCmdDebugMarkerEndEXT' (commandBufferHandle (commandBuffer))
+  traceAroundEvent "vkCmdDebugMarkerEndEXT" (vkCmdDebugMarkerEndEXT' (commandBufferHandle (commandBuffer)))
   pure $ ()
 
 
@@ -669,7 +670,7 @@ cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerInsertEXT is null" Nothing Nothing
   let vkCmdDebugMarkerInsertEXT' = mkVkCmdDebugMarkerInsertEXT vkCmdDebugMarkerInsertEXTPtr
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
-  lift $ vkCmdDebugMarkerInsertEXT' (commandBufferHandle (commandBuffer)) pMarkerInfo
+  lift $ traceAroundEvent "vkCmdDebugMarkerInsertEXT" (vkCmdDebugMarkerInsertEXT' (commandBufferHandle (commandBuffer)) pMarkerInfo)
   pure $ ()
 
 

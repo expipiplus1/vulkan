@@ -6,6 +6,7 @@ module Vulkan.Core10.ExtensionDiscovery  ( enumerateInstanceExtensionProperties
                                          ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -149,12 +150,12 @@ enumerateInstanceExtensionProperties layerName = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ useAsCString (j)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkEnumerateInstanceExtensionProperties' pLayerName (pPPropertyCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkEnumerateInstanceExtensionProperties" (vkEnumerateInstanceExtensionProperties' pLayerName (pPPropertyCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @ExtensionProperties ((fromIntegral (pPropertyCount)) * 260)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 260) :: Ptr ExtensionProperties) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ vkEnumerateInstanceExtensionProperties' pLayerName (pPPropertyCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkEnumerateInstanceExtensionProperties" (vkEnumerateInstanceExtensionProperties' pLayerName (pPPropertyCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @ExtensionProperties (((pPProperties) `advancePtrBytes` (260 * (i)) :: Ptr ExtensionProperties)))
@@ -237,12 +238,12 @@ enumerateDeviceExtensionProperties physicalDevice layerName = liftIO . evalContT
     Nothing -> pure nullPtr
     Just j -> ContT $ useAsCString (j)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkEnumerateDeviceExtensionProperties' physicalDevice' pLayerName (pPPropertyCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkEnumerateDeviceExtensionProperties" (vkEnumerateDeviceExtensionProperties' physicalDevice' pLayerName (pPPropertyCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @ExtensionProperties ((fromIntegral (pPropertyCount)) * 260)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 260) :: Ptr ExtensionProperties) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ vkEnumerateDeviceExtensionProperties' physicalDevice' pLayerName (pPPropertyCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkEnumerateDeviceExtensionProperties" (vkEnumerateDeviceExtensionProperties' physicalDevice' pLayerName (pPPropertyCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @ExtensionProperties (((pPProperties) `advancePtrBytes` (260 * (i)) :: Ptr ExtensionProperties)))

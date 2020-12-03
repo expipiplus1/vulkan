@@ -9,6 +9,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_maintenance1  ( trimCommandPool
                                                         , FormatFeatureFlags
                                                         ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import GHC.IO (throwIO)
@@ -118,6 +119,6 @@ trimCommandPool device commandPool flags = liftIO $ do
   unless (vkTrimCommandPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkTrimCommandPool is null" Nothing Nothing
   let vkTrimCommandPool' = mkVkTrimCommandPool vkTrimCommandPoolPtr
-  vkTrimCommandPool' (deviceHandle (device)) (commandPool) (flags)
+  traceAroundEvent "vkTrimCommandPool" (vkTrimCommandPool' (deviceHandle (device)) (commandPool) (flags))
   pure $ ()
 

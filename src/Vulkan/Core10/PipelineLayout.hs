@@ -8,6 +8,7 @@ module Vulkan.Core10.PipelineLayout  ( createPipelineLayout
                                      , PipelineLayout(..)
                                      ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -129,7 +130,7 @@ createPipelineLayout device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPPipelineLayout <- ContT $ bracket (callocBytes @PipelineLayout 8) free
-  r <- lift $ vkCreatePipelineLayout' (deviceHandle (device)) pCreateInfo pAllocator (pPPipelineLayout)
+  r <- lift $ traceAroundEvent "vkCreatePipelineLayout" (vkCreatePipelineLayout' (deviceHandle (device)) pCreateInfo pAllocator (pPPipelineLayout))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelineLayout <- lift $ peek @PipelineLayout pPPipelineLayout
   pure $ (pPipelineLayout)
@@ -220,7 +221,7 @@ destroyPipelineLayout device pipelineLayout allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyPipelineLayout' (deviceHandle (device)) (pipelineLayout) pAllocator
+  lift $ traceAroundEvent "vkDestroyPipelineLayout" (vkDestroyPipelineLayout' (deviceHandle (device)) (pipelineLayout) pAllocator)
   pure $ ()
 
 

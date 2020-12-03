@@ -160,6 +160,7 @@ module Vulkan.Extensions.VK_KHR_get_surface_capabilities2  ( getPhysicalDeviceSu
                                                            , SurfaceTransformFlagsKHR
                                                            ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -317,7 +318,7 @@ getPhysicalDeviceSurfaceCapabilities2KHR physicalDevice surfaceInfo = liftIO . e
   let vkGetPhysicalDeviceSurfaceCapabilities2KHR' = mkVkGetPhysicalDeviceSurfaceCapabilities2KHR vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPSurfaceCapabilities <- ContT (withZeroCStruct @(SurfaceCapabilities2KHR _))
-  r <- lift $ vkGetPhysicalDeviceSurfaceCapabilities2KHR' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pSurfaceInfo) (forgetExtensions (pPSurfaceCapabilities))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceCapabilities2KHR" (vkGetPhysicalDeviceSurfaceCapabilities2KHR' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pSurfaceInfo) (forgetExtensions (pPSurfaceCapabilities)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurfaceCapabilities <- lift $ peekCStruct @(SurfaceCapabilities2KHR _) pPSurfaceCapabilities
   pure $ (pSurfaceCapabilities)
@@ -421,12 +422,12 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalCo
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   let x9 = forgetExtensions pSurfaceInfo
   pPSurfaceFormatCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceFormats2KHR" (vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurfaceFormatCount <- lift $ peek @Word32 pPSurfaceFormatCount
   pPSurfaceFormats <- ContT $ bracket (callocBytes @SurfaceFormat2KHR ((fromIntegral (pSurfaceFormatCount)) * 24)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPSurfaceFormats `advancePtrBytes` (i * 24) :: Ptr SurfaceFormat2KHR) . ($ ())) [0..(fromIntegral (pSurfaceFormatCount)) - 1]
-  r' <- lift $ vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) ((pPSurfaceFormats))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceFormats2KHR" (vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) ((pPSurfaceFormats)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pSurfaceFormatCount' <- lift $ peek @Word32 pPSurfaceFormatCount
   pSurfaceFormats' <- lift $ generateM (fromIntegral (pSurfaceFormatCount')) (\i -> peekCStruct @SurfaceFormat2KHR (((pPSurfaceFormats) `advancePtrBytes` (24 * (i)) :: Ptr SurfaceFormat2KHR)))

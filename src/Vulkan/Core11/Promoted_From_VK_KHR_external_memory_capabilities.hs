@@ -17,6 +17,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities  ( getPhy
                                                                         ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -117,7 +118,7 @@ getPhysicalDeviceExternalBufferProperties physicalDevice externalBufferInfo = li
   let vkGetPhysicalDeviceExternalBufferProperties' = mkVkGetPhysicalDeviceExternalBufferProperties vkGetPhysicalDeviceExternalBufferPropertiesPtr
   pExternalBufferInfo <- ContT $ withCStruct (externalBufferInfo)
   pPExternalBufferProperties <- ContT (withZeroCStruct @ExternalBufferProperties)
-  lift $ vkGetPhysicalDeviceExternalBufferProperties' (physicalDeviceHandle (physicalDevice)) pExternalBufferInfo (pPExternalBufferProperties)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceExternalBufferProperties" (vkGetPhysicalDeviceExternalBufferProperties' (physicalDeviceHandle (physicalDevice)) pExternalBufferInfo (pPExternalBufferProperties))
   pExternalBufferProperties <- lift $ peekCStruct @ExternalBufferProperties pPExternalBufferProperties
   pure $ (pExternalBufferProperties)
 

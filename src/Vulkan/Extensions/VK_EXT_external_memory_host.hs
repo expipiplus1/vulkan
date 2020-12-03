@@ -179,6 +179,7 @@ module Vulkan.Extensions.VK_EXT_external_memory_host  ( getMemoryHostPointerProp
                                                       , pattern EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME
                                                       ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -303,7 +304,7 @@ getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalC
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryHostPointerPropertiesEXT is null" Nothing Nothing
   let vkGetMemoryHostPointerPropertiesEXT' = mkVkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXTPtr
   pPMemoryHostPointerProperties <- ContT (withZeroCStruct @MemoryHostPointerPropertiesEXT)
-  r <- lift $ vkGetMemoryHostPointerPropertiesEXT' (deviceHandle (device)) (handleType) (hostPointer) (pPMemoryHostPointerProperties)
+  r <- lift $ traceAroundEvent "vkGetMemoryHostPointerPropertiesEXT" (vkGetMemoryHostPointerPropertiesEXT' (deviceHandle (device)) (handleType) (hostPointer) (pPMemoryHostPointerProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryHostPointerProperties <- lift $ peekCStruct @MemoryHostPointerPropertiesEXT pPMemoryHostPointerProperties
   pure $ (pMemoryHostPointerProperties)

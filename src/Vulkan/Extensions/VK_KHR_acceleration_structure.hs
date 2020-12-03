@@ -1236,6 +1236,7 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -1444,7 +1445,7 @@ destroyAccelerationStructureKHR device accelerationStructure allocator = liftIO 
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyAccelerationStructureKHR' (deviceHandle (device)) (accelerationStructure) pAllocator
+  lift $ traceAroundEvent "vkDestroyAccelerationStructureKHR" (vkDestroyAccelerationStructureKHR' (deviceHandle (device)) (accelerationStructure) pAllocator)
   pure $ ()
 
 
@@ -1538,7 +1539,7 @@ cmdCopyAccelerationStructureKHR commandBuffer info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureKHR is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureKHR' = mkVkCmdCopyAccelerationStructureKHR vkCmdCopyAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  lift $ vkCmdCopyAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) pInfo
+  lift $ traceAroundEvent "vkCmdCopyAccelerationStructureKHR" (vkCmdCopyAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) pInfo)
   pure $ ()
 
 
@@ -1647,7 +1648,7 @@ copyAccelerationStructureKHR device deferredOperation info = liftIO . evalContT 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyAccelerationStructureKHR is null" Nothing Nothing
   let vkCopyAccelerationStructureKHR' = mkVkCopyAccelerationStructureKHR vkCopyAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ vkCopyAccelerationStructureKHR' (deviceHandle (device)) (deferredOperation) pInfo
+  r <- lift $ traceAroundEvent "vkCopyAccelerationStructureKHR" (vkCopyAccelerationStructureKHR' (deviceHandle (device)) (deferredOperation) pInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -1790,7 +1791,7 @@ cmdCopyAccelerationStructureToMemoryKHR commandBuffer info = liftIO . evalContT 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureToMemoryKHR is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureToMemoryKHR' = mkVkCmdCopyAccelerationStructureToMemoryKHR vkCmdCopyAccelerationStructureToMemoryKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  lift $ vkCmdCopyAccelerationStructureToMemoryKHR' (commandBufferHandle (commandBuffer)) pInfo
+  lift $ traceAroundEvent "vkCmdCopyAccelerationStructureToMemoryKHR" (vkCmdCopyAccelerationStructureToMemoryKHR' (commandBufferHandle (commandBuffer)) pInfo)
   pure $ ()
 
 
@@ -1905,7 +1906,7 @@ copyAccelerationStructureToMemoryKHR device deferredOperation info = liftIO . ev
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyAccelerationStructureToMemoryKHR is null" Nothing Nothing
   let vkCopyAccelerationStructureToMemoryKHR' = mkVkCopyAccelerationStructureToMemoryKHR vkCopyAccelerationStructureToMemoryKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ vkCopyAccelerationStructureToMemoryKHR' (deviceHandle (device)) (deferredOperation) pInfo
+  r <- lift $ traceAroundEvent "vkCopyAccelerationStructureToMemoryKHR" (vkCopyAccelerationStructureToMemoryKHR' (deviceHandle (device)) (deferredOperation) pInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -2023,7 +2024,7 @@ cmdCopyMemoryToAccelerationStructureKHR commandBuffer info = liftIO . evalContT 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyMemoryToAccelerationStructureKHR is null" Nothing Nothing
   let vkCmdCopyMemoryToAccelerationStructureKHR' = mkVkCmdCopyMemoryToAccelerationStructureKHR vkCmdCopyMemoryToAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  lift $ vkCmdCopyMemoryToAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) pInfo
+  lift $ traceAroundEvent "vkCmdCopyMemoryToAccelerationStructureKHR" (vkCmdCopyMemoryToAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) pInfo)
   pure $ ()
 
 
@@ -2134,7 +2135,7 @@ copyMemoryToAccelerationStructureKHR device deferredOperation info = liftIO . ev
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyMemoryToAccelerationStructureKHR is null" Nothing Nothing
   let vkCopyMemoryToAccelerationStructureKHR' = mkVkCopyMemoryToAccelerationStructureKHR vkCopyMemoryToAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ vkCopyMemoryToAccelerationStructureKHR' (deviceHandle (device)) (deferredOperation) pInfo
+  r <- lift $ traceAroundEvent "vkCopyMemoryToAccelerationStructureKHR" (vkCopyMemoryToAccelerationStructureKHR' (deviceHandle (device)) (deferredOperation) pInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -2275,7 +2276,7 @@ cmdWriteAccelerationStructuresPropertiesKHR commandBuffer accelerationStructures
   let vkCmdWriteAccelerationStructuresPropertiesKHR' = mkVkCmdWriteAccelerationStructuresPropertiesKHR vkCmdWriteAccelerationStructuresPropertiesKHRPtr
   pPAccelerationStructures <- ContT $ allocaBytesAligned @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureKHR) (e)) (accelerationStructures)
-  lift $ vkCmdWriteAccelerationStructuresPropertiesKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (queryPool) (firstQuery)
+  lift $ traceAroundEvent "vkCmdWriteAccelerationStructuresPropertiesKHR" (vkCmdWriteAccelerationStructuresPropertiesKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (queryPool) (firstQuery))
   pure $ ()
 
 
@@ -2424,7 +2425,7 @@ writeAccelerationStructuresPropertiesKHR device accelerationStructures queryType
   let vkWriteAccelerationStructuresPropertiesKHR' = mkVkWriteAccelerationStructuresPropertiesKHR vkWriteAccelerationStructuresPropertiesKHRPtr
   pPAccelerationStructures <- ContT $ allocaBytesAligned @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureKHR) (e)) (accelerationStructures)
-  r <- lift $ vkWriteAccelerationStructuresPropertiesKHR' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (CSize (dataSize)) (data') (CSize (stride))
+  r <- lift $ traceAroundEvent "vkWriteAccelerationStructuresPropertiesKHR" (vkWriteAccelerationStructuresPropertiesKHR' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (CSize (dataSize)) (data') (CSize (stride)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2479,7 +2480,7 @@ getDeviceAccelerationStructureCompatibilityKHR device versionInfo = liftIO . eva
   let vkGetDeviceAccelerationStructureCompatibilityKHR' = mkVkGetDeviceAccelerationStructureCompatibilityKHR vkGetDeviceAccelerationStructureCompatibilityKHRPtr
   pVersionInfo <- ContT $ withCStruct (versionInfo)
   pPCompatibility <- ContT $ bracket (callocBytes @AccelerationStructureCompatibilityKHR 4) free
-  lift $ vkGetDeviceAccelerationStructureCompatibilityKHR' (deviceHandle (device)) pVersionInfo (pPCompatibility)
+  lift $ traceAroundEvent "vkGetDeviceAccelerationStructureCompatibilityKHR" (vkGetDeviceAccelerationStructureCompatibilityKHR' (deviceHandle (device)) pVersionInfo (pPCompatibility))
   pCompatibility <- lift $ peek @AccelerationStructureCompatibilityKHR pPCompatibility
   pure $ (pCompatibility)
 
@@ -2593,7 +2594,7 @@ createAccelerationStructureKHR device createInfo allocator = liftIO . evalContT 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPAccelerationStructure <- ContT $ bracket (callocBytes @AccelerationStructureKHR 8) free
-  r <- lift $ vkCreateAccelerationStructureKHR' (deviceHandle (device)) pCreateInfo pAllocator (pPAccelerationStructure)
+  r <- lift $ traceAroundEvent "vkCreateAccelerationStructureKHR" (vkCreateAccelerationStructureKHR' (deviceHandle (device)) pCreateInfo pAllocator (pPAccelerationStructure))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAccelerationStructure <- lift $ peek @AccelerationStructureKHR pPAccelerationStructure
   pure $ (pAccelerationStructure)
@@ -3192,7 +3193,7 @@ cmdBuildAccelerationStructuresKHR commandBuffer infos buildRangeInfos = liftIO .
     pPpBuildRangeInfos' <- ContT $ allocaBytesAligned @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16) 4
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i')) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e')) (e)
     lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
-  lift $ vkCmdBuildAccelerationStructuresKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos)
+  lift $ traceAroundEvent "vkCmdBuildAccelerationStructuresKHR" (vkCmdBuildAccelerationStructuresKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos))
   pure $ ()
 
 
@@ -3821,7 +3822,7 @@ cmdBuildAccelerationStructuresIndirectKHR commandBuffer infos indirectDeviceAddr
     pPpMaxPrimitiveCounts' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (e)) * 4) 4
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpMaxPrimitiveCounts' `plusPtr` (4 * (i')) :: Ptr Word32) (e')) (e)
     lift $ poke (pPpMaxPrimitiveCounts `plusPtr` (8 * (i)) :: Ptr (Ptr Word32)) (pPpMaxPrimitiveCounts')) (maxPrimitiveCounts)
-  lift $ vkCmdBuildAccelerationStructuresIndirectKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPIndirectDeviceAddresses) (pPIndirectStrides) (pPpMaxPrimitiveCounts)
+  lift $ traceAroundEvent "vkCmdBuildAccelerationStructuresIndirectKHR" (vkCmdBuildAccelerationStructuresIndirectKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPIndirectDeviceAddresses) (pPIndirectStrides) (pPpMaxPrimitiveCounts))
   pure $ ()
 
 
@@ -4286,7 +4287,7 @@ buildAccelerationStructuresKHR device deferredOperation infos buildRangeInfos = 
     pPpBuildRangeInfos' <- ContT $ allocaBytesAligned @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16) 4
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i')) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e')) (e)
     lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
-  r <- lift $ vkBuildAccelerationStructuresKHR' (deviceHandle (device)) (deferredOperation) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos)
+  r <- lift $ traceAroundEvent "vkBuildAccelerationStructuresKHR" (vkBuildAccelerationStructuresKHR' (deviceHandle (device)) (deferredOperation) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -4363,7 +4364,7 @@ getAccelerationStructureDeviceAddressKHR device info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureDeviceAddressKHR is null" Nothing Nothing
   let vkGetAccelerationStructureDeviceAddressKHR' = mkVkGetAccelerationStructureDeviceAddressKHR vkGetAccelerationStructureDeviceAddressKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ vkGetAccelerationStructureDeviceAddressKHR' (deviceHandle (device)) pInfo
+  r <- lift $ traceAroundEvent "vkGetAccelerationStructureDeviceAddressKHR" (vkGetAccelerationStructureDeviceAddressKHR' (deviceHandle (device)) pInfo)
   pure $ (r)
 
 
@@ -4521,7 +4522,7 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
   pPMaxPrimitiveCounts <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (maxPrimitiveCounts)) * 4) 4
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMaxPrimitiveCounts `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (maxPrimitiveCounts)
   pPSizeInfo <- ContT (withZeroCStruct @AccelerationStructureBuildSizesInfoKHR)
-  lift $ vkGetAccelerationStructureBuildSizesKHR' (deviceHandle (device)) (buildType) pBuildInfo (pPMaxPrimitiveCounts) (pPSizeInfo)
+  lift $ traceAroundEvent "vkGetAccelerationStructureBuildSizesKHR" (vkGetAccelerationStructureBuildSizesKHR' (deviceHandle (device)) (buildType) pBuildInfo (pPMaxPrimitiveCounts) (pPSizeInfo))
   pSizeInfo <- lift $ peekCStruct @AccelerationStructureBuildSizesInfoKHR pPSizeInfo
   pure $ (pSizeInfo)
 

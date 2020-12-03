@@ -14,6 +14,7 @@ module Vulkan.Core10.Query  ( createQueryPool
                             , QueryPipelineStatisticFlags
                             ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -155,7 +156,7 @@ createQueryPool device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPQueryPool <- ContT $ bracket (callocBytes @QueryPool 8) free
-  r <- lift $ vkCreateQueryPool' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPQueryPool)
+  r <- lift $ traceAroundEvent "vkCreateQueryPool" (vkCreateQueryPool' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPQueryPool))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pQueryPool <- lift $ peek @QueryPool pPQueryPool
   pure $ (pQueryPool)
@@ -241,7 +242,7 @@ destroyQueryPool device queryPool allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyQueryPool' (deviceHandle (device)) (queryPool) pAllocator
+  lift $ traceAroundEvent "vkDestroyQueryPool" (vkDestroyQueryPool' (deviceHandle (device)) (queryPool) pAllocator)
   pure $ ()
 
 
@@ -485,7 +486,7 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
   unless (vkGetQueryPoolResultsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetQueryPoolResults is null" Nothing Nothing
   let vkGetQueryPoolResults' = mkVkGetQueryPoolResults vkGetQueryPoolResultsPtr
-  r <- vkGetQueryPoolResults' (deviceHandle (device)) (queryPool) (firstQuery) (queryCount) (CSize (dataSize)) (data') (stride) (flags)
+  r <- traceAroundEvent "vkGetQueryPoolResults" (vkGetQueryPoolResults' (deviceHandle (device)) (queryPool) (firstQuery) (queryCount) (CSize (dataSize)) (data') (stride) (flags))
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 

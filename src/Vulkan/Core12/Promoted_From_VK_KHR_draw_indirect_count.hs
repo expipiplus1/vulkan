@@ -4,6 +4,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count  ( cmdDrawIndirect
                                                                , cmdDrawIndexedIndirectCount
                                                                ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import GHC.IO (throwIO)
@@ -586,7 +587,7 @@ cmdDrawIndirectCount commandBuffer buffer offset countBuffer countBufferOffset m
   unless (vkCmdDrawIndirectCountPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndirectCount is null" Nothing Nothing
   let vkCmdDrawIndirectCount' = mkVkCmdDrawIndirectCount vkCmdDrawIndirectCountPtr
-  vkCmdDrawIndirectCount' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride)
+  traceAroundEvent "vkCmdDrawIndirectCount" (vkCmdDrawIndirectCount' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride))
   pure $ ()
 
 
@@ -1161,6 +1162,6 @@ cmdDrawIndexedIndirectCount commandBuffer buffer offset countBuffer countBufferO
   unless (vkCmdDrawIndexedIndirectCountPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndexedIndirectCount is null" Nothing Nothing
   let vkCmdDrawIndexedIndirectCount' = mkVkCmdDrawIndexedIndirectCount vkCmdDrawIndexedIndirectCountPtr
-  vkCmdDrawIndexedIndirectCount' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride)
+  traceAroundEvent "vkCmdDrawIndexedIndirectCount" (vkCmdDrawIndexedIndirectCount' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride))
   pure $ ()
 

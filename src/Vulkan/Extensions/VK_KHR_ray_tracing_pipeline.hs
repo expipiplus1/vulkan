@@ -757,6 +757,7 @@ module Vulkan.Extensions.VK_KHR_ray_tracing_pipeline  ( cmdTraceRaysKHR
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -1368,7 +1369,7 @@ cmdTraceRaysKHR commandBuffer raygenShaderBindingTable missShaderBindingTable hi
   pMissShaderBindingTable <- ContT $ withCStruct (missShaderBindingTable)
   pHitShaderBindingTable <- ContT $ withCStruct (hitShaderBindingTable)
   pCallableShaderBindingTable <- ContT $ withCStruct (callableShaderBindingTable)
-  lift $ vkCmdTraceRaysKHR' (commandBufferHandle (commandBuffer)) pRaygenShaderBindingTable pMissShaderBindingTable pHitShaderBindingTable pCallableShaderBindingTable (width) (height) (depth)
+  lift $ traceAroundEvent "vkCmdTraceRaysKHR" (vkCmdTraceRaysKHR' (commandBufferHandle (commandBuffer)) pRaygenShaderBindingTable pMissShaderBindingTable pHitShaderBindingTable pCallableShaderBindingTable (width) (height) (depth))
   pure $ ()
 
 
@@ -1458,7 +1459,7 @@ getRayTracingShaderGroupHandlesKHR device pipeline firstGroup groupCount dataSiz
   unless (vkGetRayTracingShaderGroupHandlesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingShaderGroupHandlesKHR is null" Nothing Nothing
   let vkGetRayTracingShaderGroupHandlesKHR' = mkVkGetRayTracingShaderGroupHandlesKHR vkGetRayTracingShaderGroupHandlesKHRPtr
-  r <- vkGetRayTracingShaderGroupHandlesKHR' (deviceHandle (device)) (pipeline) (firstGroup) (groupCount) (CSize (dataSize)) (data')
+  r <- traceAroundEvent "vkGetRayTracingShaderGroupHandlesKHR" (vkGetRayTracingShaderGroupHandlesKHR' (deviceHandle (device)) (pipeline) (firstGroup) (groupCount) (CSize (dataSize)) (data'))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1550,7 +1551,7 @@ getRayTracingCaptureReplayShaderGroupHandlesKHR device pipeline firstGroup group
   unless (vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingCaptureReplayShaderGroupHandlesKHR is null" Nothing Nothing
   let vkGetRayTracingCaptureReplayShaderGroupHandlesKHR' = mkVkGetRayTracingCaptureReplayShaderGroupHandlesKHR vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr
-  r <- vkGetRayTracingCaptureReplayShaderGroupHandlesKHR' (deviceHandle (device)) (pipeline) (firstGroup) (groupCount) (CSize (dataSize)) (data')
+  r <- traceAroundEvent "vkGetRayTracingCaptureReplayShaderGroupHandlesKHR" (vkGetRayTracingCaptureReplayShaderGroupHandlesKHR' (deviceHandle (device)) (pipeline) (firstGroup) (groupCount) (CSize (dataSize)) (data'))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1718,7 +1719,7 @@ createRayTracingPipelinesKHR device deferredOperation pipelineCache createInfos 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPPipelines <- ContT $ bracket (callocBytes @Pipeline ((fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) * 8)) free
-  r <- lift $ vkCreateRayTracingPipelinesKHR' (deviceHandle (device)) (deferredOperation) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (forgetExtensions (pPCreateInfos)) pAllocator (pPPipelines)
+  r <- lift $ traceAroundEvent "vkCreateRayTracingPipelinesKHR" (vkCreateRayTracingPipelinesKHR' (deviceHandle (device)) (deferredOperation) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (forgetExtensions (pPCreateInfos)) pAllocator (pPPipelines))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
   pure $ (r, pPipelines)
@@ -2239,7 +2240,7 @@ cmdTraceRaysIndirectKHR commandBuffer raygenShaderBindingTable missShaderBinding
   pMissShaderBindingTable <- ContT $ withCStruct (missShaderBindingTable)
   pHitShaderBindingTable <- ContT $ withCStruct (hitShaderBindingTable)
   pCallableShaderBindingTable <- ContT $ withCStruct (callableShaderBindingTable)
-  lift $ vkCmdTraceRaysIndirectKHR' (commandBufferHandle (commandBuffer)) pRaygenShaderBindingTable pMissShaderBindingTable pHitShaderBindingTable pCallableShaderBindingTable (indirectDeviceAddress)
+  lift $ traceAroundEvent "vkCmdTraceRaysIndirectKHR" (vkCmdTraceRaysIndirectKHR' (commandBufferHandle (commandBuffer)) pRaygenShaderBindingTable pMissShaderBindingTable pHitShaderBindingTable pCallableShaderBindingTable (indirectDeviceAddress))
   pure $ ()
 
 
@@ -2304,7 +2305,7 @@ getRayTracingShaderGroupStackSizeKHR device pipeline group groupShader = liftIO 
   unless (vkGetRayTracingShaderGroupStackSizeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingShaderGroupStackSizeKHR is null" Nothing Nothing
   let vkGetRayTracingShaderGroupStackSizeKHR' = mkVkGetRayTracingShaderGroupStackSizeKHR vkGetRayTracingShaderGroupStackSizeKHRPtr
-  r <- vkGetRayTracingShaderGroupStackSizeKHR' (deviceHandle (device)) (pipeline) (group) (groupShader)
+  r <- traceAroundEvent "vkGetRayTracingShaderGroupStackSizeKHR" (vkGetRayTracingShaderGroupStackSizeKHR' (deviceHandle (device)) (pipeline) (group) (groupShader))
   pure $ (r)
 
 
@@ -2383,7 +2384,7 @@ cmdSetRayTracingPipelineStackSizeKHR commandBuffer pipelineStackSize = liftIO $ 
   unless (vkCmdSetRayTracingPipelineStackSizeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetRayTracingPipelineStackSizeKHR is null" Nothing Nothing
   let vkCmdSetRayTracingPipelineStackSizeKHR' = mkVkCmdSetRayTracingPipelineStackSizeKHR vkCmdSetRayTracingPipelineStackSizeKHRPtr
-  vkCmdSetRayTracingPipelineStackSizeKHR' (commandBufferHandle (commandBuffer)) (pipelineStackSize)
+  traceAroundEvent "vkCmdSetRayTracingPipelineStackSizeKHR" (vkCmdSetRayTracingPipelineStackSizeKHR' (commandBufferHandle (commandBuffer)) (pipelineStackSize))
   pure $ ()
 
 

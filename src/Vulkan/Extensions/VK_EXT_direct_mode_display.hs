@@ -111,6 +111,7 @@ module Vulkan.Extensions.VK_EXT_direct_mode_display  ( releaseDisplayEXT
                                                      , DisplayKHR(..)
                                                      ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import GHC.IO (throwIO)
@@ -170,7 +171,7 @@ releaseDisplayEXT physicalDevice display = liftIO $ do
   unless (vkReleaseDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseDisplayEXT is null" Nothing Nothing
   let vkReleaseDisplayEXT' = mkVkReleaseDisplayEXT vkReleaseDisplayEXTPtr
-  _ <- vkReleaseDisplayEXT' (physicalDeviceHandle (physicalDevice)) (display)
+  _ <- traceAroundEvent "vkReleaseDisplayEXT" (vkReleaseDisplayEXT' (physicalDeviceHandle (physicalDevice)) (display))
   pure $ ()
 
 

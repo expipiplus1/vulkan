@@ -127,6 +127,7 @@ module Vulkan.Extensions.VK_EXT_hdr_metadata  ( setHdrMetadataEXT
                                               , SwapchainKHR(..)
                                               ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -227,7 +228,7 @@ setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSwapchains `plusPtr` (8 * (i)) :: Ptr SwapchainKHR) (e)) (swapchains)
   pPMetadata <- ContT $ allocaBytesAligned @HdrMetadataEXT ((Data.Vector.length (metadata)) * 64) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMetadata `plusPtr` (64 * (i)) :: Ptr HdrMetadataEXT) (e)) (metadata)
-  lift $ vkSetHdrMetadataEXT' (deviceHandle (device)) ((fromIntegral pSwapchainsLength :: Word32)) (pPSwapchains) (pPMetadata)
+  lift $ traceAroundEvent "vkSetHdrMetadataEXT" (vkSetHdrMetadataEXT' (deviceHandle (device)) ((fromIntegral pSwapchainsLength :: Word32)) (pPSwapchains) (pPMetadata))
   pure $ ()
 
 

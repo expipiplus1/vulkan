@@ -64,6 +64,7 @@ module Vulkan.Core10.DeviceInitialization  ( createInstance
                                            ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -323,7 +324,7 @@ createInstance createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPInstance <- ContT $ bracket (callocBytes @(Ptr Instance_T) 8) free
-  r <- lift $ vkCreateInstance' (forgetExtensions pCreateInfo) pAllocator (pPInstance)
+  r <- lift $ traceAroundEvent "vkCreateInstance" (vkCreateInstance' (forgetExtensions pCreateInfo) pAllocator (pPInstance))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pInstance <- lift $ peek @(Ptr Instance_T) pPInstance
   pInstance' <- lift $ (\h -> Instance h <$> initInstanceCmds h) pInstance
@@ -405,7 +406,7 @@ destroyInstance instance' allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyInstance' (instanceHandle (instance')) pAllocator
+  lift $ traceAroundEvent "vkDestroyInstance" (vkDestroyInstance' (instanceHandle (instance')) pAllocator)
   pure $ ()
 
 
@@ -481,11 +482,11 @@ enumeratePhysicalDevices instance' = liftIO . evalContT $ do
   let vkEnumeratePhysicalDevices' = mkVkEnumeratePhysicalDevices vkEnumeratePhysicalDevicesPtr
   let instance'' = instanceHandle (instance')
   pPPhysicalDeviceCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkEnumeratePhysicalDevices' instance'' (pPPhysicalDeviceCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkEnumeratePhysicalDevices" (vkEnumeratePhysicalDevices' instance'' (pPPhysicalDeviceCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPhysicalDeviceCount <- lift $ peek @Word32 pPPhysicalDeviceCount
   pPPhysicalDevices <- ContT $ bracket (callocBytes @(Ptr PhysicalDevice_T) ((fromIntegral (pPhysicalDeviceCount)) * 8)) free
-  r' <- lift $ vkEnumeratePhysicalDevices' instance'' (pPPhysicalDeviceCount) (pPPhysicalDevices)
+  r' <- lift $ traceAroundEvent "vkEnumeratePhysicalDevices" (vkEnumeratePhysicalDevices' instance'' (pPPhysicalDeviceCount) (pPPhysicalDevices))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPhysicalDeviceCount' <- lift $ peek @Word32 pPPhysicalDeviceCount
   pPhysicalDevices' <- lift $ generateM (fromIntegral (pPhysicalDeviceCount')) (\i -> do
@@ -574,7 +575,7 @@ getDeviceProcAddr device name = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceProcAddr is null" Nothing Nothing
   let vkGetDeviceProcAddr' = mkVkGetDeviceProcAddr vkGetDeviceProcAddrPtr
   pName <- ContT $ useAsCString (name)
-  r <- lift $ vkGetDeviceProcAddr' (deviceHandle (device)) pName
+  r <- lift $ traceAroundEvent "vkGetDeviceProcAddr" (vkGetDeviceProcAddr' (deviceHandle (device)) pName)
   pure $ (r)
 
 
@@ -679,7 +680,7 @@ getInstanceProcAddr instance' name = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetInstanceProcAddr is null" Nothing Nothing
   let vkGetInstanceProcAddr' = mkVkGetInstanceProcAddr vkGetInstanceProcAddrPtr
   pName <- ContT $ useAsCString (name)
-  r <- lift $ vkGetInstanceProcAddr' (instanceHandle (instance')) pName
+  r <- lift $ traceAroundEvent "vkGetInstanceProcAddr" (vkGetInstanceProcAddr' (instanceHandle (instance')) pName)
   pure $ (r)
 
 
@@ -713,7 +714,7 @@ getPhysicalDeviceProperties physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceProperties' = mkVkGetPhysicalDeviceProperties vkGetPhysicalDevicePropertiesPtr
   pPProperties <- ContT (withZeroCStruct @PhysicalDeviceProperties)
-  lift $ vkGetPhysicalDeviceProperties' (physicalDeviceHandle (physicalDevice)) (pPProperties)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceProperties" (vkGetPhysicalDeviceProperties' (physicalDeviceHandle (physicalDevice)) (pPProperties))
   pProperties <- lift $ peekCStruct @PhysicalDeviceProperties pPProperties
   pure $ (pProperties)
 
@@ -773,11 +774,11 @@ getPhysicalDeviceQueueFamilyProperties physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyProperties' = mkVkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyPropertiesPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPQueueFamilyPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ vkGetPhysicalDeviceQueueFamilyProperties' physicalDevice' (pPQueueFamilyPropertyCount) (nullPtr)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties" (vkGetPhysicalDeviceQueueFamilyProperties' physicalDevice' (pPQueueFamilyPropertyCount) (nullPtr))
   pQueueFamilyPropertyCount <- lift $ peek @Word32 pPQueueFamilyPropertyCount
   pPQueueFamilyProperties <- ContT $ bracket (callocBytes @QueueFamilyProperties ((fromIntegral (pQueueFamilyPropertyCount)) * 24)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPQueueFamilyProperties `advancePtrBytes` (i * 24) :: Ptr QueueFamilyProperties) . ($ ())) [0..(fromIntegral (pQueueFamilyPropertyCount)) - 1]
-  lift $ vkGetPhysicalDeviceQueueFamilyProperties' physicalDevice' (pPQueueFamilyPropertyCount) ((pPQueueFamilyProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties" (vkGetPhysicalDeviceQueueFamilyProperties' physicalDevice' (pPQueueFamilyPropertyCount) ((pPQueueFamilyProperties)))
   pQueueFamilyPropertyCount' <- lift $ peek @Word32 pPQueueFamilyPropertyCount
   pQueueFamilyProperties' <- lift $ generateM (fromIntegral (pQueueFamilyPropertyCount')) (\i -> peekCStruct @QueueFamilyProperties (((pPQueueFamilyProperties) `advancePtrBytes` (24 * (i)) :: Ptr QueueFamilyProperties)))
   pure $ (pQueueFamilyProperties')
@@ -813,7 +814,7 @@ getPhysicalDeviceMemoryProperties physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMemoryProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceMemoryProperties' = mkVkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryPropertiesPtr
   pPMemoryProperties <- ContT (withZeroCStruct @PhysicalDeviceMemoryProperties)
-  lift $ vkGetPhysicalDeviceMemoryProperties' (physicalDeviceHandle (physicalDevice)) (pPMemoryProperties)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceMemoryProperties" (vkGetPhysicalDeviceMemoryProperties' (physicalDeviceHandle (physicalDevice)) (pPMemoryProperties))
   pMemoryProperties <- lift $ peekCStruct @PhysicalDeviceMemoryProperties pPMemoryProperties
   pure $ (pMemoryProperties)
 
@@ -848,7 +849,7 @@ getPhysicalDeviceFeatures physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFeatures is null" Nothing Nothing
   let vkGetPhysicalDeviceFeatures' = mkVkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeaturesPtr
   pPFeatures <- ContT (withZeroCStruct @PhysicalDeviceFeatures)
-  lift $ vkGetPhysicalDeviceFeatures' (physicalDeviceHandle (physicalDevice)) (pPFeatures)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceFeatures" (vkGetPhysicalDeviceFeatures' (physicalDeviceHandle (physicalDevice)) (pPFeatures))
   pFeatures <- lift $ peekCStruct @PhysicalDeviceFeatures pPFeatures
   pure $ (pFeatures)
 
@@ -890,7 +891,7 @@ getPhysicalDeviceFormatProperties physicalDevice format = liftIO . evalContT $ d
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFormatProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceFormatProperties' = mkVkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatPropertiesPtr
   pPFormatProperties <- ContT (withZeroCStruct @FormatProperties)
-  lift $ vkGetPhysicalDeviceFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (pPFormatProperties)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceFormatProperties" (vkGetPhysicalDeviceFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (pPFormatProperties))
   pFormatProperties <- lift $ peekCStruct @FormatProperties pPFormatProperties
   pure $ (pFormatProperties)
 
@@ -1017,7 +1018,7 @@ getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceImageFormatProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceImageFormatProperties' = mkVkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatPropertiesPtr
   pPImageFormatProperties <- ContT (withZeroCStruct @ImageFormatProperties)
-  r <- lift $ vkGetPhysicalDeviceImageFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (type') (tiling) (usage) (flags) (pPImageFormatProperties)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceImageFormatProperties" (vkGetPhysicalDeviceImageFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (type') (tiling) (usage) (flags) (pPImageFormatProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImageFormatProperties <- lift $ peekCStruct @ImageFormatProperties pPImageFormatProperties
   pure $ (pImageFormatProperties)

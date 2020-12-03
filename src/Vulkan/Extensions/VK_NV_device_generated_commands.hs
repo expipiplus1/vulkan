@@ -582,6 +582,7 @@ module Vulkan.Extensions.VK_NV_device_generated_commands  ( cmdExecuteGeneratedC
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -1204,7 +1205,7 @@ cmdExecuteGeneratedCommandsNV commandBuffer isPreprocessed generatedCommandsInfo
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdExecuteGeneratedCommandsNV is null" Nothing Nothing
   let vkCmdExecuteGeneratedCommandsNV' = mkVkCmdExecuteGeneratedCommandsNV vkCmdExecuteGeneratedCommandsNVPtr
   pGeneratedCommandsInfo <- ContT $ withCStruct (generatedCommandsInfo)
-  lift $ vkCmdExecuteGeneratedCommandsNV' (commandBufferHandle (commandBuffer)) (boolToBool32 (isPreprocessed)) pGeneratedCommandsInfo
+  lift $ traceAroundEvent "vkCmdExecuteGeneratedCommandsNV" (vkCmdExecuteGeneratedCommandsNV' (commandBufferHandle (commandBuffer)) (boolToBool32 (isPreprocessed)) pGeneratedCommandsInfo)
   pure $ ()
 
 
@@ -1290,7 +1291,7 @@ cmdPreprocessGeneratedCommandsNV commandBuffer generatedCommandsInfo = liftIO . 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPreprocessGeneratedCommandsNV is null" Nothing Nothing
   let vkCmdPreprocessGeneratedCommandsNV' = mkVkCmdPreprocessGeneratedCommandsNV vkCmdPreprocessGeneratedCommandsNVPtr
   pGeneratedCommandsInfo <- ContT $ withCStruct (generatedCommandsInfo)
-  lift $ vkCmdPreprocessGeneratedCommandsNV' (commandBufferHandle (commandBuffer)) pGeneratedCommandsInfo
+  lift $ traceAroundEvent "vkCmdPreprocessGeneratedCommandsNV" (vkCmdPreprocessGeneratedCommandsNV' (commandBufferHandle (commandBuffer)) pGeneratedCommandsInfo)
   pure $ ()
 
 
@@ -1391,7 +1392,7 @@ cmdBindPipelineShaderGroupNV commandBuffer pipelineBindPoint pipeline groupIndex
   unless (vkCmdBindPipelineShaderGroupNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindPipelineShaderGroupNV is null" Nothing Nothing
   let vkCmdBindPipelineShaderGroupNV' = mkVkCmdBindPipelineShaderGroupNV vkCmdBindPipelineShaderGroupNVPtr
-  vkCmdBindPipelineShaderGroupNV' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (pipeline) (groupIndex)
+  traceAroundEvent "vkCmdBindPipelineShaderGroupNV" (vkCmdBindPipelineShaderGroupNV' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (pipeline) (groupIndex))
   pure $ ()
 
 
@@ -1447,7 +1448,7 @@ getGeneratedCommandsMemoryRequirementsNV device info = liftIO . evalContT $ do
   let vkGetGeneratedCommandsMemoryRequirementsNV' = mkVkGetGeneratedCommandsMemoryRequirementsNV vkGetGeneratedCommandsMemoryRequirementsNVPtr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
-  lift $ vkGetGeneratedCommandsMemoryRequirementsNV' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements))
+  lift $ traceAroundEvent "vkGetGeneratedCommandsMemoryRequirementsNV" (vkGetGeneratedCommandsMemoryRequirementsNV' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements)))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2 _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -1527,7 +1528,7 @@ createIndirectCommandsLayoutNV device createInfo allocator = liftIO . evalContT 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPIndirectCommandsLayout <- ContT $ bracket (callocBytes @IndirectCommandsLayoutNV 8) free
-  r <- lift $ vkCreateIndirectCommandsLayoutNV' (deviceHandle (device)) pCreateInfo pAllocator (pPIndirectCommandsLayout)
+  r <- lift $ traceAroundEvent "vkCreateIndirectCommandsLayoutNV" (vkCreateIndirectCommandsLayoutNV' (deviceHandle (device)) pCreateInfo pAllocator (pPIndirectCommandsLayout))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pIndirectCommandsLayout <- lift $ peek @IndirectCommandsLayoutNV pPIndirectCommandsLayout
   pure $ (pIndirectCommandsLayout)
@@ -1625,7 +1626,7 @@ destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyIndirectCommandsLayoutNV' (deviceHandle (device)) (indirectCommandsLayout) pAllocator
+  lift $ traceAroundEvent "vkDestroyIndirectCommandsLayoutNV" (vkDestroyIndirectCommandsLayoutNV' (deviceHandle (device)) (indirectCommandsLayout) pAllocator)
   pure $ ()
 
 

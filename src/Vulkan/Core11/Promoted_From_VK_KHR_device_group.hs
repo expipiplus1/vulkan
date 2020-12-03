@@ -20,6 +20,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_device_group  ( getDeviceGroupPeerMemo
                                                         , MemoryAllocateFlags
                                                         ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -138,7 +139,7 @@ getDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceI
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupPeerMemoryFeatures is null" Nothing Nothing
   let vkGetDeviceGroupPeerMemoryFeatures' = mkVkGetDeviceGroupPeerMemoryFeatures vkGetDeviceGroupPeerMemoryFeaturesPtr
   pPPeerMemoryFeatures <- ContT $ bracket (callocBytes @PeerMemoryFeatureFlags 4) free
-  lift $ vkGetDeviceGroupPeerMemoryFeatures' (deviceHandle (device)) (heapIndex) (localDeviceIndex) (remoteDeviceIndex) (pPPeerMemoryFeatures)
+  lift $ traceAroundEvent "vkGetDeviceGroupPeerMemoryFeatures" (vkGetDeviceGroupPeerMemoryFeatures' (deviceHandle (device)) (heapIndex) (localDeviceIndex) (remoteDeviceIndex) (pPPeerMemoryFeatures))
   pPeerMemoryFeatures <- lift $ peek @PeerMemoryFeatureFlags pPPeerMemoryFeatures
   pure $ (pPeerMemoryFeatures)
 
@@ -230,7 +231,7 @@ cmdSetDeviceMask commandBuffer deviceMask = liftIO $ do
   unless (vkCmdSetDeviceMaskPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDeviceMask is null" Nothing Nothing
   let vkCmdSetDeviceMask' = mkVkCmdSetDeviceMask vkCmdSetDeviceMaskPtr
-  vkCmdSetDeviceMask' (commandBufferHandle (commandBuffer)) (deviceMask)
+  traceAroundEvent "vkCmdSetDeviceMask" (vkCmdSetDeviceMask' (commandBufferHandle (commandBuffer)) (deviceMask))
   pure $ ()
 
 
@@ -557,7 +558,7 @@ cmdDispatchBase commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX group
   unless (vkCmdDispatchBasePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatchBase is null" Nothing Nothing
   let vkCmdDispatchBase' = mkVkCmdDispatchBase vkCmdDispatchBasePtr
-  vkCmdDispatchBase' (commandBufferHandle (commandBuffer)) (baseGroupX) (baseGroupY) (baseGroupZ) (groupCountX) (groupCountY) (groupCountZ)
+  traceAroundEvent "vkCmdDispatchBase" (vkCmdDispatchBase' (commandBufferHandle (commandBuffer)) (baseGroupX) (baseGroupY) (baseGroupZ) (groupCountX) (groupCountY) (groupCountZ))
   pure $ ()
 
 

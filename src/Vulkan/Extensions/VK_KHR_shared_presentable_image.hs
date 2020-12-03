@@ -226,6 +226,7 @@ module Vulkan.Extensions.VK_KHR_shared_presentable_image  ( getSwapchainStatusKH
                                                           , PresentModeKHR(..)
                                                           ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -329,7 +330,7 @@ getSwapchainStatusKHR device swapchain = liftIO $ do
   unless (vkGetSwapchainStatusKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainStatusKHR is null" Nothing Nothing
   let vkGetSwapchainStatusKHR' = mkVkGetSwapchainStatusKHR vkGetSwapchainStatusKHRPtr
-  r <- vkGetSwapchainStatusKHR' (deviceHandle (device)) (swapchain)
+  r <- traceAroundEvent "vkGetSwapchainStatusKHR" (vkGetSwapchainStatusKHR' (deviceHandle (device)) (swapchain))
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 

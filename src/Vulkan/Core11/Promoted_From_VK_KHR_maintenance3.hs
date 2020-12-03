@@ -6,6 +6,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_maintenance3  ( getDescriptorSetLayout
                                                         , StructureType(..)
                                                         ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
@@ -131,7 +132,7 @@ getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
   let vkGetDescriptorSetLayoutSupport' = mkVkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupportPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPSupport <- ContT (withZeroCStruct @(DescriptorSetLayoutSupport _))
-  lift $ vkGetDescriptorSetLayoutSupport' (deviceHandle (device)) (forgetExtensions pCreateInfo) (forgetExtensions (pPSupport))
+  lift $ traceAroundEvent "vkGetDescriptorSetLayoutSupport" (vkGetDescriptorSetLayoutSupport' (deviceHandle (device)) (forgetExtensions pCreateInfo) (forgetExtensions (pPSupport)))
   pSupport <- lift $ peekCStruct @(DescriptorSetLayoutSupport _) pPSupport
   pure $ (pSupport)
 

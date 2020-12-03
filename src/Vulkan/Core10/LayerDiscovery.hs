@@ -6,6 +6,7 @@ module Vulkan.Core10.LayerDiscovery  ( enumerateInstanceLayerProperties
                                      ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -129,12 +130,12 @@ enumerateInstanceLayerProperties  = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumerateInstanceLayerProperties is null" Nothing Nothing
   let vkEnumerateInstanceLayerProperties' = mkVkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerPropertiesPtr
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkEnumerateInstanceLayerProperties' (pPPropertyCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkEnumerateInstanceLayerProperties" (vkEnumerateInstanceLayerProperties' (pPPropertyCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @LayerProperties ((fromIntegral (pPropertyCount)) * 520)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 520) :: Ptr LayerProperties) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ vkEnumerateInstanceLayerProperties' (pPPropertyCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkEnumerateInstanceLayerProperties" (vkEnumerateInstanceLayerProperties' (pPPropertyCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @LayerProperties (((pPProperties) `advancePtrBytes` (520 * (i)) :: Ptr LayerProperties)))
@@ -214,12 +215,12 @@ enumerateDeviceLayerProperties physicalDevice = liftIO . evalContT $ do
   let vkEnumerateDeviceLayerProperties' = mkVkEnumerateDeviceLayerProperties vkEnumerateDeviceLayerPropertiesPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkEnumerateDeviceLayerProperties' physicalDevice' (pPPropertyCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkEnumerateDeviceLayerProperties" (vkEnumerateDeviceLayerProperties' physicalDevice' (pPPropertyCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @LayerProperties ((fromIntegral (pPropertyCount)) * 520)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 520) :: Ptr LayerProperties) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ vkEnumerateDeviceLayerProperties' physicalDevice' (pPPropertyCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkEnumerateDeviceLayerProperties" (vkEnumerateDeviceLayerProperties' physicalDevice' (pPPropertyCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @LayerProperties (((pPProperties) `advancePtrBytes` (520 * (i)) :: Ptr LayerProperties)))

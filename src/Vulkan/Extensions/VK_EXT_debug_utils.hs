@@ -531,6 +531,7 @@ module Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameEXT
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -691,7 +692,7 @@ setDebugUtilsObjectNameEXT device nameInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDebugUtilsObjectNameEXT is null" Nothing Nothing
   let vkSetDebugUtilsObjectNameEXT' = mkVkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXTPtr
   pNameInfo <- ContT $ withCStruct (nameInfo)
-  r <- lift $ vkSetDebugUtilsObjectNameEXT' (deviceHandle (device)) pNameInfo
+  r <- lift $ traceAroundEvent "vkSetDebugUtilsObjectNameEXT" (vkSetDebugUtilsObjectNameEXT' (deviceHandle (device)) pNameInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -747,7 +748,7 @@ setDebugUtilsObjectTagEXT device tagInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDebugUtilsObjectTagEXT is null" Nothing Nothing
   let vkSetDebugUtilsObjectTagEXT' = mkVkSetDebugUtilsObjectTagEXT vkSetDebugUtilsObjectTagEXTPtr
   pTagInfo <- ContT $ withCStruct (tagInfo)
-  r <- lift $ vkSetDebugUtilsObjectTagEXT' (deviceHandle (device)) pTagInfo
+  r <- lift $ traceAroundEvent "vkSetDebugUtilsObjectTagEXT" (vkSetDebugUtilsObjectTagEXT' (deviceHandle (device)) pTagInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -793,7 +794,7 @@ queueBeginDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueBeginDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueBeginDebugUtilsLabelEXT' = mkVkQueueBeginDebugUtilsLabelEXT vkQueueBeginDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
-  lift $ vkQueueBeginDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo
+  lift $ traceAroundEvent "vkQueueBeginDebugUtilsLabelEXT" (vkQueueBeginDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo)
   pure $ ()
 
 
@@ -845,7 +846,7 @@ queueEndDebugUtilsLabelEXT queue = liftIO $ do
   unless (vkQueueEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueEndDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueEndDebugUtilsLabelEXT' = mkVkQueueEndDebugUtilsLabelEXT vkQueueEndDebugUtilsLabelEXTPtr
-  vkQueueEndDebugUtilsLabelEXT' (queueHandle (queue))
+  traceAroundEvent "vkQueueEndDebugUtilsLabelEXT" (vkQueueEndDebugUtilsLabelEXT' (queueHandle (queue)))
   pure $ ()
 
 
@@ -891,7 +892,7 @@ queueInsertDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueInsertDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueInsertDebugUtilsLabelEXT' = mkVkQueueInsertDebugUtilsLabelEXT vkQueueInsertDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
-  lift $ vkQueueInsertDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo
+  lift $ traceAroundEvent "vkQueueInsertDebugUtilsLabelEXT" (vkQueueInsertDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo)
   pure $ ()
 
 
@@ -958,7 +959,7 @@ cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdBeginDebugUtilsLabelEXT' = mkVkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
-  lift $ vkCmdBeginDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
+  lift $ traceAroundEvent "vkCmdBeginDebugUtilsLabelEXT" (vkCmdBeginDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo)
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -1048,7 +1049,7 @@ cmdEndDebugUtilsLabelEXT commandBuffer = liftIO $ do
   unless (vkCmdEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdEndDebugUtilsLabelEXT' = mkVkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXTPtr
-  vkCmdEndDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer))
+  traceAroundEvent "vkCmdEndDebugUtilsLabelEXT" (vkCmdEndDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)))
   pure $ ()
 
 
@@ -1114,7 +1115,7 @@ cmdInsertDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdInsertDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdInsertDebugUtilsLabelEXT' = mkVkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
-  lift $ vkCmdInsertDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
+  lift $ traceAroundEvent "vkCmdInsertDebugUtilsLabelEXT" (vkCmdInsertDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo)
   pure $ ()
 
 
@@ -1188,7 +1189,7 @@ createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPMessenger <- ContT $ bracket (callocBytes @DebugUtilsMessengerEXT 8) free
-  r <- lift $ vkCreateDebugUtilsMessengerEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPMessenger)
+  r <- lift $ traceAroundEvent "vkCreateDebugUtilsMessengerEXT" (vkCreateDebugUtilsMessengerEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPMessenger))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMessenger <- lift $ peek @DebugUtilsMessengerEXT pPMessenger
   pure $ (pMessenger)
@@ -1282,7 +1283,7 @@ destroyDebugUtilsMessengerEXT instance' messenger allocator = liftIO . evalContT
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyDebugUtilsMessengerEXT' (instanceHandle (instance')) (messenger) pAllocator
+  lift $ traceAroundEvent "vkDestroyDebugUtilsMessengerEXT" (vkDestroyDebugUtilsMessengerEXT' (instanceHandle (instance')) (messenger) pAllocator)
   pure $ ()
 
 
@@ -1352,7 +1353,7 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSubmitDebugUtilsMessageEXT is null" Nothing Nothing
   let vkSubmitDebugUtilsMessageEXT' = mkVkSubmitDebugUtilsMessageEXT vkSubmitDebugUtilsMessageEXTPtr
   pCallbackData <- ContT $ withCStruct (callbackData)
-  lift $ vkSubmitDebugUtilsMessageEXT' (instanceHandle (instance')) (messageSeverity) (messageTypes) pCallbackData
+  lift $ traceAroundEvent "vkSubmitDebugUtilsMessageEXT" (vkSubmitDebugUtilsMessageEXT' (instanceHandle (instance')) (messageSeverity) (messageTypes) pCallbackData)
   pure $ ()
 
 

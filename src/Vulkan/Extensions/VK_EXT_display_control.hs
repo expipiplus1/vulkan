@@ -181,6 +181,7 @@ module Vulkan.Extensions.VK_EXT_display_control  ( displayPowerControlEXT
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -305,7 +306,7 @@ displayPowerControlEXT device display displayPowerInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDisplayPowerControlEXT is null" Nothing Nothing
   let vkDisplayPowerControlEXT' = mkVkDisplayPowerControlEXT vkDisplayPowerControlEXTPtr
   pDisplayPowerInfo <- ContT $ withCStruct (displayPowerInfo)
-  r <- lift $ vkDisplayPowerControlEXT' (deviceHandle (device)) (display) pDisplayPowerInfo
+  r <- lift $ traceAroundEvent "vkDisplayPowerControlEXT" (vkDisplayPowerControlEXT' (deviceHandle (device)) (display) pDisplayPowerInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -371,7 +372,7 @@ registerDeviceEventEXT device deviceEventInfo allocator = liftIO . evalContT $ d
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFence <- ContT $ bracket (callocBytes @Fence 8) free
-  r <- lift $ vkRegisterDeviceEventEXT' (deviceHandle (device)) pDeviceEventInfo pAllocator (pPFence)
+  r <- lift $ traceAroundEvent "vkRegisterDeviceEventEXT" (vkRegisterDeviceEventEXT' (deviceHandle (device)) pDeviceEventInfo pAllocator (pPFence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)
@@ -449,7 +450,7 @@ registerDisplayEventEXT device display displayEventInfo allocator = liftIO . eva
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFence <- ContT $ bracket (callocBytes @Fence 8) free
-  r <- lift $ vkRegisterDisplayEventEXT' (deviceHandle (device)) (display) pDisplayEventInfo pAllocator (pPFence)
+  r <- lift $ traceAroundEvent "vkRegisterDisplayEventEXT" (vkRegisterDisplayEventEXT' (deviceHandle (device)) (display) pDisplayEventInfo pAllocator (pPFence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)
@@ -531,7 +532,7 @@ getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainCounterEXT is null" Nothing Nothing
   let vkGetSwapchainCounterEXT' = mkVkGetSwapchainCounterEXT vkGetSwapchainCounterEXTPtr
   pPCounterValue <- ContT $ bracket (callocBytes @Word64 8) free
-  r <- lift $ vkGetSwapchainCounterEXT' (deviceHandle (device)) (swapchain) (counter) (pPCounterValue)
+  r <- lift $ traceAroundEvent "vkGetSwapchainCounterEXT" (vkGetSwapchainCounterEXT' (deviceHandle (device)) (swapchain) (counter) (pPCounterValue))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCounterValue <- lift $ peek @Word64 pPCounterValue
   pure $ (pCounterValue)

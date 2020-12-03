@@ -175,6 +175,7 @@ module Vulkan.Extensions.VK_KHR_copy_commands2  ( cmdCopyBuffer2KHR
                                                 ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
@@ -343,7 +344,7 @@ cmdCopyBuffer2KHR commandBuffer copyBufferInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBuffer2KHR is null" Nothing Nothing
   let vkCmdCopyBuffer2KHR' = mkVkCmdCopyBuffer2KHR vkCmdCopyBuffer2KHRPtr
   pCopyBufferInfo <- ContT $ withCStruct (copyBufferInfo)
-  lift $ vkCmdCopyBuffer2KHR' (commandBufferHandle (commandBuffer)) pCopyBufferInfo
+  lift $ traceAroundEvent "vkCmdCopyBuffer2KHR" (vkCmdCopyBuffer2KHR' (commandBufferHandle (commandBuffer)) pCopyBufferInfo)
   pure $ ()
 
 
@@ -434,7 +435,7 @@ cmdCopyImage2KHR commandBuffer copyImageInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImage2KHR is null" Nothing Nothing
   let vkCmdCopyImage2KHR' = mkVkCmdCopyImage2KHR vkCmdCopyImage2KHRPtr
   pCopyImageInfo <- ContT $ withCStruct (copyImageInfo)
-  lift $ vkCmdCopyImage2KHR' (commandBufferHandle (commandBuffer)) pCopyImageInfo
+  lift $ traceAroundEvent "vkCmdCopyImage2KHR" (vkCmdCopyImage2KHR' (commandBufferHandle (commandBuffer)) pCopyImageInfo)
   pure $ ()
 
 
@@ -524,7 +525,7 @@ cmdBlitImage2KHR commandBuffer blitImageInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBlitImage2KHR is null" Nothing Nothing
   let vkCmdBlitImage2KHR' = mkVkCmdBlitImage2KHR vkCmdBlitImage2KHRPtr
   pBlitImageInfo <- ContT $ withCStruct (blitImageInfo)
-  lift $ vkCmdBlitImage2KHR' (commandBufferHandle (commandBuffer)) pBlitImageInfo
+  lift $ traceAroundEvent "vkCmdBlitImage2KHR" (vkCmdBlitImage2KHR' (commandBufferHandle (commandBuffer)) pBlitImageInfo)
   pure $ ()
 
 
@@ -617,7 +618,7 @@ cmdCopyBufferToImage2KHR commandBuffer copyBufferToImageInfo = liftIO . evalCont
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBufferToImage2KHR is null" Nothing Nothing
   let vkCmdCopyBufferToImage2KHR' = mkVkCmdCopyBufferToImage2KHR vkCmdCopyBufferToImage2KHRPtr
   pCopyBufferToImageInfo <- ContT $ withCStruct (copyBufferToImageInfo)
-  lift $ vkCmdCopyBufferToImage2KHR' (commandBufferHandle (commandBuffer)) pCopyBufferToImageInfo
+  lift $ traceAroundEvent "vkCmdCopyBufferToImage2KHR" (vkCmdCopyBufferToImage2KHR' (commandBufferHandle (commandBuffer)) pCopyBufferToImageInfo)
   pure $ ()
 
 
@@ -710,7 +711,7 @@ cmdCopyImageToBuffer2KHR commandBuffer copyImageToBufferInfo = liftIO . evalCont
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImageToBuffer2KHR is null" Nothing Nothing
   let vkCmdCopyImageToBuffer2KHR' = mkVkCmdCopyImageToBuffer2KHR vkCmdCopyImageToBuffer2KHRPtr
   pCopyImageToBufferInfo <- ContT $ withCStruct (copyImageToBufferInfo)
-  lift $ vkCmdCopyImageToBuffer2KHR' (commandBufferHandle (commandBuffer)) pCopyImageToBufferInfo
+  lift $ traceAroundEvent "vkCmdCopyImageToBuffer2KHR" (vkCmdCopyImageToBuffer2KHR' (commandBufferHandle (commandBuffer)) pCopyImageToBufferInfo)
   pure $ ()
 
 
@@ -800,7 +801,7 @@ cmdResolveImage2KHR commandBuffer resolveImageInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResolveImage2KHR is null" Nothing Nothing
   let vkCmdResolveImage2KHR' = mkVkCmdResolveImage2KHR vkCmdResolveImage2KHRPtr
   pResolveImageInfo <- ContT $ withCStruct (resolveImageInfo)
-  lift $ vkCmdResolveImage2KHR' (commandBufferHandle (commandBuffer)) pResolveImageInfo
+  lift $ traceAroundEvent "vkCmdResolveImage2KHR" (vkCmdResolveImage2KHR' (commandBufferHandle (commandBuffer)) pResolveImageInfo)
   pure $ ()
 
 

@@ -11,6 +11,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation  ( enumeratePhys
                                                                  ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -147,12 +148,12 @@ enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
   let vkEnumeratePhysicalDeviceGroups' = mkVkEnumeratePhysicalDeviceGroups vkEnumeratePhysicalDeviceGroupsPtr
   let instance'' = instanceHandle (instance')
   pPPhysicalDeviceGroupCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkEnumeratePhysicalDeviceGroups' instance'' (pPPhysicalDeviceGroupCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkEnumeratePhysicalDeviceGroups" (vkEnumeratePhysicalDeviceGroups' instance'' (pPPhysicalDeviceGroupCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPhysicalDeviceGroupCount <- lift $ peek @Word32 pPPhysicalDeviceGroupCount
   pPPhysicalDeviceGroupProperties <- ContT $ bracket (callocBytes @PhysicalDeviceGroupProperties ((fromIntegral (pPhysicalDeviceGroupCount)) * 288)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPPhysicalDeviceGroupProperties `advancePtrBytes` (i * 288) :: Ptr PhysicalDeviceGroupProperties) . ($ ())) [0..(fromIntegral (pPhysicalDeviceGroupCount)) - 1]
-  r' <- lift $ vkEnumeratePhysicalDeviceGroups' instance'' (pPPhysicalDeviceGroupCount) ((pPPhysicalDeviceGroupProperties))
+  r' <- lift $ traceAroundEvent "vkEnumeratePhysicalDeviceGroups" (vkEnumeratePhysicalDeviceGroups' instance'' (pPPhysicalDeviceGroupCount) ((pPPhysicalDeviceGroupProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPhysicalDeviceGroupCount' <- lift $ peek @Word32 pPPhysicalDeviceGroupCount
   pPhysicalDeviceGroupProperties' <- lift $ generateM (fromIntegral (pPhysicalDeviceGroupCount')) (\i -> peekCStruct @PhysicalDeviceGroupProperties (((pPPhysicalDeviceGroupProperties) `advancePtrBytes` (288 * (i)) :: Ptr PhysicalDeviceGroupProperties)))

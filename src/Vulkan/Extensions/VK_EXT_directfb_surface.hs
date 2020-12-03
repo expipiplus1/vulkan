@@ -106,6 +106,7 @@ module Vulkan.Extensions.VK_EXT_directfb_surface  ( createDirectFBSurfaceEXT
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -236,7 +237,7 @@ createDirectFBSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ d
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ vkCreateDirectFBSurfaceEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface)
+  r <- lift $ traceAroundEvent "vkCreateDirectFBSurfaceEXT" (vkCreateDirectFBSurfaceEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -289,7 +290,7 @@ getPhysicalDeviceDirectFBPresentationSupportEXT physicalDevice queueFamilyIndex 
   unless (vkGetPhysicalDeviceDirectFBPresentationSupportEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceDirectFBPresentationSupportEXT is null" Nothing Nothing
   let vkGetPhysicalDeviceDirectFBPresentationSupportEXT' = mkVkGetPhysicalDeviceDirectFBPresentationSupportEXT vkGetPhysicalDeviceDirectFBPresentationSupportEXTPtr
-  r <- vkGetPhysicalDeviceDirectFBPresentationSupportEXT' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (dfb)
+  r <- traceAroundEvent "vkGetPhysicalDeviceDirectFBPresentationSupportEXT" (vkGetPhysicalDeviceDirectFBPresentationSupportEXT' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (dfb))
   pure $ ((bool32ToBool r))
 
 

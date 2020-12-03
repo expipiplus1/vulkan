@@ -117,6 +117,7 @@ module Vulkan.Extensions.VK_KHR_external_semaphore_fd  ( getSemaphoreFdKHR
                                                        , pattern KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME
                                                        ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -237,7 +238,7 @@ getSemaphoreFdKHR device getFdInfo = liftIO . evalContT $ do
   let vkGetSemaphoreFdKHR' = mkVkGetSemaphoreFdKHR vkGetSemaphoreFdKHRPtr
   pGetFdInfo <- ContT $ withCStruct (getFdInfo)
   pPFd <- ContT $ bracket (callocBytes @CInt 4) free
-  r <- lift $ vkGetSemaphoreFdKHR' (deviceHandle (device)) pGetFdInfo (pPFd)
+  r <- lift $ traceAroundEvent "vkGetSemaphoreFdKHR" (vkGetSemaphoreFdKHR' (deviceHandle (device)) pGetFdInfo (pPFd))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFd <- lift $ peek @CInt pPFd
   pure $ (((\(CInt a) -> a) pFd))
@@ -299,7 +300,7 @@ importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreFdKHR is null" Nothing Nothing
   let vkImportSemaphoreFdKHR' = mkVkImportSemaphoreFdKHR vkImportSemaphoreFdKHRPtr
   pImportSemaphoreFdInfo <- ContT $ withCStruct (importSemaphoreFdInfo)
-  r <- lift $ vkImportSemaphoreFdKHR' (deviceHandle (device)) pImportSemaphoreFdInfo
+  r <- lift $ traceAroundEvent "vkImportSemaphoreFdKHR" (vkImportSemaphoreFdKHR' (deviceHandle (device)) pImportSemaphoreFdInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

@@ -135,6 +135,7 @@ module Vulkan.Extensions.VK_GOOGLE_display_timing  ( getRefreshCycleDurationGOOG
                                                    , SwapchainKHR(..)
                                                    ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -252,7 +253,7 @@ getRefreshCycleDurationGOOGLE device swapchain = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRefreshCycleDurationGOOGLE is null" Nothing Nothing
   let vkGetRefreshCycleDurationGOOGLE' = mkVkGetRefreshCycleDurationGOOGLE vkGetRefreshCycleDurationGOOGLEPtr
   pPDisplayTimingProperties <- ContT (withZeroCStruct @RefreshCycleDurationGOOGLE)
-  r <- lift $ vkGetRefreshCycleDurationGOOGLE' (deviceHandle (device)) (swapchain) (pPDisplayTimingProperties)
+  r <- lift $ traceAroundEvent "vkGetRefreshCycleDurationGOOGLE" (vkGetRefreshCycleDurationGOOGLE' (deviceHandle (device)) (swapchain) (pPDisplayTimingProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDisplayTimingProperties <- lift $ peekCStruct @RefreshCycleDurationGOOGLE pPDisplayTimingProperties
   pure $ (pDisplayTimingProperties)
@@ -349,12 +350,12 @@ getPastPresentationTimingGOOGLE device swapchain = liftIO . evalContT $ do
   let vkGetPastPresentationTimingGOOGLE' = mkVkGetPastPresentationTimingGOOGLE vkGetPastPresentationTimingGOOGLEPtr
   let device' = deviceHandle (device)
   pPPresentationTimingCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPastPresentationTimingGOOGLE' device' (swapchain) (pPPresentationTimingCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPastPresentationTimingGOOGLE" (vkGetPastPresentationTimingGOOGLE' device' (swapchain) (pPPresentationTimingCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPresentationTimingCount <- lift $ peek @Word32 pPPresentationTimingCount
   pPPresentationTimings <- ContT $ bracket (callocBytes @PastPresentationTimingGOOGLE ((fromIntegral (pPresentationTimingCount)) * 40)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPPresentationTimings `advancePtrBytes` (i * 40) :: Ptr PastPresentationTimingGOOGLE) . ($ ())) [0..(fromIntegral (pPresentationTimingCount)) - 1]
-  r' <- lift $ vkGetPastPresentationTimingGOOGLE' device' (swapchain) (pPPresentationTimingCount) ((pPPresentationTimings))
+  r' <- lift $ traceAroundEvent "vkGetPastPresentationTimingGOOGLE" (vkGetPastPresentationTimingGOOGLE' device' (swapchain) (pPPresentationTimingCount) ((pPPresentationTimings)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPresentationTimingCount' <- lift $ peek @Word32 pPPresentationTimingCount
   pPresentationTimings' <- lift $ generateM (fromIntegral (pPresentationTimingCount')) (\i -> peekCStruct @PastPresentationTimingGOOGLE (((pPPresentationTimings) `advancePtrBytes` (40 * (i)) :: Ptr PastPresentationTimingGOOGLE)))

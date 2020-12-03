@@ -12,6 +12,7 @@ module Vulkan.Core10.Queue  ( getDeviceQueue
                             , PipelineStageFlags
                             ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -155,7 +156,7 @@ getDeviceQueue device queueFamilyIndex queueIndex = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceQueue is null" Nothing Nothing
   let vkGetDeviceQueue' = mkVkGetDeviceQueue vkGetDeviceQueuePtr
   pPQueue <- ContT $ bracket (callocBytes @(Ptr Queue_T) 8) free
-  lift $ vkGetDeviceQueue' (deviceHandle (device)) (queueFamilyIndex) (queueIndex) (pPQueue)
+  lift $ traceAroundEvent "vkGetDeviceQueue" (vkGetDeviceQueue' (deviceHandle (device)) (queueFamilyIndex) (queueIndex) (pPQueue))
   pQueue <- lift $ peek @(Ptr Queue_T) pPQueue
   pure $ (((\h -> Queue h cmds ) pQueue))
 
@@ -405,7 +406,7 @@ queueSubmit queue submits fence = liftIO . evalContT $ do
   let vkQueueSubmit' = mkVkQueueSubmit vkQueueSubmitPtr
   pPSubmits <- ContT $ allocaBytesAligned @(SubmitInfo _) ((Data.Vector.length (submits)) * 72) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubmits `plusPtr` (72 * (i)) :: Ptr (SubmitInfo _))) (e) . ($ ())) (submits)
-  r <- lift $ vkQueueSubmit' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (submits)) :: Word32)) (forgetExtensions (pPSubmits)) (fence)
+  r <- lift $ traceAroundEvent "vkQueueSubmit" (vkQueueSubmit' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (submits)) :: Word32)) (forgetExtensions (pPSubmits)) (fence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -433,7 +434,7 @@ queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
   unless (vkQueueWaitIdlePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueWaitIdle is null" Nothing Nothing
   let vkQueueWaitIdle' = mkVkQueueWaitIdle vkQueueWaitIdlePtr
-  r <- vkQueueWaitIdle' (queueHandle (queue))
+  r <- traceAroundEvent "vkQueueWaitIdle" (vkQueueWaitIdle' (queueHandle (queue)))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 -- | vkQueueWaitIdle - Wait for a queue to become idle
@@ -519,7 +520,7 @@ deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdle device = liftIO $ do
   unless (vkDeviceWaitIdlePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDeviceWaitIdle is null" Nothing Nothing
   let vkDeviceWaitIdle' = mkVkDeviceWaitIdle vkDeviceWaitIdlePtr
-  r <- vkDeviceWaitIdle' (deviceHandle (device))
+  r <- traceAroundEvent "vkDeviceWaitIdle" (vkDeviceWaitIdle' (deviceHandle (device)))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 -- | vkDeviceWaitIdle - Wait for a device to become idle

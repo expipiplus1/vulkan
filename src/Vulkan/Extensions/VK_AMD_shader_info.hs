@@ -169,6 +169,7 @@ module Vulkan.Extensions.VK_AMD_shader_info  ( getShaderInfoAMD
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -341,11 +342,11 @@ getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
   let vkGetShaderInfoAMD' = mkVkGetShaderInfoAMD vkGetShaderInfoAMDPtr
   let device' = deviceHandle (device)
   pPInfoSize <- ContT $ bracket (callocBytes @CSize 8) free
-  r <- lift $ vkGetShaderInfoAMD' device' (pipeline) (shaderStage) (infoType) (pPInfoSize) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetShaderInfoAMD" (vkGetShaderInfoAMD' device' (pipeline) (shaderStage) (infoType) (pPInfoSize) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pInfoSize <- lift $ peek @CSize pPInfoSize
   pPInfo <- ContT $ bracket (callocBytes @(()) (fromIntegral (((\(CSize a) -> a) pInfoSize)))) free
-  r' <- lift $ vkGetShaderInfoAMD' device' (pipeline) (shaderStage) (infoType) (pPInfoSize) (pPInfo)
+  r' <- lift $ traceAroundEvent "vkGetShaderInfoAMD" (vkGetShaderInfoAMD' device' (pipeline) (shaderStage) (infoType) (pPInfoSize) (pPInfo))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pInfoSize'' <- lift $ peek @CSize pPInfoSize
   pInfo' <- lift $ packCStringLen  (castPtr @() @CChar pPInfo, (fromIntegral (((\(CSize a) -> a) pInfoSize''))))

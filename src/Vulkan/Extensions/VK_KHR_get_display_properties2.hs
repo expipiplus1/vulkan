@@ -173,6 +173,7 @@ module Vulkan.Extensions.VK_KHR_get_display_properties2  ( getPhysicalDeviceDisp
                                                          , SurfaceTransformFlagsKHR
                                                          ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -305,12 +306,12 @@ getPhysicalDeviceDisplayProperties2KHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayProperties2KHR' = mkVkGetPhysicalDeviceDisplayProperties2KHR vkGetPhysicalDeviceDisplayProperties2KHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceDisplayProperties2KHR' physicalDevice' (pPPropertyCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayProperties2KHR" (vkGetPhysicalDeviceDisplayProperties2KHR' physicalDevice' (pPPropertyCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @DisplayProperties2KHR ((fromIntegral (pPropertyCount)) * 64)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 64) :: Ptr DisplayProperties2KHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ vkGetPhysicalDeviceDisplayProperties2KHR' physicalDevice' (pPPropertyCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayProperties2KHR" (vkGetPhysicalDeviceDisplayProperties2KHR' physicalDevice' (pPPropertyCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayProperties2KHR (((pPProperties) `advancePtrBytes` (64 * (i)) :: Ptr DisplayProperties2KHR)))
@@ -378,12 +379,12 @@ getPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice = liftIO . evalContT 
   let vkGetPhysicalDeviceDisplayPlaneProperties2KHR' = mkVkGetPhysicalDeviceDisplayPlaneProperties2KHR vkGetPhysicalDeviceDisplayPlaneProperties2KHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceDisplayPlaneProperties2KHR' physicalDevice' (pPPropertyCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPlaneProperties2KHR" (vkGetPhysicalDeviceDisplayPlaneProperties2KHR' physicalDevice' (pPPropertyCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @DisplayPlaneProperties2KHR ((fromIntegral (pPropertyCount)) * 32)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 32) :: Ptr DisplayPlaneProperties2KHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ vkGetPhysicalDeviceDisplayPlaneProperties2KHR' physicalDevice' (pPPropertyCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPlaneProperties2KHR" (vkGetPhysicalDeviceDisplayPlaneProperties2KHR' physicalDevice' (pPPropertyCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayPlaneProperties2KHR (((pPProperties) `advancePtrBytes` (32 * (i)) :: Ptr DisplayPlaneProperties2KHR)))
@@ -459,12 +460,12 @@ getDisplayModeProperties2KHR physicalDevice display = liftIO . evalContT $ do
   let vkGetDisplayModeProperties2KHR' = mkVkGetDisplayModeProperties2KHR vkGetDisplayModeProperties2KHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetDisplayModeProperties2KHR' physicalDevice' (display) (pPPropertyCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetDisplayModeProperties2KHR" (vkGetDisplayModeProperties2KHR' physicalDevice' (display) (pPPropertyCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @DisplayModeProperties2KHR ((fromIntegral (pPropertyCount)) * 40)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 40) :: Ptr DisplayModeProperties2KHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ vkGetDisplayModeProperties2KHR' physicalDevice' (display) (pPPropertyCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkGetDisplayModeProperties2KHR" (vkGetDisplayModeProperties2KHR' physicalDevice' (display) (pPPropertyCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayModeProperties2KHR (((pPProperties) `advancePtrBytes` (40 * (i)) :: Ptr DisplayModeProperties2KHR)))
@@ -528,7 +529,7 @@ getDisplayPlaneCapabilities2KHR physicalDevice displayPlaneInfo = liftIO . evalC
   let vkGetDisplayPlaneCapabilities2KHR' = mkVkGetDisplayPlaneCapabilities2KHR vkGetDisplayPlaneCapabilities2KHRPtr
   pDisplayPlaneInfo <- ContT $ withCStruct (displayPlaneInfo)
   pPCapabilities <- ContT (withZeroCStruct @DisplayPlaneCapabilities2KHR)
-  r <- lift $ vkGetDisplayPlaneCapabilities2KHR' (physicalDeviceHandle (physicalDevice)) pDisplayPlaneInfo (pPCapabilities)
+  r <- lift $ traceAroundEvent "vkGetDisplayPlaneCapabilities2KHR" (vkGetDisplayPlaneCapabilities2KHR' (physicalDeviceHandle (physicalDevice)) pDisplayPlaneInfo (pPCapabilities))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCapabilities <- lift $ peekCStruct @DisplayPlaneCapabilities2KHR pPCapabilities
   pure $ (pCapabilities)

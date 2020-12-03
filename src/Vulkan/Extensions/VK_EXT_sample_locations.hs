@@ -183,6 +183,7 @@ module Vulkan.Extensions.VK_EXT_sample_locations  ( cmdSetSampleLocationsEXT
                                                   ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -322,7 +323,7 @@ cmdSetSampleLocationsEXT commandBuffer sampleLocationsInfo = liftIO . evalContT 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetSampleLocationsEXT is null" Nothing Nothing
   let vkCmdSetSampleLocationsEXT' = mkVkCmdSetSampleLocationsEXT vkCmdSetSampleLocationsEXTPtr
   pSampleLocationsInfo <- ContT $ withCStruct (sampleLocationsInfo)
-  lift $ vkCmdSetSampleLocationsEXT' (commandBufferHandle (commandBuffer)) pSampleLocationsInfo
+  lift $ traceAroundEvent "vkCmdSetSampleLocationsEXT" (vkCmdSetSampleLocationsEXT' (commandBufferHandle (commandBuffer)) pSampleLocationsInfo)
   pure $ ()
 
 
@@ -364,7 +365,7 @@ getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . eval
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMultisamplePropertiesEXT is null" Nothing Nothing
   let vkGetPhysicalDeviceMultisamplePropertiesEXT' = mkVkGetPhysicalDeviceMultisamplePropertiesEXT vkGetPhysicalDeviceMultisamplePropertiesEXTPtr
   pPMultisampleProperties <- ContT (withZeroCStruct @MultisamplePropertiesEXT)
-  lift $ vkGetPhysicalDeviceMultisamplePropertiesEXT' (physicalDeviceHandle (physicalDevice)) (samples) (pPMultisampleProperties)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceMultisamplePropertiesEXT" (vkGetPhysicalDeviceMultisamplePropertiesEXT' (physicalDeviceHandle (physicalDevice)) (samples) (pPMultisampleProperties))
   pMultisampleProperties <- lift $ peekCStruct @MultisamplePropertiesEXT pPMultisampleProperties
   pure $ (pMultisampleProperties)
 

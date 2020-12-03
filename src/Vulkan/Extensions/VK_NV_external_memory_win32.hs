@@ -289,6 +289,7 @@ module Vulkan.Extensions.VK_NV_external_memory_win32  ( getMemoryWin32HandleNV
                                                       , ExternalMemoryHandleTypeFlagsNV
                                                       ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -404,7 +405,7 @@ getMemoryWin32HandleNV device memory handleType = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryWin32HandleNV is null" Nothing Nothing
   let vkGetMemoryWin32HandleNV' = mkVkGetMemoryWin32HandleNV vkGetMemoryWin32HandleNVPtr
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
-  r <- lift $ vkGetMemoryWin32HandleNV' (deviceHandle (device)) (memory) (handleType) (pPHandle)
+  r <- lift $ traceAroundEvent "vkGetMemoryWin32HandleNV" (vkGetMemoryWin32HandleNV' (deviceHandle (device)) (memory) (handleType) (pPHandle))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pHandle <- lift $ peek @HANDLE pPHandle
   pure $ (pHandle)
