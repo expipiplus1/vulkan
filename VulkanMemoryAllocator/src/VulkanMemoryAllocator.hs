@@ -174,6 +174,7 @@ import Vulkan (Result)
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
@@ -268,7 +269,7 @@ createAllocator :: forall io
 createAllocator createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocator <- ContT $ bracket (callocBytes @Allocator 8) free
-  r <- lift $ (ffiVmaCreateAllocator) pCreateInfo (pPAllocator)
+  r <- lift $ traceAroundEvent "vmaCreateAllocator" ((ffiVmaCreateAllocator) pCreateInfo (pPAllocator))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocator <- lift $ peek @Allocator pPAllocator
   pure $ (pAllocator)
@@ -301,7 +302,7 @@ destroyAllocator :: forall io
                     Allocator
                  -> io ()
 destroyAllocator allocator = liftIO $ do
-  (ffiVmaDestroyAllocator) (allocator)
+  traceAroundEvent "vmaDestroyAllocator" ((ffiVmaDestroyAllocator) (allocator))
   pure $ ()
 
 
@@ -325,7 +326,7 @@ getAllocatorInfo :: forall io
                  -> io (AllocatorInfo)
 getAllocatorInfo allocator = liftIO . evalContT $ do
   pPAllocatorInfo <- ContT (withZeroCStruct @AllocatorInfo)
-  lift $ (ffiVmaGetAllocatorInfo) (allocator) (pPAllocatorInfo)
+  lift $ traceAroundEvent "vmaGetAllocatorInfo" ((ffiVmaGetAllocatorInfo) (allocator) (pPAllocatorInfo))
   pAllocatorInfo <- lift $ peekCStruct @AllocatorInfo pPAllocatorInfo
   pure $ (pAllocatorInfo)
 
@@ -347,7 +348,7 @@ getPhysicalDeviceProperties :: forall io
                             -> io (Ptr PhysicalDeviceProperties)
 getPhysicalDeviceProperties allocator = liftIO . evalContT $ do
   pPpPhysicalDeviceProperties <- ContT $ bracket (callocBytes @(Ptr PhysicalDeviceProperties) 8) free
-  lift $ (ffiVmaGetPhysicalDeviceProperties) (allocator) (pPpPhysicalDeviceProperties)
+  lift $ traceAroundEvent "vmaGetPhysicalDeviceProperties" ((ffiVmaGetPhysicalDeviceProperties) (allocator) (pPpPhysicalDeviceProperties))
   ppPhysicalDeviceProperties <- lift $ peek @(Ptr PhysicalDeviceProperties) pPpPhysicalDeviceProperties
   pure $ (ppPhysicalDeviceProperties)
 
@@ -369,7 +370,7 @@ getMemoryProperties :: forall io
                     -> io (Ptr PhysicalDeviceMemoryProperties)
 getMemoryProperties allocator = liftIO . evalContT $ do
   pPpPhysicalDeviceMemoryProperties <- ContT $ bracket (callocBytes @(Ptr PhysicalDeviceMemoryProperties) 8) free
-  lift $ (ffiVmaGetMemoryProperties) (allocator) (pPpPhysicalDeviceMemoryProperties)
+  lift $ traceAroundEvent "vmaGetMemoryProperties" ((ffiVmaGetMemoryProperties) (allocator) (pPpPhysicalDeviceMemoryProperties))
   ppPhysicalDeviceMemoryProperties <- lift $ peek @(Ptr PhysicalDeviceMemoryProperties) pPpPhysicalDeviceMemoryProperties
   pure $ (ppPhysicalDeviceMemoryProperties)
 
@@ -394,7 +395,7 @@ getMemoryTypeProperties :: forall io
                         -> io (MemoryPropertyFlags)
 getMemoryTypeProperties allocator memoryTypeIndex = liftIO . evalContT $ do
   pPFlags <- ContT $ bracket (callocBytes @MemoryPropertyFlags 4) free
-  lift $ (ffiVmaGetMemoryTypeProperties) (allocator) (memoryTypeIndex) (pPFlags)
+  lift $ traceAroundEvent "vmaGetMemoryTypeProperties" ((ffiVmaGetMemoryTypeProperties) (allocator) (memoryTypeIndex) (pPFlags))
   pFlags <- lift $ peek @MemoryPropertyFlags pPFlags
   pure $ (pFlags)
 
@@ -421,7 +422,7 @@ setCurrentFrameIndex :: forall io
                         ("frameIndex" ::: Word32)
                      -> io ()
 setCurrentFrameIndex allocator frameIndex = liftIO $ do
-  (ffiVmaSetCurrentFrameIndex) (allocator) (frameIndex)
+  traceAroundEvent "vmaSetCurrentFrameIndex" ((ffiVmaSetCurrentFrameIndex) (allocator) (frameIndex))
   pure $ ()
 
 
@@ -448,7 +449,7 @@ calculateStats :: forall io
                -> io (Stats)
 calculateStats allocator = liftIO . evalContT $ do
   pPStats <- ContT (withZeroCStruct @Stats)
-  lift $ (ffiVmaCalculateStats) (allocator) (pPStats)
+  lift $ traceAroundEvent "vmaCalculateStats" ((ffiVmaCalculateStats) (allocator) (pPStats))
   pStats <- lift $ peekCStruct @Stats pPStats
   pure $ (pStats)
 
@@ -484,7 +485,7 @@ getBudget :: forall io
 getBudget allocator = liftIO . evalContT $ do
   pPBudget <- ContT $ bracket (callocBytes @Budget ((MAX_MEMORY_HEAPS) * 32)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPBudget `advancePtrBytes` (i * 32) :: Ptr Budget) . ($ ())) [0..(MAX_MEMORY_HEAPS) - 1]
-  lift $ (ffiVmaGetBudget) (allocator) ((pPBudget))
+  lift $ traceAroundEvent "vmaGetBudget" ((ffiVmaGetBudget) (allocator) ((pPBudget)))
   pBudget <- lift $ generateM (MAX_MEMORY_HEAPS) (\i -> peekCStruct @Budget (((pPBudget) `advancePtrBytes` (32 * (i)) :: Ptr Budget)))
   pure $ (pBudget)
 
@@ -513,7 +514,7 @@ buildStatsString :: forall io
                  -> io (("statsString" ::: Ptr CChar))
 buildStatsString allocator detailedMap = liftIO . evalContT $ do
   pPpStatsString <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
-  lift $ (ffiVmaBuildStatsString) (allocator) (pPpStatsString) (boolToBool32 (detailedMap))
+  lift $ traceAroundEvent "vmaBuildStatsString" ((ffiVmaBuildStatsString) (allocator) (pPpStatsString) (boolToBool32 (detailedMap)))
   ppStatsString <- lift $ peek @(Ptr CChar) pPpStatsString
   pure $ (ppStatsString)
 
@@ -534,7 +535,7 @@ freeStatsString :: forall io
                    ("statsString" ::: Ptr CChar)
                 -> io ()
 freeStatsString allocator statsString = liftIO $ do
-  (ffiVmaFreeStatsString) (allocator) (statsString)
+  traceAroundEvent "vmaFreeStatsString" ((ffiVmaFreeStatsString) (allocator) (statsString))
   pure $ ()
 
 
@@ -579,7 +580,7 @@ findMemoryTypeIndex :: forall io
 findMemoryTypeIndex allocator memoryTypeBits allocationCreateInfo = liftIO . evalContT $ do
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ (ffiVmaFindMemoryTypeIndex) (allocator) (memoryTypeBits) pAllocationCreateInfo (pPMemoryTypeIndex)
+  r <- lift $ traceAroundEvent "vmaFindMemoryTypeIndex" ((ffiVmaFindMemoryTypeIndex) (allocator) (memoryTypeBits) pAllocationCreateInfo (pPMemoryTypeIndex))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryTypeIndex <- lift $ peek @Word32 pPMemoryTypeIndex
   pure $ (pMemoryTypeIndex)
@@ -620,7 +621,7 @@ findMemoryTypeIndexForBufferInfo allocator bufferCreateInfo allocationCreateInfo
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ (ffiVmaFindMemoryTypeIndexForBufferInfo) (allocator) (forgetExtensions pBufferCreateInfo) pAllocationCreateInfo (pPMemoryTypeIndex)
+  r <- lift $ traceAroundEvent "vmaFindMemoryTypeIndexForBufferInfo" ((ffiVmaFindMemoryTypeIndexForBufferInfo) (allocator) (forgetExtensions pBufferCreateInfo) pAllocationCreateInfo (pPMemoryTypeIndex))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryTypeIndex <- lift $ peek @Word32 pPMemoryTypeIndex
   pure $ (pMemoryTypeIndex)
@@ -661,7 +662,7 @@ findMemoryTypeIndexForImageInfo allocator imageCreateInfo allocationCreateInfo =
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ (ffiVmaFindMemoryTypeIndexForImageInfo) (allocator) (forgetExtensions pImageCreateInfo) pAllocationCreateInfo (pPMemoryTypeIndex)
+  r <- lift $ traceAroundEvent "vmaFindMemoryTypeIndexForImageInfo" ((ffiVmaFindMemoryTypeIndexForImageInfo) (allocator) (forgetExtensions pImageCreateInfo) pAllocationCreateInfo (pPMemoryTypeIndex))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryTypeIndex <- lift $ peek @Word32 pPMemoryTypeIndex
   pure $ (pMemoryTypeIndex)
@@ -695,7 +696,7 @@ createPool :: forall io
 createPool allocator createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPPool <- ContT $ bracket (callocBytes @Pool 8) free
-  r <- lift $ (ffiVmaCreatePool) (allocator) pCreateInfo (pPPool)
+  r <- lift $ traceAroundEvent "vmaCreatePool" ((ffiVmaCreatePool) (allocator) pCreateInfo (pPPool))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPool <- lift $ peek @Pool pPPool
   pure $ (pPool)
@@ -730,7 +731,7 @@ destroyPool :: forall io
                Pool
             -> io ()
 destroyPool allocator pool = liftIO $ do
-  (ffiVmaDestroyPool) (allocator) (pool)
+  traceAroundEvent "vmaDestroyPool" ((ffiVmaDestroyPool) (allocator) (pool))
   pure $ ()
 
 
@@ -761,7 +762,7 @@ getPoolStats :: forall io
              -> io (PoolStats)
 getPoolStats allocator pool = liftIO . evalContT $ do
   pPPoolStats <- ContT (withZeroCStruct @PoolStats)
-  lift $ (ffiVmaGetPoolStats) (allocator) (pool) (pPPoolStats)
+  lift $ traceAroundEvent "vmaGetPoolStats" ((ffiVmaGetPoolStats) (allocator) (pool) (pPPoolStats))
   pPoolStats <- lift $ peekCStruct @PoolStats pPPoolStats
   pure $ (pPoolStats)
 
@@ -796,7 +797,7 @@ makePoolAllocationsLost :: forall io
                         -> io (("lostAllocationCount" ::: Word64))
 makePoolAllocationsLost allocator pool = liftIO . evalContT $ do
   pPLostAllocationCount <- ContT $ bracket (callocBytes @CSize 8) free
-  lift $ (ffiVmaMakePoolAllocationsLost) (allocator) (pool) (pPLostAllocationCount)
+  lift $ traceAroundEvent "vmaMakePoolAllocationsLost" ((ffiVmaMakePoolAllocationsLost) (allocator) (pool) (pPLostAllocationCount))
   pLostAllocationCount <- lift $ peek @CSize pPLostAllocationCount
   pure $ (((\(CSize a) -> a) pLostAllocationCount))
 
@@ -837,7 +838,7 @@ checkPoolCorruption :: forall io
                        Pool
                     -> io ()
 checkPoolCorruption allocator pool = liftIO $ do
-  r <- (ffiVmaCheckPoolCorruption) (allocator) (pool)
+  r <- traceAroundEvent "vmaCheckPoolCorruption" ((ffiVmaCheckPoolCorruption) (allocator) (pool))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -863,7 +864,7 @@ getPoolName :: forall io
             -> io (("name" ::: Ptr CChar))
 getPoolName allocator pool = liftIO . evalContT $ do
   pPpName <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
-  lift $ (ffiVmaGetPoolName) (allocator) (pool) (pPpName)
+  lift $ traceAroundEvent "vmaGetPoolName" ((ffiVmaGetPoolName) (allocator) (pool) (pPpName))
   ppName <- lift $ peek @(Ptr CChar) pPpName
   pure $ (ppName)
 
@@ -893,7 +894,7 @@ setPoolName allocator pool name = liftIO . evalContT $ do
   pName <- case (name) of
     Nothing -> pure nullPtr
     Just j -> ContT $ useAsCString (j)
-  lift $ (ffiVmaSetPoolName) (allocator) (pool) pName
+  lift $ traceAroundEvent "vmaSetPoolName" ((ffiVmaSetPoolName) (allocator) (pool) pName)
   pure $ ()
 
 
@@ -935,7 +936,7 @@ allocateMemory allocator vkMemoryRequirements createInfo = liftIO . evalContT $ 
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ (ffiVmaAllocateMemory) (allocator) pVkMemoryRequirements pCreateInfo (pPAllocation) (pPAllocationInfo)
+  r <- lift $ traceAroundEvent "vmaAllocateMemory" ((ffiVmaAllocateMemory) (allocator) pVkMemoryRequirements pCreateInfo (pPAllocation) (pPAllocationInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocation <- lift $ peek @Allocation pPAllocation
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
@@ -1017,7 +1018,7 @@ allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalCon
   pPAllocations <- ContT $ bracket (callocBytes @Allocation ((fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) * 8)) free
   pPAllocationInfo <- ContT $ bracket (callocBytes @AllocationInfo ((fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) * 48)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPAllocationInfo `advancePtrBytes` (i * 48) :: Ptr AllocationInfo) . ($ ())) [0..(fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) - 1]
-  r <- lift $ (ffiVmaAllocateMemoryPages) (allocator) (pPVkMemoryRequirements) (pPCreateInfo) ((fromIntegral pVkMemoryRequirementsLength :: CSize)) (pPAllocations) ((pPAllocationInfo))
+  r <- lift $ traceAroundEvent "vmaAllocateMemoryPages" ((ffiVmaAllocateMemoryPages) (allocator) (pPVkMemoryRequirements) (pPCreateInfo) ((fromIntegral pVkMemoryRequirementsLength :: CSize)) (pPAllocations) ((pPAllocationInfo)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocations <- lift $ generateM (fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) (\i -> peek @Allocation ((pPAllocations `advancePtrBytes` (8 * (i)) :: Ptr Allocation)))
   pAllocationInfo <- lift $ generateM (fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) (\i -> peekCStruct @AllocationInfo (((pPAllocationInfo) `advancePtrBytes` (48 * (i)) :: Ptr AllocationInfo)))
@@ -1068,7 +1069,7 @@ allocateMemoryForBuffer allocator buffer createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ (ffiVmaAllocateMemoryForBuffer) (allocator) (buffer) pCreateInfo (pPAllocation) (pPAllocationInfo)
+  r <- lift $ traceAroundEvent "vmaAllocateMemoryForBuffer" ((ffiVmaAllocateMemoryForBuffer) (allocator) (buffer) pCreateInfo (pPAllocation) (pPAllocationInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocation <- lift $ peek @Allocation pPAllocation
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
@@ -1109,7 +1110,7 @@ allocateMemoryForImage allocator image createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ (ffiVmaAllocateMemoryForImage) (allocator) (image) pCreateInfo (pPAllocation) (pPAllocationInfo)
+  r <- lift $ traceAroundEvent "vmaAllocateMemoryForImage" ((ffiVmaAllocateMemoryForImage) (allocator) (image) pCreateInfo (pPAllocation) (pPAllocationInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocation <- lift $ peek @Allocation pPAllocation
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
@@ -1149,7 +1150,7 @@ freeMemory :: forall io
               Allocation
            -> io ()
 freeMemory allocator allocation = liftIO $ do
-  (ffiVmaFreeMemory) (allocator) (allocation)
+  traceAroundEvent "vmaFreeMemory" ((ffiVmaFreeMemory) (allocator) (allocation))
   pure $ ()
 
 
@@ -1182,7 +1183,7 @@ freeMemoryPages :: forall io
 freeMemoryPages allocator allocations = liftIO . evalContT $ do
   pPAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
-  lift $ (ffiVmaFreeMemoryPages) (allocator) ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize)) (pPAllocations)
+  lift $ traceAroundEvent "vmaFreeMemoryPages" ((ffiVmaFreeMemoryPages) (allocator) ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize)) (pPAllocations))
   pure $ ()
 
 
@@ -1212,7 +1213,7 @@ resizeAllocation :: forall io
                     ("newSize" ::: DeviceSize)
                  -> io ()
 resizeAllocation allocator allocation newSize = liftIO $ do
-  r <- (ffiVmaResizeAllocation) (allocator) (allocation) (newSize)
+  r <- traceAroundEvent "vmaResizeAllocation" ((ffiVmaResizeAllocation) (allocator) (allocation) (newSize))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1252,7 +1253,7 @@ getAllocationInfo :: forall io
                   -> io (AllocationInfo)
 getAllocationInfo allocator allocation = liftIO . evalContT $ do
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  lift $ (ffiVmaGetAllocationInfo) (allocator) (allocation) (pPAllocationInfo)
+  lift $ traceAroundEvent "vmaGetAllocationInfo" ((ffiVmaGetAllocationInfo) (allocator) (allocation) (pPAllocationInfo))
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
   pure $ (pAllocationInfo)
 
@@ -1290,7 +1291,7 @@ touchAllocation :: forall io
                    Allocation
                 -> io (Bool)
 touchAllocation allocator allocation = liftIO $ do
-  r <- (ffiVmaTouchAllocation) (allocator) (allocation)
+  r <- traceAroundEvent "vmaTouchAllocation" ((ffiVmaTouchAllocation) (allocator) (allocation))
   pure $ ((bool32ToBool r))
 
 
@@ -1325,7 +1326,7 @@ setAllocationUserData :: forall io
                          ("userData" ::: Ptr ())
                       -> io ()
 setAllocationUserData allocator allocation userData = liftIO $ do
-  (ffiVmaSetAllocationUserData) (allocator) (allocation) (userData)
+  traceAroundEvent "vmaSetAllocationUserData" ((ffiVmaSetAllocationUserData) (allocator) (allocation) (userData))
   pure $ ()
 
 
@@ -1352,7 +1353,7 @@ createLostAllocation :: forall io
                      -> io (Allocation)
 createLostAllocation allocator = liftIO . evalContT $ do
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
-  lift $ (ffiVmaCreateLostAllocation) (allocator) (pPAllocation)
+  lift $ traceAroundEvent "vmaCreateLostAllocation" ((ffiVmaCreateLostAllocation) (allocator) (pPAllocation))
   pAllocation <- lift $ peek @Allocation pPAllocation
   pure $ (pAllocation)
 
@@ -1426,7 +1427,7 @@ mapMemory :: forall io
           -> io (("data" ::: Ptr ()))
 mapMemory allocator allocation = liftIO . evalContT $ do
   pPpData <- ContT $ bracket (callocBytes @(Ptr ()) 8) free
-  r <- lift $ (ffiVmaMapMemory) (allocator) (allocation) (pPpData)
+  r <- lift $ traceAroundEvent "vmaMapMemory" ((ffiVmaMapMemory) (allocator) (allocation) (pPpData))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   ppData <- lift $ peek @(Ptr ()) pPpData
   pure $ (ppData)
@@ -1469,7 +1470,7 @@ unmapMemory :: forall io
                Allocation
             -> io ()
 unmapMemory allocator allocation = liftIO $ do
-  (ffiVmaUnmapMemory) (allocator) (allocation)
+  traceAroundEvent "vmaUnmapMemory" ((ffiVmaUnmapMemory) (allocator) (allocation))
   pure $ ()
 
 
@@ -1519,7 +1520,7 @@ flushAllocation :: forall io
                    DeviceSize
                 -> io ()
 flushAllocation allocator allocation offset size = liftIO $ do
-  r <- (ffiVmaFlushAllocation) (allocator) (allocation) (offset) (size)
+  r <- traceAroundEvent "vmaFlushAllocation" ((ffiVmaFlushAllocation) (allocator) (allocation) (offset) (size))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1570,7 +1571,7 @@ invalidateAllocation :: forall io
                         DeviceSize
                      -> io ()
 invalidateAllocation allocator allocation offset size = liftIO $ do
-  r <- (ffiVmaInvalidateAllocation) (allocator) (allocation) (offset) (size)
+  r <- traceAroundEvent "vmaInvalidateAllocation" ((ffiVmaInvalidateAllocation) (allocator) (allocation) (offset) (size))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1641,7 +1642,7 @@ flushAllocations allocator allocations offsets sizes = liftIO . evalContT $ do
       pSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
       lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pSizes
-  r <- lift $ (ffiVmaFlushAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes'
+  r <- lift $ traceAroundEvent "vmaFlushAllocations" ((ffiVmaFlushAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes')
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1713,7 +1714,7 @@ invalidateAllocations allocator allocations offsets sizes = liftIO . evalContT $
       pSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
       lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pSizes
-  r <- lift $ (ffiVmaInvalidateAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes'
+  r <- lift $ traceAroundEvent "vmaInvalidateAllocations" ((ffiVmaInvalidateAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes')
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1760,7 +1761,7 @@ checkCorruption :: forall io
                    ("memoryTypeBits" ::: Word32)
                 -> io ()
 checkCorruption allocator memoryTypeBits = liftIO $ do
-  r <- (ffiVmaCheckCorruption) (allocator) (memoryTypeBits)
+  r <- traceAroundEvent "vmaCheckCorruption" ((ffiVmaCheckCorruption) (allocator) (memoryTypeBits))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1834,7 +1835,7 @@ defragmentationBegin allocator info = liftIO . evalContT $ do
   pInfo <- ContT $ withCStruct (info)
   pPStats <- ContT (withZeroCStruct @DefragmentationStats)
   pPContext <- ContT $ bracket (callocBytes @DefragmentationContext 8) free
-  r <- lift $ (ffiVmaDefragmentationBegin) (allocator) pInfo (pPStats) (pPContext)
+  r <- lift $ traceAroundEvent "vmaDefragmentationBegin" ((ffiVmaDefragmentationBegin) (allocator) pInfo (pPStats) (pPContext))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pStats <- lift $ peekCStruct @DefragmentationStats pPStats
   pContext <- lift $ peek @DefragmentationContext pPContext
@@ -1874,7 +1875,7 @@ defragmentationEnd :: forall io
                       DefragmentationContext
                    -> io ()
 defragmentationEnd allocator context = liftIO $ do
-  r <- (ffiVmaDefragmentationEnd) (allocator) (context)
+  r <- traceAroundEvent "vmaDefragmentationEnd" ((ffiVmaDefragmentationEnd) (allocator) (context))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1895,7 +1896,7 @@ beginDefragmentationPass :: forall io
                          -> io (DefragmentationPassInfo)
 beginDefragmentationPass allocator context = liftIO . evalContT $ do
   pPInfo <- ContT (withZeroCStruct @DefragmentationPassInfo)
-  r <- lift $ (ffiVmaBeginDefragmentationPass) (allocator) (context) (pPInfo)
+  r <- lift $ traceAroundEvent "vmaBeginDefragmentationPass" ((ffiVmaBeginDefragmentationPass) (allocator) (context) (pPInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pInfo <- lift $ peekCStruct @DefragmentationPassInfo pPInfo
   pure $ (pInfo)
@@ -1930,7 +1931,7 @@ endDefragmentationPass :: forall io
                           DefragmentationContext
                        -> io ()
 endDefragmentationPass allocator context = liftIO $ do
-  r <- (ffiVmaEndDefragmentationPass) (allocator) (context)
+  r <- traceAroundEvent "vmaEndDefragmentationPass" ((ffiVmaEndDefragmentationPass) (allocator) (context))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2029,7 +2030,7 @@ defragment allocator allocations defragmentationInfo = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPDefragmentationStats <- ContT (withZeroCStruct @DefragmentationStats)
-  r <- lift $ (ffiVmaDefragment) (allocator) (pPAllocations) ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize)) (pPAllocationsChanged) pDefragmentationInfo (pPDefragmentationStats)
+  r <- lift $ traceAroundEvent "vmaDefragment" ((ffiVmaDefragment) (allocator) (pPAllocations) ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize)) (pPAllocationsChanged) pDefragmentationInfo (pPDefragmentationStats))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocationsChanged <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize))) (\i -> do
     pAllocationsChangedElem <- peek @Bool32 ((pPAllocationsChanged `advancePtrBytes` (4 * (i)) :: Ptr Bool32))
@@ -2068,7 +2069,7 @@ bindBufferMemory :: forall io
                     Buffer
                  -> io ()
 bindBufferMemory allocator allocation buffer = liftIO $ do
-  r <- (ffiVmaBindBufferMemory) (allocator) (allocation) (buffer)
+  r <- traceAroundEvent "vmaBindBufferMemory" ((ffiVmaBindBufferMemory) (allocator) (allocation) (buffer))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2114,7 +2115,7 @@ bindBufferMemory2 :: forall io
                      ("next" ::: Ptr ())
                   -> io ()
 bindBufferMemory2 allocator allocation allocationLocalOffset buffer next = liftIO $ do
-  r <- (ffiVmaBindBufferMemory2) (allocator) (allocation) (allocationLocalOffset) (buffer) (next)
+  r <- traceAroundEvent "vmaBindBufferMemory2" ((ffiVmaBindBufferMemory2) (allocator) (allocation) (allocationLocalOffset) (buffer) (next))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2148,7 +2149,7 @@ bindImageMemory :: forall io
                    Image
                 -> io ()
 bindImageMemory allocator allocation image = liftIO $ do
-  r <- (ffiVmaBindImageMemory) (allocator) (allocation) (image)
+  r <- traceAroundEvent "vmaBindImageMemory" ((ffiVmaBindImageMemory) (allocator) (allocation) (image))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2194,7 +2195,7 @@ bindImageMemory2 :: forall io
                     ("next" ::: Ptr ())
                  -> io ()
 bindImageMemory2 allocator allocation allocationLocalOffset image next = liftIO $ do
-  r <- (ffiVmaBindImageMemory2) (allocator) (allocation) (allocationLocalOffset) (image) (next)
+  r <- traceAroundEvent "vmaBindImageMemory2" ((ffiVmaBindImageMemory2) (allocator) (allocation) (allocationLocalOffset) (image) (next))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2264,7 +2265,7 @@ createBuffer allocator bufferCreateInfo allocationCreateInfo = liftIO . evalCont
   pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ (ffiVmaCreateBuffer) (allocator) (forgetExtensions pBufferCreateInfo) pAllocationCreateInfo (pPBuffer) (pPAllocation) (pPAllocationInfo)
+  r <- lift $ traceAroundEvent "vmaCreateBuffer" ((ffiVmaCreateBuffer) (allocator) (forgetExtensions pBufferCreateInfo) pAllocationCreateInfo (pPBuffer) (pPAllocation) (pPAllocationInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pBuffer <- lift $ peek @Buffer pPBuffer
   pAllocation <- lift $ peek @Allocation pPAllocation
@@ -2310,7 +2311,7 @@ destroyBuffer :: forall io
                  Allocation
               -> io ()
 destroyBuffer allocator buffer allocation = liftIO $ do
-  (ffiVmaDestroyBuffer) (allocator) (buffer) (allocation)
+  traceAroundEvent "vmaDestroyBuffer" ((ffiVmaDestroyBuffer) (allocator) (buffer) (allocation))
   pure $ ()
 
 
@@ -2337,7 +2338,7 @@ createImage allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT 
   pPImage <- ContT $ bracket (callocBytes @Image 8) free
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ (ffiVmaCreateImage) (allocator) (forgetExtensions pImageCreateInfo) pAllocationCreateInfo (pPImage) (pPAllocation) (pPAllocationInfo)
+  r <- lift $ traceAroundEvent "vmaCreateImage" ((ffiVmaCreateImage) (allocator) (forgetExtensions pImageCreateInfo) pAllocationCreateInfo (pPImage) (pPAllocation) (pPAllocationInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImage <- lift $ peek @Image pPImage
   pAllocation <- lift $ peek @Allocation pPAllocation
@@ -2383,7 +2384,7 @@ destroyImage :: forall io
                 Allocation
              -> io ()
 destroyImage allocator image allocation = liftIO $ do
-  (ffiVmaDestroyImage) (allocator) (image) (allocation)
+  traceAroundEvent "vmaDestroyImage" ((ffiVmaDestroyImage) (allocator) (image) (allocation))
   pure $ ()
 
 
