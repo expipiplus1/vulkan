@@ -29,6 +29,7 @@ import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 )
 import           MonadVulkan
 import           RefCounted
+import           Say                            ( sayErrString )
 import           UnliftIO
 import           Vulkan.CStruct.Extends         ( SomeStruct )
 import           Vulkan.Core10

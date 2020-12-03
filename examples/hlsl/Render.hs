@@ -14,6 +14,7 @@ import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 )
 import           MonadFrame
 import           MonadVulkan
+import           Say                            ( sayErrString )
 import           Swapchain
 import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
