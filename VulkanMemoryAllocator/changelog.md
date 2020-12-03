@@ -2,6 +2,9 @@
 
 ## WIP
 
+- Calling traceEventIO before and after every VulkanMemoryAllocator command if
+  `vulkan` was compiled with the `trace-calls` flag
+
 ## [0.3.11] - 2020-11-30
 
 - Raise upper bound on `vulkan`
