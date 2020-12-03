@@ -48,6 +48,7 @@ import           Vulkan.Zero
 
 import qualified Data.ByteString               as BS
 import           Frame
+import           HasVulkan
 import           Init
 import           Julia
 import           MonadVulkan

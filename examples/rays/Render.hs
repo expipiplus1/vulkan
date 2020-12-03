@@ -16,6 +16,7 @@ import           Frame
 import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 , IOException(IOError)
                                                 )
+import           HasVulkan
 import           Linear.Matrix
 import           Linear.Quaternion
 import           Linear.V3

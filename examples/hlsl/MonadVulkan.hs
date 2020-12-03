@@ -10,11 +10,11 @@ import           Control.Monad                  ( replicateM
                                                 , void
                                                 )
 import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
 import           Data.ByteString                ( ByteString )
 import           Data.List                      ( isSuffixOf )
+import           HasVulkan
 import           Language.Haskell.TH
 import           Language.Haskell.TH.Syntax     ( addTopDecls )
 import           OpenTelemetry.Eventlog         ( beginSpan
@@ -71,26 +71,12 @@ newtype CmdT m a = CmdT { unCmdT :: ReaderT CommandBuffer m a }
 instance MonadUnliftIO m => MonadUnliftIO (CmdT m) where
   withRunInIO a = CmdT $ withRunInIO (\r -> a (r . unCmdT))
 
-class HasVulkan m where
-  getInstance :: m Instance
-  getGraphicsQueue :: m Queue
-  getPhysicalDevice :: m PhysicalDevice
-  getDevice :: m Device
-  getAllocator :: m Allocator
-
 instance HasVulkan V where
   getInstance       = V (asks ghInstance)
   getGraphicsQueue  = V (asks (snd . graphicsQueue . ghQueues))
   getPhysicalDevice = V (asks ghPhysicalDevice)
   getDevice         = V (asks ghDevice)
   getAllocator      = V (asks ghAllocator)
-
-instance (Monad m, HasVulkan m) => HasVulkan (ReaderT r m) where
-  getInstance       = lift getInstance
-  getGraphicsQueue  = lift getGraphicsQueue
-  getPhysicalDevice = lift getPhysicalDevice
-  getDevice         = lift getDevice
-  getAllocator      = lift getAllocator
 
 getGraphicsQueueFamilyIndex :: V QueueFamilyIndex
 getGraphicsQueueFamilyIndex = V (asks (fst . graphicsQueue . ghQueues))
@@ -198,9 +184,6 @@ withSpan_ n x = bracket (beginSpan n) endSpan (const x)
 ----------------------------------------------------------------
 -- Commands
 ----------------------------------------------------------------
-
-noAllocationCallbacks :: Maybe AllocationCallbacks
-noAllocationCallbacks = Nothing
 
 --
 -- Wrap a bunch of Vulkan commands so that they automatically pull global

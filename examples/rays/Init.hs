@@ -22,10 +22,10 @@ import           Data.Word
 import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
                                                 , IOException(IOError)
                                                 )
+import           HasVulkan
 import           MonadVulkan                    ( Queues(..)
                                                 , RTInfo(..)
                                                 , checkCommands
-                                                , noAllocationCallbacks
                                                 )
 import qualified SDL.Video                     as SDL
 import qualified SDL.Video.Vulkan              as SDL

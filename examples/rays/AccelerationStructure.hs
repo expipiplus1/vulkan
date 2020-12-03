@@ -8,6 +8,7 @@ import           Data.Bits
 import           Data.Coerce                    ( coerce )
 import           Data.Vector                    ( Vector )
 import           Foreign.Storable               ( Storable(poke, sizeOf) )
+import           HasVulkan
 import           MonadVulkan
 import           Scene
 import           UnliftIO.Foreign               ( castPtr )

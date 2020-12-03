@@ -18,7 +18,6 @@ import qualified Pipeline
 import qualified SDL
 import           SDL                            ( Window )
 import qualified SDL.Video.Vulkan              as SDL
-import           Say
 import           Swapchain
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10

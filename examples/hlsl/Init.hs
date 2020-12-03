@@ -12,6 +12,7 @@ import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
 import           Control.Monad.Trans.Resource
 import qualified Data.Vector                   as V
 import           Data.Word
+import           HasVulkan
 import           Say
 import           UnliftIO.Exception
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
@@ -26,7 +27,6 @@ import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
                                                 )
 import           MonadVulkan                    ( Queues(..)
                                                 , checkCommands
-                                                , noAllocationCallbacks
                                                 )
 import qualified SDL.Video                     as SDL
 import qualified SDL.Video.Vulkan              as SDL

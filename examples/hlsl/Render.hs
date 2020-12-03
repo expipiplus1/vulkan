@@ -12,6 +12,7 @@ import           Frame
 import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 , IOException(IOError)
                                                 )
+import           HasVulkan
 import           MonadFrame
 import           MonadVulkan
 import           Swapchain

@@ -26,6 +26,7 @@ import           Data.Vector                    ( Vector
                                                 )
 import           Data.Word
 
+import           HasVulkan
 import           MonadVulkan
 import           RefCounted
 import           Vulkan.CStruct.Extends         ( SomeStruct )

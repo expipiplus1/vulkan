@@ -14,6 +14,8 @@ library:
   verbatim:
     ghc-options: -Wall
   dependencies:
+  - VulkanMemoryAllocator
+  - autoapply
   - base <5
   - derive-storable >= 0.3
   - derive-storable-plugin >= 0.2.3.1
@@ -23,6 +25,7 @@ library:
   - resourcet >= 1.2.4
   - sdl2 >= 2.5.2.0
   - text
+  - transformers
   - unliftio
   - vulkan
 

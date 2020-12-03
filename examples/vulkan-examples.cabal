@@ -39,6 +39,8 @@ flag renderdoc
 library
   exposed-modules:
       Camera
+      Framebuffer
+      HasVulkan
       RefCounted
       Utils
       Window
@@ -49,7 +51,9 @@ library
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
   ghc-options: -Wall
   build-depends:
-      base <5
+      VulkanMemoryAllocator
+    , autoapply
+    , base <5
     , derive-storable >=0.3
     , derive-storable-plugin >=0.2.3.1
     , lens
@@ -58,6 +62,7 @@ library
     , resourcet >=1.2.4
     , sdl2 >=2.5.2.0
     , text
+    , transformers
     , unliftio
     , vulkan
   if os(windows)
@@ -94,7 +99,6 @@ executable hlsl
   main-is: Main.hs
   other-modules:
       Frame
-      Framebuffer
       Init
       MonadFrame
       MonadVulkan
@@ -186,7 +190,6 @@ executable rays
   other-modules:
       AccelerationStructure
       Frame
-      Framebuffer
       Init
       MonadFrame
       MonadVulkan
@@ -234,7 +237,6 @@ executable resize
   main-is: Main.hs
   other-modules:
       Frame
-      Framebuffer
       Init
       Julia
       Julia.Constants

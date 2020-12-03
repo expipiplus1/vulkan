@@ -7,12 +7,12 @@ module MonadVulkan where
 import           AutoApply
 import           Control.Monad                  ( void )
 import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import           Data.Word
+import           HasVulkan
 import           UnliftIO
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
@@ -56,13 +56,6 @@ newtype CmdT m a = CmdT { unCmdT :: ReaderT CommandBuffer m a }
 instance MonadUnliftIO m => MonadUnliftIO (CmdT m) where
   withRunInIO a = CmdT $ withRunInIO (\r -> a (r . unCmdT))
 
-class HasVulkan m where
-  getInstance :: m Instance
-  getGraphicsQueue :: m Queue
-  getPhysicalDevice :: m PhysicalDevice
-  getDevice :: m Device
-  getAllocator :: m Allocator
-
 instance HasVulkan V where
   getInstance       = V (asks ghInstance)
   getGraphicsQueue  = V (asks ghGraphicsQueue)
@@ -70,18 +63,8 @@ instance HasVulkan V where
   getDevice         = V (asks ghDevice)
   getAllocator      = V (asks ghAllocator)
 
-instance (Monad m, HasVulkan m) => HasVulkan (ReaderT r m) where
-  getInstance       = lift getInstance
-  getGraphicsQueue  = lift getGraphicsQueue
-  getPhysicalDevice = lift getPhysicalDevice
-  getDevice         = lift getDevice
-  getAllocator      = lift getAllocator
-
 getGraphicsQueueFamilyIndex :: V Word32
 getGraphicsQueueFamilyIndex = V (asks ghGraphicsQueueFamilyIndex)
-
-noAllocationCallbacks :: Maybe AllocationCallbacks
-noAllocationCallbacks = Nothing
 
 getCommandBuffer :: Monad m => CmdT m CommandBuffer
 getCommandBuffer = CmdT ask
