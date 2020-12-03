@@ -9,6 +9,23 @@ extra-source-files:
 - package.yaml
 license: BSD-3-Clause
 
+library:
+  source-dirs: lib
+  verbatim:
+    ghc-options: -Wall
+  dependencies:
+  - base <5
+  - derive-storable >= 0.3
+  - derive-storable-plugin >= 0.2.3.1
+  - lens
+  - linear
+  - nothunks >= 0.1.2
+  - resourcet >= 1.2.4
+  - sdl2 >= 2.5.2.0
+  - text
+  - unliftio
+  - vulkan
+
 executables:
   info:
     main: Main.hs
@@ -96,6 +113,7 @@ executables:
     - unliftio
     - vector
     - vulkan
+    - vulkan-examples
     - vulkan-utils
 
   timeline-semaphore:
@@ -132,6 +150,7 @@ executables:
     - unliftio
     - vector
     - vulkan
+    - vulkan-examples
     - vulkan-utils >= 0.3
     when:
     - condition: impl(ghc < 8.10.0)
@@ -144,6 +163,7 @@ executables:
     main: Main.hs
     source-dirs: rays
     dependencies:
+    - VulkanMemoryAllocator
     - autoapply >= 0.4
     - base <5
     - bytestring
@@ -165,7 +185,7 @@ executables:
     - unliftio
     - vector
     - vulkan >= 3.7
-    - VulkanMemoryAllocator
+    - vulkan-examples
     - vulkan-utils >= 0.3
     when:
     - condition: impl(ghc < 8.10.0)
@@ -234,6 +254,5 @@ default-extensions:
 ghc-options:
 - -Wall
 - -threaded
-- -O2
 - -rtsopts
 - -with-rtsopts=-N

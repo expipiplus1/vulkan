@@ -36,7 +36,7 @@ main = runResourceT $ do
         liftIO $ putStrLn $ "Average: " <> show mean
 
   let frame f = do
-        shouldQuit >>= \case
+        shouldQuit (TimeLimit 6) >>= \case
           True -> do
             reportFPS f
             pure Nothing

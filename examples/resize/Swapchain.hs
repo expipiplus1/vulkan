@@ -11,6 +11,7 @@ import           Data.Bits
 import           Data.Either                    ( isLeft )
 import           Data.Foldable                  ( traverse_ )
 import qualified Data.Vector                   as V
+import           RefCounted
 import qualified SDL
 import qualified SDL.Video.Vulkan              as SDL
 import           Say

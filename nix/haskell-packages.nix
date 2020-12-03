@@ -89,14 +89,11 @@ let
           name = "pure.patch";
           sha256 = "11fm91062slgh25na3pmjpf2sn9z1gg9lg5jr4nv2q8a2bzg32zs";
         });
-      nothunks = doJailbreak (overrideSrc super.nothunks {
-        src = pkgs.fetchFromGitHub {
-          owner = "input-output-hk";
-          repo = "nothunks";
-          rev = "bb3e23bbf143aa8e65049bd6d4b3554eeb934b90";
-          sha256 = "1p60w89ywy1wzjmy07gv20fwrkp88bg9kcrfxvc08nrgh9p4yz4f";
-        };
-      });
+      nothunks = doJailbreak (self.callHackageDirect {
+        pkg = "nothunks";
+        ver = "0.1.2";
+        sha256 = "1xj5xvy3x3vixkj84cwsjl3m06z2zfszbcpxbz1j1ca83ha2gb7i";
+      } { });
       # profiling
       eventlog2html = doJailbreak (appendPatch
         (overrideSrc super.eventlog2html {
