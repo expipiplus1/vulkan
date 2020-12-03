@@ -1,6 +1,6 @@
 { pkgs ? import ../nix/nixpkgs.nix, compiler ? null
 , forShell ? pkgs.lib.inNixShell, hoogle ? forShell, withSwiftshader ? false
-, buildProfiling ? false }:
+, buildProfiling ? false, buildInstrumented ? false}:
 
 let
   haskellPackages = let

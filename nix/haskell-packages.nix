@@ -1,6 +1,6 @@
 # Haskell package overrides
 
-{ pkgs, hoogle, buildProfiling ? false }:
+{ pkgs, hoogle, buildProfiling ? false, buildInstrumented ? false }:
 
 with pkgs.haskell.lib;
 
@@ -29,6 +29,7 @@ in self: super:
     root = aggressiveFilter ../.;
     modifier = drv: (mod drv).override { vulkan = pkgs.vulkan-loader; };
     returnShellEnv = false;
+    cabal2nixOptions = if buildInstrumented then "--flag=trace-calls" else "";
   };
   vulkan-utils = self.developPackage {
     name = "vulkan-utils";
