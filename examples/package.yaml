@@ -139,7 +139,6 @@ executables:
     - bytestring
     - containers
     - opentelemetry
-    - primitive-unlifted >= 1.0
     - resourcet >= 1.2.4
     - say
     - sdl2 >= 2.5.2.0
@@ -153,8 +152,6 @@ executables:
     - vulkan-examples
     - vulkan-utils >= 0.3
     when:
-    - condition: impl(ghc < 8.10.0)
-      buildable: false
     - condition: '!flag(have-shaderc)'
       buildable: false
     ghc-options: -eventlog
@@ -174,7 +171,6 @@ executables:
     - linear
     - nothunks >= 0.1.2
     - opentelemetry
-    - primitive-unlifted
     - resourcet >= 1.2.4
     - say
     - sdl2 >= 2.5.2.0
@@ -188,8 +184,6 @@ executables:
     - vulkan-examples
     - vulkan-utils >= 0.3
     when:
-    - condition: impl(ghc < 8.10.0)
-      buildable: false
     - condition: '!flag(raytracing)'
       buildable: false
     ghc-options: -eventlog
