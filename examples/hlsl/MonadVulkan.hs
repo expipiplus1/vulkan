@@ -4,20 +4,21 @@
 module MonadVulkan where
 
 import           AutoApply
+import           Control.Concurrent.Chan.Unagi
+import           Control.Concurrent.MVar
 import           Control.Monad                  ( void )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
+import           Language.Haskell.TH.Syntax     ( addTopDecls )
 import           UnliftIO                       ( Async
                                                 , MonadUnliftIO(withRunInIO)
-                                                , async
+                                                , asyncWithUnmask
+                                                , mask
                                                 , toIO
                                                 , uninterruptibleCancel
                                                 )
-
-import           Control.Concurrent.Chan.Unagi
-import           Language.Haskell.TH.Syntax     ( addTopDecls )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -159,7 +160,20 @@ newtype Queues q = Queues { graphicsQueue :: q }
 spawn :: V a -> V (Async a)
 spawn a = do
   aIO <- toIO a
-  snd <$> allocate (async aIO) uninterruptibleCancel
+  -- If we don't remove the release key when the thread is done it'll leak,
+  -- remove it at the end of the async action when the thread is going to die
+  -- anyway.
+  --
+  -- Mask this so there's no chance
+  kv  <- liftIO newEmptyMVar
+  UnliftIO.mask $ \_ -> do
+    (k, r) <- allocate
+      (asyncWithUnmask
+        (\unmask -> unmask $ aIO <* (unprotect =<< liftIO (readMVar kv)))
+      )
+      uninterruptibleCancel
+    liftIO $ putMVar kv k
+    pure r
 
 spawn_ :: V () -> V ()
 spawn_ = void . spawn
