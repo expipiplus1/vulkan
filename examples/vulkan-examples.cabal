@@ -164,7 +164,6 @@ executable rays
       AccelerationStructure
       Cache
       Camera
-      DescriptorSet
       Frame
       Framebuffer
       Init
@@ -189,7 +188,7 @@ executable rays
     , bytestring
     , containers
     , derive-storable >=0.3
-    , derive-storable-plugin
+    , derive-storable-plugin >=0.2.3.1
     , lens
     , linear
     , primitive-unlifted

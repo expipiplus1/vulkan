@@ -60,3 +60,22 @@ git add .
 git commit -m 'vXXX'
 git push
 ```
+
+## Upload to Hackage
+
+This will upload the release artifacts:
+
+```bash
+tag=v3.8
+hub release download "refs/tags/$tag" |
+cut -d' ' -f2 |
+sort -r |
+while read f; do
+  if [[ "$f" =~ "-docs.tar.gz" ]]; then
+    cabal upload --publish --doc "$f"
+  else
+    cabal upload --publish "$f"
+  fi
+  rm "$f"
+done
+```

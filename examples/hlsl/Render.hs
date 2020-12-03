@@ -14,7 +14,7 @@ import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 )
 import           MonadFrame
 import           MonadVulkan
-import           Say
+import           Say                            ( sayErrString )
 import           Swapchain
 import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
@@ -37,10 +37,10 @@ renderFrame = do
 
   -- Make sure we'll have an image to render to
   imageIndex <-
-    acquireNextImageKHR' siSwapchain
-                         oneSecond
-                         fImageAvailableSemaphore
-                         NULL_HANDLE
+    acquireNextImageKHRSafe' siSwapchain
+                             oneSecond
+                             fImageAvailableSemaphore
+                             NULL_HANDLE
       >>= \case
             (SUCCESS, imageIndex) -> pure imageIndex
             (TIMEOUT, _) ->

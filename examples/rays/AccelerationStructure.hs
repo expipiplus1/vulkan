@@ -44,7 +44,7 @@ createTLAS sceneBuffers = do
       inst :: AccelerationStructureInstanceKHR
       inst = zero
         { transform                      = identity
-        , instanceCustomIndex            = complement 0 -- TODO: unnecessary
+        , instanceCustomIndex            = 0
         , mask                           = complement 0
         , instanceShaderBindingTableRecordOffset = 0
         , flags = GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR
@@ -171,7 +171,7 @@ createBLAS sceneBuffers = do
                        , geometries = [sceneGeom]
                        , scratchData = zero
                        }
-      maxPrimitiveCounts = [1]
+      maxPrimitiveCounts = [sceneSize sceneBuffers]
   sizes <- getAccelerationStructureBuildSizesKHR'
     ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR
     buildInfo

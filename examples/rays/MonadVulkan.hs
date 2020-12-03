@@ -4,21 +4,25 @@
 module MonadVulkan where
 
 import           AutoApply
+import           Control.Concurrent.Chan.Unagi
+import           Control.Concurrent.MVar        ( newEmptyMVar
+                                                , putMVar
+                                                , readMVar
+                                                )
 import           Control.Monad                  ( void )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
+import           Data.Word
+import           Language.Haskell.TH.Syntax     ( addTopDecls )
 import           UnliftIO                       ( Async
                                                 , MonadUnliftIO(withRunInIO)
-                                                , async
+                                                , mask
                                                 , toIO
                                                 , uninterruptibleCancel
                                                 )
-
-import           Control.Concurrent.Chan.Unagi
-import           Data.Word
-import           Language.Haskell.TH.Syntax     ( addTopDecls )
+import           UnliftIO.Async                 ( asyncWithUnmask )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -174,12 +178,25 @@ newtype Queues q = Queues { graphicsQueue :: q }
 -- Helpers
 ----------------------------------------------------------------
 
--- Start an async thread which will be cancelled at the end of the ResourceT
+-- Start an async thread which will be cancelled by the end of the ResourceT
 -- block
 spawn :: V a -> V (Async a)
 spawn a = do
   aIO <- toIO a
-  snd <$> allocate (async aIO) uninterruptibleCancel
+  -- If we don't remove the release key when the thread is done it'll leak,
+  -- remove it at the end of the async action when the thread is going to die
+  -- anyway.
+  --
+  -- Mask this so there's no chance
+  kv  <- liftIO newEmptyMVar
+  UnliftIO.mask $ \_ -> do
+    (k, r) <- allocate
+      (asyncWithUnmask
+        (\unmask -> unmask $ aIO <* (unprotect =<< liftIO (readMVar kv)))
+      )
+      uninterruptibleCancel
+    liftIO $ putMVar kv k
+    pure r
 
 spawn_ :: V () -> V ()
 spawn_ = void . spawn
@@ -209,7 +226,7 @@ do
         , 'flushAllocation
         ]
       commands =
-        [ 'acquireNextImageKHR
+        [ 'acquireNextImageKHRSafe
         , 'allocateCommandBuffers
         , 'allocateDescriptorSets
         , 'buildAccelerationStructuresKHR

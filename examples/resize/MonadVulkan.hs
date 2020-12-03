@@ -14,7 +14,6 @@ import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import           Data.Word
 import           UnliftIO
-
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -24,6 +23,7 @@ import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           VulkanMemoryAllocator         as VMA
                                          hiding ( getPhysicalDeviceProperties )
+
 
 ----------------------------------------------------------------
 -- Define the monad in which most of the program will run
@@ -117,7 +117,21 @@ runV ghInstance ghPhysicalDevice ghDevice ghGraphicsQueue ghGraphicsQueueFamilyI
 spawn :: V a -> V (Async a)
 spawn a = do
   aIO <- toIO a
-  snd <$> allocate (async aIO) uninterruptibleCancel
+  -- If we don't remove the release key when the thread is done it'll leak,
+  -- remove it at the end of the async action when the thread is going to die
+  -- anyway.
+  --
+  -- Mask this so there's no chance
+  kv  <- liftIO newEmptyMVar
+  UnliftIO.mask $ \_ -> do
+    (k, r) <- allocate
+      (asyncWithUnmask
+        (\unmask -> unmask $ aIO <* (unprotect =<< liftIO (readMVar kv)))
+      )
+      uninterruptibleCancel
+    liftIO $ putMVar kv k
+    pure r
+
 
 spawn_ :: V () -> V ()
 spawn_ = void . spawn

@@ -2,14 +2,8 @@
 , forShell ? pkgs.lib.inNixShell, hoogle ? forShell }:
 
 let
-  haskellPackages = let
-    hp = if compiler == null then
-      pkgs.haskellPackages
-    else
-      pkgs.haskell.packages.${compiler};
-  in hp.override {
-    overrides = import ./nix/haskell-packages.nix { inherit pkgs hoogle; };
-  };
+  haskellPackages =
+    import ./nix/haskell-packages.nix { inherit pkgs compiler hoogle; };
 
   tools = with pkgs; [
     pkgconfig
