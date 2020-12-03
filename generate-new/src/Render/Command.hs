@@ -92,10 +92,9 @@ makeReturnType
   => Bool
   -> MarshaledCommand
   -> Sem r H.Type
-makeReturnType includeInOutCountTypes mc
-  = do
-    ts <- marshaledCommandReturnTypes includeInOutCountTypes mc
-    pure $ VarT ioVar :@ foldl' (:@) (TupleT (length ts)) ts
+makeReturnType includeInOutCountTypes mc = do
+  ts <- marshaledCommandReturnTypes includeInOutCountTypes mc
+  pure $ VarT ioVar :@ foldl' (:@) (TupleT (length ts)) ts
 
 structVariables
   :: (HasErr r, HasRenderedNames r)
@@ -890,7 +889,7 @@ getPoke
   -> Stmt s r (Ref s ValueDoc, Maybe (Ref s ValueDoc))
   -- ^ (poke, peek if it's a returned value)
 getPoke valueRef MarshaledParam {..} = do
-  (poke, peek)      <- case mpScheme of
+  (poke, peek) <- case mpScheme of
     Returned s -> do
       (addrRef, peek) <- allocateAndPeek (lowerParamType mpParam) s
       -- TODO: implement ref casting
@@ -942,8 +941,7 @@ lowerParamType p@Parameter {..} = case pType of
 ----------------------------------------------------------------
 
 addMonadIO :: Type -> Type
-addMonadIO = addConstraints
-      [ConT ''MonadIO :@ VarT ioVar]
+addMonadIO = addConstraints [ConT ''MonadIO :@ VarT ioVar]
 
 ioVar :: Name
 ioVar = mkName "io"
