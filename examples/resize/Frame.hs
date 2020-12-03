@@ -6,7 +6,6 @@
 -- 'runFrame'.
 module Frame where
 
-import           Control.Monad                  ( void )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
@@ -14,7 +13,6 @@ import           Control.Monad.Trans.Resource  as ResourceT
 import qualified SDL
 import           UnliftIO                       ( MonadUnliftIO(..)
                                                 , askRunInIO
-                                                , mask
                                                 , toIO
                                                 )
 import           UnliftIO.Exception             ( finally
