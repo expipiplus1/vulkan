@@ -1,9 +1,13 @@
+{-# LANGUAGE CPP #-}
+
 module Vulkan.Internal.Utils
   ( enumReadPrec
   , enumShowsPrec
+  , traceAroundEvent
   ) where
 
 import           Data.Foldable
+import           Debug.Trace
 import           GHC.Read                       ( expectP )
 import           Text.ParserCombinators.ReadP   ( skipSpaces
                                                 , string
@@ -62,3 +66,12 @@ enumShowsPrec prefix table conName getInternal showsInternal p e =
       in  showParen (p >= 11)
                     (showString conName . showString " " . showsInternal x)
 
+-- | Wrap an IO action with a pair of 'traceEventIO' using the specified
+-- message with "begin" or "end" appended.
+traceAroundEvent :: String -> IO a -> IO a
+#if defined(TRACE_CALLS)
+traceAroundEvent msg a =
+  traceEventIO (msg <> " begin") *> a <* traceEventIO (msg <> " end")
+#else
+traceAroundEvent _ a = a
+#endif

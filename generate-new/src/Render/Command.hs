@@ -276,8 +276,16 @@ commandRHS m@MarshaledCommand {..} = do
     wrappedRef <- stmt (Just rTy) (Just name) $ do
       FunDoc fun <- use funRef
       pokes      <- traverseV use pokeRefs
+      tellImport (mkName "Vulkan.Internal.Utils.traceAroundEvent")
+      let traceName :: Text
+          traceName = unCName mcName
       -- call the command
-      pure . IOAction . ValueDoc $ sep (fun : (unValueDoc <$> toList pokes))
+      pure
+        .   IOAction
+        .   ValueDoc
+        $   "traceAroundEvent"
+        <+> viaShow traceName
+        <+> parens (sep (fun : (unValueDoc <$> toList pokes)))
     retRef        <- unwrapIdiomaticType (Just name) wrappedRef
 
     -- check the result
@@ -666,8 +674,16 @@ runWithPokes includeReturnType MarshaledCommand {..} funRef pokes = do
   retRef <- stmt Nothing (Just (bool "r" "_" useEmptyBinder)) $ do
     FunDoc fun <- use funRef
     pokes      <- traverseV use pokes
+    tellImport (mkName "Vulkan.Internal.Utils.traceAroundEvent")
+    let traceName :: Text
+        traceName = unCName mcName
     -- call the command
-    pure . IOAction . ValueDoc $ sep (fun : (unValueDoc <$> toList pokes))
+    pure
+      .   IOAction
+      .   ValueDoc
+      $   "traceAroundEvent"
+      <+> viaShow traceName
+      <+> parens (sep (fun : (unValueDoc <$> toList pokes)))
 
   checkResultMaybe mcCommand retRef
 

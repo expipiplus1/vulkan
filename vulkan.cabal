@@ -33,6 +33,11 @@ flag safe-foreign-calls
   manual: True
   default: False
 
+flag trace-calls
+  description: Inserts calls to Debug.Trace.traceEventIO around every Vulkan call.
+  manual: True
+  default: False
+
 library
   exposed-modules:
       Vulkan
@@ -497,4 +502,6 @@ library
     cpp-options: -DSAFE_FOREIGN_CALLS
   if flag(generic-instances)
     cpp-options: -DGENERIC_INSTANCES
+  if flag(trace-calls)
+    cpp-options: -DTRACE_CALLS
   default-language: Haskell2010
