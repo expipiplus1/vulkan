@@ -209,7 +209,7 @@ do
         , 'flushAllocation
         ]
       commands =
-        [ 'acquireNextImageKHR
+        [ 'acquireNextImageKHRSafe
         , 'allocateCommandBuffers
         , 'allocateDescriptorSets
         , 'buildAccelerationStructuresKHR
