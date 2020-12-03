@@ -122,6 +122,7 @@ module Vulkan.Extensions.VK_MVK_ios_surface  ( createIOSSurfaceMVK
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -264,7 +265,7 @@ createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ vkCreateIOSSurfaceMVK' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface)
+  r <- lift $ traceAroundEvent "vkCreateIOSSurfaceMVK" (vkCreateIOSSurfaceMVK' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)

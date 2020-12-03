@@ -11,6 +11,7 @@ module Vulkan.Core10.Event  ( createEvent
                             , EventCreateFlags(..)
                             ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -140,7 +141,7 @@ createEvent device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPEvent <- ContT $ bracket (callocBytes @Event 8) free
-  r <- lift $ vkCreateEvent' (deviceHandle (device)) pCreateInfo pAllocator (pPEvent)
+  r <- lift $ traceAroundEvent "vkCreateEvent" (vkCreateEvent' (deviceHandle (device)) pCreateInfo pAllocator (pPEvent))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pEvent <- lift $ peek @Event pPEvent
   pure $ (pEvent)
@@ -225,7 +226,7 @@ destroyEvent device event allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyEvent' (deviceHandle (device)) (event) pAllocator
+  lift $ traceAroundEvent "vkDestroyEvent" (vkDestroyEvent' (deviceHandle (device)) (event) pAllocator)
   pure $ ()
 
 
@@ -307,7 +308,7 @@ getEventStatus device event = liftIO $ do
   unless (vkGetEventStatusPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetEventStatus is null" Nothing Nothing
   let vkGetEventStatus' = mkVkGetEventStatus vkGetEventStatusPtr
-  r <- vkGetEventStatus' (deviceHandle (device)) (event)
+  r <- traceAroundEvent "vkGetEventStatus" (vkGetEventStatus' (deviceHandle (device)) (event))
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -371,7 +372,7 @@ setEvent device event = liftIO $ do
   unless (vkSetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetEvent is null" Nothing Nothing
   let vkSetEvent' = mkVkSetEvent vkSetEventPtr
-  r <- vkSetEvent' (deviceHandle (device)) (event)
+  r <- traceAroundEvent "vkSetEvent" (vkSetEvent' (deviceHandle (device)) (event))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -439,7 +440,7 @@ resetEvent device event = liftIO $ do
   unless (vkResetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetEvent is null" Nothing Nothing
   let vkResetEvent' = mkVkResetEvent vkResetEventPtr
-  r <- vkResetEvent' (deviceHandle (device)) (event)
+  r <- traceAroundEvent "vkResetEvent" (vkResetEvent' (deviceHandle (device)) (event))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 

@@ -93,6 +93,7 @@ module Vulkan.Extensions.VK_AMD_buffer_marker  ( cmdWriteBufferMarkerAMD
                                                , pattern AMD_BUFFER_MARKER_EXTENSION_NAME
                                                ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import GHC.IO (throwIO)
@@ -291,7 +292,7 @@ cmdWriteBufferMarkerAMD commandBuffer pipelineStage dstBuffer dstOffset marker =
   unless (vkCmdWriteBufferMarkerAMDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteBufferMarkerAMD is null" Nothing Nothing
   let vkCmdWriteBufferMarkerAMD' = mkVkCmdWriteBufferMarkerAMD vkCmdWriteBufferMarkerAMDPtr
-  vkCmdWriteBufferMarkerAMD' (commandBufferHandle (commandBuffer)) (pipelineStage) (dstBuffer) (dstOffset) (marker)
+  traceAroundEvent "vkCmdWriteBufferMarkerAMD" (vkCmdWriteBufferMarkerAMD' (commandBufferHandle (commandBuffer)) (pipelineStage) (dstBuffer) (dstOffset) (marker))
   pure $ ()
 
 

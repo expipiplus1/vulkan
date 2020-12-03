@@ -137,6 +137,7 @@ module Vulkan.Extensions.VK_KHR_external_fence_win32  ( getFenceWin32HandleKHR
                                                       , SECURITY_ATTRIBUTES
                                                       ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -251,7 +252,7 @@ getFenceWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
   let vkGetFenceWin32HandleKHR' = mkVkGetFenceWin32HandleKHR vkGetFenceWin32HandleKHRPtr
   pGetWin32HandleInfo <- ContT $ withCStruct (getWin32HandleInfo)
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
-  r <- lift $ vkGetFenceWin32HandleKHR' (deviceHandle (device)) pGetWin32HandleInfo (pPHandle)
+  r <- lift $ traceAroundEvent "vkGetFenceWin32HandleKHR" (vkGetFenceWin32HandleKHR' (deviceHandle (device)) pGetWin32HandleInfo (pPHandle))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pHandle <- lift $ peek @HANDLE pPHandle
   pure $ (pHandle)
@@ -314,7 +315,7 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportFenceWin32HandleKHR is null" Nothing Nothing
   let vkImportFenceWin32HandleKHR' = mkVkImportFenceWin32HandleKHR vkImportFenceWin32HandleKHRPtr
   pImportFenceWin32HandleInfo <- ContT $ withCStruct (importFenceWin32HandleInfo)
-  r <- lift $ vkImportFenceWin32HandleKHR' (deviceHandle (device)) pImportFenceWin32HandleInfo
+  r <- lift $ traceAroundEvent "vkImportFenceWin32HandleKHR" (vkImportFenceWin32HandleKHR' (deviceHandle (device)) pImportFenceWin32HandleInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

@@ -184,6 +184,7 @@ module Vulkan.Extensions.VK_KHR_xcb_surface  ( createXcbSurfaceKHR
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -312,7 +313,7 @@ createXcbSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ vkCreateXcbSurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface)
+  r <- lift $ traceAroundEvent "vkCreateXcbSurfaceKHR" (vkCreateXcbSurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -367,7 +368,7 @@ getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex conne
   unless (vkGetPhysicalDeviceXcbPresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceXcbPresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceXcbPresentationSupportKHR' = mkVkGetPhysicalDeviceXcbPresentationSupportKHR vkGetPhysicalDeviceXcbPresentationSupportKHRPtr
-  r <- vkGetPhysicalDeviceXcbPresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (connection) (visual_id)
+  r <- traceAroundEvent "vkGetPhysicalDeviceXcbPresentationSupportKHR" (vkGetPhysicalDeviceXcbPresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (connection) (visual_id))
   pure $ ((bool32ToBool r))
 
 

@@ -13,6 +13,7 @@ module Vulkan.Core10.ImageView  ( createImageView
                                 , ImageViewCreateFlags
                                 ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -150,7 +151,7 @@ createImageView device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPView <- ContT $ bracket (callocBytes @ImageView 8) free
-  r <- lift $ vkCreateImageView' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPView)
+  r <- lift $ traceAroundEvent "vkCreateImageView" (vkCreateImageView' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPView))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pView <- lift $ peek @ImageView pPView
   pure $ (pView)
@@ -236,7 +237,7 @@ destroyImageView device imageView allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyImageView' (deviceHandle (device)) (imageView) pAllocator
+  lift $ traceAroundEvent "vkDestroyImageView" (vkDestroyImageView' (deviceHandle (device)) (imageView) pAllocator)
   pure $ ()
 
 

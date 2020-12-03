@@ -135,6 +135,7 @@ module Vulkan.Extensions.VK_KHR_push_descriptor  ( cmdPushDescriptorSetKHR
                                                  , pattern KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
                                                  ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -345,7 +346,7 @@ cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWri
   let vkCmdPushDescriptorSetKHR' = mkVkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHRPtr
   pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _))) (e) . ($ ())) (descriptorWrites)
-  lift $ vkCmdPushDescriptorSetKHR' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (layout) (set) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (forgetExtensions (pPDescriptorWrites))
+  lift $ traceAroundEvent "vkCmdPushDescriptorSetKHR" (vkCmdPushDescriptorSetKHR' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (layout) (set) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (forgetExtensions (pPDescriptorWrites)))
   pure $ ()
 
 
@@ -497,7 +498,7 @@ cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layou
   unless (vkCmdPushDescriptorSetWithTemplateKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushDescriptorSetWithTemplateKHR is null" Nothing Nothing
   let vkCmdPushDescriptorSetWithTemplateKHR' = mkVkCmdPushDescriptorSetWithTemplateKHR vkCmdPushDescriptorSetWithTemplateKHRPtr
-  vkCmdPushDescriptorSetWithTemplateKHR' (commandBufferHandle (commandBuffer)) (descriptorUpdateTemplate) (layout) (set) (data')
+  traceAroundEvent "vkCmdPushDescriptorSetWithTemplateKHR" (vkCmdPushDescriptorSetWithTemplateKHR' (commandBufferHandle (commandBuffer)) (descriptorUpdateTemplate) (layout) (set) (data'))
   pure $ ()
 
 

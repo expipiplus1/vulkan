@@ -539,6 +539,7 @@ module Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( getImageDrmFormatMo
                                                            , pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
                                                            ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -644,7 +645,7 @@ getImageDrmFormatModifierPropertiesEXT device image = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageDrmFormatModifierPropertiesEXT is null" Nothing Nothing
   let vkGetImageDrmFormatModifierPropertiesEXT' = mkVkGetImageDrmFormatModifierPropertiesEXT vkGetImageDrmFormatModifierPropertiesEXTPtr
   pPProperties <- ContT (withZeroCStruct @ImageDrmFormatModifierPropertiesEXT)
-  r <- lift $ vkGetImageDrmFormatModifierPropertiesEXT' (deviceHandle (device)) (image) (pPProperties)
+  r <- lift $ traceAroundEvent "vkGetImageDrmFormatModifierPropertiesEXT" (vkGetImageDrmFormatModifierPropertiesEXT' (deviceHandle (device)) (image) (pPProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pProperties <- lift $ peekCStruct @ImageDrmFormatModifierPropertiesEXT pPProperties
   pure $ (pProperties)

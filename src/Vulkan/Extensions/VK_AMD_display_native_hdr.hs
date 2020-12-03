@@ -135,6 +135,7 @@ module Vulkan.Extensions.VK_AMD_display_native_hdr  ( setLocalDimmingAMD
                                                     , ColorSpaceKHR(..)
                                                     ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -223,7 +224,7 @@ setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
   unless (vkSetLocalDimmingAMDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetLocalDimmingAMD is null" Nothing Nothing
   let vkSetLocalDimmingAMD' = mkVkSetLocalDimmingAMD vkSetLocalDimmingAMDPtr
-  vkSetLocalDimmingAMD' (deviceHandle (device)) (swapChain) (boolToBool32 (localDimmingEnable))
+  traceAroundEvent "vkSetLocalDimmingAMD" (vkSetLocalDimmingAMD' (deviceHandle (device)) (swapChain) (boolToBool32 (localDimmingEnable)))
   pure $ ()
 
 

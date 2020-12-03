@@ -15,6 +15,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2  ( createRenderPass
                                                               , StructureType(..)
                                                               ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -190,7 +191,7 @@ createRenderPass2 device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPRenderPass <- ContT $ bracket (callocBytes @RenderPass 8) free
-  r <- lift $ vkCreateRenderPass2' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPRenderPass)
+  r <- lift $ traceAroundEvent "vkCreateRenderPass2" (vkCreateRenderPass2' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPRenderPass))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pRenderPass <- lift $ peek @RenderPass pPRenderPass
   pure $ (pRenderPass)
@@ -444,7 +445,7 @@ cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . ev
   let vkCmdBeginRenderPass2' = mkVkCmdBeginRenderPass2 vkCmdBeginRenderPass2Ptr
   pRenderPassBegin <- ContT $ withCStruct (renderPassBegin)
   pSubpassBeginInfo <- ContT $ withCStruct (subpassBeginInfo)
-  lift $ vkCmdBeginRenderPass2' (commandBufferHandle (commandBuffer)) (forgetExtensions pRenderPassBegin) pSubpassBeginInfo
+  lift $ traceAroundEvent "vkCmdBeginRenderPass2" (vkCmdBeginRenderPass2' (commandBufferHandle (commandBuffer)) (forgetExtensions pRenderPassBegin) pSubpassBeginInfo)
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -547,7 +548,7 @@ cmdNextSubpass2 commandBuffer subpassBeginInfo subpassEndInfo = liftIO . evalCon
   let vkCmdNextSubpass2' = mkVkCmdNextSubpass2 vkCmdNextSubpass2Ptr
   pSubpassBeginInfo <- ContT $ withCStruct (subpassBeginInfo)
   pSubpassEndInfo <- ContT $ withCStruct (subpassEndInfo)
-  lift $ vkCmdNextSubpass2' (commandBufferHandle (commandBuffer)) pSubpassBeginInfo pSubpassEndInfo
+  lift $ traceAroundEvent "vkCmdNextSubpass2" (vkCmdNextSubpass2' (commandBufferHandle (commandBuffer)) pSubpassBeginInfo pSubpassEndInfo)
   pure $ ()
 
 
@@ -633,7 +634,7 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndRenderPass2 is null" Nothing Nothing
   let vkCmdEndRenderPass2' = mkVkCmdEndRenderPass2 vkCmdEndRenderPass2Ptr
   pSubpassEndInfo <- ContT $ withCStruct (subpassEndInfo)
-  lift $ vkCmdEndRenderPass2' (commandBufferHandle (commandBuffer)) pSubpassEndInfo
+  lift $ traceAroundEvent "vkCmdEndRenderPass2" (vkCmdEndRenderPass2' (commandBufferHandle (commandBuffer)) pSubpassEndInfo)
   pure $ ()
 
 

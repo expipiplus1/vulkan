@@ -178,6 +178,7 @@ module Vulkan.Extensions.VK_EXT_conditional_rendering  ( cmdBeginConditionalRend
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -300,7 +301,7 @@ cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginConditionalRenderingEXT is null" Nothing Nothing
   let vkCmdBeginConditionalRenderingEXT' = mkVkCmdBeginConditionalRenderingEXT vkCmdBeginConditionalRenderingEXTPtr
   pConditionalRenderingBegin <- ContT $ withCStruct (conditionalRenderingBegin)
-  lift $ vkCmdBeginConditionalRenderingEXT' (commandBufferHandle (commandBuffer)) pConditionalRenderingBegin
+  lift $ traceAroundEvent "vkCmdBeginConditionalRenderingEXT" (vkCmdBeginConditionalRenderingEXT' (commandBufferHandle (commandBuffer)) pConditionalRenderingBegin)
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -390,7 +391,7 @@ cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
   unless (vkCmdEndConditionalRenderingEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndConditionalRenderingEXT is null" Nothing Nothing
   let vkCmdEndConditionalRenderingEXT' = mkVkCmdEndConditionalRenderingEXT vkCmdEndConditionalRenderingEXTPtr
-  vkCmdEndConditionalRenderingEXT' (commandBufferHandle (commandBuffer))
+  traceAroundEvent "vkCmdEndConditionalRenderingEXT" (vkCmdEndConditionalRenderingEXT' (commandBufferHandle (commandBuffer)))
   pure $ ()
 
 

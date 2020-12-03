@@ -270,6 +270,7 @@ module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer  ( g
                                                                              , AHardwareBuffer
                                                                              ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -390,7 +391,7 @@ getAndroidHardwareBufferPropertiesANDROID device buffer = liftIO . evalContT $ d
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAndroidHardwareBufferPropertiesANDROID is null" Nothing Nothing
   let vkGetAndroidHardwareBufferPropertiesANDROID' = mkVkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferPropertiesANDROIDPtr
   pPProperties <- ContT (withZeroCStruct @(AndroidHardwareBufferPropertiesANDROID _))
-  r <- lift $ vkGetAndroidHardwareBufferPropertiesANDROID' (deviceHandle (device)) (buffer) (forgetExtensions (pPProperties))
+  r <- lift $ traceAroundEvent "vkGetAndroidHardwareBufferPropertiesANDROID" (vkGetAndroidHardwareBufferPropertiesANDROID' (deviceHandle (device)) (buffer) (forgetExtensions (pPProperties)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pProperties <- lift $ peekCStruct @(AndroidHardwareBufferPropertiesANDROID _) pPProperties
   pure $ (pProperties)
@@ -459,7 +460,7 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
   let vkGetMemoryAndroidHardwareBufferANDROID' = mkVkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROIDPtr
   pInfo <- ContT $ withCStruct (info)
   pPBuffer <- ContT $ bracket (callocBytes @(Ptr AHardwareBuffer) 8) free
-  r <- lift $ vkGetMemoryAndroidHardwareBufferANDROID' (deviceHandle (device)) pInfo (pPBuffer)
+  r <- lift $ traceAroundEvent "vkGetMemoryAndroidHardwareBufferANDROID" (vkGetMemoryAndroidHardwareBufferANDROID' (deviceHandle (device)) pInfo (pPBuffer))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pBuffer <- lift $ peek @(Ptr AHardwareBuffer) pPBuffer
   pure $ (pBuffer)

@@ -535,6 +535,7 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -706,14 +707,14 @@ enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice que
   let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' = mkVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPCounterCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' physicalDevice' (queueFamilyIndex) (pPCounterCount) (nullPtr) (nullPtr)
+  r <- lift $ traceAroundEvent "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR" (vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' physicalDevice' (queueFamilyIndex) (pPCounterCount) (nullPtr) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCounterCount <- lift $ peek @Word32 pPCounterCount
   pPCounters <- ContT $ bracket (callocBytes @PerformanceCounterKHR ((fromIntegral (pCounterCount)) * 48)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPCounters `advancePtrBytes` (i * 48) :: Ptr PerformanceCounterKHR) . ($ ())) [0..(fromIntegral (pCounterCount)) - 1]
   pPCounterDescriptions <- ContT $ bracket (callocBytes @PerformanceCounterDescriptionKHR ((fromIntegral (pCounterCount)) * 792)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPCounterDescriptions `advancePtrBytes` (i * 792) :: Ptr PerformanceCounterDescriptionKHR) . ($ ())) [0..(fromIntegral (pCounterCount)) - 1]
-  r' <- lift $ vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' physicalDevice' (queueFamilyIndex) (pPCounterCount) ((pPCounters)) ((pPCounterDescriptions))
+  r' <- lift $ traceAroundEvent "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR" (vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' physicalDevice' (queueFamilyIndex) (pPCounterCount) ((pPCounters)) ((pPCounterDescriptions)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pCounterCount' <- lift $ peek @Word32 pPCounterCount
   let x33 = pCounterCount'
@@ -772,7 +773,7 @@ getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performance
   let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR' = mkVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr
   pPerformanceQueryCreateInfo <- ContT $ withCStruct (performanceQueryCreateInfo)
   pPNumPasses <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR' (physicalDeviceHandle (physicalDevice)) pPerformanceQueryCreateInfo (pPNumPasses)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR" (vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR' (physicalDeviceHandle (physicalDevice)) pPerformanceQueryCreateInfo (pPNumPasses))
   pNumPasses <- lift $ peek @Word32 pPNumPasses
   pure $ (pNumPasses)
 
@@ -826,7 +827,7 @@ acquireProfilingLockKHR device info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireProfilingLockKHR is null" Nothing Nothing
   let vkAcquireProfilingLockKHR' = mkVkAcquireProfilingLockKHR vkAcquireProfilingLockKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ vkAcquireProfilingLockKHR' (deviceHandle (device)) pInfo
+  r <- lift $ traceAroundEvent "vkAcquireProfilingLockKHR" (vkAcquireProfilingLockKHR' (deviceHandle (device)) pInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -863,7 +864,7 @@ releaseProfilingLockKHR device = liftIO $ do
   unless (vkReleaseProfilingLockKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseProfilingLockKHR is null" Nothing Nothing
   let vkReleaseProfilingLockKHR' = mkVkReleaseProfilingLockKHR vkReleaseProfilingLockKHRPtr
-  vkReleaseProfilingLockKHR' (deviceHandle (device))
+  traceAroundEvent "vkReleaseProfilingLockKHR" (vkReleaseProfilingLockKHR' (deviceHandle (device)))
   pure $ ()
 
 

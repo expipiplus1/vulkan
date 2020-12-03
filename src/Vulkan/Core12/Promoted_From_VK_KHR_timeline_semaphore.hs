@@ -16,6 +16,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore  ( getSemaphoreCoun
                                                               , SemaphoreWaitFlags
                                                               ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -147,7 +148,7 @@ getSemaphoreCounterValue device semaphore = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreCounterValue is null" Nothing Nothing
   let vkGetSemaphoreCounterValue' = mkVkGetSemaphoreCounterValue vkGetSemaphoreCounterValuePtr
   pPValue <- ContT $ bracket (callocBytes @Word64 8) free
-  r <- lift $ vkGetSemaphoreCounterValue' (deviceHandle (device)) (semaphore) (pPValue)
+  r <- lift $ traceAroundEvent "vkGetSemaphoreCounterValue" (vkGetSemaphoreCounterValue' (deviceHandle (device)) (semaphore) (pPValue))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pValue <- lift $ peek @Word64 pPValue
   pure $ (pValue)
@@ -192,7 +193,7 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO .
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitSemaphores is null" Nothing Nothing
   let vkWaitSemaphores' = mkVkWaitSemaphores vkWaitSemaphoresPtr
   pWaitInfo <- ContT $ withCStruct (waitInfo)
-  r <- lift $ vkWaitSemaphores' (deviceHandle (device)) pWaitInfo (timeout)
+  r <- lift $ traceAroundEvent "vkWaitSemaphores" (vkWaitSemaphores' (deviceHandle (device)) pWaitInfo (timeout))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -343,7 +344,7 @@ signalSemaphore device signalInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSignalSemaphore is null" Nothing Nothing
   let vkSignalSemaphore' = mkVkSignalSemaphore vkSignalSemaphorePtr
   pSignalInfo <- ContT $ withCStruct (signalInfo)
-  r <- lift $ vkSignalSemaphore' (deviceHandle (device)) pSignalInfo
+  r <- lift $ traceAroundEvent "vkSignalSemaphore" (vkSignalSemaphore' (deviceHandle (device)) pSignalInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

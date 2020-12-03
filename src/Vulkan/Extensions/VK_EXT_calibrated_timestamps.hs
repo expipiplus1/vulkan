@@ -181,6 +181,7 @@ module Vulkan.Extensions.VK_EXT_calibrated_timestamps  ( getPhysicalDeviceCalibr
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -310,11 +311,11 @@ getPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice = liftIO . evalContT
   let vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' = mkVkGetPhysicalDeviceCalibrateableTimeDomainsEXT vkGetPhysicalDeviceCalibrateableTimeDomainsEXTPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPTimeDomainCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' physicalDevice' (pPTimeDomainCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT" (vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' physicalDevice' (pPTimeDomainCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pTimeDomainCount <- lift $ peek @Word32 pPTimeDomainCount
   pPTimeDomains <- ContT $ bracket (callocBytes @TimeDomainEXT ((fromIntegral (pTimeDomainCount)) * 4)) free
-  r' <- lift $ vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' physicalDevice' (pPTimeDomainCount) (pPTimeDomains)
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT" (vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' physicalDevice' (pPTimeDomainCount) (pPTimeDomains))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pTimeDomainCount' <- lift $ peek @Word32 pPTimeDomainCount
   pTimeDomains' <- lift $ generateM (fromIntegral (pTimeDomainCount')) (\i -> peek @TimeDomainEXT ((pPTimeDomains `advancePtrBytes` (4 * (i)) :: Ptr TimeDomainEXT)))
@@ -389,7 +390,7 @@ getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
   lift $ Data.Vector.imapM_ (\i e -> poke (pPTimestampInfos `plusPtr` (24 * (i)) :: Ptr CalibratedTimestampInfoEXT) (e)) (timestampInfos)
   pPTimestamps <- ContT $ bracket (callocBytes @Word64 ((fromIntegral ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32))) * 8)) free
   pPMaxDeviation <- ContT $ bracket (callocBytes @Word64 8) free
-  r <- lift $ vkGetCalibratedTimestampsEXT' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32)) (pPTimestampInfos) (pPTimestamps) (pPMaxDeviation)
+  r <- lift $ traceAroundEvent "vkGetCalibratedTimestampsEXT" (vkGetCalibratedTimestampsEXT' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32)) (pPTimestampInfos) (pPTimestamps) (pPMaxDeviation))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pTimestamps <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32))) (\i -> peek @Word64 ((pPTimestamps `advancePtrBytes` (8 * (i)) :: Ptr Word64)))
   pMaxDeviation <- lift $ peek @Word64 pPMaxDeviation

@@ -11,6 +11,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2  ( getBufferM
                                                                     , StructureType(..)
                                                                     ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -115,7 +116,7 @@ getBufferMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetBufferMemoryRequirements2' = mkVkGetBufferMemoryRequirements2 vkGetBufferMemoryRequirements2Ptr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
-  lift $ vkGetBufferMemoryRequirements2' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements))
+  lift $ traceAroundEvent "vkGetBufferMemoryRequirements2" (vkGetBufferMemoryRequirements2' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements)))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2 _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -157,7 +158,7 @@ getImageMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetImageMemoryRequirements2' = mkVkGetImageMemoryRequirements2 vkGetImageMemoryRequirements2Ptr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
-  lift $ vkGetImageMemoryRequirements2' (deviceHandle (device)) (forgetExtensions pInfo) (forgetExtensions (pPMemoryRequirements))
+  lift $ traceAroundEvent "vkGetImageMemoryRequirements2" (vkGetImageMemoryRequirements2' (deviceHandle (device)) (forgetExtensions pInfo) (forgetExtensions (pPMemoryRequirements)))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2 _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -212,11 +213,11 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
   let device' = deviceHandle (device)
   pInfo <- ContT $ withCStruct (info)
   pPSparseMemoryRequirementCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ vkGetImageSparseMemoryRequirements2' device' pInfo (pPSparseMemoryRequirementCount) (nullPtr)
+  lift $ traceAroundEvent "vkGetImageSparseMemoryRequirements2" (vkGetImageSparseMemoryRequirements2' device' pInfo (pPSparseMemoryRequirementCount) (nullPtr))
   pSparseMemoryRequirementCount <- lift $ peek @Word32 pPSparseMemoryRequirementCount
   pPSparseMemoryRequirements <- ContT $ bracket (callocBytes @SparseImageMemoryRequirements2 ((fromIntegral (pSparseMemoryRequirementCount)) * 64)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPSparseMemoryRequirements `advancePtrBytes` (i * 64) :: Ptr SparseImageMemoryRequirements2) . ($ ())) [0..(fromIntegral (pSparseMemoryRequirementCount)) - 1]
-  lift $ vkGetImageSparseMemoryRequirements2' device' pInfo (pPSparseMemoryRequirementCount) ((pPSparseMemoryRequirements))
+  lift $ traceAroundEvent "vkGetImageSparseMemoryRequirements2" (vkGetImageSparseMemoryRequirements2' device' pInfo (pPSparseMemoryRequirementCount) ((pPSparseMemoryRequirements)))
   pSparseMemoryRequirementCount' <- lift $ peek @Word32 pPSparseMemoryRequirementCount
   pSparseMemoryRequirements' <- lift $ generateM (fromIntegral (pSparseMemoryRequirementCount')) (\i -> peekCStruct @SparseImageMemoryRequirements2 (((pPSparseMemoryRequirements) `advancePtrBytes` (64 * (i)) :: Ptr SparseImageMemoryRequirements2)))
   pure $ (pSparseMemoryRequirements')

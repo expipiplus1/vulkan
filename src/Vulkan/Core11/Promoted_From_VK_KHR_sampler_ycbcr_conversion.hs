@@ -24,6 +24,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion  ( createSamp
                                                                     , ChromaLocation(..)
                                                                     ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -196,7 +197,7 @@ createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPYcbcrConversion <- ContT $ bracket (callocBytes @SamplerYcbcrConversion 8) free
-  r <- lift $ vkCreateSamplerYcbcrConversion' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPYcbcrConversion)
+  r <- lift $ traceAroundEvent "vkCreateSamplerYcbcrConversion" (vkCreateSamplerYcbcrConversion' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPYcbcrConversion))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pYcbcrConversion <- lift $ peek @SamplerYcbcrConversion pPYcbcrConversion
   pure $ (pYcbcrConversion)
@@ -271,7 +272,7 @@ destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalCo
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroySamplerYcbcrConversion' (deviceHandle (device)) (ycbcrConversion) pAllocator
+  lift $ traceAroundEvent "vkDestroySamplerYcbcrConversion" (vkDestroySamplerYcbcrConversion' (deviceHandle (device)) (ycbcrConversion) pAllocator)
   pure $ ()
 
 

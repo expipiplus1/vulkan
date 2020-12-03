@@ -312,6 +312,7 @@ module Vulkan.Extensions.VK_NV_shading_rate_image  ( cmdBindShadingRateImageNV
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -484,7 +485,7 @@ cmdBindShadingRateImageNV commandBuffer imageView imageLayout = liftIO $ do
   unless (vkCmdBindShadingRateImageNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindShadingRateImageNV is null" Nothing Nothing
   let vkCmdBindShadingRateImageNV' = mkVkCmdBindShadingRateImageNV vkCmdBindShadingRateImageNVPtr
-  vkCmdBindShadingRateImageNV' (commandBufferHandle (commandBuffer)) (imageView) (imageLayout)
+  traceAroundEvent "vkCmdBindShadingRateImageNV" (vkCmdBindShadingRateImageNV' (commandBufferHandle (commandBuffer)) (imageView) (imageLayout))
   pure $ ()
 
 
@@ -581,7 +582,7 @@ cmdSetViewportShadingRatePaletteNV commandBuffer firstViewport shadingRatePalett
   let vkCmdSetViewportShadingRatePaletteNV' = mkVkCmdSetViewportShadingRatePaletteNV vkCmdSetViewportShadingRatePaletteNVPtr
   pPShadingRatePalettes <- ContT $ allocaBytesAligned @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) (shadingRatePalettes)
-  lift $ vkCmdSetViewportShadingRatePaletteNV' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (shadingRatePalettes)) :: Word32)) (pPShadingRatePalettes)
+  lift $ traceAroundEvent "vkCmdSetViewportShadingRatePaletteNV" (vkCmdSetViewportShadingRatePaletteNV' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (shadingRatePalettes)) :: Word32)) (pPShadingRatePalettes))
   pure $ ()
 
 
@@ -677,7 +678,7 @@ cmdSetCoarseSampleOrderNV commandBuffer sampleOrderType customSampleOrders = lif
   let vkCmdSetCoarseSampleOrderNV' = mkVkCmdSetCoarseSampleOrderNV vkCmdSetCoarseSampleOrderNVPtr
   pPCustomSampleOrders <- ContT $ allocaBytesAligned @CoarseSampleOrderCustomNV ((Data.Vector.length (customSampleOrders)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCustomSampleOrders `plusPtr` (24 * (i)) :: Ptr CoarseSampleOrderCustomNV) (e) . ($ ())) (customSampleOrders)
-  lift $ vkCmdSetCoarseSampleOrderNV' (commandBufferHandle (commandBuffer)) (sampleOrderType) ((fromIntegral (Data.Vector.length $ (customSampleOrders)) :: Word32)) (pPCustomSampleOrders)
+  lift $ traceAroundEvent "vkCmdSetCoarseSampleOrderNV" (vkCmdSetCoarseSampleOrderNV' (commandBufferHandle (commandBuffer)) (sampleOrderType) ((fromIntegral (Data.Vector.length $ (customSampleOrders)) :: Word32)) (pPCustomSampleOrders))
   pure $ ()
 
 

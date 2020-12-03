@@ -11,6 +11,7 @@ module Vulkan.Core10.Device  ( createDevice
                              , DeviceQueueCreateFlags
                              ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -286,7 +287,7 @@ createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPDevice <- ContT $ bracket (callocBytes @(Ptr Device_T) 8) free
-  r <- lift $ vkCreateDevice' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pCreateInfo) pAllocator (pPDevice)
+  r <- lift $ traceAroundEvent "vkCreateDevice" (vkCreateDevice' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pCreateInfo) pAllocator (pPDevice))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDevice <- lift $ peek @(Ptr Device_T) pPDevice
   pDevice' <- lift $ (\h -> Device h <$> initDeviceCmds cmds h) pDevice
@@ -382,7 +383,7 @@ destroyDevice device allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyDevice' (deviceHandle (device)) pAllocator
+  lift $ traceAroundEvent "vkDestroyDevice" (vkDestroyDevice' (deviceHandle (device)) pAllocator)
   pure $ ()
 
 

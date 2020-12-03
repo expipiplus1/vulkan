@@ -2,6 +2,7 @@
 -- No documentation found for Chapter "DeviceInitialization"
 module Vulkan.Core11.DeviceInitialization  (enumerateInstanceVersion) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -72,7 +73,7 @@ enumerateInstanceVersion  = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumerateInstanceVersion is null" Nothing Nothing
   let vkEnumerateInstanceVersion' = mkVkEnumerateInstanceVersion vkEnumerateInstanceVersionPtr
   pPApiVersion <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkEnumerateInstanceVersion' (pPApiVersion)
+  r <- lift $ traceAroundEvent "vkEnumerateInstanceVersion" (vkEnumerateInstanceVersion' (pPApiVersion))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pApiVersion <- lift $ peek @Word32 pPApiVersion
   pure $ (pApiVersion)

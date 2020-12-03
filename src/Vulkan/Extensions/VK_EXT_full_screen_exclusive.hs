@@ -283,6 +283,7 @@ module Vulkan.Extensions.VK_EXT_full_screen_exclusive  ( getPhysicalDeviceSurfac
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -442,11 +443,11 @@ getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . e
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   let x9 = forgetExtensions pSurfaceInfo
   pPPresentModeCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' x9 (pPPresentModeCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfacePresentModes2EXT" (vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' x9 (pPPresentModeCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPresentModeCount <- lift $ peek @Word32 pPPresentModeCount
   pPPresentModes <- ContT $ bracket (callocBytes @PresentModeKHR ((fromIntegral (pPresentModeCount)) * 4)) free
-  r' <- lift $ vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' x9 (pPPresentModeCount) (pPPresentModes)
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfacePresentModes2EXT" (vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' x9 (pPPresentModeCount) (pPPresentModes))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPresentModeCount' <- lift $ peek @Word32 pPPresentModeCount
   pPresentModes' <- lift $ generateM (fromIntegral (pPresentModeCount')) (\i -> peek @PresentModeKHR ((pPPresentModes `advancePtrBytes` (4 * (i)) :: Ptr PresentModeKHR)))
@@ -514,7 +515,7 @@ getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ 
   let vkGetDeviceGroupSurfacePresentModes2EXT' = mkVkGetDeviceGroupSurfacePresentModes2EXT vkGetDeviceGroupSurfacePresentModes2EXTPtr
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPModes <- ContT $ bracket (callocBytes @DeviceGroupPresentModeFlagsKHR 4) free
-  r <- lift $ vkGetDeviceGroupSurfacePresentModes2EXT' (deviceHandle (device)) (forgetExtensions pSurfaceInfo) (pPModes)
+  r <- lift $ traceAroundEvent "vkGetDeviceGroupSurfacePresentModes2EXT" (vkGetDeviceGroupSurfacePresentModes2EXT' (deviceHandle (device)) (forgetExtensions pSurfaceInfo) (pPModes))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pModes <- lift $ peek @DeviceGroupPresentModeFlagsKHR pPModes
   pure $ (pModes)
@@ -606,7 +607,7 @@ acquireFullScreenExclusiveModeEXT device swapchain = liftIO $ do
   unless (vkAcquireFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireFullScreenExclusiveModeEXT is null" Nothing Nothing
   let vkAcquireFullScreenExclusiveModeEXT' = mkVkAcquireFullScreenExclusiveModeEXT vkAcquireFullScreenExclusiveModeEXTPtr
-  r <- vkAcquireFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain)
+  r <- traceAroundEvent "vkAcquireFullScreenExclusiveModeEXT" (vkAcquireFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -655,7 +656,7 @@ releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
   unless (vkReleaseFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseFullScreenExclusiveModeEXT is null" Nothing Nothing
   let vkReleaseFullScreenExclusiveModeEXT' = mkVkReleaseFullScreenExclusiveModeEXT vkReleaseFullScreenExclusiveModeEXTPtr
-  r <- vkReleaseFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain)
+  r <- traceAroundEvent "vkReleaseFullScreenExclusiveModeEXT" (vkReleaseFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 

@@ -101,6 +101,7 @@ module Vulkan.Extensions.VK_NVX_image_view_handle  ( getImageViewHandleNVX
                                                    , pattern NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME
                                                    ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -183,7 +184,7 @@ getImageViewHandleNVX device info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageViewHandleNVX is null" Nothing Nothing
   let vkGetImageViewHandleNVX' = mkVkGetImageViewHandleNVX vkGetImageViewHandleNVXPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ vkGetImageViewHandleNVX' (deviceHandle (device)) pInfo
+  r <- lift $ traceAroundEvent "vkGetImageViewHandleNVX" (vkGetImageViewHandleNVX' (deviceHandle (device)) pInfo)
   pure $ (r)
 
 
@@ -234,7 +235,7 @@ getImageViewAddressNVX device imageView = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageViewAddressNVX is null" Nothing Nothing
   let vkGetImageViewAddressNVX' = mkVkGetImageViewAddressNVX vkGetImageViewAddressNVXPtr
   pPProperties <- ContT (withZeroCStruct @ImageViewAddressPropertiesNVX)
-  r <- lift $ vkGetImageViewAddressNVX' (deviceHandle (device)) (imageView) (pPProperties)
+  r <- lift $ traceAroundEvent "vkGetImageViewAddressNVX" (vkGetImageViewAddressNVX' (deviceHandle (device)) (imageView) (pPProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pProperties <- lift $ peekCStruct @ImageViewAddressPropertiesNVX pPProperties
   pure $ (pProperties)

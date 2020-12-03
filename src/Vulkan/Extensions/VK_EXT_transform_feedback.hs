@@ -252,6 +252,7 @@ module Vulkan.Extensions.VK_EXT_transform_feedback  ( cmdBindTransformFeedbackBu
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -480,7 +481,7 @@ cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets si
       pPSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
       lift $ Data.Vector.imapM_ (\i e -> poke (pPSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pPSizes
-  lift $ vkCmdBindTransformFeedbackBuffersEXT' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets) pSizes
+  lift $ traceAroundEvent "vkCmdBindTransformFeedbackBuffersEXT" (vkCmdBindTransformFeedbackBuffersEXT' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets) pSizes)
   pure $ ()
 
 
@@ -646,7 +647,7 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
       pPCounterBufferOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8) 8
       lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((counterBufferOffsets))
       pure $ pPCounterBufferOffsets
-  lift $ vkCmdBeginTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets
+  lift $ traceAroundEvent "vkCmdBeginTransformFeedbackEXT" (vkCmdBeginTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets)
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -801,7 +802,7 @@ cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers count
       pPCounterBufferOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8) 8
       lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((counterBufferOffsets))
       pure $ pPCounterBufferOffsets
-  lift $ vkCmdEndTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets
+  lift $ traceAroundEvent "vkCmdEndTransformFeedbackEXT" (vkCmdEndTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets)
   pure $ ()
 
 
@@ -1015,7 +1016,7 @@ cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = liftIO $ do
   unless (vkCmdBeginQueryIndexedEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginQueryIndexedEXT is null" Nothing Nothing
   let vkCmdBeginQueryIndexedEXT' = mkVkCmdBeginQueryIndexedEXT vkCmdBeginQueryIndexedEXTPtr
-  vkCmdBeginQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags) (index)
+  traceAroundEvent "vkCmdBeginQueryIndexedEXT" (vkCmdBeginQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags) (index))
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -1137,7 +1138,7 @@ cmdEndQueryIndexedEXT commandBuffer queryPool query index = liftIO $ do
   unless (vkCmdEndQueryIndexedEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndQueryIndexedEXT is null" Nothing Nothing
   let vkCmdEndQueryIndexedEXT' = mkVkCmdEndQueryIndexedEXT vkCmdEndQueryIndexedEXTPtr
-  vkCmdEndQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (index)
+  traceAroundEvent "vkCmdEndQueryIndexedEXT" (vkCmdEndQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (index))
   pure $ ()
 
 
@@ -1687,7 +1688,7 @@ cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuf
   unless (vkCmdDrawIndirectByteCountEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndirectByteCountEXT is null" Nothing Nothing
   let vkCmdDrawIndirectByteCountEXT' = mkVkCmdDrawIndirectByteCountEXT vkCmdDrawIndirectByteCountEXTPtr
-  vkCmdDrawIndirectByteCountEXT' (commandBufferHandle (commandBuffer)) (instanceCount) (firstInstance) (counterBuffer) (counterBufferOffset) (counterOffset) (vertexStride)
+  traceAroundEvent "vkCmdDrawIndirectByteCountEXT" (vkCmdDrawIndirectByteCountEXT' (commandBufferHandle (commandBuffer)) (instanceCount) (firstInstance) (counterBuffer) (counterBufferOffset) (counterOffset) (vertexStride))
   pure $ ()
 
 

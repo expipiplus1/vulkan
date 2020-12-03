@@ -5,6 +5,7 @@ module Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset  ( resetQueryPool
                                                             , StructureType(..)
                                                             ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -115,7 +116,7 @@ resetQueryPool device queryPool firstQuery queryCount = liftIO $ do
   unless (vkResetQueryPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetQueryPool is null" Nothing Nothing
   let vkResetQueryPool' = mkVkResetQueryPool vkResetQueryPoolPtr
-  vkResetQueryPool' (deviceHandle (device)) (queryPool) (firstQuery) (queryCount)
+  traceAroundEvent "vkResetQueryPool" (vkResetQueryPool' (deviceHandle (device)) (queryPool) (firstQuery) (queryCount))
   pure $ ()
 
 

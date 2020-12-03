@@ -147,6 +147,7 @@ module Vulkan.Extensions.VK_NV_coverage_reduction_mode  ( getPhysicalDeviceSuppo
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -281,12 +282,12 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
   let vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' = mkVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPCombinationCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' physicalDevice' (pPCombinationCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV" (vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' physicalDevice' (pPCombinationCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCombinationCount <- lift $ peek @Word32 pPCombinationCount
   pPCombinations <- ContT $ bracket (callocBytes @FramebufferMixedSamplesCombinationNV ((fromIntegral (pCombinationCount)) * 32)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPCombinations `advancePtrBytes` (i * 32) :: Ptr FramebufferMixedSamplesCombinationNV) . ($ ())) [0..(fromIntegral (pCombinationCount)) - 1]
-  r' <- lift $ vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' physicalDevice' (pPCombinationCount) ((pPCombinations))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV" (vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' physicalDevice' (pPCombinationCount) ((pPCombinations)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pCombinationCount' <- lift $ peek @Word32 pPCombinationCount
   pCombinations' <- lift $ generateM (fromIntegral (pCombinationCount')) (\i -> peekCStruct @FramebufferMixedSamplesCombinationNV (((pPCombinations) `advancePtrBytes` (32 * (i)) :: Ptr FramebufferMixedSamplesCombinationNV)))

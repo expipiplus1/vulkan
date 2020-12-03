@@ -12,6 +12,7 @@ module Vulkan.Core10.Buffer  ( createBuffer
                              , BufferCreateFlags
                              ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -164,7 +165,7 @@ createBuffer device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
-  r <- lift $ vkCreateBuffer' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPBuffer)
+  r <- lift $ traceAroundEvent "vkCreateBuffer" (vkCreateBuffer' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPBuffer))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pBuffer <- lift $ peek @Buffer pPBuffer
   pure $ (pBuffer)
@@ -250,7 +251,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyBuffer' (deviceHandle (device)) (buffer) pAllocator
+  lift $ traceAroundEvent "vkDestroyBuffer" (vkDestroyBuffer' (deviceHandle (device)) (buffer) pAllocator)
   pure $ ()
 
 

@@ -162,6 +162,7 @@ module Vulkan.Extensions.VK_KHR_external_semaphore_win32  ( getSemaphoreWin32Han
                                                           , SECURITY_ATTRIBUTES
                                                           ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -286,7 +287,7 @@ getSemaphoreWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
   let vkGetSemaphoreWin32HandleKHR' = mkVkGetSemaphoreWin32HandleKHR vkGetSemaphoreWin32HandleKHRPtr
   pGetWin32HandleInfo <- ContT $ withCStruct (getWin32HandleInfo)
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
-  r <- lift $ vkGetSemaphoreWin32HandleKHR' (deviceHandle (device)) pGetWin32HandleInfo (pPHandle)
+  r <- lift $ traceAroundEvent "vkGetSemaphoreWin32HandleKHR" (vkGetSemaphoreWin32HandleKHR' (deviceHandle (device)) pGetWin32HandleInfo (pPHandle))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pHandle <- lift $ peek @HANDLE pPHandle
   pure $ (pHandle)
@@ -350,7 +351,7 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreWin32HandleKHR is null" Nothing Nothing
   let vkImportSemaphoreWin32HandleKHR' = mkVkImportSemaphoreWin32HandleKHR vkImportSemaphoreWin32HandleKHRPtr
   pImportSemaphoreWin32HandleInfo <- ContT $ withCStruct (importSemaphoreWin32HandleInfo)
-  r <- lift $ vkImportSemaphoreWin32HandleKHR' (deviceHandle (device)) pImportSemaphoreWin32HandleInfo
+  r <- lift $ traceAroundEvent "vkImportSemaphoreWin32HandleKHR" (vkImportSemaphoreWin32HandleKHR' (deviceHandle (device)) pImportSemaphoreWin32HandleInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

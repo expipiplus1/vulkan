@@ -178,6 +178,7 @@ module Vulkan.Extensions.VK_NV_cooperative_matrix  ( getPhysicalDeviceCooperativ
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -305,12 +306,12 @@ getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = liftIO . evalCon
   let vkGetPhysicalDeviceCooperativeMatrixPropertiesNV' = mkVkGetPhysicalDeviceCooperativeMatrixPropertiesNV vkGetPhysicalDeviceCooperativeMatrixPropertiesNVPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceCooperativeMatrixPropertiesNV' physicalDevice' (pPPropertyCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceCooperativeMatrixPropertiesNV" (vkGetPhysicalDeviceCooperativeMatrixPropertiesNV' physicalDevice' (pPPropertyCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @CooperativeMatrixPropertiesNV ((fromIntegral (pPropertyCount)) * 48)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 48) :: Ptr CooperativeMatrixPropertiesNV) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ vkGetPhysicalDeviceCooperativeMatrixPropertiesNV' physicalDevice' (pPPropertyCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceCooperativeMatrixPropertiesNV" (vkGetPhysicalDeviceCooperativeMatrixPropertiesNV' physicalDevice' (pPPropertyCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @CooperativeMatrixPropertiesNV (((pPProperties) `advancePtrBytes` (48 * (i)) :: Ptr CooperativeMatrixPropertiesNV)))

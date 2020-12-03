@@ -202,6 +202,7 @@ module Vulkan.Extensions.VK_KHR_pipeline_executable_properties  ( getPipelineExe
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -363,12 +364,12 @@ getPipelineExecutablePropertiesKHR device pipelineInfo = liftIO . evalContT $ do
   let device' = deviceHandle (device)
   pPipelineInfo <- ContT $ withCStruct (pipelineInfo)
   pPExecutableCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPipelineExecutablePropertiesKHR' device' pPipelineInfo (pPExecutableCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPipelineExecutablePropertiesKHR" (vkGetPipelineExecutablePropertiesKHR' device' pPipelineInfo (pPExecutableCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pExecutableCount <- lift $ peek @Word32 pPExecutableCount
   pPProperties <- ContT $ bracket (callocBytes @PipelineExecutablePropertiesKHR ((fromIntegral (pExecutableCount)) * 536)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 536) :: Ptr PipelineExecutablePropertiesKHR) . ($ ())) [0..(fromIntegral (pExecutableCount)) - 1]
-  r' <- lift $ vkGetPipelineExecutablePropertiesKHR' device' pPipelineInfo (pPExecutableCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkGetPipelineExecutablePropertiesKHR" (vkGetPipelineExecutablePropertiesKHR' device' pPipelineInfo (pPExecutableCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pExecutableCount' <- lift $ peek @Word32 pPExecutableCount
   pProperties' <- lift $ generateM (fromIntegral (pExecutableCount')) (\i -> peekCStruct @PipelineExecutablePropertiesKHR (((pPProperties) `advancePtrBytes` (536 * (i)) :: Ptr PipelineExecutablePropertiesKHR)))
@@ -466,12 +467,12 @@ getPipelineExecutableStatisticsKHR device executableInfo = liftIO . evalContT $ 
   let device' = deviceHandle (device)
   pExecutableInfo <- ContT $ withCStruct (executableInfo)
   pPStatisticCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPipelineExecutableStatisticsKHR' device' pExecutableInfo (pPStatisticCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPipelineExecutableStatisticsKHR" (vkGetPipelineExecutableStatisticsKHR' device' pExecutableInfo (pPStatisticCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pStatisticCount <- lift $ peek @Word32 pPStatisticCount
   pPStatistics <- ContT $ bracket (callocBytes @PipelineExecutableStatisticKHR ((fromIntegral (pStatisticCount)) * 544)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPStatistics `advancePtrBytes` (i * 544) :: Ptr PipelineExecutableStatisticKHR) . ($ ())) [0..(fromIntegral (pStatisticCount)) - 1]
-  r' <- lift $ vkGetPipelineExecutableStatisticsKHR' device' pExecutableInfo (pPStatisticCount) ((pPStatistics))
+  r' <- lift $ traceAroundEvent "vkGetPipelineExecutableStatisticsKHR" (vkGetPipelineExecutableStatisticsKHR' device' pExecutableInfo (pPStatisticCount) ((pPStatistics)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pStatisticCount' <- lift $ peek @Word32 pPStatisticCount
   pStatistics' <- lift $ generateM (fromIntegral (pStatisticCount')) (\i -> peekCStruct @PipelineExecutableStatisticKHR (((pPStatistics) `advancePtrBytes` (544 * (i)) :: Ptr PipelineExecutableStatisticKHR)))
@@ -578,12 +579,12 @@ getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO .
   let device' = deviceHandle (device)
   pExecutableInfo <- ContT $ withCStruct (executableInfo)
   pPInternalRepresentationCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPipelineExecutableInternalRepresentationsKHR' device' pExecutableInfo (pPInternalRepresentationCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPipelineExecutableInternalRepresentationsKHR" (vkGetPipelineExecutableInternalRepresentationsKHR' device' pExecutableInfo (pPInternalRepresentationCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pInternalRepresentationCount <- lift $ peek @Word32 pPInternalRepresentationCount
   pPInternalRepresentations <- ContT $ bracket (callocBytes @PipelineExecutableInternalRepresentationKHR ((fromIntegral (pInternalRepresentationCount)) * 552)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPInternalRepresentations `advancePtrBytes` (i * 552) :: Ptr PipelineExecutableInternalRepresentationKHR) . ($ ())) [0..(fromIntegral (pInternalRepresentationCount)) - 1]
-  r' <- lift $ vkGetPipelineExecutableInternalRepresentationsKHR' device' pExecutableInfo (pPInternalRepresentationCount) ((pPInternalRepresentations))
+  r' <- lift $ traceAroundEvent "vkGetPipelineExecutableInternalRepresentationsKHR" (vkGetPipelineExecutableInternalRepresentationsKHR' device' pExecutableInfo (pPInternalRepresentationCount) ((pPInternalRepresentations)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pInternalRepresentationCount' <- lift $ peek @Word32 pPInternalRepresentationCount
   pInternalRepresentations' <- lift $ generateM (fromIntegral (pInternalRepresentationCount')) (\i -> peekCStruct @PipelineExecutableInternalRepresentationKHR (((pPInternalRepresentations) `advancePtrBytes` (552 * (i)) :: Ptr PipelineExecutableInternalRepresentationKHR)))

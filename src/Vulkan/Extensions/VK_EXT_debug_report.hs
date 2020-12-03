@@ -372,6 +372,7 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -506,7 +507,7 @@ createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPCallback <- ContT $ bracket (callocBytes @DebugReportCallbackEXT 8) free
-  r <- lift $ vkCreateDebugReportCallbackEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPCallback)
+  r <- lift $ traceAroundEvent "vkCreateDebugReportCallbackEXT" (vkCreateDebugReportCallbackEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPCallback))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCallback <- lift $ peek @DebugReportCallbackEXT pPCallback
   pure $ (pCallback)
@@ -596,7 +597,7 @@ destroyDebugReportCallbackEXT instance' callback allocator = liftIO . evalContT 
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyDebugReportCallbackEXT' (instanceHandle (instance')) (callback) pAllocator
+  lift $ traceAroundEvent "vkDestroyDebugReportCallbackEXT" (vkDestroyDebugReportCallbackEXT' (instanceHandle (instance')) (callback) pAllocator)
   pure $ ()
 
 
@@ -683,7 +684,7 @@ debugReportMessageEXT instance' flags objectType object location messageCode lay
   let vkDebugReportMessageEXT' = mkVkDebugReportMessageEXT vkDebugReportMessageEXTPtr
   pLayerPrefix <- ContT $ useAsCString (layerPrefix)
   pMessage <- ContT $ useAsCString (message)
-  lift $ vkDebugReportMessageEXT' (instanceHandle (instance')) (flags) (objectType) (object) (CSize (location)) (messageCode) pLayerPrefix pMessage
+  lift $ traceAroundEvent "vkDebugReportMessageEXT" (vkDebugReportMessageEXT' (instanceHandle (instance')) (flags) (objectType) (object) (CSize (location)) (messageCode) pLayerPrefix pMessage)
   pure $ ()
 
 

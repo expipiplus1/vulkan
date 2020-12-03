@@ -8,6 +8,7 @@ module Vulkan.Core10.BufferView  ( createBufferView
                                  , BufferViewCreateFlags(..)
                                  ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -123,7 +124,7 @@ createBufferView device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPView <- ContT $ bracket (callocBytes @BufferView 8) free
-  r <- lift $ vkCreateBufferView' (deviceHandle (device)) pCreateInfo pAllocator (pPView)
+  r <- lift $ traceAroundEvent "vkCreateBufferView" (vkCreateBufferView' (deviceHandle (device)) pCreateInfo pAllocator (pPView))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pView <- lift $ peek @BufferView pPView
   pure $ (pView)
@@ -210,7 +211,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyBufferView' (deviceHandle (device)) (bufferView) pAllocator
+  lift $ traceAroundEvent "vkDestroyBufferView" (vkDestroyBufferView' (deviceHandle (device)) (bufferView) pAllocator)
   pure $ ()
 
 

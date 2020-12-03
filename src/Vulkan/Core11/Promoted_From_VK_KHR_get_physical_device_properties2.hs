@@ -19,6 +19,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2  ( get
                                                                            , StructureType(..)
                                                                            ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -279,7 +280,7 @@ getPhysicalDeviceFeatures2 physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFeatures2 is null" Nothing Nothing
   let vkGetPhysicalDeviceFeatures2' = mkVkGetPhysicalDeviceFeatures2 vkGetPhysicalDeviceFeatures2Ptr
   pPFeatures <- ContT (withZeroCStruct @(PhysicalDeviceFeatures2 _))
-  lift $ vkGetPhysicalDeviceFeatures2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPFeatures))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceFeatures2" (vkGetPhysicalDeviceFeatures2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPFeatures)))
   pFeatures <- lift $ peekCStruct @(PhysicalDeviceFeatures2 _) pPFeatures
   pure $ (pFeatures)
 
@@ -321,7 +322,7 @@ getPhysicalDeviceProperties2 physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceProperties2' = mkVkGetPhysicalDeviceProperties2 vkGetPhysicalDeviceProperties2Ptr
   pPProperties <- ContT (withZeroCStruct @(PhysicalDeviceProperties2 _))
-  lift $ vkGetPhysicalDeviceProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceProperties2" (vkGetPhysicalDeviceProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPProperties)))
   pProperties <- lift $ peekCStruct @(PhysicalDeviceProperties2 _) pPProperties
   pure $ (pProperties)
 
@@ -370,7 +371,7 @@ getPhysicalDeviceFormatProperties2 physicalDevice format = liftIO . evalContT $ 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFormatProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceFormatProperties2' = mkVkGetPhysicalDeviceFormatProperties2 vkGetPhysicalDeviceFormatProperties2Ptr
   pPFormatProperties <- ContT (withZeroCStruct @(FormatProperties2 _))
-  lift $ vkGetPhysicalDeviceFormatProperties2' (physicalDeviceHandle (physicalDevice)) (format) (forgetExtensions (pPFormatProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceFormatProperties2" (vkGetPhysicalDeviceFormatProperties2' (physicalDeviceHandle (physicalDevice)) (format) (forgetExtensions (pPFormatProperties)))
   pFormatProperties <- lift $ peekCStruct @(FormatProperties2 _) pPFormatProperties
   pure $ (pFormatProperties)
 
@@ -451,7 +452,7 @@ getPhysicalDeviceImageFormatProperties2 physicalDevice imageFormatInfo = liftIO 
   let vkGetPhysicalDeviceImageFormatProperties2' = mkVkGetPhysicalDeviceImageFormatProperties2 vkGetPhysicalDeviceImageFormatProperties2Ptr
   pImageFormatInfo <- ContT $ withCStruct (imageFormatInfo)
   pPImageFormatProperties <- ContT (withZeroCStruct @(ImageFormatProperties2 _))
-  r <- lift $ vkGetPhysicalDeviceImageFormatProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pImageFormatInfo) (forgetExtensions (pPImageFormatProperties))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceImageFormatProperties2" (vkGetPhysicalDeviceImageFormatProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pImageFormatInfo) (forgetExtensions (pPImageFormatProperties)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImageFormatProperties <- lift $ peekCStruct @(ImageFormatProperties2 _) pPImageFormatProperties
   pure $ (pImageFormatProperties)
@@ -506,11 +507,11 @@ getPhysicalDeviceQueueFamilyProperties2 physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyProperties2' = mkVkGetPhysicalDeviceQueueFamilyProperties2 vkGetPhysicalDeviceQueueFamilyProperties2Ptr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPQueueFamilyPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ vkGetPhysicalDeviceQueueFamilyProperties2' physicalDevice' (pPQueueFamilyPropertyCount) (forgetExtensions (nullPtr))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties2" (vkGetPhysicalDeviceQueueFamilyProperties2' physicalDevice' (pPQueueFamilyPropertyCount) (forgetExtensions (nullPtr)))
   pQueueFamilyPropertyCount <- lift $ peek @Word32 pPQueueFamilyPropertyCount
   pPQueueFamilyProperties <- ContT $ bracket (callocBytes @(QueueFamilyProperties2 _) ((fromIntegral (pQueueFamilyPropertyCount)) * 40)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPQueueFamilyProperties `advancePtrBytes` (i * 40) :: Ptr (QueueFamilyProperties2 _)) . ($ ())) [0..(fromIntegral (pQueueFamilyPropertyCount)) - 1]
-  lift $ vkGetPhysicalDeviceQueueFamilyProperties2' physicalDevice' (pPQueueFamilyPropertyCount) (forgetExtensions ((pPQueueFamilyProperties)))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties2" (vkGetPhysicalDeviceQueueFamilyProperties2' physicalDevice' (pPQueueFamilyPropertyCount) (forgetExtensions ((pPQueueFamilyProperties))))
   pQueueFamilyPropertyCount' <- lift $ peek @Word32 pPQueueFamilyPropertyCount
   pQueueFamilyProperties' <- lift $ generateM (fromIntegral (pQueueFamilyPropertyCount')) (\i -> peekCStruct @(QueueFamilyProperties2 _) (((pPQueueFamilyProperties) `advancePtrBytes` (40 * (i)) :: Ptr (QueueFamilyProperties2 _))))
   pure $ (pQueueFamilyProperties')
@@ -554,7 +555,7 @@ getPhysicalDeviceMemoryProperties2 physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMemoryProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceMemoryProperties2' = mkVkGetPhysicalDeviceMemoryProperties2 vkGetPhysicalDeviceMemoryProperties2Ptr
   pPMemoryProperties <- ContT (withZeroCStruct @(PhysicalDeviceMemoryProperties2 _))
-  lift $ vkGetPhysicalDeviceMemoryProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPMemoryProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceMemoryProperties2" (vkGetPhysicalDeviceMemoryProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPMemoryProperties)))
   pMemoryProperties <- lift $ peekCStruct @(PhysicalDeviceMemoryProperties2 _) pPMemoryProperties
   pure $ (pMemoryProperties)
 
@@ -616,11 +617,11 @@ getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = liftIO
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pFormatInfo <- ContT $ withCStruct (formatInfo)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ vkGetPhysicalDeviceSparseImageFormatProperties2' physicalDevice' pFormatInfo (pPPropertyCount) (nullPtr)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceSparseImageFormatProperties2" (vkGetPhysicalDeviceSparseImageFormatProperties2' physicalDevice' pFormatInfo (pPPropertyCount) (nullPtr))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @SparseImageFormatProperties2 ((fromIntegral (pPropertyCount)) * 40)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 40) :: Ptr SparseImageFormatProperties2) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  lift $ vkGetPhysicalDeviceSparseImageFormatProperties2' physicalDevice' pFormatInfo (pPPropertyCount) ((pPProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceSparseImageFormatProperties2" (vkGetPhysicalDeviceSparseImageFormatProperties2' physicalDevice' pFormatInfo (pPPropertyCount) ((pPProperties)))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @SparseImageFormatProperties2 (((pPProperties) `advancePtrBytes` (40 * (i)) :: Ptr SparseImageFormatProperties2)))
   pure $ (pProperties')

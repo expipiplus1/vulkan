@@ -9,6 +9,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2  ( bindBufferMemory2
                                                         , ImageCreateFlags
                                                         ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
@@ -129,7 +130,7 @@ bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindBufferMemory2' = mkVkBindBufferMemory2 vkBindBufferMemory2Ptr
   pPBindInfos <- ContT $ allocaBytesAligned @(BindBufferMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindBufferMemoryInfo _))) (e) . ($ ())) (bindInfos)
-  r <- lift $ vkBindBufferMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos))
+  r <- lift $ traceAroundEvent "vkBindBufferMemory2" (vkBindBufferMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -200,7 +201,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindImageMemory2' = mkVkBindImageMemory2 vkBindImageMemory2Ptr
   pPBindInfos <- ContT $ allocaBytesAligned @(BindImageMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindImageMemoryInfo _))) (e) . ($ ())) (bindInfos)
-  r <- lift $ vkBindImageMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos))
+  r <- lift $ traceAroundEvent "vkBindImageMemory2" (vkBindImageMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

@@ -150,6 +150,7 @@ module Vulkan.Extensions.VK_EXT_line_rasterization  ( cmdSetLineStippleEXT
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -260,7 +261,7 @@ cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO
   unless (vkCmdSetLineStippleEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetLineStippleEXT is null" Nothing Nothing
   let vkCmdSetLineStippleEXT' = mkVkCmdSetLineStippleEXT vkCmdSetLineStippleEXTPtr
-  vkCmdSetLineStippleEXT' (commandBufferHandle (commandBuffer)) (lineStippleFactor) (lineStipplePattern)
+  traceAroundEvent "vkCmdSetLineStippleEXT" (vkCmdSetLineStippleEXT' (commandBufferHandle (commandBuffer)) (lineStippleFactor) (lineStipplePattern))
   pure $ ()
 
 

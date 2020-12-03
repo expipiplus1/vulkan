@@ -83,6 +83,7 @@ req = (badQQ "req") { quoteExp = reqExp }
 -- requirements
 --
 -- It ignores
+--
 -- - Blank lines
 -- - Lines beginning with @--@ or @#@
 reqs :: QuasiQuoter

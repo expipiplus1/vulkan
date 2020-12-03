@@ -9,6 +9,7 @@ module Vulkan.Core10.Shader  ( createShaderModule
                              , ShaderModuleCreateFlags
                              ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -161,7 +162,7 @@ createShaderModule device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPShaderModule <- ContT $ bracket (callocBytes @ShaderModule 8) free
-  r <- lift $ vkCreateShaderModule' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPShaderModule)
+  r <- lift $ traceAroundEvent "vkCreateShaderModule" (vkCreateShaderModule' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPShaderModule))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pShaderModule <- lift $ peek @ShaderModule pPShaderModule
   pure $ (pShaderModule)
@@ -251,7 +252,7 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyShaderModule' (deviceHandle (device)) (shaderModule) pAllocator
+  lift $ traceAroundEvent "vkDestroyShaderModule" (vkDestroyShaderModule' (deviceHandle (device)) (shaderModule) pAllocator)
   pure $ ()
 
 

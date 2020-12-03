@@ -1124,6 +1124,7 @@ module Vulkan.Extensions.VK_KHR_swapchain  ( createSwapchainKHR
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -1368,7 +1369,7 @@ createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSwapchain <- ContT $ bracket (callocBytes @SwapchainKHR 8) free
-  r <- lift $ vkCreateSwapchainKHR' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSwapchain)
+  r <- lift $ traceAroundEvent "vkCreateSwapchainKHR" (vkCreateSwapchainKHR' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSwapchain))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSwapchain <- lift $ peek @SwapchainKHR pPSwapchain
   pure $ (pSwapchain)
@@ -1482,7 +1483,7 @@ destroySwapchainKHR device swapchain allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroySwapchainKHR' (deviceHandle (device)) (swapchain) pAllocator
+  lift $ traceAroundEvent "vkDestroySwapchainKHR" (vkDestroySwapchainKHR' (deviceHandle (device)) (swapchain) pAllocator)
   pure $ ()
 
 
@@ -1565,11 +1566,11 @@ getSwapchainImagesKHR device swapchain = liftIO . evalContT $ do
   let vkGetSwapchainImagesKHR' = mkVkGetSwapchainImagesKHR vkGetSwapchainImagesKHRPtr
   let device' = deviceHandle (device)
   pPSwapchainImageCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetSwapchainImagesKHR' device' (swapchain) (pPSwapchainImageCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetSwapchainImagesKHR" (vkGetSwapchainImagesKHR' device' (swapchain) (pPSwapchainImageCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSwapchainImageCount <- lift $ peek @Word32 pPSwapchainImageCount
   pPSwapchainImages <- ContT $ bracket (callocBytes @Image ((fromIntegral (pSwapchainImageCount)) * 8)) free
-  r' <- lift $ vkGetSwapchainImagesKHR' device' (swapchain) (pPSwapchainImageCount) (pPSwapchainImages)
+  r' <- lift $ traceAroundEvent "vkGetSwapchainImagesKHR" (vkGetSwapchainImagesKHR' device' (swapchain) (pPSwapchainImageCount) (pPSwapchainImages))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pSwapchainImageCount' <- lift $ peek @Word32 pPSwapchainImageCount
   pSwapchainImages' <- lift $ generateM (fromIntegral (pSwapchainImageCount')) (\i -> peek @Image ((pPSwapchainImages `advancePtrBytes` (8 * (i)) :: Ptr Image)))
@@ -1613,7 +1614,7 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device swapchain timeout
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImageKHR is null" Nothing Nothing
   let vkAcquireNextImageKHR' = mkVkAcquireNextImageKHR vkAcquireNextImageKHRPtr
   pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkAcquireNextImageKHR' (deviceHandle (device)) (swapchain) (timeout) (semaphore) (fence) (pPImageIndex)
+  r <- lift $ traceAroundEvent "vkAcquireNextImageKHR" (vkAcquireNextImageKHR' (deviceHandle (device)) (swapchain) (timeout) (semaphore) (fence) (pPImageIndex))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImageIndex <- lift $ peek @Word32 pPImageIndex
   pure $ (r, pImageIndex)
@@ -1937,7 +1938,7 @@ queuePresentKHR queue presentInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueuePresentKHR is null" Nothing Nothing
   let vkQueuePresentKHR' = mkVkQueuePresentKHR vkQueuePresentKHRPtr
   pPresentInfo <- ContT $ withCStruct (presentInfo)
-  r <- lift $ vkQueuePresentKHR' (queueHandle (queue)) (forgetExtensions pPresentInfo)
+  r <- lift $ traceAroundEvent "vkQueuePresentKHR" (vkQueuePresentKHR' (queueHandle (queue)) (forgetExtensions pPresentInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -1981,7 +1982,7 @@ getDeviceGroupPresentCapabilitiesKHR device = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupPresentCapabilitiesKHR is null" Nothing Nothing
   let vkGetDeviceGroupPresentCapabilitiesKHR' = mkVkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHRPtr
   pPDeviceGroupPresentCapabilities <- ContT (withZeroCStruct @DeviceGroupPresentCapabilitiesKHR)
-  r <- lift $ vkGetDeviceGroupPresentCapabilitiesKHR' (deviceHandle (device)) (pPDeviceGroupPresentCapabilities)
+  r <- lift $ traceAroundEvent "vkGetDeviceGroupPresentCapabilitiesKHR" (vkGetDeviceGroupPresentCapabilitiesKHR' (deviceHandle (device)) (pPDeviceGroupPresentCapabilities))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDeviceGroupPresentCapabilities <- lift $ peekCStruct @DeviceGroupPresentCapabilitiesKHR pPDeviceGroupPresentCapabilities
   pure $ (pDeviceGroupPresentCapabilities)
@@ -2056,7 +2057,7 @@ getDeviceGroupSurfacePresentModesKHR device surface = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupSurfacePresentModesKHR is null" Nothing Nothing
   let vkGetDeviceGroupSurfacePresentModesKHR' = mkVkGetDeviceGroupSurfacePresentModesKHR vkGetDeviceGroupSurfacePresentModesKHRPtr
   pPModes <- ContT $ bracket (callocBytes @DeviceGroupPresentModeFlagsKHR 4) free
-  r <- lift $ vkGetDeviceGroupSurfacePresentModesKHR' (deviceHandle (device)) (surface) (pPModes)
+  r <- lift $ traceAroundEvent "vkGetDeviceGroupSurfacePresentModesKHR" (vkGetDeviceGroupSurfacePresentModesKHR' (deviceHandle (device)) (surface) (pPModes))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pModes <- lift $ peek @DeviceGroupPresentModeFlagsKHR pPModes
   pure $ (pModes)
@@ -2091,7 +2092,7 @@ acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device acquireInfo = l
   let vkAcquireNextImage2KHR' = mkVkAcquireNextImage2KHR vkAcquireNextImage2KHRPtr
   pAcquireInfo <- ContT $ withCStruct (acquireInfo)
   pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkAcquireNextImage2KHR' (deviceHandle (device)) pAcquireInfo (pPImageIndex)
+  r <- lift $ traceAroundEvent "vkAcquireNextImage2KHR" (vkAcquireNextImage2KHR' (deviceHandle (device)) pAcquireInfo (pPImageIndex))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImageIndex <- lift $ peek @Word32 pPImageIndex
   pure $ (r, pImageIndex)
@@ -2262,12 +2263,12 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
   let vkGetPhysicalDevicePresentRectanglesKHR' = mkVkGetPhysicalDevicePresentRectanglesKHR vkGetPhysicalDevicePresentRectanglesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPRectCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDevicePresentRectanglesKHR' physicalDevice' (surface) (pPRectCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDevicePresentRectanglesKHR" (vkGetPhysicalDevicePresentRectanglesKHR' physicalDevice' (surface) (pPRectCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pRectCount <- lift $ peek @Word32 pPRectCount
   pPRects <- ContT $ bracket (callocBytes @Rect2D ((fromIntegral (pRectCount)) * 16)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPRects `advancePtrBytes` (i * 16) :: Ptr Rect2D) . ($ ())) [0..(fromIntegral (pRectCount)) - 1]
-  r' <- lift $ vkGetPhysicalDevicePresentRectanglesKHR' physicalDevice' (surface) (pPRectCount) ((pPRects))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDevicePresentRectanglesKHR" (vkGetPhysicalDevicePresentRectanglesKHR' physicalDevice' (surface) (pPRectCount) ((pPRects)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pRectCount' <- lift $ peek @Word32 pPRectCount
   pRects' <- lift $ generateM (fromIntegral (pRectCount')) (\i -> peekCStruct @Rect2D (((pPRects) `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))

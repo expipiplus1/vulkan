@@ -8,6 +8,7 @@ module Vulkan.Core10.QueueSemaphore  ( createSemaphore
                                      , SemaphoreCreateFlags(..)
                                      ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -134,7 +135,7 @@ createSemaphore device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSemaphore <- ContT $ bracket (callocBytes @Semaphore 8) free
-  r <- lift $ vkCreateSemaphore' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSemaphore)
+  r <- lift $ traceAroundEvent "vkCreateSemaphore" (vkCreateSemaphore' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSemaphore))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSemaphore <- lift $ peek @Semaphore pPSemaphore
   pure $ (pSemaphore)
@@ -220,7 +221,7 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroySemaphore' (deviceHandle (device)) (semaphore) pAllocator
+  lift $ traceAroundEvent "vkDestroySemaphore" (vkDestroySemaphore' (deviceHandle (device)) (semaphore) pAllocator)
   pure $ ()
 
 

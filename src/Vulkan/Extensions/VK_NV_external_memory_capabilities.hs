@@ -159,6 +159,7 @@ module Vulkan.Extensions.VK_NV_external_memory_capabilities  ( getPhysicalDevice
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -317,7 +318,7 @@ getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' til
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalImageFormatPropertiesNV is null" Nothing Nothing
   let vkGetPhysicalDeviceExternalImageFormatPropertiesNV' = mkVkGetPhysicalDeviceExternalImageFormatPropertiesNV vkGetPhysicalDeviceExternalImageFormatPropertiesNVPtr
   pPExternalImageFormatProperties <- ContT (withZeroCStruct @ExternalImageFormatPropertiesNV)
-  r <- lift $ vkGetPhysicalDeviceExternalImageFormatPropertiesNV' (physicalDeviceHandle (physicalDevice)) (format) (type') (tiling) (usage) (flags) (externalHandleType) (pPExternalImageFormatProperties)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceExternalImageFormatPropertiesNV" (vkGetPhysicalDeviceExternalImageFormatPropertiesNV' (physicalDeviceHandle (physicalDevice)) (format) (type') (tiling) (usage) (flags) (externalHandleType) (pPExternalImageFormatProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pExternalImageFormatProperties <- lift $ peekCStruct @ExternalImageFormatPropertiesNV pPExternalImageFormatProperties
   pure $ (pExternalImageFormatProperties)

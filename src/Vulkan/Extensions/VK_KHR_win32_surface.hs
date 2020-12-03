@@ -227,6 +227,7 @@ module Vulkan.Extensions.VK_KHR_win32_surface  ( createWin32SurfaceKHR
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -356,7 +357,7 @@ createWin32SurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ vkCreateWin32SurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface)
+  r <- lift $ traceAroundEvent "vkCreateWin32SurfaceKHR" (vkCreateWin32SurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -404,7 +405,7 @@ getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = l
   unless (vkGetPhysicalDeviceWin32PresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceWin32PresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceWin32PresentationSupportKHR' = mkVkGetPhysicalDeviceWin32PresentationSupportKHR vkGetPhysicalDeviceWin32PresentationSupportKHRPtr
-  r <- vkGetPhysicalDeviceWin32PresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex)
+  r <- traceAroundEvent "vkGetPhysicalDeviceWin32PresentationSupportKHR" (vkGetPhysicalDeviceWin32PresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex))
   pure $ ((bool32ToBool r))
 
 

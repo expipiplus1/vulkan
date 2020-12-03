@@ -10,6 +10,7 @@ module Vulkan.Core10.Image  ( createImage
                             , ImageLayout(..)
                             ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -171,7 +172,7 @@ createImage device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPImage <- ContT $ bracket (callocBytes @Image 8) free
-  r <- lift $ vkCreateImage' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPImage)
+  r <- lift $ traceAroundEvent "vkCreateImage" (vkCreateImage' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPImage))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImage <- lift $ peek @Image pPImage
   pure $ (pImage)
@@ -257,7 +258,7 @@ destroyImage device image allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyImage' (deviceHandle (device)) (image) pAllocator
+  lift $ traceAroundEvent "vkDestroyImage" (vkDestroyImage' (deviceHandle (device)) (image) pAllocator)
   pure $ ()
 
 
@@ -417,7 +418,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
   let vkGetImageSubresourceLayout' = mkVkGetImageSubresourceLayout vkGetImageSubresourceLayoutPtr
   pSubresource <- ContT $ withCStruct (subresource)
   pPLayout <- ContT (withZeroCStruct @SubresourceLayout)
-  lift $ vkGetImageSubresourceLayout' (deviceHandle (device)) (image) pSubresource (pPLayout)
+  lift $ traceAroundEvent "vkGetImageSubresourceLayout" (vkGetImageSubresourceLayout' (deviceHandle (device)) (image) pSubresource (pPLayout))
   pLayout <- lift $ peekCStruct @SubresourceLayout pPLayout
   pure $ (pLayout)
 

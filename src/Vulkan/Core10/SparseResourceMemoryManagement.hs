@@ -20,6 +20,7 @@ module Vulkan.Core10.SparseResourceMemoryManagement  ( getImageSparseMemoryRequi
                                                      , SparseMemoryBindFlags
                                                      ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -200,11 +201,11 @@ getImageSparseMemoryRequirements device image = liftIO . evalContT $ do
   let vkGetImageSparseMemoryRequirements' = mkVkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirementsPtr
   let device' = deviceHandle (device)
   pPSparseMemoryRequirementCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ vkGetImageSparseMemoryRequirements' device' (image) (pPSparseMemoryRequirementCount) (nullPtr)
+  lift $ traceAroundEvent "vkGetImageSparseMemoryRequirements" (vkGetImageSparseMemoryRequirements' device' (image) (pPSparseMemoryRequirementCount) (nullPtr))
   pSparseMemoryRequirementCount <- lift $ peek @Word32 pPSparseMemoryRequirementCount
   pPSparseMemoryRequirements <- ContT $ bracket (callocBytes @SparseImageMemoryRequirements ((fromIntegral (pSparseMemoryRequirementCount)) * 48)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPSparseMemoryRequirements `advancePtrBytes` (i * 48) :: Ptr SparseImageMemoryRequirements) . ($ ())) [0..(fromIntegral (pSparseMemoryRequirementCount)) - 1]
-  lift $ vkGetImageSparseMemoryRequirements' device' (image) (pPSparseMemoryRequirementCount) ((pPSparseMemoryRequirements))
+  lift $ traceAroundEvent "vkGetImageSparseMemoryRequirements" (vkGetImageSparseMemoryRequirements' device' (image) (pPSparseMemoryRequirementCount) ((pPSparseMemoryRequirements)))
   pSparseMemoryRequirementCount' <- lift $ peek @Word32 pPSparseMemoryRequirementCount
   pSparseMemoryRequirements' <- lift $ generateM (fromIntegral (pSparseMemoryRequirementCount')) (\i -> peekCStruct @SparseImageMemoryRequirements (((pPSparseMemoryRequirements) `advancePtrBytes` (48 * (i)) :: Ptr SparseImageMemoryRequirements)))
   pure $ (pSparseMemoryRequirements')
@@ -327,11 +328,11 @@ getPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples
   let vkGetPhysicalDeviceSparseImageFormatProperties' = mkVkGetPhysicalDeviceSparseImageFormatProperties vkGetPhysicalDeviceSparseImageFormatPropertiesPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ vkGetPhysicalDeviceSparseImageFormatProperties' physicalDevice' (format) (type') (samples) (usage) (tiling) (pPPropertyCount) (nullPtr)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceSparseImageFormatProperties" (vkGetPhysicalDeviceSparseImageFormatProperties' physicalDevice' (format) (type') (samples) (usage) (tiling) (pPPropertyCount) (nullPtr))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @SparseImageFormatProperties ((fromIntegral (pPropertyCount)) * 20)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 20) :: Ptr SparseImageFormatProperties) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  lift $ vkGetPhysicalDeviceSparseImageFormatProperties' physicalDevice' (format) (type') (samples) (usage) (tiling) (pPPropertyCount) ((pPProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceSparseImageFormatProperties" (vkGetPhysicalDeviceSparseImageFormatProperties' physicalDevice' (format) (type') (samples) (usage) (tiling) (pPPropertyCount) ((pPProperties)))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @SparseImageFormatProperties (((pPProperties) `advancePtrBytes` (20 * (i)) :: Ptr SparseImageFormatProperties)))
   pure $ (pProperties')
@@ -490,7 +491,7 @@ queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
   let vkQueueBindSparse' = mkVkQueueBindSparse vkQueueBindSparsePtr
   pPBindInfo <- ContT $ allocaBytesAligned @(BindSparseInfo _) ((Data.Vector.length (bindInfo)) * 96) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfo `plusPtr` (96 * (i)) :: Ptr (BindSparseInfo _))) (e) . ($ ())) (bindInfo)
-  r <- lift $ vkQueueBindSparse' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (bindInfo)) :: Word32)) (forgetExtensions (pPBindInfo)) (fence)
+  r <- lift $ traceAroundEvent "vkQueueBindSparse" (vkQueueBindSparse' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (bindInfo)) :: Word32)) (forgetExtensions (pPBindInfo)) (fence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

@@ -10,6 +10,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities  ( get
                                                                            , ExternalSemaphoreFeatureFlags
                                                                            ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
@@ -108,7 +109,7 @@ getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInf
   let vkGetPhysicalDeviceExternalSemaphoreProperties' = mkVkGetPhysicalDeviceExternalSemaphoreProperties vkGetPhysicalDeviceExternalSemaphorePropertiesPtr
   pExternalSemaphoreInfo <- ContT $ withCStruct (externalSemaphoreInfo)
   pPExternalSemaphoreProperties <- ContT (withZeroCStruct @ExternalSemaphoreProperties)
-  lift $ vkGetPhysicalDeviceExternalSemaphoreProperties' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pExternalSemaphoreInfo) (pPExternalSemaphoreProperties)
+  lift $ traceAroundEvent "vkGetPhysicalDeviceExternalSemaphoreProperties" (vkGetPhysicalDeviceExternalSemaphoreProperties' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pExternalSemaphoreInfo) (pPExternalSemaphoreProperties))
   pExternalSemaphoreProperties <- lift $ peekCStruct @ExternalSemaphoreProperties pPExternalSemaphoreProperties
   pure $ (pExternalSemaphoreProperties)
 

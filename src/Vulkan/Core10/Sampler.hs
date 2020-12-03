@@ -13,6 +13,7 @@ module Vulkan.Core10.Sampler  ( createSampler
                               , SamplerCreateFlags
                               ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -161,7 +162,7 @@ createSampler device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSampler <- ContT $ bracket (callocBytes @Sampler 8) free
-  r <- lift $ vkCreateSampler' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSampler)
+  r <- lift $ traceAroundEvent "vkCreateSampler" (vkCreateSampler' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSampler))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSampler <- lift $ peek @Sampler pPSampler
   pure $ (pSampler)
@@ -247,7 +248,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroySampler' (deviceHandle (device)) (sampler) pAllocator
+  lift $ traceAroundEvent "vkDestroySampler" (vkDestroySampler' (deviceHandle (device)) (sampler) pAllocator)
   pure $ ()
 
 

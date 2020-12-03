@@ -548,6 +548,7 @@ module Vulkan.Extensions.VK_KHR_display  ( getPhysicalDeviceDisplayPropertiesKHR
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -706,12 +707,12 @@ getPhysicalDeviceDisplayPropertiesKHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayPropertiesKHR' = mkVkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceDisplayPropertiesKHR' physicalDevice' (pPPropertyCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPropertiesKHR" (vkGetPhysicalDeviceDisplayPropertiesKHR' physicalDevice' (pPPropertyCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @DisplayPropertiesKHR ((fromIntegral (pPropertyCount)) * 48)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 48) :: Ptr DisplayPropertiesKHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ vkGetPhysicalDeviceDisplayPropertiesKHR' physicalDevice' (pPPropertyCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPropertiesKHR" (vkGetPhysicalDeviceDisplayPropertiesKHR' physicalDevice' (pPPropertyCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayPropertiesKHR (((pPProperties) `advancePtrBytes` (48 * (i)) :: Ptr DisplayPropertiesKHR)))
@@ -783,12 +784,12 @@ getPhysicalDeviceDisplayPlanePropertiesKHR physicalDevice = liftIO . evalContT $
   let vkGetPhysicalDeviceDisplayPlanePropertiesKHR' = mkVkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceDisplayPlanePropertiesKHR' physicalDevice' (pPPropertyCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" (vkGetPhysicalDeviceDisplayPlanePropertiesKHR' physicalDevice' (pPPropertyCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @DisplayPlanePropertiesKHR ((fromIntegral (pPropertyCount)) * 16)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 16) :: Ptr DisplayPlanePropertiesKHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ vkGetPhysicalDeviceDisplayPlanePropertiesKHR' physicalDevice' (pPPropertyCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" (vkGetPhysicalDeviceDisplayPlanePropertiesKHR' physicalDevice' (pPPropertyCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayPlanePropertiesKHR (((pPProperties) `advancePtrBytes` (16 * (i)) :: Ptr DisplayPlanePropertiesKHR)))
@@ -874,11 +875,11 @@ getDisplayPlaneSupportedDisplaysKHR physicalDevice planeIndex = liftIO . evalCon
   let vkGetDisplayPlaneSupportedDisplaysKHR' = mkVkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPDisplayCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetDisplayPlaneSupportedDisplaysKHR' physicalDevice' (planeIndex) (pPDisplayCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetDisplayPlaneSupportedDisplaysKHR" (vkGetDisplayPlaneSupportedDisplaysKHR' physicalDevice' (planeIndex) (pPDisplayCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDisplayCount <- lift $ peek @Word32 pPDisplayCount
   pPDisplays <- ContT $ bracket (callocBytes @DisplayKHR ((fromIntegral (pDisplayCount)) * 8)) free
-  r' <- lift $ vkGetDisplayPlaneSupportedDisplaysKHR' physicalDevice' (planeIndex) (pPDisplayCount) (pPDisplays)
+  r' <- lift $ traceAroundEvent "vkGetDisplayPlaneSupportedDisplaysKHR" (vkGetDisplayPlaneSupportedDisplaysKHR' physicalDevice' (planeIndex) (pPDisplayCount) (pPDisplays))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pDisplayCount' <- lift $ peek @Word32 pPDisplayCount
   pDisplays' <- lift $ generateM (fromIntegral (pDisplayCount')) (\i -> peek @DisplayKHR ((pPDisplays `advancePtrBytes` (8 * (i)) :: Ptr DisplayKHR)))
@@ -962,12 +963,12 @@ getDisplayModePropertiesKHR physicalDevice display = liftIO . evalContT $ do
   let vkGetDisplayModePropertiesKHR' = mkVkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetDisplayModePropertiesKHR' physicalDevice' (display) (pPPropertyCount) (nullPtr)
+  r <- lift $ traceAroundEvent "vkGetDisplayModePropertiesKHR" (vkGetDisplayModePropertiesKHR' physicalDevice' (display) (pPPropertyCount) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @DisplayModePropertiesKHR ((fromIntegral (pPropertyCount)) * 24)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 24) :: Ptr DisplayModePropertiesKHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ vkGetDisplayModePropertiesKHR' physicalDevice' (display) (pPPropertyCount) ((pPProperties))
+  r' <- lift $ traceAroundEvent "vkGetDisplayModePropertiesKHR" (vkGetDisplayModePropertiesKHR' physicalDevice' (display) (pPPropertyCount) ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayModePropertiesKHR (((pPProperties) `advancePtrBytes` (24 * (i)) :: Ptr DisplayModePropertiesKHR)))
@@ -1055,7 +1056,7 @@ createDisplayModeKHR physicalDevice display createInfo allocator = liftIO . eval
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPMode <- ContT $ bracket (callocBytes @DisplayModeKHR 8) free
-  r <- lift $ vkCreateDisplayModeKHR' (physicalDeviceHandle (physicalDevice)) (display) pCreateInfo pAllocator (pPMode)
+  r <- lift $ traceAroundEvent "vkCreateDisplayModeKHR" (vkCreateDisplayModeKHR' (physicalDeviceHandle (physicalDevice)) (display) pCreateInfo pAllocator (pPMode))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMode <- lift $ peek @DisplayModeKHR pPMode
   pure $ (pMode)
@@ -1123,7 +1124,7 @@ getDisplayPlaneCapabilitiesKHR physicalDevice mode planeIndex = liftIO . evalCon
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayPlaneCapabilitiesKHR is null" Nothing Nothing
   let vkGetDisplayPlaneCapabilitiesKHR' = mkVkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHRPtr
   pPCapabilities <- ContT (withZeroCStruct @DisplayPlaneCapabilitiesKHR)
-  r <- lift $ vkGetDisplayPlaneCapabilitiesKHR' (physicalDeviceHandle (physicalDevice)) (mode) (planeIndex) (pPCapabilities)
+  r <- lift $ traceAroundEvent "vkGetDisplayPlaneCapabilitiesKHR" (vkGetDisplayPlaneCapabilitiesKHR' (physicalDeviceHandle (physicalDevice)) (mode) (planeIndex) (pPCapabilities))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCapabilities <- lift $ peekCStruct @DisplayPlaneCapabilitiesKHR pPCapabilities
   pure $ (pCapabilities)
@@ -1199,7 +1200,7 @@ createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ vkCreateDisplayPlaneSurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface)
+  r <- lift $ traceAroundEvent "vkCreateDisplayPlaneSurfaceKHR" (vkCreateDisplayPlaneSurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)

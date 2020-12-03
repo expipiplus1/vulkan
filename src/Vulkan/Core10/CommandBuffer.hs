@@ -20,6 +20,7 @@ module Vulkan.Core10.CommandBuffer  ( allocateCommandBuffers
                                     , CommandBufferResetFlags
                                     ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -193,7 +194,7 @@ allocateCommandBuffers device allocateInfo = liftIO . evalContT $ do
   let vkAllocateCommandBuffers' = mkVkAllocateCommandBuffers vkAllocateCommandBuffersPtr
   pAllocateInfo <- ContT $ withCStruct (allocateInfo)
   pPCommandBuffers <- ContT $ bracket (callocBytes @(Ptr CommandBuffer_T) ((fromIntegral $ commandBufferCount ((allocateInfo) :: CommandBufferAllocateInfo)) * 8)) free
-  r <- lift $ vkAllocateCommandBuffers' (deviceHandle (device)) pAllocateInfo (pPCommandBuffers)
+  r <- lift $ traceAroundEvent "vkAllocateCommandBuffers" (vkAllocateCommandBuffers' (deviceHandle (device)) pAllocateInfo (pPCommandBuffers))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCommandBuffers <- lift $ generateM (fromIntegral $ commandBufferCount ((allocateInfo) :: CommandBufferAllocateInfo)) (\i -> do
     pCommandBuffersElem <- peek @(Ptr CommandBuffer_T) ((pPCommandBuffers `advancePtrBytes` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)))
@@ -288,7 +289,7 @@ freeCommandBuffers device commandPool commandBuffers = liftIO . evalContT $ do
   let vkFreeCommandBuffers' = mkVkFreeCommandBuffers vkFreeCommandBuffersPtr
   pPCommandBuffers <- ContT $ allocaBytesAligned @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (commandBufferHandle (e))) (commandBuffers)
-  lift $ vkFreeCommandBuffers' (deviceHandle (device)) (commandPool) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32)) (pPCommandBuffers)
+  lift $ traceAroundEvent "vkFreeCommandBuffers" (vkFreeCommandBuffers' (deviceHandle (device)) (commandPool) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32)) (pPCommandBuffers))
   pure $ ()
 
 
@@ -380,7 +381,7 @@ beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBeginCommandBuffer is null" Nothing Nothing
   let vkBeginCommandBuffer' = mkVkBeginCommandBuffer vkBeginCommandBufferPtr
   pBeginInfo <- ContT $ withCStruct (beginInfo)
-  r <- lift $ vkBeginCommandBuffer' (commandBufferHandle (commandBuffer)) (forgetExtensions pBeginInfo)
+  r <- lift $ traceAroundEvent "vkBeginCommandBuffer" (vkBeginCommandBuffer' (commandBufferHandle (commandBuffer)) (forgetExtensions pBeginInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 -- | This function will call the supplied action between calls to
@@ -482,7 +483,7 @@ endCommandBuffer commandBuffer = liftIO $ do
   unless (vkEndCommandBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEndCommandBuffer is null" Nothing Nothing
   let vkEndCommandBuffer' = mkVkEndCommandBuffer vkEndCommandBufferPtr
-  r <- vkEndCommandBuffer' (commandBufferHandle (commandBuffer))
+  r <- traceAroundEvent "vkEndCommandBuffer" (vkEndCommandBuffer' (commandBufferHandle (commandBuffer)))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -558,7 +559,7 @@ resetCommandBuffer commandBuffer flags = liftIO $ do
   unless (vkResetCommandBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetCommandBuffer is null" Nothing Nothing
   let vkResetCommandBuffer' = mkVkResetCommandBuffer vkResetCommandBufferPtr
-  r <- vkResetCommandBuffer' (commandBufferHandle (commandBuffer)) (flags)
+  r <- traceAroundEvent "vkResetCommandBuffer" (vkResetCommandBuffer' (commandBufferHandle (commandBuffer)) (flags))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 

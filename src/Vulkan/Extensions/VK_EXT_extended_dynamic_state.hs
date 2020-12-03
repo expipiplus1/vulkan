@@ -176,6 +176,7 @@ module Vulkan.Extensions.VK_EXT_extended_dynamic_state  ( cmdSetCullModeEXT
                                                         , pattern EXT_EXTENDED_DYNAMIC_STATE_EXTENSION_NAME
                                                         ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -315,7 +316,7 @@ cmdSetCullModeEXT commandBuffer cullMode = liftIO $ do
   unless (vkCmdSetCullModeEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetCullModeEXT is null" Nothing Nothing
   let vkCmdSetCullModeEXT' = mkVkCmdSetCullModeEXT vkCmdSetCullModeEXTPtr
-  vkCmdSetCullModeEXT' (commandBufferHandle (commandBuffer)) (cullMode)
+  traceAroundEvent "vkCmdSetCullModeEXT" (vkCmdSetCullModeEXT' (commandBufferHandle (commandBuffer)) (cullMode))
   pure $ ()
 
 
@@ -385,7 +386,7 @@ cmdSetFrontFaceEXT commandBuffer frontFace = liftIO $ do
   unless (vkCmdSetFrontFaceEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetFrontFaceEXT is null" Nothing Nothing
   let vkCmdSetFrontFaceEXT' = mkVkCmdSetFrontFaceEXT vkCmdSetFrontFaceEXTPtr
-  vkCmdSetFrontFaceEXT' (commandBufferHandle (commandBuffer)) (frontFace)
+  traceAroundEvent "vkCmdSetFrontFaceEXT" (vkCmdSetFrontFaceEXT' (commandBufferHandle (commandBuffer)) (frontFace))
   pure $ ()
 
 
@@ -457,7 +458,7 @@ cmdSetPrimitiveTopologyEXT commandBuffer primitiveTopology = liftIO $ do
   unless (vkCmdSetPrimitiveTopologyEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPrimitiveTopologyEXT is null" Nothing Nothing
   let vkCmdSetPrimitiveTopologyEXT' = mkVkCmdSetPrimitiveTopologyEXT vkCmdSetPrimitiveTopologyEXTPtr
-  vkCmdSetPrimitiveTopologyEXT' (commandBufferHandle (commandBuffer)) (primitiveTopology)
+  traceAroundEvent "vkCmdSetPrimitiveTopologyEXT" (vkCmdSetPrimitiveTopologyEXT' (commandBufferHandle (commandBuffer)) (primitiveTopology))
   pure $ ()
 
 
@@ -542,7 +543,7 @@ cmdSetViewportWithCountEXT commandBuffer viewports = liftIO . evalContT $ do
   let vkCmdSetViewportWithCountEXT' = mkVkCmdSetViewportWithCountEXT vkCmdSetViewportWithCountEXTPtr
   pPViewports <- ContT $ allocaBytesAligned @Viewport ((Data.Vector.length (viewports)) * 24) 4
   lift $ Data.Vector.imapM_ (\i e -> poke (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e)) (viewports)
-  lift $ vkCmdSetViewportWithCountEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (viewports)) :: Word32)) (pPViewports)
+  lift $ traceAroundEvent "vkCmdSetViewportWithCountEXT" (vkCmdSetViewportWithCountEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (viewports)) :: Word32)) (pPViewports))
   pure $ ()
 
 
@@ -640,7 +641,7 @@ cmdSetScissorWithCountEXT commandBuffer scissors = liftIO . evalContT $ do
   let vkCmdSetScissorWithCountEXT' = mkVkCmdSetScissorWithCountEXT vkCmdSetScissorWithCountEXTPtr
   pPScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (scissors)) * 16) 4
   lift $ Data.Vector.imapM_ (\i e -> poke (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (scissors)
-  lift $ vkCmdSetScissorWithCountEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (scissors)) :: Word32)) (pPScissors)
+  lift $ traceAroundEvent "vkCmdSetScissorWithCountEXT" (vkCmdSetScissorWithCountEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (scissors)) :: Word32)) (pPScissors))
   pure $ ()
 
 
@@ -837,7 +838,7 @@ cmdBindVertexBuffers2EXT commandBuffer firstBinding buffers offsets sizes stride
       pPStrides <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (strides))) * 8) 8
       lift $ Data.Vector.imapM_ (\i e -> poke (pPStrides `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((strides))
       pure $ pPStrides
-  lift $ vkCmdBindVertexBuffers2EXT' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets) pSizes pStrides
+  lift $ traceAroundEvent "vkCmdBindVertexBuffers2EXT" (vkCmdBindVertexBuffers2EXT' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets) pSizes pStrides)
   pure $ ()
 
 
@@ -914,7 +915,7 @@ cmdSetDepthTestEnableEXT commandBuffer depthTestEnable = liftIO $ do
   unless (vkCmdSetDepthTestEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthTestEnableEXT is null" Nothing Nothing
   let vkCmdSetDepthTestEnableEXT' = mkVkCmdSetDepthTestEnableEXT vkCmdSetDepthTestEnableEXTPtr
-  vkCmdSetDepthTestEnableEXT' (commandBufferHandle (commandBuffer)) (boolToBool32 (depthTestEnable))
+  traceAroundEvent "vkCmdSetDepthTestEnableEXT" (vkCmdSetDepthTestEnableEXT' (commandBufferHandle (commandBuffer)) (boolToBool32 (depthTestEnable)))
   pure $ ()
 
 
@@ -991,7 +992,7 @@ cmdSetDepthWriteEnableEXT commandBuffer depthWriteEnable = liftIO $ do
   unless (vkCmdSetDepthWriteEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthWriteEnableEXT is null" Nothing Nothing
   let vkCmdSetDepthWriteEnableEXT' = mkVkCmdSetDepthWriteEnableEXT vkCmdSetDepthWriteEnableEXTPtr
-  vkCmdSetDepthWriteEnableEXT' (commandBufferHandle (commandBuffer)) (boolToBool32 (depthWriteEnable))
+  traceAroundEvent "vkCmdSetDepthWriteEnableEXT" (vkCmdSetDepthWriteEnableEXT' (commandBufferHandle (commandBuffer)) (boolToBool32 (depthWriteEnable)))
   pure $ ()
 
 
@@ -1072,7 +1073,7 @@ cmdSetDepthCompareOpEXT commandBuffer depthCompareOp = liftIO $ do
   unless (vkCmdSetDepthCompareOpEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthCompareOpEXT is null" Nothing Nothing
   let vkCmdSetDepthCompareOpEXT' = mkVkCmdSetDepthCompareOpEXT vkCmdSetDepthCompareOpEXTPtr
-  vkCmdSetDepthCompareOpEXT' (commandBufferHandle (commandBuffer)) (depthCompareOp)
+  traceAroundEvent "vkCmdSetDepthCompareOpEXT" (vkCmdSetDepthCompareOpEXT' (commandBufferHandle (commandBuffer)) (depthCompareOp))
   pure $ ()
 
 
@@ -1149,7 +1150,7 @@ cmdSetDepthBoundsTestEnableEXT commandBuffer depthBoundsTestEnable = liftIO $ do
   unless (vkCmdSetDepthBoundsTestEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBoundsTestEnableEXT is null" Nothing Nothing
   let vkCmdSetDepthBoundsTestEnableEXT' = mkVkCmdSetDepthBoundsTestEnableEXT vkCmdSetDepthBoundsTestEnableEXTPtr
-  vkCmdSetDepthBoundsTestEnableEXT' (commandBufferHandle (commandBuffer)) (boolToBool32 (depthBoundsTestEnable))
+  traceAroundEvent "vkCmdSetDepthBoundsTestEnableEXT" (vkCmdSetDepthBoundsTestEnableEXT' (commandBufferHandle (commandBuffer)) (boolToBool32 (depthBoundsTestEnable)))
   pure $ ()
 
 
@@ -1226,7 +1227,7 @@ cmdSetStencilTestEnableEXT commandBuffer stencilTestEnable = liftIO $ do
   unless (vkCmdSetStencilTestEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilTestEnableEXT is null" Nothing Nothing
   let vkCmdSetStencilTestEnableEXT' = mkVkCmdSetStencilTestEnableEXT vkCmdSetStencilTestEnableEXTPtr
-  vkCmdSetStencilTestEnableEXT' (commandBufferHandle (commandBuffer)) (boolToBool32 (stencilTestEnable))
+  traceAroundEvent "vkCmdSetStencilTestEnableEXT" (vkCmdSetStencilTestEnableEXT' (commandBufferHandle (commandBuffer)) (boolToBool32 (stencilTestEnable)))
   pure $ ()
 
 
@@ -1336,7 +1337,7 @@ cmdSetStencilOpEXT commandBuffer faceMask failOp passOp depthFailOp compareOp = 
   unless (vkCmdSetStencilOpEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilOpEXT is null" Nothing Nothing
   let vkCmdSetStencilOpEXT' = mkVkCmdSetStencilOpEXT vkCmdSetStencilOpEXTPtr
-  vkCmdSetStencilOpEXT' (commandBufferHandle (commandBuffer)) (faceMask) (failOp) (passOp) (depthFailOp) (compareOp)
+  traceAroundEvent "vkCmdSetStencilOpEXT" (vkCmdSetStencilOpEXT' (commandBufferHandle (commandBuffer)) (faceMask) (failOp) (passOp) (depthFailOp) (compareOp))
   pure $ ()
 
 

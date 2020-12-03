@@ -13,6 +13,7 @@ module Vulkan.Core10.Fence  ( createFence
                             , FenceCreateFlags
                             ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -150,7 +151,7 @@ createFence device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFence <- ContT $ bracket (callocBytes @Fence 8) free
-  r <- lift $ vkCreateFence' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPFence)
+  r <- lift $ traceAroundEvent "vkCreateFence" (vkCreateFence' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPFence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)
@@ -236,7 +237,7 @@ destroyFence device fence allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyFence' (deviceHandle (device)) (fence) pAllocator
+  lift $ traceAroundEvent "vkDestroyFence" (vkDestroyFence' (deviceHandle (device)) (fence) pAllocator)
   pure $ ()
 
 
@@ -318,7 +319,7 @@ resetFences device fences = liftIO . evalContT $ do
   let vkResetFences' = mkVkResetFences vkResetFencesPtr
   pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
-  r <- lift $ vkResetFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences)
+  r <- lift $ traceAroundEvent "vkResetFences" (vkResetFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -401,7 +402,7 @@ getFenceStatus device fence = liftIO $ do
   unless (vkGetFenceStatusPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetFenceStatus is null" Nothing Nothing
   let vkGetFenceStatus' = mkVkGetFenceStatus vkGetFenceStatusPtr
-  r <- vkGetFenceStatus' (deviceHandle (device)) (fence)
+  r <- traceAroundEvent "vkGetFenceStatus" (vkGetFenceStatus' (deviceHandle (device)) (fence))
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -445,7 +446,7 @@ waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = lift
   let vkWaitForFences' = mkVkWaitForFences vkWaitForFencesPtr
   pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
-  r <- lift $ vkWaitForFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences) (boolToBool32 (waitAll)) (timeout)
+  r <- lift $ traceAroundEvent "vkWaitForFences" (vkWaitForFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences) (boolToBool32 (waitAll)) (timeout))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 

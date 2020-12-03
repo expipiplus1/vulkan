@@ -570,6 +570,7 @@ module Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -837,7 +838,7 @@ compileDeferredNV device pipeline shader = liftIO $ do
   unless (vkCompileDeferredNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCompileDeferredNV is null" Nothing Nothing
   let vkCompileDeferredNV' = mkVkCompileDeferredNV vkCompileDeferredNVPtr
-  r <- vkCompileDeferredNV' (deviceHandle (device)) (pipeline) (shader)
+  r <- traceAroundEvent "vkCompileDeferredNV" (vkCompileDeferredNV' (deviceHandle (device)) (pipeline) (shader))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -920,7 +921,7 @@ createAccelerationStructureNV device createInfo allocator = liftIO . evalContT $
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPAccelerationStructure <- ContT $ bracket (callocBytes @AccelerationStructureNV 8) free
-  r <- lift $ vkCreateAccelerationStructureNV' (deviceHandle (device)) pCreateInfo pAllocator (pPAccelerationStructure)
+  r <- lift $ traceAroundEvent "vkCreateAccelerationStructureNV" (vkCreateAccelerationStructureNV' (deviceHandle (device)) pCreateInfo pAllocator (pPAccelerationStructure))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAccelerationStructure <- lift $ peek @AccelerationStructureNV pPAccelerationStructure
   pure $ (pAccelerationStructure)
@@ -1014,7 +1015,7 @@ destroyAccelerationStructureNV device accelerationStructure allocator = liftIO .
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyAccelerationStructureNV' (deviceHandle (device)) (accelerationStructure) pAllocator
+  lift $ traceAroundEvent "vkDestroyAccelerationStructureNV" (vkDestroyAccelerationStructureNV' (deviceHandle (device)) (accelerationStructure) pAllocator)
   pure $ ()
 
 
@@ -1058,7 +1059,7 @@ getAccelerationStructureMemoryRequirementsNV device info = liftIO . evalContT $ 
   let vkGetAccelerationStructureMemoryRequirementsNV' = mkVkGetAccelerationStructureMemoryRequirementsNV vkGetAccelerationStructureMemoryRequirementsNVPtr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2KHR _))
-  lift $ vkGetAccelerationStructureMemoryRequirementsNV' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements))
+  lift $ traceAroundEvent "vkGetAccelerationStructureMemoryRequirementsNV" (vkGetAccelerationStructureMemoryRequirementsNV' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements)))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2KHR _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -1111,7 +1112,7 @@ bindAccelerationStructureMemoryNV device bindInfos = liftIO . evalContT $ do
   let vkBindAccelerationStructureMemoryNV' = mkVkBindAccelerationStructureMemoryNV vkBindAccelerationStructureMemoryNVPtr
   pPBindInfos <- ContT $ allocaBytesAligned @BindAccelerationStructureMemoryInfoNV ((Data.Vector.length (bindInfos)) * 56) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfos `plusPtr` (56 * (i)) :: Ptr BindAccelerationStructureMemoryInfoNV) (e) . ($ ())) (bindInfos)
-  r <- lift $ vkBindAccelerationStructureMemoryNV' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (pPBindInfos)
+  r <- lift $ traceAroundEvent "vkBindAccelerationStructureMemoryNV" (vkBindAccelerationStructureMemoryNV' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (pPBindInfos))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1233,7 +1234,7 @@ cmdCopyAccelerationStructureNV commandBuffer dst src mode = liftIO $ do
   unless (vkCmdCopyAccelerationStructureNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureNV is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureNV' = mkVkCmdCopyAccelerationStructureNV vkCmdCopyAccelerationStructureNVPtr
-  vkCmdCopyAccelerationStructureNV' (commandBufferHandle (commandBuffer)) (dst) (src) (mode)
+  traceAroundEvent "vkCmdCopyAccelerationStructureNV" (vkCmdCopyAccelerationStructureNV' (commandBufferHandle (commandBuffer)) (dst) (src) (mode))
   pure $ ()
 
 
@@ -1374,7 +1375,7 @@ cmdWriteAccelerationStructuresPropertiesNV commandBuffer accelerationStructures 
   let vkCmdWriteAccelerationStructuresPropertiesNV' = mkVkCmdWriteAccelerationStructuresPropertiesNV vkCmdWriteAccelerationStructuresPropertiesNVPtr
   pPAccelerationStructures <- ContT $ allocaBytesAligned @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureNV) (e)) (accelerationStructures)
-  lift $ vkCmdWriteAccelerationStructuresPropertiesNV' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (queryPool) (firstQuery)
+  lift $ traceAroundEvent "vkCmdWriteAccelerationStructuresPropertiesNV" (vkCmdWriteAccelerationStructuresPropertiesNV' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (queryPool) (firstQuery))
   pure $ ()
 
 
@@ -1585,7 +1586,7 @@ cmdBuildAccelerationStructureNV commandBuffer info instanceData instanceOffset u
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructureNV is null" Nothing Nothing
   let vkCmdBuildAccelerationStructureNV' = mkVkCmdBuildAccelerationStructureNV vkCmdBuildAccelerationStructureNVPtr
   pInfo <- ContT $ withCStruct (info)
-  lift $ vkCmdBuildAccelerationStructureNV' (commandBufferHandle (commandBuffer)) pInfo (instanceData) (instanceOffset) (boolToBool32 (update)) (dst) (src) (scratch) (scratchOffset)
+  lift $ traceAroundEvent "vkCmdBuildAccelerationStructureNV" (vkCmdBuildAccelerationStructureNV' (commandBufferHandle (commandBuffer)) pInfo (instanceData) (instanceOffset) (boolToBool32 (update)) (dst) (src) (scratch) (scratchOffset))
   pure $ ()
 
 
@@ -2044,7 +2045,7 @@ cmdTraceRaysNV commandBuffer raygenShaderBindingTableBuffer raygenShaderBindingO
   unless (vkCmdTraceRaysNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdTraceRaysNV is null" Nothing Nothing
   let vkCmdTraceRaysNV' = mkVkCmdTraceRaysNV vkCmdTraceRaysNVPtr
-  vkCmdTraceRaysNV' (commandBufferHandle (commandBuffer)) (raygenShaderBindingTableBuffer) (raygenShaderBindingOffset) (missShaderBindingTableBuffer) (missShaderBindingOffset) (missShaderBindingStride) (hitShaderBindingTableBuffer) (hitShaderBindingOffset) (hitShaderBindingStride) (callableShaderBindingTableBuffer) (callableShaderBindingOffset) (callableShaderBindingStride) (width) (height) (depth)
+  traceAroundEvent "vkCmdTraceRaysNV" (vkCmdTraceRaysNV' (commandBufferHandle (commandBuffer)) (raygenShaderBindingTableBuffer) (raygenShaderBindingOffset) (missShaderBindingTableBuffer) (missShaderBindingOffset) (missShaderBindingStride) (hitShaderBindingTableBuffer) (hitShaderBindingOffset) (hitShaderBindingStride) (callableShaderBindingTableBuffer) (callableShaderBindingOffset) (callableShaderBindingStride) (width) (height) (depth))
   pure $ ()
 
 
@@ -2117,7 +2118,7 @@ getAccelerationStructureHandleNV device accelerationStructure dataSize data' = l
   unless (vkGetAccelerationStructureHandleNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureHandleNV is null" Nothing Nothing
   let vkGetAccelerationStructureHandleNV' = mkVkGetAccelerationStructureHandleNV vkGetAccelerationStructureHandleNVPtr
-  r <- vkGetAccelerationStructureHandleNV' (deviceHandle (device)) (accelerationStructure) (CSize (dataSize)) (data')
+  r <- traceAroundEvent "vkGetAccelerationStructureHandleNV" (vkGetAccelerationStructureHandleNV' (deviceHandle (device)) (accelerationStructure) (CSize (dataSize)) (data'))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2238,7 +2239,7 @@ createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPPipelines <- ContT $ bracket (callocBytes @Pipeline ((fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) * 8)) free
-  r <- lift $ vkCreateRayTracingPipelinesNV' (deviceHandle (device)) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (forgetExtensions (pPCreateInfos)) pAllocator (pPPipelines)
+  r <- lift $ traceAroundEvent "vkCreateRayTracingPipelinesNV" (vkCreateRayTracingPipelinesNV' (deviceHandle (device)) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (forgetExtensions (pPCreateInfos)) pAllocator (pPPipelines))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
   pure $ (r, pPipelines)

@@ -31,6 +31,7 @@ module Vulkan.Core10.DescriptorSet  ( createDescriptorSetLayout
                                     , DescriptorSetLayoutCreateFlags
                                     ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -205,7 +206,7 @@ createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSetLayout <- ContT $ bracket (callocBytes @DescriptorSetLayout 8) free
-  r <- lift $ vkCreateDescriptorSetLayout' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSetLayout)
+  r <- lift $ traceAroundEvent "vkCreateDescriptorSetLayout" (vkCreateDescriptorSetLayout' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSetLayout))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSetLayout <- lift $ peek @DescriptorSetLayout pPSetLayout
   pure $ (pSetLayout)
@@ -293,7 +294,7 @@ destroyDescriptorSetLayout device descriptorSetLayout allocator = liftIO . evalC
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyDescriptorSetLayout' (deviceHandle (device)) (descriptorSetLayout) pAllocator
+  lift $ traceAroundEvent "vkDestroyDescriptorSetLayout" (vkDestroyDescriptorSetLayout' (deviceHandle (device)) (descriptorSetLayout) pAllocator)
   pure $ ()
 
 
@@ -372,7 +373,7 @@ createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPDescriptorPool <- ContT $ bracket (callocBytes @DescriptorPool 8) free
-  r <- lift $ vkCreateDescriptorPool' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPDescriptorPool)
+  r <- lift $ traceAroundEvent "vkCreateDescriptorPool" (vkCreateDescriptorPool' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPDescriptorPool))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDescriptorPool <- lift $ peek @DescriptorPool pPDescriptorPool
   pure $ (pDescriptorPool)
@@ -468,7 +469,7 @@ destroyDescriptorPool device descriptorPool allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyDescriptorPool' (deviceHandle (device)) (descriptorPool) pAllocator
+  lift $ traceAroundEvent "vkDestroyDescriptorPool" (vkDestroyDescriptorPool' (deviceHandle (device)) (descriptorPool) pAllocator)
   pure $ ()
 
 
@@ -539,7 +540,7 @@ resetDescriptorPool device descriptorPool flags = liftIO $ do
   unless (vkResetDescriptorPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetDescriptorPool is null" Nothing Nothing
   let vkResetDescriptorPool' = mkVkResetDescriptorPool vkResetDescriptorPoolPtr
-  _ <- vkResetDescriptorPool' (deviceHandle (device)) (descriptorPool) (flags)
+  _ <- traceAroundEvent "vkResetDescriptorPool" (vkResetDescriptorPool' (deviceHandle (device)) (descriptorPool) (flags))
   pure $ ()
 
 
@@ -668,7 +669,7 @@ allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
   let vkAllocateDescriptorSets' = mkVkAllocateDescriptorSets vkAllocateDescriptorSetsPtr
   pAllocateInfo <- ContT $ withCStruct (allocateInfo)
   pPDescriptorSets <- ContT $ bracket (callocBytes @DescriptorSet ((fromIntegral . Data.Vector.length . setLayouts $ (allocateInfo)) * 8)) free
-  r <- lift $ vkAllocateDescriptorSets' (deviceHandle (device)) (forgetExtensions pAllocateInfo) (pPDescriptorSets)
+  r <- lift $ traceAroundEvent "vkAllocateDescriptorSets" (vkAllocateDescriptorSets' (deviceHandle (device)) (forgetExtensions pAllocateInfo) (pPDescriptorSets))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDescriptorSets <- lift $ generateM (fromIntegral . Data.Vector.length . setLayouts $ (allocateInfo)) (\i -> peek @DescriptorSet ((pPDescriptorSets `advancePtrBytes` (8 * (i)) :: Ptr DescriptorSet)))
   pure $ (pDescriptorSets)
@@ -772,7 +773,7 @@ freeDescriptorSets device descriptorPool descriptorSets = liftIO . evalContT $ d
   let vkFreeDescriptorSets' = mkVkFreeDescriptorSets vkFreeDescriptorSetsPtr
   pPDescriptorSets <- ContT $ allocaBytesAligned @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
-  _ <- lift $ vkFreeDescriptorSets' (deviceHandle (device)) (descriptorPool) ((fromIntegral (Data.Vector.length $ (descriptorSets)) :: Word32)) (pPDescriptorSets)
+  _ <- lift $ traceAroundEvent "vkFreeDescriptorSets" (vkFreeDescriptorSets' (deviceHandle (device)) (descriptorPool) ((fromIntegral (Data.Vector.length $ (descriptorSets)) :: Word32)) (pPDescriptorSets))
   pure $ ()
 
 
@@ -869,7 +870,7 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _))) (e) . ($ ())) (descriptorWrites)
   pPDescriptorCopies <- ContT $ allocaBytesAligned @CopyDescriptorSet ((Data.Vector.length (descriptorCopies)) * 56) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorCopies `plusPtr` (56 * (i)) :: Ptr CopyDescriptorSet) (e)) (descriptorCopies)
-  lift $ vkUpdateDescriptorSets' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (forgetExtensions (pPDescriptorWrites)) ((fromIntegral (Data.Vector.length $ (descriptorCopies)) :: Word32)) (pPDescriptorCopies)
+  lift $ traceAroundEvent "vkUpdateDescriptorSets" (vkUpdateDescriptorSets' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (forgetExtensions (pPDescriptorWrites)) ((fromIntegral (Data.Vector.length $ (descriptorCopies)) :: Word32)) (pPDescriptorCopies))
   pure $ ()
 
 
