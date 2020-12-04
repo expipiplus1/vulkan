@@ -74,12 +74,16 @@ main = runManaged $ do
 
 mainLoop :: IO () -> IO ()
 mainLoop draw = whileM $ do
-  quit <- Prelude.any isQuitEvent <$> SDL.pollEvents
+  quit <- Prelude.any isQuitEvent <$> awaitSDLEvents
   if quit
     then pure False
     else do
       draw
       pure True
+
+-- wait for the next SDL event and slurp in others that have become available
+awaitSDLEvents :: IO [SDL.Event]
+awaitSDLEvents = (:) <$> SDL.waitEvent <*> SDL.pollEvents
 
 drawFrame
   :: Device

@@ -394,9 +394,9 @@ draw = do
 ----------------------------------------------------------------
 
 -- | Consumes all events in the queue and reports if any of them instruct the
--- application to quit.
+-- application to quit. Waits for at least one event to arrive.
 shouldQuit :: MonadIO m => m Bool
-shouldQuit = any isQuitEvent <$> SDL.pollEvents
+shouldQuit = any isQuitEvent <$> awaitSDLEvents
  where
   isQuitEvent :: SDL.Event -> Bool
   isQuitEvent = \case
@@ -405,6 +405,10 @@ shouldQuit = any isQuitEvent <$> SDL.pollEvents
       | code == SDL.KeycodeQ || code == SDL.KeycodeEscape
       -> True
     _ -> False
+
+-- | Wait for the next SDL event and slurp in others that have become available
+awaitSDLEvents :: MonadIO m => m [SDL.Event]
+awaitSDLEvents = (:) <$> SDL.waitEvent <*> SDL.pollEvents
 
 ----------------------------------------------------------------
 -- Utils
