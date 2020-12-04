@@ -70,7 +70,8 @@ runFrame f@Frame {..} (F r) = runReaderT r f `finally` do
         _ -> pure ()
 
     -- Free resources wanted elsewhere now, all those in RecycledResources
-    resetCommandPool' (fCommandPool fRecycledResources) zero
+    resetCommandPool' (fCommandPool fRecycledResources)
+                      COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
 
     -- Signal we're done by making the recycled resources available
     bin <- V $ asks ghRecycleBin

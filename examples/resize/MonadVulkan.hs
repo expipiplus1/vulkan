@@ -180,7 +180,6 @@ autoapplyDecs
   , 'withSemaphore
   , 'deviceWaitIdleSafe
   , 'resetCommandPool
-  , 'allocateCommandBuffers
   , 'cmdSetViewport
   , 'cmdSetScissor
   , 'cmdUseRenderPass

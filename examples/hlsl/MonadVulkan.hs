@@ -198,7 +198,6 @@ do
         ]
       commands =
         [ 'acquireNextImageKHRSafe
-        , 'allocateCommandBuffers
         , 'allocateDescriptorSets
         , 'cmdBindDescriptorSets
         , 'cmdBindPipeline

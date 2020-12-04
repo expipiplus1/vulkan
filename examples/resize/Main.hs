@@ -257,7 +257,7 @@ draw = do
                                        }
 
   -- The command buffer will be freed when the frame is retired
-  [commandBuffer] <- allocateCommandBuffers' commandBufferAllocateInfo
+  (_, [commandBuffer]) <- withCommandBuffers' commandBufferAllocateInfo
 
   updateDescriptorSets'
     [ SomeStruct zero

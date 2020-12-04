@@ -106,9 +106,11 @@ renderFrame = withSpan_ "renderFrame" $ do
                                        , level = COMMAND_BUFFER_LEVEL_PRIMARY
                                        , commandBufferCount = 1
                                        }
-  ~[commandBuffer] <- allocateCommandBuffers' commandBufferAllocateInfo
+  (_, ~[commandBuffer]) <- withCommandBuffers' commandBufferAllocateInfo
   withSpan_ "record"
-    $ useCommandBuffer' commandBuffer zero
+    $ useCommandBuffer'
+        commandBuffer
+        zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
     $ myRecordCommandBuffer f imageIndex
 
   -- Submit the work
