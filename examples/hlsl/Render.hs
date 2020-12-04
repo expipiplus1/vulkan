@@ -35,6 +35,7 @@ renderFrame = do
 
   -- Ensure that the swapchain survives for the duration of this frame
   frameRefCount srRelease
+  frameRefCount fReleaseFramebuffers
 
   -- Make sure we'll have an image to render to
   imageIndex <-
@@ -95,8 +96,8 @@ myRecordCommandBuffer Frame {..} imageIndex = do
   let SwapchainResources {..} = fSwapchainResources
       SwapchainInfo {..}      = srInfo
       renderPassBeginInfo     = zero
-        { renderPass  = srRenderPass
-        , framebuffer = srFramebuffers ! fromIntegral imageIndex
+        { renderPass  = fRenderPass
+        , framebuffer = fFramebuffers ! fromIntegral imageIndex
         , renderArea  = Rect2D { offset = zero, extent = siImageExtent }
         , clearValues = [Color (Float32 0.3 0.4 0.8 1)]
         }

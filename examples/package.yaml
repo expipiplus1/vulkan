@@ -27,7 +27,9 @@ library:
   - text
   - transformers
   - unliftio
+  - vector
   - vulkan
+  - vulkan-utils
 
 executables:
   info:

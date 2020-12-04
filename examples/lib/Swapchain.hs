@@ -1,5 +1,8 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-missing-signatures #-}
+
 module Swapchain
   ( SwapchainInfo(..)
   , SwapchainResources(..)
@@ -8,6 +11,7 @@ module Swapchain
   , threwSwapchainError
   ) where
 
+import           AutoApply
 import           Control.Monad
 import           Control.Monad.Trans.Resource
 import           Data.Bits
@@ -20,13 +24,12 @@ import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
 import           Framebuffer
 import           GHC.Generics                   ( Generic )
-import           MonadVulkan
+import           HasVulkan
 import           NoThunks.Class
 import           Orphans                        ( )
 import           RefCounted
 import qualified SDL
 import qualified SDL.Video.Vulkan              as SDL
-import           Say
 import           UnliftIO.Exception             ( throwString
                                                 , tryJust
                                                 )
@@ -36,6 +39,23 @@ import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Misc
 import           Vulkan.Zero
+
+autoapplyDecs
+  (<> "'")
+  [ 'getDevice
+  , 'getPhysicalDevice
+  , 'getInstance
+  , 'getAllocator
+  , 'noAllocationCallbacks
+  , 'noPipelineCache
+  ]
+  [ 'allocate ]
+  [ 'getSwapchainImagesKHR
+  , 'getPhysicalDeviceSurfaceCapabilitiesKHR
+  , 'getPhysicalDeviceSurfacePresentModesKHR
+  , 'getPhysicalDeviceSurfaceFormatsKHR
+  , 'withSwapchainKHR
+  ]
 
 data SwapchainInfo = SwapchainInfo
   { siSwapchain           :: SwapchainKHR
@@ -61,12 +81,13 @@ data SwapchainResources = SwapchainResources
 
 -- | Allocate everything which depends on the swapchain
 allocSwapchainResources
-  :: SwapchainKHR
+  :: (MonadResource m, HasVulkan m)
+  => SwapchainKHR
   -- ^ Previous swapchain, can be NULL_HANDLE
   -> Extent2D
   -- ^ If the swapchain size determines the surface size, use this size
   -> SurfaceKHR
-  -> V SwapchainResources
+  -> m SwapchainResources
 allocSwapchainResources oldSwapchain windowSize surface = do
   info@SwapchainInfo {..} <- createSwapchain oldSwapchain windowSize surface
 
@@ -86,10 +107,11 @@ allocSwapchainResources oldSwapchain windowSize surface = do
   pure $ SwapchainResources info imageViews swapchainImages releaseResources
 
 recreateSwapchainResources
-  :: SDL.Window
+  :: (MonadResource m, HasVulkan m)
+  => SDL.Window
   -> SwapchainResources
   -- ^ The reference to these resources will be dropped
-  -> V SwapchainResources
+  -> m SwapchainResources
 recreateSwapchainResources win oldResources = do
   SDL.V2 width height <- SDL.vkGetDrawableSize win
   let oldSwapchain = siSwapchain . srInfo $ oldResources
@@ -107,12 +129,13 @@ recreateSwapchainResources win oldResources = do
 
 -- | Create a swapchain from a 'SurfaceKHR'
 createSwapchain
-  :: SwapchainKHR
+  :: (MonadResource m, HasVulkan m)
+  => SwapchainKHR
   -- ^ Old swapchain, can be NULL_HANDLE
   -> Extent2D
   -- ^ If the swapchain size determines the surface size, use this size
   -> SurfaceKHR
-  -> V SwapchainInfo
+  -> m SwapchainInfo
 createSwapchain oldSwapchain explicitSize surf = do
   surfaceCaps <- getPhysicalDeviceSurfaceCapabilitiesKHR' surf
 
@@ -132,7 +155,6 @@ createSwapchain oldSwapchain explicitSize surf = do
   -- getPhysicalDeviceSurfaceFormatsKHR doesn't return an empty list
   (_, availableFormats) <- getPhysicalDeviceSurfaceFormatsKHR' surf
   let surfaceFormat = selectSurfaceFormat availableFormats
-  sayErrString $ "Using surface format: " <> show surfaceFormat
 
   -- Calculate the extent
   let imageExtent =
@@ -188,7 +210,7 @@ createSwapchain oldSwapchain explicitSize surf = do
 ----------------------------------------------------------------
 
 -- | Catch an ERROR_OUT_OF_DATE_KHR exception and return 'True' if that happened
-threwSwapchainError :: V a -> V Bool
+threwSwapchainError :: MonadUnliftIO f => f b -> f Bool
 threwSwapchainError = fmap isLeft . tryJust swapchainError
  where
   swapchainError = \case
@@ -213,9 +235,7 @@ selectSurfaceFormat = V.maximumBy (comparing surfaceFormatScore)
 
 -- | An ordered list of the present mode to be chosen for the swapchain.
 desiredPresentModes :: [PresentModeKHR]
-desiredPresentModes =
-  -- [PRESENT_MODE_MAILBOX_KHR, PRESENT_MODE_FIFO_KHR, PRESENT_MODE_IMMEDIATE_KHR]
-  [PRESENT_MODE_IMMEDIATE_KHR]
+desiredPresentModes = [PRESENT_MODE_FIFO_KHR, PRESENT_MODE_IMMEDIATE_KHR]
 
 -- | The images in the swapchain must support these flags.
 requiredUsageFlags :: [ImageUsageFlagBits]

@@ -41,7 +41,9 @@ library
       Camera
       Framebuffer
       HasVulkan
+      Orphans
       RefCounted
+      Swapchain
       Utils
       Window
   other-modules:
@@ -64,7 +66,9 @@ library
     , text
     , transformers
     , unliftio
+    , vector
     , vulkan
+    , vulkan-utils
   if os(windows)
     ghc-options: -optl-mconsole
   default-language: Haskell2010
@@ -105,7 +109,6 @@ executable hlsl
       Pipeline
       Render
       RenderPass
-      Swapchain
       Paths_vulkan_examples
   hs-source-dirs:
       hlsl
@@ -193,11 +196,9 @@ executable rays
       Init
       MonadFrame
       MonadVulkan
-      Orphans
       Pipeline
       Render
       Scene
-      Swapchain
       Paths_vulkan_examples
   hs-source-dirs:
       rays
