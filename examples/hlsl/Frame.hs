@@ -138,6 +138,8 @@ advanceFrame :: Bool -> Frame -> V Frame
 advanceFrame needsNewSwapchain f = do
   -- Wait for a prior frame to finish, then we can steal it's resources!
   nib                <- V $ asks ghRecycleNib
+  -- Handle mvar indefinite timeout exception here:
+  -- https://github.com/expipiplus1/vulkan/issues/236
   fRecycledResources <- liftIO $ nib >>= \case
     Left  block -> block
     Right rs    -> pure rs
