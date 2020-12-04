@@ -17,6 +17,7 @@ extra-deps:
 - derive-storable-0.3.0.0
 - github: expipiplus1/derive-storable-plugin
   commit: e98e5835913e50a10cf8545af9a1f29f84a9d15a
+- nothunks-0.1.2
 
 
 nix:
