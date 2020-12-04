@@ -190,7 +190,7 @@ spawn a = do
   -- remove it at the end of the async action when the thread is going to die
   -- anyway.
   --
-  -- Mask this so there's no chance
+  -- Mask this so there's no chance we're inturrupted before writing the mvar.
   kv  <- liftIO newEmptyMVar
   UnliftIO.mask $ \_ -> do
     (k, r) <- allocate
