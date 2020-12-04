@@ -43,6 +43,11 @@ The [`autoapply` package](https://hackage.haskell.org/package/autoapply) is
 used to write the boilerplate of passing some global handles to vulkan
 functions.
 
+### `rays`
+
+An example of using the `VK_KHR_ray_tracing_pipeline` extension. Needs quite a
+new driver to run!
+
 ### `offscreen`
 
 This example:
