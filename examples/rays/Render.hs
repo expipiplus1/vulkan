@@ -6,7 +6,6 @@ module Render
 
 import           Camera
 import           Control.Exception              ( throwIO )
-import           Control.Monad
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( MonadTrans(lift) )
 import           Data.Vector                    ( (!) )
@@ -89,8 +88,8 @@ renderFrame = withSpan_ "renderFrame" $ do
     ]
     []
 
-  time <- liftIO getMonotonicTime
-  let spin       = axisAngle (V3 0 1 0) (realToFrac time)
+  time <- realToFrac <$> liftIO getMonotonicTime
+  let spin       = axisAngle (V3 0 1 0) (sin time + 1)
       forwards   = axisAngle (V3 0 0 1) 0
       camera     = Camera (V3 0 0 (-10)) (spin * forwards) (16 / 9) 1.4
       cameraMats = CameraMatrices

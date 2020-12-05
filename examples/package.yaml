@@ -172,6 +172,7 @@ executables:
     - autoapply >= 0.4
     - base <5
     - bytestring
+    - colour
     - containers
     - derive-storable >= 0.3
     - derive-storable-plugin >= 0.2.3.3
@@ -179,6 +180,7 @@ executables:
     - linear
     - nothunks >= 0.1.2
     - opentelemetry
+    - random
     - resourcet >= 1.2.4
     - say
     - sdl2 >= 2.5.2.0
