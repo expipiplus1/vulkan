@@ -59,7 +59,7 @@ library
     , base <5
     , bytestring
     , derive-storable >=0.3
-    , derive-storable-plugin >=0.2.3.1
+    , derive-storable-plugin >=0.2.3.3
     , lens
     , linear
     , nothunks >=0.1.2
@@ -216,7 +216,7 @@ executable rays
     , bytestring
     , containers
     , derive-storable >=0.3
-    , derive-storable-plugin >=0.2.3.1
+    , derive-storable-plugin >=0.2.3.3
     , lens
     , linear
     , nothunks >=0.1.2

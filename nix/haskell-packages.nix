@@ -78,17 +78,11 @@ let
         ver = "0.3.0.0";
         sha256 = "0h9v6k1651acsqs64mkidqrflld7ghhbiir7z9f0wm8vrqwc6wyp";
       } { };
-      derive-storable-plugin = appendPatch (doJailbreak
-        (self.callHackageDirect {
-          pkg = "derive-storable-plugin";
-          ver = "0.2.3.1";
-          sha256 = "0iibzdjlx2v5caib41a3i5l67dplwwhp8sys3hfc6m3lyhghzg16";
-        } { })) (pkgs.fetchpatch {
-          url =
-            "https://github.com/mkloczko/derive-storable-plugin/pull/4.patch";
-          name = "pure.patch";
-          sha256 = "11fm91062slgh25na3pmjpf2sn9z1gg9lg5jr4nv2q8a2bzg32zs";
-        });
+      derive-storable-plugin = self.callHackageDirect {
+        pkg = "derive-storable-plugin";
+        ver = "0.2.3.3";
+        sha256 = "07ikj9l5pzrh7khp0pr6pjgpygni12svfm14x0csvw0hgbsb0mnj";
+      } { };
       nothunks = doJailbreak (self.callHackageDirect {
         pkg = "nothunks";
         ver = "0.1.2";
