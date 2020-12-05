@@ -11,6 +11,8 @@ import           Control.Lens
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.Bits
+import           Data.Colour.RGBSpace
+import           Data.Colour.RGBSpace.HSV
 import           Data.Word
 import           Foreign.Marshal.Array
 import           Foreign.Ptr
@@ -19,6 +21,7 @@ import           GHC.Generics                   ( Generic )
 import           Linear.V3
 import           Linear.V4
 import           MonadVulkan
+import           System.Random
 import           Vulkan.Core10
 import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Zero
@@ -26,29 +29,26 @@ import           VulkanMemoryAllocator
 
 scene :: [Sphere]
 scene =
-  [ Sphere (V4 originx 0 0 radius) (V4 r g b 1)
-  | radius   <- [1 .. 10]
-  | originx <- [ i**1.3 | i <- [0 .. 10]]
+  let n = 2000
+  in
+  [ Sphere (V4 (x*radius)
+               (radius**2.4 * sin x)
+               (radius**2.4 * cos x)
+               (radius**1.3))
+           (V4 r g b 1)
+  | radius <- (**1.3) <$> [1, 1.1 ..]
+  | x <- take n [0 ..]
   | V3 r g b <- pastels
   ]
 
-
 pastels :: [V3 Float]
-pastels = (/ pure 256) <$> cycle
-  [ V3 138 255 167
-  , V3 174 255 243
-  , V3 212 204 255
-  , V3 255 184 205
-  , V3 128 255 254
-  , V3 159 255 153
-  , V3 255 250 184
-  , V3 221 133 255
-  , V3 221 255 199
-  , V3 133 255 174
-  , V3 184 255 229
-  , V3 255 189 207
-  , V3 255 179 148
-  ]
+pastels =
+  let (g1, (g2, g3)) = split <$> split (mkStdGen 2)
+      hues           = randomRs (0, 360) g1
+      sats           = randomRs (0.3, 0.5) g2
+      vals           = randomRs (0.8, 1) g3
+      cs             = zipWith3 hsv hues sats vals
+  in  uncurryRGB V3 <$> cs
 
 ----------------------------------------------------------------
 -- Vulkan

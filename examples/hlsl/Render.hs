@@ -12,10 +12,11 @@ import           Frame
 import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 , IOException(IOError)
                                                 )
+import           HasVulkan
 import           MonadFrame
 import           MonadVulkan
-import           Say                            ( sayErrString )
 import           Swapchain
+import           UnliftIO                       ( MonadUnliftIO )
 import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Core10
@@ -34,6 +35,7 @@ renderFrame = do
 
   -- Ensure that the swapchain survives for the duration of this frame
   frameRefCount srRelease
+  frameRefCount fReleaseFramebuffers
 
   -- Make sure we'll have an image to render to
   imageIndex <-
@@ -52,8 +54,10 @@ renderFrame = do
                                        , level = COMMAND_BUFFER_LEVEL_PRIMARY
                                        , commandBufferCount = 1
                                        }
-  ~[commandBuffer] <- allocateCommandBuffers' commandBufferAllocateInfo
-  useCommandBuffer' commandBuffer zero $ myRecordCommandBuffer f imageIndex
+  (_, ~[commandBuffer]) <- withCommandBuffers' commandBufferAllocateInfo
+  useCommandBuffer' commandBuffer
+                    zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+    $ myRecordCommandBuffer f imageIndex
 
   -- Submit the work
   let -- Wait for the 'imageAvailableSemaphore' before outputting to the color
@@ -86,16 +90,16 @@ renderFrame = do
          , swapchains          = [siSwapchain]
          , imageIndices        = [imageIndex]
          }
-  sayErrString ("submitted " <> show fIndex)
+  pure ()
 
 -- | Clear and render a triangle
-myRecordCommandBuffer :: MonadIO m => Frame -> Word32 -> CmdT m ()
+myRecordCommandBuffer :: MonadUnliftIO m => Frame -> Word32 -> CmdT m ()
 myRecordCommandBuffer Frame {..} imageIndex = do
   let SwapchainResources {..} = fSwapchainResources
       SwapchainInfo {..}      = srInfo
       renderPassBeginInfo     = zero
-        { renderPass  = srRenderPass
-        , framebuffer = srFramebuffers ! fromIntegral imageIndex
+        { renderPass  = fRenderPass
+        , framebuffer = fFramebuffers ! fromIntegral imageIndex
         , renderArea  = Rect2D { offset = zero, extent = siImageExtent }
         , clearValues = [Color (Float32 0.3 0.4 0.8 1)]
         }

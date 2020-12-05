@@ -6,7 +6,6 @@
 -- 'runFrame'.
 module Frame where
 
-import           Control.Monad                  ( void )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
@@ -14,7 +13,6 @@ import           Control.Monad.Trans.Resource  as ResourceT
 import qualified SDL
 import           UnliftIO                       ( MonadUnliftIO(..)
                                                 , askRunInIO
-                                                , mask
                                                 , toIO
                                                 )
 import           UnliftIO.Exception             ( finally
@@ -28,6 +26,9 @@ import           Data.Vector                    ( Vector
                                                 )
 import           Data.Word
 
+import           HasVulkan
+import           MonadVulkan
+import           RefCounted
 import           Vulkan.CStruct.Extends         ( SomeStruct )
 import           Vulkan.Core10                 as Vk
                                          hiding ( createDevice
@@ -40,8 +41,6 @@ import           Vulkan.Core10                 as Vk
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Zero
-
-import           MonadVulkan
 
 -- | A record of everything required to render a single frame of the
 -- application.
@@ -124,7 +123,7 @@ allocateGlobal_ create destroy = allocateGlobal create (const destroy)
 runFrame :: Frame -> F a -> V a
 runFrame f (F r) = runReaderT r f `finally` do
   fences <- liftIO $ readIORef (fGPUWork f)
-  -- Wait for this frame to be presented in another thread before retiring
+  -- Wait in another thread for this frame to be presented before retiring
   spawn_ $ do
     waitForFencesSafe' fences True 1e9 >>= \case
       TIMEOUT -> do
@@ -170,33 +169,6 @@ queueSubmitFrame q ss fence = do
   gpuWork <- asksFrame fGPUWork
   liftIO $ atomicModifyIORef' gpuWork ((, ()) . cons fence)
 
-----------------------------------------------------------------
--- Ref counting helper
-----------------------------------------------------------------
-
--- A 'RefCounted' will perform the specified action when the count reaches 0
-data RefCounted = RefCounted
-  { rcCount  :: IORef Word
-  , rcAction :: IO ()
-  }
-
-newRefCounted :: MonadIO m => IO () -> m RefCounted
-newRefCounted rcAction = do
-  rcCount <- liftIO $ newIORef 1
-  pure RefCounted { .. }
-
--- | Decrement the ref counted value, the action will be run promptly and in
--- this thread if the counter reached 0.
-releaseRefCounted :: MonadIO m => RefCounted -> m ()
-releaseRefCounted RefCounted {..} = liftIO $ mask $ \_ ->
-  atomicModifyIORef' rcCount (\c -> (pred c, pred c)) >>= \case
-    0 -> rcAction
-    _ -> pure ()
-
-useRefCounted :: MonadIO m => RefCounted -> m ()
-useRefCounted RefCounted {..} =
-  liftIO $ atomicModifyIORef' rcCount (\c -> (succ c, ()))
-
 -- | Make sure a reference is held until this frame is retired
 frameRefCount :: RefCounted -> F ()
-frameRefCount r = void $ allocate_ (useRefCounted r) (releaseRefCounted r)
+frameRefCount = resourceTRefCount

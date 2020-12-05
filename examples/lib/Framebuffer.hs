@@ -1,21 +1,41 @@
 {-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-missing-signatures #-}
 module Framebuffer
   ( Framebuffer.createFramebuffer
   , Framebuffer.createImageView
   ) where
 
+import           AutoApply
 import           Control.Monad.Trans.Resource
+import           HasVulkan
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
 import           Vulkan.Zero
 
-import           MonadVulkan
+autoapplyDecs
+  (<> "'")
+  [ 'getDevice
+  , 'getPhysicalDevice
+  , 'getInstance
+  , 'getAllocator
+  , 'noAllocationCallbacks
+  , 'noPipelineCache
+  ]
+  [ 'allocate ]
+  [ 'withFramebuffer
+  , 'withImageView
+  ]
 
 -- | Create a framebuffer filling the whole image.
 createFramebuffer
-  :: RenderPass -> ImageView -> Extent2D -> V (ReleaseKey, Framebuffer)
+  :: (MonadResource m, HasVulkan m)
+  => RenderPass
+  -> ImageView
+  -> Extent2D
+  -> m (ReleaseKey, Framebuffer)
 createFramebuffer renderPass imageView imageSize = do
   -- Create a framebuffer
   let framebufferCreateInfo :: FramebufferCreateInfo '[]
@@ -28,7 +48,11 @@ createFramebuffer renderPass imageView imageSize = do
   withFramebuffer' framebufferCreateInfo
 
 -- | Create a pretty vanilla ImageView covering the whole image
-createImageView :: Format -> Image -> V (ReleaseKey, ImageView)
+createImageView
+  :: (MonadResource m, HasVulkan m)
+  => Format
+  -> Image
+  -> m (ReleaseKey, ImageView)
 createImageView format = \image ->
   withImageView' imageViewCreateInfo { image = image }
  where

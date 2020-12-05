@@ -274,6 +274,8 @@ jobs:
     - run: nix-build nix/release.nix -A docs
     - run: nix-build nix/release.nix -A sdistTest
     - run: nix-build nix/release.nix -A docs-combined
+    - run: XDG_DATA_DIRS=$(mktemp -d) nix-shell examples --run 'ghc-pkg list'
+    - run: XDG_DATA_DIRS=$(mktemp -d) nix-shell examples --arg buildProfiling true --run 'ghc-pkg list'
 
   shellcheck:
     runs-on: ubuntu-20.04

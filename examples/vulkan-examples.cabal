@@ -36,6 +36,47 @@ flag renderdoc
   manual: True
   default: False
 
+library
+  exposed-modules:
+      Camera
+      Framebuffer
+      HasVulkan
+      InstrumentDecs
+      Orphans
+      RefCounted
+      Swapchain
+      Utils
+      Window
+  other-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      lib
+  default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
+  ghc-options: -Wall
+  build-depends:
+      VulkanMemoryAllocator
+    , autoapply
+    , base <5
+    , bytestring
+    , derive-storable >=0.3
+    , derive-storable-plugin >=0.2.3.3
+    , lens
+    , linear
+    , nothunks >=0.1.2
+    , opentelemetry
+    , resourcet >=1.2.4
+    , sdl2 >=2.5.2.0
+    , template-haskell
+    , text
+    , transformers
+    , unliftio
+    , vector
+    , vulkan
+    , vulkan-utils
+  if os(windows)
+    ghc-options: -optl-mconsole
+  default-language: Haskell2010
+
 executable compute
   main-is: Main.hs
   other-modules:
@@ -43,7 +84,7 @@ executable compute
   hs-source-dirs:
       compute
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
-  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       JuicyPixels
     , VulkanMemoryAllocator
@@ -65,31 +106,25 @@ executable compute
 executable hlsl
   main-is: Main.hs
   other-modules:
-      Cache
       Frame
-      Framebuffer
       Init
       MonadFrame
       MonadVulkan
       Pipeline
-      RefCounted
       Render
       RenderPass
-      Swapchain
-      Utils
-      Window
       Paths_vulkan_examples
   hs-source-dirs:
       hlsl
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
-  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N -eventlog
   build-depends:
       VulkanMemoryAllocator
     , autoapply >=0.4
     , base <5
     , bytestring
     , containers
-    , primitive-unlifted >=1.0
+    , opentelemetry
     , resourcet >=1.2.4
     , say
     , sdl2 >=2.5.2.0
@@ -100,11 +135,10 @@ executable hlsl
     , unliftio
     , vector
     , vulkan
+    , vulkan-examples
     , vulkan-utils >=0.3
   if os(windows)
     ghc-options: -optl-mconsole
-  if impl(ghc < 8.10.0)
-    buildable: False
   if !flag(have-shaderc)
     buildable: False
   default-language: Haskell2010
@@ -116,7 +150,7 @@ executable info
   hs-source-dirs:
       info
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
-  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base <5
     , pretty-simple >=3.3
@@ -132,7 +166,7 @@ executable offscreen
   hs-source-dirs:
       offscreen
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
-  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       JuicyPixels
     , VulkanMemoryAllocator
@@ -162,36 +196,33 @@ executable rays
   main-is: Main.hs
   other-modules:
       AccelerationStructure
-      Cache
-      Camera
+      Cleanup
       Frame
-      Framebuffer
       Init
       MonadFrame
       MonadVulkan
       Pipeline
-      RefCounted
       Render
       Scene
-      Swapchain
-      Utils
-      Window
       Paths_vulkan_examples
   hs-source-dirs:
       rays
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
-  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N -eventlog
   build-depends:
       VulkanMemoryAllocator
     , autoapply >=0.4
     , base <5
     , bytestring
+    , colour
     , containers
     , derive-storable >=0.3
-    , derive-storable-plugin >=0.2.3.1
+    , derive-storable-plugin >=0.2.3.3
     , lens
     , linear
-    , primitive-unlifted
+    , nothunks >=0.1.2
+    , opentelemetry
+    , random
     , resourcet >=1.2.4
     , say
     , sdl2 >=2.5.2.0
@@ -202,11 +233,10 @@ executable rays
     , unliftio
     , vector
     , vulkan >=3.7
+    , vulkan-examples
     , vulkan-utils >=0.3
   if os(windows)
     ghc-options: -optl-mconsole
-  if impl(ghc < 8.10.0)
-    buildable: False
   if !flag(raytracing)
     buildable: False
   default-language: Haskell2010
@@ -215,19 +245,17 @@ executable resize
   main-is: Main.hs
   other-modules:
       Frame
-      Framebuffer
       Init
       Julia
       Julia.Constants
       MonadVulkan
       Pipeline
       Swapchain
-      Window
       Paths_vulkan_examples
   hs-source-dirs:
       resize
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
-  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       VulkanMemoryAllocator
     , autoapply >=0.4
@@ -244,6 +272,7 @@ executable resize
     , unliftio
     , vector
     , vulkan
+    , vulkan-examples
     , vulkan-utils
   if os(windows)
     ghc-options: -optl-mconsole
@@ -256,7 +285,7 @@ executable sdl-triangle
   hs-source-dirs:
       sdl-triangle
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
-  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base <5
     , bytestring
@@ -280,7 +309,7 @@ executable timeline-semaphore
   hs-source-dirs:
       timeline-semaphore
   default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
-  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base <5
     , resourcet

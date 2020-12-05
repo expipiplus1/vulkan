@@ -1,3 +1,8 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-missing-signatures #-}
+
 module Swapchain
   ( SwapchainInfo(..)
   , SwapchainResources(..)
@@ -6,6 +11,7 @@ module Swapchain
   , threwSwapchainError
   ) where
 
+import           AutoApply
 import           Control.Monad
 import           Control.Monad.Trans.Resource
 import           Data.Bits
@@ -17,9 +23,13 @@ import           Data.Ord                       ( comparing )
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
 import           Framebuffer
-import           MonadVulkan
+import           GHC.Generics                   ( Generic )
+import           HasVulkan
+import           InstrumentDecs
+import           Language.Haskell.TH            ( nameBase )
+import           NoThunks.Class
+import           Orphans                        ( )
 import           RefCounted
-import           RenderPass
 import qualified SDL
 import qualified SDL.Video.Vulkan              as SDL
 import           UnliftIO.Exception             ( throwString
@@ -32,6 +42,23 @@ import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Misc
 import           Vulkan.Zero
 
+instrumentDecs (Just . init . nameBase) =<< autoapplyDecs
+  (<> "'")
+  [ 'getDevice
+  , 'getPhysicalDevice
+  , 'getInstance
+  , 'getAllocator
+  , 'noAllocationCallbacks
+  , 'noPipelineCache
+  ]
+  [ 'allocate ]
+  [ 'getSwapchainImagesKHR
+  , 'getPhysicalDeviceSurfaceCapabilitiesKHR
+  , 'getPhysicalDeviceSurfacePresentModesKHR
+  , 'getPhysicalDeviceSurfaceFormatsKHR
+  , 'withSwapchainKHR
+  ]
+
 data SwapchainInfo = SwapchainInfo
   { siSwapchain           :: SwapchainKHR
   , siSwapchainReleaseKey :: ReleaseKey
@@ -40,15 +67,15 @@ data SwapchainInfo = SwapchainInfo
   , siImageExtent         :: Extent2D
   , siSurface             :: SurfaceKHR
   }
+  deriving (Generic, NoThunks)
 
 data SwapchainResources = SwapchainResources
-  { srInfo         :: SwapchainInfo
-  , srFramebuffers :: Vector Framebuffer
-  , srImageViews   :: Vector ImageView
-  , srImages       :: Vector Image
-  , srRenderPass   :: RenderPass
-  , srRelease      :: RefCounted
+  { srInfo       :: SwapchainInfo
+  , srImageViews :: Vector ImageView
+  , srImages     :: Vector Image
+  , srRelease    :: RefCounted
   }
+  deriving (Generic, NoThunks)
 
 ----------------------------------------------------------------
 -- All the resources which depend on the swapchain
@@ -56,51 +83,37 @@ data SwapchainResources = SwapchainResources
 
 -- | Allocate everything which depends on the swapchain
 allocSwapchainResources
-  :: SwapchainKHR
+  :: (MonadUnliftIO m, MonadResource m, HasVulkan m)
+  => SwapchainKHR
   -- ^ Previous swapchain, can be NULL_HANDLE
   -> Extent2D
   -- ^ If the swapchain size determines the surface size, use this size
   -> SurfaceKHR
-  -> V SwapchainResources
+  -> m SwapchainResources
 allocSwapchainResources oldSwapchain windowSize surface = do
   info@SwapchainInfo {..} <- createSwapchain oldSwapchain windowSize surface
 
-  -- TODO: cache this, it's probably not going to change
-  (renderPassKey, srRenderPass) <- RenderPass.createRenderPass
-    (format (siSurfaceFormat :: SurfaceFormatKHR))
-
   -- Get all the swapchain images, and create views for them
-  (_            , swapchainImages) <- getSwapchainImagesKHR' siSwapchain
-  (imageViewKeys, imageViews     ) <-
+  (_, swapchainImages) <- getSwapchainImagesKHR' siSwapchain
+  (imageViewKeys, imageViews) <-
     fmap V.unzip . V.forM swapchainImages $ \image ->
       Framebuffer.createImageView
         (format (siSurfaceFormat :: SurfaceFormatKHR))
         image
 
-  -- Also create a framebuffer for each one
-  (framebufferKeys, framebuffers) <-
-    fmap V.unzip . V.forM imageViews $ \imageView ->
-      Framebuffer.createFramebuffer srRenderPass imageView siImageExtent
-
   -- This refcount is released in 'recreateSwapchainResources'
   releaseResources <- newRefCounted $ do
-    traverse_ release framebufferKeys
     traverse_ release imageViewKeys
-    release renderPassKey
     release siSwapchainReleaseKey
 
-  pure $ SwapchainResources info
-                            framebuffers
-                            imageViews
-                            swapchainImages
-                            srRenderPass
-                            releaseResources
+  pure $ SwapchainResources info imageViews swapchainImages releaseResources
 
 recreateSwapchainResources
-  :: SDL.Window
+  :: (MonadUnliftIO m, MonadResource m, HasVulkan m)
+  => SDL.Window
   -> SwapchainResources
   -- ^ The reference to these resources will be dropped
-  -> V SwapchainResources
+  -> m SwapchainResources
 recreateSwapchainResources win oldResources = do
   SDL.V2 width height <- SDL.vkGetDrawableSize win
   let oldSwapchain = siSwapchain . srInfo $ oldResources
@@ -118,12 +131,13 @@ recreateSwapchainResources win oldResources = do
 
 -- | Create a swapchain from a 'SurfaceKHR'
 createSwapchain
-  :: SwapchainKHR
+  :: (MonadUnliftIO m, MonadResource m, HasVulkan m)
+  => SwapchainKHR
   -- ^ Old swapchain, can be NULL_HANDLE
   -> Extent2D
   -- ^ If the swapchain size determines the surface size, use this size
   -> SurfaceKHR
-  -> V SwapchainInfo
+  -> m SwapchainInfo
 createSwapchain oldSwapchain explicitSize surf = do
   surfaceCaps <- getPhysicalDeviceSurfaceCapabilitiesKHR' surf
 
@@ -198,7 +212,7 @@ createSwapchain oldSwapchain explicitSize surf = do
 ----------------------------------------------------------------
 
 -- | Catch an ERROR_OUT_OF_DATE_KHR exception and return 'True' if that happened
-threwSwapchainError :: V a -> V Bool
+threwSwapchainError :: MonadUnliftIO f => f b -> f Bool
 threwSwapchainError = fmap isLeft . tryJust swapchainError
  where
   swapchainError = \case
@@ -224,8 +238,12 @@ selectSurfaceFormat = V.maximumBy (comparing surfaceFormatScore)
 -- | An ordered list of the present mode to be chosen for the swapchain.
 desiredPresentModes :: [PresentModeKHR]
 desiredPresentModes =
-  [PRESENT_MODE_MAILBOX_KHR, PRESENT_MODE_FIFO_KHR, PRESENT_MODE_IMMEDIATE_KHR]
+  [ PRESENT_MODE_FIFO_RELAXED_KHR
+  , PRESENT_MODE_FIFO_KHR --  ^ This will always be present
+  , PRESENT_MODE_IMMEDIATE_KHR --  ^ Keep this here for easy swapping for testing
+  ]
 
 -- | The images in the swapchain must support these flags.
 requiredUsageFlags :: [ImageUsageFlagBits]
-requiredUsageFlags = [IMAGE_USAGE_COLOR_ATTACHMENT_BIT]
+requiredUsageFlags =
+  [IMAGE_USAGE_COLOR_ATTACHMENT_BIT, IMAGE_USAGE_STORAGE_BIT]

@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingVia #-}
 module RefCounted where
 
 import           Control.Exception              ( throwIO )
@@ -12,6 +13,7 @@ import           Data.IORef
 import           GHC.IO.Exception               ( IOErrorType(UserError)
                                                 , IOException(IOError)
                                                 )
+import           NoThunks.Class
 import           UnliftIO.Exception             ( mask )
 
 -- | A 'RefCounted' will perform the specified action when the count reaches 0
@@ -19,6 +21,7 @@ data RefCounted = RefCounted
   { rcCount  :: IORef Int
   , rcAction :: IO ()
   }
+  deriving NoThunks via InspectHeap RefCounted
 
 -- | Create a counter with a value of 1
 newRefCounted :: MonadIO m => IO () -> m RefCounted

@@ -13,9 +13,11 @@ import           Data.Word
 import           Foreign.Ptr                    ( plusPtr )
 import           Foreign.Storable
 import           Frame
+import           GHC.Clock                      ( getMonotonicTime )
 import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 , IOException(IOError)
                                                 )
+import           HasVulkan
 import           Linear.Matrix
 import           Linear.Quaternion
 import           Linear.V3
@@ -30,9 +32,10 @@ import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import           Vulkan.Extensions.VK_KHR_swapchain
                                                as Swap
 import           Vulkan.Zero
+import           InstrumentDecs                       ( withSpan_ )
 
 renderFrame :: F ()
-renderFrame = do
+renderFrame = withSpan_ "renderFrame" $ do
   f@Frame {..} <- askFrame
   let RecycledResources {..}  = fRecycledResources
       oneSecond               = 1e9
@@ -44,18 +47,19 @@ renderFrame = do
 
   -- Make sure we'll have an image to render to
   imageIndex <-
-    acquireNextImageKHRSafe' siSwapchain
-                             oneSecond
-                             fImageAvailableSemaphore
-                             NULL_HANDLE
-      >>= \case
-            (SUCCESS, imageIndex) -> pure imageIndex
-            (TIMEOUT, _) ->
-              timeoutError "Timed out (1s) trying to acquire next image"
-            _ -> throwString "Unexpected Result from acquireNextImageKHR"
+    withSpan_ "acquire"
+    $   acquireNextImageKHRSafe' siSwapchain
+                                 oneSecond
+                                 fImageAvailableSemaphore
+                                 NULL_HANDLE
+    >>= \case
+          (SUCCESS, imageIndex) -> pure imageIndex
+          (TIMEOUT, _) ->
+            timeoutError "Timed out (1s) trying to acquire next image"
+          _ -> throwString "Unexpected Result from acquireNextImageKHR"
 
   -- Update the necessary descriptor sets
-  updateDescriptorSets'
+  withSpan_ "update" $ updateDescriptorSets'
     [ SomeStruct zero
       { dstSet          = fDescriptorSet
       , dstBinding      = 1
@@ -84,7 +88,8 @@ renderFrame = do
     ]
     []
 
-  let spin       = axisAngle (V3 0 1 0) (realToFrac fIndex / 100)
+  time <- realToFrac <$> liftIO getMonotonicTime
+  let spin       = axisAngle (V3 0 1 0) (sin time + 1)
       forwards   = axisAngle (V3 0 0 1) 0
       camera     = Camera (V3 0 0 (-10)) (spin * forwards) (16 / 9) 1.4
       cameraMats = CameraMatrices
@@ -94,17 +99,22 @@ renderFrame = do
   liftIO $ poke
     (fCameraMatricesBufferData `plusPtr` fromIntegral fCameraMatricesOffset)
     cameraMats
-  flushAllocation' fCameraMatricesAllocation
-                   fCameraMatricesOffset
-                   (fromIntegral (sizeOf (undefined :: CameraMatrices)))
+  withSpan_ "flush" $ flushAllocation'
+    fCameraMatricesAllocation
+    fCameraMatricesOffset
+    (fromIntegral (sizeOf (undefined :: CameraMatrices)))
 
   -- Allocate a command buffer and populate it
   let commandBufferAllocateInfo = zero { commandPool = fCommandPool
                                        , level = COMMAND_BUFFER_LEVEL_PRIMARY
                                        , commandBufferCount = 1
                                        }
-  ~[commandBuffer] <- allocateCommandBuffers' commandBufferAllocateInfo
-  useCommandBuffer' commandBuffer zero $ myRecordCommandBuffer f imageIndex
+  (_, ~[commandBuffer]) <- withCommandBuffers' commandBufferAllocateInfo
+  withSpan_ "record"
+    $ useCommandBuffer'
+        commandBuffer
+        zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+    $ myRecordCommandBuffer f imageIndex
 
   -- Submit the work
   let -- Wait for the 'imageAvailableSemaphore' before outputting to the color
@@ -123,15 +133,13 @@ renderFrame = do
                  }
         :&  ()
   graphicsQueue <- getGraphicsQueue
-  queueSubmitFrame graphicsQueue
-                   [SomeStruct submitInfo]
-                   fRenderFinishedHostSemaphore
-                   fIndex
+
+  withSpan_ "submit" $ finalQueueSubmitFrame [SomeStruct submitInfo]
 
   -- Present the frame when the render is finished
   -- The return code here could be SUBOPTIMAL_KHR
   -- TODO, check for that
-  _ <- queuePresentKHR
+  _ <- withSpan_ "present" $ queuePresentKHR'
     graphicsQueue
     zero { Swap.waitSemaphores = [fRenderFinishedSemaphore]
          , swapchains          = [siSwapchain]

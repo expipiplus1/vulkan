@@ -30,6 +30,7 @@ import           UnliftIO.Foreign               ( allocaBytes
                                                 )
 import           UnliftIO.IORef
 import           UnliftIO.MVar
+import           Utils
 
 import           Vulkan.CStruct.Extends         ( SomeStruct(..) )
 import           Vulkan.Core10                 as Vk
@@ -45,11 +46,14 @@ import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Zero
 
+import qualified Data.ByteString               as BS
 import           Frame
+import           HasVulkan
 import           Init
 import           Julia
 import           MonadVulkan
 import           Pipeline
+import qualified SDL.Video.Vulkan              as SDL
 import           Swapchain
 import           Window
 
@@ -68,9 +72,9 @@ main = prettyError . runResourceT $ do
       initHeight = 720
 
   -- Create everything up to the device
-  (windowExts, sdlWindow) <- createWindow "Haskell ❤️ Vulkan"
-                                          initWidth
-                                          initHeight
+  sdlWindow  <- createWindow "Haskell ❤️ Vulkan" initWidth initHeight
+  windowExts <-
+    liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions sdlWindow
   inst    <- createInstance windowExts
   surface <- createSurface inst sdlWindow
   DeviceParams devName phys dev graphicsQueue graphicsQueueFamilyIndex <-
@@ -171,7 +175,7 @@ initialFrame window surfaceM windowSize = do
 
 -- | Process a single frame, returning Nothing if we should exit.
 frame :: Frame -> V (Maybe Frame)
-frame f = shouldQuit >>= \case
+frame f = shouldQuit (TimeLimit 6) >>= \case
   True  -> pure Nothing
   False -> do
     -- Wait for the second previous frame to have finished presenting so the
@@ -253,7 +257,7 @@ draw = do
                                        }
 
   -- The command buffer will be freed when the frame is retired
-  [commandBuffer] <- allocateCommandBuffers' commandBufferAllocateInfo
+  (_, [commandBuffer]) <- withCommandBuffers' commandBufferAllocateInfo
 
   updateDescriptorSets'
     [ SomeStruct zero
@@ -390,34 +394,8 @@ draw = do
   pure (renderFence, ())
 
 ----------------------------------------------------------------
--- SDL helpers
-----------------------------------------------------------------
-
--- | Consumes all events in the queue and reports if any of them instruct the
--- application to quit. Waits for at least one event to arrive.
-shouldQuit :: MonadIO m => m Bool
-shouldQuit = any isQuitEvent <$> awaitSDLEvents
- where
-  isQuitEvent :: SDL.Event -> Bool
-  isQuitEvent = \case
-    (SDL.Event _ SDL.QuitEvent) -> True
-    SDL.Event _ (SDL.KeyboardEvent (SDL.KeyboardEventData _ SDL.Released False (SDL.Keysym _ code _)))
-      | code == SDL.KeycodeQ || code == SDL.KeycodeEscape
-      -> True
-    _ -> False
-
--- | Wait for the next SDL event and slurp in others that have become available
-awaitSDLEvents :: MonadIO m => m [SDL.Event]
-awaitSDLEvents = (:) <$> SDL.waitEvent <*> SDL.pollEvents
-
-----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
-
-loopJust :: Monad m => (a -> m (Maybe a)) -> a -> m ()
-loopJust f x = f x >>= \case
-  Nothing -> pure ()
-  Just x' -> loopJust f x'
 
 -- | Print a string if something is slow
 _time :: MonadIO m => String -> m a -> m a

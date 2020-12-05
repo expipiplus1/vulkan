@@ -8,6 +8,7 @@ import           Data.Bits
 import           Data.Coerce                    ( coerce )
 import           Data.Vector                    ( Vector )
 import           Foreign.Storable               ( Storable(poke, sizeOf) )
+import           HasVulkan
 import           MonadVulkan
 import           Scene
 import           UnliftIO.Foreign               ( castPtr )
@@ -227,7 +228,9 @@ oneShotComputeCommands cmds = do
   --
   -- Record and kick off the build commands
   --
-  useCommandBuffer' commandBuffer zero cmds
+  useCommandBuffer' commandBuffer
+                    zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+                    cmds
   (fenceKey, fence) <- withFence' zero
   queueSubmit
     graphicsQueue

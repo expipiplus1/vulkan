@@ -2,12 +2,14 @@ module Window
   ( withSDL
   , createWindow
   , createSurface
+  , RefreshLimit(..)
   , shouldQuit
   ) where
 
 import           Control.Monad                  ( void )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
+import           Data.Maybe                     ( maybeToList )
 import           Data.Text                      ( Text )
 import           Foreign.Ptr                    ( castPtr )
 import qualified SDL
@@ -57,10 +59,15 @@ createSurface inst window = allocate
 -- SDL helpers
 ----------------------------------------------------------------
 
+data RefreshLimit
+  = NoLimit
+  | TimeLimit Int -- ^ Time in ms
+  | EventLimit -- ^ Indefinite timeout
+
 -- | Consumes all events in the queue and reports if any of them instruct the
 -- application to quit.
-shouldQuit :: MonadIO m => m Bool
-shouldQuit = any isQuitEvent <$> SDL.pollEvents
+shouldQuit :: MonadIO m => RefreshLimit -> m Bool
+shouldQuit limit = any isQuitEvent <$> awaitSDLEvents limit
  where
   isQuitEvent :: SDL.Event -> Bool
   isQuitEvent = \case
@@ -69,3 +76,15 @@ shouldQuit = any isQuitEvent <$> SDL.pollEvents
       | code == SDL.KeycodeQ || code == SDL.KeycodeEscape
       -> True
     _ -> False
+
+-- | Return the SDL events which have become available
+--
+-- Optionally wait for a timeout or forever.
+awaitSDLEvents :: MonadIO m => RefreshLimit -> m [SDL.Event]
+awaitSDLEvents limit = do
+  first <- case limit of
+    NoLimit      -> pure Nothing
+    TimeLimit ms -> SDL.waitEventTimeout (fromIntegral ms)
+    EventLimit   -> Just <$> SDL.waitEvent
+  next <- SDL.pollEvents
+  pure $ maybeToList first <> next

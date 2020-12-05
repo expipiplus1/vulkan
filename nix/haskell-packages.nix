@@ -78,27 +78,18 @@ let
         ver = "0.3.0.0";
         sha256 = "0h9v6k1651acsqs64mkidqrflld7ghhbiir7z9f0wm8vrqwc6wyp";
       } { };
-      derive-storable-plugin = appendPatch (doJailbreak
-        (self.callHackageDirect {
-          pkg = "derive-storable-plugin";
-          ver = "0.2.3.1";
-          sha256 = "0iibzdjlx2v5caib41a3i5l67dplwwhp8sys3hfc6m3lyhghzg16";
-        } { })) (pkgs.fetchpatch {
-          url =
-            "https://github.com/mkloczko/derive-storable-plugin/pull/4.patch";
-          name = "pure.patch";
-          sha256 = "11fm91062slgh25na3pmjpf2sn9z1gg9lg5jr4nv2q8a2bzg32zs";
-        });
-      nothunks = doJailbreak (overrideSrc super.nothunks {
-        src = pkgs.fetchFromGitHub {
-          owner = "input-output-hk";
-          repo = "nothunks";
-          rev = "bb3e23bbf143aa8e65049bd6d4b3554eeb934b90";
-          sha256 = "1p60w89ywy1wzjmy07gv20fwrkp88bg9kcrfxvc08nrgh9p4yz4f";
-        };
-      });
+      derive-storable-plugin = self.callHackageDirect {
+        pkg = "derive-storable-plugin";
+        ver = "0.2.3.3";
+        sha256 = "07ikj9l5pzrh7khp0pr6pjgpygni12svfm14x0csvw0hgbsb0mnj";
+      } { };
+      nothunks = doJailbreak (self.callHackageDirect {
+        pkg = "nothunks";
+        ver = "0.1.2";
+        sha256 = "1xj5xvy3x3vixkj84cwsjl3m06z2zfszbcpxbz1j1ca83ha2gb7i";
+      } { });
       # profiling
-      eventlog2html = doJailbreak (appendPatch
+      eventlog2html = markUnbroken (doJailbreak (appendPatch
         (overrideSrc super.eventlog2html {
           src = pkgs.fetchFromGitHub {
             owner = "BinderDavid";
@@ -111,15 +102,15 @@ let
           url = "https://github.com/mpickering/eventlog2html/pull/129.patch";
           name = "vega.patch";
           sha256 = "1lnbdscngb5g5b6ys0xhp7izdfkz6j3llnpirbfxck3sy3ssxph5";
-        }));
-      hs-speedscope = overrideSrc super.hs-speedscope {
+        })));
+      hs-speedscope = markUnbroken (overrideSrc super.hs-speedscope {
         src = pkgs.fetchFromGitHub {
           owner = "mpickering";
           repo = "hs-speedscope";
           rev = "9e28b303993b79f3d943ccb89b148cb9a4fb6ca5";
           sha256 = "105zk9w5lpn0m866m8y0lhrw2x6kym2f2ryjc56zxqzfr9b76jdn";
         };
-      };
+      });
       hvega = doJailbreak (self.callHackageDirect {
         pkg = "hvega";
         ver = "0.6.0.0";

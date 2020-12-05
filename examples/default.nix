@@ -18,6 +18,7 @@ in if forShell then
         haskellPackages.opentelemetry-extra
         pkgs.tracy
         pkgs.gdb
+        pkgs.linuxPackages.perf
       ];
     withHoogle = hoogle;
   } // pkgs.lib.optionalAttrs withSwiftshader {

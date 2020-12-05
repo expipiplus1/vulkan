@@ -6,12 +6,20 @@ module MonadVulkan where
 import           AutoApply
 import           Control.Concurrent.Chan.Unagi
 import           Control.Concurrent.MVar
-import           Control.Monad                  ( void )
+import           Control.Monad                  ( replicateM
+                                                , void
+                                                )
 import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
+import           Data.ByteString                ( ByteString )
+import           Data.List                      ( isSuffixOf )
+import           HasVulkan
+import           Language.Haskell.TH
 import           Language.Haskell.TH.Syntax     ( addTopDecls )
+import           OpenTelemetry.Eventlog         ( beginSpan
+                                                , endSpan
+                                                )
 import           UnliftIO                       ( Async
                                                 , MonadUnliftIO(withRunInIO)
                                                 , asyncWithUnmask
@@ -19,6 +27,7 @@ import           UnliftIO                       ( Async
                                                 , toIO
                                                 , uninterruptibleCancel
                                                 )
+import           UnliftIO.Exception             ( bracket )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -62,26 +71,12 @@ newtype CmdT m a = CmdT { unCmdT :: ReaderT CommandBuffer m a }
 instance MonadUnliftIO m => MonadUnliftIO (CmdT m) where
   withRunInIO a = CmdT $ withRunInIO (\r -> a (r . unCmdT))
 
-class HasVulkan m where
-  getInstance :: m Instance
-  getGraphicsQueue :: m Queue
-  getPhysicalDevice :: m PhysicalDevice
-  getDevice :: m Device
-  getAllocator :: m Allocator
-
 instance HasVulkan V where
   getInstance       = V (asks ghInstance)
   getGraphicsQueue  = V (asks (snd . graphicsQueue . ghQueues))
   getPhysicalDevice = V (asks ghPhysicalDevice)
   getDevice         = V (asks ghDevice)
   getAllocator      = V (asks ghAllocator)
-
-instance (Monad m, HasVulkan m) => HasVulkan (ReaderT r m) where
-  getInstance       = lift getInstance
-  getGraphicsQueue  = lift getGraphicsQueue
-  getPhysicalDevice = lift getPhysicalDevice
-  getDevice         = lift getDevice
-  getAllocator      = lift getAllocator
 
 getGraphicsQueueFamilyIndex :: V QueueFamilyIndex
 getGraphicsQueueFamilyIndex = V (asks (fst . graphicsQueue . ghQueues))
@@ -91,7 +86,11 @@ getCommandBuffer = CmdT ask
 
 useCommandBuffer'
   :: forall a m r
-   . (Extendss CommandBufferBeginInfo a, PokeChain a, MonadIO m)
+   . ( Extendss CommandBufferBeginInfo a
+     , PokeChain a
+     , MonadIO m
+     , MonadUnliftIO m
+     )
   => CommandBuffer
   -> CommandBufferBeginInfo a
   -> CmdT m r
@@ -164,7 +163,7 @@ spawn a = do
   -- remove it at the end of the async action when the thread is going to die
   -- anyway.
   --
-  -- Mask this so there's no chance
+  -- Mask this so there's no chance we're inturrupted before writing the mvar.
   kv  <- liftIO newEmptyMVar
   UnliftIO.mask $ \_ -> do
     (k, r) <- allocate
@@ -178,12 +177,13 @@ spawn a = do
 spawn_ :: V () -> V ()
 spawn_ = void . spawn
 
+-- Profiling span
+withSpan_ :: MonadUnliftIO m => ByteString -> m c -> m c
+withSpan_ n x = bracket (beginSpan n) endSpan (const x)
+
 ----------------------------------------------------------------
 -- Commands
 ----------------------------------------------------------------
-
-noAllocationCallbacks :: Maybe AllocationCallbacks
-noAllocationCallbacks = Nothing
 
 --
 -- Wrap a bunch of Vulkan commands so that they automatically pull global
@@ -198,7 +198,6 @@ do
         ]
       commands =
         [ 'acquireNextImageKHRSafe
-        , 'allocateCommandBuffers
         , 'allocateDescriptorSets
         , 'cmdBindDescriptorSets
         , 'cmdBindPipeline
@@ -238,8 +237,8 @@ do
         , 'withSwapchainKHR
         ]
   addTopDecls =<< [d|checkCommands = $(checkCommandsExp commands)|]
-  autoapplyDecs
-    (<> "'")
+  ds <- autoapplyDecs
+    (<> "''")
     [ 'getDevice
     , 'getPhysicalDevice
     , 'getInstance
@@ -251,3 +250,22 @@ do
     -- put it in the unifying group.
     ['allocate]
     (vmaCommands <> commands)
+  -- TODO: neaten this!
+  ds' <- concat <$> sequenceA [ case d of
+                FunD n [Clause ps (NormalB o) _ ]
+                  | b <- nameBase n
+                  , "''" `isSuffixOf` b
+                  -> do
+                    let n' = mkName (init b)
+                        vkName = init (init b)
+                        eArity = \case
+                          LamE ls e -> length ls + eArity e
+                          _ -> 0
+                        arity = length ps + eArity o
+                    vs <- replicateM arity (newName "x")
+                    e <- [|withSpan_ $(litE (StringL vkName)) $(foldl appE (varE n) (varE <$> vs))|]
+                    pure [FunD n' [Clause (VarP <$> vs) (NormalB e) []]]
+                _ -> pure [d]
+            | d <- ds
+            ]
+  pure (ds <> ds')

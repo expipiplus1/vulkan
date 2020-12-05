@@ -1,3 +1,6 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE RecursiveDo #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
@@ -11,18 +14,24 @@ import           Control.Concurrent.MVar        ( newEmptyMVar
                                                 )
 import           Control.Monad                  ( void )
 import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
 import           Data.Word
+import           GHC.Generics                   ( Generic )
+import           HasVulkan
+import           InstrumentDecs
+import           Language.Haskell.TH
 import           Language.Haskell.TH.Syntax     ( addTopDecls )
+import           NoThunks.Class
+import           Orphans                        ( )
 import           UnliftIO                       ( Async
                                                 , MonadUnliftIO(withRunInIO)
                                                 , mask
                                                 , toIO
+                                                )
+import           UnliftIO.Async                 ( asyncWithUnmask
                                                 , uninterruptibleCancel
                                                 )
-import           UnliftIO.Async                 ( asyncWithUnmask )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -71,26 +80,12 @@ newtype CmdT m a = CmdT { unCmdT :: ReaderT CommandBuffer m a }
 instance MonadUnliftIO m => MonadUnliftIO (CmdT m) where
   withRunInIO a = CmdT $ withRunInIO (\r -> a (r . unCmdT))
 
-class HasVulkan m where
-  getInstance :: m Instance
-  getGraphicsQueue :: m Queue
-  getPhysicalDevice :: m PhysicalDevice
-  getDevice :: m Device
-  getAllocator :: m Allocator
-
 instance HasVulkan V where
   getInstance       = V (asks ghInstance)
   getGraphicsQueue  = V (asks (snd . graphicsQueue . ghQueues))
   getPhysicalDevice = V (asks ghPhysicalDevice)
   getDevice         = V (asks ghDevice)
   getAllocator      = V (asks ghAllocator)
-
-instance (Monad m, HasVulkan m) => HasVulkan (ReaderT r m) where
-  getInstance       = lift getInstance
-  getGraphicsQueue  = lift getGraphicsQueue
-  getPhysicalDevice = lift getPhysicalDevice
-  getDevice         = lift getDevice
-  getAllocator      = lift getAllocator
 
 getGraphicsQueueFamilyIndex :: V QueueFamilyIndex
 getGraphicsQueueFamilyIndex = V (asks (fst . graphicsQueue . ghQueues))
@@ -168,6 +163,7 @@ data RecycledResources = RecycledResources
     -- ^ A descriptor set for ray tracing
   , fCameraMatricesOffset    :: Word64
   }
+  deriving (Generic, NoThunks)
 
 -- | The shape of all the queues we use for our program, parameterized over the
 -- queue type so we can use it with 'Vulkan.Utils.QueueAssignment.assignQueues'
@@ -187,7 +183,7 @@ spawn a = do
   -- remove it at the end of the async action when the thread is going to die
   -- anyway.
   --
-  -- Mask this so there's no chance
+  -- Mask this so there's no chance we're inturrupted before writing the mvar.
   kv  <- liftIO newEmptyMVar
   UnliftIO.mask $ \_ -> do
     (k, r) <- allocate
@@ -204,12 +200,6 @@ spawn_ = void . spawn
 ----------------------------------------------------------------
 -- Commands
 ----------------------------------------------------------------
-
-noAllocationCallbacks :: Maybe AllocationCallbacks
-noAllocationCallbacks = Nothing
-
-noPipelineCache :: PipelineCache
-noPipelineCache = NULL_HANDLE
 
 --
 -- Wrap a bunch of Vulkan commands so that they automatically pull global
@@ -251,8 +241,10 @@ do
         , 'getPhysicalDeviceSurfaceFormatsKHR
         , 'getPhysicalDeviceSurfacePresentModesKHR
         , 'getRayTracingShaderGroupHandlesKHR
+        , 'getSemaphoreCounterValue
         , 'getSwapchainImagesKHR
         , 'nameObject
+        , 'queuePresentKHR
         , 'resetCommandPool
         , 'updateDescriptorSets
         , 'waitForFences
@@ -278,7 +270,7 @@ do
         , 'withSwapchainKHR
         ]
   addTopDecls =<< [d|checkCommands = $(checkCommandsExp commands)|]
-  autoapplyDecs
+  ds <- autoapplyDecs
     (<> "'")
     [ 'getDevice
     , 'getPhysicalDevice
@@ -292,3 +284,4 @@ do
     -- put it in the unifying group.
     ['allocate]
     (vmaCommands <> commands)
+  instrumentDecs (Just . init . nameBase) ds

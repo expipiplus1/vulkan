@@ -2,7 +2,9 @@
 -- can be found in 'MonadFrame'
 module Frame where
 
-import           Control.Monad                  ( replicateM_ )
+import           Control.Monad                  ( replicateM_
+                                                , unless
+                                                )
 import           Control.Monad.IO.Class         ( MonadIO(liftIO) )
 import           Control.Monad.Trans.Reader     ( asks )
 import           Control.Monad.Trans.Resource   ( InternalState
@@ -10,16 +12,23 @@ import           Control.Monad.Trans.Resource   ( InternalState
                                                 , allocate
                                                 , closeInternalState
                                                 , createInternalState
+                                                , release
                                                 )
+import           Data.Foldable
 import           Data.IORef
+import           Data.Vector                    ( Vector )
+import qualified Data.Vector                   as V
 import           Data.Word
+import qualified Framebuffer
 import           MonadVulkan
 import qualified Pipeline
+import           RefCounted
+import           RenderPass
 import qualified SDL
 import           SDL                            ( Window )
 import qualified SDL.Video.Vulkan              as SDL
-import           Say
 import           Swapchain
+import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
@@ -40,6 +49,9 @@ data Frame = Frame
   , fSurface                     :: SurfaceKHR
   , fSwapchainResources          :: SwapchainResources
   , fPipeline                    :: Pipeline
+  , fRenderPass                  :: RenderPass
+  , fFramebuffers                :: Vector Framebuffer
+  , fReleaseFramebuffers         :: RefCounted
   , fRenderFinishedHostSemaphore :: Semaphore
     -- ^ A timeline semaphore which increments to fIndex when this frame is
     -- done, the host can wait on this semaphore
@@ -80,10 +92,16 @@ initialFrame fWindow fSurface = do
                                                  windowSize
                                                  fSurface
 
+  (_, fRenderPass) <- RenderPass.createRenderPass
+    (format (siSurfaceFormat (srInfo fSwapchainResources) :: SurfaceFormatKHR))
+
+  (fReleaseFramebuffers, fFramebuffers) <- createFramebuffers
+    fRenderPass
+    fSwapchainResources
+
   -- TODO: Cache this
   -- TODO: Recreate this if the swapchain format changes
-  (_releasePipeline, fPipeline) <- Pipeline.createPipeline
-    (srRenderPass fSwapchainResources)
+  (_releasePipeline, fPipeline) <- Pipeline.createPipeline fRenderPass
 
   -- Don't keep the release key, this semaphore lives for the lifetime of the
   -- application
@@ -104,20 +122,45 @@ initialFrame fWindow fSurface = do
 
   pure Frame { .. }
 
+createFramebuffers
+  :: RenderPass -> SwapchainResources -> V (RefCounted, Vector Framebuffer)
+createFramebuffers renderPass SwapchainResources {..} = do
+  let SwapchainInfo {..} = srInfo
+  -- Also create a framebuffer for each one
+  (framebufferKeys, framebuffers) <-
+    fmap V.unzip . V.forM srImageViews $ \imageView ->
+      Framebuffer.createFramebuffer renderPass imageView siImageExtent
+  releaseFramebuffers <- newRefCounted (traverse_ release framebufferKeys)
+  pure (releaseFramebuffers, framebuffers)
+
 -- | Create the next frame
 advanceFrame :: Bool -> Frame -> V Frame
 advanceFrame needsNewSwapchain f = do
   -- Wait for a prior frame to finish, then we can steal it's resources!
   nib                <- V $ asks ghRecycleNib
+  -- Handle mvar indefinite timeout exception here:
+  -- https://github.com/expipiplus1/vulkan/issues/236
   fRecycledResources <- liftIO $ nib >>= \case
-    Left block -> do
-      sayErr "CPU is running ahead"
-      block
-    Right rs -> pure rs
+    Left  block -> block
+    Right rs    -> pure rs
 
-  fSwapchainResources <- if needsNewSwapchain
-    then recreateSwapchainResources (fWindow f) (fSwapchainResources f)
-    else pure $ fSwapchainResources f
+  (fSwapchainResources, fFramebuffers, fReleaseFramebuffers) <-
+    if needsNewSwapchain
+      then do
+        swapchainResources <- recreateSwapchainResources
+          (fWindow f)
+          (fSwapchainResources f)
+        unless
+            (  siSurfaceFormat (srInfo swapchainResources)
+            == siSurfaceFormat (srInfo swapchainResources)
+            )
+          $ throwString "TODO: Handle swapchain changing formats"
+        releaseRefCounted (fReleaseFramebuffers f)
+        (releaseFramebuffers, framebuffers) <- createFramebuffers
+          (fRenderPass f)
+          swapchainResources
+        pure (swapchainResources, framebuffers, releaseFramebuffers)
+      else pure (fSwapchainResources f, fFramebuffers f, fReleaseFramebuffers f)
 
   -- The per-frame resource helpers need to be created fresh
   fGPUWork   <- liftIO $ newIORef mempty
@@ -127,6 +170,9 @@ advanceFrame needsNewSwapchain f = do
              , fWindow                      = fWindow f
              , fSurface                     = fSurface f
              , fSwapchainResources
+             , fFramebuffers
+             , fReleaseFramebuffers
+             , fRenderPass                  = fRenderPass f
              , fPipeline                    = fPipeline f
              , fRenderFinishedHostSemaphore = fRenderFinishedHostSemaphore f
              , fGPUWork

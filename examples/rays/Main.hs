@@ -23,12 +23,12 @@ main = runResourceT $ do
   win                        <- createWindow "Vulkan ⚡ Haskell" 1280 720
   inst                       <- Init.createInstance win
   (phys, pdi, dev, qs, surf) <- Init.createDevice inst win
-  vma   <- createVMA inst phys dev
+  vma                        <- createVMA inst phys dev
 
   --
   -- Go
   --
-  start <- SDL.time @Double
+  start                      <- SDL.time @Double
   let reportFPS f = do
         end <- SDL.time
         let frames = fIndex f
@@ -38,7 +38,7 @@ main = runResourceT $ do
   let rtInfo = pdiRTInfo pdi
 
   let frame f = do
-        shouldQuit >>= \case
+        shouldQuit NoLimit >>= \case
           True -> do
             reportFPS f
             pure Nothing

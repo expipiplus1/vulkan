@@ -1,5 +1,8 @@
 cradle:
   cabal:
+    - path: "./lib/"
+      component: "lib:vulkan-examples"
+
     - path: "./info/"
       component: "exe:info"
 

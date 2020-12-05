@@ -211,7 +211,7 @@ createRayGenerationShader = do
               normalize((viewInverse * vec4((projInverse * vec4(scr,1,1)).xyz, 0)).xyz);
             const uint  rayFlags = gl_RayFlagsOpaqueEXT;
             const float tMin     = 0.001;
-            const float tMax     = 10000.0;
+            const float tMax     = 10e10;
             const uint cullMask = 0xff;
             const uint sbtRecordOffset = 0;
             const uint sbtRecordStride = 1;

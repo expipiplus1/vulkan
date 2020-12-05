@@ -27,13 +27,14 @@ import           Frame
 import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 , IOException(IOError)
                                                 )
+import           HasVulkan
 import           MonadVulkan
 import           RefCounted
-import           Say                            ( sayErrString )
 import           UnliftIO
 import           Vulkan.CStruct.Extends         ( SomeStruct )
 import           Vulkan.Core10
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
+import           Vulkan.NamedType
 import           Vulkan.Zero                    ( Zero(zero) )
 
 newtype F a = F {unF :: ReaderT Frame V a }
@@ -63,20 +64,14 @@ runFrame f@Frame {..} (F r) = runReaderT r f `finally` do
       let waitInfo = zero { semaphores = V.fromList (fst <$> waits)
                           , values     = V.fromList (snd <$> waits)
                           }
-      waitSemaphoresSafe' waitInfo oneSecond >>= \case
-        TIMEOUT -> do
-          -- Give the frame one last chance to complete,
-          -- It could be that the program was suspended during the preceding
-          -- wait causing it to timeout, this will check if it actually
-          -- finished.
-          waitSemaphores' waitInfo 0 >>= \case
-            TIMEOUT -> timeoutError
-              "Timed out (1s) waiting for frame to finish on Device"
-            _ -> pure ()
+      waitTwice waitInfo oneSecond >>= \case
+        TIMEOUT ->
+          timeoutError "Timed out (1s) waiting for frame to finish on Device"
         _ -> pure ()
 
     -- Free resources wanted elsewhere now, all those in RecycledResources
-    resetCommandPool' (fCommandPool fRecycledResources) zero
+    resetCommandPool' (fCommandPool fRecycledResources)
+                      COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
 
     -- Signal we're done by making the recycled resources available
     bin <- V $ asks ghRecycleBin
@@ -130,9 +125,7 @@ allocateGlobal_ create destroy = allocateGlobal create (const destroy)
 
 -- | Free frame resources, the frame must have finished GPU execution first.
 retireFrame :: MonadIO m => Frame -> m ()
-retireFrame Frame {..} = do
-  sayErrString ("retiring frame " <> show fIndex)
-  release (fst fResources)
+retireFrame Frame {..} = release (fst fResources)
 
 -- | Make sure a reference is held until this frame is retired
 frameRefCount :: RefCounted -> F ()
@@ -153,6 +146,17 @@ asksFrame = F . asks
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
+
+-- | Wait for some semaphores, if the wait times out give the frame one last
+-- chance to complete with a zero timeout.
+--
+-- It could be that the program was suspended during the preceding
+-- wait causing it to timeout, this will check if it actually
+-- finished.
+waitTwice :: SemaphoreWaitInfo -> ("timeout" ::: Word64) -> V Result
+waitTwice waitInfo t = waitSemaphoresSafe' waitInfo t >>= \case
+  TIMEOUT -> waitSemaphores' waitInfo 0
+  r       -> pure r
 
 timeoutError :: MonadIO m => String -> m a
 timeoutError message =
