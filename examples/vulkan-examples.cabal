@@ -41,6 +41,7 @@ library
       Camera
       Framebuffer
       HasVulkan
+      InstrumentDecs
       Orphans
       RefCounted
       Swapchain
@@ -56,13 +57,16 @@ library
       VulkanMemoryAllocator
     , autoapply
     , base <5
+    , bytestring
     , derive-storable >=0.3
     , derive-storable-plugin >=0.2.3.1
     , lens
     , linear
     , nothunks >=0.1.2
+    , opentelemetry
     , resourcet >=1.2.4
     , sdl2 >=2.5.2.0
+    , template-haskell
     , text
     , transformers
     , unliftio
@@ -192,6 +196,7 @@ executable rays
   main-is: Main.hs
   other-modules:
       AccelerationStructure
+      Cleanup
       Frame
       Init
       MonadFrame

@@ -6,6 +6,7 @@ module Render
 
 import           Camera
 import           Control.Exception              ( throwIO )
+import           Control.Monad
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( MonadTrans(lift) )
 import           Data.Vector                    ( (!) )
@@ -13,6 +14,7 @@ import           Data.Word
 import           Foreign.Ptr                    ( plusPtr )
 import           Foreign.Storable
 import           Frame
+import           GHC.Clock                      ( getMonotonicTime )
 import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
                                                 , IOException(IOError)
                                                 )
@@ -31,6 +33,7 @@ import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import           Vulkan.Extensions.VK_KHR_swapchain
                                                as Swap
 import           Vulkan.Zero
+import           InstrumentDecs                       ( withSpan_ )
 
 renderFrame :: F ()
 renderFrame = withSpan_ "renderFrame" $ do
@@ -86,7 +89,8 @@ renderFrame = withSpan_ "renderFrame" $ do
     ]
     []
 
-  let spin       = axisAngle (V3 0 1 0) (realToFrac fIndex / 100)
+  time <- liftIO getMonotonicTime
+  let spin       = axisAngle (V3 0 1 0) (realToFrac time)
       forwards   = axisAngle (V3 0 0 1) 0
       camera     = Camera (V3 0 0 (-10)) (spin * forwards) (16 / 9) 1.4
       cameraMats = CameraMatrices
@@ -130,15 +134,13 @@ renderFrame = withSpan_ "renderFrame" $ do
                  }
         :&  ()
   graphicsQueue <- getGraphicsQueue
-  withSpan_ "submit" $ queueSubmitFrame graphicsQueue
-                                        [SomeStruct submitInfo]
-                                        fRenderFinishedHostSemaphore
-                                        fIndex
+
+  withSpan_ "submit" $ finalQueueSubmitFrame [SomeStruct submitInfo]
 
   -- Present the frame when the render is finished
   -- The return code here could be SUBOPTIMAL_KHR
   -- TODO, check for that
-  _ <- withSpan_ "present" $ queuePresentKHR
+  _ <- withSpan_ "present" $ queuePresentKHR'
     graphicsQueue
     zero { Swap.waitSemaphores = [fRenderFinishedSemaphore]
          , swapchains          = [siSwapchain]

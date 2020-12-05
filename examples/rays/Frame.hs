@@ -8,6 +8,7 @@ module Frame where
 
 import           AccelerationStructure
 import           Camera
+import           Cleanup
 import           Control.Arrow                  ( Arrow((&&&)) )
 import           Control.Monad                  ( zipWithM )
 import           Control.Monad.IO.Class         ( MonadIO(liftIO) )
@@ -27,6 +28,7 @@ import           Foreign.Ptr                    ( Ptr
                                                 )
 import           Foreign.Storable
 import           GHC.Generics
+import           InstrumentDecs                 ( withSpan_ )
 import           MonadVulkan
 import           NoThunks.Class
 import           Orphans                        ( )
@@ -72,14 +74,26 @@ data Frame = Frame
   , fRecycledResources           :: RecycledResources
     -- ^ Resources which can be used for this frame and are then passed on to a
     -- later frame.
-  , fGPUWork                     :: IORef [(Semaphore, Word64)]
-    -- ^ Timeline semaphores and corresponding wait values, updates as the
-    -- frame progresses.
+  , fCleaner                     :: Cleaner
+    -- ^ Handle to the thread doing cleanup after frames
+  , fWorkProgress                :: IORef WorkProgress
   , fResources                   :: (ReleaseKey, InternalState)
     -- ^ The 'InternalState' for tracking frame-local resources along with the
     -- key to release it in the global scope. This will be released when the
     -- frame is done with GPU work.
   }
+  deriving (Generic, NoThunks)
+
+data WorkProgress
+  = NoWorkSubmitted
+    -- ^ We've not submitted anything to the GPU yet and resources are free to
+    -- be recycled without waiting.
+  | SomeWorkSubmitted
+    -- ^ We have failed to finish submitting all work to the GPU and the frame
+    -- counter semaphore won't be incremented. This is exceptional.
+  | AllWorkSubmitted
+    -- ^ We submitted all work and the device will bump the frame counter
+    -- semaphore.
   deriving (Generic, NoThunks)
 
 initialRecycledResources :: Word64 -> DescriptorSet -> V RecycledResources
@@ -152,6 +166,8 @@ initialFrame fWindow fSurface = do
   (_, fRenderFinishedHostSemaphore) <- withSemaphore'
     (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_TIMELINE 0 :& ())
 
+  fCleaner <- newCleaner fIndex fRenderFinishedHostSemaphore
+
   -- Create the 'RecycledResources' necessary to kick off the rest of the
   -- concurrent frames and push them into the chan.
   let (ourDescriptorSet, otherDescriptorSets) =
@@ -163,10 +179,10 @@ initialFrame fWindow fSurface = do
   bin <- V $ asks ghRecycleBin
   liftIO $ for_ otherRecycledResources bin
 
-  fGPUWork   <- liftIO $ newIORef mempty
+  fWorkProgress <- liftIO $ newIORef NoWorkSubmitted
   -- Create the frame resource tracker at the global level so it's closed
   -- correctly on exception
-  fResources <- allocate createInternalState closeInternalState
+  fResources    <- allocate createInternalState closeInternalState
 
   pure Frame { .. }
 
@@ -184,8 +200,8 @@ advanceFrame needsNewSwapchain f = do
     else pure $ fSwapchainResources f
 
   -- The per-frame resource helpers need to be created fresh
-  fGPUWork   <- liftIO $ newIORef mempty
-  fResources <- allocate createInternalState closeInternalState
+  fWorkProgress <- liftIO $ newIORef NoWorkSubmitted
+  fResources    <- allocate createInternalState closeInternalState
 
   let f' = Frame
         { fIndex                       = succ (fIndex f)
@@ -201,7 +217,8 @@ advanceFrame needsNewSwapchain f = do
         , fCameraMatricesAllocation    = fCameraMatricesAllocation f
         , fCameraMatricesBufferData    = fCameraMatricesBufferData f
         , fRenderFinishedHostSemaphore = fRenderFinishedHostSemaphore f
-        , fGPUWork
+        , fCleaner                     = fCleaner f
+        , fWorkProgress
         , fResources
         , fRecycledResources
         }

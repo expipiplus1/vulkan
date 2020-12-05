@@ -25,6 +25,8 @@ import           Data.Vector                    ( Vector )
 import           Framebuffer
 import           GHC.Generics                   ( Generic )
 import           HasVulkan
+import           InstrumentDecs
+import           Language.Haskell.TH            ( nameBase )
 import           NoThunks.Class
 import           Orphans                        ( )
 import           RefCounted
@@ -40,7 +42,7 @@ import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Misc
 import           Vulkan.Zero
 
-autoapplyDecs
+instrumentDecs (Just . init . nameBase) =<< autoapplyDecs
   (<> "'")
   [ 'getDevice
   , 'getPhysicalDevice
@@ -81,7 +83,7 @@ data SwapchainResources = SwapchainResources
 
 -- | Allocate everything which depends on the swapchain
 allocSwapchainResources
-  :: (MonadResource m, HasVulkan m)
+  :: (MonadUnliftIO m, MonadResource m, HasVulkan m)
   => SwapchainKHR
   -- ^ Previous swapchain, can be NULL_HANDLE
   -> Extent2D
@@ -107,7 +109,7 @@ allocSwapchainResources oldSwapchain windowSize surface = do
   pure $ SwapchainResources info imageViews swapchainImages releaseResources
 
 recreateSwapchainResources
-  :: (MonadResource m, HasVulkan m)
+  :: (MonadUnliftIO m, MonadResource m, HasVulkan m)
   => SDL.Window
   -> SwapchainResources
   -- ^ The reference to these resources will be dropped
@@ -129,7 +131,7 @@ recreateSwapchainResources win oldResources = do
 
 -- | Create a swapchain from a 'SurfaceKHR'
 createSwapchain
-  :: (MonadResource m, HasVulkan m)
+  :: (MonadUnliftIO m, MonadResource m, HasVulkan m)
   => SwapchainKHR
   -- ^ Old swapchain, can be NULL_HANDLE
   -> Extent2D
@@ -235,7 +237,11 @@ selectSurfaceFormat = V.maximumBy (comparing surfaceFormatScore)
 
 -- | An ordered list of the present mode to be chosen for the swapchain.
 desiredPresentModes :: [PresentModeKHR]
-desiredPresentModes = [PRESENT_MODE_FIFO_KHR, PRESENT_MODE_IMMEDIATE_KHR]
+desiredPresentModes =
+  [ PRESENT_MODE_FIFO_RELAXED_KHR
+  , PRESENT_MODE_FIFO_KHR --  ^ This will always be present
+  , PRESENT_MODE_IMMEDIATE_KHR --  ^ Keep this here for easy swapping for testing
+  ]
 
 -- | The images in the swapchain must support these flags.
 requiredUsageFlags :: [ImageUsageFlagBits]

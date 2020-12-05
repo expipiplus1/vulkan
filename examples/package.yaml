@@ -17,13 +17,16 @@ library:
   - VulkanMemoryAllocator
   - autoapply
   - base <5
+  - bytestring
   - derive-storable >= 0.3
   - derive-storable-plugin >= 0.2.3.1
   - lens
   - linear
   - nothunks >= 0.1.2
+  - opentelemetry
   - resourcet >= 1.2.4
   - sdl2 >= 2.5.2.0
+  - template-haskell
   - text
   - transformers
   - unliftio

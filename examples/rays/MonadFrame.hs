@@ -1,17 +1,19 @@
+{-# LANGUAGE OverloadedLists #-}
 module MonadFrame
   ( F
   , runFrame
   , liftV
-  , queueSubmitFrame
   , allocateGlobal
   , allocateGlobal_
   , frameRefCount
   , askFrame
   , asksFrame
+  , finalQueueSubmitFrame
+  , queueSubmitFrame
   ) where
 
 
-import           Control.Monad
+import           Cleanup
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader     ( ReaderT
@@ -20,21 +22,16 @@ import           Control.Monad.Trans.Reader     ( ReaderT
                                                 , runReaderT
                                                 )
 import           Control.Monad.Trans.Resource
-import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
-import           Data.Word
 import           Frame
-import           GHC.IO.Exception               ( IOErrorType(TimeExpired)
-                                                , IOException(IOError)
-                                                )
 import           HasVulkan
+import           InstrumentDecs                 ( withSpan_ )
 import           MonadVulkan
 import           RefCounted
 import           UnliftIO
-import           Vulkan.CStruct.Extends         ( SomeStruct )
+import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
-import           Vulkan.NamedType
 import           Vulkan.Zero                    ( Zero(zero) )
 
 newtype F a = F {unF :: ReaderT Frame V a }
@@ -56,40 +53,52 @@ instance MonadUnliftIO F where
 -- which point the frame-specific resources are collected.
 runFrame :: Frame -> F a -> V a
 runFrame f@Frame {..} (F r) = runReaderT r f `finally` do
-  waits <- liftIO $ readIORef fGPUWork
-  let oneSecond = 1e9 -- one second
-  spawn_ $ withSpan_ "Retire" $ do
-    -- Wait for the GPU work to finish (if we have any)
-    unless (null waits) $ do
-      let waitInfo = zero { semaphores = V.fromList (fst <$> waits)
-                          , values     = V.fromList (snd <$> waits)
-                          }
-      withSpan_ "QueueWait" $ waitTwice waitInfo oneSecond >>= \case
-        TIMEOUT ->
-          timeoutError "Timed out (1s) waiting for frame to finish on Device"
-        _ -> pure ()
+  let recycleResources = do
+        withSpan_ "resetCommandPool"
+          $ resetCommandPool' (fCommandPool fRecycledResources) zero
+        pure fRecycledResources
+      finalRetire = withSpan_ "final retire" $ retireFrame f
+  liftIO (readIORef fWorkProgress) >>= \case
+    -- If we have no work on the GPU we can recycle things here and now
+    NoWorkSubmitted   -> runCleanup (recycleResources, finalRetire)
+    -- Otherwise we need to wait for whatever GPU work we submitted to
+    -- complete, make sure the frame semaphore is incremented and push the work
+    -- to the cleanup queue
+    SomeWorkSubmitted -> do
+      graphicsQueue <- getGraphicsQueue
+      queueSubmit
+        graphicsQueue
+        [ SomeStruct
+            (   zero { waitDstStageMask = [PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT]
+                     , signalSemaphores = [fRenderFinishedHostSemaphore]
+                     }
+            ::& zero { signalSemaphoreValues = [fIndex] }
+            :&  ()
+            )
+        ]
+        NULL_HANDLE
+      pushCleanup fCleaner recycleResources finalRetire
+    AllWorkSubmitted -> pushCleanup fCleaner recycleResources finalRetire
 
-    -- Free resources wanted elsewhere now, all those in RecycledResources
-    withSpan_ "resetCommandPool"
-      $ resetCommandPool' (fCommandPool fRecycledResources) zero
-
-    -- Signal we're done by making the recycled resources available
-    bin <- V $ asks ghRecycleBin
-    liftIO $ bin fRecycledResources
-
-    -- Destroy frame-specific resources at our leisure
-    withSpan_ "final retire" $ retireFrame f
-
--- | 'queueSubmit' and add wait for the 'Fence' before retiring the frame.
-queueSubmitFrame
-  :: Queue -> Vector (SomeStruct SubmitInfo) -> Semaphore -> Word64 -> F ()
-queueSubmitFrame q ss sem value = do
-  gpuWork <- asksFrame fGPUWork
-  -- Make sure we don't get interrupted between submitting the work and
-  -- recording the wait
+-- | Submit the specified work and set 'fWorkProgress' to 'SomeWorkSubmitted'
+queueSubmitFrame :: Vector (SomeStruct SubmitInfo) -> F ()
+queueSubmitFrame ss = do
+  workProgress <- asksFrame fWorkProgress
+  q            <- getGraphicsQueue
   mask $ \_ -> do
+    liftIO $ writeIORef workProgress SomeWorkSubmitted
     queueSubmit q ss NULL_HANDLE
-    liftIO $ atomicModifyIORef' gpuWork ((, ()) . ((sem, value) :))
+
+-- | Submit the specified work and set 'fWorkProgress' to 'AllWorkSubmitted'
+--
+-- A 'SubmitInfo' must increment 'fRenderFinishedHostSemaphore' to 'fIndex'
+finalQueueSubmitFrame :: Vector (SomeStruct SubmitInfo) -> F ()
+finalQueueSubmitFrame ss = do
+  workProgress <- asksFrame fWorkProgress
+  q            <- getGraphicsQueue
+  mask $ \_ -> do
+    liftIO $ writeIORef workProgress AllWorkSubmitted
+    queueSubmit q ss NULL_HANDLE
 
 liftV :: V a -> F a
 liftV = F . lift
@@ -142,22 +151,3 @@ askFrame = F ask
 -- | Get a function of the current 'Frame'
 asksFrame :: (Frame -> a) -> F a
 asksFrame = F . asks
-
-----------------------------------------------------------------
--- Utils
-----------------------------------------------------------------
-
--- | Wait for some semaphores, if the wait times out give the frame one last
--- chance to complete with a zero timeout.
---
--- It could be that the program was suspended during the preceding
--- wait causing it to timeout, this will check if it actually
--- finished.
-waitTwice :: SemaphoreWaitInfo -> ("timeout" ::: Word64) -> V Result
-waitTwice waitInfo t = waitSemaphoresSafe' waitInfo t >>= \case
-  TIMEOUT -> waitSemaphores' waitInfo 0
-  r       -> pure r
-
-timeoutError :: MonadIO m => String -> m a
-timeoutError message =
-  liftIO . throwIO $ IOError Nothing TimeExpired "" message Nothing Nothing
