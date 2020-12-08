@@ -289,7 +289,7 @@
 --
 -- == New or Modified Built-In Variables
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-launchid LaunchIDKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-launchid LaunchIdKHR>
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-launchsize LaunchSizeKHR>
 --
@@ -1250,16 +1250,8 @@ foreign import ccall
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR'
 --
--- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-02712# If @commandBuffer@ is a
---     protected command buffer, any resource written to by the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not be an unprotected resource
---
--- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-02713# If @commandBuffer@ is a
---     protected command buffer, pipeline stages other than the
---     framebuffer-space and compute stages in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point /must/ not write to any resource
+-- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-04625# @commandBuffer@ /must/
+--     not be a protected command buffer
 --
 -- -   #VUID-vkCmdTraceRaysKHR-width-03626# @width@ /must/ be less than or
 --     equal to
@@ -1385,6 +1377,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-pipeline-04619#
+--     @pipeline@ /must/ be a ray tracing pipeline
+--
 -- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-firstGroup-04050#
 --     @firstGroup@ /must/ be less than the number of shader groups in
 --     @pipeline@
@@ -1474,6 +1469,9 @@ foreign import ccall
 -- capture replay pipeline shader group handles
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-pipeline-04620#
+--     @pipeline@ /must/ be a ray tracing pipeline
 --
 -- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-firstGroup-04051#
 --     @firstGroup@ /must/ be less than the number of shader groups in
@@ -2260,6 +2258,9 @@ foreign import ccall
 -- specified shader as called from the specified shader group.
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkGetRayTracingShaderGroupStackSizeKHR-pipeline-04622#
+--     @pipeline@ /must/ be a ray tracing pipeline
 --
 -- -   #VUID-vkGetRayTracingShaderGroupStackSizeKHR-group-03608# The value
 --     of @group@ must be less than the number of shader groups in

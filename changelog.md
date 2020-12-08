@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [3.8.1] - 2020-12-08
+- Bump API version to v1.2.164
+
 - Add cabal flag trace-calls to enable calling traceEventIO before and after
   every Vulkan command
 

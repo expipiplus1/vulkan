@@ -11,6 +11,7 @@ module Vulkan.Core10.Enums.DescriptorType  (DescriptorType( DESCRIPTOR_TYPE_SAMP
                                                           , DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
                                                           , DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
                                                           , DESCRIPTOR_TYPE_INPUT_ATTACHMENT
+                                                          , DESCRIPTOR_TYPE_MUTABLE_VALVE
                                                           , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV
                                                           , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
                                                           , DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT
@@ -65,6 +66,9 @@ import Vulkan.Zero (Zero)
 --
 -- -   'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT' specifies an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>.
+--
+-- -   'DESCRIPTOR_TYPE_MUTABLE_VALVE' specifies a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-mutable descriptor of mutable type>.
 --
 -- When a descriptor set is updated via elements of
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet', members of
@@ -131,6 +135,7 @@ import Vulkan.Zero (Zero)
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateEntry',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewHandleInfoNVX',
+-- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeListVALVE',
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
 newtype DescriptorType = DescriptorType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -157,6 +162,8 @@ pattern DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC     = DescriptorType 8
 pattern DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC     = DescriptorType 9
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT"
 pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT           = DescriptorType 10
+-- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_MUTABLE_VALVE"
+pattern DESCRIPTOR_TYPE_MUTABLE_VALVE              = DescriptorType 1000351000
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV"
 pattern DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV  = DescriptorType 1000165000
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR"
@@ -174,6 +181,7 @@ pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT   = DescriptorType 1000138000
              DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
              DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC,
              DESCRIPTOR_TYPE_INPUT_ATTACHMENT,
+             DESCRIPTOR_TYPE_MUTABLE_VALVE,
              DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV,
              DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR,
              DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT :: DescriptorType #-}
@@ -197,6 +205,7 @@ showTableDescriptorType =
   , (DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC    , "UNIFORM_BUFFER_DYNAMIC")
   , (DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC    , "STORAGE_BUFFER_DYNAMIC")
   , (DESCRIPTOR_TYPE_INPUT_ATTACHMENT          , "INPUT_ATTACHMENT")
+  , (DESCRIPTOR_TYPE_MUTABLE_VALVE             , "MUTABLE_VALVE")
   , (DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV , "ACCELERATION_STRUCTURE_NV")
   , (DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR, "ACCELERATION_STRUCTURE_KHR")
   , (DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT  , "INLINE_UNIFORM_BLOCK_EXT")

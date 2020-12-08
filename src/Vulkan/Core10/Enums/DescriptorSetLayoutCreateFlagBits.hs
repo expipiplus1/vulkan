@@ -1,7 +1,8 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DescriptorSetLayoutCreateFlagBits"
 module Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits  ( DescriptorSetLayoutCreateFlags
-                                                              , DescriptorSetLayoutCreateFlagBits( DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
+                                                              , DescriptorSetLayoutCreateFlagBits( DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE
+                                                                                                 , DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
                                                                                                  , DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT
                                                                                                  , ..
                                                                                                  )
@@ -29,6 +30,17 @@ type DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlagBits
 newtype DescriptorSetLayoutCreateFlagBits = DescriptorSetLayoutCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+-- | 'DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE' specifies that
+-- descriptor sets using this layout /must/ be allocated from a descriptor
+-- pool created with the
+-- 'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
+-- bit set. Descriptor set layouts created with this bit have no
+-- expressable limit for maximum number of descriptors per-stage. Host
+-- descriptor sets are limited only by available host memory, but /may/ be
+-- limited for implementation specific reasons. Implementations /may/ limit
+-- the number of supported descriptors to UpdateAfterBind limits or
+-- non-UpdateAfterBind limits, whichever is larger.
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE   = DescriptorSetLayoutCreateFlagBits 0x00000004
 -- | 'DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR' specifies that
 -- descriptor sets /must/ not be allocated using this layout, and
 -- descriptors are instead pushed by
@@ -54,7 +66,8 @@ enumPrefixDescriptorSetLayoutCreateFlagBits = "DESCRIPTOR_SET_LAYOUT_CREATE_"
 
 showTableDescriptorSetLayoutCreateFlagBits :: [(DescriptorSetLayoutCreateFlagBits, String)]
 showTableDescriptorSetLayoutCreateFlagBits =
-  [ (DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR   , "PUSH_DESCRIPTOR_BIT_KHR")
+  [ (DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE  , "HOST_ONLY_POOL_BIT_VALVE")
+  , (DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR   , "PUSH_DESCRIPTOR_BIT_KHR")
   , (DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT, "UPDATE_AFTER_BIND_POOL_BIT")
   ]
 

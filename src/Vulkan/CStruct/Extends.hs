@@ -305,6 +305,8 @@ import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (MemoryType)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (MemoryWin32HandlePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_surface (MetalSurfaceCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (MultisamplePropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (MutableDescriptorTypeCreateInfoVALVE)
+import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (MutableDescriptorTypeListVALVE)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Offset2D)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Offset3D)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (PastPresentationTimingGOOGLE)
@@ -392,6 +394,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_mesh_shader (PhysicalDeviceMeshSha
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (PhysicalDeviceMutableDescriptorTypeFeaturesVALVE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pci_bus_info (PhysicalDevicePCIBusInfoPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryPropertiesKHR)
@@ -752,8 +755,10 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends ComputePipelineCreateInfo PipelineCreationFeedbackCreateInfoEXT = ()
   Extends ComputePipelineCreateInfo PipelineCompilerControlCreateInfoAMD = ()
   Extends DescriptorPoolCreateInfo DescriptorPoolInlineUniformBlockCreateInfoEXT = ()
+  Extends DescriptorPoolCreateInfo MutableDescriptorTypeCreateInfoVALVE = ()
   Extends DescriptorSetAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo = ()
   Extends DescriptorSetLayoutCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo = ()
+  Extends DescriptorSetLayoutCreateInfo MutableDescriptorTypeCreateInfoVALVE = ()
   Extends DescriptorSetLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport = ()
   Extends DeviceCreateInfo PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = ()
   Extends DeviceCreateInfo DevicePrivateDataCreateInfoEXT = ()
@@ -837,6 +842,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceFragmentShadingRateFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderTerminateInvocationFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = ()
+  Extends DeviceCreateInfo PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoEXT = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
@@ -965,6 +971,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShadingRateFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderTerminateInvocationFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1449,6 +1456,8 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_FEATURES_NV -> go @PhysicalDeviceFragmentShadingRateEnumsFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_PROPERTIES_NV -> go @PhysicalDeviceFragmentShadingRateEnumsPropertiesNV
   STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_ENUM_STATE_CREATE_INFO_NV -> go @PipelineFragmentShadingRateEnumStateCreateInfoNV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE -> go @PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
+  STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE -> go @MutableDescriptorTypeCreateInfoVALVE
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -1763,6 +1772,8 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceFragmentShadingRateEnumsFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceFragmentShadingRateEnumsPropertiesNV #-}
 {-# complete (::&) :: PipelineFragmentShadingRateEnumStateCreateInfoNV #-}
+{-# complete (::&) :: PhysicalDeviceMutableDescriptorTypeFeaturesVALVE #-}
+{-# complete (::&) :: MutableDescriptorTypeCreateInfoVALVE #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

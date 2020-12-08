@@ -1331,6 +1331,12 @@ foreign import ccall
 --     sum of the effective offset, as defined above, and the range of the
 --     binding /must/ be less than or equal to the size of the buffer
 --
+-- -   #VUID-vkCmdBindDescriptorSets-pDescriptorSets-04616# Each element of
+--     @pDescriptorSets@ /must/ not have been allocated from a
+--     'Vulkan.Core10.Handles.DescriptorPool' with the
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
+--     flag set
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdBindDescriptorSets-commandBuffer-parameter#
@@ -2094,6 +2100,13 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point /must/ not write to any resource
 --
+-- -   #VUID-vkCmdDraw-commandBuffer-04617# If any of the shader stages of
+--     the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
+--     point used by this command uses the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-RayQueryKHR RayQueryKHR>
+--     capability, then @commandBuffer@ /must/ not be a protected command
+--     buffer
+--
 -- -   #VUID-vkCmdDraw-None-04007# All vertex input bindings accessed via
 --     vertex input variables declared in the vertex shader entry point’s
 --     interface /must/ have either valid or
@@ -2609,6 +2622,13 @@ foreign import ccall
 --     framebuffer-space and compute stages in the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point /must/ not write to any resource
+--
+-- -   #VUID-vkCmdDrawIndexed-commandBuffer-04617# If any of the shader
+--     stages of the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline
+--     bind point used by this command uses the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-RayQueryKHR RayQueryKHR>
+--     capability, then @commandBuffer@ /must/ not be a protected command
+--     buffer
 --
 -- -   #VUID-vkCmdDrawIndexed-None-04007# All vertex input bindings
 --     accessed via vertex input variables declared in the vertex shader
@@ -4016,6 +4036,13 @@ foreign import ccall
 --     framebuffer-space and compute stages in the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point /must/ not write to any resource
+--
+-- -   #VUID-vkCmdDispatch-commandBuffer-04617# If any of the shader stages
+--     of the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
+--     point used by this command uses the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-RayQueryKHR RayQueryKHR>
+--     capability, then @commandBuffer@ /must/ not be a protected command
+--     buffer
 --
 -- -   #VUID-vkCmdDispatch-groupCountX-00386# @groupCountX@ /must/ be less
 --     than or equal to
@@ -9705,40 +9732,6 @@ foreign import ccall
 --     attachment to be written to, both attachments /must/ have had the
 --     'Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT'
 --     set
---
--- -   #VUID-vkCmdBeginRenderPass-pAttachments-04102# Each element of the
---     @pAttachments@ of @framebuffer@ that is referenced by any element of
---     the @pInputAttachments@ of any element of @pSubpasses@ of
---     @renderPass@ /must/ have
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
---     containing at least
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
---     or
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
---
--- -   #VUID-vkCmdBeginRenderPass-pAttachments-04103# Each element of the
---     @pAttachments@ of @framebuffer@ that is referenced by any element of
---     the @pColorAttachments@ of any element of @pSubpasses@ of
---     @renderPass@ /must/ have
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
---     containing
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
---
--- -   #VUID-vkCmdBeginRenderPass-pAttachments-04104# Each element of the
---     @pAttachments@ of @framebuffer@ that is referenced by any element of
---     the @pResolveAttachments@ of any element of @pSubpasses@ of
---     @renderPass@ /must/ have
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
---     containing
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
---
--- -   #VUID-vkCmdBeginRenderPass-pAttachments-04105# Each element of the
---     @pAttachments@ of @framebuffer@ that is referenced by any element of
---     the @pDepthStencilAttachment@ of any element of @pSubpasses@ of
---     @renderPass@ /must/ have
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
---     containing
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- == Valid Usage (Implicit)
 --

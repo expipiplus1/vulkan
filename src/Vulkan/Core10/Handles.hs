@@ -123,6 +123,7 @@ data PhysicalDevice_T
 --
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.PhysicalDeviceGroupProperties',
+-- 'Vulkan.Extensions.VK_NV_acquire_winrt_display.acquireWinrtDisplayNV',
 -- 'Vulkan.Extensions.VK_EXT_acquire_xlib_display.acquireXlibDisplayEXT',
 -- 'Vulkan.Core10.Device.createDevice',
 -- 'Vulkan.Extensions.VK_KHR_display.createDisplayModeKHR',
@@ -189,6 +190,7 @@ data PhysicalDevice_T
 -- 'Vulkan.Extensions.VK_KHR_xcb_surface.getPhysicalDeviceXcbPresentationSupportKHR',
 -- 'Vulkan.Extensions.VK_KHR_xlib_surface.getPhysicalDeviceXlibPresentationSupportKHR',
 -- 'Vulkan.Extensions.VK_EXT_acquire_xlib_display.getRandROutputDisplayEXT',
+-- 'Vulkan.Extensions.VK_NV_acquire_winrt_display.getWinrtDisplayNV',
 -- 'Vulkan.Extensions.VK_EXT_direct_mode_display.releaseDisplayEXT'
 data PhysicalDevice = PhysicalDevice
   { physicalDeviceHandle :: Ptr PhysicalDevice_T

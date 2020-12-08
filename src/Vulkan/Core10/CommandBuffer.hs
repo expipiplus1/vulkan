@@ -589,9 +589,6 @@ data CommandBufferAllocateInfo = CommandBufferAllocateInfo
     level :: CommandBufferLevel
   , -- | @commandBufferCount@ is the number of command buffers to allocate from
     -- the pool.
-    --
-    -- #VUID-VkCommandBufferAllocateInfo-commandBufferCount-00044#
-    -- @commandBufferCount@ /must/ be greater than @0@
     commandBufferCount :: Word32
   }
   deriving (Typeable, Eq)

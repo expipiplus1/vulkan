@@ -1297,6 +1297,16 @@ foreign import ccall
 -- include the app not being set as high-dpi aware, or if the physical
 -- device and monitor are not compatible in this mode.
 --
+-- When the 'Vulkan.Extensions.Handles.SurfaceKHR' in
+-- 'SwapchainCreateInfoKHR' is a display surface, then the
+-- 'Vulkan.Extensions.Handles.DisplayModeKHR' in display surface’s
+-- 'Vulkan.Extensions.VK_KHR_display.DisplaySurfaceCreateInfoKHR' is
+-- associated with a particular 'Vulkan.Extensions.Handles.DisplayKHR'.
+-- Swapchain creation /may/ fail if that
+-- 'Vulkan.Extensions.Handles.DisplayKHR' is not acquired by the
+-- application. In this scenario
+-- 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED' is returned.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCreateSwapchainKHR-device-parameter# @device@ /must/ be a

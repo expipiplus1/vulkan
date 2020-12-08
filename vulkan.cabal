@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.8
+version:        3.8.1
 synopsis:       Bindings to the Vulkan graphics API.
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -438,6 +438,7 @@ library
       Vulkan.Extensions.VK_MVK_ios_surface
       Vulkan.Extensions.VK_MVK_macos_surface
       Vulkan.Extensions.VK_NN_vi_surface
+      Vulkan.Extensions.VK_NV_acquire_winrt_display
       Vulkan.Extensions.VK_NV_clip_space_w_scaling
       Vulkan.Extensions.VK_NV_compute_shader_derivatives
       Vulkan.Extensions.VK_NV_cooperative_matrix
@@ -476,6 +477,7 @@ library
       Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Vulkan.Extensions.VK_QCOM_render_pass_transform
       Vulkan.Extensions.VK_QCOM_rotated_copy_commands
+      Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
       Vulkan.NamedType
       Vulkan.SPIRVRequirements
       Vulkan.Version

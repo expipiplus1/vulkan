@@ -8,6 +8,7 @@ module Bespoke
   , bespokeElements
   , bespokeSizes
   , bespokeOptionality
+  , bespokeLengths
   , bespokeSchemes
   , BespokeScheme(..)
   , structChainVar
@@ -464,19 +465,20 @@ difficultLengths =
                       <+> pretty uuidSizeDoc
                 tellImport uuidSizeDoc
                 throwErrDoc err cond
-              stmt (Just (ConT ''Ptr :@ ConT ''Word8)) (Just "versionData'") $ do
-                after assertCorrectLength
-                ValueDoc bs <- use bsRef
-                tellImportWithAll ''ContT
-                tellImport 'BS.unsafeUseAsCString
-                tellImport 'castPtr
-                tellImport ''Word8
-                tellImport ''CChar
-                pure
-                  .   ContTAction
-                  .   ValueDoc
-                  $ "fmap (castPtr @CChar @Word8) . ContT $ unsafeUseAsCString"
-                  <+> bs
+              stmt (Just (ConT ''Ptr :@ ConT ''Word8)) (Just "versionData'")
+                $ do
+                    after assertCorrectLength
+                    ValueDoc bs <- use bsRef
+                    tellImportWithAll ''ContT
+                    tellImport 'BS.unsafeUseAsCString
+                    tellImport 'castPtr
+                    tellImport ''Word8
+                    tellImport ''CChar
+                    pure
+                      .   ContTAction
+                      .   ValueDoc
+                      $ "fmap (castPtr @CChar @Word8) . ContT $ unsafeUseAsCString"
+                      <+> bs
             , csPeek       = \addrRef ->
               stmt (Just (ConT ''ByteString)) (Just "versionData") $ do
                 RenderParams {..} <- input
@@ -732,7 +734,16 @@ bespokeOptionality = \case
     _                  -> Nothing
   _ -> const Nothing
 
-bespokeElements :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
+bespokeLengths :: CName -> CName -> Maybe (Vector ParameterLength)
+bespokeLengths = \case
+  -- Work around https://github.com/KhronosGroup/Vulkan-Docs/issues/1414
+  "VkDescriptorSetAllocateInfo" -> \case
+    "pSetLayouts" -> Just (fromList [NamedLength "descriptorSetCount"])
+    _             -> Nothing
+  _ -> const Nothing
+
+bespokeElements
+  :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
 bespokeElements =
   fromList
     $  [ namedType
@@ -795,7 +806,7 @@ baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
 nullHandle :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 nullHandle = genRe "null handle" $ do
   RenderParams {..} <- input
-  let patName    = mkPatternName "VK_NULL_HANDLE"
+  let patName = mkPatternName "VK_NULL_HANDLE"
   tellExplicitModule (vulkanModule ["Core10", "APIConstants"])
   tellNotReexportable
   tellExport (EPat patName)
@@ -835,9 +846,9 @@ win32' = [voidData "SECURITY_ATTRIBUTES"]
 x11 :: HasRenderParams r => [BespokeAlias r]
 x11 =
   [ alias (APtr ''()) "Display"
-  , alias AWord64 "VisualID"
-  , alias AWord64 "Window"
-  , alias AWord64 "RROutput"
+  , alias AWord64     "VisualID"
+  , alias AWord64     "Window"
+  , alias AWord64     "RROutput"
   ]
 
 xcb1 :: HasRenderParams r => [Sem r RenderElement]
@@ -847,33 +858,22 @@ xcb2 :: HasRenderParams r => [BespokeAlias r]
 xcb2 = [alias AWord32 "xcb_visualid_t", alias AWord32 "xcb_window_t"]
 
 ggp :: HasRenderParams r => [BespokeAlias r]
-ggp =
-  [ alias AWord32 "GgpStreamDescriptor"
-  , alias AWord32 "GgpFrameToken"
-  ]
+ggp = [alias AWord32 "GgpStreamDescriptor", alias AWord32 "GgpFrameToken"]
 
 metal :: HasRenderParams r => [Sem r RenderElement]
-metal =
-  [ voidData "CAMetalLayer"
-  ]
+metal = [voidData "CAMetalLayer"]
 
 wayland :: HasRenderParams r => [Sem r RenderElement]
-wayland =
-  [ voidData "wl_display"
-  , voidData "wl_surface"
-  ]
+wayland = [voidData "wl_display", voidData "wl_surface"]
 
 zircon :: HasRenderParams r => [BespokeAlias r]
-zircon =
-  [alias AWord32 "zx_handle_t"]
+zircon = [alias AWord32 "zx_handle_t"]
 
 android :: HasRenderParams r => [Sem r RenderElement]
-android =
-  [voidData "AHardwareBuffer", voidData "ANativeWindow"]
+android = [voidData "AHardwareBuffer", voidData "ANativeWindow"]
 
 directfb :: HasRenderParams r => [Sem r RenderElement]
-directfb =
-  [voidData "IDirectFB", voidData "IDirectFBSurface"]
+directfb = [voidData "IDirectFB", voidData "IDirectFBSurface"]
 
 ----------------------------------------------------------------
 -- Helpers
@@ -883,9 +883,9 @@ data AType = AWord32 | AWord64 | APtr Name
 
 aTypeSize :: AType -> (Int, Int)
 aTypeSize = \case
-  AWord32  -> (4, 4)
-  AWord64  -> (8, 8)
-  APtr _ -> (8, 8)
+  AWord32 -> (4, 4)
+  AWord64 -> (8, 8)
+  APtr _  -> (8, 8)
 
 aTypeType :: AType -> H.Type
 aTypeType = \case

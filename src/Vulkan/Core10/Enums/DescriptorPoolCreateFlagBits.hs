@@ -2,6 +2,7 @@
 -- No documentation found for Chapter "DescriptorPoolCreateFlagBits"
 module Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits  ( DescriptorPoolCreateFlags
                                                          , DescriptorPoolCreateFlagBits( DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
+                                                                                       , DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE
                                                                                        , DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT
                                                                                        , ..
                                                                                        )
@@ -39,6 +40,17 @@ newtype DescriptorPoolCreateFlagBits = DescriptorPoolCreateFlagBits Flags
 -- 'Vulkan.Core10.DescriptorSet.allocateDescriptorSets' and
 -- 'Vulkan.Core10.DescriptorSet.resetDescriptorPool' are allowed.
 pattern DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = DescriptorPoolCreateFlagBits 0x00000001
+-- | 'DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE' specifies that this
+-- descriptor pool and the descriptor sets allocated from it reside
+-- entirely in host memory and cannot be bound. Descriptor sets allocated
+-- from this pool are partially exempt from the external synchronization
+-- requirement in
+-- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplateKHR'
+-- and 'Vulkan.Core10.DescriptorSet.updateDescriptorSets'. Descriptor sets
+-- and their descriptors can be updated concurrently in different threads,
+-- though the same descriptor /must/ not be updated concurrently by two
+-- threads.
+pattern DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE     = DescriptorPoolCreateFlagBits 0x00000004
 -- | 'DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT' specifies that descriptor
 -- sets allocated from this pool /can/ include bindings with the
 -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
@@ -58,6 +70,7 @@ enumPrefixDescriptorPoolCreateFlagBits = "DESCRIPTOR_POOL_CREATE_"
 showTableDescriptorPoolCreateFlagBits :: [(DescriptorPoolCreateFlagBits, String)]
 showTableDescriptorPoolCreateFlagBits =
   [ (DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT, "FREE_DESCRIPTOR_SET_BIT")
+  , (DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE    , "HOST_ONLY_BIT_VALVE")
   , (DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT  , "UPDATE_AFTER_BIND_BIT")
   ]
 

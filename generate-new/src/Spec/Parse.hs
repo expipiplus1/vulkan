@@ -740,8 +740,10 @@ parseStruct n = do
       Just o  -> pure o
       Nothing -> boolListAttr "optional" m
     let listAttrName = if hasAttr "altlen" m then "altlen" else "len"
-    smLengths <- lenListAttr listAttrName m
-    smValues  <- listAttr decode "values" m
+    smLengths <- case bespokeLengths sName smName of
+      Just o  -> pure o
+      Nothing -> lenListAttr listAttrName m
+    smValues <- listAttr decode "values" m
     let smOffset = ()
     pure StructMember { .. }
 
@@ -764,7 +766,7 @@ parseCommands es =
     cName         <- nameElem "command" proto
     cReturnType   <- parseCType (allNonCommentText proto)
     cParameters   <- fromList
-      <$> traverseV parseParameter (manyChildren "param" n)
+      <$> traverseV (parseParameter cName) (manyChildren "param" n)
     let cIsDynamic = True
         cCanBlock =
           "wait"
@@ -773,14 +775,18 @@ parseCommands es =
             `V.elem`      cSuccessCodes
     pure Command { .. }
 
-  parseParameter :: Node -> P Parameter
-  parseParameter m = do
+  parseParameter :: CName -> Node -> P Parameter
+  parseParameter cName m = do
     pName <- nameElem "parameter" m
     let typeString = allNonCommentText m
     pType       <- parseCType typeString
-    pIsOptional <- boolListAttr "optional" m
+    pIsOptional <- case bespokeOptionality cName pName of
+      Just o  -> pure o
+      Nothing -> boolListAttr "optional" m
     let listAttrName = if hasAttr "altlen" m then "altlen" else "len"
-    pLengths    <- lenListAttr listAttrName m
+    pLengths <- case bespokeLengths cName pName of
+      Just o  -> pure o
+      Nothing -> lenListAttr listAttrName m
     pure Parameter { .. }
 
 ----------------------------------------------------------------

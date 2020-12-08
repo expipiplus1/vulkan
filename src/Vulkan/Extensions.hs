@@ -187,6 +187,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NN_vi_surface
                           , module Vulkan.Extensions.VK_NVX_image_view_handle
                           , module Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
+                          , module Vulkan.Extensions.VK_NV_acquire_winrt_display
                           , module Vulkan.Extensions.VK_NV_clip_space_w_scaling
                           , module Vulkan.Extensions.VK_NV_compute_shader_derivatives
                           , module Vulkan.Extensions.VK_NV_cooperative_matrix
@@ -223,6 +224,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_QCOM_render_pass_store_ops
                           , module Vulkan.Extensions.VK_QCOM_render_pass_transform
                           , module Vulkan.Extensions.VK_QCOM_rotated_copy_commands
+                          , module Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
                           ) where
 import Vulkan.Extensions.Dependencies
 import Vulkan.Extensions.Handles
@@ -411,6 +413,7 @@ import Vulkan.Extensions.VK_MVK_macos_surface
 import Vulkan.Extensions.VK_NN_vi_surface
 import Vulkan.Extensions.VK_NVX_image_view_handle
 import Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
+import Vulkan.Extensions.VK_NV_acquire_winrt_display
 import Vulkan.Extensions.VK_NV_clip_space_w_scaling
 import Vulkan.Extensions.VK_NV_compute_shader_derivatives
 import Vulkan.Extensions.VK_NV_cooperative_matrix
@@ -447,4 +450,5 @@ import Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
 import Vulkan.Extensions.VK_QCOM_render_pass_store_ops
 import Vulkan.Extensions.VK_QCOM_render_pass_transform
 import Vulkan.Extensions.VK_QCOM_rotated_copy_commands
+import Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
 
