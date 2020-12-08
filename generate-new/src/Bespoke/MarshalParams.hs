@@ -146,6 +146,8 @@ isPassAsPointerType' = \case
              , "SECURITY_ATTRIBUTES"
              , "IDirectFB"
              , "IDirectFBSurface"
+             , "IUnknown"
+             , "jobject"
              -- TODO: remove these
              , "VkInstanceCreateInfo"
              , "VkAllocationCallbacks"

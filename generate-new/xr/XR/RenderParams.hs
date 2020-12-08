@@ -58,7 +58,7 @@ renderParams handles = r
                                        . lowerCaseFirst
                                        . dropXr
     , alwaysQualifiedNames           = mempty
-    , mkIdiomaticType                = \t ->
+    , mkIdiomaticType                =
       let
         dropVulkanModule = transformBi
           (\n -> if nameModule n == Just (T.unpack vulkanModulePrefix)
@@ -66,79 +66,64 @@ renderParams handles = r
             else n
           )
         xrIdiomatic =
-          t
-            `List.lookup` (  [ ( ConT (typeName $ mkTyName r "XrBool32")
-                               , IdiomaticType
-                                 (ConT ''Bool)
-                                 (do
-                                   tellImport (TermName "boolToBool32")
-                                   pure "boolToBool32"
-                                 )
-                                 (do
-                                   tellImport (TermName "bool32ToBool")
-                                   pure $ PureFunction "bool32ToBool"
-                                 )
-                               )
-                             ]
-                          <> [ ( ConT ''Ptr
-                                 :@ ConT (typeName $ mkEmptyDataName r name)
-                               , IdiomaticType
-                                 (ConT (typeName $ mkTyName r name))
-                                 (do
-                                   let h = mkDispatchableHandlePtrName r name
-                                   tellImportWithAll (mkTyName r name)
-                                   pure (pretty h)
-                                 )
-                                 (do
-                                   let c = mkConName r name name
-                                   tellImportWith (mkTyName r name) c
-                                   case name of
-                                     "XrInstance" -> do
-                                       tellImport
-                                         (TermName "initInstanceCmds")
-                                       pure
-                                         .   IOFunction
-                                         $   "(\\h ->"
-                                         <+> pretty c
-                                         <+> "h <$> initInstanceCmds h)"
-                                     _ -> do
-                                       CmdsDoc cmds <- useViaName "cmds"
-                                       pure
-                                         .   PureFunction
-                                         $   "(\\h ->"
-                                         <+> pretty c
-                                         <+> "h"
-                                         <+> cmds
-                                         <+> ")"
-                                 )
-                               )
-                             | name <- toList dispatchableHandleNames
-                             ]
-                          )
+          (`List.lookup` (  [ ( ConT (typeName $ mkTyName r "XrBool32")
+                              , IdiomaticType
+                                (ConT ''Bool)
+                                (do
+                                  tellImport (TermName "boolToBool32")
+                                  pure "boolToBool32"
+                                )
+                                (do
+                                  tellImport (TermName "bool32ToBool")
+                                  pure $ PureFunction "bool32ToBool"
+                                )
+                              )
+                            ]
+                         <> [ ( ConT ''Ptr
+                                :@ ConT (typeName $ mkEmptyDataName r name)
+                              , IdiomaticType
+                                (ConT (typeName $ mkTyName r name))
+                                (do
+                                  let h = mkDispatchableHandlePtrName r name
+                                  tellImportWithAll (mkTyName r name)
+                                  pure (pretty h)
+                                )
+                                (do
+                                  let c = mkConName r name name
+                                  tellImportWith (mkTyName r name) c
+                                  case name of
+                                    "XrInstance" -> do
+                                      tellImport (TermName "initInstanceCmds")
+                                      pure
+                                        .   IOFunction
+                                        $   "(\\h ->"
+                                        <+> pretty c
+                                        <+> "h <$> initInstanceCmds h)"
+                                    _ -> do
+                                      CmdsDoc cmds <- useViaName "cmds"
+                                      pure
+                                        .   PureFunction
+                                        $   "(\\h ->"
+                                        <+> pretty c
+                                        <+> "h"
+                                        <+> cmds
+                                        <+> ")"
+                                )
+                              )
+                            | name <- toList dispatchableHandleNames
+                            ]
+                         )
+          )
       in
-        xrIdiomatic <|> (mkIdiomaticType vulkanParams . dropVulkanModule $ t)
-    , mkHsTypeOverride               = \structStyle preserve t ->
-      case vulkanManifest structStyle vulkanParams t of
-        Just t -> Just $ do
-          t <- t
-          case preserve of
-            DoNotPreserve -> case mkIdiomaticType r t of
-              Just i  -> pure $ itType i
-              Nothing -> pure t
-            _ -> pure t
-        _ -> case preserve of
-          DoNotPreserve -> Nothing
-          _             -> case t of
-            TypeName n | Set.member n dispatchableHandleNames ->
-              Just . pure $ ConT ''Ptr :@ ConT
-                ( mkName
-                . ((T.unpack vulkanModulePrefix <> ".") <>)
-                . T.unpack
-                . unName
-                . mkEmptyDataName vulkanParams
-                $ n
-                )
-            _ -> Nothing
+        \t ->
+          xrIdiomatic t
+            <|> (mkIdiomaticType vulkanParams . dropVulkanModule $ t)
+    , mkHsTypeOverride = \_ preserve t -> pure <$> case preserve of
+      DoNotPreserve -> Nothing
+      _             -> case t of
+        TypeName n | Set.member n dispatchableHandleNames ->
+          Just $ ConT ''Ptr :@ ConT (typeName (mkEmptyDataName r n))
+        _ -> Nothing
     , unionDiscriminators            = mempty
     , successCodeType                = TypeName "XrResult"
     , isSuccessCodeReturned          = (/= "XR_SUCCESS")

@@ -724,6 +724,7 @@ bespokeSizes t =
         , ("XrDuration"               , (8, 8))
         , ("XrVersion"                , (8, 8))
           -- TODO: Can these be got elsewhere?
+        , ("VkResult"                 , (4, 4))
         , ("VkFormat"                 , (4, 4))
         , ("VkInstance"               , (8, 8))
         , ("VkPhysicalDevice"         , (8, 8))

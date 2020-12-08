@@ -1,7 +1,6 @@
 {-# language TemplateHaskellQuotes #-}
 {-# language QuasiQuotes #-}
-module Render.Dynamic
-  where
+module Render.Dynamic where
 
 import qualified Data.List.Extra               as List
 import           Data.Text.Prettyprint.Doc

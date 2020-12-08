@@ -96,6 +96,7 @@ During development unfinished bits not to forget are listed here.
 - [ ] Handle levels
 - [ ] Share Vulkan handles
 - [ ] Bespoke vulkan types should be just in sizes
+- [ ] Remove vulkan stuff from bespokeSizes
 - [ ] Fix runAsciidoctor
 - [ ] These are passed as pointers ,(see Bespoke.MarshalParams.isPassAsPointerType')
 
