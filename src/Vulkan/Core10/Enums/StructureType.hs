@@ -49,6 +49,8 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_MEMORY_BARRIER
                                                         , STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO
                                                         , STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO
+                                                        , STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE
                                                         , STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT
                                                         , STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR
@@ -710,6 +712,7 @@ import Vulkan.Zero (Zero)
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.MemoryWin32HandlePropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_metal_surface.MetalSurfaceCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT',
+-- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.PerformanceConfigurationAcquireInfoINTEL',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterDescriptionKHR',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterKHR',
@@ -790,6 +793,7 @@ import Vulkan.Zero (Zero)
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewFeatures',
 -- 'Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties',
+-- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesVALVE',
 -- 'Vulkan.Extensions.VK_EXT_pci_bus_info.PhysicalDevicePCIBusInfoPropertiesEXT',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryPropertiesKHR',
@@ -1075,6 +1079,10 @@ pattern STRUCTURE_TYPE_MEMORY_BARRIER                            = StructureType
 pattern STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO               = StructureType 47
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO"
 pattern STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO                 = StructureType 48
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE"
+pattern STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE = StructureType 1000351002
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE = StructureType 1000351000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT"
 pattern STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT          = StructureType 1000346000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT"
@@ -1968,6 +1976,8 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES       = StructureType
              STRUCTURE_TYPE_MEMORY_BARRIER,
              STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO,
              STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO,
+             STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE,
              STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT,
              STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR,
@@ -2448,21 +2458,25 @@ showTableStructureType =
   , (STRUCTURE_TYPE_MEMORY_BARRIER                           , "MEMORY_BARRIER")
   , (STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO              , "LOADER_INSTANCE_CREATE_INFO")
   , (STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO                , "LOADER_DEVICE_CREATE_INFO")
-  , (STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT         , "DIRECTFB_SURFACE_CREATE_INFO_EXT")
-  , (STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT, "PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT")
-  , (STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR                      , "IMAGE_RESOLVE_2_KHR")
-  , (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR                  , "BUFFER_IMAGE_COPY_2_KHR")
-  , (STRUCTURE_TYPE_IMAGE_BLIT_2_KHR                         , "IMAGE_BLIT_2_KHR")
-  , (STRUCTURE_TYPE_IMAGE_COPY_2_KHR                         , "IMAGE_COPY_2_KHR")
-  , (STRUCTURE_TYPE_BUFFER_COPY_2_KHR                        , "BUFFER_COPY_2_KHR")
-  , (STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2_KHR                 , "RESOLVE_IMAGE_INFO_2_KHR")
-  , (STRUCTURE_TYPE_BLIT_IMAGE_INFO_2_KHR                    , "BLIT_IMAGE_INFO_2_KHR")
-  , (STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2_KHR          , "COPY_IMAGE_TO_BUFFER_INFO_2_KHR")
-  , (STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2_KHR          , "COPY_BUFFER_TO_IMAGE_INFO_2_KHR")
-  , (STRUCTURE_TYPE_COPY_IMAGE_INFO_2_KHR                    , "COPY_IMAGE_INFO_2_KHR")
-  , (STRUCTURE_TYPE_COPY_BUFFER_INFO_2_KHR                   , "COPY_BUFFER_INFO_2_KHR")
+  , (STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE, "MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE")
+  , ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE
+    , "PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE"
+    )
+  , (STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT             , "DIRECTFB_SURFACE_CREATE_INFO_EXT")
+  , (STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT    , "PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT")
+  , (STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR                          , "IMAGE_RESOLVE_2_KHR")
+  , (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR                      , "BUFFER_IMAGE_COPY_2_KHR")
+  , (STRUCTURE_TYPE_IMAGE_BLIT_2_KHR                             , "IMAGE_BLIT_2_KHR")
+  , (STRUCTURE_TYPE_IMAGE_COPY_2_KHR                             , "IMAGE_COPY_2_KHR")
+  , (STRUCTURE_TYPE_BUFFER_COPY_2_KHR                            , "BUFFER_COPY_2_KHR")
+  , (STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2_KHR                     , "RESOLVE_IMAGE_INFO_2_KHR")
+  , (STRUCTURE_TYPE_BLIT_IMAGE_INFO_2_KHR                        , "BLIT_IMAGE_INFO_2_KHR")
+  , (STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2_KHR              , "COPY_IMAGE_TO_BUFFER_INFO_2_KHR")
+  , (STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2_KHR              , "COPY_BUFFER_TO_IMAGE_INFO_2_KHR")
+  , (STRUCTURE_TYPE_COPY_IMAGE_INFO_2_KHR                        , "COPY_IMAGE_INFO_2_KHR")
+  , (STRUCTURE_TYPE_COPY_BUFFER_INFO_2_KHR                       , "COPY_BUFFER_INFO_2_KHR")
   , (STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES_EXT, "PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES_EXT")
-  , (STRUCTURE_TYPE_COPY_COMMAND_TRANSFORM_INFO_QCOM         , "COPY_COMMAND_TRANSFORM_INFO_QCOM")
+  , (STRUCTURE_TYPE_COPY_COMMAND_TRANSFORM_INFO_QCOM             , "COPY_COMMAND_TRANSFORM_INFO_QCOM")
   , ( STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT
     , "PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT"
     )

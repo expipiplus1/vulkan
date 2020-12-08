@@ -406,6 +406,8 @@ data InstanceCmds = InstanceCmds
   , pVkReleaseDisplayEXT :: FunPtr (Ptr PhysicalDevice_T -> DisplayKHR -> IO Result)
   , pVkAcquireXlibDisplayEXT :: FunPtr (Ptr PhysicalDevice_T -> ("dpy" ::: Ptr Display) -> DisplayKHR -> IO Result)
   , pVkGetRandROutputDisplayEXT :: FunPtr (Ptr PhysicalDevice_T -> ("dpy" ::: Ptr Display) -> RROutput -> ("pDisplay" ::: Ptr DisplayKHR) -> IO Result)
+  , pVkAcquireWinrtDisplayNV :: FunPtr (Ptr PhysicalDevice_T -> DisplayKHR -> IO Result)
+  , pVkGetWinrtDisplayNV :: FunPtr (Ptr PhysicalDevice_T -> ("deviceRelativeId" ::: Word32) -> ("pDisplay" ::: Ptr DisplayKHR) -> IO Result)
   , pVkGetPhysicalDeviceSurfaceCapabilities2EXT :: FunPtr (Ptr PhysicalDevice_T -> SurfaceKHR -> ("pSurfaceCapabilities" ::: Ptr SurfaceCapabilities2EXT) -> IO Result)
   , pVkEnumeratePhysicalDeviceGroups :: FunPtr (Ptr Instance_T -> ("pPhysicalDeviceGroupCount" ::: Ptr Word32) -> ("pPhysicalDeviceGroupProperties" ::: Ptr PhysicalDeviceGroupProperties) -> IO Result)
   , pVkGetPhysicalDevicePresentRectanglesKHR :: FunPtr (Ptr PhysicalDevice_T -> SurfaceKHR -> ("pRectCount" ::: Ptr Word32) -> ("pRects" ::: Ptr Rect2D) -> IO Result)
@@ -447,7 +449,7 @@ instance Zero InstanceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 -- | A version of 'getInstanceProcAddr' which can be called
 -- with a null pointer for the instance.
@@ -522,6 +524,8 @@ initInstanceCmds handle = do
   vkReleaseDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkReleaseDisplayEXT"#)
   vkAcquireXlibDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkAcquireXlibDisplayEXT"#)
   vkGetRandROutputDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkGetRandROutputDisplayEXT"#)
+  vkAcquireWinrtDisplayNV <- getInstanceProcAddr' handle (Ptr "vkAcquireWinrtDisplayNV"#)
+  vkGetWinrtDisplayNV <- getInstanceProcAddr' handle (Ptr "vkGetWinrtDisplayNV"#)
   vkGetPhysicalDeviceSurfaceCapabilities2EXT <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceSurfaceCapabilities2EXT"#)
   vkEnumeratePhysicalDeviceGroups <- getFirstInstanceProcAddr [(Ptr "vkEnumeratePhysicalDeviceGroupsKHR"#), (Ptr "vkEnumeratePhysicalDeviceGroups"#)]
   vkGetPhysicalDevicePresentRectanglesKHR <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDevicePresentRectanglesKHR"#)
@@ -604,6 +608,8 @@ initInstanceCmds handle = do
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> DisplayKHR -> IO Result) vkReleaseDisplayEXT)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("dpy" ::: Ptr Display) -> DisplayKHR -> IO Result) vkAcquireXlibDisplayEXT)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("dpy" ::: Ptr Display) -> RROutput -> ("pDisplay" ::: Ptr DisplayKHR) -> IO Result) vkGetRandROutputDisplayEXT)
+    (castFunPtr @_ @(Ptr PhysicalDevice_T -> DisplayKHR -> IO Result) vkAcquireWinrtDisplayNV)
+    (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("deviceRelativeId" ::: Word32) -> ("pDisplay" ::: Ptr DisplayKHR) -> IO Result) vkGetWinrtDisplayNV)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> SurfaceKHR -> ("pSurfaceCapabilities" ::: Ptr SurfaceCapabilities2EXT) -> IO Result) vkGetPhysicalDeviceSurfaceCapabilities2EXT)
     (castFunPtr @_ @(Ptr Instance_T -> ("pPhysicalDeviceGroupCount" ::: Ptr Word32) -> ("pPhysicalDeviceGroupProperties" ::: Ptr PhysicalDeviceGroupProperties) -> IO Result) vkEnumeratePhysicalDeviceGroups)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> SurfaceKHR -> ("pRectCount" ::: Ptr Word32) -> ("pRects" ::: Ptr Rect2D) -> IO Result) vkGetPhysicalDevicePresentRectanglesKHR)

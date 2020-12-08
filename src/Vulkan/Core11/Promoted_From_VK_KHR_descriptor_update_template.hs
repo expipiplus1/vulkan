@@ -566,6 +566,12 @@ instance Zero DescriptorUpdateTemplateEntry where
 --     uses a descriptor set layout that was created with
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
 --
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-templateType-04615# If
+--     @templateType@ is
+--     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET',
+--     @descriptorSetLayout@ /must/ not contain a binding with type
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-sType-sType# @sType@

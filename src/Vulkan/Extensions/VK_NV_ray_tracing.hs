@@ -347,7 +347,7 @@
 --
 -- == New or Modified Built-In Variables
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-launchid LaunchIDNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-launchid LaunchIdNV>
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-launchsize LaunchSizeNV>
 --
@@ -816,6 +816,9 @@ compileDeferredNV :: forall io
                      -- 'Vulkan.Core10.Handles.Device' handle
                      Device
                   -> -- | @pipeline@ is the ray tracing pipeline object containing the shaders.
+                     --
+                     -- #VUID-vkCompileDeferredNV-pipeline-04621# @pipeline@ /must/ be a ray
+                     -- tracing pipeline
                      --
                      -- #VUID-vkCompileDeferredNV-pipeline-02237# @pipeline@ /must/ have been
                      -- created with
@@ -1818,16 +1821,8 @@ foreign import ccall
 --     referenced by this call /must/ have been queried from the currently
 --     bound ray tracing shader pipeline
 --
--- -   #VUID-vkCmdTraceRaysNV-commandBuffer-02712# If @commandBuffer@ is a
---     protected command buffer, any resource written to by the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not be an unprotected resource
---
--- -   #VUID-vkCmdTraceRaysNV-commandBuffer-02713# If @commandBuffer@ is a
---     protected command buffer, pipeline stages other than the
---     framebuffer-space and compute stages in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point /must/ not write to any resource
+-- -   #VUID-vkCmdTraceRaysNV-commandBuffer-04624# @commandBuffer@ /must/
+--     not be a protected command buffer
 --
 -- -   #VUID-vkCmdTraceRaysNV-maxRecursionDepth-03625# This command /must/
 --     not cause a trace ray instruction to be executed from a shader
@@ -3286,6 +3281,9 @@ instance Zero GeometryNV where
 --     'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV' then the
 --     @geometryType@ member of each geometry in @pGeometries@ /must/ be
 --     the same
+--
+-- -   #VUID-VkAccelerationStructureInfoNV-type-04623# @type@ /must/ not be
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR'
 --
 -- -   #VUID-VkAccelerationStructureInfoNV-flags-02592# If @flags@ has the
 --     'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV' bit set,

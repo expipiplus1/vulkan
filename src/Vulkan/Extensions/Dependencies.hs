@@ -136,6 +136,7 @@ import Vulkan.Extensions.VK_MVK_ios_surface (pattern MVK_IOS_SURFACE_EXTENSION_N
 import Vulkan.Extensions.VK_MVK_macos_surface (pattern MVK_MACOS_SURFACE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NN_vi_surface (pattern NN_VI_SURFACE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (pattern NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME)
+import Vulkan.Extensions.VK_NV_acquire_winrt_display (pattern NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_compute_shader_derivatives (pattern NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_cooperative_matrix (pattern NV_COOPERATIVE_MATRIX_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_corner_sampled_image (pattern NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME)
@@ -160,6 +161,7 @@ import Vulkan.Extensions.VK_NV_shading_rate_image (pattern NV_SHADING_RATE_IMAGE
 import Vulkan.Extensions.VK_NV_win32_keyed_mutex (pattern NV_WIN32_KEYED_MUTEX_EXTENSION_NAME)
 import Vulkan.Extensions.VK_QCOM_render_pass_transform (pattern QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME)
 import Vulkan.Extensions.VK_QCOM_rotated_copy_commands (pattern QCOM_rotated_copy_commands_EXTENSION_NAME)
+import Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (pattern VALVE_MUTABLE_DESCRIPTOR_TYPE_EXTENSION_NAME)
 -- | The set of other extensions required to use this extension
 extensionDependencies :: ("extensionName" ::: ByteString) -> [ByteString]
 extensionDependencies = \case
@@ -460,9 +462,13 @@ extensionDependencies = \case
   QCOM_rotated_copy_commands_EXTENSION_NAME ->
     [KHR_SWAPCHAIN_EXTENSION_NAME, KHR_COPY_COMMANDS_2_EXTENSION_NAME, KHR_SURFACE_EXTENSION_NAME]
   EXT_IMAGE_ROBUSTNESS_EXTENSION_NAME -> [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
-  EXT_4444_FORMATS_EXTENSION_NAME -> [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
+  EXT_4444_FORMATS_EXTENSION_NAME     -> [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
+  NV_ACQUIRE_WINRT_DISPLAY_EXTENSION_NAME ->
+    [EXT_DIRECT_MODE_DISPLAY_EXTENSION_NAME, KHR_DISPLAY_EXTENSION_NAME, KHR_SURFACE_EXTENSION_NAME]
   EXT_DIRECTFB_SURFACE_EXTENSION_NAME -> [KHR_SURFACE_EXTENSION_NAME]
-  _                               -> []
+  VALVE_MUTABLE_DESCRIPTOR_TYPE_EXTENSION_NAME ->
+    [KHR_MAINTENANCE3_EXTENSION_NAME, KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
+  _ -> []
 
 -- | The minimum required API version to use this extension
 extensionCoreRequirement :: ("extensionName" ::: ByteString) -> Word32

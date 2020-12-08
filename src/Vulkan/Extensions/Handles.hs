@@ -236,6 +236,7 @@ instance Show PrivateDataSlotEXT where
 --
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPlanePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR',
+-- 'Vulkan.Extensions.VK_NV_acquire_winrt_display.acquireWinrtDisplayNV',
 -- 'Vulkan.Extensions.VK_EXT_acquire_xlib_display.acquireXlibDisplayEXT',
 -- 'Vulkan.Extensions.VK_KHR_display.createDisplayModeKHR',
 -- 'Vulkan.Extensions.VK_EXT_display_control.displayPowerControlEXT',
@@ -243,6 +244,7 @@ instance Show PrivateDataSlotEXT where
 -- 'Vulkan.Extensions.VK_KHR_display.getDisplayModePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_display.getDisplayPlaneSupportedDisplaysKHR',
 -- 'Vulkan.Extensions.VK_EXT_acquire_xlib_display.getRandROutputDisplayEXT',
+-- 'Vulkan.Extensions.VK_NV_acquire_winrt_display.getWinrtDisplayNV',
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDisplayEventEXT',
 -- 'Vulkan.Extensions.VK_EXT_direct_mode_display.releaseDisplayEXT'
 newtype DisplayKHR = DisplayKHR Word64

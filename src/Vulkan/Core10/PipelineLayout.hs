@@ -665,6 +665,11 @@ instance Zero PushConstantRange where
 --     /must/ be less than or equal to
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxDescriptorSetSubsampledSamplers ::maxDescriptorSetSubsampledSamplers>
 --
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-04606# Any element of
+--     @pSetLayouts@ /must/ not have been created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
+--     bit set
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-sType-sType# @sType@ /must/ be
