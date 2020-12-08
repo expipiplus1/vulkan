@@ -91,6 +91,12 @@ The docbook documentation will be in `docs/docbook`.
 
 During development unfinished bits not to forget are listed here.
 
+### OpenXR
+
+- Handle levels
+- Share Vulkan handles
+- Bespoke vulkan types should be just in sizes
+
 ### 1.2.162
 
 - [x] optionalness on VkWriteDescriptorSetAccelerationStructureKHR->pAccelerationStructures

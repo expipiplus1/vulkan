@@ -1,13 +1,16 @@
 cradle:
   multi:
+
   - path: ./out
     config:
       cradle:
         none:
+
   - path: ./out-vma
     config:
       cradle:
         none:
+
   - path: ./
     config:
       cradle:
@@ -16,5 +19,7 @@ cradle:
           component: lib:generate-new
         - path: ./vk/
           component: exe:vk
+        - path: ./xr/
+          component: exe:xr
         - path: ./vma/
           component: exe:vma

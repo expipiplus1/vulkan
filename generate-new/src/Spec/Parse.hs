@@ -1,3 +1,5 @@
+{-# language AllowAmbiguousTypes #-}
+
 module Spec.Parse
   ( module Spec.Types
   , parseSpec
@@ -39,6 +41,7 @@ import           Xeno.DOM
 import           Bespoke
 import           CType
 import           CType.Size
+import           Data.ByteString.Extra          ( dropPrefix )
 import           Error
 import           Marshal.Marshalable            ( ParameterLength(..) )
 import           Spec.APIConstant
@@ -53,7 +56,7 @@ type P a
 
 parseSpec
   :: forall t r
-   . (KnownSpecType t, HasErr r)
+   . (KnownSpecFlavor t, HasErr r)
   => ByteString
   -- ^ The spec xml
   -> Sem r (Spec t, CType -> Maybe (Int, Int))
@@ -66,17 +69,20 @@ parseSpec bs = do
       typeNames <- allTypeNames types
       runInputConst typeNames $ do
         specHeaderVersion <- parseHeaderVersion types
-        specHandles       <- parseHandles types
-        specFuncPointers  <- parseFuncPointers types
-        unsizedStructs    <- parseStructs types
-        unsizedUnions     <- parseUnions types
-        specCommands      <- parseCommands . contents =<< oneChild "commands" n
-        emptyBitmasks     <- parseEmptyBitmasks types
-        nonEmptyEnums     <- parseEnums types . contents $ n
-        requires          <- allRequires NotDisabled . contents $ n
-        enumExtensions    <- parseEnumExtensions requires
-        constantAliases   <- parseConstantAliases (contents n)
-        typeAliases       <- parseTypeAliases
+        specAtoms         <- case sSpecFlavor @t of
+          SSpecVk -> pure mempty
+          SSpecXr -> parseAtoms types
+        specHandles      <- parseHandles @t types
+        specFuncPointers <- parseFuncPointers types
+        unsizedStructs   <- parseStructs types
+        unsizedUnions    <- parseUnions types
+        specCommands     <- parseCommands . contents =<< oneChild "commands" n
+        emptyBitmasks    <- parseEmptyBitmasks types
+        nonEmptyEnums    <- parseEnums types . contents $ n
+        requires         <- allRequires NotDisabled . contents $ n
+        enumExtensions   <- parseEnumExtensions requires
+        constantAliases  <- parseConstantAliases (contents n)
+        typeAliases      <- parseTypeAliases
           ["handle", "enum", "bitmask", "struct"]
           types
         enumAliases <-
@@ -86,7 +92,7 @@ parseSpec bs = do
           parseCommandAliases . contents =<< oneChild "commands" n
         let specEnums = appendEnumExtensions
               enumExtensions
-              (extraEnums <> emptyBitmasks <> nonEmptyEnums)
+              (extraEnums @t <> emptyBitmasks <> nonEmptyEnums)
             -- The spec can contain duplicate aliases (duplicated in different
             -- extensions), remove them here.
             specAliases =
@@ -100,23 +106,32 @@ parseSpec bs = do
           parseExtensions NotDisabled . contents =<< oneChild "extensions" n
         specDisabledExtensions <-
           parseExtensions OnlyDisabled . contents =<< oneChild "extensions" n
-        specAPIConstants       <- parseAPIConstants (contents n)
+        specAPIConstants <- parseAPIConstants (contents n)
         specExtensionConstants <- parseExtensionConstants (contents n)
-        specSPIRVExtensions    <-
-          parseSPIRVExtensions . contents =<< oneChild "spirvextensions" n
-        specSPIRVCapabilities <-
-          parseSPIRVCapabilities . contents =<< oneChild "spirvcapabilities" n
+        (specSPIRVExtensions, specSPIRVCapabilities) <- case sSpecFlavor @t of
+          SSpecVk ->
+            (,)
+              <$> (   parseSPIRVExtensions
+                  .   contents
+                  =<< oneChild "spirvextensions" n
+                  )
+              <*> (   parseSPIRVCapabilities
+                  .   contents
+                  =<< oneChild "spirvcapabilities" n
+                  )
+          SSpecXr -> pure mempty
         let
           sizeMap :: Map.Map CName (Int, Int)
           sizeMap =
             let
               baseMap =
                 Map.fromList
-                  $  bespokeSizes
+                  $  bespokeSizes (specFlavor @t)
                   <> [ (eName, (4, 4)) | Enum {..} <- V.toList specEnums ]
                   <> [ (n, (4, 4))
                      | Enum { eType = ABitmask n } <- V.toList specEnums
                      ]
+                  <> [ (atName, (8, 8)) | Atom {..} <- V.toList specAtoms ]
                   <> [ (hName, (8, 8)) | Handle {..} <- V.toList specHandles ]
                   <> [ (fpName, (8, 8))
                      | FuncPointer {..} <- V.toList specFuncPointers
@@ -500,7 +515,7 @@ parseConstantAliases es =
 ----------------------------------------------------------------
 
 parseHeaderVersion
-  :: forall t . KnownSpecType t => [Content] -> P (SpecHeaderVersion t)
+  :: forall t . KnownSpecFlavor t => [Content] -> P (SpecHeaderVersion t)
 parseHeaderVersion es = do
   let defines :: [Node]
       defines =
@@ -518,17 +533,31 @@ parseHeaderVersion es = do
           allText <- decode $ allText d
           let ver = T.takeWhileEnd isNumber allText
           pure . fmap VkVersion $ readMaybe (T.unpack ver)
-    SSpecXR -> pure [XRVersion]
+    SSpecXr -> pure [XRVersion]
   case vers of
     []  -> throw "No header version found in spec"
     [v] -> pure v
     vs  -> throw $ "Multiple header versions found in spec: " <> show vs
 
 ----------------------------------------------------------------
+-- Atoms
+----------------------------------------------------------------
+
+parseAtoms :: [Content] -> P (Vector Atom)
+parseAtoms = fmap (V.mapMaybe id) . onTypes "basetype" parseAtom
+ where
+  parseAtom :: Node -> P (Maybe Atom)
+  parseAtom n = runMaybeT $ do
+    atName     <- lift $ nameElem "atom" n
+    typeString <- maybe empty pure (elemText "type" n)
+    guard (typeString == "XR_DEFINE_ATOM")
+    pure Atom { .. }
+
+----------------------------------------------------------------
 -- Handles
 ----------------------------------------------------------------
 
-parseHandles :: [Content] -> P (Vector Handle)
+parseHandles :: forall t . KnownSpecFlavor t => [Content] -> P (Vector Handle)
 parseHandles = onTypes "handle" parseHandle
  where
 
@@ -537,13 +566,14 @@ parseHandles = onTypes "handle" parseHandle
     hName <- nameElem "handle" n
     context (unCName hName) $ do
       typeString    <- note "Handle has no type" (elemText "type" n)
-      hDispatchable <- case typeString of
-        "VK_DEFINE_HANDLE" -> pure Dispatchable
-        "VK_DEFINE_NON_DISPATCHABLE_HANDLE" -> pure NonDispatchable
-        _                  -> throw "Unable to parse handle type"
+      hDispatchable <- case dropPrefix (flavorPrefixCaps @t) typeString of
+        Just "_DEFINE_HANDLE" -> pure Dispatchable
+        Just "_DEFINE_NON_DISPATCHABLE_HANDLE" -> pure NonDispatchable
+        _ -> throw "Unable to parse handle type"
       hLevel <- case hName of
         "VkInstance" -> pure Instance
         "VkDevice"   -> pure Device
+        "XrInstance" -> pure Instance
         _            -> case getAttr "parent" n of
           Nothing                 -> pure NoHandleLevel
           -- TODO: derive this from the spec
@@ -554,6 +584,9 @@ parseHandles = onTypes "handle" parseHandle
           Just "VkDescriptorPool" -> pure Device
           Just "VkDisplayKHR"     -> pure Instance
           Just "VkSurfaceKHR"     -> pure Instance
+          Just "XrInstance"       -> pure Instance
+          Just "XrSession"        -> pure Session
+          Just "XrActionSet"      -> pure ActionSet
           _                       -> throw "Unknown handle level"
       pure Handle { .. }
 
@@ -912,13 +945,20 @@ allRequires parseDisabled es =
 -- Vulkan
 ----------------------------------------------------------------
 
-extraEnums :: Vector Enum'
-extraEnums = V.singleton Enum
-  { eName   = "VkBool32"
-  , eValues = V.fromList
-                [EnumValue "VK_FALSE" 0 False, EnumValue "VK_TRUE" 1 False]
-  , eType   = AnEnum
-  }
+extraEnums :: forall t . KnownSpecFlavor t => Vector Enum'
+extraEnums = case sSpecFlavor @t of
+  SSpecVk -> V.singleton Enum
+    { eName   = "VkBool32"
+    , eValues = V.fromList
+                  [EnumValue "VK_FALSE" 0 False, EnumValue "VK_TRUE" 1 False]
+    , eType   = AnEnum
+    }
+  SSpecXr -> V.singleton Enum
+    { eName   = "XrBool32"
+    , eValues = V.fromList
+                  [EnumValue "XR_FALSE" 0 False, EnumValue "XR_TRUE" 1 False]
+    , eType   = AnEnum
+    }
 
 isForbidden :: CName -> Bool
 isForbidden n =

@@ -1,5 +1,4 @@
-module CType
-  where
+module CType where
 
 import qualified Data.ByteString.Char8         as BS
 import           Data.List.Extra               as List
@@ -59,8 +58,11 @@ parseCType bs = do
   let -- Drop the 'struct' keyword, it confuses our C type parser.
       typeStringWorkarounds :: ByteString -> ByteString
       typeStringWorkarounds =
-        BS.unwords . Relude.filter (/= "struct") . BS.words . removeSubString
-          "VKAPI_PTR"
+        BS.unwords
+          . Relude.filter (/= "struct")
+          . BS.words
+          . removeSubString "VKAPI_PTR"
+          . removeSubString "XRAPI_PTR"
   case
       runCParser
         parseContext

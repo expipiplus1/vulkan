@@ -4,6 +4,7 @@
 module Spec.Types
   ( CName(..)
   , module Spec.Types
+  , module Spec.Flavor
   ) where
 
 import           Data.Vector                    ( Vector )
@@ -14,21 +15,7 @@ import           CType
 import qualified Marshal.Marshalable           as M
 import           Spec.APIConstant
 import           Spec.Name
-
-data SpecFlavor
-  = SpecVk
-  | SpecXR
-
-data SSpecFlavor t where
-  SSpecVk :: SSpecFlavor SpecVk
-  SSpecXR :: SSpecFlavor SpecXR
-
-class KnownSpecType (t :: SpecFlavor) where
-  sSpecFlavor :: SSpecFlavor t
-instance KnownSpecType SpecVk where
-  sSpecFlavor = SSpecVk
-instance KnownSpecType SpecXR where
-  sSpecFlavor = SSpecXR
+import           Spec.Flavor
 
 ----------------------------------------------------------------
 -- The spec
@@ -37,6 +24,8 @@ instance KnownSpecType SpecXR where
 data Spec t = Spec
   { specHeaderVersion      :: SpecHeaderVersion t
   , specHandles            :: Vector Handle
+  , specAtoms              :: Vector Atom
+    -- ^ Not present in Vulkan specs
   , specFuncPointers       :: Vector FuncPointer
   , specStructs            :: Vector Struct
   , specUnions             :: Vector Union
@@ -49,13 +38,15 @@ data Spec t = Spec
   , specAPIConstants       :: Vector Constant
   , specExtensionConstants :: Vector Constant
   , specSPIRVExtensions    :: Vector SPIRVExtension
+    -- ^ Only present in Vulkan specs
   , specSPIRVCapabilities  :: Vector SPIRVCapability
+    -- ^ Only present in Vulkan specs
   }
   deriving Show
 
 data SpecHeaderVersion (t :: SpecFlavor) where
   VkVersion :: Word -> SpecHeaderVersion SpecVk
-  XRVersion :: SpecHeaderVersion SpecXR
+  XRVersion :: SpecHeaderVersion SpecXr
 
 deriving instance Show (SpecHeaderVersion t)
 
@@ -131,6 +122,15 @@ data FuncPointer = FuncPointer
   deriving (Show)
 
 --
+-- Atoms
+--
+
+newtype Atom = Atom
+  { atName :: CName
+  }
+  deriving (Show)
+
+--
 -- Handles
 --
 
@@ -145,6 +145,8 @@ data Handle = Handle
 data HandleLevel
   = Instance
   | Device
+  | Session
+  | ActionSet
   | NoHandleLevel
   deriving (Show, Eq, Ord)
 

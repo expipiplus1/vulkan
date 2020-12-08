@@ -1,6 +1,6 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# language QuasiQuotes #-}
-{-# language TemplateHaskellQuotes #-}
+{-# language TemplateHaskell #-}
 module Bespoke
   ( forbiddenConstants
   , assignBespokeModules
@@ -24,6 +24,7 @@ import qualified Data.Vector.Extra             as V
 import           Foreign.C.Types
 import           Foreign.Ptr
 import           Language.Haskell.TH            ( mkName )
+import qualified Language.Haskell.TH.Syntax    as TH
 import           Polysemy
 import           Polysemy.Input
 import           Relude                  hiding ( Const )
@@ -39,6 +40,7 @@ import           Numeric
 
 import           CType
 import           Error
+import           Foreign.C.String               ( CString )
 import           Haskell                       as H
 import           Marshal.Marshalable
 import           Marshal.Scheme
@@ -713,14 +715,34 @@ bespokeStructsAndUnions =
       }
   ]
 
-bespokeSizes :: [(CName, (Int, Int))]
-bespokeSizes =
-  (fst <$> concat [win32 @'[Input RenderParams], x11, xcb2, zircon, ggp])
-    <> [ ("VkSampleMask"   , (4, 4))
-       , ("VkFlags"        , (4, 4))
-       , ("VkDeviceSize"   , (8, 8))
-       , ("VkDeviceAddress", (8, 8))
-       ]
+bespokeSizes :: SpecFlavor -> [(CName, (Int, Int))]
+bespokeSizes t =
+  let xrSizes =
+        [ ("XrFlags64"                , (8, 8))
+        , ("XrTime"                   , (8, 8))
+        , ("XrDuration"               , (8, 8))
+        , ("XrVersion"                , (8, 8))
+          -- TODO: Can these be got elsewhere?
+        , ("VkInstance"               , (8, 8))
+        , ("VkPhysicalDevice"         , (8, 8))
+        , ("VkImage"                  , (8, 8))
+        , ("VkDevice"                 , (8, 8))
+        , ("PFN_vkGetDeviceProcAddr"  , (8, 8))
+        , ("PFN_vkGetInstanceProcAddr", (8, 8))
+        ]
+      vkSizes =
+        [ ("VkSampleMask"   , (4, 4))
+        , ("VkFlags"        , (4, 4))
+        , ("VkDeviceSize"   , (8, 8))
+        , ("VkDeviceAddress", (8, 8))
+        ]
+      sharedSizes =
+        (fst <$> concat
+          [win32 @'[Input RenderParams], x11, xcb2, zircon, ggp, egl, gl, d3d]
+        )
+  in  sharedSizes <> case t of
+        SpecVk -> vkSizes
+        SpecXr -> xrSizes
 
 bespokeOptionality :: CName -> CName -> Maybe (Vector Bool)
 bespokeOptionality = \case
@@ -838,6 +860,9 @@ win32 =
   , alias (APtr ''())     "HANDLE"
   , alias AWord32         "DWORD"
   , alias (APtr ''CWchar) "LPCWSTR"
+  , alias (APtr ''())     "HDC" -- TODO: should be an alias for HANDLE
+  , alias (APtr ''())     "HGLRC" -- TODO: check this
+  , alias AWord64         "LUID"
   ]
 
 win32' :: HasRenderParams r => [Sem r RenderElement]
@@ -855,7 +880,14 @@ xcb1 :: HasRenderParams r => [Sem r RenderElement]
 xcb1 = [voidData "xcb_connection_t"]
 
 xcb2 :: HasRenderParams r => [BespokeAlias r]
-xcb2 = [alias AWord32 "xcb_visualid_t", alias AWord32 "xcb_window_t"]
+xcb2 =
+  [ alias AWord32 "xcb_visualid_t"
+  , alias AWord32 "xcb_window_t"
+  , alias AWord32 "xcb_glx_fbconfig_t"
+  , alias AWord32 "xcb_glx_drawable_t"
+  , alias AWord32 "xcb_glx_context_t"
+  ]
+
 
 ggp :: HasRenderParams r => [BespokeAlias r]
 ggp = [alias AWord32 "GgpStreamDescriptor", alias AWord32 "GgpFrameToken"]
@@ -875,23 +907,44 @@ android = [voidData "AHardwareBuffer", voidData "ANativeWindow"]
 directfb :: HasRenderParams r => [Sem r RenderElement]
 directfb = [voidData "IDirectFB", voidData "IDirectFBSurface"]
 
+egl :: HasRenderParams r => [BespokeAlias r]
+egl =
+  [ alias (AFunPtr $(TH.lift =<< [t|CString -> IO (FunPtr (IO ()))|]))
+          "PFNEGLGETPROCADDRESSPROC"
+  , alias (APtr ''()) "EGLDisplay"
+  , alias (APtr ''()) "EGLConfig"
+  , alias (APtr ''()) "EGLContext"
+  ]
+
+gl :: HasRenderParams r => [BespokeAlias r]
+gl =
+  [ alias (APtr ''()) "GLXFBConfig"
+  , alias AWord64     "GLXDrawable"
+  , alias (APtr ''()) "GLXContext"
+  ]
+
+d3d :: HasRenderParams r => [BespokeAlias r]
+d3d = [alias AWord32 "D3D_FEATURE_LEVEL"]
+
 ----------------------------------------------------------------
 -- Helpers
 ----------------------------------------------------------------
 
-data AType = AWord32 | AWord64 | APtr Name
+data AType = AWord32 | AWord64 | APtr Name | AFunPtr H.Type
 
 aTypeSize :: AType -> (Int, Int)
 aTypeSize = \case
-  AWord32 -> (4, 4)
-  AWord64 -> (8, 8)
-  APtr _  -> (8, 8)
+  AWord32   -> (4, 4)
+  AWord64   -> (8, 8)
+  APtr    _ -> (8, 8)
+  AFunPtr _ -> (8, 8)
 
 aTypeType :: AType -> H.Type
 aTypeType = \case
-  AWord32 -> ConT ''Word32
-  AWord64 -> ConT ''Word64
-  APtr n  -> ConT ''Ptr :@ ConT n
+  AWord32   -> ConT ''Word32
+  AWord64   -> ConT ''Word64
+  APtr    n -> ConT ''Ptr :@ ConT n
+  AFunPtr t -> ConT ''FunPtr :@ t
 
 voidData :: HasRenderParams r => CName -> Sem r RenderElement
 voidData n = fmap identicalBoot . genRe ("data " <> unCName n) $ do
