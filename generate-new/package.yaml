@@ -55,12 +55,17 @@ extra-source-files:
 library:
   source-dirs: src
 
+internal-libraries:
+  khronos-spec:
+    source-dirs: khronos-spec
+
 executables:
   vk:
     main: Main.hs
     source-dirs: vk
     dependencies:
     - generate-new
+    - khronos-spec
     ghc-options:
     - -threaded
     - -rtsopts
@@ -71,6 +76,7 @@ executables:
     source-dirs: xr
     dependencies:
     - generate-new
+    - khronos-spec
     ghc-options:
     - -threaded
     - -rtsopts

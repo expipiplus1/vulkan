@@ -1,5 +1,5 @@
 {-# language DeriveFunctor, DeriveFoldable, DeriveTraversable #-}
-module VK.Render where
+module Khronos.Render where
 
 import qualified Data.HashMap.Strict           as Map
 import           Data.Vector                    ( Vector )
@@ -8,13 +8,17 @@ import           Data.Vector.TopTraverse
 import           Polysemy
 import           Polysemy.Fixpoint
 import           Polysemy.Input
-import           Relude                  hiding ( Enum )
+import           Relude                  hiding ( Enum
+                                                , Handle
+                                                )
 
 import           Bespoke
 import           Bespoke.Utils
 import           CType
 import           Documentation
 import           Error
+import           Khronos.ExtensionDepElements
+import           Khronos.SPIRVElements
 import           Marshal
 import           Render.Alias
 import           Render.CStruct
@@ -30,16 +34,12 @@ import           Render.Names
 import           Render.Spec.Extends
 import           Render.Spec.Versions
 import           Render.SpecInfo
+import           Render.State                   ( HasRenderState )
 import           Render.Stmts
 import           Render.Struct
 import           Render.Union
 import           Render.VkException
 import           Spec.Parse
-
-import           Render.State                   ( HasRenderState )
-import           VK.Bracket
-import           VK.ExtensionDepElements
-import           VK.SPIRVElements
 
 data RenderedSpec a = RenderedSpec
   { rsHandles            :: Vector a
@@ -62,14 +62,19 @@ renderSpec
      , HasSpecInfo r
      , HasRenderedNames r
      , HasRenderState r
+     , KnownSpecFlavor t
      )
-  => Spec SpecVk
+  => Spec t
   -> (Documentee -> Maybe Documentation)
+  -> (  Vector MarshaledCommand
+     -> Vector Handle
+     -> Sem r (Vector (CName, CName, RenderElement))
+     )
   -> Vector (MarshaledStruct AStruct)
   -> Vector (MarshaledStruct AUnion)
   -> Vector MarshaledCommand
   -> Sem r (RenderedSpec RenderElement)
-renderSpec spec@Spec {..} getDoc ss us cs = do
+renderSpec spec@Spec {..} getDoc brackets ss us cs = do
   RenderParams {..} <- input
 
   -- TODO: neaten
@@ -187,4 +192,9 @@ immediateDepends Struct {..} =
 -- These are the only structs with cycles, don't bother using their storable
 -- instances in poking as they're only used once
 cycleBreakers :: [CName]
-cycleBreakers = ["VkBaseInStructure", "VkBaseOutStructure"]
+cycleBreakers =
+  [ "VkBaseInStructure"
+  , "VkBaseOutStructure"
+  , "XrBaseInStructure"
+  , "XrBaseOutStructure"
+  ]

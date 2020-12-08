@@ -27,9 +27,9 @@ import           Render.Names
 import           Render.SpecInfo
 import           Spec.Parse
 
+import           Khronos.AssignModules
+import           Khronos.Render
 import           Render.State                   ( initialRenderState )
-import           VK.AssignModules
-import           VK.Render
 
 main :: IO ()
 main =

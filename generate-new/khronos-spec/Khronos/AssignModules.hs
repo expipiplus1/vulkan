@@ -1,4 +1,4 @@
-module VK.AssignModules
+module Khronos.AssignModules
   ( assignModules
   ) where
 
@@ -35,7 +35,7 @@ import           Spec.Types
 import           VkModulePrefix
 
 import           Data.Char                      ( isUpper )
-import           VK.Render
+import           Khronos.Render
 
 -- | Assign all render elements a module
 assignModules
@@ -96,7 +96,10 @@ assignModules spec rs = do
         res <-
           filter (getAll . reReexportable) <$> forV (Set.toList is) lookupRe
         pure
-          $ (reexportingRenderElement . Data.Set.fromList . toList . reExports)
+          $   reexportingRenderElement
+          .   Data.Set.fromList
+          .   toList
+          .   reExports
           <$> res
     pure
       (modname, declaringRenderElements <> fromList reexportingRenderElements)

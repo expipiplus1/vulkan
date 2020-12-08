@@ -121,45 +121,49 @@ classes Spec {..} = do
   tellImportWithAll ''IOErrorType
   tellImport 'typeRep
   tellImport 'fromMaybe
+  estt <- maybe (throw "No extensible structure type tag type")
+                pure
+                extensibleStructTypeType
   peekChainCases <- fmap (V.mapMaybe id) . forV specStructs $ \Struct {..} ->
     if V.null sExtends
       then pure Nothing
       else Just <$> case sMembers V.!? 0 of
-        Just (StructMember "sType" (TypeName "VkStructureType") vals _ _ _) ->
-          case vals of
+        Just (StructMember smName (TypeName estt') vals _ _ _)
+          | Just smName == extensibleStructTypeMemberName, estt' == estt -> case
+              vals
+            of
             -- GHC complains if this match is inline...
-            V.Singleton typeEnum -> do
-              -- If this type contains a union then it doesn't have a PeekCStruct
-              -- instance
-              --
-              -- TODO: Actually check here for the instance, and don't repeat this
-              -- union checking logic.
-              let isDiscriminated u =
-                    Spec.Types.sName u
-                      `elem` (udUnionType <$> toList unionDiscriminators)
-              unions <- filter (not . isDiscriminated) <$> containsUnion sName
+              V.Singleton typeEnum -> do
+                -- If this type contains a union then it doesn't have a PeekCStruct
+                -- instance
+                --
+                -- TODO: Actually check here for the instance, and don't repeat this
+                -- union checking logic.
+                let isDiscriminated u =
+                      Spec.Types.sName u
+                        `elem` (udUnionType <$> toList unionDiscriminators)
+                unions <- filter (not . isDiscriminated) <$> containsUnion sName
 
-              let tagCon =
-                    pretty (mkConName "VkStructureType" (CName typeEnum))
-                  match = tagCon <+> "->"
-              case unions of
-                [] -> do
-                  let n = mkTyName sName
-                  tDoc <- renderTypeHighPrecSource $ if V.null sExtendedBy
-                    then ConT (typeName n)
-                    else ConT (typeName n) :@ PromotedNilT
-                  tellImportWithAll (mkTyName "VkStructureType")
-                  tellSourceImport n
-                  pure $ match <+> "go @" <> tDoc
-                u : _ ->
-                  pure
-                    $   match
-                    <+> "throwIO $ IOError Nothing InvalidArgument \"peekChainHead\" (\"struct type"
-                    <+> tagCon
-                    <+> "contains an undiscriminated union ("
-                    <>  pretty (mkTyName (Spec.Types.sName u))
-                    <>  ") and can't be safely peeked\") Nothing Nothing"
-            _ -> throw "Multiple values for sType"
+                let tagCon = pretty (mkConName estt (CName typeEnum))
+                    match  = tagCon <+> "->"
+                case unions of
+                  [] -> do
+                    let n = mkTyName sName
+                    tDoc <- renderTypeHighPrecSource $ if V.null sExtendedBy
+                      then ConT (typeName n)
+                      else ConT (typeName n) :@ PromotedNilT
+                    tellImportWithAll (mkTyName estt)
+                    tellSourceImport n
+                    pure $ match <+> "go @" <> tDoc
+                  u : _ ->
+                    pure
+                      $   match
+                      <+> "throwIO $ IOError Nothing InvalidArgument \"peekChainHead\" (\"struct type"
+                      <+> tagCon
+                      <+> "contains an undiscriminated union ("
+                      <>  pretty (mkTyName (Spec.Types.sName u))
+                      <>  ") and can't be safely peeked\") Nothing Nothing"
+              _ -> throw "Multiple values for sType"
         _ -> throw $ "Unable to find sType member in " <> show sName
   completeStructTailPragmas <-
     fmap (V.mapMaybe id) . forV specStructs $ \Struct {..} -> if V.null sExtends

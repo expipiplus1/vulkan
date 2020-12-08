@@ -125,11 +125,11 @@ data NameSpace
   deriving (Show, Eq, Ord)
 
 data Import n = Import
-  { importName :: n
+  { importName      :: n
   , importQualified :: Bool
-  , importChildren :: Vector n
-  , importWithAll :: Bool
-  , importSource :: Bool
+  , importChildren  :: Vector n
+  , importWithAll   :: Bool
+  , importSource    :: Bool
   }
   deriving (Show, Eq, Ord)
 
@@ -277,14 +277,18 @@ data RenderParams = RenderParams
     -- (other parameter or member). Sometimes also this isn't a trivial case of
     -- getting that member of the struct, so use this field for writing those
     -- complex overrides.
-  , isExternalName    :: HName -> Maybe ModName
+  , isExternalName                 :: HName -> Maybe ModName
     -- ^ If you want to refer to something in another package without using
     -- template haskell ''quotes, put the module in here
-  , externalDocHTML   :: Maybe Text
+  , externalDocHTML                :: Maybe Text
     -- ^ If we can't find a place in the generated source to link to, link to
     -- this documentation instead.
-  , objectTypePattern :: CName -> Maybe HName
+  , objectTypePattern              :: CName -> Maybe HName
     -- ^ An object type enumeration for a handle name, if any
+  , extensibleStructTypeMemberName :: Maybe CName
+    -- ^ "sType" or "type" or Nothing
+  , extensibleStructTypeType       :: Maybe CName
+    -- ^ "VkStructureType" or "XrStructureType"
   }
 
 data UnionDiscriminator = UnionDiscriminator
@@ -386,8 +390,7 @@ tellCanFormat :: MemberWithError (State RenderElement) r => Sem r ()
 tellCanFormat = modify' (\r -> r { reCanFormat = All True })
 
 tellDoc :: MemberWithError (State RenderElement) r => Doc () -> Sem r ()
-tellDoc d =
-  modify' (\r -> r { reDoc = \h -> reDoc r h `lineMaybe` Just d })
+tellDoc d = modify' (\r -> r { reDoc = \h -> reDoc r h `lineMaybe` Just d })
 
 tellDocWithHaddock
   :: MemberWithError (State RenderElement) r

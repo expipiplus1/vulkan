@@ -93,9 +93,39 @@ During development unfinished bits not to forget are listed here.
 
 ### OpenXR
 
-- Handle levels
-- Share Vulkan handles
-- Bespoke vulkan types should be just in sizes
+- [ ] Handle levels
+- [ ] Share Vulkan handles
+- [ ] Bespoke vulkan types should be just in sizes
+- [ ] Fix runAsciidoctor
+- [ ] These are passed as pointers ,(see Bespoke.MarshalParams.isPassAsPointerType')
+
+    ```
+    "VkInstanceCreateInfo"
+    "VkAllocationCallbacks"
+    "VkDeviceCreateInfo"
+    "VkAllocationCallbacks"
+    "LARGE_INTEGER"
+    "timespec"
+    ```
+
+- [ ] remove XR.RenderParams.vulkanNameOverrides
+- [ ] check
+  - [ ] `XrEventDataBuffer->varying`
+  - [ ] `XrSpatialGraphNodeSpaceCreateInfoMSFT->nodeId`
+  - [ ] `XrSpatialGraphNodeSpaceCreateInfoMSFT`
+  - [ ] `XrEventDataBuffer`
+  - [ ] `xrCreateInstance`: Unable to find ref named cmds
+  - [ ] `xrResultToString`: Unhandled ByteString conversion to Ptr NonConst Char
+  - [ ] `xrStructureTypeToString`: Unhandled ByteString conversion to Ptr NonConst Char
+  - [ ] `xrPathToString`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [ ] `xrCreateSwapchainAndroidSurfaceKHR`: Unable to get size for TypeName `jobject`
+  - [ ] `xrGetInputSourceLocalizedName`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [ ] `xrGetVulkanInstanceExtensionsKHR`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [ ] `xrGetVulkanDeviceExtensionsKHR`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [ ] `xrCreateVulkanInstanceKHR`: Unable to get size for TypeName `VkResult`
+  - [ ] `xrCreateVulkanDeviceKHR`: Unable to get size for TypeName `VkResult`
+  - [ ] `xrCreateSpatialAnchorFromPerceptionAnchorMSFT`: Unable to get size for TypeName `IUnknown`
+
 
 ### 1.2.162
 

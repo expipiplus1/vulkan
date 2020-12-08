@@ -1,6 +1,6 @@
 {-# LANGUAGE QuasiQuotes #-}
 
-module VK.SPIRVElements
+module Khronos.SPIRVElements
   ( renderSPIRVElements
   ) where
 
@@ -21,6 +21,7 @@ import           Haskell                        ( HName(..)
                                                 , renderType
                                                 , (~>)
                                                 )
+import           Khronos.Utils
 import           Language.Haskell.TH            ( Type(ConT)
                                                 , mkName
                                                 )
@@ -35,7 +36,6 @@ import           Render.Type                    ( cToHsType )
 import           Render.Type.Preserve           ( Preserve(DoNotPreserve) )
 import           Spec.Types
 import           Text.InterpolatedString.Perl6.Unindented
-import           VK.Utils
 import           VkModulePrefix
 
 renderSPIRVElements

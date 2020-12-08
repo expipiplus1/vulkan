@@ -59,11 +59,17 @@ marshalParams spec@Spec {..} = do
       TypeName n ->
         isDispatchableHandle n || isDispatchableHandle (resolveAlias n)
       _ -> False
+    atomNames :: HashSet CName
+    atomNames  = fromList [ atName | Atom {..} <- toList specAtoms ]
+    isAtomType = \case
+      TypeName n -> n `member` atomNames
+      _          -> False
   pure MarshalParams
     { isDefaultable       = isDefaultable'
                             <||> isBitmaskType
                             <||> isNonDispatchableHandleType
                             <||> isDispatchableHandleType
+                            <||> isAtomType
     , isPassAsPointerType = isPassAsPointerType'
     , getBespokeScheme    = \p a ->
       asum . fmap (\(BespokeScheme f) -> f p a) $ bespokeSchemes
@@ -75,7 +81,7 @@ marshalParams spec@Spec {..} = do
 
 isDefaultable' :: CType -> Bool
 isDefaultable' t =
-  isDefaultableForeignType t || isIntegral t || hasUnknownEnum t
+  isDefaultableForeignType t || isIntegral t || isFloating t || hasUnknownEnum t
 
 isIntegral :: CType -> Bool
 isIntegral =
@@ -95,8 +101,17 @@ isIntegral =
           , TypeName "VkDeviceOrHostAddressConstKHR"
           , TypeName "VkDeviceOrHostAddressKHR"
           , TypeName "VkBool32"
+          , TypeName "LARGE_INTEGER"
+          -- TODO: Get these from spec
+          -- Base types
+          , TypeName "XrTime"
+          , TypeName "XrDuration"
+          , TypeName "XrBool32"
           ]
   )
+
+isFloating :: CType -> Bool
+isFloating = (`elem` [Float, Double])
 
 isDefaultableForeignType :: CType -> Bool
 isDefaultableForeignType t =
@@ -111,6 +126,7 @@ isDefaultableForeignType t =
          TypeName (CName n) -> "PFN_" `T.isPrefixOf` n
          _                  -> False
 
+-- TODO: These shouldn't be defaultable, probably a spec oversight
 hasUnknownEnum :: CType -> Bool
 hasUnknownEnum = (`elem` [TypeName "VkFormat", TypeName "VkObjectType"])
 
@@ -130,6 +146,13 @@ isPassAsPointerType' = \case
              , "SECURITY_ATTRIBUTES"
              , "IDirectFB"
              , "IDirectFBSurface"
+             -- TODO: remove these
+             , "VkInstanceCreateInfo"
+             , "VkAllocationCallbacks"
+             , "VkDeviceCreateInfo"
+             , "VkAllocationCallbacks"
+             , "LARGE_INTEGER"
+             , "timespec"
              ]
   _ -> False
 

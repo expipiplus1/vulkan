@@ -1,7 +1,7 @@
+{-# LANGUAGE NamedFieldPuns #-}
 {-# language QuasiQuotes #-}
 {-# language TemplateHaskell #-}
-module Render.Struct
-  where
+module Render.Struct where
 
 import qualified Data.Map                      as Map
 import qualified Data.Text.Extra               as T
@@ -144,8 +144,9 @@ renderExtensibleInstance MarshaledStruct {..} = do
       cases   = toList matches ++ [noMatch]
       structTypes =
         [ v
-        | MarshaledStructMember { msmStructMember = StructMember { smName = "sType" }, msmScheme = ElidedUnivalued v } <-
+        | MarshaledStructMember { msmStructMember = StructMember { smName }, msmScheme = ElidedUnivalued v } <-
           toList msMembers
+        , Just smName == extensibleStructTypeMemberName
         ]
     structType <- case structTypes of
       []  -> throw "Unable to find type enum of extensible struct"
@@ -315,7 +316,7 @@ peekCStructBody
   -> Sem r (Doc ())
 peekCStructBody MarshaledStruct {..} = do
   RenderParams {..} <- input
-  let con         = mkConName msName msName
+  let con = mkConName msName msName
       offset o tDoc =
         AddrDoc
           .   parens

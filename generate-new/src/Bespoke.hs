@@ -63,7 +63,7 @@ import           VkModulePrefix
 
 -- | These constants are defined elsewhere
 forbiddenConstants :: [CName]
-forbiddenConstants = ["VK_TRUE", "VK_FALSE"]
+forbiddenConstants = ["VK_TRUE", "VK_FALSE", "XR_TRUE", "XR_FALSE"]
 
 ----------------------------------------------------------------
 -- Module assignments
@@ -122,6 +122,7 @@ bespokeSchemes spec =
     <> [bitfields]
     <> [accelerationStructureGeometry]
     <> [buildingAccelerationStructures]
+    <> openXRSchemes
 
 baseInOut :: BespokeScheme
 baseInOut = BespokeScheme $ \case
@@ -723,6 +724,7 @@ bespokeSizes t =
         , ("XrDuration"               , (8, 8))
         , ("XrVersion"                , (8, 8))
           -- TODO: Can these be got elsewhere?
+        , ("VkFormat"                 , (4, 4))
         , ("VkInstance"               , (8, 8))
         , ("VkPhysicalDevice"         , (8, 8))
         , ("VkImage"                  , (8, 8))
@@ -925,6 +927,22 @@ gl =
 
 d3d :: HasRenderParams r => [BespokeAlias r]
 d3d = [alias AWord32 "D3D_FEATURE_LEVEL"]
+
+----------------------------------------------------------------
+-- OpenXR stuff
+----------------------------------------------------------------
+
+openXRSchemes :: [BespokeScheme]
+openXRSchemes =
+  [ BespokeScheme $ \case
+      "XrEventDataBuffer" -> \case
+        a | "varying" <- name a -> Just ByteString
+        _                       -> Nothing
+      "XrSpatialGraphNodeSpaceCreateInfoMSFT" -> \case
+        a | "nodeId" <- name a -> Just ByteString
+        _                      -> Nothing
+      _ -> const Nothing
+  ]
 
 ----------------------------------------------------------------
 -- Helpers

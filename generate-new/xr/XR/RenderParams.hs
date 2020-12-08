@@ -1,30 +1,35 @@
-module VMA.RenderParams
+module XR.RenderParams
   ( renderParams
   ) where
 
+import qualified Bespoke.RenderParams          as Vk
+import           CType
 import           Data.Char                      ( isLower )
 import           Data.Generics.Uniplate.Data
 import qualified Data.HashSet                  as Set
+import qualified Data.List                     as List
 import qualified Data.Text                     as T
 import           Data.Text.Extra                ( lowerCaseFirst
                                                 , upperCaseFirst
                                                 )
+import           Data.Text.Extra               as T
+                                                ( (<+>) )
+import           Data.Text.Prettyprint.Doc      ( pretty )
 import           Data.Vector                    ( Vector )
+import           Foreign.Ptr
+import           Haskell
 import           Language.Haskell.TH
 import           Polysemy
 import           Relude                  hiding ( Handle
                                                 , Type
                                                 , uncons
                                                 )
-
-import           Foreign.Ptr
-
-import qualified Bespoke.RenderParams          as Vk
-import           CType
-import           Haskell
 import           Render.Element
+import           Render.Stmts                   ( useViaName )
+import           Render.Stmts.Poke              ( CmdsDoc(..) )
 import           Render.Type.Preserve
 import           Spec.Parse
+import           Text.Casing             hiding ( dropPrefix )
 import           VkModulePrefix
 
 renderParams :: Vector Handle -> RenderParams
@@ -34,35 +39,84 @@ renderParams handles = r
     [ hName | Handle {..} <- toList handles, hDispatchable == Dispatchable ]
   vulkanParams = Vk.renderParams handles
   r            = RenderParams
-    { mkTyName = \n -> TyConName $ fromMaybe (upperCaseFirst . dropVma $ n)
+    { mkTyName = \n -> TyConName $ fromMaybe (upperCaseFirst . dropXr $ n)
                                              (vulkanNameOverrides n)
-    , mkConName = \_ n -> ConName $ fromMaybe (upperCaseFirst . dropVma $ n)
+    , mkConName = \_ n -> ConName $ fromMaybe (upperCaseFirst . dropXr $ n)
                                               (vulkanNameOverrides n)
     , mkMemberName                   = \_parent ->
                                          TermName . lowerCaseFirst . dropPointer . unCName
-    , mkFunName                      = TermName . lowerCaseFirst . dropVma
+    , mkFunName                      = TermName . lowerCaseFirst . dropXr
     , mkParamName                    = TermName . dropPointer . unCName
     , mkPatternName                  =
       \n -> ConName
-        $ fromMaybe (upperCaseFirst . dropVma $ n) (vulkanNameOverrides n)
+        $ fromMaybe (upperCaseFirst . dropXr $ n) (vulkanNameOverrides n)
     , mkFuncPointerName              = TyConName . T.tail . unCName
     , mkFuncPointerMemberName = TermName . ("p" <>) . upperCaseFirst . unCName
-    , mkEmptyDataName                = TermName . (<> "_T") . dropVma
+    , mkEmptyDataName                = TermName . (<> "_T") . dropXr
     , mkDispatchableHandlePtrName    = TermName
                                        . (<> "Handle")
                                        . lowerCaseFirst
-                                       . dropVma
+                                       . dropXr
     , alwaysQualifiedNames           = mempty
-    , mkIdiomaticType = let dropVulkanModule = transformBi
-                              (\n ->
-                                if nameModule n
-                                   == Just (T.unpack vulkanModulePrefix)
-                                then
-                                  mkName (nameBase n)
-                                else
-                                  n
-                              )
-                        in  mkIdiomaticType vulkanParams . dropVulkanModule
+    , mkIdiomaticType                = \t ->
+      let
+        dropVulkanModule = transformBi
+          (\n -> if nameModule n == Just (T.unpack vulkanModulePrefix)
+            then mkName (nameBase n)
+            else n
+          )
+        xrIdiomatic =
+          t
+            `List.lookup` (  [ ( ConT (typeName $ mkTyName r "XrBool32")
+                               , IdiomaticType
+                                 (ConT ''Bool)
+                                 (do
+                                   tellImport (TermName "boolToBool32")
+                                   pure "boolToBool32"
+                                 )
+                                 (do
+                                   tellImport (TermName "bool32ToBool")
+                                   pure $ PureFunction "bool32ToBool"
+                                 )
+                               )
+                             ]
+                          <> [ ( ConT ''Ptr
+                                 :@ ConT (typeName $ mkEmptyDataName r name)
+                               , IdiomaticType
+                                 (ConT (typeName $ mkTyName r name))
+                                 (do
+                                   let h = mkDispatchableHandlePtrName r name
+                                   tellImportWithAll (mkTyName r name)
+                                   pure (pretty h)
+                                 )
+                                 (do
+                                   let c = mkConName r name name
+                                   tellImportWith (mkTyName r name) c
+                                   case name of
+                                     "XrInstance" -> do
+                                       tellImport
+                                         (TermName "initInstanceCmds")
+                                       pure
+                                         .   IOFunction
+                                         $   "(\\h ->"
+                                         <+> pretty c
+                                         <+> "h <$> initInstanceCmds h)"
+                                     _ -> do
+                                       CmdsDoc cmds <- useViaName "cmds"
+                                       pure
+                                         .   PureFunction
+                                         $   "(\\h ->"
+                                         <+> pretty c
+                                         <+> "h"
+                                         <+> cmds
+                                         <+> ")"
+                                 )
+                               )
+                             | name <- toList dispatchableHandleNames
+                             ]
+                          )
+      in
+        xrIdiomatic <|> (mkIdiomaticType vulkanParams . dropVulkanModule $ t)
     , mkHsTypeOverride               = \structStyle preserve t ->
       case vulkanManifest structStyle vulkanParams t of
         Just t -> Just $ do
@@ -86,49 +140,34 @@ renderParams handles = r
                 )
             _ -> Nothing
     , unionDiscriminators            = mempty
-    , successCodeType                = TypeName "VkResult"
-    , isSuccessCodeReturned          = (/= "VK_SUCCESS")
-    , firstSuccessCode               = "VK_SUCCESS"
-    , exceptionTypeName              = TyConName "VulkanException"
+    , successCodeType                = TypeName "XrResult"
+    , isSuccessCodeReturned          = (/= "XR_SUCCESS")
+    , firstSuccessCode               = "XR_SUCCESS"
+    , exceptionTypeName              = TyConName "OpenXrException"
     , complexMemberLengthFunction    = \_ _ _ -> Nothing
-    , isExternalName                 =
-      let vk s = Just (ModName $ vulkanModulePrefix <> "." <> s)
-      in  \case
-            TermName  "advancePtrBytes"  -> vk "CStruct.Utils"
-            TermName  "lowerArrayPtr"    -> vk "CStruct.Utils"
-            TermName  "boolToBool32"     -> vk "Core10.FundamentalTypes"
-            TermName  "bool32ToBool"     -> vk "Core10.FundamentalTypes"
-            TyConName "Zero"             -> vk "Zero"
-            TyConName "ToCStruct"        -> vk "CStruct"
-            TyConName "FromCStruct"      -> vk "CStruct"
-            TyConName "IsHandle"         -> vk "Core10.APIConstants"
-            TyConName ":::"              -> vk "NamedType"
-            TyConName "MAX_MEMORY_TYPES" -> vk "Core10.APIConstants"
-            TyConName "MAX_MEMORY_HEAPS" -> vk "Core10.APIConstants"
-            ConName   "MAX_MEMORY_TYPES" -> vk "Core10.APIConstants"
-            ConName   "MAX_MEMORY_HEAPS" -> vk "Core10.APIConstants"
-            TyConName "SomeStruct"       -> vk "CStruct.Extends"
-            TyConName "PokeChain"        -> vk "CStruct.Extends"
-            TyConName "Extendss"         -> vk "CStruct.Extends"
-            TermName  "forgetExtensions" -> vk "CStruct.Extends"
-            TyConName "VulkanException"  -> vk "Exception"
-            ConName   "SUCCESS"          -> vk "Core10.Enums.Result"
-            _                            -> Nothing
-    , externalDocHTML                = Nothing
-    , objectTypePattern              = const Nothing
-    , extensibleStructTypeMemberName = Nothing
-    , extensibleStructTypeType       = Nothing
+    , isExternalName                 = const Nothing
+    , externalDocHTML                = Just
+      "https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html"
+    , objectTypePattern              = pure
+                                       . mkPatternName r
+                                       . CName
+                                       . ("XR_OBJECT_TYPE_" <>)
+                                       . T.pack
+                                       . toScreamingSnake
+                                       . fromHumps
+                                       . T.unpack
+                                       . dropXr
+    , extensibleStructTypeMemberName = Just "type"
+    , extensibleStructTypeType       = Just "XrStructureType"
     }
 
-dropVma :: CName -> Text
-dropVma (CName t) = fromMaybe t (dropPrefix "vma" t)
+dropXr :: CName -> Text
+dropXr (CName t) = fromMaybe t (dropPrefix "xr" t)
 
+-- TODO: expand or remove
 vulkanNameOverrides :: CName -> Maybe Text
 vulkanNameOverrides = \case
-  "VK_MAX_MEMORY_TYPES" -> Just "MAX_MEMORY_TYPES"
-  "VK_MAX_MEMORY_HEAPS" -> Just "MAX_MEMORY_HEAPS"
-  "VK_SUCCESS"          -> Just "SUCCESS"
-  _                     -> Nothing
+  _ -> Nothing
 
 dropPrefix
   :: Text

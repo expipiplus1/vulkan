@@ -17,6 +17,8 @@ cradle:
         cabal:
         - path: ./src/
           component: lib:generate-new
+        - path: ./khronos-spec/
+          component: lib:khronos-spec
         - path: ./vk/
           component: exe:vk
         - path: ./xr/

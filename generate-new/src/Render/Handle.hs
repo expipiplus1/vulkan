@@ -1,5 +1,4 @@
-module Render.Handle
-  where
+module Render.Handle where
 
 import           Data.Text.Prettyprint.Doc
 import           Language.Haskell.TH            ( mkName )

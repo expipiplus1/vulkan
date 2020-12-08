@@ -2,23 +2,23 @@ module Documentation.All
   ( loadAllDocumentation
   ) where
 
-import           Relude
-import qualified Data.Text.Extra               as T
-import           Control.Monad.Except
-import qualified Data.Map                      as Map
-import           Data.Text.Extra                ( (<+>) )
-import           Say
-import           System.FilePath
-import           System.Directory
-import qualified Data.List                     as List
 import           Control.Concurrent.Async.Pool
+import           Control.Monad.Except
+import qualified Data.List                     as List
+import qualified Data.Map                      as Map
+import qualified Data.Text.Extra               as T
+import           Data.Text.Extra                ( (<+>) )
+import           GHC.Conc                       ( numCapabilities )
+import           Relude
+import           Say
 import           System.Console.AsciiProgress   ( Options(..)
-                                                , displayConsoleRegions
                                                 , def
+                                                , displayConsoleRegions
                                                 , newProgressBar
                                                 , tick
                                                 )
-import           GHC.Conc                       ( numCapabilities )
+import           System.Directory
+import           System.FilePath
 
 import           Documentation
 import           Documentation.RunAsciiDoctor

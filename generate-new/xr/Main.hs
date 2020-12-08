@@ -1,7 +1,14 @@
 module Main where
 
+import           Bespoke                        ( assignBespokeModules )
+import           Bespoke.MarshalParams
 import           Data.Text.Extra                ( (<+>) )
 import           Data.Version
+import           Documentation.All
+import           Error
+import           Khronos.AssignModules
+import           Khronos.Render
+import           Marshal
 import           Polysemy
 import           Polysemy.Fixpoint
 import           Polysemy.Input
@@ -12,23 +19,16 @@ import           Relude                  hiding ( Handle
                                                 , evalState
                                                 , uncons
                                                 )
-import           Say
-import           System.TimeIt
-import           Text.Show.Pretty
-
-import           Bespoke                        ( assignBespokeModules )
-import           Bespoke.MarshalParams
-import           Bespoke.RenderParams
-import           Documentation.All
-import           Error
-import           Marshal
 import           Render.Aggregate
 import           Render.Element.Write
 import           Render.Names
 import           Render.SpecInfo
-import           Spec.Parse
-
 import           Render.State                   ( initialRenderState )
+import           Say
+import           Spec.Parse
+import           System.TimeIt
+import           Text.Show.Pretty
+import           XR.RenderParams
 
 main :: IO ()
 main =
@@ -47,6 +47,61 @@ main =
     (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec"
       $ parseSpec @SpecXr specText
 
-    liftIO $ pPrint spec
+    let allExtensionNames =
+          toList (exName <$> specExtensions)
+            <> [ "XR_VERSION_" <> show major <> "_" <> show minor
+               | Feature {..}      <- toList specFeatures
+               , major : minor : _ <- pure $ versionBranch fVersion
+               ]
+        doLoadDocs = False
+    getDocumentation <- if doLoadDocs
+      then liftIO $ loadAllDocumentation allExtensionNames
+                                         "./OpenXR-Docs/specification"
+                                         "./OpenXR-Docs/specification/man"
+      else pure (const Nothing)
 
-    error "TODO"
+    runInputConst (renderParams specHandles)
+      . withRenderedNames spec
+      . withSpecInfo spec getSize
+      . withTypeInfo spec
+      $ do
+
+          mps          <- marshalParams spec
+
+          (ss, us, cs) <- runInputConst mps $ do
+            ss <- timeItNamed "Marshaling structs"
+              $ traverseV marshalStruct specStructs
+            us <- timeItNamed "Marshaling unions"
+              $ traverseV marshalStruct specUnions
+            cs <- timeItNamed "Marshaling commands"
+              $ traverseV marshalCommand specCommands
+              -- TODO: Don't use all commands here, just those commands referenced by
+              -- features and extensions. Similarly for specs
+            pure (ss, us, cs)
+
+          renderElements <-
+            timeItNamed "Rendering" $ traverse evaluateWHNF =<< evalStateIO
+              initialRenderState
+              (renderSpec spec getDocumentation brackets ss us cs)
+
+          groups <-
+            timeItNamed "Segmenting"
+            $   assignModules spec
+            =<< assignBespokeModules renderElements
+
+          timeItNamed "writing"
+            $ renderSegments getDocumentation "out" (mergeElements groups)
+
+------------------------------------------------------------------
+----
+------------------------------------------------------------------
+
+evalStateIO :: Member (Embed IO) r => s -> Sem (State s ': r) a -> Sem r a
+evalStateIO i = fmap snd . stateToIO i
+
+
+----------------------------------------------------------------
+-- Todo
+----------------------------------------------------------------
+
+brackets _ _ = pure mempty

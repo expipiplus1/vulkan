@@ -1,22 +1,22 @@
 {-# LANGUAGE QuasiQuotes #-}
 
-module VK.ExtensionDepElements
+module Khronos.ExtensionDepElements
   ( renderExtensionDepElements
   ) where
 
-import           VK.Utils
 import           Data.Text.Prettyprint.Doc
+import           Data.Traversable
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import           Error
 import           Haskell                        ( HName(..) )
+import           Khronos.Utils
+import           Polysemy.Input
 import           Relude
 import           Render.Element
 import           Render.SpecInfo
 import           Spec.Types
 import           VkModulePrefix
-import           Data.Traversable
-import Polysemy.Input
 
 renderExtensionDepElements
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)

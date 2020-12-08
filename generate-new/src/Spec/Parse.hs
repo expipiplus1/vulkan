@@ -585,8 +585,8 @@ parseHandles = onTypes "handle" parseHandle
           Just "VkDisplayKHR"     -> pure Instance
           Just "VkSurfaceKHR"     -> pure Instance
           Just "XrInstance"       -> pure Instance
-          Just "XrSession"        -> pure Session
-          Just "XrActionSet"      -> pure ActionSet
+          Just "XrSession"        -> pure Instance
+          Just "XrActionSet"      -> pure Instance
           _                       -> throw "Unknown handle level"
       pure Handle { .. }
 

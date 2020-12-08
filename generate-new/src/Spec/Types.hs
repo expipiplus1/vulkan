@@ -145,8 +145,6 @@ data Handle = Handle
 data HandleLevel
   = Instance
   | Device
-  | Session
-  | ActionSet
   | NoHandleLevel
   deriving (Show, Eq, Ord)
 

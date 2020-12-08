@@ -18,15 +18,20 @@ import           Spec.Parse
 import           VkModulePrefix
 
 specVersions
-  :: forall r
-   . (HasErr r, HasRenderParams r)
-  => Spec SpecVk
+  :: forall r t
+   . (HasErr r, HasRenderParams r, KnownSpecFlavor t)
+  => Spec t
   -> Vector (Sem r RenderElement)
 specVersions Spec {..} = fromList
-  ( headerVersion specHeaderVersion
-  : headerVersionComplete (fVersion (V.last specFeatures)) specHeaderVersion
-  : versionConstruction
-  : (featureVersion <$> toList specFeatures)
+  (  (case sSpecFlavor @t of
+       SSpecVk ->
+         [ headerVersion specHeaderVersion
+         , headerVersionComplete (fVersion (V.last specFeatures))
+                                 specHeaderVersion
+         ]
+       SSpecXr -> []
+     )
+  <> (versionConstruction : (featureVersion <$> toList specFeatures))
   )
 
 headerVersion

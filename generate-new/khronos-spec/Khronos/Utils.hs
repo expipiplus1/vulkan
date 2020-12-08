@@ -1,16 +1,15 @@
-module VK.Utils where
+module Khronos.Utils where
 
 import           Data.Text
 import qualified Data.Text                     as T
+import           Data.Version
+import           Error
 import           Haskell.Name
-import           Polysemy
 import           Polysemy.Input
+import           Prettyprinter
 import           Relude
 import           Render.Element
 import           Spec.Name                      ( CName(CName) )
-import Prettyprinter
-import Data.Version
-import Error
 
 extensionPatterns :: HasRenderParams r => Text -> Sem r (HName, HName)
   -- ^ EXTENSION_NAME, SPEC_VERSION

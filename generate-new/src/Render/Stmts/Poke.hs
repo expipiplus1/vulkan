@@ -194,7 +194,7 @@ normal name to from valueRef =
     RenderParams {..}                     <- input
     toTy                                  <- cToHsTypeWithHoles DoPreserve to
     Just (IdiomaticType fromTy fromFun _) <- pure $ mkIdiomaticType toTy
-    fromTy'                               <- cToHsTypeWithHoles DoNotPreserve from
+    fromTy' <- cToHsTypeWithHoles DoNotPreserve from
     guard (fromTy == fromTy')
     raise2 $ stmtC (Just toTy) name $ do
       fromDoc        <- fromFun
@@ -473,8 +473,8 @@ eitherWord32 name toType fromElem valueRef = case toType of
     elemTy <- cToHsTypeWithHoles DoPreserve toElem
     stmtC (Just (ConT ''Ptr :@ elemTy)) name $ do
       ValueDoc value <- use valueRef
-      vecName <- freshName (Just "v")
-      subPoke <- renderSubStmts $ do
+      vecName        <- freshName (Just "v")
+      subPoke        <- renderSubStmts $ do
         valueRef' <- pureStmt . ValueDoc . pretty $ vecName
         getPokeDirect' name toType (Vector NotNullable fromElem) valueRef'
       freeNames [vecName]
@@ -719,8 +719,12 @@ byteStringFixedArrayIndirect
   -> Ref s AddrDoc
   -> Stmt s r (Ref s ValueDoc)
 byteStringFixedArrayIndirect _name size toElem valueRef addrRef = case size of
-  SymbolicArraySize _ -> unitStmt $ do
-    fn                <- case toElem of
+  SymbolicArraySize _ -> sized
+  NumericArraySize _ -> sized
+  t -> throw $ "Unhandled indirect ByteString conversion to: " <> show t
+ where
+  sized = unitStmt $ do
+    fn <- case toElem of
       Char -> do
         let fn = "pokeFixedLengthNullTerminatedByteString"
         tellImport (TermName fn)
@@ -733,7 +737,6 @@ byteStringFixedArrayIndirect _name size toElem valueRef addrRef = case size of
     ValueDoc value <- use valueRef
     pure . IOAction . ValueDoc $ pretty fn <+> addr <+> value
 
-  t -> throw $ "Unhandled indirect ByteString conversion to: " <> show t
 
 tupleIndirect
   :: HasPoke a r
@@ -923,5 +926,6 @@ elemAddrRef toElem addrRef index = stmt Nothing Nothing $ do
 raise2 :: Sem r a -> Sem (e1 : e2 : r) a
 raise2 = raise . raise
 
-forVMaybes :: HasErr r => Vector a -> (a -> Sem r (Maybe b)) -> Sem r (Vector b)
+forVMaybes
+  :: HasErr r => Vector a -> (a -> Sem r (Maybe b)) -> Sem r (Vector b)
 forVMaybes xs f = V.mapMaybe id <$> traverseV f xs
