@@ -46,7 +46,7 @@ instance Semigroup RenderedNames where
 instance Monoid RenderedNames where
   mempty = RenderedNames mempty mempty mempty mempty mempty id
 
-specRenderedNames :: HasRenderParams r => Spec -> Sem r RenderedNames
+specRenderedNames :: HasRenderParams r => Spec t -> Sem r RenderedNames
 specRenderedNames Spec {..} = do
   RenderParams {..} <- input
   let
@@ -79,7 +79,7 @@ specRenderedNames Spec {..} = do
   pure RenderedNames { .. }
 
 withRenderedNames
-  :: HasRenderParams r => Spec -> Sem (Input RenderedNames ': r) a -> Sem r a
+  :: HasRenderParams r => Spec t -> Sem (Input RenderedNames ': r) a -> Sem r a
 withRenderedNames spec a = do
   rns <- specRenderedNames spec
   runInputConst rns a

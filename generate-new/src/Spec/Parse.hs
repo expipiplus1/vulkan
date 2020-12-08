@@ -52,10 +52,11 @@ type P a
   = forall r . (MemberWithError (Input TypeNames) r, HasErr r) => Sem r a
 
 parseSpec
-  :: HasErr r
+  :: forall t r
+   . (KnownSpecType t, HasErr r)
   => ByteString
   -- ^ The spec xml
-  -> Sem r (Spec, CType -> Maybe (Int, Int))
+  -> Sem r (Spec t, CType -> Maybe (Int, Int))
   -- ^ Return the map from CType to size and alignment because it's useful later
 parseSpec bs = do
   n <- fromEither (first show (parse bs))
@@ -498,7 +499,8 @@ parseConstantAliases es =
 -- Defines
 ----------------------------------------------------------------
 
-parseHeaderVersion :: [Content] -> P Word
+parseHeaderVersion
+  :: forall t . KnownSpecType t => [Content] -> P (SpecHeaderVersion t)
 parseHeaderVersion es = do
   let defines :: [Node]
       defines =
@@ -507,14 +509,16 @@ parseHeaderVersion es = do
         , name n == "type"
         , Just "define" <- pure (getAttr "category" n)
         ]
-  vers <- flip mapMaybeM defines $ \d -> do
-    name <- nameElemMaybe d
-    if name /= Just "VK_HEADER_VERSION"
-      then pure Nothing
-      else do
-        allText <- decode $ allText d
-        let ver = T.takeWhileEnd isNumber allText
-        pure $ readMaybe (T.unpack ver)
+  vers <- case sSpecFlavor @t of
+    SSpecVk -> flip mapMaybeM defines $ \d -> do
+      name <- nameElemMaybe d
+      if name /= Just "VK_HEADER_VERSION"
+        then pure Nothing
+        else do
+          allText <- decode $ allText d
+          let ver = T.takeWhileEnd isNumber allText
+          pure . fmap VkVersion $ readMaybe (T.unpack ver)
+    SSpecXR -> pure [XRVersion]
   case vers of
     []  -> throw "No header version found in spec"
     [v] -> pure v

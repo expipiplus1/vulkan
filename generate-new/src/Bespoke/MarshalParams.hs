@@ -16,7 +16,7 @@ import           CType
 import           Marshal.Scheme
 import           Spec.Parse
 
-marshalParams :: Spec -> Sem r MarshalParams
+marshalParams :: Spec t -> Sem r MarshalParams
 marshalParams spec@Spec {..} = do
   bespokeSchemes <- bespokeSchemes spec
   let
@@ -74,7 +74,8 @@ marshalParams spec@Spec {..} = do
 ----------------------------------------------------------------
 
 isDefaultable' :: CType -> Bool
-isDefaultable' t = isDefaultableForeignType t || isIntegral t || hasUnknownEnum t
+isDefaultable' t =
+  isDefaultableForeignType t || isIntegral t || hasUnknownEnum t
 
 isIntegral :: CType -> Bool
 isIntegral =

@@ -7,3 +7,6 @@
 [submodule "generate-new/VulkanMemoryAllocator"]
 	path = VulkanMemoryAllocator/VulkanMemoryAllocator
 	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+[submodule "generate-new/OpenXR-Docs"]
+	path = generate-new/OpenXR-Docs
+	url = git://github.com/KhronosGroup/OpenXR-Docs.git

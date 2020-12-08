@@ -31,9 +31,9 @@ import           Spec.Types
 import           VkModulePrefix
 
 structExtends
-  :: forall r
+  :: forall r t
    . (HasErr r, HasRenderParams r, HasSpecInfo r)
-  => Spec
+  => Spec t
   -> Sem r RenderElement
 structExtends spec = genRe "Extends type family" $ do
   tellExplicitModule (vulkanModule ["CStruct", "Extends"])
@@ -42,9 +42,9 @@ structExtends spec = genRe "Extends type family" $ do
   classes spec
 
 typeFamily
-  :: forall r
+  :: forall r t
    . (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderElem r)
-  => Spec
+  => Spec t
   -> Sem r ()
 typeFamily Spec {..} = do
   RenderParams {..} <- input
@@ -79,9 +79,9 @@ typeFamily Spec {..} = do
          )
 
 classes
-  :: forall r
+  :: forall r t
    . (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderElem r)
-  => Spec
+  => Spec t
   -> Sem r ()
 classes Spec {..} = do
   RenderParams {..} <- input

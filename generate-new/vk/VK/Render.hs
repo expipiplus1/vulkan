@@ -38,8 +38,8 @@ import           Spec.Parse
 
 import           Render.State                   ( HasRenderState )
 import           VK.Bracket
-import           VK.SPIRVElements
 import           VK.ExtensionDepElements
+import           VK.SPIRVElements
 
 data RenderedSpec a = RenderedSpec
   { rsHandles            :: Vector a
@@ -63,7 +63,7 @@ renderSpec
      , HasRenderedNames r
      , HasRenderState r
      )
-  => Spec
+  => Spec SpecVk
   -> (Documentee -> Maybe Documentation)
   -> Vector (MarshaledStruct AStruct)
   -> Vector (MarshaledStruct AUnion)
@@ -134,8 +134,7 @@ renderSpec spec@Spec {..} getDoc ss us cs = do
       <> V.singleton (structExtends spec)
       <> V.singleton
            (renderSPIRVElements specSPIRVExtensions specSPIRVCapabilities)
-      <> V.singleton
-           (renderExtensionDepElements specExtensions)
+      <> V.singleton (renderExtensionDepElements specExtensions)
     }
 
 -- | Render a command along with any associated bracketing function

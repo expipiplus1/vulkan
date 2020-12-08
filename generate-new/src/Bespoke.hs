@@ -112,7 +112,7 @@ data BespokeScheme where
   BespokeScheme ::(forall a. Marshalable a => CName -> a -> Maybe (MarshalScheme a)) -> BespokeScheme
   --- ^ Parent name -> child -> scheme
 
-bespokeSchemes :: Spec -> Sem r [BespokeScheme]
+bespokeSchemes :: Spec t -> Sem r [BespokeScheme]
 bespokeSchemes spec =
   pure
     $  [baseInOut, wsiScheme, dualPurposeBytestrings, nextPointers spec]
@@ -131,7 +131,7 @@ baseInOut = BespokeScheme $ \case
 
 data NextType = NextElided | NextChain
 
-nextPointers :: Spec -> BespokeScheme
+nextPointers :: Spec t -> BespokeScheme
 nextPointers Spec {..} =
   let schemeMap :: Map (CName, CName) NextType
       schemeMap = Map.fromList

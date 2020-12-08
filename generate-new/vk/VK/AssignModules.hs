@@ -39,9 +39,9 @@ import           VK.Render
 
 -- | Assign all render elements a module
 assignModules
-  :: forall r
+  :: forall r t
    . (HasErr r, HasRenderParams r, HasSpecInfo r)
-  => Spec
+  => Spec t
   -> RenderedSpec RenderElement
   -> Sem r [(ModName, Vector RenderElement)]
 assignModules spec rs = do
@@ -136,12 +136,12 @@ data ReqDeps = ReqDeps
 -- - For each extension
 --   -
 assign
-  :: forall r
+  :: forall r t
    . (HasErr r, Member (State S) r, HasRenderParams r)
   => (HName -> Sem r Int)
   -> AdjacencyIntMap
   -> AdjacencyIntMap
-  -> Spec
+  -> Spec t
   -> RenderedSpec (Int, RenderElement)
   -> Sem r ()
 assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
@@ -452,7 +452,7 @@ postIntSets is rel = Set.unions $ (`postIntSet` rel) <$> Set.toList is
 -- Ignored unexported names
 ----------------------------------------------------------------
 
-unexportedNames :: HasRenderParams r => Spec -> Sem r [HName]
+unexportedNames :: HasRenderParams r => Spec t -> Sem r [HName]
 unexportedNames Spec {..} = do
   RenderParams {..} <- input
   let apiVersions = toList specFeatures <&> \Feature {..} ->

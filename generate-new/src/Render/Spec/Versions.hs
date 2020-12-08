@@ -1,6 +1,5 @@
 {-# language QuasiQuotes #-}
-module Render.Spec.Versions
-  where
+module Render.Spec.Versions where
 
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
@@ -21,18 +20,20 @@ import           VkModulePrefix
 specVersions
   :: forall r
    . (HasErr r, HasRenderParams r)
-  => Spec
+  => Spec SpecVk
   -> Vector (Sem r RenderElement)
 specVersions Spec {..} = fromList
   ( headerVersion specHeaderVersion
-  : headerVersionComplete (fVersion (V.last specFeatures))
-                          specHeaderVersion
+  : headerVersionComplete (fVersion (V.last specFeatures)) specHeaderVersion
   : versionConstruction
   : (featureVersion <$> toList specFeatures)
   )
 
-headerVersion :: (HasErr r, HasRenderParams r) => Word -> Sem r RenderElement
-headerVersion version = genRe "header version" $ do
+headerVersion
+  :: (HasErr r, HasRenderParams r)
+  => SpecHeaderVersion SpecVk
+  -> Sem r RenderElement
+headerVersion (VkVersion version) = genRe "header version" $ do
   RenderParams {..} <- input
   tellExplicitModule (vulkanModule ["Version"])
   let pat = mkPatternName "VK_HEADER_VERSION"
@@ -44,8 +45,11 @@ headerVersion version = genRe "header version" $ do
   |]
 
 headerVersionComplete
-  :: (HasErr r, HasRenderParams r) => Version -> Word -> Sem r RenderElement
-headerVersionComplete lastFeatureVersion headerVersion =
+  :: (HasErr r, HasRenderParams r)
+  => Version
+  -> SpecHeaderVersion SpecVk
+  -> Sem r RenderElement
+headerVersionComplete lastFeatureVersion (VkVersion headerVersion) =
   genRe "header version complete" $ do
     RenderParams {..} <- input
     tellExplicitModule (vulkanModule ["Version"])

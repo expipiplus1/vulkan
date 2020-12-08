@@ -1,4 +1,5 @@
 {-# language UndecidableInstances #-}
+{-# language AllowAmbiguousTypes #-}
 {-# language TypeFamilyDependencies #-}
 module Spec.Types
   ( CName(..)
@@ -14,8 +15,27 @@ import qualified Marshal.Marshalable           as M
 import           Spec.APIConstant
 import           Spec.Name
 
-data Spec = Spec
-  { specHeaderVersion      :: Word
+data SpecFlavor
+  = SpecVk
+  | SpecXR
+
+data SSpecFlavor t where
+  SSpecVk :: SSpecFlavor SpecVk
+  SSpecXR :: SSpecFlavor SpecXR
+
+class KnownSpecType (t :: SpecFlavor) where
+  sSpecFlavor :: SSpecFlavor t
+instance KnownSpecType SpecVk where
+  sSpecFlavor = SSpecVk
+instance KnownSpecType SpecXR where
+  sSpecFlavor = SSpecXR
+
+----------------------------------------------------------------
+-- The spec
+----------------------------------------------------------------
+
+data Spec t = Spec
+  { specHeaderVersion      :: SpecHeaderVersion t
   , specHandles            :: Vector Handle
   , specFuncPointers       :: Vector FuncPointer
   , specStructs            :: Vector Struct
@@ -32,6 +52,12 @@ data Spec = Spec
   , specSPIRVCapabilities  :: Vector SPIRVCapability
   }
   deriving Show
+
+data SpecHeaderVersion (t :: SpecFlavor) where
+  VkVersion :: Word -> SpecHeaderVersion SpecVk
+  XRVersion :: SpecHeaderVersion SpecXR
+
+deriving instance Show (SpecHeaderVersion t)
 
 --
 -- Features and Extensions

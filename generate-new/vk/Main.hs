@@ -7,10 +7,10 @@ import           Polysemy.Fixpoint
 import           Polysemy.Input
 import           Polysemy.State
 import           Relude                  hiding ( Handle
+                                                , State
                                                 , Type
                                                 , evalState
                                                 , uncons
-                                                , State
                                                 )
 import           Say
 import           System.TimeIt
@@ -45,7 +45,8 @@ main =
     specText <- timeItNamed "Reading spec"
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
 
-    (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec" $ parseSpec specText
+    (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec"
+      $ parseSpec @SpecVk specText
 
     let allExtensionNames =
           toList (exName <$> specExtensions)
