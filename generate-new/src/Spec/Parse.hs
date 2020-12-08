@@ -740,8 +740,10 @@ parseStruct n = do
       Just o  -> pure o
       Nothing -> boolListAttr "optional" m
     let listAttrName = if hasAttr "altlen" m then "altlen" else "len"
-    smLengths <- lenListAttr listAttrName m
-    smValues  <- listAttr decode "values" m
+    smLengths <- case bespokeLengths sName smName of
+      Just o  -> pure o
+      Nothing -> lenListAttr listAttrName m
+    smValues <- listAttr decode "values" m
     let smOffset = ()
     pure StructMember { .. }
 

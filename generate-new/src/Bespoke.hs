@@ -8,6 +8,7 @@ module Bespoke
   , bespokeElements
   , bespokeSizes
   , bespokeOptionality
+  , bespokeLengths
   , bespokeSchemes
   , BespokeScheme(..)
   , structChainVar
@@ -730,6 +731,14 @@ bespokeOptionality = \case
     "pBufferInfo"      -> Just (fromList [True])
     "pTexelBufferView" -> Just (fromList [True])
     _                  -> Nothing
+  _ -> const Nothing
+
+bespokeLengths :: CName -> CName -> Maybe (Vector ParameterLength)
+bespokeLengths = \case
+  -- Work around https://github.com/KhronosGroup/Vulkan-Docs/issues/1414
+  "VkDescriptorSetAllocateInfo" -> \case
+    "pSetLayouts" -> Just (fromList [NamedLength "descriptorSetCount"])
+    _             -> Nothing
   _ -> const Nothing
 
 bespokeElements :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
