@@ -190,6 +190,8 @@ vmaSpecInfo enums structs handles commands = do
       siAppearsInNegativePosition = const False
       -- TODO: is there anything sensible to put in here
       siGetAliases                = const []
+      siExtensionType             = const Nothing
+      siExtensionDeps             = const []
   pure SpecInfo { .. }
 
 ----------------------------------------------------------------
