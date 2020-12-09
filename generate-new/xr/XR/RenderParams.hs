@@ -52,11 +52,14 @@ renderParams handles = r
         $ fromMaybe (upperCaseFirst . dropXr $ n) (vulkanNameOverrides n)
     , mkFuncPointerName              = TyConName . T.tail . unCName
     , mkFuncPointerMemberName = TermName . ("p" <>) . upperCaseFirst . unCName
-    , mkEmptyDataName                = TermName . (<> "_T") . dropXr
+    , mkEmptyDataName                = TyConName . (<> "_T") . dropXr
     , mkDispatchableHandlePtrName    = TermName
                                        . (<> "Handle")
                                        . lowerCaseFirst
                                        . dropXr
+    , camelPrefix                    = "Xr"
+    , lowerPrefix                    = "xr"
+    , flagsTypeName                  = "XrFlags64"
     , alwaysQualifiedNames           = mempty
     , mkIdiomaticType                =
       let

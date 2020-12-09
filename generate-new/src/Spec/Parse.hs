@@ -42,6 +42,7 @@ import           Bespoke
 import           CType
 import           CType.Size
 import           Data.ByteString.Extra          ( dropPrefix )
+import qualified Data.ByteString.Extra         as BS
 import           Error
 import           Marshal.Marshalable            ( ParameterLength(..) )
 import           Spec.APIConstant
@@ -106,7 +107,11 @@ parseSpec bs = do
           parseExtensions NotDisabled . contents =<< oneChild "extensions" n
         specDisabledExtensions <-
           parseExtensions OnlyDisabled . contents =<< oneChild "extensions" n
-        specAPIConstants <- parseAPIConstants (contents n)
+        specAPIConstants <- case specFlavor @t of
+          SpecVk -> parseAPIConstants (contents n)
+          SpecXr -> liftA2 (<>)
+                           (parseAPIConstants (contents n))
+                           (parseDefinedConstants types)
         specExtensionConstants <- parseExtensionConstants (contents n)
         (specSPIRVExtensions, specSPIRVCapabilities) <- case sSpecFlavor @t of
           SSpecVk ->
@@ -419,6 +424,17 @@ parseAPIConstants es = V.fromList <$> sequenceV
   , (n, v)               <- someConstants e
   ]
 
+parseDefinedConstants :: [Content] -> P (Vector Constant)
+parseDefinedConstants es = V.fromList <$> sequenceV
+  [ do
+      n' <- decode n
+      context n' (Constant (CName n') <$> parseConstant v)
+  | Element e <- es
+  , "type" == name e
+  , Just "define" <- pure $ getAttr "category" e
+  , Just (n, v)   <- pure $ definedConstant e
+  ]
+
 parseExtensionConstants :: [Content] -> P (Vector Constant)
 parseExtensionConstants es = V.fromList <$> sequenceV
   [ do
@@ -443,6 +459,13 @@ someConstants r =
   , Just n <- pure (getAttr "name" ee)
   , Just v <- pure (getAttr "value" ee)
   ]
+
+definedConstant :: Node -> Maybe (ByteString, ByteString)
+definedConstant r =
+  let t = BS.strip $ allNonCommentText r
+  in  case BS.words t of
+        ["#define", n, v] -> Just (n, v)
+        _                 -> Nothing
 
 ---------------------------------------------------------------
 -- Aliases
@@ -962,22 +985,39 @@ extraEnums = case sSpecFlavor @t of
 
 isForbidden :: CName -> Bool
 isForbidden n =
-  (      n
-    `elem` [ "vk_platform"
-           , "VK_API_VERSION"
-           , "VK_VERSION_MAJOR"
-           , "VK_VERSION_MINOR"
-           , "VK_VERSION_PATCH"
-           , "VK_HEADER_VERSION"
-           , "VK_HEADER_VERSION_COMPLETE"
-           , "VK_NULL_HANDLE"
-           , "VK_DEFINE_HANDLE"
-           , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
-           , "VK_MAKE_VERSION"
-           ]
-    )
+  (n `elem` (vkForbidden <> xrForbidden))
     ||             "VK_API_VERSION_"
     `T.isPrefixOf` unCName n
+ where
+  vkForbidden =
+    [ "vk_platform"
+    , "VK_API_VERSION"
+    , "VK_VERSION_MAJOR"
+    , "VK_VERSION_MINOR"
+    , "VK_VERSION_PATCH"
+    , "VK_HEADER_VERSION"
+    , "VK_HEADER_VERSION_COMPLETE"
+    , "VK_NULL_HANDLE"
+    , "VK_DEFINE_HANDLE"
+    , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
+    , "VK_MAKE_VERSION"
+    ]
+  xrForbidden =
+    [ "openxr_platform_defines"
+    , "XR_CURRENT_API_VERSION"
+    , "XR_VERSION_MAJOR"
+    , "XR_VERSION_MINOR"
+    , "XR_VERSION_PATCH"
+    , "XR_DEFINE_HANDLE"
+    , "XR_MAKE_VERSION"
+    , "XR_MAY_ALIAS"
+    , "XR_NULL_HANDLE"
+    , "XR_NULL_PATH"
+    , "XR_NULL_SYSTEM_ID"
+    , "XR_SUCCEEDED"
+    , "XR_UNQUALIFIED_SUCCESS"
+    , "XR_FAILED"
+    ]
 
 onTypes
   :: HasErr r

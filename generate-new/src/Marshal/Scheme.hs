@@ -1,5 +1,4 @@
-module Marshal.Scheme
-  where
+module Marshal.Scheme where
 
 import           Data.Text.Prettyprint.Doc
 import           Data.Vector.Extra              ( pattern (:<|)
@@ -93,9 +92,9 @@ data Nullable = Nullable | NotNullable
   deriving (Show, Eq, Ord)
 
 data CustomScheme a = CustomScheme
-  { csName :: Text
+  { csName       :: Text
     -- ^ A name for Eq and Ord, also useful for debugging
-  , csZero :: Maybe (Doc ())
+  , csZero       :: Maybe (Doc ())
     -- ^ The 'zero' value for this scheme if possible
   , csZeroIsZero :: Bool
     -- ^ Does the 'zero' value write zero bytes (and can be omitted if we know
@@ -291,7 +290,7 @@ voidPointerScheme p = do
 returnPointerScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 returnPointerScheme p = do
   MarshalParams {..} <- input
-  Ptr NonConst t <- pure $ type' p
+  Ptr NonConst t     <- pure $ type' p
   guard (not (isPassAsPointerType t))
   let inout = do
         Empty                <- pure $ lengths p
@@ -307,9 +306,19 @@ returnPointerScheme p = do
         pure $ Returned (Vector NotNullable (Normal t))
   asum [inout, normal, array]
 
+returnArrayScheme :: Marshalable a => a -> ND r (MarshalScheme a)
+returnArrayScheme p = do
+  MarshalParams {..}          <- input
+  Array NonConst _arraySize t <- pure $ type' p
+  guard (not (isPassAsPointerType t))
+  let string = do
+        Char  <- pure t
+        Empty <- pure $ lengths p
+        pure $ Returned ByteString
+  asum [string]
+
 -- | If we have a non-const pointer in a struct leave it as it is
-returnPointerInStructScheme
-  :: Marshalable a => a -> ND r (MarshalScheme a)
+returnPointerInStructScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 returnPointerInStructScheme p = do
   t@(Ptr NonConst _) <- pure $ type' p
   pure $ Preserve t
@@ -421,15 +430,15 @@ optionalScheme wes wdh p = do
 -- | A struct to be wrapped in "SomeStruct"
 extensibleStruct :: Marshalable a => a -> ND r (MarshalScheme a)
 extensibleStruct p = do
-  TypeName n         <- dropPtrToStruct (type' p)
-  Just     s         <- getStruct n
+  TypeName n <- dropPtrToStruct (type' p)
+  Just     s <- getStruct n
   guard (not (V.null (sExtendedBy s)))
   pure $ WrappedStruct n
 
 rawDispatchableHandles :: Marshalable a => a -> ND r (MarshalScheme a)
 rawDispatchableHandles p = do
-  t@(TypeName n)     <- dropPtrToStruct (type' p)
-  Just h             <- getHandle n
+  t@(TypeName n) <- dropPtrToStruct (type' p)
+  Just h         <- getHandle n
   guard (Dispatchable == hDispatchable h)
   normalCheck t p
   pure . Preserve $ t

@@ -242,6 +242,12 @@ data RenderParams = RenderParams
     -- types
   , mkDispatchableHandlePtrName :: CName -> HName
     -- ^ The record member name for the pointer member in dispatchable handles
+  , camelPrefix                 :: Text
+    -- ^ "Vk" or "Xr" or "Vma"
+  , lowerPrefix                 :: Text
+    -- ^ "vk" or "xr" or "vma"
+  , flagsTypeName               :: CName
+    -- ^ "VkFlags" or "XrFlags64"
   , alwaysQualifiedNames        :: Vector Name
   , mkIdiomaticType             :: Type -> Maybe IdiomaticType
     -- ^ Overrides for using a different type than default on the Haskell side

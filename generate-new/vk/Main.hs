@@ -26,6 +26,7 @@ import           Render.Element.Write
 import           Render.Names
 import           Render.SpecInfo
 import           Spec.Parse
+import           VK.Bracket
 
 import           Khronos.AssignModules
 import           Khronos.Render
@@ -84,7 +85,7 @@ main =
           renderElements <-
             timeItNamed "Rendering" $ traverse evaluateWHNF =<< evalStateIO
               initialRenderState
-              (renderSpec spec getDocumentation ss us cs)
+              (renderSpec spec getDocumentation brackets ss us cs)
 
           groups <-
             timeItNamed "Segmenting"

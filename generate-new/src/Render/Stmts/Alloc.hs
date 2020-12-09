@@ -129,9 +129,15 @@ allocateVector
 allocateVector vec = do
   let name' = name vec
       toTy  = type' vec
-  toElem <- unPtr toTy
-  lenRef <- getLenRef @a (lengths vec)
-  allocArray Zeroed name' toElem (Right lenRef)
+  case toTy of
+    Array _ arraySize toElem -> do
+      lenRef <- stmt Nothing Nothing $ do
+        pure $ Pure AlwaysInline (ValueDoc "error \"shibb\"")
+      allocArray Zeroed name' toElem (Right lenRef)
+    _ -> do
+      toElem <- unPtr toTy
+      lenRef <- getLenRef @a (lengths vec)
+      allocArray Zeroed name' toElem (Right lenRef)
 
 -- Currently the same implementation as allocateVector
 allocateByteString

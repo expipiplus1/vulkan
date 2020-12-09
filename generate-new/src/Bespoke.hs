@@ -718,12 +718,13 @@ bespokeStructsAndUnions =
 
 bespokeSizes :: SpecFlavor -> [(CName, (Int, Int))]
 bespokeSizes t =
-  let xrSizes =
-        [ ("XrFlags64"                , (8, 8))
+  let
+    xrSizes =
+      [ ("XrFlags64"                , (8, 8))
         , ("XrTime"                   , (8, 8))
         , ("XrDuration"               , (8, 8))
         , ("XrVersion"                , (8, 8))
-          -- TODO: Can these be got elsewhere?
+        -- TODO: Can these be got elsewhere?
         , ("VkResult"                 , (4, 4))
         , ("VkFormat"                 , (4, 4))
         , ("VkInstance"               , (8, 8))
@@ -733,19 +734,23 @@ bespokeSizes t =
         , ("PFN_vkGetDeviceProcAddr"  , (8, 8))
         , ("PFN_vkGetInstanceProcAddr", (8, 8))
         ]
-      vkSizes =
-        [ ("VkSampleMask"   , (4, 4))
+        <> (fst <$> concat
+             [win32Xr @'[Input RenderParams], x11Shared, xcb2Xr, egl, gl, d3d]
+           )
+    vkSizes =
+      [ ("VkSampleMask"   , (4, 4))
         , ("VkFlags"        , (4, 4))
         , ("VkDeviceSize"   , (8, 8))
         , ("VkDeviceAddress", (8, 8))
         ]
-      sharedSizes =
-        (fst <$> concat
-          [win32 @'[Input RenderParams], x11, xcb2, zircon, ggp, egl, gl, d3d]
-        )
-  in  sharedSizes <> case t of
-        SpecVk -> vkSizes
-        SpecXr -> xrSizes
+        <> (fst <$> concat
+             [win32 @'[Input RenderParams], x11Shared, x11, xcb2, zircon, ggp]
+           )
+    sharedSizes = []
+  in
+    sharedSizes <> case t of
+      SpecVk -> vkSizes
+      SpecXr -> xrSizes
 
 bespokeOptionality :: CName -> CName -> Maybe (Vector Bool)
 bespokeOptionality = \case
@@ -768,18 +773,26 @@ bespokeLengths = \case
   _ -> const Nothing
 
 bespokeElements
-  :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
-bespokeElements =
-  fromList
-    $  [ namedType
-       , baseType "VkSampleMask"    ''Word32
-       , baseType "VkFlags"         ''Word32
-       , baseType "VkDeviceSize"    ''Word64
-       , baseType "VkDeviceAddress" ''Word64
-       , nullHandle
-       , boolConversion
-       ]
-    <> wsiTypes
+  :: (HasErr r, HasRenderParams r) => SpecFlavor -> Vector (Sem r RenderElement)
+bespokeElements = \case
+  SpecVk ->
+    fromList
+      $  shared
+      <> [ baseType "VkSampleMask"    ''Word32
+         , baseType "VkFlags"         ''Word32
+         , baseType "VkDeviceSize"    ''Word64
+         , baseType "VkDeviceAddress" ''Word64
+         ]
+      <> wsiTypes SpecVk
+  SpecXr ->
+    fromList
+      $  shared
+      <> [ baseType "XrFlags64"  ''Word64
+         , baseType "XrTime"     ''Int64
+         , baseType "XrDuration" ''Int64
+         ]
+      <> wsiTypes SpecXr
+  where shared = fromList [namedType, nullHandle, boolConversion]
 
 boolConversion :: HasRenderParams r => Sem r RenderElement
 boolConversion = genRe "Bool conversion" $ do
@@ -801,10 +814,13 @@ boolConversion = genRe "Bool conversion" $ do
       {true}  -> True
   |]
 
-
-wsiTypes :: (HasErr r, HasRenderParams r) => [Sem r RenderElement]
-wsiTypes = (snd <$> concat [win32, x11, xcb2, zircon, ggp])
-  <> concat [win32', xcb1, wayland, metal, android, directfb]
+wsiTypes
+  :: (HasErr r, HasRenderParams r) => SpecFlavor -> [Sem r RenderElement]
+wsiTypes = \case
+  SpecVk -> (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp])
+    <> concat [win32', xcb1, waylandShared, wayland, metal, android, directfb]
+  SpecXr -> (snd <$> concat [win32Xr, x11Shared, xcb2Xr, egl, gl, d3d])
+    <> concat [win32Xr', xcb1, waylandShared, d3d', jni, time, vulkan]
 
 namedType :: HasErr r => Sem r RenderElement
 namedType = genRe "namedType" $ do
@@ -863,29 +879,38 @@ win32 =
   , alias (APtr ''())     "HANDLE"
   , alias AWord32         "DWORD"
   , alias (APtr ''CWchar) "LPCWSTR"
-  , alias (APtr ''())     "HDC" -- TODO: should be an alias for HANDLE
-  , alias (APtr ''())     "HGLRC" -- TODO: check this
-  , alias AWord64         "LUID"
   ]
 
 win32' :: HasRenderParams r => [Sem r RenderElement]
 win32' = [voidData "SECURITY_ATTRIBUTES"]
 
+win32Xr :: HasRenderParams r => [BespokeAlias r]
+win32Xr =
+  [ alias (APtr ''()) "HDC" -- TODO: should be an alias for HANDLE
+  , alias (APtr ''()) "HGLRC" -- TODO: check this
+  , alias AWord64     "LUID"
+  , alias AWord64     "LARGE_INTEGER"
+  ]
+
+win32Xr' :: HasRenderParams r => [Sem r RenderElement]
+win32Xr' = [voidData "IUnknown"]
+
+x11Shared :: HasRenderParams r => [BespokeAlias r]
+x11Shared = [alias (APtr ''()) "Display"]
+
 x11 :: HasRenderParams r => [BespokeAlias r]
 x11 =
-  [ alias (APtr ''()) "Display"
-  , alias AWord64     "VisualID"
-  , alias AWord64     "Window"
-  , alias AWord64     "RROutput"
-  ]
+  [alias AWord64 "VisualID", alias AWord64 "Window", alias AWord64 "RROutput"]
 
 xcb1 :: HasRenderParams r => [Sem r RenderElement]
 xcb1 = [voidData "xcb_connection_t"]
 
 xcb2 :: HasRenderParams r => [BespokeAlias r]
-xcb2 =
+xcb2 = [alias AWord32 "xcb_visualid_t", alias AWord32 "xcb_window_t"]
+
+xcb2Xr :: HasRenderParams r => [BespokeAlias r]
+xcb2Xr =
   [ alias AWord32 "xcb_visualid_t"
-  , alias AWord32 "xcb_window_t"
   , alias AWord32 "xcb_glx_fbconfig_t"
   , alias AWord32 "xcb_glx_drawable_t"
   , alias AWord32 "xcb_glx_context_t"
@@ -898,8 +923,11 @@ ggp = [alias AWord32 "GgpStreamDescriptor", alias AWord32 "GgpFrameToken"]
 metal :: HasRenderParams r => [Sem r RenderElement]
 metal = [voidData "CAMetalLayer"]
 
+waylandShared :: HasRenderParams r => [Sem r RenderElement]
+waylandShared = [voidData "wl_display"]
+
 wayland :: HasRenderParams r => [Sem r RenderElement]
-wayland = [voidData "wl_display", voidData "wl_surface"]
+wayland = [voidData "wl_surface"]
 
 zircon :: HasRenderParams r => [BespokeAlias r]
 zircon = [alias AWord32 "zx_handle_t"]
@@ -909,6 +937,10 @@ android = [voidData "AHardwareBuffer", voidData "ANativeWindow"]
 
 directfb :: HasRenderParams r => [Sem r RenderElement]
 directfb = [voidData "IDirectFB", voidData "IDirectFBSurface"]
+
+----------------------------------------------------------------
+-- OpenXR platform stuff
+----------------------------------------------------------------
 
 egl :: HasRenderParams r => [BespokeAlias r]
 egl =
@@ -928,6 +960,42 @@ gl =
 
 d3d :: HasRenderParams r => [BespokeAlias r]
 d3d = [alias AWord32 "D3D_FEATURE_LEVEL"]
+
+d3d' :: HasRenderParams r => [Sem r RenderElement]
+d3d' =
+  [ voidData "ID3D11Device"
+  , voidData "ID3D11Texture2D"
+  , voidData "ID3D12CommandQueue"
+  , voidData "ID3D12Device"
+  , voidData "ID3D12Resource"
+  ]
+
+jni :: HasRenderParams r => [Sem r RenderElement]
+jni = [voidData "jobject"]
+
+-- TODO: improve this
+time :: HasRenderParams r => [Sem r RenderElement]
+time = [voidData "time", voidData "timespec"]
+
+-- TODO: Remove this
+vulkan :: HasRenderParams r => [Sem r RenderElement]
+vulkan =
+  [ voidData "VkDevice"
+    , voidData "VkInstance"
+    , voidData "VkPhysicalDevice"
+    , voidData "VkImage"
+    , voidData "VkResult"
+    , voidData "VkInstanceCreateInfo"
+    , voidData "VkDeviceCreateInfo"
+    , voidData "VkAllocationCallbacks"
+    ]
+    <> (   snd
+       <$> [ alias AWord32 "VkFormat"
+           , alias
+             (AFunPtr $(TH.lift =<< [t|CString -> IO (FunPtr (IO ()))|]))
+             "PFN_vkGetInstanceProcAddr"
+           ]
+       )
 
 ----------------------------------------------------------------
 -- OpenXR stuff

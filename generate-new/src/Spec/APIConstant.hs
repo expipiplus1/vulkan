@@ -26,21 +26,26 @@ data ConstantValue
     Word32Value Word32
   | -- | A value sized with 'ULL'
     Word64Value Word64
+  | -- | A value sized with 'LL'
+    Int64Value Int64
+  | -- | size of a type
+    SizeOfValue CName
   deriving (Show)
 
 parseConstant :: HasErr r => ByteString -> Sem r ConstantValue
-parseConstant s = fromMaybe
-  (throw ("unable to read constant" <> decodeUtf8 s))
-  (match parse (BS.unpack s))
+parseConstant s = fromMaybe (throw ("unable to read constant: " <> show s))
+                            (match parse (BS.unpack s))
 
 parse :: HasErr r => RE Char (Sem r ConstantValue)
 parse =
   parens
     $   (pure . StrValue . T.pack <$> ("&quot;" *> many anySym <* "&quot;"))
-    <|> (fmap IntegralValue . readSpec <$> digits)
+    <|> (fmap IntegralValue <$> inverted (readSpec <$> digits))
     <|> (fmap Word32Value <$> subtracted (inverted word32))
     <|> (fmap Word64Value <$> subtracted (inverted word64))
+    <|> (fmap Int64Value <$> subtracted (inverted int64))
     <|> (fmap FloatValue <$> float)
+    <|> (pure . SizeOfValue <$> sizeof)
 
 -- | Oops, Applicative
 subtracted :: (HasErr r, Num a) => RE Char (Sem r a) -> RE Char (Sem r a)
@@ -50,8 +55,9 @@ subtracted x =
     <|> (x *> "-" *> (throw . T.pack <$> digits))
     <|> x
 
-inverted :: (Bits a, Functor f) => RE Char (f a) -> RE Char (f a)
-inverted x = ("~" *> (fmap complement <$> x)) <|> x
+inverted :: (Bits a, Functor f, Num a) => RE Char (f a) -> RE Char (f a)
+inverted x =
+  asum ["~" *> (fmap complement <$> x), "-" *> (fmap negate <$> x), x]
 
 word32 :: HasErr r => RE Char (Sem r Word32)
 word32 = readSpec <$> digits <* "U"
@@ -59,11 +65,20 @@ word32 = readSpec <$> digits <* "U"
 word64 :: HasErr r => RE Char (Sem r Word64)
 word64 = readSpec <$> digits <* "ULL"
 
+int64 :: HasErr r => RE Char (Sem r Int64)
+int64 = readSpec <$> digits <* "LL"
+
 float :: HasErr r => RE Char (Sem r Float)
 float = readSpec <$> (fmap concat . sequenceA $ [digits, ".", digits]) <* "f"
 
 digits :: RE Char String
-digits = many (psym isDigit)
+digits = many (psym isDigit) <|> ((<>) <$> "0x" <*> many (psym isHexDigit))
+
+sizeof :: RE Char CName
+sizeof =
+  CName
+    .   T.pack
+    <$> ("sizeof" *> parens (many (psym (isAlphaNum <||> (== '_')))))
 
 parens :: RE Char a -> RE Char a
 parens a = "(" *> a <* ")" <|> a
@@ -84,3 +99,6 @@ decode :: HasErr r => ByteString -> Sem r Text
 decode bs = case decodeUtf8' bs of
   Left  e -> throw $ show e
   Right t -> pure t
+
+(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
+(<||>) = liftA2 (||)

@@ -111,6 +111,7 @@ During development unfinished bits not to forget are listed here.
 
 - [ ] remove XR.RenderParams.vulkanNameOverrides
 - [ ] check
+  - [ ] `XrCompositionLayerBaseHeader` (the 'type' member doesn't have a single value)
   - [ ] `XrEventDataBuffer->varying`
   - [ ] `XrSpatialGraphNodeSpaceCreateInfoMSFT->nodeId`
   - [ ] `XrSpatialGraphNodeSpaceCreateInfoMSFT`
@@ -127,6 +128,21 @@ During development unfinished bits not to forget are listed here.
   - [ ] `xrCreateVulkanDeviceKHR`: Unable to get size for TypeName `VkResult`
   - [ ] `xrCreateSpatialAnchorFromPerceptionAnchorMSFT`: Unable to get size for TypeName `IUnknown`
 
+- [ ] Check we have all of
+  - [ ] `NULL_SYSTEM_ID`
+  - [ ] `NULL_PATH`
+  - [ ] `SUCCEEDED`
+  - [ ] `FAILED`
+  - [ ] `UNQUALIFIED_SUCCESS`
+  - [ ] `NO_DURATION`
+  - [ ] `INFINITE_DURATION`
+  - [ ] `MIN_HAPTIC_DURATION`
+  - [ ] `FREQUENCY_UNSPECIFIED`
+  - [ ] `MAX_EVENT_DATA_SIZE`
+  - [ ] `MAY_ALIAS`
+
+- [ ] Make Vulkan integration optional, have a module which either defines
+  opaque handles or reexports types from `vulkan`
 
 ### 1.2.162
 

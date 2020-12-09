@@ -125,9 +125,15 @@ renderExtensibleInstance
   -> Sem r ()
 renderExtensibleInstance MarshaledStruct {..} = do
   RenderParams {..} <- input
-  let n   = mkTyName (sName msStruct)
-      con = mkConName (sName msStruct) (sName msStruct)
-  unless (V.null (sExtendedBy msStruct)) $ do
+  let
+    n   = mkTyName (sName msStruct)
+    con = mkConName (sName msStruct) (sName msStruct)
+    -- TODO: Remove special case here
+    isExtended =
+      not (V.null (sExtendedBy msStruct))
+        && msName
+        /= "XrCompositionLayerBaseHeader"
+  when isExtended $ do
     tellImportWithAll (TyConName "Extensible")
     tellImport (TyConName "Extends")
     tellImport ''Typeable

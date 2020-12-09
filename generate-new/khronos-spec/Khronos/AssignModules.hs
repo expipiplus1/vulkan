@@ -475,10 +475,23 @@ unexportedNames Spec {..} = do
        , mkTyName "VkPhysicalDevicePresentationPropertiesANDROID"
          -- TODO: Export these
        , mkTyName "VkSemaphoreCreateFlagBits"
+         -- TODO: Export these
+       , mkTyName "InstanceCreateFlagBits"
+       , mkTyName "SessionCreateFlagBits"
+       , mkTyName "SwapchainCreateFlagBits"
+       , mkTyName "ViewStateFlagBits"
+       , mkTyName "CompositionLayerFlagBits"
+       , mkTyName "SpaceLocationFlagBits"
+       , mkTyName "SpaceVelocityFlagBits"
+       , mkTyName "InputSourceLocalizedNameFlagBits"
+       , mkTyName "VulkanInstanceCreateFlagBitsKHR"
+       , mkTyName "VulkanDeviceCreateFlagBitsKHR"
+       , mkTyName "DebugUtilsMessageSeverityFlagBitsEXT"
+       , mkTyName "DebugUtilsMessageTypeFlagBitsEXT"
+       , mkTyName "OverlayMainSessionFlagBitsEXTX"
+       , mkTyName "OverlaySessionCreateFlagBitsEXTX"
        ]
     <> apiVersions
-
-
 
 ----------------------------------------------------------------
 -- Utils

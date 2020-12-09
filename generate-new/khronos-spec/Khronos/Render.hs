@@ -19,8 +19,10 @@ import           Documentation
 import           Error
 import           Khronos.ExtensionDepElements
 import           Khronos.SPIRVElements
+import qualified Khronos.Versions.OpenXR       as Xr
 import           Marshal
 import           Render.Alias
+import           Render.Atom
 import           Render.CStruct
 import           Render.Command
 import           Render.Constant
@@ -32,7 +34,7 @@ import           Render.FuncPointer
 import           Render.Handle
 import           Render.Names
 import           Render.Spec.Extends
-import           Render.Spec.Versions
+import qualified Render.Spec.Versions          as Vk
 import           Render.SpecInfo
 import           Render.State                   ( HasRenderState )
 import           Render.Stmts
@@ -43,6 +45,7 @@ import           Spec.Parse
 
 data RenderedSpec a = RenderedSpec
   { rsHandles            :: Vector a
+  , rsAtoms              :: Vector a
   , rsStructsAndUnions   :: Vector a
   , rsCommands           :: Vector a
   , rsEnums              :: Vector a
@@ -55,7 +58,8 @@ data RenderedSpec a = RenderedSpec
   deriving (Functor, Foldable, Traversable)
 
 renderSpec
-  :: ( HasErr r
+  :: forall t r
+   . ( HasErr r
      , HasTypeInfo r
      , HasRenderParams r
      , HasStmts r
@@ -119,6 +123,7 @@ renderSpec spec@Spec {..} getDoc brackets ss us cs = do
 
   sequenceV RenderedSpec
     { rsHandles            = renderHandle <$> specHandles
+    , rsAtoms              = renderAtom <$> specAtoms
     , rsStructsAndUnions   = pure <$> structsAndUnions
     , rsCommands           = renderCommand' <$> cs
     , rsEnums              = renderEnum <$> specEnums
@@ -128,14 +133,16 @@ renderSpec spec@Spec {..} getDoc brackets ss us cs = do
     , rsExtensionConstants = renderConstant
                                <$> filterConstants specExtensionConstants
     , rsOthers             =
-      bespokeElements
+      bespokeElements (specFlavor @t)
       <> V.singleton (renderDynamicLoader cs)
       <> cStructDocs
       <> V.singleton marshalUtils
       <> V.singleton zeroClass
       <> V.singleton hasObjectTypeClass
       <> V.singleton (vkExceptionRenderElement getDoc vkResult)
-      <> specVersions spec
+      <> case sSpecFlavor @t of
+           SSpecVk -> Vk.specVersions spec
+           SSpecXr -> Xr.specVersions spec
       <> V.singleton (structExtends spec)
       <> V.singleton
            (renderSPIRVElements specSPIRVExtensions specSPIRVCapabilities)

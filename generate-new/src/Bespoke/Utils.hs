@@ -25,6 +25,7 @@ import           GHC.TypeNats
 import           Error
 import           Haskell.Name
 import           Render.Element
+import           Spec.Name                      ( CName(CName) )
 import           VkModulePrefix
 
 hasObjectTypeClass :: (HasErr r, HasRenderParams r) => Sem r RenderElement
@@ -34,7 +35,7 @@ hasObjectTypeClass = genRe "HasObjectType class" $ do
   tellExplicitModule (vulkanModule ["Core10", "APIConstants"])
   tellImport ''Word64
   tellNotReexportable
-  let objectType = mkTyName "VkObjectType"
+  let objectType = mkTyName (CName $ camelPrefix <> "ObjectType")
   tellImport objectType
 
   tellDoc $ "class HasObjectType a where" <> line <> indent

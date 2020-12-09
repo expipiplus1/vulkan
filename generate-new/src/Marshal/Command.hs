@@ -36,12 +36,11 @@ data MarshaledCommand = MarshaledCommand
   }
   deriving Show
 
-data MarshaledParam =
-  MarshaledParam
-    { mpParam :: Parameter
-    , mpScheme :: MarshalScheme Parameter
-    }
-  deriving (Show)
+data MarshaledParam = MarshaledParam
+  { mpParam  :: Parameter
+  , mpScheme :: MarshalScheme Parameter
+  }
+  deriving Show
 
 marshalCommand
   :: (HasMarshalParams r, HasErr r, HasSpecInfo r)
@@ -73,6 +72,7 @@ parameterScheme Command {..} param = do
       , voidPointerScheme
         -- Pointers to return values in
       , returnPointerScheme
+      , returnArrayScheme
         -- Optional and non optional arrays
       , arrayScheme WrapExtensibleStructs WrapDispatchableHandles cParameters
       , fixedArrayScheme WrapExtensibleStructs WrapDispatchableHandles

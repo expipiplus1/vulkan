@@ -1,6 +1,5 @@
 {-# language TemplateHaskellQuotes #-}
-module Render.Constant
-  where
+module Render.Constant where
 
 import           Data.Text.Prettyprint.Doc
 import           Language.Haskell.TH.Syntax
@@ -16,9 +15,7 @@ import           Spec.APIConstant
 import           Spec.Parse
 
 renderConstant
-  :: (HasErr r, HasRenderParams r)
-  => Constant
-  -> Sem r RenderElement
+  :: (HasErr r, HasRenderParams r) => Constant -> Sem r RenderElement
 renderConstant Constant {..} = contextShow constName $ do
   RenderParams {..} <- input
   genRe ("constant " <> unCName constName) $ do
@@ -45,6 +42,11 @@ renderConstant Constant {..} = contextShow constName $ do
           (ConT ''Word32, pretty @String (printf "0x%x" i), True)
         Word64Value i ->
           (ConT ''Word64, pretty @String (printf "0x%x" i), True)
+        Int64Value i ->
+          let s = if i >= 0 then printf "0x%x" i else printf "%d" i
+          in  (ConT ''Int64, pretty @String s, True)
+        -- TODO: Fix
+        SizeOfValue c -> (ConT ''Int, "SIZE_OF" <> viaShow c, True)
 
     when hasType $ do
       let syn :: HasRenderElem r => Sem r ()

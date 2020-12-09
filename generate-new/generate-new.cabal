@@ -45,6 +45,7 @@ library
       Marshal.Struct
       Render.Aggregate
       Render.Alias
+      Render.Atom
       Render.Command
       Render.Constant
       Render.CStruct
@@ -143,6 +144,7 @@ library khronos-spec
       Khronos.Render
       Khronos.SPIRVElements
       Khronos.Utils
+      Khronos.Versions.OpenXR
   other-modules:
       Paths_generate_new
   hs-source-dirs:

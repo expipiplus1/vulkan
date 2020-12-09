@@ -60,6 +60,9 @@ renderParams handles = r
                                        . (<> "Handle")
                                        . lowerCaseFirst
                                        . dropVk
+    , camelPrefix                    = "Vk"
+    , lowerPrefix                    = "vk"
+    , flagsTypeName                  = "VkFlags"
     , alwaysQualifiedNames           = mempty
     , mkIdiomaticType                =
       (`List.lookup` (  [ wrappedIdiomaticType ''Float  ''CFloat  'CFloat

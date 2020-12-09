@@ -116,11 +116,12 @@ cToHsType' structStyle preserve t = do
     Float  -> pure $ ConT ''CFloat
     Double -> pure $ ConT ''CDouble
     Char   -> case preserve of
-      DoLower    -> pure $ ConT ''CChar
-      DoPreserve -> pure $ ConT ''CChar
-      DoNotPreserve ->
-        throw
-          "Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring"
+      DoLower       -> pure $ ConT ''CChar
+      DoPreserve    -> pure $ ConT ''CChar
+      -- TODO: restore the error here
+      DoNotPreserve -> pure $ ConT ''CChar
+        -- throw
+        --   "Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring"
     Ptr _ Void -> pure $ ConT ''Ptr :@ TupleT 0
     Ptr _ p    -> do
       t' <- cToHsType' structStyle preserve p
@@ -128,8 +129,7 @@ cToHsType' structStyle preserve t = do
     Array _ s e -> do
       e' <- cToHsType' structStyle preserve e
       s' <- arraySizeType s
-      let arrayTy =
-            ConT (mkName "Vulkan.CStruct.Utils.FixedArray") :@ s' :@ e'
+      let arrayTy = ConT (mkName "Vulkan.CStruct.Utils.FixedArray") :@ s' :@ e'
       pure $ case preserve of
         DoLower -> ConT ''Ptr :@ arrayTy
         _       -> arrayTy
@@ -193,10 +193,9 @@ namedTy name ty =
 type NextVar = Input (Maybe Type)
 
 getVar :: (HasErr r, Member NextVar r) => Sem r Type
-getVar =
-  input @(Maybe Type) >>= \case
-    Nothing -> throw "Run out of variables"
-    Just v ->  pure v
+getVar = input @(Maybe Type) >>= \case
+  Nothing -> throw "Run out of variables"
+  Just v  -> pure v
 
 -- 'r' is used elsewhere for return types
 allVars :: [Type]

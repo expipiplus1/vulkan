@@ -757,8 +757,9 @@ getCCallDynamic c = do
       noHandlePtr = stmt Nothing (Just (unCName (cName c) <> "Ptr")) $ do
         -- TODO: Change this function pointer to a "global variable" with ioref and
         -- unsafePerformIO
-        let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'"
-        tellImport getInstanceProcAddr' -- TODO: Remove vulkan specific stuff here!
+        let getInstanceProcAddr' =
+              mkFunName (CName $ lowerPrefix <> "GetInstanceProcAddr'")
+        tellImport getInstanceProcAddr'
         tellImport 'nullPtr
         tellImport 'castFunPtr
         tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
@@ -949,8 +950,8 @@ forgetStructExtensions ty poke = do
 -- | Parameters of type foo[x] are passed as pointers
 lowerParamType :: Parameter -> Parameter
 lowerParamType p@Parameter {..} = case pType of
-  Array q _ elem -> p { pType = Ptr q elem }
-  _              -> p
+  -- Array q _ elem -> p { pType = Ptr q elem }
+  _ -> p
 
 ----------------------------------------------------------------
 --

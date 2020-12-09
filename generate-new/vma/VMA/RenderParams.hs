@@ -47,11 +47,14 @@ renderParams handles = r
         $ fromMaybe (upperCaseFirst . dropVma $ n) (vulkanNameOverrides n)
     , mkFuncPointerName              = TyConName . T.tail . unCName
     , mkFuncPointerMemberName = TermName . ("p" <>) . upperCaseFirst . unCName
-    , mkEmptyDataName                = TermName . (<> "_T") . dropVma
+    , mkEmptyDataName                = TyConName . (<> "_T") . dropVma
     , mkDispatchableHandlePtrName    = TermName
                                        . (<> "Handle")
                                        . lowerCaseFirst
                                        . dropVma
+    , camelPrefix                    = "Vma"
+    , lowerPrefix                    = "vma"
+    , flagsTypeName                  = "VkFlags"
     , alwaysQualifiedNames           = mempty
     , mkIdiomaticType = let dropVulkanModule = transformBi
                               (\n ->
