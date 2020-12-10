@@ -35,6 +35,8 @@ import           System.FilePath
 import qualified Data.Vector.Generic           as VG
 import           Type.Reflection
 
+import           Control.Exception              ( IOException )
+import           Control.Exception.Base         ( catch )
 import           Documentation
 import           Documentation.Haddock
 import           Error
@@ -168,10 +170,10 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
         Relude.filter (\(Import n _ _ _ _) -> n `V.notElem` declaredNames)
       findModule' n =
         note ("Unable to find module for " <> show n) (findModule n)
-      findLocalModule' n =
-        case n of
-          TyConName "PhysicalDevice" -> pure (ModName "Foo")
-          _ -> note ("Unable to find local module for " <> show n) (findLocalModule n)
+      findLocalModule' n = case n of
+        TyConName "PhysicalDevice" -> pure (ModName "Foo")
+        _ -> note ("Unable to find local module for " <> show n)
+                  (findLocalModule n)
     imports <- vsep <$> traverseV
       (renderImport findModule' (T.pack . nameBase) thNameNamespace id)
       ( mapMaybe
@@ -303,7 +305,7 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
           T.intercalate "\n" (layoutDoc headerContents : contentsTexts)
 
     liftIO $ createDirectoryIfMissing True (takeDirectory f)
-    liftIO $ withFile f WriteMode $ \h -> T.hPutStr h moduleText
+    writeIfChanged f moduleText
 
 allExports :: Vector Export -> Vector HName
 allExports =
@@ -449,6 +451,15 @@ adoptConstructors = \case
 
 nubOrdOnV :: Ord b => (a -> b) -> Vector a -> Vector a
 nubOrdOnV p = fromList . nubOrdOn p . toList
+
+writeIfChanged :: MonadIO m => FilePath -> Text -> m ()
+writeIfChanged f t' = liftIO $ do
+  t <- readFileMaybe f
+  when (t /= Just t') $ T.writeFile f t'
+
+readFileMaybe :: FilePath -> IO (Maybe Text)
+readFileMaybe f =
+  (Just <$> T.readFile f) `catch` (\(_ :: IOException) -> pure Nothing)
 
 brittanyConfig :: CConfig Identity
 brittanyConfig = staticDefaultConfig

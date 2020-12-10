@@ -106,6 +106,7 @@ classes Spec {..} = do
   tellImport ''Relude.Type
   tellImportWith ''Proxy 'Proxy
   tellImport ''Constraint
+  tellImport ''Typeable
   tellImport ''Ptr
   tellImport 'nullPtr
   tellImport 'castPtr
@@ -190,6 +191,9 @@ classes Spec {..} = do
         Chain '[]    = ()
         Chain (x:xs) = (x, Chain xs)
     |]
+  estmn <- maybe (throw "No extensible struct member name")
+                 (pure . pretty . mkMemberName "XrBaseOutStructure")
+                 extensibleStructTypeMemberName
   tellDoc [qqi|
     data SomeStruct (a :: [Type] -> Type) where
       SomeStruct
@@ -278,7 +282,7 @@ classes Spec {..} = do
       else do
         baseOut <- peek p
         join
-          $ peekChainHead @a (sType (baseOut :: BaseOutStructure))
+          $ peekChainHead @a ({estmn} (baseOut :: BaseOutStructure))
                              (castPtr @BaseOutStructure @() p)
           $ \\head' -> peekSomeChain @a (next (baseOut :: BaseOutStructure))
                                       (\\tail' -> c (head', tail'))

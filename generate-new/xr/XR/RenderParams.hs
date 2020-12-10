@@ -59,6 +59,7 @@ renderParams handles = r
                                        . dropXr
     , camelPrefix                    = "Xr"
     , lowerPrefix                    = "xr"
+    , upperPrefix                    = "XR"
     , flagsTypeName                  = "XrFlags64"
     , alwaysQualifiedNames           = mempty
     , mkIdiomaticType                =

@@ -392,6 +392,7 @@ featureCommentMap = \case
     -> "OtherTypes"
   "These types are part of the API, though not directly used in API commands or data structures"
     -> "OtherTypes"
+  "Types not directly used by the API" -> "OtherTypes"
   "Fundamental types used by many commands and structures" ->
     "FundamentalTypes"
   t -> t
@@ -490,6 +491,12 @@ unexportedNames Spec {..} = do
        , mkTyName "DebugUtilsMessageTypeFlagBitsEXT"
        , mkTyName "OverlayMainSessionFlagBitsEXTX"
        , mkTyName "OverlaySessionCreateFlagBitsEXTX"
+         -- TODO: export these
+       , mkFunName "xrSetInputDeviceActiveEXT"
+       , mkFunName "xrSetInputDeviceStateBoolEXT"
+       , mkFunName "xrSetInputDeviceStateFloatEXT"
+       , mkFunName "xrSetInputDeviceStateVector2fEXT"
+       , mkFunName "xrSetInputDeviceLocationEXT"
        ]
     <> apiVersions
 

@@ -23,6 +23,7 @@ import           Error
 import           Haskell
 import           Marshal.Marshalable
 import           Marshal.Scheme
+import           Polysemy.Input                 ( input )
 import           Render.Element
 import           Render.Peek
 import           Render.SpecInfo
@@ -130,10 +131,26 @@ allocateVector vec = do
   let name' = name vec
       toTy  = type' vec
   case toTy of
-    Array _ arraySize toElem -> do
-      lenRef <- stmt Nothing Nothing $ do
-        pure $ Pure AlwaysInline (ValueDoc "error \"shibb\"")
-      allocArray Zeroed name' toElem (Right lenRef)
+    Array _ arraySize toElem -> stmt Nothing (Just (unCName name')) $ do
+      tellImportWithAll ''ContT
+      tellImport 'free
+      tellImport 'bracket
+      tellImport (TermName "callocFixedArray")
+      tyDoc <- renderTypeHighPrec =<< cToHsType DoPreserve toElem
+      size  <- case arraySize of
+        SymbolicArraySize n -> do
+          RenderParams {..} <- input
+          let p = mkPatternName n
+          tellImport p
+          pure $ pretty p
+        NumericArraySize n -> pure $ viaShow n
+        MultipleArraySize _ _ ->
+          throw "TODO: Unhandled array size in allocateVector"
+      pure $ ContTAction $ AddrDoc
+        (   "ContT $ bracket"
+        <+> parens ("callocFixedArray @" <> size <+> "@" <> tyDoc)
+        <+> "free"
+        )
     _ -> do
       toElem <- unPtr toTy
       lenRef <- getLenRef @a (lengths vec)

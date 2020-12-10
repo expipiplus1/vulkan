@@ -62,6 +62,7 @@ renderParams handles = r
                                        . dropVk
     , camelPrefix                    = "Vk"
     , lowerPrefix                    = "vk"
+    , upperPrefix                    = "VK"
     , flagsTypeName                  = "VkFlags"
     , alwaysQualifiedNames           = mempty
     , mkIdiomaticType                =

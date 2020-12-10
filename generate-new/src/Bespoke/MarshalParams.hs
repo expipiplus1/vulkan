@@ -16,7 +16,7 @@ import           CType
 import           Marshal.Scheme
 import           Spec.Parse
 
-marshalParams :: Spec t -> Sem r MarshalParams
+marshalParams :: KnownSpecFlavor t => Spec t -> Sem r MarshalParams
 marshalParams spec@Spec {..} = do
   bespokeSchemes <- bespokeSchemes spec
   let

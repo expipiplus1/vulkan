@@ -20,7 +20,7 @@ zeroScheme = runNonDetMaybe . go
     Unit              -> pure "()"
     Preserve _        -> pure "zero"
     Normal   _        -> pure "zero"
-    Length _ _ _      -> pure "zero"
+    Length{}          -> pure "zero"
     ElidedLength{}    -> empty
     ElidedUnivalued _ -> empty
     ElidedVoid        -> empty

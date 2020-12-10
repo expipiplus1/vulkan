@@ -373,10 +373,15 @@ byteStringPeek name lengths addrRef =
         <+> parens ("{-# TODO: CHECK THIS #-} lowerArrayPtr" <+> addr)
         )
 
-    Array NonConst (SymbolicArraySize _) Char -> do
+    Array NonConst (SymbolicArraySize p) Char -> do
+      RenderParams {..} <- input
       tellImport 'BS.packCString
+      tellImport (TermName "lowerArrayPtr")
       AddrDoc addr <- use addrRef
-      pure . IOAction $ ValueDoc ("packCString " <+> addr)
+      let size = mkPatternName p
+      tellImport size
+      pure . IOAction $ ValueDoc
+        ("packCString . lowerArrayPtr @CChar @" <> pretty size <+> "$" <+> addr)
 
     Ptr _ (Array NonConst size (TypeName "uint8_t"))
       | case size of

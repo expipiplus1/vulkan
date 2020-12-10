@@ -54,6 +54,7 @@ renderParams handles = r
                                        . dropVma
     , camelPrefix                    = "Vma"
     , lowerPrefix                    = "vma"
+    , upperPrefix                    = "VMA"
     , flagsTypeName                  = "VkFlags"
     , alwaysQualifiedNames           = mempty
     , mkIdiomaticType = let dropVulkanModule = transformBi

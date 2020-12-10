@@ -134,7 +134,7 @@ renderSpec spec@Spec {..} getDoc brackets ss us cs = do
                                <$> filterConstants specExtensionConstants
     , rsOthers             =
       bespokeElements (specFlavor @t)
-      <> V.singleton (renderDynamicLoader cs)
+      <> V.singleton (renderDynamicLoader (specFlavor @t) cs)
       <> cStructDocs
       <> V.singleton marshalUtils
       <> V.singleton zeroClass

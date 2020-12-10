@@ -144,6 +144,11 @@ During development unfinished bits not to forget are listed here.
 - [ ] Make Vulkan integration optional, have a module which either defines
   opaque handles or reexports types from `vulkan`
 
+- [ ] make Xr stuff in `bespokeModules`
+
+- [ ] dual-use commands have a different style in OpenXR... they're wrong now
+  - For example `enumerateReferenceSpaces`
+
 ### 1.2.162
 
 - [x] optionalness on VkWriteDescriptorSetAccelerationStructureKHR->pAccelerationStructures

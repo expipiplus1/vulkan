@@ -23,6 +23,7 @@ import           Foreign.Storable
 import           GHC.TypeNats
 
 import           Error
+import           Foreign.Marshal.Alloc          ( callocBytes )
 import           Haskell.Name
 import           Render.Element
 import           Spec.Name                      ( CName(CName) )
@@ -162,6 +163,8 @@ marshalUtils = genRe "marshal utils" $ do
     , 'plusPtr
     , ''Nat
     , ''Type
+    , 'callocBytes
+    , 'sizeOf
     ]
 
   traverseV_
@@ -183,6 +186,7 @@ marshalUtils = genRe "marshal utils" $ do
     [ "pokeFixedLengthByteString"
     , "pokeFixedLengthNullTerminatedByteString"
     , "peekByteStringFromSizedVectorPtr"
+    , "callocFixedArray"
     , "lowerArrayPtr"
     , "advancePtrBytes"
     ]
@@ -240,6 +244,15 @@ marshalUtils = genRe "marshal utils" $ do
       => Ptr (FixedArray n Word8)
       -> IO ByteString
     peekByteStringFromSizedVectorPtr p = packCStringLen (castPtr p, fromIntegral (natVal (Proxy @n)))
+
+    -- | Allocate a zero array with the size specified by the 'FixedArray'
+    -- return type. Make sure to release the memory with 'free'
+    callocFixedArray
+      :: forall n a . (KnownNat n, Storable a) => IO (Ptr (FixedArray n a))
+    callocFixedArray = callocBytes
+      ( sizeOf (error "sizeOf evaluated its argument" :: a)
+      * fromIntegral (natVal (Proxy @n))
+      )
 
     -- | Get the pointer to the first element in the array
     lowerArrayPtr

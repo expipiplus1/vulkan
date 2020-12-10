@@ -246,6 +246,8 @@ data RenderParams = RenderParams
     -- ^ "Vk" or "Xr" or "Vma"
   , lowerPrefix                 :: Text
     -- ^ "vk" or "xr" or "vma"
+  , upperPrefix                 :: Text
+    -- ^ "VK" or "XR" or "VMA"
   , flagsTypeName               :: CName
     -- ^ "VkFlags" or "XrFlags64"
   , alwaysQualifiedNames        :: Vector Name

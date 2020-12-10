@@ -22,7 +22,10 @@ import           Foreign.Ptr
 import           GHC.Ptr
 
 import qualified CType                         as C
+import           Control.Exception              ( throwIO )
 import           Error
+import           Foreign.Marshal                ( alloca )
+import           Foreign.Storable               ( Storable )
 import           Haskell                       as H
 import           Haskell.Name                   ( )
 import           Marshal
@@ -36,9 +39,10 @@ import           VkModulePrefix
 
 renderDynamicLoader
   :: (HasErr r, HasRenderParams r, HasTypeInfo r, HasSpecInfo r)
-  => Vector MarshaledCommand
+  => SpecFlavor
+  -> Vector MarshaledCommand
   -> Sem r RenderElement
-renderDynamicLoader cs = do
+renderDynamicLoader t cs = do
   RenderParams {..} <- input
   genRe "dynamic loader" $ do
     tellExplicitModule (vulkanModule ["Dynamic"])
@@ -59,7 +63,7 @@ renderDynamicLoader cs = do
           (typeName (mkEmptyDataName (CName $ camelPrefix <> "Instance")))
         )
         instanceCommands
-      writeGetInstanceProcAddr
+      writeGetInstanceProcAddr t
       writeInitInstanceCmds instanceCommands
 
     unless (null deviceCommands) $ do
@@ -271,8 +275,9 @@ writeGetInstanceProcAddr
      , MemberWithError (State RenderElement) r
      , HasRenderParams r
      )
-  => Sem r ()
-writeGetInstanceProcAddr = do
+  => SpecFlavor
+  -> Sem r ()
+writeGetInstanceProcAddr t = do
   RenderParams {..} <- input
   c <- maybe (throw "Unable to find GetInstanceProcAddr command") pure
     =<< getCommand (CName $ lowerPrefix <> "GetInstanceProcAddr")
@@ -280,15 +285,46 @@ writeGetInstanceProcAddr = do
   tDoc <- renderTypeSource ty
   let n = mkFunName (CName $ lowerPrefix <> "GetInstanceProcAddr'")
   tellExport (ETerm n)
-  tellDoc [qqi|
-    -- | A version of '{mkFunName (CName $ lowerPrefix <> "GetInstanceProcAddr")}' which can be called
-    -- with a null pointer for the instance.
-    foreign import ccall
-    #if !defined(SAFE_FOREIGN_CALLS)
-      unsafe
-    #endif
-      "{lowerPrefix}GetInstanceProcAddr" {n} :: {tDoc}
-  |]
+  case t of
+    SpecVk -> tellDoc [qqi|
+        -- | A version of '{mkFunName (CName $ lowerPrefix <> "GetInstanceProcAddr")}' which can be called
+        -- with a null pointer for the instance.
+        foreign import ccall
+        #if !defined(SAFE_FOREIGN_CALLS)
+          unsafe
+        #endif
+          "{lowerPrefix}GetInstanceProcAddr" {n} :: {tDoc}
+      |]
+    SpecXr -> do
+      tellImportWithAll ''Storable
+      tellImportWithAll (mkTyName "XrResult")
+      tellImport 'alloca
+      tellImport 'throwIO
+      let succeeded   = mkPatternName "XR_SUCCEEDED"
+          unsupported = mkPatternName "XR_ERROR_FUNCTION_UNSUPPORTED"
+          failed      = mkPatternName "XR_FAILED"
+      tellImport succeeded
+      tellImport unsupported
+      tellImport failed
+      tellImportWithAll exceptionTypeName
+      tellDoc [qqi|
+        foreign import ccall
+        #if !defined(SAFE_FOREIGN_CALLS)
+          unsafe
+        #endif
+          "{lowerPrefix}GetInstanceProcAddr" {n}' :: {tDoc}
+
+        -- | A version of '{mkFunName (CName $ lowerPrefix <> "GetInstanceProcAddr")}' which can be called
+        -- with a null pointer for the instance.
+        {n}
+          :: Ptr Instance_T -> ("name" ::: Ptr CChar) -> IO PFN_xrVoidFunction
+        {n} inst name = do
+          alloca $ \\r -> {n}' inst name r >>= \\case
+            {succeeded}                  -> peek r
+            {unsupported}                -> pure nullFunPtr
+            e@{failed}                   -> throwIO ({exceptionTypeName} e)
+
+      |]
 
 writeMkGetDeviceProcAddr
   :: ( HasTypeInfo r

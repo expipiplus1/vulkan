@@ -98,11 +98,22 @@ bespokeModules = do
          )
        , (mkTyName "VkBaseInStructure" , vulkanModule ["CStruct", "Extends"])
        , (mkTyName "VkBaseOutStructure", vulkanModule ["CStruct", "Extends"])
+       , (mkTyName "XrBaseInStructure" , vulkanModule ["CStruct", "Extends"])
+       , (mkTyName "XrBaseOutStructure", vulkanModule ["CStruct", "Extends"])
+       , (mkTyName "XrFovf"            , vulkanModule ["Core10", "OtherTypes"])
+       , (mkTyName "XrPosef"           , vulkanModule ["Core10", "Space"])
        ]
     <> (   (, vulkanModule ["Core10", "FundamentalTypes"])
        <$> [ mkTyName "VkBool32"
            , TermName "boolToBool32"
            , TermName "bool32ToBool"
+           , mkTyName "XrBool32"
+           , mkTyName "XrOffset2Df"
+           , mkTyName "XrExtent2Df"
+           , mkTyName "XrRect2Df"
+           , mkTyName "XrOffset2Di"
+           , mkTyName "XrExtent2Di"
+           , mkTyName "XrRect2Di"
            ]
        )
 
@@ -114,7 +125,7 @@ data BespokeScheme where
   BespokeScheme ::(forall a. Marshalable a => CName -> a -> Maybe (MarshalScheme a)) -> BespokeScheme
   --- ^ Parent name -> child -> scheme
 
-bespokeSchemes :: Spec t -> Sem r [BespokeScheme]
+bespokeSchemes :: KnownSpecFlavor t => Spec t -> Sem r [BespokeScheme]
 bespokeSchemes spec =
   pure
     $  [baseInOut, wsiScheme, dualPurposeBytestrings, nextPointers spec]
@@ -129,16 +140,18 @@ baseInOut = BespokeScheme $ \case
   n | n `elem` ["VkBaseInStructure", "VkBaseOutStructure"] -> \case
     m | "pNext" <- name m -> Just $ Normal (type' m)
     _                     -> Nothing
+  n | n `elem` ["XrBaseInStructure", "XrBaseOutStructure"] -> \case
+    m | "next" <- name m -> Just $ Normal (type' m)
+    _                    -> Nothing
   _ -> const Nothing
-
 
 data NextType = NextElided | NextChain
 
-nextPointers :: Spec t -> BespokeScheme
+nextPointers :: forall t . KnownSpecFlavor t => Spec t -> BespokeScheme
 nextPointers Spec {..} =
   let schemeMap :: Map (CName, CName) NextType
       schemeMap = Map.fromList
-        [ ((sName s, "pNext"), scheme)
+        [ ((sName s, nextName), scheme)
         | s <- toList specStructs
         , let scheme = case sExtendedBy s of
                 V.Empty -> NextElided
@@ -149,6 +162,10 @@ nextPointers Spec {..} =
         Just NextElided -> Just (ElidedUnivalued "nullPtr")
         Just NextChain  -> Just (Custom chainScheme)
  where
+  nextName :: CName
+  nextName = case specFlavor @t of
+    SpecVk -> "pNext"
+    SpecXr -> "next"
   chainVarT   = VarT (mkName structChainVar)
   chainT      = ConT (mkName "Chain") :@ chainVarT
   chainScheme = CustomScheme
@@ -158,7 +175,7 @@ nextPointers Spec {..} =
     -- , csType = pure $ ForallT [] [ConT (mkName "PokeChain") :@ chainVarT] chainT
     , csType       = pure $ ForallT [] [] chainT
     , csDirectPoke = APoke $ \chainRef ->
-      stmt (Just (ConT ''Ptr :@ chainT)) (Just "pNext") $ do
+      stmt (Just (ConT ''Ptr :@ chainT)) (Just (unCName nextName)) $ do
         tellImportWithAll (TyConName "PokeChain")
         tellImport (TyConName "Chain")
         tellImport 'castPtr
@@ -171,7 +188,7 @@ nextPointers Spec {..} =
           <+> chain
     , csPeek       = \addrRef -> stmt (Just chainT) (Just "next") $ do
       chainPtr <- use
-        =<< storablePeek "pNext" addrRef (Ptr Const (Ptr Const Void))
+        =<< storablePeek nextName addrRef (Ptr Const (Ptr Const Void))
       tellImportWithAll (TyConName "PeekChain")
       tellImport (TyConName "Chain")
       tellImport 'castPtr
@@ -792,18 +809,20 @@ bespokeElements = \case
          , baseType "XrDuration" ''Int64
          ]
       <> wsiTypes SpecXr
+      <> [resultMatchers]
   where shared = fromList [namedType, nullHandle, boolConversion]
 
 boolConversion :: HasRenderParams r => Sem r RenderElement
 boolConversion = genRe "Bool conversion" $ do
   RenderParams {..} <- input
   tellNotReexportable
-  let true   = mkPatternName "VK_TRUE"
-      false  = mkPatternName "VK_FALSE"
-      bool32 = mkTyName "VkBool32"
+  let true   = mkPatternName (CName $ upperPrefix <> "_TRUE")
+      false  = mkPatternName (CName $ upperPrefix <> "_FALSE")
+      bool32 = mkTyName (CName $ camelPrefix <> "Bool32")
   tellExport (ETerm (TermName "boolToBool32"))
   tellExport (ETerm (TermName "bool32ToBool"))
   tellImport 'bool
+  tellImportWithAll bool32
   tellDoc [qqi|
     boolToBool32 :: Bool -> {bool32}
     boolToBool32 = bool {false} {true}
@@ -862,6 +881,38 @@ nullHandle = genRe "null handle" $ do
 
     -- | A class for things which can be created with '{patName}'.
     class (Eq a, Zero a) => IsHandle a where
+  |]
+
+
+----------------------------------------------------------------
+-- Base XR stuff
+----------------------------------------------------------------
+
+resultMatchers :: (HasErr r, HasRenderParams r) => Sem r RenderElement
+resultMatchers = genRe "xr result matchers" $ do
+  RenderParams {..} <- input
+  let succName = mkPatternName "XR_SUCCEEDED"
+      unquName = mkPatternName "XR_UNQUALIFIED_SUCCESS"
+      failName = mkPatternName "XR_FAILED"
+  tellExplicitModule (vulkanModule ["Core10", "Enums", "Result"])
+  tellNotReexportable
+  tellExport (EPat succName)
+  tellExport (EPat unquName)
+  tellExport (EPat failName)
+  tellDocWithHaddock $ \getDoc -> [qqi|
+    {getDoc (TopLevel "XR_SUCCEEDED")}
+    pattern SUCCEEDED :: Result
+    pattern SUCCEEDED <- ((SUCCESS <=) -> True)
+
+    {getDoc (TopLevel "XR_UNQUALIFIED_SUCCESS")}
+    pattern UNQUALIFIED_SUCCESS :: Result
+    pattern UNQUALIFIED_SUCCESS <- ((SUCCESS ==) -> True)
+
+    {getDoc (TopLevel "XR_FAILED")}
+    pattern FAILED :: Result
+    pattern FAILED <- ((SUCCESS >) -> True)
+
+    \{-# complete SUCCEEDED, FAILED #-}
   |]
 
 ----------------------------------------------------------------
@@ -975,7 +1026,7 @@ jni = [voidData "jobject"]
 
 -- TODO: improve this
 time :: HasRenderParams r => [Sem r RenderElement]
-time = [voidData "time", voidData "timespec"]
+time = [voidData "timespec"]
 
 -- TODO: Remove this
 vulkan :: HasRenderParams r => [Sem r RenderElement]

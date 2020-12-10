@@ -5,6 +5,7 @@ module Khronos.Versions.OpenXR
 
 import           Data.Vector                    ( Vector )
 import           Data.Version
+import           Foreign.Storable               ( Storable )
 import           Polysemy
 import           Polysemy.Input
 import           Relude
@@ -82,12 +83,21 @@ versionType = genRe "version type" $ do
   RenderParams {..} <- input
   tellExplicitModule (vulkanModule ["Version"])
   tellImport ''Word64
+  tellImport ''Storable
+  tellImport ''Generic
+  tellImport ''Typeable
+  tellImport (TyConName "Zero")
   let t = mkTyName "XrVersion"
       c = mkConName "XrVersion" "XrVersion"
-  tellExport (EType t)
+  tellDataExport t
   tellDocWithHaddock $ \getDoc -> [qqi|
   {getDoc (TopLevel "XrVersion")}
   newtype {t} = {c} \{ unVersion :: Word64 }
+    deriving stock (Typeable, Eq, Ord, Show, Read)
+    deriving newtype (Storable, Zero)
+  #if defined(GENERIC_INSTANCES)
+  deriving instance Generic {t}
+  #endif
   |]
 
 -- // OpenXR current version number.
@@ -127,11 +137,11 @@ versionConstruction = genRe "version construction" $ do
                                 .|. fromIntegral patch
 
     {patMajor} :: Version -> Word16
-    {patMajor} v = fromIntegral $ (v `shiftR` 48) .&. 0xffff
+    {patMajor} (Version v) = fromIntegral $ (v `shiftR` 48) .&. 0xffff
 
     {patMinor} :: Version -> Word16
-    {patMinor} v = fromIntegral $ (v `shiftR` 32) .&. 0xffff
+    {patMinor} (Version v) = fromIntegral $ (v `shiftR` 32) .&. 0xffff
 
     {patPatch} :: Version -> Word32
-    {patPatch} v = fromIntegral $ v .&. 0xffffffff
+    {patPatch} (Version v) = fromIntegral $ v .&. 0xffffffff
   |]
