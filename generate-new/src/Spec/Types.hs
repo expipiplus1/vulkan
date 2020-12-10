@@ -176,12 +176,15 @@ type family ChildrenType (su :: StructOrUnionType) (a :: WithChildren) where
 
 data StructOrUnion (t :: StructOrUnionType) (s :: WithSize) (c :: WithChildren)
   = Struct
-    { sName       :: CName
-    , sMembers    :: Vector (StructMember' s)
-    , sSize       :: SizeType s
-    , sAlignment  :: SizeType s
-    , sExtends    :: Vector CName
-    , sExtendedBy :: ChildrenType t c
+    { sName        :: CName
+    , sMembers     :: Vector (StructMember' s)
+    , sSize        :: SizeType s
+    , sAlignment   :: SizeType s
+    , sExtends     :: Vector CName
+    , sExtendedBy  :: ChildrenType t c
+    , sInherits    :: Vector CName
+    , sInheritedBy :: ChildrenType t c
+      -- ^ parentstruct stuff
     }
 
 deriving instance Show (ChildrenType t 'WithChildren) => Show (StructOrUnion t 'WithSize 'WithChildren)

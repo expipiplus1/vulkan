@@ -1005,10 +1005,12 @@ importConstructors
   => Type
   -> Sem r ()
 importConstructors t = do
+  RenderParams {..} <- input
   let names = nubOrd $ allTypeNames t
       isNewtype' :: Name -> Sem r Bool
-      isNewtype' n = pure (n `elem` builtinNewtypes)
-        <||> isNewtype (TyConName . T.pack . nameBase $ n)
+      isNewtype' n =
+        pure (n `elem` (builtinNewtypes <> toList extraNewtypes))
+          <||> isNewtype (TyConName . T.pack . nameBase $ n)
       setNameBase :: Name -> HName -> Name
       setNameBase n = case nameModule n of
         Nothing -> mkName . T.unpack . unName
@@ -1016,7 +1018,9 @@ importConstructors t = do
   resolveAlias <- do
     ra <- getResolveAlias
     pure $ \n -> setNameBase n (ra . TyConName . T.pack . nameBase $ n)
-  for_ names $ \n -> whenM (isNewtype' n) $ tellImportWithAll (resolveAlias n)
+  for_ names $ \n -> whenM (isNewtype' n) $ if n `elem` alwaysQualifiedNames
+    then tellQualImportWithAll (resolveAlias n)
+    else tellImportWithAll (resolveAlias n)
 
 builtinNewtypes :: [Name]
 builtinNewtypes =

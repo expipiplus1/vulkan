@@ -239,7 +239,7 @@ structSizeOverrides
   -> Maybe (StructOrUnion AStruct 'WithSize sc)
 structSizeOverrides = \case
   -- This is provisional, so match exactly in case it changes
-  s@(Struct "VkAccelerationStructureInstanceKHR" ms () () _ _)
+  s@(Struct "VkAccelerationStructureInstanceKHR" ms () () _ _ _ _)
     | ms == V.fromList
       [ StructMember "transform"
                      (TypeName "VkTransformMatrixKHR")
@@ -341,9 +341,16 @@ withChildren ss =
         | s1 <- toList ss
         , e  <- toList (sExtends s1)
         ]
-  in
-    \s ->
-      s { sExtendedBy = fromMaybe mempty (Map.lookup (sName s) extendedByMap) }
+      inheritedByMap = Map.fromListWith
+        (<>)
+        [ (e, V.singleton (sName s1))
+        | s1 <- toList ss
+        , e  <- toList (sInherits s1)
+        ]
+  in  \s -> s
+        { sExtendedBy  = fromMaybe mempty (Map.lookup (sName s) extendedByMap)
+        , sInheritedBy = fromMaybe mempty (Map.lookup (sName s) inheritedByMap)
+        }
 
 ----------------------------------------------------------------
 -- Features and extensions
@@ -777,17 +784,19 @@ parseUnions = onTypes "union" parseStruct
 parseStruct :: Node -> P (StructOrUnion a WithoutSize WithoutChildren)
 parseStruct n = do
   sName <- nameAttr "struct" n
-  case find (\(Struct n _ _ _ _ _) -> n == sName) bespokeStructsAndUnions of
+  case find (\s -> sName == Spec.Types.sName s) bespokeStructsAndUnions of
     Just s  -> pure s
     Nothing -> context (unCName sName) $ do
       sMembers <-
         fmap fromList
         . traverseV (parseStructMember sName)
         $ [ m | Element m <- contents n, name m == "member" ]
-      let sSize       = ()
-          sAlignment  = ()
-          sExtendedBy = ()
-      sExtends <- listAttr (fmap CName . decode) "structextends" n
+      let sSize        = ()
+          sAlignment   = ()
+          sExtendedBy  = ()
+          sInheritedBy = ()
+      sExtends  <- listAttr (fmap CName . decode) "structextends" n
+      sInherits <- listAttr (fmap CName . decode) "parentstruct" n
       pure Struct { .. }
  where
 

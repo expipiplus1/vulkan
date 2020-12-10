@@ -10,3 +10,5 @@ cradle:
       component: "lib:vulkan"
     - path: "./VulkanMemoryAllocator/"
       component: "lib:VulkanMemoryAllocator"
+    - path: "./openxr/"
+      component: "lib:openxr"

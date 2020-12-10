@@ -8,12 +8,12 @@ module Haskell
   , allTypeNames
   , pattern (:@)
   , typeName
+  , typeNameWithModule
   , mkVar
   , (~>)
   , arrowUniqueVars
   , module Haskell.Name
-  )
-where
+  ) where
 
 import           Data.Char                      ( isLower )
 import           Data.Generics.Uniplate.Data
@@ -40,6 +40,10 @@ import           Render.Element
 
 typeName :: HName -> Name
 typeName = mkName . T.unpack . unName
+
+typeNameWithModule :: ModName -> HName -> Name
+typeNameWithModule (ModName mod') =
+  mkName . T.unpack . ((mod' <> ".") <>) . unName
 
 mkVar :: Text -> Type
 mkVar = VarT . mkName . T.unpack

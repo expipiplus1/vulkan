@@ -57,6 +57,7 @@ renderParams handles = r
     , upperPrefix                    = "VMA"
     , flagsTypeName                  = "VkFlags"
     , alwaysQualifiedNames           = mempty
+    , extraNewtypes                  = mempty
     , mkIdiomaticType = let dropVulkanModule = transformBi
                               (\n ->
                                 if nameModule n
@@ -93,6 +94,7 @@ renderParams handles = r
     , successCodeType                = TypeName "VkResult"
     , isSuccessCodeReturned          = (/= "VK_SUCCESS")
     , firstSuccessCode               = "VK_SUCCESS"
+    , versionType                    = TypeName "uint32_t"
     , exceptionTypeName              = TyConName "VulkanException"
     , complexMemberLengthFunction    = \_ _ _ -> Nothing
     , isExternalName                 =

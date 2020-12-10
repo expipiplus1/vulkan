@@ -1,14 +1,13 @@
-module Marshal.Scheme.Zero
-  where
+module Marshal.Scheme.Zero where
 
-import           Relude
+import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.NonDet
-import           Data.Text.Prettyprint.Doc
+import           Relude
 
+import           Haskell.Name
 import           Marshal.Scheme
 import           Render.Element
-import           Haskell.Name
 
 zeroScheme
   :: (HasRenderElem r, HasRenderParams r)

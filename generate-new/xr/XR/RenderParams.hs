@@ -61,7 +61,8 @@ renderParams handles = r
     , lowerPrefix                    = "xr"
     , upperPrefix                    = "XR"
     , flagsTypeName                  = "XrFlags64"
-    , alwaysQualifiedNames           = mempty
+    , alwaysQualifiedNames = fromList (vulkanHaskellNames vulkanParams)
+    , extraNewtypes = fromList (vulkanHaskellNames vulkanParams)
     , mkIdiomaticType                =
       let
         dropVulkanModule = transformBi
@@ -122,19 +123,34 @@ renderParams handles = r
         \t ->
           xrIdiomatic t
             <|> (mkIdiomaticType vulkanParams . dropVulkanModule $ t)
-    , mkHsTypeOverride = \_ preserve t -> pure <$> case preserve of
-      DoNotPreserve -> Nothing
-      _             -> case t of
-        TypeName n | Set.member n dispatchableHandleNames ->
-          Just $ ConT ''Ptr :@ ConT (typeName (mkEmptyDataName r n))
-        _ -> Nothing
+    , mkHsTypeOverride               = \structStyle preserve t ->
+      case vulkanManifest structStyle vulkanParams t of
+        Just t -> Just $ do
+          t <- t
+          case preserve of
+            DoNotPreserve -> case mkIdiomaticType r t of
+              Just i  -> pure $ itType i
+              Nothing -> pure t
+            _ -> pure t
+        Nothing -> pure <$> case preserve of
+          DoNotPreserve -> Nothing
+          _             -> case t of
+            TypeName n | Set.member n dispatchableHandleNames ->
+              Just $ ConT ''Ptr :@ ConT (typeName (mkEmptyDataName r n))
+            _ -> Nothing
     , unionDiscriminators            = mempty
     , successCodeType                = TypeName "XrResult"
     , isSuccessCodeReturned          = (/= "XR_SUCCESS")
     , firstSuccessCode               = "XR_SUCCESS"
+    , versionType                    = TypeName "XrVersion"
     , exceptionTypeName              = TyConName "OpenXrException"
     , complexMemberLengthFunction    = \_ _ _ -> Nothing
-    , isExternalName                 = const Nothing
+    , isExternalName                 = let
+                                         vk s = Just (ModName $ vulkanModulePrefix <> "." <> s)
+                                         isVulkanName = const False
+                                       in
+                                         \n ->
+                                           if isVulkanName n then error "AAAAASD" else Nothing
     , externalDocHTML                = Just
       "https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html"
     , objectTypePattern              = pure
@@ -176,6 +192,8 @@ dropPointer =
     . first (\p -> if T.all (== 'p') p then "" else p)
     . T.span isLower
 
+vulkanTypesModule = "Vulkan.VulkanTypes"
+
 -- TODO: Generate this automatically
 vulkanManifest
   :: ExtensibleStructStyle r -> RenderParams -> CType -> Maybe (Sem r Type)
@@ -186,7 +204,7 @@ vulkanManifest structStyle RenderParams {..} =
           . ConT
           . mkName
           . T.unpack
-          . ((vulkanModulePrefix <> ".") <>)
+          . ((vulkanTypesModule <> ".") <>)
           . unName
           . mkTyName
       someVk t = Just $ do
@@ -194,51 +212,37 @@ vulkanManifest structStyle RenderParams {..} =
               ConT
                 . mkName
                 . T.unpack
-                . ((vulkanModulePrefix <> ".") <>)
+                . ((vulkanTypesModule <> ".") <>)
                 . unName
                 . mkTyName
                 $ t
         case structStyle of
-          Applied getVar -> do
-            v <- getVar
-            pure $ structTyCon :@ v
-          Wrapped -> pure $ ConT (mkName "SomeStruct") :@ structTyCon
+          -- Never expose vulkan structs as applied
+          _ ->
+            pure
+              $  ConT
+                   (mkName (T.unpack vulkanTypesModule <> "." <> "SomeStruct"))
+              :@ structTyCon
   in  \case
-        TypeName n
-          | n
-            `elem` [ "VkFlags"
-                   , "VkAllocation"
-                   , "VkAllocationCallbacks"
-                   , "VkBool32"
-                   , "VkCommandBuffer_T"
-                   , "VkDeviceMemory"
-                   , "VkDeviceSize"
-                   , "VkDevice_T"
-                   , "VkInstance_T"
-                   , "VkMemoryPropertyFlags"
-                   , "VkPhysicalDevice_T"
-                   , "VkBuffer"
-                   , "VkBufferCopy"
-                   , "VkBufferMemoryRequirementsInfo2"
-                   , "VkImage"
-                   , "VkMappedMemoryRange"
-                   , "VkMemoryMapFlags"
-                   , "VkMemoryRequirements"
-                   , "VkPhysicalDeviceMemoryProperties"
-                   , "VkPhysicalDeviceProperties"
-                   , "VkResult"
-                   ]
-          -> vk n
-          | n
-            `elem` [ "VkMemoryAllocateInfo"
-                   , "VkBindBufferMemoryInfo"
-                   , "VkBindImageMemoryInfo"
-                   , "VkBufferCreateInfo"
-                   , "VkImageCreateInfo"
-                   , "VkMemoryRequirements2"
-                   , "VkImageMemoryRequirementsInfo2"
-                   , "VkPhysicalDeviceMemoryProperties2"
-                   ]
-          -> someVk n
+        TypeName n | n `elem` vulkanMonoNames -> vk n
+                   | n `elem` vulkanPolyNames -> someVk n
         _ -> Nothing
 
+vulkanMonoNames =
+  [ "VkInstance"
+  , "VkPhysicalDevice"
+  , "VkDevice"
+  , "VkImage"
+  , "VkResult"
+  , "VkFormat"
+  , "VkAllocationCallbacks"
+  , "PFN_vkGetInstanceProcAddr"
+  ]
+vulkanPolyNames = ["VkInstanceCreateInfo", "VkDeviceCreateInfo"]
+vulkanNames = vulkanMonoNames <> vulkanPolyNames
+
+vulkanHaskellNames :: RenderParams -> [Name]
+vulkanHaskellNames RenderParams {..} =
+  mkName (T.unpack vulkanTypesModule <> "." <> "SomeStruct")
+    : (typeNameWithModule (ModName vulkanTypesModule) . mkTyName <$> vulkanNames
+      )

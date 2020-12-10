@@ -1,6 +1,6 @@
 # Haskell package overrides
 { pkgs, compiler ? null, hoogle ? false, safeVulkanFFI ? false
-, buildProfiling ? false, buildInstrumented ? false }:
+, safeOpenXrFFI ? false, buildProfiling ? false, buildInstrumented ? false }:
 
 with pkgs.haskell.lib;
 
@@ -66,6 +66,17 @@ let
         root = aggressiveFilter ../generate-new;
         modifier = drv: dontHaddock (mod drv);
         returnShellEnv = false;
+      };
+      openxr = self.developPackage {
+        name = "openxr";
+        root = aggressiveFilter ../openxr;
+        # modifier = drv:
+        #   (mod drv).override { openxr_loader = pkgs.openxr-loader; };
+        returnShellEnv = false;
+        cabal2nixOptions = with pkgs.lib;
+          concatStringsSep " "
+          (optional safeOpenXrFFI "--flag=safe-foreign-calls"
+            ++ optional buildInstrumented "--flag=trace-calls");
       };
 
       #

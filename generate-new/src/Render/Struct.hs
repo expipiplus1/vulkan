@@ -125,14 +125,9 @@ renderExtensibleInstance
   -> Sem r ()
 renderExtensibleInstance MarshaledStruct {..} = do
   RenderParams {..} <- input
-  let
-    n   = mkTyName (sName msStruct)
-    con = mkConName (sName msStruct) (sName msStruct)
-    -- TODO: Remove special case here
-    isExtended =
-      not (V.null (sExtendedBy msStruct))
-        && msName
-        /= "XrCompositionLayerBaseHeader"
+  let n          = mkTyName (sName msStruct)
+      con        = mkConName (sName msStruct) (sName msStruct)
+      isExtended = not (V.null (sExtendedBy msStruct))
   when isExtended $ do
     tellImportWithAll (TyConName "Extensible")
     tellImport (TyConName "Extends")
@@ -145,23 +140,12 @@ renderExtensibleInstance MarshaledStruct {..} = do
         then ConT (typeName (mkTyName childName))
         else ConT (typeName (mkTyName childName)) :@ PromotedNilT
       pure $ "| Just Refl <- eqT @e @" <> childTDoc <+> "= Just f"
-    let
-      noMatch = "| otherwise = Nothing"
-      cases   = toList matches ++ [noMatch]
-      structTypes =
-        [ v
-        | MarshaledStructMember { msmStructMember = StructMember { smName }, msmScheme = ElidedUnivalued v } <-
-          toList msMembers
-        , Just smName == extensibleStructTypeMemberName
-        ]
-    structType <- case structTypes of
-      []  -> throw "Unable to find type enum of extensible struct"
-      [v] -> pure v
-      vs  -> throw $ "Found multiple struct type enums " <> show vs
+    let noMatch = "| otherwise = Nothing"
+        cases   = toList matches ++ [noMatch]
     tellDoc $ "instance Extensible" <+> pretty n <+> "where" <> line <> indent
       2
       (vsep
-        [ "extensibleType =" <+> pretty (mkPatternName (CName structType))
+        [ "extensibleTypeName =" <+> dquotes (pretty n)
         , "setNext x next = x{next = next}"
         , "getNext" <+> pretty con <> "{..} = next"
         , "extends :: forall e b proxy. Typeable e => proxy e -> (Extends"
@@ -201,7 +185,7 @@ renderStoreInstances ms@MarshaledStruct {..} = do
     , showInstanceStub tellSourceImport msStruct
     ]
 
-  pokes <- renderPokes (fmap Just . (recordWildCardsMemberVal msName))
+  pokes <- renderPokes (fmap Just . recordWildCardsMemberVal msName)
                        (IOAction $ pretty contVar)
                        ms
 

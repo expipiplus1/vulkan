@@ -251,6 +251,7 @@ data RenderParams = RenderParams
   , flagsTypeName               :: CName
     -- ^ "VkFlags" or "XrFlags64"
   , alwaysQualifiedNames        :: Vector Name
+  , extraNewtypes               :: Vector Name
   , mkIdiomaticType             :: Type -> Maybe IdiomaticType
     -- ^ Overrides for using a different type than default on the Haskell side
     -- than the C side
@@ -269,6 +270,7 @@ data RenderParams = RenderParams
     -- use @const True@ to always return success codes
   , firstSuccessCode      :: CName
     -- Any code less than this is an error code
+  , versionType           :: CType
   , exceptionTypeName     :: HName
     -- The name for the exception wrapper
   , complexMemberLengthFunction
@@ -418,6 +420,8 @@ class Importable a where
 instance Importable Name where
   addImport import'@(Import i qual children withAll source) = do
     RenderParams {..} <- input
+    -- TODO: Throw a an error here if we are not qual and i is in
+    -- alwaysQualifiedNames
     let mkLocalName n =
           let b = T.pack . nameBase $ n
           in  case nameSpace n of

@@ -9,12 +9,16 @@ import           Data.Traversable
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import           Error
-import           Haskell                        ( HName(..) )
+import           Haskell                        ( HName(..)
+                                                , renderType
+                                                )
 import           Khronos.Utils
 import           Polysemy.Input
 import           Relude
 import           Render.Element
 import           Render.SpecInfo
+import           Render.Type                    ( cToHsType )
+import           Render.Type.Preserve           ( Preserve(DoNotPreserve) )
 import           Spec.Types
 import           VkModulePrefix
 
@@ -45,6 +49,7 @@ renderDeps exts = do
           pure $ pretty namePattern <+> "->" <+> list (pretty <$> depPatterns)
   tellImport (TyConName ":::")
   tellImport ''ByteString
+  tellExport (ETerm (TermName "extensionDependencies"))
   tellDoc $ vsep
     [ "-- | The set of other extensions required to use this extension"
     , "extensionDependencies :: (\"extensionName\" ::: ByteString) -> [ByteString]"
@@ -58,8 +63,10 @@ renderCoreRequirements
   => Vector Extension
   -> Sem r ()
 renderCoreRequirements exts = do
+  RenderParams {..} <- input
   tellImport (ConName "API_VERSION_1_0")
   let defaultCase = "_ -> API_VERSION_1_0"
+  ver   <- renderType =<< cToHsType DoNotPreserve versionType
   cases <-
     for
         [ (exName, v)
@@ -73,9 +80,11 @@ renderCoreRequirements exts = do
           pure $ pretty namePattern <+> "->" <+> vPat
   tellImport (TyConName ":::")
   tellImport ''Word32
+  tellExport (ETerm (TermName "extensionCoreRequirement"))
   tellDoc $ vsep
     [ "-- | The minimum required API version to use this extension"
-    , "extensionCoreRequirement :: (\"extensionName\" ::: ByteString) -> Word32"
+    , "extensionCoreRequirement :: (\"extensionName\" ::: ByteString) ->"
+      <+> ver
     , "extensionCoreRequirement = \\case" <> line <> indent
       2
       (vsep (cases <> [defaultCase]))

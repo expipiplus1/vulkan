@@ -699,37 +699,39 @@ structChainVar = "es"
 bespokeStructsAndUnions :: [StructOrUnion a WithoutSize WithoutChildren]
 bespokeStructsAndUnions =
   [ Struct
-      { sName       = "VkTransformMatrixKHR"
-      , sMembers    = V.fromList
-                        [ StructMember
-                          { smName       = "matrixRow0"
-                          , smType = Array NonConst (NumericArraySize 4) Float
-                          , smValues     = mempty
-                          , smLengths    = mempty
-                          , smIsOptional = mempty
-                          , smOffset     = ()
-                          }
-                        , StructMember
-                          { smName       = "matrixRow1"
-                          , smType = Array NonConst (NumericArraySize 4) Float
-                          , smValues     = mempty
-                          , smLengths    = mempty
-                          , smIsOptional = mempty
-                          , smOffset     = ()
-                          }
-                        , StructMember
-                          { smName       = "matrixRow2"
-                          , smType = Array NonConst (NumericArraySize 4) Float
-                          , smValues     = mempty
-                          , smLengths    = mempty
-                          , smIsOptional = mempty
-                          , smOffset     = ()
-                          }
-                        ]
-      , sSize       = ()
-      , sAlignment  = ()
-      , sExtends    = mempty
-      , sExtendedBy = mempty
+      { sName        = "VkTransformMatrixKHR"
+      , sMembers     = V.fromList
+                         [ StructMember
+                           { smName       = "matrixRow0"
+                           , smType = Array NonConst (NumericArraySize 4) Float
+                           , smValues     = mempty
+                           , smLengths    = mempty
+                           , smIsOptional = mempty
+                           , smOffset     = ()
+                           }
+                         , StructMember
+                           { smName       = "matrixRow1"
+                           , smType = Array NonConst (NumericArraySize 4) Float
+                           , smValues     = mempty
+                           , smLengths    = mempty
+                           , smIsOptional = mempty
+                           , smOffset     = ()
+                           }
+                         , StructMember
+                           { smName       = "matrixRow2"
+                           , smType = Array NonConst (NumericArraySize 4) Float
+                           , smValues     = mempty
+                           , smLengths    = mempty
+                           , smIsOptional = mempty
+                           , smOffset     = ()
+                           }
+                         ]
+      , sSize        = ()
+      , sAlignment   = ()
+      , sExtends     = mempty
+      , sExtendedBy  = mempty
+      , sInherits    = mempty
+      , sInheritedBy = mempty
       }
   ]
 
@@ -839,7 +841,7 @@ wsiTypes = \case
   SpecVk -> (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp])
     <> concat [win32', xcb1, waylandShared, wayland, metal, android, directfb]
   SpecXr -> (snd <$> concat [win32Xr, x11Shared, xcb2Xr, egl, gl, d3d])
-    <> concat [win32Xr', xcb1, waylandShared, d3d', jni, time, vulkan]
+    <> concat [win32Xr', xcb1, waylandShared, d3d', jni, time]
 
 namedType :: HasErr r => Sem r RenderElement
 namedType = genRe "namedType" $ do
@@ -1027,26 +1029,6 @@ jni = [voidData "jobject"]
 -- TODO: improve this
 time :: HasRenderParams r => [Sem r RenderElement]
 time = [voidData "timespec"]
-
--- TODO: Remove this
-vulkan :: HasRenderParams r => [Sem r RenderElement]
-vulkan =
-  [ voidData "VkDevice"
-    , voidData "VkInstance"
-    , voidData "VkPhysicalDevice"
-    , voidData "VkImage"
-    , voidData "VkResult"
-    , voidData "VkInstanceCreateInfo"
-    , voidData "VkDeviceCreateInfo"
-    , voidData "VkAllocationCallbacks"
-    ]
-    <> (   snd
-       <$> [ alias AWord32 "VkFormat"
-           , alias
-             (AFunPtr $(TH.lift =<< [t|CString -> IO (FunPtr (IO ()))|]))
-             "PFN_vkGetInstanceProcAddr"
-           ]
-       )
 
 ----------------------------------------------------------------
 -- OpenXR stuff

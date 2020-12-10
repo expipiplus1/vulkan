@@ -132,21 +132,25 @@ renderSpec spec@Spec {..} getDoc brackets ss us cs = do
     , rsAPIConstants       = renderConstant <$> filterConstants specAPIConstants
     , rsExtensionConstants = renderConstant
                                <$> filterConstants specExtensionConstants
-    , rsOthers             =
-      bespokeElements (specFlavor @t)
-      <> V.singleton (renderDynamicLoader (specFlavor @t) cs)
-      <> cStructDocs
-      <> V.singleton marshalUtils
-      <> V.singleton zeroClass
-      <> V.singleton hasObjectTypeClass
-      <> V.singleton (vkExceptionRenderElement getDoc vkResult)
-      <> case sSpecFlavor @t of
-           SSpecVk -> Vk.specVersions spec
-           SSpecXr -> Xr.specVersions spec
-      <> V.singleton (structExtends spec)
-      <> V.singleton
-           (renderSPIRVElements specSPIRVExtensions specSPIRVCapabilities)
-      <> V.singleton (renderExtensionDepElements specExtensions)
+    , rsOthers             = bespokeElements (specFlavor @t)
+                             <> V.singleton (renderDynamicLoader (specFlavor @t) cs)
+                             <> cStructDocs
+                             <> V.singleton marshalUtils
+                             <> V.singleton zeroClass
+                             <> V.singleton hasObjectTypeClass
+                             <> V.singleton (vkExceptionRenderElement getDoc vkResult)
+                             <> case sSpecFlavor @t of
+                                  SSpecVk -> Vk.specVersions spec
+                                  SSpecXr -> Xr.specVersions spec
+                             <> V.singleton (structExtends spec)
+                             <> case specFlavor @t of
+                                  SpecVk ->
+                                    V.singleton
+                                      (renderSPIRVElements specSPIRVExtensions
+                                                           specSPIRVCapabilities
+                                      )
+                                  SpecXr -> mempty
+                             <> V.singleton (renderExtensionDepElements specExtensions)
     }
 
 -- | Render a command along with any associated bracketing function

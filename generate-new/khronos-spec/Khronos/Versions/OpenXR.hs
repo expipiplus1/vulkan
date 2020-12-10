@@ -25,41 +25,10 @@ specVersions
   => Spec SpecXr
   -> Vector (Sem r RenderElement)
 specVersions Spec {..} = fromList
-  (versionType : versionConstruction : (featureVersion <$> toList specFeatures))
-
-headerVersion
-  :: (HasErr r, HasRenderParams r)
-  => SpecHeaderVersion SpecVk
-  -> Sem r RenderElement
-headerVersion (VkVersion version) = genRe "header version" $ do
-  RenderParams {..} <- input
-  tellExplicitModule (vulkanModule ["Version"])
-  let pat = mkPatternName "VK_HEADER_VERSION"
-  tellExport (EPat pat)
-  tellImport ''Word32
-  tellDoc [qqi|
-    pattern {pat} :: Word32
-    pattern {pat} = {version}
-  |]
-
-headerVersionComplete
-  :: (HasErr r, HasRenderParams r)
-  => Version
-  -> SpecHeaderVersion SpecVk
-  -> Sem r RenderElement
-headerVersionComplete lastFeatureVersion (VkVersion headerVersion) =
-  genRe "header version complete" $ do
-    RenderParams {..} <- input
-    tellExplicitModule (vulkanModule ["Version"])
-    let pat               = mkPatternName "VK_HEADER_VERSION_COMPLETE"
-        major : minor : _ = versionBranch lastFeatureVersion
-        makeVersion       = mkPatternName "VK_MAKE_VERSION"
-    tellExport (EPat pat)
-    tellImport ''Word32
-    tellDoc [qqi|
-    pattern {pat} :: Word32
-    pattern {pat} = {makeVersion} {major} {minor} {headerVersion}
-  |]
+  ( versionTypeElem
+  : versionConstruction
+  : (featureVersion <$> toList specFeatures)
+  )
 
 featureVersion
   :: (HasErr r, HasRenderParams r) => Feature -> Sem r RenderElement
@@ -69,17 +38,19 @@ featureVersion Feature {..} = genRe "feature version" $ do
       pat               = mkPatternName
         (CName $ "XR_API_VERSION_" <> show major <> "_" <> show minor)
       make = mkPatternName "XR_MAKE_VERSION"
+      ver  = mkTyName "XrVersion"
   tellExport (EPat pat)
   tellImport ''Word32
   tellImport make
+  tellImport ver
   tellExplicitModule (vulkanModule ["Core" <> show major <> show minor])
   tellDoc [qqi|
-    pattern {pat} :: Word32
+    pattern {pat} :: {ver}
     pattern {pat} = {make} {major} {minor} 0
   |]
 
-versionType :: (HasErr r, HasRenderParams r) => Sem r RenderElement
-versionType = genRe "version type" $ do
+versionTypeElem :: (HasErr r, HasRenderParams r) => Sem r RenderElement
+versionTypeElem = genRe "version type" $ do
   RenderParams {..} <- input
   tellExplicitModule (vulkanModule ["Version"])
   tellImport ''Word64

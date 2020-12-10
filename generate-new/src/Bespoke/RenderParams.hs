@@ -65,6 +65,7 @@ renderParams handles = r
     , upperPrefix                    = "VK"
     , flagsTypeName                  = "VkFlags"
     , alwaysQualifiedNames           = mempty
+    , extraNewtypes                  = mempty
     , mkIdiomaticType                =
       (`List.lookup` (  [ wrappedIdiomaticType ''Float  ''CFloat  'CFloat
                         , wrappedIdiomaticType ''Int32  ''CInt    'CInt
@@ -167,6 +168,7 @@ renderParams handles = r
     , successCodeType                = TypeName "VkResult"
     , isSuccessCodeReturned          = (/= "VK_SUCCESS")
     , firstSuccessCode               = "VK_SUCCESS"
+    , versionType                    = TypeName "uint32_t"
     , exceptionTypeName              = TyConName "VulkanException"
     , complexMemberLengthFunction    = curry3 $ \case
       ("pAllocateInfo", "descriptorSetCount", sibling) -> Just $ do
