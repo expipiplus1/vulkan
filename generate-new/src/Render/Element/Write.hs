@@ -170,10 +170,8 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
         Relude.filter (\(Import n _ _ _ _) -> n `V.notElem` declaredNames)
       findModule' n =
         note ("Unable to find module for " <> show n) (findModule n)
-      findLocalModule' n = case n of
-        TyConName "PhysicalDevice" -> pure (ModName "Foo")
-        _ -> note ("Unable to find local module for " <> show n)
-                  (findLocalModule n)
+      findLocalModule' n =
+        note ("Unable to find local module for " <> show n) (findLocalModule n)
     imports <- vsep <$> traverseV
       (renderImport findModule' (T.pack . nameBase) thNameNamespace id)
       ( mapMaybe
