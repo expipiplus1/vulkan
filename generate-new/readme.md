@@ -93,21 +93,23 @@ During development unfinished bits not to forget are listed here.
 
 ### OpenXR
 
-- [ ] Handle levels
+- [x] Handle levels
+  - They are all "session"
 - [ ] Share Vulkan handles
-- [ ] Bespoke vulkan types should be just in sizes
+- [x] Bespoke vulkan types should be just in sizes
 - [ ] Remove vulkan stuff from bespokeSizes
+  - Would be nice to generate it automatically, but it's fine as it is
 - [ ] Fix runAsciidoctor
 - [ ] These are passed as pointers ,(see Bespoke.MarshalParams.isPassAsPointerType')
 
-    ```
-    "VkInstanceCreateInfo"
-    "VkAllocationCallbacks"
-    "VkDeviceCreateInfo"
-    "VkAllocationCallbacks"
-    "LARGE_INTEGER"
-    "timespec"
-    ```
+  - [ ] `VkInstanceCreateInfo`
+    - Simpler to keep as ptr
+  - [ ] `VkAllocationCallbacks`
+    - Simpler to keep as ptr
+  - [ ] `VkDeviceCreateInfo`
+    - Simpler to keep as ptr
+  - [ ] `LARGE_INTEGER`
+  - [ ] `timespec"
 
 - [ ] remove XR.RenderParams.vulkanNameOverrides
 - [ ] check
