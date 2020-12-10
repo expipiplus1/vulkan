@@ -100,12 +100,12 @@ During development unfinished bits not to forget are listed here.
 - [ ] Remove vulkan stuff from bespokeSizes
   - Would be nice to generate it automatically, but it's fine as it is
 - [ ] Fix runAsciidoctor
-- [ ] These are passed as pointers ,(see Bespoke.MarshalParams.isPassAsPointerType')
+- [x] These are passed as pointers ,(see Bespoke.MarshalParams.isPassAsPointerType')
 
   - [ ] `VkInstanceCreateInfo`, `VkAllocationCallbacks`, `VkDeviceCreateInfo`
     - Simpler to keep as ptr
-  - [ ] `LARGE_INTEGER`
-  - [ ] `timespec`
+  - [x] `LARGE_INTEGER`
+  - [x] `timespec`
 
 - [x] remove XR.RenderParams.vulkanNameOverrides
 

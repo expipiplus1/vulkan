@@ -201,6 +201,8 @@ type HasMarshalParams r = MemberWithError (Input MarshalParams) r
 data MarshalParams = MarshalParams
   { isDefaultable       :: CType -> Bool
   , isPassAsPointerType :: CType -> Bool
+  , isForeignStruct     :: CType -> Bool
+    -- ^ Foreign structs we've defined explicitly
   , getBespokeScheme
       :: forall a . Marshalable a => CName -> a -> Maybe (MarshalScheme a)
   }
@@ -209,6 +211,7 @@ instance Semigroup MarshalParams where
   mp1 <> mp2 = MarshalParams
     { isDefaultable       = getAny . concatBoth (Any .: isDefaultable)
     , isPassAsPointerType = getAny . concatBoth (Any .: isPassAsPointerType)
+    , isForeignStruct     = getAny . concatBoth (Any .: isPassAsPointerType)
     , getBespokeScheme    = \p x ->
                               getBespokeScheme mp1 p x <|> getBespokeScheme mp2 p x
     }
@@ -464,17 +467,18 @@ normalCheck t p = do
   guard . (/= Void) $ t
   guard $ not (isPtrType t) || isPassAsPointerType (unPtrType t)
 
-
 -- Sometimes pointers to non-optional structs are used, remove these for the
 -- marshalled version.
-dropPtrToStruct :: HasSpecInfo r => CType -> Sem r CType
+dropPtrToStruct :: (HasMarshalParams r, HasSpecInfo r) => CType -> Sem r CType
 dropPtrToStruct t = do
+  MarshalParams {..} <- input
   let stripConstPtr = \case
         Ptr Const t -> stripConstPtr t
         t           -> t
   case stripConstPtr t of
+    t | isForeignStruct t -> pure t
     TypeName n ->
-      liftA2 (||) (isJust <$> getStruct n) (isJust <$> getUnion n) <&> \case
+      (isJust <$> getStruct n) <||> (isJust <$> getUnion n) <&> \case
         True  -> TypeName n
         False -> t
     _ -> pure t
@@ -518,7 +522,9 @@ unwrapDispatchableHandles t = failToNonDet $ do
 
 -- If this is an extensible struct, wrap it, otherwise return Normal
 wrapExtensibleStruct
-  :: (Member NonDet r, HasSpecInfo r) => CType -> Sem r (MarshalScheme a)
+  :: (Member NonDet r, HasSpecInfo r, HasMarshalParams r)
+  => CType
+  -> Sem r (MarshalScheme a)
 wrapExtensibleStruct t = failToNonDet $ do
   TypeName n <- dropPtrToStruct t
   Just     s <- getStruct n
@@ -626,3 +632,6 @@ isSimple = \case
 
 (<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
 (<&&>) = liftA2 (&&)
+
+(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
+(<||>) = liftA2 (||)

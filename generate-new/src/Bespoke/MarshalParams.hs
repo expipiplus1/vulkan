@@ -71,6 +71,7 @@ marshalParams spec@Spec {..} = do
                             <||> isDispatchableHandleType
                             <||> isAtomType
     , isPassAsPointerType = isPassAsPointerType'
+    , isForeignStruct     = isForeignStruct'
     , getBespokeScheme    = \p a ->
       asum . fmap (\(BespokeScheme f) -> f p a) $ bespokeSchemes
     }
@@ -153,14 +154,12 @@ isPassAsPointerType' = \case
              , "VkAllocationCallbacks"
              , "VkDeviceCreateInfo"
              , "VkAllocationCallbacks"
-             , "LARGE_INTEGER"
-             , "timespec"
              ]
   _ -> False
 
-----------------------------------------------------------------
--- Utils
-----------------------------------------------------------------
-
-(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
-(<||>) = liftA2 (||)
+-- | Is this a foreign struct we've defined (not specified in the spec)
+isForeignStruct' :: CType -> Bool
+isForeignStruct' = \case
+  TypeName "LARGE_INTEGER" -> True
+  TypeName "timespec"      -> True
+  _                        -> False

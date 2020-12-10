@@ -1069,6 +1069,3 @@ getDynName = ("mk" <>) . upperCaseFirst . unCName . cName
 
 getStaticName :: Command -> Text
 getStaticName = ("ffi" <>) . upperCaseFirst . unCName . cName
-
-(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
-(<||>) = liftA2 (||)

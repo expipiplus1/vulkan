@@ -46,6 +46,7 @@ import           Foreign.Ptr
 
 import           CType                         as C
 import           Error
+import           Foreign.Marshal.Utils          ( with )
 import           Haskell
 import           Marshal.Marshalable
 import           Marshal.Scheme
@@ -188,7 +189,7 @@ normal
   -> Stmt s r (Ref s ValueDoc)
 normal name to from valueRef =
   note ("Unhandled " <> show from <> " conversion to: " <> show to)
-    =<< runNonDetMaybe (asum [idiomatic, same, indirectStruct])
+    =<< runNonDetMaybe (asum [idiomatic, same, indirect])
  where
   idiomatic = failToNonDet $ do
     RenderParams {..}                     <- input
@@ -205,16 +206,22 @@ normal name to from valueRef =
     guard (from == to)
     pure valueRef
 
-  indirectStruct = failToNonDet $ do
+  indirect = failToNonDet $ do
     Ptr Const toElem@(TypeName n) <- pure to
     guard (from == toElem)
-    guard =<< ((isJust <$> getStruct n) <||> (isJust <$> getUnion n))
-    ty <- cToHsTypeWithHoles DoNotPreserve to
+    isStructOrUnion <- (isJust <$> getStruct n) <||> (isJust <$> getUnion n)
+    ty              <- cToHsTypeWithHoles DoNotPreserve to
     raise2 $ stmtC (Just ty) name . fmap (ContTAction . ValueDoc) $ do
-      tellImportWithAll (TyConName "ToCStruct")
       tellImportWithAll ''ContT
-      ValueDoc value <- use valueRef
-      pure $ "ContT $ withCStruct" <+> value
+      if isStructOrUnion
+        then do
+          tellImportWithAll (TyConName "ToCStruct")
+          ValueDoc value <- use valueRef
+          pure $ "ContT $ withCStruct" <+> value
+        else do
+          tellImport 'with
+          ValueDoc value <- use valueRef
+          pure $ "ContT $ with" <+> value
 
 wrappedStructIndirect
   :: ( HasErr r
@@ -919,9 +926,6 @@ elemAddrRef toElem addrRef index = stmt Nothing Nothing $ do
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
-
-(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
-(<||>) = liftA2 (||)
 
 raise2 :: Sem r a -> Sem (e1 : e2 : r) a
 raise2 = raise . raise

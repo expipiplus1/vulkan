@@ -41,6 +41,7 @@ import           Numeric
 import           CType
 import           Error
 import           Foreign.C.String               ( CString )
+import           Foreign.Storable               ( Storable )
 import           Haskell                       as H
 import           Marshal.Marshalable
 import           Marshal.Scheme
@@ -743,6 +744,7 @@ bespokeSizes t =
         , ("XrTime"                   , (8, 8))
         , ("XrDuration"               , (8, 8))
         , ("XrVersion"                , (8, 8))
+        , ("timespec"                 , (16, 8))
         -- TODO: Can these be got elsewhere?
         , ("VkResult"                 , (4, 4))
         , ("VkFormat"                 , (4, 4))
@@ -841,7 +843,7 @@ wsiTypes = \case
   SpecVk -> (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp])
     <> concat [win32', xcb1, waylandShared, wayland, metal, android, directfb]
   SpecXr -> (snd <$> concat [win32Xr, x11Shared, xcb2Xr, egl, gl, d3d])
-    <> concat [win32Xr', xcb1, waylandShared, d3d', jni, time]
+    <> concat [win32Xr', xcb1, waylandShared, d3d', jni, timespec]
 
 namedType :: (HasRenderParams r, HasErr r) => Sem r RenderElement
 namedType = genRe "namedType" $ do
@@ -1026,9 +1028,33 @@ d3d' =
 jni :: HasRenderParams r => [Sem r RenderElement]
 jni = [voidData "jobject"]
 
--- TODO: improve this
-time :: HasRenderParams r => [Sem r RenderElement]
-time = [voidData "timespec"]
+timespec :: HasRenderParams r => [Sem r RenderElement]
+timespec = pure $ genRe "timespec" $ do
+  tellImport ''CTime
+  tellImport ''Int64
+  tellImport ''Typeable
+  tellImport ''Generic
+  tellImportWithAll ''Storable
+  tellImport 'castPtr
+  tellImport 'plusPtr
+  tellDataExport (TyConName "Timespec")
+  tellDoc [qqi|
+    data Timespec = Timespec
+      \{ tv_sec :: CTime
+      , tv_nsec :: Int64
+      }
+      deriving (Typeable, Generic, Read, Show, Eq, Ord)
+
+    instance Storable Timespec where
+      sizeOf ~_ = 16
+      alignment ~_ = 8
+      peek p = Timespec
+        <$> peek (castPtr @Timespec @CTime p)
+        <*> peek (plusPtr @Timespec @Int64 p 8)
+      poke p (Timespec s n) = do
+        poke (castPtr @Timespec @CTime p) s
+        poke (plusPtr @Timespec @Int64 p 8) n
+  |]
 
 ----------------------------------------------------------------
 -- OpenXR stuff
