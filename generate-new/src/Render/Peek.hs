@@ -364,14 +364,14 @@ byteStringPeek name lengths addrRef =
       pure . IOAction $ ValueDoc
         ("packCStringLen " <+> tupled [castAddr, lenVal])
 
+    -- TODO: These next two patterns have different "levelness" but the same
+    -- code, it works because this function is not called consistently. Fix!
     Ptr _ (Array NonConst (SymbolicArraySize _) Char) -> do
       tellImport 'BS.packCString
       tellImport (TermName "lowerArrayPtr")
       AddrDoc addr <- use addrRef
       pure . IOAction $ ValueDoc
-        (   "packCString"
-        <+> parens ("{-# TODO: CHECK THIS #-} lowerArrayPtr" <+> addr)
-        )
+        ("packCString" <+> parens ("lowerArrayPtr" <+> addr))
 
     Array NonConst (SymbolicArraySize p) Char -> do
       RenderParams {..} <- input
