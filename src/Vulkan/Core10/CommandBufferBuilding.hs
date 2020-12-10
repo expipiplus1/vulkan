@@ -78,6 +78,7 @@ import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.Trans.Cont (runContT)
@@ -88,6 +89,7 @@ import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -11341,7 +11343,7 @@ instance FromCStruct ClearDepthStencilValue where
     depth <- peek @CFloat ((p `plusPtr` 0 :: Ptr CFloat))
     stencil <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
     pure $ ClearDepthStencilValue
-             ((\(CFloat a) -> a) depth) stencil
+             (coerce @CFloat @Float depth) stencil
 
 instance Storable ClearDepthStencilValue where
   sizeOf ~_ = 8

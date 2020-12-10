@@ -184,6 +184,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
 import Data.ByteString (packCStringLen)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Foreign.C.Types (CSize(..))
@@ -192,6 +193,7 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -345,11 +347,11 @@ getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
   r <- lift $ traceAroundEvent "vkGetShaderInfoAMD" (vkGetShaderInfoAMD' device' (pipeline) (shaderStage) (infoType) (pPInfoSize) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pInfoSize <- lift $ peek @CSize pPInfoSize
-  pPInfo <- ContT $ bracket (callocBytes @(()) (fromIntegral (((\(CSize a) -> a) pInfoSize)))) free
+  pPInfo <- ContT $ bracket (callocBytes @(()) (fromIntegral ((coerce @CSize @Word64 pInfoSize)))) free
   r' <- lift $ traceAroundEvent "vkGetShaderInfoAMD" (vkGetShaderInfoAMD' device' (pipeline) (shaderStage) (infoType) (pPInfoSize) (pPInfo))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pInfoSize'' <- lift $ peek @CSize pPInfoSize
-  pInfo' <- lift $ packCStringLen  (castPtr @() @CChar pPInfo, (fromIntegral (((\(CSize a) -> a) pInfoSize''))))
+  pInfo' <- lift $ packCStringLen  (castPtr @() @CChar pPInfo, (fromIntegral ((coerce @CSize @Word64 pInfoSize''))))
   pure $ ((r'), pInfo')
 
 
@@ -409,7 +411,7 @@ instance FromCStruct ShaderResourceUsageAMD where
     ldsUsageSizeInBytes <- peek @CSize ((p `plusPtr` 16 :: Ptr CSize))
     scratchMemUsageInBytes <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     pure $ ShaderResourceUsageAMD
-             numUsedVgprs numUsedSgprs ldsSizePerLocalWorkGroup ((\(CSize a) -> a) ldsUsageSizeInBytes) ((\(CSize a) -> a) scratchMemUsageInBytes)
+             numUsedVgprs numUsedSgprs ldsSizePerLocalWorkGroup (coerce @CSize @Word64 ldsUsageSizeInBytes) (coerce @CSize @Word64 scratchMemUsageInBytes)
 
 instance Storable ShaderResourceUsageAMD where
   sizeOf ~_ = 32

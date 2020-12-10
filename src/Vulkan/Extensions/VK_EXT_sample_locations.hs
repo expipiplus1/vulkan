@@ -191,6 +191,7 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -200,6 +201,7 @@ import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -419,7 +421,7 @@ instance FromCStruct SampleLocationEXT where
     x <- peek @CFloat ((p `plusPtr` 0 :: Ptr CFloat))
     y <- peek @CFloat ((p `plusPtr` 4 :: Ptr CFloat))
     pure $ SampleLocationEXT
-             ((\(CFloat a) -> a) x) ((\(CFloat a) -> a) y)
+             (coerce @CFloat @Float x) (coerce @CFloat @Float y)
 
 instance Storable SampleLocationEXT where
   sizeOf ~_ = 8
@@ -948,7 +950,7 @@ instance FromCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
     sampleLocationSubPixelBits <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
     variableSampleLocations <- peek @Bool32 ((p `plusPtr` 40 :: Ptr Bool32))
     pure $ PhysicalDeviceSampleLocationsPropertiesEXT
-             sampleLocationSampleCounts maxSampleLocationGridSize ((((\(CFloat a) -> a) sampleLocationCoordinateRange0), ((\(CFloat a) -> a) sampleLocationCoordinateRange1))) sampleLocationSubPixelBits (bool32ToBool variableSampleLocations)
+             sampleLocationSampleCounts maxSampleLocationGridSize (((coerce @CFloat @Float sampleLocationCoordinateRange0), (coerce @CFloat @Float sampleLocationCoordinateRange1))) sampleLocationSubPixelBits (bool32ToBool variableSampleLocations)
 
 instance Storable PhysicalDeviceSampleLocationsPropertiesEXT where
   sizeOf ~_ = 48

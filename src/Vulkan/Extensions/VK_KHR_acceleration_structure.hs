@@ -1275,6 +1275,7 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.C.Types (CSize)
 import Foreign.C.Types (CSize(CSize))
@@ -5811,7 +5812,7 @@ instance FromCStruct AabbPositionsKHR where
     maxY <- peek @CFloat ((p `plusPtr` 16 :: Ptr CFloat))
     maxZ <- peek @CFloat ((p `plusPtr` 20 :: Ptr CFloat))
     pure $ AabbPositionsKHR
-             ((\(CFloat a) -> a) minX) ((\(CFloat a) -> a) minY) ((\(CFloat a) -> a) minZ) ((\(CFloat a) -> a) maxX) ((\(CFloat a) -> a) maxY) ((\(CFloat a) -> a) maxZ)
+             (coerce @CFloat @Float minX) (coerce @CFloat @Float minY) (coerce @CFloat @Float minZ) (coerce @CFloat @Float maxX) (coerce @CFloat @Float maxY) (coerce @CFloat @Float maxZ)
 
 instance Storable AabbPositionsKHR where
   sizeOf ~_ = 24
@@ -5923,7 +5924,7 @@ instance FromCStruct TransformMatrixKHR where
     matrixRow22 <- peek @CFloat ((pmatrixRow2 `advancePtrBytes` 8 :: Ptr CFloat))
     matrixRow23 <- peek @CFloat ((pmatrixRow2 `advancePtrBytes` 12 :: Ptr CFloat))
     pure $ TransformMatrixKHR
-             ((((\(CFloat a) -> a) matrixRow00), ((\(CFloat a) -> a) matrixRow01), ((\(CFloat a) -> a) matrixRow02), ((\(CFloat a) -> a) matrixRow03))) ((((\(CFloat a) -> a) matrixRow10), ((\(CFloat a) -> a) matrixRow11), ((\(CFloat a) -> a) matrixRow12), ((\(CFloat a) -> a) matrixRow13))) ((((\(CFloat a) -> a) matrixRow20), ((\(CFloat a) -> a) matrixRow21), ((\(CFloat a) -> a) matrixRow22), ((\(CFloat a) -> a) matrixRow23)))
+             (((coerce @CFloat @Float matrixRow00), (coerce @CFloat @Float matrixRow01), (coerce @CFloat @Float matrixRow02), (coerce @CFloat @Float matrixRow03))) (((coerce @CFloat @Float matrixRow10), (coerce @CFloat @Float matrixRow11), (coerce @CFloat @Float matrixRow12), (coerce @CFloat @Float matrixRow13))) (((coerce @CFloat @Float matrixRow20), (coerce @CFloat @Float matrixRow21), (coerce @CFloat @Float matrixRow22), (coerce @CFloat @Float matrixRow23)))
 
 instance Storable TransformMatrixKHR where
   sizeOf ~_ = 48

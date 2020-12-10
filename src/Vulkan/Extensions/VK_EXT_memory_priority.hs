@@ -102,9 +102,11 @@ module Vulkan.Extensions.VK_EXT_memory_priority  ( PhysicalDeviceMemoryPriorityF
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -240,7 +242,7 @@ instance FromCStruct MemoryPriorityAllocateInfoEXT where
   peekCStruct p = do
     priority <- peek @CFloat ((p `plusPtr` 16 :: Ptr CFloat))
     pure $ MemoryPriorityAllocateInfoEXT
-             ((\(CFloat a) -> a) priority)
+             (coerce @CFloat @Float priority)
 
 instance Storable MemoryPriorityAllocateInfoEXT where
   sizeOf ~_ = 24

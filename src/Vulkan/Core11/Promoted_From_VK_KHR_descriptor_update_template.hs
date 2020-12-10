@@ -25,6 +25,7 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -33,6 +34,7 @@ import qualified Data.Vector (length)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -518,7 +520,7 @@ instance FromCStruct DescriptorUpdateTemplateEntry where
     offset <- peek @CSize ((p `plusPtr` 16 :: Ptr CSize))
     stride <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     pure $ DescriptorUpdateTemplateEntry
-             dstBinding dstArrayElement descriptorCount descriptorType ((\(CSize a) -> a) offset) ((\(CSize a) -> a) stride)
+             dstBinding dstArrayElement descriptorCount descriptorType (coerce @CSize @Word64 offset) (coerce @CSize @Word64 stride)
 
 instance Storable DescriptorUpdateTemplateEntry where
   sizeOf ~_ = 32

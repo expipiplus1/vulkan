@@ -129,6 +129,7 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Foreign.C.Types (CInt(..))
@@ -136,6 +137,7 @@ import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CInt)
+import Foreign.C.Types (CInt(..))
 import Foreign.C.Types (CInt(CInt))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -241,7 +243,7 @@ getSemaphoreFdKHR device getFdInfo = liftIO . evalContT $ do
   r <- lift $ traceAroundEvent "vkGetSemaphoreFdKHR" (vkGetSemaphoreFdKHR' (deviceHandle (device)) pGetFdInfo (pPFd))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFd <- lift $ peek @CInt pPFd
-  pure $ (((\(CInt a) -> a) pFd))
+  pure $ ((coerce @CInt @Int32 pFd))
 
 
 foreign import ccall
@@ -451,7 +453,7 @@ instance FromCStruct ImportSemaphoreFdInfoKHR where
     handleType <- peek @ExternalSemaphoreHandleTypeFlagBits ((p `plusPtr` 28 :: Ptr ExternalSemaphoreHandleTypeFlagBits))
     fd <- peek @CInt ((p `plusPtr` 32 :: Ptr CInt))
     pure $ ImportSemaphoreFdInfoKHR
-             semaphore flags handleType ((\(CInt a) -> a) fd)
+             semaphore flags handleType (coerce @CInt @Int32 fd)
 
 instance Storable ImportSemaphoreFdInfoKHR where
   sizeOf ~_ = 40

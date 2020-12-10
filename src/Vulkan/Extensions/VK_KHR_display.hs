@@ -564,6 +564,7 @@ import GHC.Show (showString)
 import Numeric (showHex)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -574,6 +575,7 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -1844,7 +1846,7 @@ instance FromCStruct DisplaySurfaceCreateInfoKHR where
     alphaMode <- peek @DisplayPlaneAlphaFlagBitsKHR ((p `plusPtr` 48 :: Ptr DisplayPlaneAlphaFlagBitsKHR))
     imageExtent <- peekCStruct @Extent2D ((p `plusPtr` 52 :: Ptr Extent2D))
     pure $ DisplaySurfaceCreateInfoKHR
-             flags displayMode planeIndex planeStackIndex transform ((\(CFloat a) -> a) globalAlpha) alphaMode imageExtent
+             flags displayMode planeIndex planeStackIndex transform (coerce @CFloat @Float globalAlpha) alphaMode imageExtent
 
 instance Storable DisplaySurfaceCreateInfoKHR where
   sizeOf ~_ = 64

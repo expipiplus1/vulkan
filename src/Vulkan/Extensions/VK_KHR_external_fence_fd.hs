@@ -125,6 +125,7 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Foreign.C.Types (CInt(..))
@@ -132,6 +133,7 @@ import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CInt)
+import Foreign.C.Types (CInt(..))
 import Foreign.C.Types (CInt(CInt))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -241,7 +243,7 @@ getFenceFdKHR device getFdInfo = liftIO . evalContT $ do
   r <- lift $ traceAroundEvent "vkGetFenceFdKHR" (vkGetFenceFdKHR' (deviceHandle (device)) pGetFdInfo (pPFd))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFd <- lift $ peek @CInt pPFd
-  pure $ (((\(CInt a) -> a) pFd))
+  pure $ ((coerce @CInt @Int32 pFd))
 
 
 foreign import ccall
@@ -424,7 +426,7 @@ instance FromCStruct ImportFenceFdInfoKHR where
     handleType <- peek @ExternalFenceHandleTypeFlagBits ((p `plusPtr` 28 :: Ptr ExternalFenceHandleTypeFlagBits))
     fd <- peek @CInt ((p `plusPtr` 32 :: Ptr CInt))
     pure $ ImportFenceFdInfoKHR
-             fence flags handleType ((\(CInt a) -> a) fd)
+             fence flags handleType (coerce @CInt @Int32 fd)
 
 instance Storable ImportFenceFdInfoKHR where
   sizeOf ~_ = 40

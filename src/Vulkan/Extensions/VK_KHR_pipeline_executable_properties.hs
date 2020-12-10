@@ -217,6 +217,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
 import Data.ByteString (packCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.Trans.Cont (runContT)
@@ -226,8 +227,10 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CDouble)
+import Foreign.C.Types (CDouble(..))
 import Foreign.C.Types (CDouble(CDouble))
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -1028,7 +1031,7 @@ instance FromCStruct PipelineExecutableInternalRepresentationKHR where
     dataSize <- peek @CSize ((p `plusPtr` 536 :: Ptr CSize))
     pData <- peek @(Ptr ()) ((p `plusPtr` 544 :: Ptr (Ptr ())))
     pure $ PipelineExecutableInternalRepresentationKHR
-             name description (bool32ToBool isText) ((\(CSize a) -> a) dataSize) pData
+             name description (bool32ToBool isText) (coerce @CSize @Word64 dataSize) pData
 
 instance Storable PipelineExecutableInternalRepresentationKHR where
   sizeOf ~_ = 552
@@ -1077,7 +1080,7 @@ peekPipelineExecutableStatisticValueKHR tag p = case tag of
   PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR -> U64 <$> (peek @Word64 (castPtr @_ @Word64 p))
   PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR -> F64 <$> (do
     f64 <- peek @CDouble (castPtr @_ @CDouble p)
-    pure $ (\(CDouble a) -> a) f64)
+    pure $ coerce @CDouble @Double f64)
 
 
 -- | VkPipelineExecutableStatisticFormatKHR - Enum describing a pipeline

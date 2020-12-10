@@ -144,6 +144,7 @@ import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -155,6 +156,7 @@ import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -325,7 +327,7 @@ instance FromCStruct PipelineCoverageModulationStateCreateInfoNV where
     let pCoverageModulationTableLength = if pCoverageModulationTable == nullPtr then 0 else (fromIntegral coverageModulationTableCount)
     pCoverageModulationTable' <- generateM pCoverageModulationTableLength (\i -> do
       pCoverageModulationTableElem <- peek @CFloat ((pCoverageModulationTable `advancePtrBytes` (4 * (i)) :: Ptr CFloat))
-      pure $ (\(CFloat a) -> a) pCoverageModulationTableElem)
+      pure $ coerce @CFloat @Float pCoverageModulationTableElem)
     pure $ PipelineCoverageModulationStateCreateInfoNV
              flags coverageModulationMode (bool32ToBool coverageModulationTableEnable) coverageModulationTableCount pCoverageModulationTable'
 

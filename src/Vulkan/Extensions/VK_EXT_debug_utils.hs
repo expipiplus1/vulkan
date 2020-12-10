@@ -548,6 +548,7 @@ import GHC.Show (showString)
 import Numeric (showHex)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -560,8 +561,10 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -1542,7 +1545,7 @@ instance FromCStruct DebugUtilsObjectTagInfoEXT where
     tagSize <- peek @CSize ((p `plusPtr` 40 :: Ptr CSize))
     pTag <- peek @(Ptr ()) ((p `plusPtr` 48 :: Ptr (Ptr ())))
     pure $ DebugUtilsObjectTagInfoEXT
-             objectType objectHandle tagName ((\(CSize a) -> a) tagSize) pTag
+             objectType objectHandle tagName (coerce @CSize @Word64 tagSize) pTag
 
 instance Storable DebugUtilsObjectTagInfoEXT where
   sizeOf ~_ = 56
@@ -1621,7 +1624,7 @@ instance FromCStruct DebugUtilsLabelEXT where
     color2 <- peek @CFloat ((pcolor `advancePtrBytes` 8 :: Ptr CFloat))
     color3 <- peek @CFloat ((pcolor `advancePtrBytes` 12 :: Ptr CFloat))
     pure $ DebugUtilsLabelEXT
-             pLabelName ((((\(CFloat a) -> a) color0), ((\(CFloat a) -> a) color1), ((\(CFloat a) -> a) color2), ((\(CFloat a) -> a) color3)))
+             pLabelName (((coerce @CFloat @Float color0), (coerce @CFloat @Float color1), (coerce @CFloat @Float color2), (coerce @CFloat @Float color3)))
 
 instance Zero DebugUtilsLabelEXT where
   zero = DebugUtilsLabelEXT

@@ -27,12 +27,14 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
@@ -714,7 +716,7 @@ instance (Extendss SamplerCreateInfo es, PeekChain es) => FromCStruct (SamplerCr
     borderColor <- peek @BorderColor ((p `plusPtr` 72 :: Ptr BorderColor))
     unnormalizedCoordinates <- peek @Bool32 ((p `plusPtr` 76 :: Ptr Bool32))
     pure $ SamplerCreateInfo
-             next flags magFilter minFilter mipmapMode addressModeU addressModeV addressModeW ((\(CFloat a) -> a) mipLodBias) (bool32ToBool anisotropyEnable) ((\(CFloat a) -> a) maxAnisotropy) (bool32ToBool compareEnable) compareOp ((\(CFloat a) -> a) minLod) ((\(CFloat a) -> a) maxLod) borderColor (bool32ToBool unnormalizedCoordinates)
+             next flags magFilter minFilter mipmapMode addressModeU addressModeV addressModeW (coerce @CFloat @Float mipLodBias) (bool32ToBool anisotropyEnable) (coerce @CFloat @Float maxAnisotropy) (bool32ToBool compareEnable) compareOp (coerce @CFloat @Float minLod) (coerce @CFloat @Float maxLod) borderColor (bool32ToBool unnormalizedCoordinates)
 
 instance es ~ '[] => Zero (SamplerCreateInfo es) where
   zero = SamplerCreateInfo

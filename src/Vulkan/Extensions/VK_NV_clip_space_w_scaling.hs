@@ -220,6 +220,7 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -230,6 +231,7 @@ import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -384,7 +386,7 @@ instance FromCStruct ViewportWScalingNV where
     xcoeff <- peek @CFloat ((p `plusPtr` 0 :: Ptr CFloat))
     ycoeff <- peek @CFloat ((p `plusPtr` 4 :: Ptr CFloat))
     pure $ ViewportWScalingNV
-             ((\(CFloat a) -> a) xcoeff) ((\(CFloat a) -> a) ycoeff)
+             (coerce @CFloat @Float xcoeff) (coerce @CFloat @Float ycoeff)
 
 instance Storable ViewportWScalingNV where
   sizeOf ~_ = 8

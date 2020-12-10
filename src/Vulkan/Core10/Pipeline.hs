@@ -78,6 +78,7 @@ import qualified Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -89,8 +90,10 @@ import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -738,7 +741,7 @@ instance FromCStruct Viewport where
     minDepth <- peek @CFloat ((p `plusPtr` 16 :: Ptr CFloat))
     maxDepth <- peek @CFloat ((p `plusPtr` 20 :: Ptr CFloat))
     pure $ Viewport
-             ((\(CFloat a) -> a) x) ((\(CFloat a) -> a) y) ((\(CFloat a) -> a) width) ((\(CFloat a) -> a) height) ((\(CFloat a) -> a) minDepth) ((\(CFloat a) -> a) maxDepth)
+             (coerce @CFloat @Float x) (coerce @CFloat @Float y) (coerce @CFloat @Float width) (coerce @CFloat @Float height) (coerce @CFloat @Float minDepth) (coerce @CFloat @Float maxDepth)
 
 instance Storable Viewport where
   sizeOf ~_ = 24
@@ -812,7 +815,7 @@ instance FromCStruct SpecializationMapEntry where
     offset <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
     size <- peek @CSize ((p `plusPtr` 8 :: Ptr CSize))
     pure $ SpecializationMapEntry
-             constantID offset ((\(CSize a) -> a) size)
+             constantID offset (coerce @CSize @Word64 size)
 
 instance Storable SpecializationMapEntry where
   sizeOf ~_ = 16
@@ -897,7 +900,7 @@ instance FromCStruct SpecializationInfo where
     dataSize <- peek @CSize ((p `plusPtr` 16 :: Ptr CSize))
     pData <- peek @(Ptr ()) ((p `plusPtr` 24 :: Ptr (Ptr ())))
     pure $ SpecializationInfo
-             pMapEntries' ((\(CSize a) -> a) dataSize) pData
+             pMapEntries' (coerce @CSize @Word64 dataSize) pData
 
 instance Zero SpecializationInfo where
   zero = SpecializationInfo
@@ -2404,7 +2407,7 @@ instance (Extendss PipelineRasterizationStateCreateInfo es, PeekChain es) => Fro
     depthBiasSlopeFactor <- peek @CFloat ((p `plusPtr` 52 :: Ptr CFloat))
     lineWidth <- peek @CFloat ((p `plusPtr` 56 :: Ptr CFloat))
     pure $ PipelineRasterizationStateCreateInfo
-             next flags (bool32ToBool depthClampEnable) (bool32ToBool rasterizerDiscardEnable) polygonMode cullMode frontFace (bool32ToBool depthBiasEnable) ((\(CFloat a) -> a) depthBiasConstantFactor) ((\(CFloat a) -> a) depthBiasClamp) ((\(CFloat a) -> a) depthBiasSlopeFactor) ((\(CFloat a) -> a) lineWidth)
+             next flags (bool32ToBool depthClampEnable) (bool32ToBool rasterizerDiscardEnable) polygonMode cullMode frontFace (bool32ToBool depthBiasEnable) (coerce @CFloat @Float depthBiasConstantFactor) (coerce @CFloat @Float depthBiasClamp) (coerce @CFloat @Float depthBiasSlopeFactor) (coerce @CFloat @Float lineWidth)
 
 instance es ~ '[] => Zero (PipelineRasterizationStateCreateInfo es) where
   zero = PipelineRasterizationStateCreateInfo
@@ -2602,7 +2605,7 @@ instance (Extendss PipelineMultisampleStateCreateInfo es, PeekChain es) => FromC
     alphaToCoverageEnable <- peek @Bool32 ((p `plusPtr` 40 :: Ptr Bool32))
     alphaToOneEnable <- peek @Bool32 ((p `plusPtr` 44 :: Ptr Bool32))
     pure $ PipelineMultisampleStateCreateInfo
-             next flags rasterizationSamples (bool32ToBool sampleShadingEnable) ((\(CFloat a) -> a) minSampleShading) pSampleMask' (bool32ToBool alphaToCoverageEnable) (bool32ToBool alphaToOneEnable)
+             next flags rasterizationSamples (bool32ToBool sampleShadingEnable) (coerce @CFloat @Float minSampleShading) pSampleMask' (bool32ToBool alphaToCoverageEnable) (bool32ToBool alphaToOneEnable)
 
 instance es ~ '[] => Zero (PipelineMultisampleStateCreateInfo es) where
   zero = PipelineMultisampleStateCreateInfo
@@ -3020,7 +3023,7 @@ instance (Extendss PipelineColorBlendStateCreateInfo es, PeekChain es) => FromCS
     blendConstants2 <- peek @CFloat ((pblendConstants `advancePtrBytes` 8 :: Ptr CFloat))
     blendConstants3 <- peek @CFloat ((pblendConstants `advancePtrBytes` 12 :: Ptr CFloat))
     pure $ PipelineColorBlendStateCreateInfo
-             next flags (bool32ToBool logicOpEnable) logicOp pAttachments' ((((\(CFloat a) -> a) blendConstants0), ((\(CFloat a) -> a) blendConstants1), ((\(CFloat a) -> a) blendConstants2), ((\(CFloat a) -> a) blendConstants3)))
+             next flags (bool32ToBool logicOpEnable) logicOp pAttachments' (((coerce @CFloat @Float blendConstants0), (coerce @CFloat @Float blendConstants1), (coerce @CFloat @Float blendConstants2), (coerce @CFloat @Float blendConstants3)))
 
 instance es ~ '[] => Zero (PipelineColorBlendStateCreateInfo es) where
   zero = PipelineColorBlendStateCreateInfo
@@ -3356,7 +3359,7 @@ instance FromCStruct PipelineDepthStencilStateCreateInfo where
     minDepthBounds <- peek @CFloat ((p `plusPtr` 96 :: Ptr CFloat))
     maxDepthBounds <- peek @CFloat ((p `plusPtr` 100 :: Ptr CFloat))
     pure $ PipelineDepthStencilStateCreateInfo
-             flags (bool32ToBool depthTestEnable) (bool32ToBool depthWriteEnable) depthCompareOp (bool32ToBool depthBoundsTestEnable) (bool32ToBool stencilTestEnable) front back ((\(CFloat a) -> a) minDepthBounds) ((\(CFloat a) -> a) maxDepthBounds)
+             flags (bool32ToBool depthTestEnable) (bool32ToBool depthWriteEnable) depthCompareOp (bool32ToBool depthBoundsTestEnable) (bool32ToBool stencilTestEnable) front back (coerce @CFloat @Float minDepthBounds) (coerce @CFloat @Float maxDepthBounds)
 
 instance Storable PipelineDepthStencilStateCreateInfo where
   sizeOf ~_ = 104

@@ -28,6 +28,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -38,6 +39,7 @@ import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
@@ -511,7 +513,7 @@ instance (Extendss DeviceQueueCreateInfo es, PeekChain es) => FromCStruct (Devic
     pQueuePriorities <- peek @(Ptr CFloat) ((p `plusPtr` 32 :: Ptr (Ptr CFloat)))
     pQueuePriorities' <- generateM (fromIntegral queueCount) (\i -> do
       pQueuePrioritiesElem <- peek @CFloat ((pQueuePriorities `advancePtrBytes` (4 * (i)) :: Ptr CFloat))
-      pure $ (\(CFloat a) -> a) pQueuePrioritiesElem)
+      pure $ coerce @CFloat @Float pQueuePrioritiesElem)
     pure $ DeviceQueueCreateInfo
              next flags queueFamilyIndex pQueuePriorities'
 
