@@ -149,6 +149,10 @@ During development unfinished bits not to forget are listed here.
 - [ ] dual-use commands have a different style in OpenXR... they're wrong now
   - For example `enumerateReferenceSpaces`
 
+- [ ] Implement OpenXR's polymorphic types
+
+- [ ] change `\CFloat a -> a` to `coerce @CFloat @Float`
+
 ### 1.2.162
 
 - [x] optionalness on VkWriteDescriptorSetAccelerationStructureKHR->pAccelerationStructures
