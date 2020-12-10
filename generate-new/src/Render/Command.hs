@@ -947,11 +947,16 @@ forgetStructExtensions ty poke = do
     _ -> pure Nothing
   pure $ fromMaybe poke forgottenPoke
 
--- | Parameters of type foo[x] are passed as pointers
+-- | Parameters of type foo[x] are passed as pointers if x is large
 lowerParamType :: Parameter -> Parameter
-lowerParamType p@Parameter {..} = case pType of
-  -- Array q _ elem -> p { pType = Ptr q elem }
-  _ -> p
+lowerParamType p@Parameter {..} =
+  let large    = (> 16)
+      largeSym = const True -- TODO: implement
+  in  case pType of
+        Array _ (NumericArraySize n) _ | large n     -> p
+        Array _ (SymbolicArraySize n) _ | largeSym n -> p
+        Array q _ elem                               -> p { pType = Ptr q elem }
+        _                                            -> p
 
 ----------------------------------------------------------------
 --
