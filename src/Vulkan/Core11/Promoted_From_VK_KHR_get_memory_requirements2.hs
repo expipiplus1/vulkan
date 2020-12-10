@@ -354,7 +354,7 @@ deriving instance Generic (ImageMemoryRequirementsInfo2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (ImageMemoryRequirementsInfo2 es)
 
 instance Extensible ImageMemoryRequirementsInfo2 where
-  extensibleType = STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2
+  extensibleTypeName = "ImageMemoryRequirementsInfo2"
   setNext x next = x{next = next}
   getNext ImageMemoryRequirementsInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageMemoryRequirementsInfo2 e => b) -> Maybe b
@@ -485,7 +485,7 @@ deriving instance Generic (MemoryRequirements2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (MemoryRequirements2 es)
 
 instance Extensible MemoryRequirements2 where
-  extensibleType = STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2
+  extensibleTypeName = "MemoryRequirements2"
   setNext x next = x{next = next}
   getNext MemoryRequirements2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends MemoryRequirements2 e => b) -> Maybe b

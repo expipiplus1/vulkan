@@ -1437,7 +1437,7 @@ deriving instance Generic (InstanceCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (InstanceCreateInfo es)
 
 instance Extensible InstanceCreateInfo where
-  extensibleType = STRUCTURE_TYPE_INSTANCE_CREATE_INFO
+  extensibleTypeName = "InstanceCreateInfo"
   setNext x next = x{next = next}
   getNext InstanceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends InstanceCreateInfo e => b) -> Maybe b

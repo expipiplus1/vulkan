@@ -157,7 +157,7 @@ deriving instance Generic (PhysicalDeviceExternalSemaphoreInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PhysicalDeviceExternalSemaphoreInfo es)
 
 instance Extensible PhysicalDeviceExternalSemaphoreInfo where
-  extensibleType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO
+  extensibleTypeName = "PhysicalDeviceExternalSemaphoreInfo"
   setNext x next = x{next = next}
   getNext PhysicalDeviceExternalSemaphoreInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceExternalSemaphoreInfo e => b) -> Maybe b

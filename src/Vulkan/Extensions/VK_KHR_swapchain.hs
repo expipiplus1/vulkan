@@ -2720,7 +2720,7 @@ deriving instance Generic (SwapchainCreateInfoKHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (SwapchainCreateInfoKHR es)
 
 instance Extensible SwapchainCreateInfoKHR where
-  extensibleType = STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR
+  extensibleTypeName = "SwapchainCreateInfoKHR"
   setNext x next = x{next = next}
   getNext SwapchainCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfoKHR e => b) -> Maybe b
@@ -2942,7 +2942,7 @@ deriving instance Generic (PresentInfoKHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (PresentInfoKHR es)
 
 instance Extensible PresentInfoKHR where
-  extensibleType = STRUCTURE_TYPE_PRESENT_INFO_KHR
+  extensibleTypeName = "PresentInfoKHR"
   setNext x next = x{next = next}
   getNext PresentInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PresentInfoKHR e => b) -> Maybe b

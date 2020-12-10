@@ -11246,7 +11246,7 @@ deriving instance Generic (RenderPassBeginInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (RenderPassBeginInfo es)
 
 instance Extensible RenderPassBeginInfo where
-  extensibleType = STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
+  extensibleTypeName = "RenderPassBeginInfo"
   setNext x next = x{next = next}
   getNext RenderPassBeginInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassBeginInfo e => b) -> Maybe b

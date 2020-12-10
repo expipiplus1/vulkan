@@ -1941,7 +1941,7 @@ deriving instance Generic (RenderPassCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (RenderPassCreateInfo es)
 
 instance Extensible RenderPassCreateInfo where
-  extensibleType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
+  extensibleTypeName = "RenderPassCreateInfo"
   setNext x next = x{next = next}
   getNext RenderPassCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassCreateInfo e => b) -> Maybe b
@@ -2541,7 +2541,7 @@ deriving instance Generic (FramebufferCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (FramebufferCreateInfo es)
 
 instance Extensible FramebufferCreateInfo where
-  extensibleType = STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
+  extensibleTypeName = "FramebufferCreateInfo"
   setNext x next = x{next = next}
   getNext FramebufferCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FramebufferCreateInfo e => b) -> Maybe b

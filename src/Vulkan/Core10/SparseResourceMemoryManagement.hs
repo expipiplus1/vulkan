@@ -1379,7 +1379,7 @@ deriving instance Generic (BindSparseInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (BindSparseInfo es)
 
 instance Extensible BindSparseInfo where
-  extensibleType = STRUCTURE_TYPE_BIND_SPARSE_INFO
+  extensibleTypeName = "BindSparseInfo"
   setNext x next = x{next = next}
   getNext BindSparseInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindSparseInfo e => b) -> Maybe b

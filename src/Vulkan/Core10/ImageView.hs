@@ -1213,7 +1213,7 @@ deriving instance Generic (ImageViewCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (ImageViewCreateInfo es)
 
 instance Extensible ImageViewCreateInfo where
-  extensibleType = STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
+  extensibleTypeName = "ImageViewCreateInfo"
   setNext x next = x{next = next}
   getNext ImageViewCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageViewCreateInfo e => b) -> Maybe b

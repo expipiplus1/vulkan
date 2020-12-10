@@ -570,7 +570,7 @@ deriving instance Generic (QueryPoolCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (QueryPoolCreateInfo es)
 
 instance Extensible QueryPoolCreateInfo where
-  extensibleType = STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO
+  extensibleTypeName = "QueryPoolCreateInfo"
   setNext x next = x{next = next}
   getNext QueryPoolCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends QueryPoolCreateInfo e => b) -> Maybe b

@@ -1048,7 +1048,7 @@ deriving instance Generic (ImageBlit2KHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (ImageBlit2KHR es)
 
 instance Extensible ImageBlit2KHR where
-  extensibleType = STRUCTURE_TYPE_IMAGE_BLIT_2_KHR
+  extensibleTypeName = "ImageBlit2KHR"
   setNext x next = x{next = next}
   getNext ImageBlit2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageBlit2KHR e => b) -> Maybe b
@@ -1199,7 +1199,7 @@ deriving instance Generic (BufferImageCopy2KHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (BufferImageCopy2KHR es)
 
 instance Extensible BufferImageCopy2KHR where
-  extensibleType = STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR
+  extensibleTypeName = "BufferImageCopy2KHR"
   setNext x next = x{next = next}
   getNext BufferImageCopy2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferImageCopy2KHR e => b) -> Maybe b

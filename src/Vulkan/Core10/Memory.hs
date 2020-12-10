@@ -1158,7 +1158,7 @@ deriving instance Generic (MemoryAllocateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (MemoryAllocateInfo es)
 
 instance Extensible MemoryAllocateInfo where
-  extensibleType = STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO
+  extensibleTypeName = "MemoryAllocateInfo"
   setNext x next = x{next = next}
   getNext MemoryAllocateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends MemoryAllocateInfo e => b) -> Maybe b

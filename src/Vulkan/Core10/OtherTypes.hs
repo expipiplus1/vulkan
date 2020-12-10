@@ -719,7 +719,7 @@ deriving instance Generic (ImageMemoryBarrier (es :: [Type]))
 deriving instance Show (Chain es) => Show (ImageMemoryBarrier es)
 
 instance Extensible ImageMemoryBarrier where
-  extensibleType = STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER
+  extensibleTypeName = "ImageMemoryBarrier"
   setNext x next = x{next = next}
   getNext ImageMemoryBarrier{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageMemoryBarrier e => b) -> Maybe b

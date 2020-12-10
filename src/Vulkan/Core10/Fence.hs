@@ -603,7 +603,7 @@ deriving instance Generic (FenceCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (FenceCreateInfo es)
 
 instance Extensible FenceCreateInfo where
-  extensibleType = STRUCTURE_TYPE_FENCE_CREATE_INFO
+  extensibleTypeName = "FenceCreateInfo"
   setNext x next = x{next = next}
   getNext FenceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FenceCreateInfo e => b) -> Maybe b

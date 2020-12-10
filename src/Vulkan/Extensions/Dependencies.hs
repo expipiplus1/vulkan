@@ -1,6 +1,8 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "Dependencies"
-module Vulkan.Extensions.Dependencies  () where
+module Vulkan.Extensions.Dependencies  ( extensionDependencies
+                                       , extensionCoreRequirement
+                                       ) where
 
 import Data.Word (Word32)
 import Data.ByteString (ByteString)

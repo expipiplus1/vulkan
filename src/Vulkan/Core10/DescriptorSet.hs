@@ -1592,7 +1592,7 @@ deriving instance Generic (WriteDescriptorSet (es :: [Type]))
 deriving instance Show (Chain es) => Show (WriteDescriptorSet es)
 
 instance Extensible WriteDescriptorSet where
-  extensibleType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
+  extensibleTypeName = "WriteDescriptorSet"
   setNext x next = x{next = next}
   getNext WriteDescriptorSet{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends WriteDescriptorSet e => b) -> Maybe b
@@ -2277,7 +2277,7 @@ deriving instance Generic (DescriptorSetLayoutCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (DescriptorSetLayoutCreateInfo es)
 
 instance Extensible DescriptorSetLayoutCreateInfo where
-  extensibleType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
+  extensibleTypeName = "DescriptorSetLayoutCreateInfo"
   setNext x next = x{next = next}
   getNext DescriptorSetLayoutCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetLayoutCreateInfo e => b) -> Maybe b
@@ -2546,7 +2546,7 @@ deriving instance Generic (DescriptorPoolCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (DescriptorPoolCreateInfo es)
 
 instance Extensible DescriptorPoolCreateInfo where
-  extensibleType = STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO
+  extensibleTypeName = "DescriptorPoolCreateInfo"
   setNext x next = x{next = next}
   getNext DescriptorPoolCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorPoolCreateInfo e => b) -> Maybe b
@@ -2671,7 +2671,7 @@ deriving instance Generic (DescriptorSetAllocateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (DescriptorSetAllocateInfo es)
 
 instance Extensible DescriptorSetAllocateInfo where
-  extensibleType = STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO
+  extensibleTypeName = "DescriptorSetAllocateInfo"
   setNext x next = x{next = next}
   getNext DescriptorSetAllocateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetAllocateInfo e => b) -> Maybe b

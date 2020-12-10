@@ -425,7 +425,7 @@ deriving instance Generic (BufferCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (BufferCreateInfo es)
 
 instance Extensible BufferCreateInfo where
-  extensibleType = STRUCTURE_TYPE_BUFFER_CREATE_INFO
+  extensibleTypeName = "BufferCreateInfo"
   setNext x next = x{next = next}
   getNext BufferCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferCreateInfo e => b) -> Maybe b

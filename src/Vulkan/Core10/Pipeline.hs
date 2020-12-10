@@ -1183,7 +1183,7 @@ deriving instance Generic (PipelineShaderStageCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineShaderStageCreateInfo es)
 
 instance Extensible PipelineShaderStageCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO
+  extensibleTypeName = "PipelineShaderStageCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineShaderStageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineShaderStageCreateInfo e => b) -> Maybe b
@@ -1407,7 +1407,7 @@ deriving instance Generic (ComputePipelineCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (ComputePipelineCreateInfo es)
 
 instance Extensible ComputePipelineCreateInfo where
-  extensibleType = STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO
+  extensibleTypeName = "ComputePipelineCreateInfo"
   setNext x next = x{next = next}
   getNext ComputePipelineCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ComputePipelineCreateInfo e => b) -> Maybe b
@@ -1723,7 +1723,7 @@ deriving instance Generic (PipelineVertexInputStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineVertexInputStateCreateInfo es)
 
 instance Extensible PipelineVertexInputStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineVertexInputStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineVertexInputStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineVertexInputStateCreateInfo e => b) -> Maybe b
@@ -1964,7 +1964,7 @@ deriving instance Generic (PipelineTessellationStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineTessellationStateCreateInfo es)
 
 instance Extensible PipelineTessellationStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineTessellationStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineTessellationStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineTessellationStateCreateInfo e => b) -> Maybe b
@@ -2126,7 +2126,7 @@ deriving instance Generic (PipelineViewportStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineViewportStateCreateInfo es)
 
 instance Extensible PipelineViewportStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineViewportStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineViewportStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineViewportStateCreateInfo e => b) -> Maybe b
@@ -2341,7 +2341,7 @@ deriving instance Generic (PipelineRasterizationStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineRasterizationStateCreateInfo es)
 
 instance Extensible PipelineRasterizationStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineRasterizationStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineRasterizationStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineRasterizationStateCreateInfo e => b) -> Maybe b
@@ -2537,7 +2537,7 @@ deriving instance Generic (PipelineMultisampleStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineMultisampleStateCreateInfo es)
 
 instance Extensible PipelineMultisampleStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineMultisampleStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineMultisampleStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineMultisampleStateCreateInfo e => b) -> Maybe b
@@ -2955,7 +2955,7 @@ deriving instance Generic (PipelineColorBlendStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineColorBlendStateCreateInfo es)
 
 instance Extensible PipelineColorBlendStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineColorBlendStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineColorBlendStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineColorBlendStateCreateInfo e => b) -> Maybe b
@@ -4277,7 +4277,7 @@ deriving instance Generic (GraphicsPipelineCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (GraphicsPipelineCreateInfo es)
 
 instance Extensible GraphicsPipelineCreateInfo where
-  extensibleType = STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
+  extensibleTypeName = "GraphicsPipelineCreateInfo"
   setNext x next = x{next = next}
   getNext GraphicsPipelineCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends GraphicsPipelineCreateInfo e => b) -> Maybe b

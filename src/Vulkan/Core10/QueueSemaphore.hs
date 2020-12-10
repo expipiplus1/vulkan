@@ -263,7 +263,7 @@ deriving instance Generic (SemaphoreCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (SemaphoreCreateInfo es)
 
 instance Extensible SemaphoreCreateInfo where
-  extensibleType = STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
+  extensibleTypeName = "SemaphoreCreateInfo"
   setNext x next = x{next = next}
   getNext SemaphoreCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SemaphoreCreateInfo e => b) -> Maybe b

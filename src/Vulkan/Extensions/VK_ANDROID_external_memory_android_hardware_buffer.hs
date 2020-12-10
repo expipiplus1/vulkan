@@ -655,7 +655,7 @@ deriving instance Generic (AndroidHardwareBufferPropertiesANDROID (es :: [Type])
 deriving instance Show (Chain es) => Show (AndroidHardwareBufferPropertiesANDROID es)
 
 instance Extensible AndroidHardwareBufferPropertiesANDROID where
-  extensibleType = STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID
+  extensibleTypeName = "AndroidHardwareBufferPropertiesANDROID"
   setNext x next = x{next = next}
   getNext AndroidHardwareBufferPropertiesANDROID{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AndroidHardwareBufferPropertiesANDROID e => b) -> Maybe b

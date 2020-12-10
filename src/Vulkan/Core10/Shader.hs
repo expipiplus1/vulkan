@@ -354,7 +354,7 @@ deriving instance Generic (ShaderModuleCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (ShaderModuleCreateInfo es)
 
 instance Extensible ShaderModuleCreateInfo where
-  extensibleType = STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
+  extensibleTypeName = "ShaderModuleCreateInfo"
   setNext x next = x{next = next}
   getNext ShaderModuleCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ShaderModuleCreateInfo e => b) -> Maybe b

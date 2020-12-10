@@ -2733,7 +2733,7 @@ deriving instance Generic (RayTracingPipelineCreateInfoNV (es :: [Type]))
 deriving instance Show (Chain es) => Show (RayTracingPipelineCreateInfoNV es)
 
 instance Extensible RayTracingPipelineCreateInfoNV where
-  extensibleType = STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV
+  extensibleTypeName = "RayTracingPipelineCreateInfoNV"
   setNext x next = x{next = next}
   getNext RayTracingPipelineCreateInfoNV{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RayTracingPipelineCreateInfoNV e => b) -> Maybe b

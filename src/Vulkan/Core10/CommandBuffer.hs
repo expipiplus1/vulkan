@@ -763,7 +763,7 @@ deriving instance Generic (CommandBufferInheritanceInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (CommandBufferInheritanceInfo es)
 
 instance Extensible CommandBufferInheritanceInfo where
-  extensibleType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO
+  extensibleTypeName = "CommandBufferInheritanceInfo"
   setNext x next = x{next = next}
   getNext CommandBufferInheritanceInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandBufferInheritanceInfo e => b) -> Maybe b
@@ -882,7 +882,7 @@ deriving instance Generic (CommandBufferBeginInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (CommandBufferBeginInfo es)
 
 instance Extensible CommandBufferBeginInfo where
-  extensibleType = STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
+  extensibleTypeName = "CommandBufferBeginInfo"
   setNext x next = x{next = next}
   getNext CommandBufferBeginInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandBufferBeginInfo e => b) -> Maybe b

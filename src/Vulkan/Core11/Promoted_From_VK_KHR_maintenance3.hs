@@ -254,7 +254,7 @@ deriving instance Generic (DescriptorSetLayoutSupport (es :: [Type]))
 deriving instance Show (Chain es) => Show (DescriptorSetLayoutSupport es)
 
 instance Extensible DescriptorSetLayoutSupport where
-  extensibleType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
+  extensibleTypeName = "DescriptorSetLayoutSupport"
   setNext x next = x{next = next}
   getNext DescriptorSetLayoutSupport{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetLayoutSupport e => b) -> Maybe b

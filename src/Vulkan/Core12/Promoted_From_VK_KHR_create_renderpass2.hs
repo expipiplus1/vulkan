@@ -853,7 +853,7 @@ deriving instance Generic (AttachmentDescription2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (AttachmentDescription2 es)
 
 instance Extensible AttachmentDescription2 where
-  extensibleType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2
+  extensibleTypeName = "AttachmentDescription2"
   setNext x next = x{next = next}
   getNext AttachmentDescription2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AttachmentDescription2 e => b) -> Maybe b
@@ -1013,7 +1013,7 @@ deriving instance Generic (AttachmentReference2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (AttachmentReference2 es)
 
 instance Extensible AttachmentReference2 where
-  extensibleType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2
+  extensibleTypeName = "AttachmentReference2"
   setNext x next = x{next = next}
   getNext AttachmentReference2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AttachmentReference2 e => b) -> Maybe b
@@ -1323,7 +1323,7 @@ deriving instance Generic (SubpassDescription2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (SubpassDescription2 es)
 
 instance Extensible SubpassDescription2 where
-  extensibleType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2
+  extensibleTypeName = "SubpassDescription2"
   setNext x next = x{next = next}
   getNext SubpassDescription2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassDescription2 e => b) -> Maybe b
@@ -1896,7 +1896,7 @@ deriving instance Generic (RenderPassCreateInfo2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (RenderPassCreateInfo2 es)
 
 instance Extensible RenderPassCreateInfo2 where
-  extensibleType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2
+  extensibleTypeName = "RenderPassCreateInfo2"
   setNext x next = x{next = next}
   getNext RenderPassCreateInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassCreateInfo2 e => b) -> Maybe b

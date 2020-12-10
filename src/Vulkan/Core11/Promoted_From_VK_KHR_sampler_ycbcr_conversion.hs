@@ -560,7 +560,7 @@ deriving instance Generic (SamplerYcbcrConversionCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (SamplerYcbcrConversionCreateInfo es)
 
 instance Extensible SamplerYcbcrConversionCreateInfo where
-  extensibleType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
+  extensibleTypeName = "SamplerYcbcrConversionCreateInfo"
   setNext x next = x{next = next}
   getNext SamplerYcbcrConversionCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerYcbcrConversionCreateInfo e => b) -> Maybe b

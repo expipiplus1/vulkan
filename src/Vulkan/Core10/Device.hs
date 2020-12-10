@@ -468,7 +468,7 @@ deriving instance Generic (DeviceQueueCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (DeviceQueueCreateInfo es)
 
 instance Extensible DeviceQueueCreateInfo where
-  extensibleType = STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO
+  extensibleTypeName = "DeviceQueueCreateInfo"
   setNext x next = x{next = next}
   getNext DeviceQueueCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceQueueCreateInfo e => b) -> Maybe b
@@ -832,7 +832,7 @@ deriving instance Generic (DeviceCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (DeviceCreateInfo es)
 
 instance Extensible DeviceCreateInfo where
-  extensibleType = STRUCTURE_TYPE_DEVICE_CREATE_INFO
+  extensibleTypeName = "DeviceCreateInfo"
   setNext x next = x{next = next}
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b

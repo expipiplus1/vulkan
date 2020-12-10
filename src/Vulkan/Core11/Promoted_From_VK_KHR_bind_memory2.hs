@@ -373,7 +373,7 @@ deriving instance Generic (BindBufferMemoryInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (BindBufferMemoryInfo es)
 
 instance Extensible BindBufferMemoryInfo where
-  extensibleType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
+  extensibleTypeName = "BindBufferMemoryInfo"
   setNext x next = x{next = next}
   getNext BindBufferMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindBufferMemoryInfo e => b) -> Maybe b
@@ -711,7 +711,7 @@ deriving instance Generic (BindImageMemoryInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (BindImageMemoryInfo es)
 
 instance Extensible BindImageMemoryInfo where
-  extensibleType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
+  extensibleTypeName = "BindImageMemoryInfo"
   setNext x next = x{next = next}
   getNext BindImageMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindImageMemoryInfo e => b) -> Maybe b

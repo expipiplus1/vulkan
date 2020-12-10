@@ -1471,7 +1471,7 @@ peekChainHead ty p c = case ty of
             InvalidArgument
             "peekChainHead"
             (  "Illegal struct extension of "
-            <> show (extensibleType @a)
+            <> extensibleTypeName @a
             <> " with "
             <> show ty
             )
@@ -1481,7 +1481,8 @@ peekChainHead ty p c = case ty of
           r
 
 class Extensible (a :: [Type] -> Type) where
-  extensibleType :: StructureType
+  extensibleTypeName :: String
+  -- ^ For error reporting an invalid extension
   getNext :: a es -> Chain es
   setNext :: a ds -> Chain es -> a es
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends a e => b) -> Maybe b

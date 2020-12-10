@@ -509,7 +509,7 @@ deriving instance Generic (PhysicalDeviceSurfaceInfo2KHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (PhysicalDeviceSurfaceInfo2KHR es)
 
 instance Extensible PhysicalDeviceSurfaceInfo2KHR where
-  extensibleType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR
+  extensibleTypeName = "PhysicalDeviceSurfaceInfo2KHR"
   setNext x next = x{next = next}
   getNext PhysicalDeviceSurfaceInfo2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceSurfaceInfo2KHR e => b) -> Maybe b
@@ -589,7 +589,7 @@ deriving instance Generic (SurfaceCapabilities2KHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (SurfaceCapabilities2KHR es)
 
 instance Extensible SurfaceCapabilities2KHR where
-  extensibleType = STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR
+  extensibleTypeName = "SurfaceCapabilities2KHR"
   setNext x next = x{next = next}
   getNext SurfaceCapabilities2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SurfaceCapabilities2KHR e => b) -> Maybe b
