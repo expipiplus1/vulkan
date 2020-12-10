@@ -17,7 +17,6 @@ import           Error
 import           Haskell.Name
 import           Render.Element
 import           Spec.Parse
-import           VkModulePrefix
 
 specVersions
   :: forall r
@@ -43,7 +42,7 @@ featureVersion Feature {..} = genRe "feature version" $ do
   tellImport ''Word32
   tellImport make
   tellImport ver
-  tellExplicitModule (vulkanModule ["Core" <> show major <> show minor])
+  tellExplicitModule =<< mkModuleName ["Core" <> show major <> show minor]
   tellDoc [qqi|
     pattern {pat} :: {ver}
     pattern {pat} = {make} {major} {minor} 0
@@ -52,7 +51,7 @@ featureVersion Feature {..} = genRe "feature version" $ do
 versionTypeElem :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 versionTypeElem = genRe "version type" $ do
   RenderParams {..} <- input
-  tellExplicitModule (vulkanModule ["Version"])
+  tellExplicitModule =<< mkModuleName ["Version"]
   tellImport ''Word64
   tellImport ''Storable
   tellImport ''Generic
@@ -82,7 +81,7 @@ versionTypeElem = genRe "version type" $ do
 versionConstruction :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 versionConstruction = genRe "version construction" $ do
   RenderParams {..} <- input
-  tellExplicitModule (vulkanModule ["Version"])
+  tellExplicitModule =<< mkModuleName ["Version"]
   tellImport ''Word16
   tellImport ''Word32
   tellImport ''Word64

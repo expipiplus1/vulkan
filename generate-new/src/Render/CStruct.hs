@@ -2,8 +2,7 @@
 {-# language TemplateHaskellQuotes #-}
 module Render.CStruct
   ( cStructDocs
-  )
-where
+  ) where
 
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
@@ -20,7 +19,6 @@ import           Foreign.Ptr
 import           Error
 import           Haskell.Name
 import           Render.Element
-import           VkModulePrefix
 
 cStructDocs :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
 cStructDocs = V.fromList [toCStruct, fromCStruct]
@@ -28,7 +26,7 @@ cStructDocs = V.fromList [toCStruct, fromCStruct]
 toCStruct :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 toCStruct = do
   genRe "ToCStruct" $ do
-    tellExplicitModule (vulkanModule ["CStruct"])
+    tellExplicitModule =<< mkModuleName ["CStruct"]
     tellNotReexportable
     tellExport (EClass (TyConName "ToCStruct"))
     tellImport ''Ptr
@@ -75,7 +73,7 @@ toCStruct = do
 fromCStruct :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 fromCStruct = do
   genRe "ToCStruct" $ do
-    tellExplicitModule (vulkanModule ["CStruct"])
+    tellExplicitModule =<< mkModuleName ["CStruct"]
     tellNotReexportable
     tellExport (EClass (TyConName "FromCStruct"))
     tellImport ''Ptr

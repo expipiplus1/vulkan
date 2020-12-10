@@ -36,7 +36,6 @@ import           Render.Type                    ( cToHsType )
 import           Render.Type.Preserve           ( Preserve(DoNotPreserve) )
 import           Spec.Types
 import           Text.InterpolatedString.Perl6.Unindented
-import           VkModulePrefix
 
 renderSPIRVElements
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -44,7 +43,7 @@ renderSPIRVElements
   -> Vector SPIRVCapability
   -> Sem r RenderElement
 renderSPIRVElements exts caps = genRe "SPIR-V stuff" $ do
-  tellExplicitModule (vulkanModule ["SPIRVRequirements"])
+  tellExplicitModule =<< mkModuleName ["SPIRVRequirements"]
   tellCanFormat
   bespokeStuff
   renderExts exts

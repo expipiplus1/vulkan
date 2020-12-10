@@ -127,9 +127,13 @@ cToHsType' structStyle preserve t = do
       t' <- cToHsType' structStyle preserve p
       pure $ ConT ''Ptr :@ t'
     Array _ s e -> do
+      RenderParams{..} <- input
       e' <- cToHsType' structStyle preserve e
       s' <- arraySizeType s
-      let arrayTy = ConT (mkName "Vulkan.CStruct.Utils.FixedArray") :@ s' :@ e'
+      let arrayTy =
+            ConT (mkName (T.unpack modulePrefix <> ".CStruct.Utils.FixedArray"))
+              :@ s'
+              :@ e'
       pure $ case preserve of
         DoLower -> ConT ''Ptr :@ arrayTy
         _       -> arrayTy

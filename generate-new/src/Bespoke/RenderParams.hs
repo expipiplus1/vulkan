@@ -196,6 +196,7 @@ renderParams handles = r
                                        . dropVk
     , extensibleStructTypeMemberName = Just "sType"
     , extensibleStructTypeType       = Just "VkStructureType"
+    , modulePrefix                   = "Vulkan"
     }
 
 wrappedIdiomaticType

@@ -160,6 +160,7 @@ renderParams handles = r
                                        . dropXr
     , extensibleStructTypeMemberName = Just "type"
     , extensibleStructTypeType       = Just "XrStructureType"
+    , modulePrefix                   = "OpenXR"
     }
 
 dropXr :: CName -> Text
@@ -183,7 +184,7 @@ dropPointer =
     . first (\p -> if T.all (== 'p') p then "" else p)
     . T.span isLower
 
-vulkanTypesModule = "Vulkan.VulkanTypes"
+vulkanTypesModule = "OpenXR.VulkanTypes"
 
 -- TODO: Generate this automatically
 vulkanManifest

@@ -108,6 +108,7 @@ During development unfinished bits not to forget are listed here.
   - [ ] `timespec`
 
 - [x] remove XR.RenderParams.vulkanNameOverrides
+
 - [ ] check
   - [ ] `XrCompositionLayerBaseHeader` (the 'type' member doesn't have a single value)
   - [ ] `XrEventDataBuffer->varying`
@@ -153,6 +154,8 @@ During development unfinished bits not to forget are listed here.
 - [ ] change `\CFloat a -> a` to `coerce @CFloat @Float`
 
 - [ ] Put modules under `OpenXR` instead of `Vulkan`
+
+- [ ] OpenXR brackets
 
 ### 1.2.162
 

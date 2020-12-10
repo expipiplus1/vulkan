@@ -1,8 +1,7 @@
 module VkModulePrefix
   ( vulkanModule
   , vulkanModulePrefix
-  )
-where
+  ) where
 
 import qualified Data.Text                     as T
 import           Relude

@@ -20,14 +20,13 @@ import           Render.SpecInfo
 import           Render.Type                    ( cToHsType )
 import           Render.Type.Preserve           ( Preserve(DoNotPreserve) )
 import           Spec.Types
-import           VkModulePrefix
 
 renderExtensionDepElements
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => Vector Extension
   -> Sem r RenderElement
 renderExtensionDepElements exts = genRe "Extension dependencies" $ do
-  tellExplicitModule (vulkanModule ["Extensions", "Dependencies"])
+  tellExplicitModule =<< mkModuleName ["Extensions", "Dependencies"]
   tellCanFormat
   renderDeps exts
   renderCoreRequirements exts

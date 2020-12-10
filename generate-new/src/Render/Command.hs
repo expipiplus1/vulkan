@@ -276,7 +276,8 @@ commandRHS m@MarshaledCommand {..} = do
     wrappedRef <- stmt (Just rTy) (Just name) $ do
       FunDoc fun <- use funRef
       pokes      <- traverseV use pokeRefs
-      tellImport (mkName "Vulkan.Internal.Utils.traceAroundEvent")
+      tellImport
+        (mkName (T.unpack modulePrefix <> ".Internal.Utils.traceAroundEvent"))
       let traceName :: Text
           traceName = unCName mcName
       -- call the command
@@ -665,6 +666,7 @@ runWithPokes
   -> Vector (Ref s ValueDoc)
   -> Stmt s r (Ref s ValueDoc)
 runWithPokes includeReturnType MarshaledCommand {..} funRef pokes = do
+  RenderParams {..} <- input
   -- Bind the result to _ if it can only return success
   let useEmptyBinder =
         not includeReturnType
@@ -674,7 +676,8 @@ runWithPokes includeReturnType MarshaledCommand {..} funRef pokes = do
   retRef <- stmt Nothing (Just (bool "r" "_" useEmptyBinder)) $ do
     FunDoc fun <- use funRef
     pokes      <- traverseV use pokes
-    tellImport (mkName "Vulkan.Internal.Utils.traceAroundEvent")
+    tellImport
+      (mkName (T.unpack modulePrefix <> ".Internal.Utils.traceAroundEvent"))
     let traceName :: Text
         traceName = unCName mcName
     -- call the command

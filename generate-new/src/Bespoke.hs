@@ -55,7 +55,6 @@ import           Render.Stmts.Utils
 import           Render.Type
 import           Render.Utils
 import           Spec.Types
-import           VkModulePrefix
 
 ----------------------------------------------------------------
 -- Changes to the spec
@@ -92,18 +91,19 @@ assignBespokeModules es = do
 bespokeModules :: HasRenderParams r => Sem r [(HName, ModName)]
 bespokeModules = do
   RenderParams {..} <- input
+  mod'              <- mkMkModuleName
   pure
     $  [ ( mkTyName "VkAllocationCallbacks"
-         , vulkanModule ["Core10", "AllocationCallbacks"]
+         , mod' ["Core10", "AllocationCallbacks"]
          )
-       , (mkTyName "VkBaseInStructure" , vulkanModule ["CStruct", "Extends"])
-       , (mkTyName "VkBaseOutStructure", vulkanModule ["CStruct", "Extends"])
-       , (mkTyName "XrBaseInStructure" , vulkanModule ["CStruct", "Extends"])
-       , (mkTyName "XrBaseOutStructure", vulkanModule ["CStruct", "Extends"])
-       , (mkTyName "XrFovf"            , vulkanModule ["Core10", "OtherTypes"])
-       , (mkTyName "XrPosef"           , vulkanModule ["Core10", "Space"])
+       , (mkTyName "VkBaseInStructure" , mod' ["CStruct", "Extends"])
+       , (mkTyName "VkBaseOutStructure", mod' ["CStruct", "Extends"])
+       , (mkTyName "XrBaseInStructure" , mod' ["CStruct", "Extends"])
+       , (mkTyName "XrBaseOutStructure", mod' ["CStruct", "Extends"])
+       , (mkTyName "XrFovf"            , mod' ["Core10", "OtherTypes"])
+       , (mkTyName "XrPosef"           , mod' ["Core10", "Space"])
        ]
-    <> (   (, vulkanModule ["Core10", "FundamentalTypes"])
+    <> (   (, mod' ["Core10", "FundamentalTypes"])
        <$> [ mkTyName "VkBool32"
            , TermName "boolToBool32"
            , TermName "bool32ToBool"
@@ -843,9 +843,9 @@ wsiTypes = \case
   SpecXr -> (snd <$> concat [win32Xr, x11Shared, xcb2Xr, egl, gl, d3d])
     <> concat [win32Xr', xcb1, waylandShared, d3d', jni, time]
 
-namedType :: HasErr r => Sem r RenderElement
+namedType :: (HasRenderParams r, HasErr r) => Sem r RenderElement
 namedType = genRe "namedType" $ do
-  tellExplicitModule (vulkanModule ["NamedType"])
+  tellExplicitModule =<< mkModuleName ["NamedType"]
   tellNotReexportable
   tellExport (EType (TyConName ":::"))
   tellDoc "-- | Annotate a type with a name\ntype (name :: k) ::: a = a"
@@ -855,7 +855,7 @@ baseType
 baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
   RenderParams {..} <- input
   let n' = mkTyName n
-  tellExplicitModule (vulkanModule ["Core10", "FundamentalTypes"])
+  tellExplicitModule =<< mkModuleName ["Core10", "FundamentalTypes"]
   tellExport (EType n')
   tDoc <- renderType (ConT t)
   tellDocWithHaddock $ \getDoc ->
@@ -869,7 +869,7 @@ nullHandle :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 nullHandle = genRe "null handle" $ do
   RenderParams {..} <- input
   let patName = mkPatternName "VK_NULL_HANDLE"
-  tellExplicitModule (vulkanModule ["Core10", "APIConstants"])
+  tellExplicitModule =<< mkModuleName ["Core10", "APIConstants"]
   tellNotReexportable
   tellExport (EPat patName)
   tellExport (EType (TyConName "IsHandle"))
@@ -896,7 +896,7 @@ resultMatchers = genRe "xr result matchers" $ do
   let succName = mkPatternName "XR_SUCCEEDED"
       unquName = mkPatternName "XR_UNQUALIFIED_SUCCESS"
       failName = mkPatternName "XR_FAILED"
-  tellExplicitModule (vulkanModule ["Core10", "Enums", "Result"])
+  tellExplicitModule =<< mkModuleName ["Core10", "Enums", "Result"]
   tellNotReexportable
   tellExport (EPat succName)
   tellExport (EPat unquName)

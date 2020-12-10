@@ -46,6 +46,8 @@ module Render.Element
   , thNameNamespace
   , nameNameSpace
   , nameSpacePrefix
+  , mkModuleName
+  , mkMkModuleName
   ) where
 
 import           Data.Char                      ( isAlpha
@@ -299,6 +301,7 @@ data RenderParams = RenderParams
     -- ^ "sType" or "type" or Nothing
   , extensibleStructTypeType       :: Maybe CName
     -- ^ "VkStructureType" or "XrStructureType"
+  , modulePrefix                   :: Text
   }
 
 data UnionDiscriminator = UnionDiscriminator
@@ -507,3 +510,12 @@ wrapSymbol ns s = if isSymbol s && s /= ".."
   else pretty s
   where isSymbol = not . (\x -> isAlpha x || (x == '_')) . T.head
 
+mkModuleName :: HasRenderParams r => [Text] -> Sem r ModName
+mkModuleName cs = do
+  RenderParams {..} <- input
+  pure . ModName . T.intercalate "." . (modulePrefix :) $ cs
+
+mkMkModuleName :: HasRenderParams r => Sem r ([Text] -> ModName)
+mkMkModuleName = do
+  RenderParams {..} <- input
+  pure $ ModName . T.intercalate "." . (modulePrefix :)

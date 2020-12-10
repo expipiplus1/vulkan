@@ -32,7 +32,6 @@ import           Haskell
 import           Render.Element
 import           Render.SpecInfo
 import           Spec.Types
-import           VkModulePrefix
 
 import           Data.Char                      ( isUpper )
 import           Khronos.Render
@@ -164,17 +163,18 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
       :: (Feature -> Text -> (Maybe Text -> ModName) -> Sem r a)
       -> Sem r (Vector a)
     forFeatures f = forV specFeatures $ \feat@Feature {..} -> do
-      let
-        prefix = vulkanModulePrefix <> ".Core" <> foldMap
-          show
-          (versionBranch fVersion)
+      let prefix =
+            modulePrefix <> ".Core" <> foldMap show (versionBranch fVersion)
       f feat prefix (featureCommentToModuleName prefix)
-    forFeatures_ = void . forFeatures
+    forFeatures_          = void . forFeatures
 
+    extensionModulePrefix = modulePrefix <> "." <> "Extensions"
     forExtensionRequires
       :: (Text -> ModName -> ReqDeps -> Require -> Sem r ()) -> Sem r ()
     forExtensionRequires f = forV_ specExtensions $ \Extension {..} ->
-      forRequires_ exRequires (const $ extensionNameToModuleName exName)
+      forRequires_
+          exRequires
+          (const $ extensionNameToModuleName extensionModulePrefix exName)
         $ \modname -> f extensionModulePrefix modname
 
     forRequires
@@ -238,7 +238,7 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   ----------------------------------------------------------------
   -- API Constants
   ----------------------------------------------------------------
-  let constantModule = vulkanModule ["Core10", "APIConstants"]
+  constantModule <- mkModuleName ["Core10", "APIConstants"]
   forV_ rsAPIConstants $ \(i, _) -> export constantModule i
 
   ----------------------------------------------------------------
@@ -362,11 +362,9 @@ exportManyNoReexport m is =
 -- Making module names
 ----------------------------------------------------------------
 
-extensionModulePrefix :: Text
-extensionModulePrefix = vulkanModulePrefix <> ".Extensions"
-
-extensionNameToModuleName :: Text -> ModName
-extensionNameToModuleName = ModName . ((extensionModulePrefix <> ".") <>)
+extensionNameToModuleName :: Text -> Text -> ModName
+extensionNameToModuleName extensionModulePrefix =
+  ModName . ((extensionModulePrefix <> ".") <>)
 
 featureCommentToModuleName :: Text -> Maybe Text -> ModName
 featureCommentToModuleName prefix = \case

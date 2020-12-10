@@ -28,7 +28,6 @@ import           Haskell
 import           Render.Element
 import           Render.SpecInfo
 import           Spec.Types
-import           VkModulePrefix
 
 structExtends
   :: forall r t
@@ -36,7 +35,7 @@ structExtends
   => Spec t
   -> Sem r RenderElement
 structExtends spec = genRe "Extends type family" $ do
-  tellExplicitModule (vulkanModule ["CStruct", "Extends"])
+  tellExplicitModule =<< mkModuleName ["CStruct", "Extends"]
   tellNotReexportable
   typeFamily spec
   classes spec

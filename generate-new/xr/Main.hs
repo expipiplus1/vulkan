@@ -90,7 +90,8 @@ main =
             =<< assignBespokeModules renderElements
 
           timeItNamed "writing"
-            $ renderSegments getDocumentation "out-xr" (mergeElements groups)
+            $   renderSegments getDocumentation "out-xr"
+            =<< mergeElements groups
 
 ------------------------------------------------------------------
 ----

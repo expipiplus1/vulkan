@@ -27,13 +27,12 @@ import           Foreign.Marshal.Alloc          ( callocBytes )
 import           Haskell.Name
 import           Render.Element
 import           Spec.Name                      ( CName(CName) )
-import           VkModulePrefix
 
 hasObjectTypeClass :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 hasObjectTypeClass = genRe "HasObjectType class" $ do
   RenderParams {..} <- input
   tellExport (EClass (TyConName "HasObjectType"))
-  tellExplicitModule (vulkanModule ["Core10", "APIConstants"])
+  tellExplicitModule =<< mkModuleName ["Core10", "APIConstants"]
   tellImport ''Word64
   tellNotReexportable
   let objectType = mkTyName (CName $ camelPrefix <> "ObjectType")
@@ -68,7 +67,7 @@ zeroClass = genRe "zero class" $ do
     ]
 
   tellExport (EClass (TyConName "Zero"))
-  tellExplicitModule (vulkanModule ["Zero"])
+  tellExplicitModule =<< mkModuleName ["Zero"]
   tellNotReexportable
 
   tellDoc [qi|
@@ -135,7 +134,7 @@ zeroClass = genRe "zero class" $ do
 
 marshalUtils :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 marshalUtils = genRe "marshal utils" $ do
-  tellExplicitModule (vulkanModule ["CStruct", "Utils"])
+  tellExplicitModule =<< mkModuleName ["CStruct", "Utils"]
   tellNotReexportable
   traverseV_ tellImportWithAll [''Proxy, ''CChar]
   traverseV_

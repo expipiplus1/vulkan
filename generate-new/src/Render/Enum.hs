@@ -199,7 +199,7 @@ renderShowInstance prefixString showTableName conNameName Enum {..} = do
       conName = mkConName eName eName
   tellImportWith n      conName
   tellImportWith ''Show 'P.showsPrec
-  tellImport (mkName "Vulkan.Internal.Utils.enumShowsPrec")
+  tellImport (mkName (T.unpack modulePrefix <> ".Internal.Utils.enumShowsPrec"))
   shows <- case eType of
     AnEnum -> do
       tellImport 'showsPrec
@@ -226,7 +226,7 @@ renderReadInstance prefixString showTableName conNameName Enum {..} = do
       conName = mkConName eName eName
   tellImportWith n      conName
   tellImportWith ''Read 'readPrec
-  tellImport (mkName "Vulkan.Internal.Utils.enumReadPrec")
+  tellImport (mkName (T.unpack modulePrefix <> ".Internal.Utils.enumReadPrec"))
   tellDoc [qqi|
     instance Read {n} where
       readPrec = enumReadPrec {prefixString} {showTableName} {conNameName} {conName}
