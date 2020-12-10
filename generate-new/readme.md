@@ -153,7 +153,7 @@ During development unfinished bits not to forget are listed here.
 
 - [ ] change `\CFloat a -> a` to `coerce @CFloat @Float`
 
-- [ ] Put modules under `OpenXR` instead of `Vulkan`
+- [x] Put modules under `OpenXR` instead of `Vulkan`
 
 - [ ] OpenXR brackets
 
