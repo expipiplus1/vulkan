@@ -331,8 +331,7 @@ data IdiomaticType = IdiomaticType
   }
 
 data IdiomaticTypeTo
-  = Constructor (Doc ())
-  | PureFunction (Doc ())
+  = PureFunction (Doc ())
   | IOFunction (Doc ())
 
 ----------------------------------------------------------------

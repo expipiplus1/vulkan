@@ -203,9 +203,9 @@ wrappedIdiomaticType
   :: Name
   -- ^ Wrapped type
   -> Name
-  -- ^ Wrapping type constructor
+  -- ^ Wrapping type
   -> Name
-  -- ^ Wrapping constructor
+  -- ^ Constructor name
   -> (Type, IdiomaticType)
   -- ^ (Wrapping type (CFloat), idiomaticType)
 wrappedIdiomaticType t w c =
@@ -217,8 +217,11 @@ wrappedIdiomaticType t w c =
       pure (pretty (nameBase c))
     )
     (do
-      tellImportWith w c
-      pure . Constructor . pretty . nameBase $ c
+      tellImportWithAll w
+      tDoc <- renderTypeHighPrec (ConT t)
+      wDoc <- renderTypeHighPrec (ConT w)
+      tellImport 'coerce
+      pure $ PureFunction ("coerce @" <> wDoc <+> "@" <> tDoc)
     )
   )
 

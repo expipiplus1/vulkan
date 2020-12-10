@@ -118,18 +118,6 @@ unwrapIdiomaticType name value = do
     Just (IdiomaticType w _ to) -> stmt (Just w) name $ do
       ValueDoc d <- use value
       to <&> \case
-        Constructor con ->
-          let unwrappedVar = "a"
-          in
-            Pure AlwaysInline $ ValueDoc
-              (   parens
-                  (   "\\"
-                  <>  parens (con <+> unwrappedVar)
-                  <+> "->"
-                  <+> unwrappedVar
-                  )
-              <+> d
-              )
         PureFunction fun -> Pure InlineOnce $ ValueDoc (fun <+> d)
         IOFunction   fun -> IOAction $ ValueDoc (fun <+> d)
 

@@ -103,7 +103,6 @@ During development unfinished bits not to forget are listed here.
 - [x] These are passed as pointers ,(see Bespoke.MarshalParams.isPassAsPointerType')
 
   - [ ] `VkInstanceCreateInfo`, `VkAllocationCallbacks`, `VkDeviceCreateInfo`
-    - Simpler to keep as ptr
   - [x] `LARGE_INTEGER`
   - [x] `timespec`
 
@@ -151,7 +150,7 @@ During development unfinished bits not to forget are listed here.
 
 - [ ] Implement OpenXR's polymorphic types
 
-- [ ] change `\CFloat a -> a` to `coerce @CFloat @Float`
+- [x] change `\CFloat a -> a` to `coerce @CFloat @Float`
 
 - [x] Put modules under `OpenXR` instead of `Vulkan`
 
