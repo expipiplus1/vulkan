@@ -404,15 +404,19 @@ parseRequires n = V.fromList <$> traverseV
  where
   parseRequire :: Node -> P Require
   parseRequire r = do
-    rComment   <- traverse decode (getAttr "comment" r)
-    rTypeNames <- V.fromList . filter (not . isForbidden) <$> sequenceV
+    rComment  <- traverse decode (getAttr "comment" r)
+    typeNames <- V.fromList . filter (not . isForbidden) <$> sequenceV
       [ nameAttr "require type" t | Element t <- contents r, "type" == name t ]
+    let -- TODO: this should probably be all constants
+        isRequiredTypeActuallyAnEnum = (`elem` ["XR_MIN_HAPTIC_DURATION"])
+        (extraEnums, rTypeNames) =
+          V.partition isRequiredTypeActuallyAnEnum typeNames
     rCommandNames <- V.fromList <$> sequenceV
       [ nameAttr "require commands" t
       | Element t <- contents r
       , "command" == name t
       ]
-    rEnumValueNames <- V.fromList <$> sequenceV
+    rEnumValueNames <- (<> extraEnums) . V.fromList <$> sequenceV
       [ nameAttr "require enum" t | Element t <- contents r, "enum" == name t ]
     pure Require { .. }
 

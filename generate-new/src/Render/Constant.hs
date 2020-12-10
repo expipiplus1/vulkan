@@ -37,12 +37,11 @@ renderConstant Constant {..} = contextShow constName $ do
               )
       IntegralValue i ->
         let a = mkName "a"
-        in
-          pure
-            ( ForallT [PlainTV a] [ConT ''Integral :@ VarT a] (VarT a)
-            , viaShow i
-            , True
-            )
+        in  pure
+              ( ForallT [PlainTV a] [ConT ''Integral :@ VarT a] (VarT a)
+              , viaShow i
+              , i >= 0
+              )
       FloatValue i -> pure (ConT ''Float, viaShow i, False)
       Word32Value i ->
         pure (ConT ''Word32, pretty @String (printf "0x%x" i), True)

@@ -39,17 +39,13 @@ renderParams handles = r
     [ hName | Handle {..} <- toList handles, hDispatchable == Dispatchable ]
   vulkanParams = Vk.renderParams handles
   r            = RenderParams
-    { mkTyName = \n -> TyConName $ fromMaybe (upperCaseFirst . dropXr $ n)
-                                             (vulkanNameOverrides n)
-    , mkConName = \_ n -> ConName $ fromMaybe (upperCaseFirst . dropXr $ n)
-                                              (vulkanNameOverrides n)
+    { mkTyName = \n -> TyConName . upperCaseFirst . dropXr $ n
+    , mkConName = \_ n -> ConName . upperCaseFirst . dropXr $ n
     , mkMemberName                   = \_parent ->
                                          TermName . lowerCaseFirst . dropPointer . unCName
     , mkFunName                      = TermName . lowerCaseFirst . dropXr
     , mkParamName                    = TermName . dropPointer . unCName
-    , mkPatternName                  =
-      \n -> ConName
-        $ fromMaybe (upperCaseFirst . dropXr $ n) (vulkanNameOverrides n)
+    , mkPatternName = \n -> ConName . upperCaseFirst . dropXr $ n
     , mkFuncPointerName              = TyConName . T.tail . unCName
     , mkFuncPointerMemberName = TermName . ("p" <>) . upperCaseFirst . unCName
     , mkEmptyDataName                = TyConName . (<> "_T") . dropXr
@@ -168,11 +164,6 @@ renderParams handles = r
 
 dropXr :: CName -> Text
 dropXr (CName t) = fromMaybe t (dropPrefix "xr" t)
-
--- TODO: expand or remove
-vulkanNameOverrides :: CName -> Maybe Text
-vulkanNameOverrides = \case
-  _ -> Nothing
 
 dropPrefix
   :: Text

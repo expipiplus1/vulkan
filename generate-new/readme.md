@@ -102,16 +102,12 @@ During development unfinished bits not to forget are listed here.
 - [ ] Fix runAsciidoctor
 - [ ] These are passed as pointers ,(see Bespoke.MarshalParams.isPassAsPointerType')
 
-  - [ ] `VkInstanceCreateInfo`
-    - Simpler to keep as ptr
-  - [ ] `VkAllocationCallbacks`
-    - Simpler to keep as ptr
-  - [ ] `VkDeviceCreateInfo`
+  - [ ] `VkInstanceCreateInfo`, `VkAllocationCallbacks`, `VkDeviceCreateInfo`
     - Simpler to keep as ptr
   - [ ] `LARGE_INTEGER`
-  - [ ] `timespec"
+  - [ ] `timespec`
 
-- [ ] remove XR.RenderParams.vulkanNameOverrides
+- [x] remove XR.RenderParams.vulkanNameOverrides
 - [ ] check
   - [ ] `XrCompositionLayerBaseHeader` (the 'type' member doesn't have a single value)
   - [ ] `XrEventDataBuffer->varying`
@@ -131,17 +127,18 @@ During development unfinished bits not to forget are listed here.
   - [ ] `xrCreateSpatialAnchorFromPerceptionAnchorMSFT`: Unable to get size for TypeName `IUnknown`
 
 - [ ] Check we have all of
-  - [ ] `NULL_SYSTEM_ID`
-  - [ ] `NULL_PATH`
-  - [ ] `SUCCEEDED`
-  - [ ] `FAILED`
-  - [ ] `UNQUALIFIED_SUCCESS`
-  - [ ] `NO_DURATION`
-  - [ ] `INFINITE_DURATION`
-  - [ ] `MIN_HAPTIC_DURATION`
-  - [ ] `FREQUENCY_UNSPECIFIED`
-  - [ ] `MAX_EVENT_DATA_SIZE`
+  - [x] `NULL_SYSTEM_ID`
+  - [x] `NULL_PATH`
+  - [x] `SUCCEEDED`
+  - [x] `FAILED`
+  - [x] `UNQUALIFIED_SUCCESS`
+  - [x] `NO_DURATION`
+  - [x] `INFINITE_DURATION`
+  - [x] `MIN_HAPTIC_DURATION`
+  - [x] `FREQUENCY_UNSPECIFIED`
+  - [x] `MAX_EVENT_DATA_SIZE`
   - [ ] `MAY_ALIAS`
+    - no need
 
 - [ ] Make Vulkan integration optional, have a module which either defines
   opaque handles or reexports types from `vulkan`
@@ -154,6 +151,8 @@ During development unfinished bits not to forget are listed here.
 - [ ] Implement OpenXR's polymorphic types
 
 - [ ] change `\CFloat a -> a` to `coerce @CFloat @Float`
+
+- [ ] Put modules under `OpenXR` instead of `Vulkan`
 
 ### 1.2.162
 

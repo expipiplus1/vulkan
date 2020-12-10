@@ -19,7 +19,7 @@ import           Spec.Name
 data ConstantValue
   = StrValue Text
   | -- | An integral value with no specific size
-    IntegralValue Word
+    IntegralValue Integer
   | -- | A value ending in 'f'
     FloatValue Float
   | -- | A value sized with 'U'
