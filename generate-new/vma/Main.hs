@@ -338,9 +338,11 @@ unitStructs state ds = do
     CompType (AnonymousRef _) _ _ _ _ -> throw "Struct without a name"
     t@(CompType (NamedRef (Ident n _ nodeInfo)) _ ms _ _) ->
       context (T.pack n) $ do
-        let sName       = CName (T.pack n)
-            sExtends    = mempty
-            sExtendedBy = mempty
+        let sName        = CName (T.pack n)
+            sExtends     = mempty
+            sExtendedBy  = mempty
+            sInherits    = mempty
+            sInheritedBy = mempty
         sizedMembers <- forV ms $ \case
           m@(MemberDecl (VarDecl (VarName (Ident n _ _) _) _ ty) Nothing _) ->
             do
