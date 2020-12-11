@@ -156,6 +156,12 @@ During development unfinished bits not to forget are listed here.
 
 - [ ] OpenXR brackets
 
+- [ ] Remove uses of WildCardT
+
+- [ ] Remove or improve special handling for `CompositionLayerBaseHeader`
+
+- [ ] Remove or improve special handling for `enumerateSwapchainImages`
+
 ### 1.2.162
 
 - [x] optionalness on VkWriteDescriptorSetAccelerationStructureKHR->pAccelerationStructures
