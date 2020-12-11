@@ -65,6 +65,7 @@ structMemberScheme Struct {..} member = do
       , optionalScheme WrapExtensibleStructs DoNotWrapDispatchableHandles
         -- Structs which can be extended, so need to be wrapped in a GADT
       , extensibleStruct
+      , inheritingStruct
         -- Structs don't have wrapped handles because it's annoying to pass
         -- the command record into the peek functions
       , rawDispatchableHandles

@@ -5,12 +5,13 @@ import           Polysemy
 import           Polysemy.NonDet
 import           Relude
 
+import           Error
 import           Haskell.Name
 import           Marshal.Scheme
 import           Render.Element
 
 zeroScheme
-  :: (HasRenderElem r, HasRenderParams r)
+  :: (HasRenderElem r, HasRenderParams r, HasErr r)
   => MarshalScheme a
   -> Sem r (Maybe (Doc ()))
 zeroScheme = runNonDetMaybe . go
@@ -36,6 +37,7 @@ zeroScheme = runNonDetMaybe . go
     WrappedStruct _ -> do
       tellImportWithAll (TyConName "SomeStruct")
       pure $ parens "SomeStruct zero"
-    Custom       CustomScheme {..} -> maybe empty pure csZero
-    ElidedCustom _                 -> empty
+    WrappedChildStruct _ -> throw "Unable to get a zero inheriting struct"
+    Custom CustomScheme {..} -> maybe empty pure csZero
+    ElidedCustom _ -> empty
 

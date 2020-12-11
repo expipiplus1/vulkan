@@ -259,7 +259,9 @@ data RenderParams = RenderParams
     -- than the C side
   , mkHsTypeOverride
       :: forall r
-       . ExtensibleStructStyle r
+       . ((Name -> ConstrainedVar) -> Sem r Name)
+      --  ^ Get a fresh variable
+      -> ExtensibleStructStyle r
       -> Preserve
       -> CType
       -> Maybe (Sem r Type)

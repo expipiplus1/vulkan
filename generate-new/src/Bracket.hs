@@ -1,10 +1,9 @@
-module Bracket
-  where
+module Bracket where
 
+import           Data.List                      ( findIndex )
 import           Data.List.Extra                ( elemIndex
                                                 , nubOrd
                                                 )
-import           Data.List                      ( findIndex )
 import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
                                          hiding ( brackets
@@ -71,8 +70,8 @@ data ResourceType
 
 isResource :: Argument -> Bool
 isResource = \case
-  Resource     _ _ -> True
-  _                -> False
+  Resource _ _ -> True
+  _            -> False
 
 -- | Try to generate a bracket automatically from the types of a pair of
 -- marshaled commands.
@@ -93,11 +92,11 @@ autoBracket bBracketType create destroy with = do
       bDestroy     = mcName destroy
       bInnerTypes =
         [ Normal t | beginHasReturnType, let t = mcReturn create ]
-          <> [ s
-             | MarshaledParam {..} <- toList (mcParams create)
-             , not (isElided mpScheme)
-             , Returned s <- pure mpScheme
-             ]
+        <> [ s
+           | MarshaledParam {..} <- toList (mcParams create)
+           , not (isElided mpScheme)
+           , Returned s <- pure mpScheme
+           ]
       bCreateArguments =
         [ Provided (unCName (pName mpParam)) mpScheme
         | MarshaledParam {..} <- toList (mcParams create)
@@ -178,23 +177,23 @@ renderBracket paramName b@Bracket {..} =
         --
         argHsTypes <- traverseV
           (   note "argument type has no representation in a negative position"
-          <=< schemeTypeNegative
+          <=< schemeTypeNegativeIgnoreContext
           )
           [ t | Provided _ t <- arguments ]
         let argHsVars =
               [ pretty (paramName v) | Provided v _ <- arguments ]
-                <> case bBracketType of
-                     BracketCPS     -> ["b"]
-                     BracketBookend -> ["a"]
+              <> case bBracketType of
+                   BracketCPS     -> ["b"]
+                   BracketBookend -> ["a"]
         innerHsType <- do
           ts <- traverse
             (   note "Inner type has no representation in a negative position"
-            <=< schemeTypeNegative
+            <=< schemeTypeNegativeIgnoreContext
             )
             bInnerTypes
           pure $ case ts of
-                   [x] -> x
-                   _ -> foldl' (:@) (TupleT (length ts)) ts
+            [x] -> x
+            _   -> foldl' (:@) (TupleT (length ts)) ts
         let noDestructorResource = not (any isResource bDestroyArguments)
             noResource           = null bInnerTypes && noDestructorResource
             ioVar                = VarT (mkName "io")
@@ -332,7 +331,7 @@ renderDestroy paramName Bracket {..} = do
             _                           -> Nothing
       case mapMaybe correctSibling bCreateArguments of
         []  -> throw $ "Unable to find sibling " <> sibling
-        [s] -> schemeTypeNegative s >>= \case
+        [s] -> schemeTypeNegativeIgnoreContext s >>= \case
           Nothing ->
             throw
               $  "Unable to get type for sibling member "

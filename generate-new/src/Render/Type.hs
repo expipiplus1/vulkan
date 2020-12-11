@@ -4,10 +4,15 @@ module Render.Type
   ( Preserve(..)
   , ExtensibleStructStyle(..)
   , cToHsType
+  , cToHsTypeWithContext
   , cToHsTypeWrapped
   , cToHsTypeWithHoles
   , cToHsTypeQuantified
   , namedTy
+  , HasContextState
+  , runRenderTypeContext
+  , negateTypeContext
+  , ConstrainedVar(..)
   ) where
 
 import qualified Data.Text                     as T
@@ -22,6 +27,7 @@ import           Polysemy.State
 import           Relude                  hiding ( State
                                                 , Type
                                                 , get
+                                                , gets
                                                 , lift
                                                 , modify'
                                                 , put
@@ -45,7 +51,7 @@ cToHsTypeWithHoles
   => Preserve
   -> CType
   -> Sem r H.Type
-cToHsTypeWithHoles = cToHsType' (Applied (pure WildCardT))
+cToHsTypeWithHoles = runNoContext .: cToHsType' UnwrappedHole
 
 -- | The same as 'cToHsType' except extensible structs are wrapped in @SomeStruct@
 cToHsTypeWrapped
@@ -54,7 +60,7 @@ cToHsTypeWrapped
   => Preserve
   -> CType
   -> Sem r H.Type
-cToHsTypeWrapped = cToHsType' Wrapped
+cToHsTypeWrapped = runNoContext .: cToHsType' Wrapped
 
 -- | The same as 'cToHsType' except type variables are quantified with forall.
 cToHsTypeQuantified
@@ -64,19 +70,17 @@ cToHsTypeQuantified
   -> CType
   -> Sem r H.Type
 cToHsTypeQuantified preserve t = do
-  let nextVar = do
-        (u, i) <- get
-        let name = mkName [i]
-        case i of
-          'q' -> pure Nothing
-          _   -> do
-            put (name : u, succ i)
-            pure $ Just (VarT name)
-  ((usedVarNames, _), t) <-
-    runState ([], 'a') . runInputSem nextVar $ cToHsType' (Applied getVar)
-                                                          preserve
-                                                          t
-  pure $ ForallT (PlainTV <$> reverse usedVarNames) [] t
+  (negNames, posNames, t) <- runRenderTypeContext
+    $ cToHsType' Unwrapped preserve t
+  pure $ ForallT (PlainTV . cVarName <$> (negNames <> posNames)) [] t
+
+cToHsTypeWithContext
+  :: forall r
+   . (HasErr r, HasRenderParams r, HasSpecInfo r, HasContextState r)
+  => Preserve
+  -> CType
+  -> Sem r H.Type
+cToHsTypeWithContext = cToHsType' Unwrapped
 
 cToHsType
   :: forall r
@@ -84,19 +88,18 @@ cToHsType
   => Preserve
   -> CType
   -> Sem r H.Type
-cToHsType preserve t =
-  runInputList allVars $ cToHsType' (Applied getVar) preserve t
+cToHsType preserve t = runNoContext $ cToHsType' Unwrapped preserve t
 
 cToHsType'
   :: forall r
-   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+   . (HasErr r, HasRenderParams r, HasSpecInfo r, HasContextState r)
   => ExtensibleStructStyle r
   -> Preserve
   -> CType
   -> Sem r H.Type
 cToHsType' structStyle preserve t = do
   RenderParams {..} <- input
-  case mkHsTypeOverride structStyle preserve t of
+  case mkHsTypeOverride getVar structStyle preserve t of
     Just h  -> h
     Nothing -> do
       t' <- r
@@ -148,13 +151,22 @@ cToHsType' structStyle preserve t = do
     TypeName "size_t"   -> pure $ ConT ''CSize
     TypeName n          -> do
       RenderParams {..} <- input
-      let con = ConT . typeName . mkTyName $ n
+      -- TODO: Remove
+      let con = case n of
+            "XrCompositionLayerBaseHeader" ->
+              (ConT . typeName . mkTyName $ n) :@ PromotedNilT
+            _ -> ConT . typeName . mkTyName $ n
       getStruct n >>= \case
+        Just s | not (V.null (sInheritedBy s)) -> case structStyle of
+          Unwrapped     -> VarT <$> getVar (Inherits con)
+          UnwrappedHole -> pure WildCardT
+          Wrapped       -> pure $ ConT (mkName "SomeChild") :@ con
         Just s | not (V.null (sExtendedBy s)) -> case structStyle of
-          Applied getVar -> do
-            var <- getVar
+          Unwrapped -> do
+            var <- VarT <$> getVar (Extends con)
             pure $ con :@ var
-          Wrapped -> pure $ ConT (mkName "SomeStruct") :@ con
+          UnwrappedHole -> pure $ con :@ WildCardT
+          Wrapped       -> pure $ ConT (mkName "SomeStruct") :@ con
         _ -> pure con
     Proto ret ps -> do
       retTy <- cToHsType' structStyle preserve ret
@@ -194,13 +206,61 @@ namedTy name ty =
                     (typeName (TyConName ":::"))
                     ty
 
-type NextVar = Input (Maybe Type)
+data ContextState = ContextState
+  { csNegativeVars :: [ConstrainedVar]
+  , csPositiveVars :: [ConstrainedVar]
+  , csNextVars     :: [Name]
+  }
 
-getVar :: (HasErr r, Member NextVar r) => Sem r Type
-getVar = input @(Maybe Type) >>= \case
-  Nothing -> throw "Run out of variables"
-  Just v  -> pure v
+type HasContextState r = Member (State ContextState) r
+
+initialContextState :: ContextState
+initialContextState = ContextState mempty mempty allVars
+
+negateTypeContext :: HasContextState r => Sem r a -> Sem r a
+negateTypeContext a = do
+  let swap cs = cs { csNegativeVars = csPositiveVars cs
+                   , csPositiveVars = csNegativeVars cs
+                   }
+  modify' swap
+  r <- a
+  modify' swap
+  pure r
+
+getVar
+  :: (HasErr r, HasContextState r) => (Name -> ConstrainedVar) -> Sem r Name
+getVar c = gets csNextVars >>= \case
+  []       -> throw "Ran out of variables"
+  (v : vs) -> do
+    modify'
+      (\cs -> cs { csNextVars = vs, csNegativeVars = c v : csNegativeVars cs })
+    pure v
 
 -- 'r' is used elsewhere for return types
-allVars :: [Type]
-allVars = (\c -> VarT (mkName [c])) <$> ['a' .. 'q']
+allVars :: [Name]
+allVars = (\c -> mkName [c]) <$> ['a' .. 'q']
+
+-- | Defaults to negative position for vars
+runRenderTypeContext
+  :: HasErr r
+  => Sem (State ContextState : r) a
+  -> Sem r ([ConstrainedVar], [ConstrainedVar], a)
+  -- ^ (negative, positive, a)
+runRenderTypeContext a = do
+  (s, r) <- runState initialContextState a
+  pure (reverse (csNegativeVars s), reverse (csPositiveVars s), r)
+
+runNoContext :: HasErr r => Sem (State ContextState : r) a -> Sem r a
+runNoContext a = do
+  (s, r) <- runState initialContextState a
+  if null (csNegativeVars s <> csPositiveVars s)
+    then pure ()
+    else throw "Variables were inserted while getting the type with no context"
+  pure r
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+(.:) :: (b -> c) -> (a1 -> a2 -> b) -> a1 -> a2 -> c
+(.:) = (.) . (.)

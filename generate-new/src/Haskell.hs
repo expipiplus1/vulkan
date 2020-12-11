@@ -48,7 +48,8 @@ typeNameWithModule (ModName mod') =
 mkVar :: Text -> Type
 mkVar = VarT . mkName . T.unpack
 
-renderType, renderTypeSource :: (HasRenderElem r, HasRenderParams r) => Type -> Sem r (Doc ())
+renderType, renderTypeSource
+  :: (HasRenderElem r, HasRenderParams r) => Type -> Sem r (Doc ())
 renderType = renderType' tellImport
 renderTypeSource = renderType'
   (\case
@@ -81,11 +82,7 @@ renderType' importer t = do
 
 -- TODO, do this properly lol
 renderTypeHighPrec, renderTypeHighPrecSource
-  :: ( HasRenderElem r
-     , HasRenderParams r
-     )
-  => Type
-  -> Sem r (Doc ())
+  :: (HasRenderElem r, HasRenderParams r) => Type -> Sem r (Doc ())
 renderTypeHighPrec = \case
   t@(ConT    _) -> renderType t
   t@(VarT    _) -> renderType t
@@ -100,7 +97,10 @@ renderTypeHighPrecSource = \case
 
 neverBootTypes :: [Name]
 neverBootTypes =
-  [typeName (TyConName ":::"), typeName (TyConName "SomeStruct")]
+  [ typeName (TyConName ":::")
+  , typeName (TyConName "SomeStruct")
+  , typeName (TyConName "SomeChild")
+  ]
 
 allTypeNames :: Type -> [Name]
 allTypeNames = childrenBi

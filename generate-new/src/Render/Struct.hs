@@ -19,6 +19,7 @@ import           Foreign.Storable
 
 import           Bespoke
 import           CType
+import           Data.Char                      ( isUpper )
 import           Data.Typeable
 import           Error
 import           Haskell                       as H
@@ -89,6 +90,8 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
       | m <- V.toList msMembers
       ]
     renderExtensibleInstance s
+    renderInheritableClass s
+    renderInheritableInstance s
     let lookupMember :: CName -> Maybe (SiblingInfo StructMember)
         lookupMember = (`Map.lookup` memberMap)
     runInputConst lookupMember $ renderStoreInstances s
@@ -154,6 +157,80 @@ renderExtensibleInstance MarshaledStruct {..} = do
         , "extends _ f" <> line <> indent 2 (vsep cases)
         ]
       )
+
+----------------------------------------------------------------
+-- Inheriting
+----------------------------------------------------------------
+
+renderInheritableClass
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
+  => MarshaledStruct AStruct
+  -> Sem r ()
+renderInheritableClass MarshaledStruct {..} | null (sInheritedBy msStruct) =
+  pure ()
+renderInheritableClass MarshaledStruct {..} = context "inheritable class" $ do
+  RenderParams {..} <- input
+  className         <- inheritClassName msName
+  let exisName = TyConName ("Some" <> unName (mkTyName msName))
+  let t        = mkTyName msName
+  tellExport (EClass className)
+  tellDataExport exisName
+  if null (sExtendedBy msStruct)
+    then tellDoc [qqi|
+      class ToCStruct a => {className} a where
+        to{t} :: a -> {t}
+
+      data {exisName} where
+        {exisName} :: {className} a => a -> {exisName}
+    |]
+    else tellDoc [qqi|
+      class ToCStruct a => {className} a where
+        to{t} :: a -> {t} '[]
+
+      data {exisName} where
+        {exisName} :: {className} a => a -> {exisName}
+    |]
+
+renderInheritableInstance
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
+  => MarshaledStruct AStruct
+  -> Sem r ()
+renderInheritableInstance ms@MarshaledStruct {..} =
+  for_ (sInherits msStruct) $ \parentName -> do
+    RenderParams {..} <- input
+    parent <- maybe (throw "couldn't find parent") pure =<< getStruct parentName
+    let hasExtensibleParent = not (null (sExtendedBy parent))
+        omitDots            = length (sMembers parent) <= 2
+    className <- inheritClassName parentName
+    let t  = mkTyName msName
+        c  = mkConName msName msName
+        p  = mkTyName parentName
+        pc = mkConName parentName parentName
+    tellImportWithAll className
+    tellImportWithAll p
+    typeEnumValue <- mkPatternName <$> getStructTypeEnumValue ms
+    tellImport typeEnumValue
+    if
+      | hasExtensibleParent -> tellDoc [qqi|
+        instance {className} {t} where
+          to{p} {c}\{..} = {pc}\{type' = {typeEnumValue}, next = (), ..}
+      |]
+      | omitDots -> tellDoc [qqi|
+        instance {className} {t} where
+          to{p} {c}\{} = {pc}\{type' = {typeEnumValue}}
+      |]
+      | otherwise -> tellDoc [qqi|
+        instance {className} {t} where
+          to{p} {c}\{..} = {pc}\{type' = {typeEnumValue}, ..}
+      |]
+
+inheritClassName :: (HasErr r, HasRenderParams r) => CName -> Sem r HName
+inheritClassName parent = do
+  RenderParams {..} <- input
+  nameBase <- maybe (throw "Name didn't end in BaseHeader")
+                    (pure . unName . mkTyName . CName)
+                    (underVendor (T.dropSuffix "BaseHeader") (unCName parent))
+  pure $ TyConName ("Is" <> nameBase)
 
 ----------------------------------------------------------------
 -- Marshaling
@@ -304,7 +381,7 @@ peekCStructBody
      )
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
-peekCStructBody MarshaledStruct {..} = do
+peekCStructBody MarshaledStruct {..} = context "peekCStruct" $ do
   RenderParams {..} <- input
   let con = mkConName msName msName
       offset o tDoc =
@@ -321,8 +398,9 @@ peekCStructBody MarshaledStruct {..} = do
       fmap (V.mapMaybe id) . forV msMembers $ \MarshaledStructMember {..} -> do
 
         -- Safe to unBitfield here as we're making it into a pointer type
-        hPtrTy <- (ConT ''Ptr :@)
-          <$> cToHsType DoPreserve (unBitfield (smType msmStructMember))
+        hPtrTy <- (ConT ''Ptr :@) <$> cToHsTypeWithHoles
+          DoPreserve
+          (unBitfield (smType msmStructMember))
 
         fmap (isElided msmScheme, ) <$> do
 
@@ -418,7 +496,7 @@ renderPokes
   -- ^ The value to return at the end
   -> MarshaledStruct AStruct
   -> Sem r (RenderedStmts (Doc ()))
-renderPokes memberDoc end MarshaledStruct {..} = do
+renderPokes memberDoc end MarshaledStruct {..} = context "render pokes" $ do
   let forbiddenNames = fromList
         (contVar : addrVar : toList
           (unCName . smName . msmStructMember <$> msMembers)
@@ -485,7 +563,7 @@ recordWildCardsMemberVal structName MarshaledStructMember {..} = do
   pure $ pretty m
 
 zeroMemberVal
-  :: (HasRenderElem r, HasRenderParams r)
+  :: (HasRenderElem r, HasRenderParams r, HasErr r)
   => MarshaledStructMember
   -> Sem r (Maybe (Doc ()))
   -- ^ Returns nothing if this is just 0 bytes and doesn't need poking
@@ -584,3 +662,25 @@ isSimpleStruct = allM (isSimple . msmScheme) . msMembers
 
 hasChildren :: Struct -> Bool
 hasChildren = not . V.null . sExtendedBy
+
+underVendor :: Functor f => (Text -> f Text) -> Text -> f Text
+underVendor f t =
+  let vendor = T.takeWhileEnd isUpper t
+      inside = T.dropEnd (T.length vendor) t
+  in  (<> vendor) <$> f inside
+
+getStructTypeEnumValue
+  :: (HasErr r, HasRenderParams r) => MarshaledStruct a -> Sem r CName
+getStructTypeEnumValue MarshaledStruct {..} = do
+  RenderParams {..} <- input
+  let
+    structTypes =
+      [ v
+      | MarshaledStructMember { msmStructMember = StructMember { smName }, msmScheme = ElidedUnivalued v } <-
+        toList msMembers
+      , Just smName == extensibleStructTypeMemberName
+      ]
+  case structTypes of
+    []  -> throw "Unable to find type enum of extensible struct"
+    [v] -> pure (CName v)
+    vs  -> throw $ "Found multiple struct type enums " <> show vs

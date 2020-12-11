@@ -60,6 +60,7 @@ import           Render.Stmts.Poke.SiblingInfo
 import           Render.Stmts.Utils
 import           Render.Type
 import           Render.Utils
+import           Spec.Types                     ( sInheritedBy )
 
 type HasPoke a r
   = ( Marshalable a
@@ -110,6 +111,8 @@ getPokeIndirect' name toType scheme value addr = runNonDetMaybe go >>= \case
       raise $ byteStringFixedArrayIndirect name size toElem value addr
     WrappedStruct from ->
       raise $ wrappedStructIndirect name toType from value addr
+    WrappedChildStruct from ->
+      raise $ wrappedChildStructIndirect name toType from value addr
     _ -> empty
 
 
@@ -145,21 +148,22 @@ getPokeDirect'
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 getPokeDirect' name toType fromType value = case fromType of
-  Unit                            -> throw "Getting poke for a unit member"
-  Normal from                     -> normal name toType from value
-  Length ty os rs                 -> nonElidedLength name ty os rs
-  Preserve _                      -> pure value
-  ElidedLength ty os rs           -> elidedLength name ty os rs
-  ElidedUnivalued value           -> elidedUnivalued name toType value
+  Unit                      -> throw "Getting poke for a unit member"
+  Normal from               -> normal name toType from value
+  Length ty os rs           -> nonElidedLength name ty os rs
+  Preserve _                -> pure value
+  ElidedLength ty os rs     -> elidedLength name ty os rs
+  ElidedUnivalued value     -> elidedUnivalued name toType value
   VoidPtr -> normal name (Ptr NonConst Void) (Ptr NonConst Void) value
-  ByteString                      -> byteString name toType value
-  Vector nullable fromElem        -> vector name toType fromElem nullable value
-  EitherWord32 fromElem           -> eitherWord32 name toType fromElem value
-  Maybe (Vector _ _) -> throw "TODO: optional vectors without length"
-  Maybe        from               -> maybe' name toType from value
-  Tupled size fromElem            -> tuple name size toType fromElem value
-  WrappedStruct fromName          -> wrappedStruct name toType fromName value
-  Custom        CustomScheme {..} -> case csDirectPoke of
+  ByteString                -> byteString name toType value
+  Vector nullable fromElem  -> vector name toType fromElem nullable value
+  EitherWord32 fromElem     -> eitherWord32 name toType fromElem value
+  Maybe        (Vector _ _) -> throw "TODO: optional vectors without length"
+  Maybe        from         -> maybe' name toType from value
+  Tupled size fromElem      -> tuple name size toType fromElem value
+  WrappedStruct fromName    -> wrappedStruct name toType fromName value
+  WrappedChildStruct fromName -> wrappedChildStruct name toType fromName value
+  Custom CustomScheme {..}  -> case csDirectPoke of
     NoPoke ->
       throw $ "Getting direct poke for custom scheme with no poke: " <> csName
     APoke p -> p value
@@ -210,6 +214,7 @@ normal name to from valueRef =
     Ptr Const toElem@(TypeName n) <- pure to
     guard (from == toElem)
     isStructOrUnion <- (isJust <$> getStruct n) <||> (isJust <$> getUnion n)
+    isInherited     <- maybe False (not . null . sInheritedBy) <$> getStruct n
     ty              <- cToHsTypeWithHoles DoNotPreserve to
     raise2 $ stmtC (Just ty) name . fmap (ContTAction . ValueDoc) $ do
       tellImportWithAll ''ContT
@@ -217,7 +222,11 @@ normal name to from valueRef =
         then do
           tellImportWithAll (TyConName "ToCStruct")
           ValueDoc value <- use valueRef
-          pure $ "ContT $ withCStruct" <+> value
+          if isInherited
+            then do
+              tellImport 'castPtr
+              pure $ "fmap castPtr $ ContT $ withCStruct" <+> value
+            else pure $ "ContT $ withCStruct" <+> value
         else do
           tellImport 'with
           ValueDoc value <- use valueRef
@@ -256,6 +265,28 @@ wrappedStructIndirect name toType fromName valueRef addrRef = case toType of
         <+> ". ($ ())"
   _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
 
+wrappedChildStructIndirect
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderedNames r
+     , HasRenderState r
+     )
+  => CName
+  -> CType
+  -> CName
+  -> Ref s ValueDoc
+  -> Ref s AddrDoc
+  -> Stmt s r (Ref s ValueDoc)
+wrappedChildStructIndirect name toType fromName valueRef addrRef =
+  case toType of
+    Ptr Const (TypeName n) | n == fromName ->
+      storablePoke addrRef =<< wrappedChildStruct name toType fromName valueRef
+    TypeName n | n == fromName -> do
+      throw "TODO: implement wrappedChildStructIndirect"
+    _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
+
 wrappedStruct
   :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
   => CName
@@ -264,7 +295,11 @@ wrappedStruct
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 wrappedStruct name toType fromName valueRef = case toType of
-  Ptr Const (TypeName n) | n == fromName -> do
+  Ptr Const (TypeName n) | n == fromName -> extending n
+  _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
+
+ where
+  extending n = do
     RenderParams {..} <- input
     ty                <- cToHsTypeWithHoles DoNotPreserve toType
     stmtC (Just ty) name $ do
@@ -286,7 +321,26 @@ wrappedStruct name toType fromName valueRef = case toType of
         <>  headTDoc
         <+> val
         <+> "(cont . castPtr)"
+
+wrappedChildStruct
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
+  => CName
+  -> CType
+  -> CName
+  -> Ref s ValueDoc
+  -> Stmt s r (Ref s ValueDoc)
+wrappedChildStruct name toType fromName valueRef = case toType of
+  Ptr Const (TypeName n) | n == fromName -> inheriting
   _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
+
+ where
+  inheriting = do
+    ty <- cToHsTypeWithHoles DoNotPreserve toType
+    stmtC (Just ty) name $ do
+      ValueDoc val <- use valueRef
+      tellImport (TermName "withSomeChild")
+      tellImportWithAll ''ContT
+      pure . ContTAction . ValueDoc $ "ContT" <+> "$ withSomeChild" <+> val
 
 elidedLength, nonElidedLength
   :: forall r a s

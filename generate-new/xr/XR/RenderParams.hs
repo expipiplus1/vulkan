@@ -119,7 +119,7 @@ renderParams handles = r
         \t ->
           xrIdiomatic t
             <|> (mkIdiomaticType vulkanParams . dropVulkanModule $ t)
-    , mkHsTypeOverride               = \structStyle preserve t ->
+    , mkHsTypeOverride               = \_ structStyle preserve t ->
       case vulkanManifest structStyle vulkanParams t of
         Just t -> Just $ do
           t <- t

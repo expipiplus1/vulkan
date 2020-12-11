@@ -68,8 +68,8 @@ renderParams handles = r
                                   n
                               )
                         in  mkIdiomaticType vulkanParams . dropVulkanModule
-    , mkHsTypeOverride               = \structStyle preserve t ->
-      case vulkanManifest structStyle vulkanParams t of
+    , mkHsTypeOverride               = \getVar structStyle preserve t ->
+      case vulkanManifest getVar structStyle vulkanParams t of
         Just t -> Just $ do
           t <- t
           case preserve of
@@ -157,8 +157,12 @@ dropPointer =
 
 -- TODO: Generate this automatically
 vulkanManifest
-  :: ExtensibleStructStyle r -> RenderParams -> CType -> Maybe (Sem r Type)
-vulkanManifest structStyle RenderParams {..} =
+  :: ((Name -> ConstrainedVar) -> Sem r Name)
+  -> ExtensibleStructStyle r
+  -> RenderParams
+  -> CType
+  -> Maybe (Sem r Type)
+vulkanManifest getVar structStyle RenderParams {..} =
   let vk =
         Just
           . pure
@@ -178,9 +182,8 @@ vulkanManifest structStyle RenderParams {..} =
                 . mkTyName
                 $ t
         case structStyle of
-          Applied getVar -> do
-            v <- getVar
-            pure $ structTyCon :@ v
+          Unwrapped -> (structTyCon :@) . VarT <$> getVar (Extends structTyCon)
+          UnwrappedHole -> pure $ structTyCon :@ WildCardT
           Wrapped -> pure $ ConT (mkName "SomeStruct") :@ structTyCon
   in  \case
         TypeName n

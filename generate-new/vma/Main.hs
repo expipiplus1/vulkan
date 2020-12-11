@@ -148,6 +148,7 @@ marshalParams handles =
         Just $ Returned (Preserve p)
       ("vmaFreeStatsString", "pStatsString") -> Just $ Preserve (type' a)
       _ -> Nothing
+    isForeignStruct = const False
   in
     pure MarshalParams { .. }
 

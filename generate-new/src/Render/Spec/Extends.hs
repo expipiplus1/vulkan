@@ -31,7 +31,7 @@ import           Spec.Types
 
 structExtends
   :: forall r t
-   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+   . (HasErr r, HasRenderParams r, HasSpecInfo r, KnownSpecFlavor t)
   => Spec t
   -> Sem r RenderElement
 structExtends spec = genRe "Extends type family" $ do
@@ -39,6 +39,9 @@ structExtends spec = genRe "Extends type family" $ do
   tellNotReexportable
   typeFamily spec
   classes spec
+  case specFlavor @t of
+    SpecVk -> pure ()
+    SpecXr -> inheritanceClasses spec
 
 typeFamily
   :: forall r t
@@ -397,4 +400,35 @@ classes Spec {..} = do
 
     linkChain :: Ptr a -> Ptr b -> IO ()
     linkChain head' tail' = poke (head' `plusPtr` 8) tail'
+  |]
+
+inheritanceClasses
+  :: forall r t
+   . (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderElem r)
+  => Spec t
+  -> Sem r ()
+inheritanceClasses Spec{} = do
+  tellExport (EData (TyConName "SomeChild"))
+  tellExport (ETerm (TermName "withSomeChild"))
+  tellExport (ETerm (TermName "lowerChildPointer"))
+  tellExport (ETerm (TermName "peekSomeCChild"))
+  tellImport (TyConName "ToCStruct")
+  tellImport ''Relude.Type
+  tellImport ''Ptr
+  tellImport 'castPtr
+  tellDoc [qqi|
+    data SomeChild (a :: Type) where
+      SomeChild :: forall a b . (Inherits a b, ToCStruct b, Show b) => b -> SomeChild a
+    deriving instance Show (SomeChild a)
+
+    type family Inherits (a :: Type) (b :: Type) where
+
+    withSomeChild :: SomeChild a -> (Ptr (SomeChild a) -> IO b) -> IO b
+    withSomeChild (SomeChild c) f = withCStruct c (f . lowerChildPointer)
+
+    lowerChildPointer :: Inherits a b => Ptr b -> Ptr (SomeChild a)
+    lowerChildPointer = castPtr
+
+    peekSomeCChild :: Ptr (SomeChild a) -> IO (SomeChild a)
+    peekSomeCChild p = error "TODO"
   |]

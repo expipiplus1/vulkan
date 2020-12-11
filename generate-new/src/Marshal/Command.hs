@@ -6,6 +6,7 @@ module Marshal.Command
   , marshaledCommandInputTypes
   , marshaledCommandReturnTypes
   , marshaledParamType
+  , marshaledParamTypeWithName
   , marshaledParamTypeNegative
   , marshaledParamTypePositive
   ) where
@@ -152,6 +153,7 @@ marshaledParamTypeNegative
 marshaledParamTypeNegative = marshaledParamType schemeTypeNegative
 
 -- | A helper to annotate a parameter with a name
+{-# deprecated marshaledParamType "use the documentee version" #-}
 marshaledParamType
   :: (HasErr r, HasRenderParams r)
   => (MarshalScheme Parameter -> Sem r (Maybe H.Type))
@@ -162,6 +164,19 @@ marshaledParamType st MarshaledParam {..} = contextShow (pName mpParam) $ do
   let Parameter {..} = mpParam
   n <- st mpScheme
   pure $ namedTy (unName . mkParamName $ pName) <$> n
+
+-- | A helper to annotate a parameter with a name
+marshaledParamTypeWithName
+  :: (HasErr r, HasRenderParams r)
+  => (MarshalScheme Parameter -> Sem r (Maybe H.Type))
+  -> MarshaledParam
+  -> Sem r (Maybe (CName, H.Type))
+marshaledParamTypeWithName st MarshaledParam {..} =
+  contextShow (pName mpParam) $ do
+    RenderParams {..} <- input
+    let Parameter {..} = mpParam
+    n <- st mpScheme
+    pure $ (pName, ) . namedTy (unName . mkParamName $ pName) <$> n
 
 ----------------------------------------------------------------
 -- Utils

@@ -73,7 +73,10 @@ data MarshalScheme a
     -- ^ A small fixed sized array, represented as a n-length tuple of the same
     -- element
   | WrappedStruct CName
-    -- ^ A struct to be wrapped in a GADT to hide a variable
+    -- ^ A extensible struct to be wrapped in a GADT to hide a variable
+  | WrappedChildStruct CName
+    -- ^ An inherited struct to be wrapped in a GADT to hide the precise
+    -- identity
   | Returned (MarshalScheme a)
     -- ^ A non-const pointer to some allocated memory, used to return
     -- additional values.
@@ -438,6 +441,14 @@ extensibleStruct p = do
   guard (not (V.null (sExtendedBy s)))
   pure $ WrappedStruct n
 
+-- | A struct to be wrapped in "SomeHaptic"/"Some..."
+inheritingStruct :: Marshalable a => a -> ND r (MarshalScheme a)
+inheritingStruct p = do
+  TypeName n <- dropPtrToStruct (type' p)
+  Just     s <- getStruct n
+  guard (not (V.null (sInheritedBy s)))
+  pure $ WrappedChildStruct n
+
 rawDispatchableHandles :: Marshalable a => a -> ND r (MarshalScheme a)
 rawDispatchableHandles p = do
   t@(TypeName n) <- dropPtrToStruct (type' p)
@@ -520,7 +531,8 @@ unwrapDispatchableHandles t = failToNonDet $ do
     Dispatchable    -> Preserve t
     NonDispatchable -> Normal t
 
--- If this is an extensible struct, wrap it, otherwise return Normal
+-- If this is an extensible or inherited struct, wrap it, otherwise return
+-- Normal
 wrapExtensibleStruct
   :: (Member NonDet r, HasSpecInfo r, HasMarshalParams r)
   => CType
@@ -528,8 +540,10 @@ wrapExtensibleStruct
 wrapExtensibleStruct t = failToNonDet $ do
   TypeName n <- dropPtrToStruct t
   Just     s <- getStruct n
-  guard (not (V.null (sExtendedBy s)))
-  pure $ WrappedStruct n
+  let isExtended  = not (V.null (sExtendedBy s))
+      isInherited = not (V.null (sInheritedBy s))
+  guard (isExtended || isInherited)
+  pure $ if isInherited then WrappedChildStruct n else WrappedStruct n
 
 ----------------------------------------------------------------
 -- Utils
@@ -565,46 +579,48 @@ isByteArrayElem = (`elem` [Void, Char, TypeName "uint8_t", TypeName "int8_t"])
 
 isElided :: MarshalScheme a -> Bool
 isElided = \case
-  Unit              -> False
-  Preserve _        -> False
-  Normal   _        -> False
-  Length{}          -> False
-  ElidedLength{}    -> True
-  ElidedUnivalued _ -> True
-  ElidedVoid        -> True
-  VoidPtr           -> False
-  ByteString        -> False
-  Maybe _           -> False
-  Vector _ _        -> False
-  EitherWord32 _    -> False
-  Tupled _ _        -> False
-  Returned      _   -> False
-  InOutCount    _   -> False
-  WrappedStruct _   -> False
-  Custom        _   -> False
-  ElidedCustom  _   -> True
+  Unit                 -> False
+  Preserve _           -> False
+  Normal   _           -> False
+  Length{}             -> False
+  ElidedLength{}       -> True
+  ElidedUnivalued _    -> True
+  ElidedVoid           -> True
+  VoidPtr              -> False
+  ByteString           -> False
+  Maybe _              -> False
+  Vector _ _           -> False
+  EitherWord32 _       -> False
+  Tupled _ _           -> False
+  Returned           _ -> False
+  InOutCount         _ -> False
+  WrappedStruct      _ -> False
+  WrappedChildStruct _ -> False
+  Custom             _ -> False
+  ElidedCustom       _ -> True
 
 isNegative :: MarshalScheme a -> Bool
 isNegative = \case
-  Unit              -> True
-  Preserve _        -> True
-  Normal   _        -> True
-  Length{}          -> True
-  ElidedLength{}    -> False
-  ElidedUnivalued _ -> False
-  ElidedVoid        -> False
-  VoidPtr           -> True
-  ByteString        -> True
-  Maybe _           -> True
-  Vector _ _        -> True
-  EitherWord32 _    -> True
-  Tupled _ _        -> True
-  Returned      _   -> False
+  Unit                 -> True
+  Preserve _           -> True
+  Normal   _           -> True
+  Length{}             -> True
+  ElidedLength{}       -> False
+  ElidedUnivalued _    -> False
+  ElidedVoid           -> False
+  VoidPtr              -> True
+  ByteString           -> True
+  Maybe _              -> True
+  Vector _ _           -> True
+  EitherWord32 _       -> True
+  Tupled _ _           -> True
+  Returned           _ -> False
   -- TODO: We should probably be more careful with InOutCount
-  InOutCount    _   -> True
-  WrappedStruct _   -> True
-  Custom        _   -> True
-  ElidedCustom  _   -> False
+  InOutCount         _ -> True
+  WrappedStruct      _ -> True
+  WrappedChildStruct _ -> True
+  Custom             _ -> True
+  ElidedCustom       _ -> False
 
 -- | A bit of an ad-hoc test
 isSimple :: HasSpecInfo r => MarshalScheme a -> Sem r Bool
@@ -613,22 +629,23 @@ isSimple = \case
   Preserve _ -> pure True
   Normal (TypeName n) ->
     (isNothing <$> getStruct n) <&&> (isNothing <$> getUnion n)
-  Normal _          -> pure True
-  Length{}          -> pure True
-  ElidedLength{}    -> pure True
-  ElidedUnivalued _ -> pure True
-  ElidedVoid        -> pure True
-  VoidPtr           -> pure False
-  ByteString        -> pure False
-  Maybe s           -> isSimple s
-  Vector _ _        -> pure False
-  EitherWord32 _    -> pure False
-  Tupled _ s        -> isSimple s
-  Returned      _   -> pure False
-  InOutCount    _   -> pure False
-  WrappedStruct _   -> pure False
-  Custom        _   -> pure False
-  ElidedCustom  _   -> pure False
+  Normal _             -> pure True
+  Length{}             -> pure True
+  ElidedLength{}       -> pure True
+  ElidedUnivalued _    -> pure True
+  ElidedVoid           -> pure True
+  VoidPtr              -> pure False
+  ByteString           -> pure False
+  Maybe s              -> isSimple s
+  Vector _ _           -> pure False
+  EitherWord32 _       -> pure False
+  Tupled _ s           -> isSimple s
+  Returned           _ -> pure False
+  InOutCount         _ -> pure False
+  WrappedStruct      _ -> pure False
+  WrappedChildStruct _ -> pure False
+  Custom             _ -> pure False
+  ElidedCustom       _ -> pure False
 
 (<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
 (<&&>) = liftA2 (&&)

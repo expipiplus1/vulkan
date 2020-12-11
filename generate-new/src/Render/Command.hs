@@ -16,11 +16,7 @@ import           Data.Vector.Extra              ( pattern (:<|)
                                                 , pattern Empty
                                                 )
 import           Language.Haskell.TH.Datatype   ( quantifyType )
-import           Language.Haskell.TH.Desugar    ( FunArgs(..)
-                                                , unravelType
-                                                )
 import           Language.Haskell.TH.Syntax     ( Pred
-                                                , TyVarBndr(..)
                                                 , mkName
                                                 , mkNameG_tc
                                                 , nameBase
@@ -87,35 +83,39 @@ renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
       then marshaledDualPurposeCommandCall commandName m
       else marshaledCommandCall commandName m
 
-makeReturnType
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
-  => Bool
-  -> MarshaledCommand
-  -> Sem r H.Type
-makeReturnType includeInOutCountTypes mc = do
-  ts <- marshaledCommandReturnTypes includeInOutCountTypes mc
-  pure $ VarT ioVar :@ foldl' (:@) (TupleT (length ts)) ts
+data StructVariables = StructVariables
+  { negativeExtending :: [(Name, Name)]
+  , positiveExtending :: [(Name, Name)]
+  }
+instance Monoid StructVariables where
+  mempty = StructVariables mempty mempty
+instance Semigroup StructVariables where
+  sv1 <> sv2 = StructVariables { positiveExtending = both positiveExtending
+                               , negativeExtending = both negativeExtending
+                               }
+    where both f = f sv1 <> f sv2
+invertStructVariables :: StructVariables -> StructVariables
+invertStructVariables (StructVariables nE pE) = StructVariables pE nE
 
 structVariables
-  :: (HasErr r, HasRenderedNames r)
-  => Type
-  -> Sem r ([(Name, Name)], [(Name, Name)])
+  :: (HasErr r, HasRenderedNames r) => Type -> Sem r StructVariables
   -- ^ negative (struct, chain var), positive (struct, chain var)
 structVariables = \case
   ArrowT :@ l :@ r -> do
-    (nl, pl) <- structVariables l
-    (nr, pr) <- structVariables r
-    pure (pl <> nr, nl <> pr)
+    sl <- structVariables l
+    sr <- structVariables r
+    pure (invertStructVariables sl <> sr)
   InfixT _ i t | i == typeName (TyConName ":::") -> structVariables t
   ConT n :@ VarT v ->
     getRenderedStruct (TyConName (T.pack (nameBase n))) <&> \case
-      Just s | not (V.null (sExtendedBy s)) -> ([], [(n, v)])
-      _ -> ([], [])
-  ConT n :@ _ | n == ''Ptr -> pure ([], [])
+      Just s | not (V.null (sExtendedBy s)) ->
+        mempty { positiveExtending = [(n, v)] }
+      _ -> mempty
+  ConT n :@ _ | n == ''Ptr -> pure mempty
   f :@ x                  -> liftA2 (<>) (structVariables f) (structVariables x)
-  ConT   _                -> pure ([], [])
-  VarT   _                -> pure ([], [])
-  TupleT _                -> pure ([], [])
+  ConT   _                -> pure mempty
+  VarT   _                -> pure mempty
+  TupleT _                -> pure mempty
   t -> throw $ "Unhandled Type constructor in structVariables: " <> show t
 
 ----------------------------------------------------------------
@@ -143,10 +143,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
   ----------------------------------------------------------------
   -- The type of this command
   ----------------------------------------------------------------
-  nts               <- marshaledCommandInputTypes m
-  r                 <- makeReturnType True m
-  let t         = foldr arrowUniqueVars r nts
-      paramName = pName . mpParam
+  let paramName = pName . mpParam
       isArg p = case mpScheme p of
         ElidedLength{}    -> Nothing
         ElidedUnivalued _ -> Nothing
@@ -155,9 +152,8 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
         _                 -> Just p
       paramNaughtyNames = toList (paramName <$> V.mapMaybe isArg mcParams)
       paramNiceNames    = pretty . mkParamName <$> paramNaughtyNames
-      paramDocumentees  = Nested (cName mcCommand) <$> paramNaughtyNames
-  constrainedType <- addMonadIO <$> constrainStructVariables t
-  tDocParts       <- renderInParts paramDocumentees constrainedType
+  cht    <- commandHaskellType True m
+  chtDoc <- renderCommandHaskellType cht
 
   if not (cCanBlock mcCommand)
     then do
@@ -165,7 +161,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
       tellDocWithHaddock $ \getDoc -> vsep
         [ getDoc (TopLevel (cName mcCommand))
         , pretty commandName
-          <+> indent 0 ("::" <> renderWithComments getDoc tDocParts)
+          <+> indent 0 ("::" <> renderWithComments getDoc chtDoc)
         , pretty commandName <+> sep paramNiceNames <+> "=" <+> rhs
         ]
     else do
@@ -184,23 +180,27 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
           dynNameSafe      = getDynName mcCommand <> "Safe"
           dynNameUnsafe    = getDynName mcCommand <> "Unsafe"
           dynamicBindType  = ConT ''FunPtr :@ ffiTy ~> ffiTy
-      tDocSafeOrUnsafe <- renderInParts (TopLevel "" : paramDocumentees)
-                                        (dynamicBindType ~> constrainedType)
-
+          chtSafeOrUnsafe  = CommandHaskellType
+            { chtVars        = chtVars cht
+            , chtConstraints = chtConstraints cht
+            , chtArgs = V.singleton (Nothing, dynamicBindType) <> chtArgs cht
+            , chtResult      = chtResult cht
+            }
+      chtSafeOrUnsafeDoc <- renderCommandHaskellType chtSafeOrUnsafe
       tellExport (ETerm commandName)
       tellExport (ETerm commandNameSafe)
 
       tellDocWithHaddock $ \getDoc -> vsep
         [ comment $ unName commandName <> " with selectable safeness"
         , safeOrUnsafeName
-          <+> indent 0 ("::" <> renderWithComments getDoc tDocSafeOrUnsafe)
+          <+> indent 0 ("::" <> renderWithComments getDoc chtSafeOrUnsafeDoc)
         , safeOrUnsafeName <+> dynName <+> sep paramNiceNames <+> "=" <+> rhs
         ]
 
       tellDocWithHaddock $ \getDoc -> vsep
         [ getDoc (TopLevel (cName mcCommand))
         , pretty commandName
-          <+> indent 0 ("::" <> renderWithComments getDoc tDocParts)
+          <+> indent 0 ("::" <> renderWithComments getDoc chtDoc)
         , pretty commandName
         <+> "="
         <+> safeOrUnsafeName
@@ -213,7 +213,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
         <> unName commandName
         <> "' which makes a *safe* FFI call"
         , pretty commandNameSafe
-          <+> indent 0 ("::" <> renderWithComments getDoc tDocParts)
+          <+> indent 0 ("::" <> renderWithComments getDoc chtDoc)
         , pretty commandNameSafe
         <+> "="
         <+> safeOrUnsafeName
@@ -235,7 +235,9 @@ commandRHS
      )
   => MarshaledCommand
   -> Sem r (Doc ())
-commandRHS m@MarshaledCommand {..} = do
+commandRHS MarshaledCommand {..} | mcName == "xrEnumerateSwapchainImages" =
+  pure "error \"todo\""
+commandRHS m@MarshaledCommand {..} = context "commandRHS" $ do
   RenderParams {..} <- input
 
   let badNames = mempty
@@ -247,7 +249,10 @@ commandRHS m@MarshaledCommand {..} = do
     paramRefs <- forV mcParams $ \MarshaledParam {..} -> if isElided mpScheme
       then pure Nothing
       else Just <$> do
-        ty       <- schemeTypeNegative mpScheme
+        -- TODO: Don't calculate these twice, use the types from earlier
+        -- (rendering the type sig)
+        (_, _, ty) <- runRenderTypeContext
+          $ schemeTypeNegativeWithContext mpScheme
         valueRef <-
           stmt ty (Just . unName . mkParamName . pName $ mpParam)
           . pure
@@ -260,10 +265,13 @@ commandRHS m@MarshaledCommand {..} = do
         pure valueRef
 
     -- poke all the parameters
-    (pokeRefs, peekRefs) <- V.unzip <$> V.zipWithM getPoke paramRefs mcParams
+    (pokeRefs, peekRefs) <-
+      context "get pokes and peeks"
+      $   V.unzip
+      <$> V.zipWithM getPoke paramRefs mcParams
 
     -- Bind the result to _ if it can only return success
-    includeReturnType    <- marshaledCommandShouldIncludeReturnValue m
+    includeReturnType <- marshaledCommandShouldIncludeReturnValue m
     let useEmptyBinder =
           not includeReturnType
             && null (cErrorCodes mcCommand)
@@ -306,57 +314,6 @@ commandRHS m@MarshaledCommand {..} = do
       tellImport 'evalContT
       tellImport 'liftIO
       pure $ "liftIO . evalContT $" <+> d
-
-
-renderInParts
-  :: (HasRenderElem r, HasRenderParams r)
-  => [a]
-  -> Type
-  -> Sem
-       r
-       (Maybe (Doc ()), Maybe (Doc ()), [(Maybe a, Doc ())], Doc ())
-  -- ^ (vars, predicates, args, return)
-renderInParts names t = do
-  let (funArgs, ret) = unravelType t
-      go             = \case
-        FANil             -> mempty
-        FAForalls _ vs as -> (vs, [], []) <> go as
-        FACxt  ps as      -> ([], ps, []) <> go as
-        FAAnon t  as      -> ([], [], [t]) <> go as
-      (vars, preds, argTypes) = go funArgs
-      renderVar               = \case
-        PlainTV n    -> pure $ viaShow n
-        KindedTV n k -> do
-          kDoc <- renderType k
-          pure $ parens (viaShow n <+> "::" <+> kDoc)
-      paddedNames = (Just <$> names) <> repeat Nothing
-  vDocs    <- traverse renderVar vars
-  predDocs <- traverse renderType preds
-  argDocs  <- traverse renderTypeHighPrec argTypes
-  retDoc   <- renderType ret
-  pure
-    ( if null vDocs then Nothing else Just $ "forall" <+> hsep vDocs
-    , if null predDocs then Nothing else Just $ tupled predDocs
-    , zip paddedNames argDocs
-    , retDoc
-    )
-
--- | Render the output of 'renderInParts' with documentation attached to the
--- parameters.
-renderWithComments
-  :: (Documentee -> Doc ())
-  -> (Maybe (Doc ()), Maybe (Doc ()), [(Maybe Documentee, Doc ())], Doc ())
-  -> Doc ()
-renderWithComments getDoc (vars, preds, args, ret) =
-  let withComment = \case
-        (Nothing, d) -> d
-        (Just n , d) -> getDoc n <> line <> d
-      as = zipWith ($)
-                   (id : repeat ("->" <>))
-                   (indent 1 <$> (withComment <$> args) <> [ret])
-  in  maybe mempty (\v -> indent 1 v <> line <> " .") vars
-        <> maybe mempty (\p -> indent 1 p <> line <> "=>") preds
-        <> vsep as
 
 ----------------------------------------------------------------
 -- Checking the result and throwing an exception if something went wrong
@@ -458,13 +415,9 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
   -- Get the type of this function
   --
   includeReturnType <- marshaledCommandShouldIncludeReturnValue m
-  let negativeSchemeType = \case
-        InOutCount _ -> pure Nothing
-        s            -> schemeTypeNegative s
-  nts <-
-    V.mapMaybe id <$> traverseV (marshaledParamType negativeSchemeType) mcParams
-  returnType <- makeReturnType False m
-  let commandType = foldr (~>) returnType nts
+  let includeInOutCountTypes = False
+  cht    <- commandHaskellType includeInOutCountTypes m
+  chtDoc <- renderCommandHaskellType cht
 
   --
   -- Get var names for the LHS
@@ -479,7 +432,6 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
         _                 -> Just p
       paramNaughtyNames = toList (paramName <$> V.mapMaybe isArg mcParams)
       paramNiceNames    = pretty . mkParamName <$> paramNaughtyNames
-      paramDocumentees  = Nested (cName mcCommand) <$> paramNaughtyNames
 
 
   let badNames = mempty
@@ -540,12 +492,9 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
       tellImport 'liftIO
       pure $ "liftIO . evalContT $" <+> d
 
-  constrainedType <- addMonadIO <$> constrainStructVariables commandType
-  tDocParts       <- renderInParts paramDocumentees constrainedType
   tellDocWithHaddock $ \getDoc -> vsep
     [ getDoc (TopLevel (cName mcCommand))
-    , pretty commandName
-      <+> indent 0 ("::" <> renderWithComments getDoc tDocParts)
+    , pretty commandName <+> indent 0 ("::" <> renderWithComments getDoc chtDoc)
     , pretty commandName <+> sep paramNiceNames <+> "=" <+> rhs
     ]
 
@@ -709,7 +658,9 @@ paramRefUnnamed
   -> Stmt s r (Ref s ValueDoc)
 paramRefUnnamed MarshaledParam {..} = do
   RenderParams {..} <- input
-  ty                <- schemeTypeNegative mpScheme
+  -- TODO: don't get the type again here, use it from earlier (generating the
+  -- sig)
+  (_, _, ty) <- runRenderTypeContext $ schemeTypeNegativeWithContext mpScheme
   stmt ty (Just . unName . mkParamName . pName $ mpParam)
     . pure
     . Pure AlwaysInline
@@ -962,23 +913,147 @@ lowerParamType p@Parameter {..} =
         _                                            -> p
 
 ----------------------------------------------------------------
---
+-- Command type rendering
 ----------------------------------------------------------------
 
-addMonadIO :: Type -> Type
-addMonadIO = addConstraints [ConT ''MonadIO :@ VarT ioVar]
+data CommandHaskellType a = CommandHaskellType
+  { chtVars        :: Vector a
+  , chtConstraints :: Vector a
+  , chtArgs        :: Vector (Maybe Documentee, a)
+  , chtResult      :: a
+  }
+  deriving (Functor, Foldable, Traversable)
+
+renderCommandHaskellType
+  :: (HasRenderElem r, HasRenderParams r)
+  => CommandHaskellType Type
+  -> Sem r (CommandHaskellType (Doc ()))
+renderCommandHaskellType CommandHaskellType {..} = do
+  chtVars        <- traverse renderTypeHighPrec chtVars
+  chtConstraints <- traverse renderType chtConstraints
+  chtArgs        <- traverse (traverse renderTypeHighPrec) chtArgs
+  chtResult      <- renderType chtResult
+  pure CommandHaskellType { .. }
+
+commandHaskellType
+  :: (HasErr r, HasSpecInfo r, HasRenderParams r, HasRenderElem r)
+  => Bool
+  -> MarshaledCommand
+  -> Sem r (CommandHaskellType Type)
+commandHaskellType includeInOutCountTypes m@MarshaledCommand {..} = do
+  (negativeArgs, positiveArgs, (argsWithName, results)) <- runRenderTypeContext
+    do
+      is <- commandInputTypes includeInOutCountTypes m
+      r  <- commandReturnTypes includeInOutCountTypes m
+      pure (is, r)
+  let chtArgs = first (Just . Nested mcName) <$> argsWithName
+      chtVars =
+        fromList
+          $  (VarT . cVarName <$> (negativeArgs <> positiveArgs))
+          <> [VarT ioVar]
+      chtConstraints =
+        fromList
+          $  (negativeArgConstraints =<< negativeArgs)
+          <> (positiveArgConstraints =<< positiveArgs)
+          <> [ConT ''MonadIO :@ VarT ioVar]
+      chtResult = VarT ioVar :@ foldl' (:@) (TupleT (length results)) results
+  pure CommandHaskellType { .. }
+
+positiveArgConstraints :: ConstrainedVar -> [Type]
+positiveArgConstraints = \case
+  Unconstrained _ -> []
+  Extends s v ->
+    [ ConT (mkName "Extendss") :@ s :@ VarT v
+    , ConT (mkName "PokeChain") :@ VarT v
+    , ConT (mkName "PeekChain") :@ VarT v
+    ]
+  Inherits _ v -> [ConT (mkName "FromCStruct") :@ VarT v]
+
+negativeArgConstraints :: ConstrainedVar -> [Type]
+negativeArgConstraints = \case
+  Unconstrained _ -> []
+  Extends s v ->
+    [ ConT (mkName "Extendss") :@ s :@ VarT v
+    , ConT (mkName "PokeChain") :@ VarT v
+    ]
+  Inherits _ v -> [ConT (mkName "ToCStruct") :@ VarT v]
+
+commandInputTypes
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasContextState r)
+  => Bool
+  -> MarshaledCommand
+  -> Sem r (V.Vector (CName, H.Type))
+commandInputTypes includeInOutCountTypes MarshaledCommand {..} =
+  let neg = if includeInOutCountTypes
+        then schemeTypeNegativeWithContext
+        else \case
+          InOutCount _ -> pure Nothing
+          s            -> schemeTypeNegativeWithContext s
+  in  V.mapMaybe id <$> traverseV (marshaledParamTypeWithName neg) mcParams
+
+-- | Get a list of the types of values which should be in the return value of
+-- this command.
+commandReturnTypes
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasContextState r)
+  => Bool
+  -- ^ Should we return the value of 'InOutCount' parameters
+  -> MarshaledCommand
+  -> Sem r (V.Vector H.Type)
+commandReturnTypes includeInOutCountTypes m@MarshaledCommand {..} = do
+  includeReturnType <- marshaledCommandShouldIncludeReturnValue m
+  let pos = \case
+        InOutCount _ | not includeInOutCountTypes -> pure Nothing
+        s -> schemeTypePositiveWithContext s
+  pts <-
+    V.mapMaybe id
+      <$> traverseV (fmap (fmap snd) . marshaledParamTypeWithName pos) mcParams
+  r <- case mcReturn of
+    Void -> pure V.empty
+    _ | not includeReturnType -> pure V.empty
+    r -> V.singleton <$> cToHsTypeWithContext DoNotPreserve r
+  pure (r <> pts)
+
+-- | Render a CommandHaskellType documentation attached to the
+-- parameters.
+renderWithComments
+  :: (Documentee -> Doc ()) -> CommandHaskellType (Doc ()) -> Doc ()
+renderWithComments getDoc CommandHaskellType {..} =
+  let
+    withComment = \case
+      (Nothing, d) -> d
+      (Just n , d) -> getDoc n <> line <> d
+    as = zipWith
+      ($)
+      (id : repeat ("->" <>))
+      (indent 1 <$> (withComment <$> toList chtArgs) <> [chtResult])
+    vars = if V.null chtVars
+      then Nothing
+      else Just ("forall" <+> hsep (toList chtVars))
+    preds = if V.null chtConstraints
+      then Nothing
+      else Just (tupled (toList chtConstraints))
+  in
+    maybe mempty (\v -> indent 1 v <> line <> " .") vars
+    <> maybe mempty (\p -> indent 1 p <> line <> "=>") preds
+    <> vsep as
+
+----------------------------------------------------------------
+--
+----------------------------------------------------------------
 
 ioVar :: Name
 ioVar = mkName "io"
 
--- | Any extensible structs have 'PokeChain' or 'PekChain' constraints added
+-- | Any extensible structs have 'PokeChain' or 'PeekChain' constraints added
 -- depending on their position polarity.
+--
+-- Inherited structs have the relevant inheriting class constraint
 constrainStructVariables
   :: (HasErr r, HasRenderParams r, HasRenderElem r, HasRenderedNames r)
   => Type
   -> Sem r Type
 constrainStructVariables t = do
-  (ns, ps) <- structVariables t
+  StructVariables ns ps <- structVariables t
   let both = nubOrd (ns <> ps)
   unless (null ns) $ tellImport (TyConName "PokeChain")
   unless (null ps) $ tellImport (TyConName "PeekChain")

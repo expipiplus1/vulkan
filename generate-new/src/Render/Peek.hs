@@ -95,10 +95,11 @@ peekIdiomatic
   -> Ref s AddrDoc
   -> MarshalScheme a
   -> Sem (NonDet ': StmtE s r ': r) (Ref s ValueDoc)
-peekIdiomatic name lengths fromType addr scheme = do
-  r    <- peekWrapped name lengths fromType addr scheme
-  t    <- raise $ refType r
-  toTy <- schemeTypeNegative scheme
+peekIdiomatic name lengths fromType addr scheme = context "peekIdiomatic" $ do
+  r            <- peekWrapped name lengths fromType addr scheme
+  t            <- raise $ refType r
+  -- TODO: probably shouldn't ignore these here
+  (_, _, toTy) <- runRenderTypeContext $ schemeTypeNegativeWithContext scheme
   -- If this is already the correct type don't try wrapping it
   if Just t == toTy
     then pure r
@@ -153,6 +154,8 @@ peekWrapped name lengths fromType addr = \case
     raise $ vectorPeek name lengths addr fromType toElem nullable
   Tupled _ toElem      -> raise $ tuplePeek name addr fromType toElem
   WrappedStruct toName -> raise $ wrappedStructPeek name addr toName fromType
+  WrappedChildStruct toName ->
+    raise $ wrappedChildStructPeek name addr toName fromType
   EitherWord32 toElem ->
     raise $ eitherWord32Peek name lengths addr fromType toElem
   ElidedCustom CustomSchemeElided {..} ->
@@ -278,6 +281,32 @@ wrappedStructPeek name addrRef toName fromPtr = case fromPtr of
       tellImportWith ''Storable 'peek
       pure $ IOAction
         (ValueDoc ("peekSomeCStruct . forgetExtensions =<< peek" <+> addr))
+  _ -> throw $ "Unhandled WrappedStruct peek from " <> show fromPtr
+
+wrappedChildStructPeek
+  :: forall r s
+   . (HasErr r, HasRenderElem r, HasRenderParams r, HasSpecInfo r)
+  => CName
+  -> Ref s AddrDoc
+  -> CName
+  -> CType
+  -> Stmt s r (Ref s ValueDoc)
+wrappedChildStructPeek name addrRef toName fromPtr = case fromPtr of
+  Ptr _ from@(TypeName n) | n == toName -> do
+    ty <- cToHsTypeWithHoles DoPreserve from
+    stmtC (Just ty) name $ do
+      AddrDoc addr <- use addrRef
+      tellImport (TermName "peekSomeCChild")
+      pure $ IOAction (ValueDoc ("peekSomeCChild" <+> addr))
+
+  Ptr _ from@(Ptr Const (TypeName n)) | n == toName -> do
+    ty <- cToHsTypeWithHoles DoPreserve from
+    stmtC (Just ty) name $ do
+      AddrDoc addr <- use addrRef
+      tellImport (TermName "peekSomeCChild")
+      tellImportWith ''Storable 'peek
+      pure $ IOAction (ValueDoc ("peekSomeCChild =<< peek" <+> addr))
+
   _ -> throw $ "Unhandled WrappedStruct peek from " <> show fromPtr
 
 unionPeek
@@ -688,7 +717,7 @@ getLenRef
      )
   => Lengths
   -> Stmt s r (Ref s ValueDoc)
-getLenRef lengths = do
+getLenRef lengths = context "getLenRef" $ do
   RenderParams {..} <- input
   stmt Nothing Nothing $ case lengths of
     Empty                 -> throw "Trying to allocate something with no length"
