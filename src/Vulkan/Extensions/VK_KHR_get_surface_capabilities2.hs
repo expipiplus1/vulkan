@@ -301,7 +301,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceSurfaceInfo2KHR',
 -- 'SurfaceCapabilities2KHR'
 getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io
-                                          . (Extendss PhysicalDeviceSurfaceInfo2KHR a, Extendss SurfaceCapabilities2KHR b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                                          . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, Extendss SurfaceCapabilities2KHR b, PokeChain b, PeekChain b, MonadIO io)
                                          => -- | @physicalDevice@ is the physical device that will be associated with the
                                             -- swapchain to be created, as described for
                                             -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.

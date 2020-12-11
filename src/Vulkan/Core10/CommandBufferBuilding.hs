@@ -7746,8 +7746,7 @@ foreign import ccall
 -- | cmdWaitEvents with selectable safeness
 cmdWaitEventsSafeOrUnsafe :: forall io
                            . (MonadIO io)
-                          => -- No documentation found for TopLevel ""
-                             (FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ())
+                          => (FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ())
                           -> -- | @commandBuffer@ is the command buffer into which the command is
                              -- recorded.
                              CommandBuffer

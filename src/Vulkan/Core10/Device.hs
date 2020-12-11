@@ -979,7 +979,7 @@ instance (Extendss DeviceCreateInfo es, PeekChain es) => FromCStruct (DeviceCrea
     next <- peekChain (castPtr pNext)
     flags <- peek @DeviceCreateFlags ((p `plusPtr` 16 :: Ptr DeviceCreateFlags))
     queueCreateInfoCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
-    pQueueCreateInfos <- peek @(Ptr (DeviceQueueCreateInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (DeviceQueueCreateInfo a))))
+    pQueueCreateInfos <- peek @(Ptr (DeviceQueueCreateInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (DeviceQueueCreateInfo _))))
     pQueueCreateInfos' <- generateM (fromIntegral queueCreateInfoCount) (\i -> peekSomeCStruct (forgetExtensions ((pQueueCreateInfos `advancePtrBytes` (40 * (i)) :: Ptr (DeviceQueueCreateInfo _)))))
     enabledLayerCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     ppEnabledLayerNames <- peek @(Ptr (Ptr CChar)) ((p `plusPtr` 40 :: Ptr (Ptr (Ptr CChar))))

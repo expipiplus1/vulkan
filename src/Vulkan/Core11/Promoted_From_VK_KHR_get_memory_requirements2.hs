@@ -138,7 +138,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'ImageMemoryRequirementsInfo2',
 -- 'MemoryRequirements2'
 getImageMemoryRequirements2 :: forall a b io
-                             . (Extendss ImageMemoryRequirementsInfo2 a, Extendss MemoryRequirements2 b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                             . (Extendss ImageMemoryRequirementsInfo2 a, PokeChain a, Extendss MemoryRequirements2 b, PokeChain b, PeekChain b, MonadIO io)
                             => -- | @device@ is the logical device that owns the image.
                                --
                                -- #VUID-vkGetImageMemoryRequirements2-device-parameter# @device@ /must/ be

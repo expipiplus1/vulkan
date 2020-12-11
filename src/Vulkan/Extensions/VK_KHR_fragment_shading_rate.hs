@@ -752,7 +752,7 @@ instance ToCStruct FragmentShadingRateAttachmentInfoKHR where
 
 instance FromCStruct FragmentShadingRateAttachmentInfoKHR where
   peekCStruct p = do
-    pFragmentShadingRateAttachment <- peekSomeCStruct . forgetExtensions =<< peek ((p `plusPtr` 16 :: Ptr (Ptr (AttachmentReference2 a))))
+    pFragmentShadingRateAttachment <- peekSomeCStruct . forgetExtensions =<< peek ((p `plusPtr` 16 :: Ptr (Ptr (AttachmentReference2 _))))
     shadingRateAttachmentTexelSize <- peekCStruct @Extent2D ((p `plusPtr` 24 :: Ptr Extent2D))
     pure $ FragmentShadingRateAttachmentInfoKHR
              pFragmentShadingRateAttachment shadingRateAttachmentTexelSize

@@ -2784,7 +2784,7 @@ instance (Extendss RayTracingPipelineCreateInfoNV es, PeekChain es) => FromCStru
     next <- peekChain (castPtr pNext)
     flags <- peek @PipelineCreateFlags ((p `plusPtr` 16 :: Ptr PipelineCreateFlags))
     stageCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
-    pStages <- peek @(Ptr (PipelineShaderStageCreateInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo a))))
+    pStages <- peek @(Ptr (PipelineShaderStageCreateInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _))))
     pStages' <- generateM (fromIntegral stageCount) (\i -> peekSomeCStruct (forgetExtensions ((pStages `advancePtrBytes` (48 * (i)) :: Ptr (PipelineShaderStageCreateInfo _)))))
     groupCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pGroups <- peek @(Ptr RayTracingShaderGroupCreateInfoNV) ((p `plusPtr` 40 :: Ptr (Ptr RayTracingShaderGroupCreateInfoNV)))

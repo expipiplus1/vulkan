@@ -437,7 +437,7 @@ foreign import ccall
 -- 'ImageFormatProperties2', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceImageFormatInfo2'
 getPhysicalDeviceImageFormatProperties2 :: forall a b io
-                                         . (Extendss PhysicalDeviceImageFormatInfo2 a, Extendss ImageFormatProperties2 b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                                         . (Extendss PhysicalDeviceImageFormatInfo2 a, PokeChain a, Extendss ImageFormatProperties2 b, PokeChain b, PeekChain b, MonadIO io)
                                         => -- | @physicalDevice@ is the physical device from which to query the image
                                            -- capabilities.
                                            PhysicalDevice

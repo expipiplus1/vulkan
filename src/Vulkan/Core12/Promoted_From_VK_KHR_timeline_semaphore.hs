@@ -168,8 +168,7 @@ foreign import ccall
 -- | waitSemaphores with selectable safeness
 waitSemaphoresSafeOrUnsafe :: forall io
                             . (MonadIO io)
-                           => -- No documentation found for TopLevel ""
-                              (FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result)
+                           => (FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result)
                            -> -- | @device@ is the logical device that owns the semaphore.
                               --
                               -- #VUID-vkWaitSemaphores-device-parameter# @device@ /must/ be a valid

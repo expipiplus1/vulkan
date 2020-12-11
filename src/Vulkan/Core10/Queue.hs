@@ -424,8 +424,7 @@ foreign import ccall
 -- | queueWaitIdle with selectable safeness
 queueWaitIdleSafeOrUnsafe :: forall io
                            . (MonadIO io)
-                          => -- No documentation found for TopLevel ""
-                             (FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result)
+                          => (FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result)
                           -> -- | @queue@ is the queue on which to wait.
                              Queue
                           -> io ()
@@ -510,8 +509,7 @@ foreign import ccall
 -- | deviceWaitIdle with selectable safeness
 deviceWaitIdleSafeOrUnsafe :: forall io
                             . (MonadIO io)
-                           => -- No documentation found for TopLevel ""
-                              (FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result)
+                           => (FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result)
                            -> -- | @device@ is the logical device to idle.
                               Device
                            -> io ()

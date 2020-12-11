@@ -1601,8 +1601,7 @@ foreign import ccall
 -- | acquireNextImageKHR with selectable safeness
 acquireNextImageKHRSafeOrUnsafe :: forall io
                                  . (MonadIO io)
-                                => -- No documentation found for TopLevel ""
-                                   (FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result)
+                                => (FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result)
                                 -> -- | @device@ is the device associated with @swapchain@.
                                    Device
                                 -> -- | @swapchain@ is the non-retired swapchain from which an image is being
@@ -2087,8 +2086,7 @@ foreign import ccall
 -- | acquireNextImage2KHR with selectable safeness
 acquireNextImage2KHRSafeOrUnsafe :: forall io
                                   . (MonadIO io)
-                                 => -- No documentation found for TopLevel ""
-                                    (FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result)
+                                 => (FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result)
                                  -> -- | @device@ is the device associated with @swapchain@.
                                     Device
                                  -> -- | @pAcquireInfo@ is a pointer to a 'AcquireNextImageInfoKHR' structure

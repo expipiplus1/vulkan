@@ -109,7 +109,7 @@ foreign import ccall
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
 -- 'DescriptorSetLayoutSupport', 'Vulkan.Core10.Handles.Device'
 getDescriptorSetLayoutSupport :: forall a b io
-                               . (Extendss DescriptorSetLayoutCreateInfo a, Extendss DescriptorSetLayoutSupport b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                               . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, Extendss DescriptorSetLayoutSupport b, PokeChain b, PeekChain b, MonadIO io)
                               => -- | @device@ is the logical device that would create the descriptor set
                                  -- layout.
                                  --

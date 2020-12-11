@@ -421,8 +421,7 @@ foreign import ccall
 -- | waitForFences with selectable safeness
 waitForFencesSafeOrUnsafe :: forall io
                            . (MonadIO io)
-                          => -- No documentation found for TopLevel ""
-                             (FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result)
+                          => (FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result)
                           -> -- | @device@ is the logical device that owns the fences.
                              Device
                           -> -- | @pFences@ is a pointer to an array of @fenceCount@ fence handles.

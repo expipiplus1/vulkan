@@ -300,7 +300,7 @@ instance FromCStruct SubpassDescriptionDepthStencilResolve where
   peekCStruct p = do
     depthResolveMode <- peek @ResolveModeFlagBits ((p `plusPtr` 16 :: Ptr ResolveModeFlagBits))
     stencilResolveMode <- peek @ResolveModeFlagBits ((p `plusPtr` 20 :: Ptr ResolveModeFlagBits))
-    pDepthStencilResolveAttachment <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 24 :: Ptr (Ptr (AttachmentReference2 a))))
+    pDepthStencilResolveAttachment <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 24 :: Ptr (Ptr (AttachmentReference2 _))))
     pDepthStencilResolveAttachment' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pDepthStencilResolveAttachment
     pure $ SubpassDescriptionDepthStencilResolve
              depthResolveMode stencilResolveMode pDepthStencilResolveAttachment'

@@ -2251,7 +2251,7 @@ instance FromCStruct BlitImageInfo2KHR where
     dstImage <- peek @Image ((p `plusPtr` 32 :: Ptr Image))
     dstImageLayout <- peek @ImageLayout ((p `plusPtr` 40 :: Ptr ImageLayout))
     regionCount <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
-    pRegions <- peek @(Ptr (ImageBlit2KHR _)) ((p `plusPtr` 48 :: Ptr (Ptr (ImageBlit2KHR a))))
+    pRegions <- peek @(Ptr (ImageBlit2KHR _)) ((p `plusPtr` 48 :: Ptr (Ptr (ImageBlit2KHR _))))
     pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (96 * (i)) :: Ptr (ImageBlit2KHR _)))))
     filter' <- peek @Filter ((p `plusPtr` 56 :: Ptr Filter))
     pure $ BlitImageInfo2KHR
@@ -2602,7 +2602,7 @@ instance FromCStruct CopyBufferToImageInfo2KHR where
     dstImage <- peek @Image ((p `plusPtr` 24 :: Ptr Image))
     dstImageLayout <- peek @ImageLayout ((p `plusPtr` 32 :: Ptr ImageLayout))
     regionCount <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
-    pRegions <- peek @(Ptr (BufferImageCopy2KHR _)) ((p `plusPtr` 40 :: Ptr (Ptr (BufferImageCopy2KHR a))))
+    pRegions <- peek @(Ptr (BufferImageCopy2KHR _)) ((p `plusPtr` 40 :: Ptr (Ptr (BufferImageCopy2KHR _))))
     pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr (BufferImageCopy2KHR _)))))
     pure $ CopyBufferToImageInfo2KHR
              srcBuffer dstImage dstImageLayout pRegions'
@@ -2942,7 +2942,7 @@ instance FromCStruct CopyImageToBufferInfo2KHR where
     srcImageLayout <- peek @ImageLayout ((p `plusPtr` 24 :: Ptr ImageLayout))
     dstBuffer <- peek @Buffer ((p `plusPtr` 32 :: Ptr Buffer))
     regionCount <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
-    pRegions <- peek @(Ptr (BufferImageCopy2KHR _)) ((p `plusPtr` 48 :: Ptr (Ptr (BufferImageCopy2KHR a))))
+    pRegions <- peek @(Ptr (BufferImageCopy2KHR _)) ((p `plusPtr` 48 :: Ptr (Ptr (BufferImageCopy2KHR _))))
     pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr (BufferImageCopy2KHR _)))))
     pure $ CopyImageToBufferInfo2KHR
              srcImage srcImageLayout dstBuffer pRegions'

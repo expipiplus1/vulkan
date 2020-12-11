@@ -915,7 +915,7 @@ instance (Extendss CommandBufferBeginInfo es, PeekChain es) => FromCStruct (Comm
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
     flags <- peek @CommandBufferUsageFlags ((p `plusPtr` 16 :: Ptr CommandBufferUsageFlags))
-    pInheritanceInfo <- peek @(Ptr (CommandBufferInheritanceInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (CommandBufferInheritanceInfo a))))
+    pInheritanceInfo <- peek @(Ptr (CommandBufferInheritanceInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (CommandBufferInheritanceInfo _))))
     pInheritanceInfo' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pInheritanceInfo
     pure $ CommandBufferBeginInfo
              next flags pInheritanceInfo'
