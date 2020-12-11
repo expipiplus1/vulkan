@@ -162,6 +162,9 @@ During development unfinished bits not to forget are listed here.
 
 - [ ] Remove or improve special handling for `enumerateSwapchainImages`
 
+- [ ] Remove uses of `schemeTypeNegativeWithContext` in `Render.Command` (there
+  are TODOs) in the code.
+
 ### 1.2.162
 
 - [x] optionalness on VkWriteDescriptorSetAccelerationStructureKHR->pAccelerationStructures
