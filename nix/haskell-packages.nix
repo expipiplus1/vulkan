@@ -114,14 +114,15 @@ let
           name = "vega.patch";
           sha256 = "1lnbdscngb5g5b6ys0xhp7izdfkz6j3llnpirbfxck3sy3ssxph5";
         })));
-      hs-speedscope = markUnbroken (overrideSrc super.hs-speedscope {
-        src = pkgs.fetchFromGitHub {
-          owner = "mpickering";
-          repo = "hs-speedscope";
-          rev = "9e28b303993b79f3d943ccb89b148cb9a4fb6ca5";
-          sha256 = "105zk9w5lpn0m866m8y0lhrw2x6kym2f2ryjc56zxqzfr9b76jdn";
-        };
-      });
+      hs-speedscope = doJailbreak (markUnbroken
+        (overrideSrc super.hs-speedscope {
+          src = pkgs.fetchFromGitHub {
+            owner = "mpickering";
+            repo = "hs-speedscope";
+            rev = "9e28b303993b79f3d943ccb89b148cb9a4fb6ca5";
+            sha256 = "105zk9w5lpn0m866m8y0lhrw2x6kym2f2ryjc56zxqzfr9b76jdn";
+          };
+        }));
       hvega = doJailbreak (self.callHackageDirect {
         pkg = "hvega";
         ver = "0.6.0.0";
