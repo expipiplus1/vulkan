@@ -148,7 +148,7 @@ During development unfinished bits not to forget are listed here.
 - [ ] dual-use commands have a different style in OpenXR... they're wrong now
   - For example `enumerateReferenceSpaces`
 
-- [ ] Implement OpenXR's polymorphic types
+- [x] Implement OpenXR's polymorphic types
 
 - [x] change `\CFloat a -> a` to `coerce @CFloat @Float`
 
