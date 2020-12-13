@@ -197,6 +197,7 @@ renderParams handles = r
     , extensibleStructTypeMemberName = Just "sType"
     , extensibleStructTypeType       = Just "VkStructureType"
     , modulePrefix                   = "Vulkan"
+    , commandOverrides               = const Nothing
     }
 
 wrappedIdiomaticType

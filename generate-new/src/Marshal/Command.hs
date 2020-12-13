@@ -68,7 +68,8 @@ parameterScheme Command {..} param = do
       [ maybe empty pure . getBespokeScheme cName
         -- These two are for value constrained params:
       , univaluedScheme
-      , lengthScheme cParameters
+      , elidedInputCountScheme cParameters
+      , lengthScheme DoNotElideReturnedVectorLengths cParameters
         -- Pointers to Void have some special handling
       , voidPointerScheme
         -- Pointers to return values in

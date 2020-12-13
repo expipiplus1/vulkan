@@ -304,6 +304,14 @@ data RenderParams = RenderParams
   , extensibleStructTypeType       :: Maybe CName
     -- ^ "VkStructureType" or "XrStructureType"
   , modulePrefix                   :: Text
+    -- ^ Where to put the generated module hierarchy
+  , commandOverrides
+      :: forall r
+       . (HasRenderParams r, HasRenderElem r)
+      => CName
+      -> Maybe (Sem r ())
+    -- ^ Instead of generating a command from the spec, use this definition
+    -- instead
   }
 
 data UnionDiscriminator = UnionDiscriminator

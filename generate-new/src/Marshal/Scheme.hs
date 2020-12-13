@@ -17,6 +17,7 @@ import           Relude                  hiding ( Const
                                                 )
 
 import           CType
+import qualified Data.Text                     as T
 import           Error
 import           Haskell                       as H
 import           Marshal.Marshalable
@@ -84,6 +85,10 @@ data MarshalScheme a
   | InOutCount (MarshalScheme a)
     -- ^ A non-const pointer to some count value, used to send and return
     -- additional the length of a vector.
+    -- - Not typically used for structs
+  | OutCount (MarshalScheme a)
+    -- ^ A non-const pointer to some count value, used to return the length of
+    -- a vector, which when input has a equal or longer length
     -- - Not typically used for structs
   | Custom (CustomScheme a)
     -- ^ A non-elided scheme with some complex behavior
@@ -264,27 +269,60 @@ instance Semigroup MarshalParams where
 univaluedScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 univaluedScheme = fmap ElidedUnivalued . singleValue
 
--- | Matches if this parameter is the length of one or more vectors
-lengthScheme
+data ElideReturnedVectorLengths
+  = DoNotElideReturnedVectorLengths
+  | DoElideReturnedVectorLengths
+
+elidedInputCountScheme
   :: (Marshalable a, HasErr r)
   => Vector a
   -- ^ A set of things which have a length to draw from
   -> a
   -- ^ The potential length parameter
   -> ND r (MarshalScheme a)
-lengthScheme ps p = do
+elidedInputCountScheme ps p = do
   -- Get the vectors which are sized with this parameter
-  let vs = V.filter (not . isReturnPtr) . getSizedWith (name p) $ ps
+  let vs = getSizedWith (name p) ps
+  -- Make sure they are not all void pointer, those do not have the length
+  -- elided
+  guard (any (\v -> type' v /= Ptr Const Void) vs)
+  guard ("CapacityInput" `T.isSuffixOf` unCName (name p))
+  case V.partition isTopOptional vs of
+    -- Make sure they exist
+    (Empty, Empty) -> empty
+    (os   , rs   ) -> pure $ ElidedLength (type' p) os rs
+
+-- | Matches if this parameter is the length of one or more vectors
+lengthScheme
+  :: (Marshalable a, HasErr r)
+  => ElideReturnedVectorLengths
+  -- ^ Should we elide lengths which are specified just by returned vectors
+  -- we may want to do this if the lengths are specified in some other way
+  -- (like in a dual-purpose command)
+  -> Vector a
+  -- ^ A set of things which have a length to draw from
+  -> a
+  -- ^ The potential length parameter
+  -> ND r (MarshalScheme a)
+lengthScheme elideReturnVectorLengths ps p = do
+  -- Get the vectors which are sized with this parameter
+  let vs = case elideReturnVectorLengths of
+        DoNotElideReturnedVectorLengths ->
+          V.filter (not . isReturnPtr) . getSizedWith (name p) $ ps
+        DoElideReturnedVectorLengths -> getSizedWith (name p) ps
   -- Make sure they are not all void pointer, those do not have the length
   -- elided
   guard (any (\v -> type' v /= Ptr Const Void) vs)
   case V.partition isTopOptional vs of
     -- Make sure they exist
-    (Empty, Empty)                   -> empty
-    (Empty, rs) | all isReturnPtr rs -> empty
+    (Empty, Empty) -> empty
+    (Empty, rs)
+      | DoNotElideReturnedVectorLengths <- elideReturnVectorLengths
+      , all isReturnPtr rs
+      -> empty
     -- If we have a just optional vectors then preserve the length member
-    (os, rs@Empty)                   -> pure $ Length (type' p) os rs
-    (os, rs      )                   -> pure $ ElidedLength (type' p) os rs
+    (os, rs@Empty) -> pure $ Length (type' p) os rs
+    (os, rs      ) -> pure $ ElidedLength (type' p) os rs
 
 -- | Matches const and non-const void pointers, exposes them as 'Ptr ()'
 voidPointerScheme :: Marshalable a => a -> ND r (MarshalScheme a)
@@ -304,13 +342,19 @@ returnPointerScheme p = do
         -- FIXME: Check if any siblings are sized by this
         guard (t == TypeName "uint32_t" || t == TypeName "size_t")
         pure $ InOutCount (Normal t)
+      outLength = do
+        Empty <- pure $ lengths p
+        Empty <- pure $ isOptional p
+        guard ("CountOutput" `T.isSuffixOf` unCName (name p))
+        guard (t == TypeName "uint32_t" || t == TypeName "size_t")
+        pure $ OutCount (Normal t)
       normal = do
         Empty <- pure $ lengths p
         pure $ Returned (Normal t)
       array = do
         _ :<| _ <- pure $ lengths p
         pure $ Returned (Vector NotNullable (Normal t))
-  asum [inout, normal, array]
+  asum [inout, outLength, normal, array]
 
 returnArrayScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 returnArrayScheme p = do
@@ -594,6 +638,7 @@ isElided = \case
   Tupled _ _           -> False
   Returned           _ -> False
   InOutCount         _ -> False
+  OutCount           _ -> False
   WrappedStruct      _ -> False
   WrappedChildStruct _ -> False
   Custom             _ -> False
@@ -617,6 +662,7 @@ isNegative = \case
   Returned           _ -> False
   -- TODO: We should probably be more careful with InOutCount
   InOutCount         _ -> True
+  OutCount           _ -> False
   WrappedStruct      _ -> True
   WrappedChildStruct _ -> True
   Custom             _ -> True
@@ -642,6 +688,7 @@ isSimple = \case
   Tupled _ s           -> isSimple s
   Returned           _ -> pure False
   InOutCount         _ -> pure False
+  OutCount           _ -> pure False
   WrappedStruct      _ -> pure False
   WrappedChildStruct _ -> pure False
   Custom             _ -> pure False

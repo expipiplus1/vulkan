@@ -125,6 +125,7 @@ renderParams handles = r
     , extensibleStructTypeMemberName = Nothing
     , extensibleStructTypeType       = Nothing
     , modulePrefix                   = "VulkanMemoryAllocator"
+    , commandOverrides               = const Nothing
     }
 
 dropVma :: CName -> Text

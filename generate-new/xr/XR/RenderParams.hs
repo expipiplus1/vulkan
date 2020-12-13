@@ -161,6 +161,7 @@ renderParams handles = r
     , extensibleStructTypeMemberName = Just "type"
     , extensibleStructTypeType       = Just "XrStructureType"
     , modulePrefix                   = "OpenXR"
+    , commandOverrides               = commandOverrides'
     }
 
 dropXr :: CName -> Text
@@ -238,3 +239,15 @@ vulkanHaskellNames RenderParams {..} =
   mkName (T.unpack vulkanTypesModule <> "." <> "SomeStruct")
     : (typeNameWithModule (ModName vulkanTypesModule) . mkTyName <$> vulkanNames
       )
+
+----------------------------------------------------------------
+-- Bespoke commands
+----------------------------------------------------------------
+
+commandOverrides'
+  :: (HasRenderParams r, HasRenderElem r) => CName -> Maybe (Sem r ())
+commandOverrides' = \case
+  -- "xrEnumerateSwapchainImages" -> Just $ do
+  --   tellExport (ETerm (TermName "enumerateSwapchainImages"))
+  --   tellDoc "-- TODO xrEnumerateSwapchainImages"
+  _ -> Nothing

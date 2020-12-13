@@ -6,6 +6,7 @@ module Render.Scheme
   , schemeTypePositive
   , schemeTypePositiveWithContext
   , isInOutCount
+  , isOutCount
   ) where
 
 import qualified Data.Vector                   as V
@@ -85,6 +86,7 @@ schemeTypeNegative' toHs s = do
         (typeName (mkTyName n))
     Returned     _                 -> pure Nothing
     InOutCount   s                 -> schemeTypeNegative' toHs s
+    OutCount     _                 -> pure Nothing
     Custom       CustomScheme {..} -> Just <$> csType
     ElidedCustom _                 -> pure Nothing
 
@@ -119,3 +121,8 @@ isInOutCount :: MarshalScheme a -> Bool
 isInOutCount = \case
   InOutCount _ -> True
   _            -> False
+
+isOutCount :: MarshalScheme a -> Bool
+isOutCount = \case
+  OutCount _ -> True
+  _          -> False

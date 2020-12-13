@@ -514,6 +514,7 @@ elidedUnivalued name to value = do
       "nullPtr" -> do
         tellImport 'nullPtr
         pure (TermName value)
+      "0"                        -> pure (TermName value)
       _ | isUpper (T.head value) -> do
         let vName = mkPatternName (CName value)
         tellImport vName

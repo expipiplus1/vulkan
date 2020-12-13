@@ -34,6 +34,7 @@ zeroScheme = runNonDetMaybe . go
       pure $ tupled (replicate (fromIntegral n) z)
     Returned      _ -> empty
     InOutCount    _ -> empty
+    OutCount      _ -> empty
     WrappedStruct _ -> do
       tellImportWithAll (TyConName "SomeStruct")
       pure $ parens "SomeStruct zero"

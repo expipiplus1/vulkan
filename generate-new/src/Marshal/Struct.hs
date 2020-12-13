@@ -52,7 +52,7 @@ structMemberScheme Struct {..} member = do
       [ maybe empty pure . getBespokeScheme sName
       , -- These two are for value constrained params:
         univaluedScheme
-      , lengthScheme sMembers
+      , lengthScheme DoNotElideReturnedVectorLengths sMembers
         -- Pointers to Void have some special handling
       , voidPointerScheme
         -- Pointers to return values in, unmarshaled at the moment

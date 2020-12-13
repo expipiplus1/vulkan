@@ -95,11 +95,14 @@ During development unfinished bits not to forget are listed here.
 
 - [x] Handle levels
   - They are all "session"
-- [ ] Share Vulkan handles
+
 - [x] Bespoke vulkan types should be just in sizes
+
 - [ ] Remove vulkan stuff from bespokeSizes
   - Would be nice to generate it automatically, but it's fine as it is
+
 - [ ] Fix runAsciidoctor
+
 - [x] These are passed as pointers ,(see Bespoke.MarshalParams.isPassAsPointerType')
 
   - [ ] `VkInstanceCreateInfo`, `VkAllocationCallbacks`, `VkDeviceCreateInfo`
@@ -146,7 +149,24 @@ During development unfinished bits not to forget are listed here.
 - [ ] make Xr stuff in `bespokeModules`
 
 - [ ] dual-use commands have a different style in OpenXR... they're wrong now
-  - For example `enumerateReferenceSpaces`
+  - [x] basically done, apart from eliding the (unused) length input parameter
+  - [ ] `xrEnumerateApiLayerProperties`
+  - [ ] `xrEnumerateInstanceExtensionProperties`
+  - [ ] `xrEnumerateSwapchainFormats`
+  - [ ] `xrEnumerateReferenceSpaces`
+  - [ ] `xrEnumerateViewConfigurations`
+  - [ ] `xrEnumerateEnvironmentBlendModes`
+  - [ ] `xrEnumerateViewConfigurationViews`
+  - [ ] `xrLocateViews`
+  - [ ] `xrPathToString`
+  - [ ] `xrEnumerateBoundSourcesForAction`
+  - [ ] `xrGetInputSourceLocalizedName`
+  - [ ] `xrGetVulkanInstanceExtensionsKHR`
+  - [ ] `xrGetVulkanDeviceExtensionsKHR`
+  - [ ] `xrLoadControllerModelMSFT`
+  - [ ] `xrEnumerateDisplayRefreshRatesFB`
+  - [ ] `xrEnumerateColorSpacesFB`
+
 
 - [x] Implement OpenXR's polymorphic types
 
@@ -164,6 +184,10 @@ During development unfinished bits not to forget are listed here.
 
 - [ ] Remove uses of `schemeTypeNegativeWithContext` in `Render.Command` (there
   are TODOs) in the code.
+
+- [ ] Some structs have an in-out purpose, see https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#buffer-size-parameters
+  - [ ] affects at least xrGetVisibilityMaskKHR and a few extension functions.
+  - [ ] Look at every use of "CapacityInput" or "CountOutput"
 
 ### 1.2.162
 
