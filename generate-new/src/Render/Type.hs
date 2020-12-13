@@ -119,12 +119,12 @@ cToHsType' structStyle preserve t = do
     Float  -> pure $ ConT ''CFloat
     Double -> pure $ ConT ''CDouble
     Char   -> case preserve of
-      DoLower       -> pure $ ConT ''CChar
-      DoPreserve    -> pure $ ConT ''CChar
+      DoLower    -> pure $ ConT ''CChar
+      DoPreserve -> pure $ ConT ''CChar
       -- TODO: restore the error here
-      DoNotPreserve -> pure $ ConT ''CChar
-        -- throw
-        --   "Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring"
+      DoNotPreserve ->
+        throw
+          "Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring"
     Ptr _ Void -> pure $ ConT ''Ptr :@ TupleT 0
     Ptr _ p    -> do
       t' <- cToHsType' structStyle preserve p

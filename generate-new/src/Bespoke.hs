@@ -1069,6 +1069,18 @@ openXRSchemes =
       "XrSpatialGraphNodeSpaceCreateInfoMSFT" -> \case
         a | "nodeId" <- name a -> Just ByteString
         _                      -> Nothing
+      -- Work around https://github.com/KhronosGroup/OpenXR-Docs/issues/69
+      f
+        | f
+          `elem` [ "xrPathToString"
+                 , "xrGetInputSourceLocalizedName"
+                 , "xrGetVulkanInstanceExtensionsKHR"
+                 , "xrGetVulkanDeviceExtensionsKHR"
+                 ]
+        -> \case
+          a | "buffer" <- name a -> Just (Returned ByteString)
+          _                      -> Nothing
+
       _ -> const Nothing
   ]
 

@@ -365,7 +365,7 @@ byteStringPeek name lengths addrRef =
       pure . IOAction $ ValueDoc ("packCString =<< peek" <+> addr)
 
     -- TODO: abstract away this repetition
-    Ptr Const Char -> do
+    Ptr _ Char -> do
       tellImport 'BS.packCString
       AddrDoc addr <- use addrRef
       pure . IOAction $ ValueDoc ("packCString " <+> addr)

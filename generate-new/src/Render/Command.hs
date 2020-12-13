@@ -577,8 +577,9 @@ findCountParameters MarshaledCommand {..} = liftA2 (<>)
                 $  "Found multiple input capacity parameters for "
                 <> show baseName
         let isCounted p = case pLengths (mpParam p) of
-                NamedLength nl :<| _ | nl == (pName . mpParam $ inCountParam) -> True
-                _ -> False
+              NamedLength nl :<| _ | nl == (pName . mpParam $ inCountParam) ->
+                True
+              _ -> False
         pure $ DifferentIndices
           in'
           out
