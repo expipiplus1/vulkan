@@ -116,7 +116,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-perviewattributes PerViewAttributesNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-PerViewAttributesNV PerViewAttributesNV>
 --
 -- == Examples
 --

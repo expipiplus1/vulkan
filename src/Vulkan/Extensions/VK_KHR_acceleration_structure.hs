@@ -2672,6 +2672,22 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkCmdBuildAccelerationStructuresKHR-mode-04628# The @mode@
+--     member of each element of @pInfos@ /must/ be a valid
+--     'BuildAccelerationStructureModeKHR' value
+--
+-- -   #VUID-vkCmdBuildAccelerationStructuresKHR-srcAccelerationStructure-04629#
+--     If the @srcAccelerationStructure@ member of any element of @pInfos@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     @srcAccelerationStructure@ member /must/ be a valid
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
+--
+-- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-04630# For each
+--     element of @pInfos@, if its @mode@ member is
+--     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
+--     @srcAccelerationStructure@ member /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03403# The
 --     @srcAccelerationStructure@ member of any element of @pInfos@ /must/
 --     not be the same acceleration structure as the
@@ -3224,6 +3240,22 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_INDIRECT_COMMAND_READ_BIT'.
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-mode-04628# The
+--     @mode@ member of each element of @pInfos@ /must/ be a valid
+--     'BuildAccelerationStructureModeKHR' value
+--
+-- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-srcAccelerationStructure-04629#
+--     If the @srcAccelerationStructure@ member of any element of @pInfos@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     @srcAccelerationStructure@ member /must/ be a valid
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
+--
+-- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-04630# For
+--     each element of @pInfos@, if its @mode@ member is
+--     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
+--     @srcAccelerationStructure@ member /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03403# The
 --     @srcAccelerationStructure@ member of any element of @pInfos@ /must/
@@ -3857,6 +3889,22 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkBuildAccelerationStructuresKHR-mode-04628# The @mode@ member
+--     of each element of @pInfos@ /must/ be a valid
+--     'BuildAccelerationStructureModeKHR' value
+--
+-- -   #VUID-vkBuildAccelerationStructuresKHR-srcAccelerationStructure-04629#
+--     If the @srcAccelerationStructure@ member of any element of @pInfos@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     @srcAccelerationStructure@ member /must/ be a valid
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
+--
+-- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-04630# For each
+--     element of @pInfos@, if its @mode@ member is
+--     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
+--     @srcAccelerationStructure@ member /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03403# The
 --     @srcAccelerationStructure@ member of any element of @pInfos@ /must/
 --     not be the same acceleration structure as the
@@ -4429,7 +4477,7 @@ foreign import ccall
 --         given index, with a @geometryType@ member equal to
 --         'GEOMETRY_TYPE_TRIANGLES_KHR', if the applicable address in the
 --         @transformData@ member of @geometry.triangles@ is not @NULL@,
---         the corresponding @transformData.pname@:hostAddress parameter in
+--         the corresponding @transformData.hostAddress@ parameter in
 --         @pBuildInfo@ is not @NULL@.
 --
 -- -   For each 'AccelerationStructureBuildRangeInfoKHR' corresponding to
@@ -5291,21 +5339,6 @@ instance Zero AccelerationStructureGeometryKHR where
 -- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-flags-parameter#
 --     @flags@ /must/ be a valid combination of
 --     'BuildAccelerationStructureFlagBitsKHR' values
---
--- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-mode-parameter#
---     @mode@ /must/ be a valid 'BuildAccelerationStructureModeKHR' value
---
--- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-srcAccelerationStructure-parameter#
---     If @srcAccelerationStructure@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @srcAccelerationStructure@
---     /must/ be a valid
---     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
---
--- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-dstAccelerationStructure-parameter#
---     If @dstAccelerationStructure@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @dstAccelerationStructure@
---     /must/ be a valid
---     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
 -- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-pGeometries-parameter#
 --     If @geometryCount@ is not @0@, and @pGeometries@ is not @NULL@,

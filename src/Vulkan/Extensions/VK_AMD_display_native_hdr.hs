@@ -200,10 +200,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkSetLocalDimmingAMD-localDimmingSupport-04618# It is only
---     valid to call 'setLocalDimmingAMD' if
---     'DisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is
---     supported
+-- -   #VUID-vkSetLocalDimmingAMD-localDimmingSupport-04618#
+--     'DisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@
+--     /must/ be supported
 --
 -- = See Also
 --

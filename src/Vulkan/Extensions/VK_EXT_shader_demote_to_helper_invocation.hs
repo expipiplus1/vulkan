@@ -78,7 +78,7 @@
 --
 -- == New SPIR-V Capability
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-demote DemoteToHelperInvocationEXT>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-DemoteToHelperInvocationEXT DemoteToHelperInvocationEXT>
 --
 -- == Version History
 --

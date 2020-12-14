@@ -323,9 +323,9 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-khr-raytracing RayTracingKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTracingKHR RayTracingKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-khr-raytracing RayTraversalPrimitiveCullingKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTraversalPrimitiveCullingKHR RayTraversalPrimitiveCullingKHR>
 --
 -- == Issues
 --
@@ -3216,14 +3216,14 @@ instance Zero PhysicalDeviceRayTracingPipelinePropertiesKHR where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkStridedDeviceAddressRegionKHR-deviceAddress-03630# If
---     @deviceAddress@ is not zero, all addresses between @deviceAddress@
---     and @deviceAddress@ + @size@ - 1 /must/ be in the buffer device
---     address range of the same buffer
+-- -   #VUID-VkStridedDeviceAddressRegionKHR-size-04631# If @size@ is not
+--     zero, all addresses between @deviceAddress@ and @deviceAddress@ +
+--     @size@ - 1 /must/ be in the buffer device address range of the same
+--     buffer
 --
--- -   #VUID-VkStridedDeviceAddressRegionKHR-deviceAddress-03631# If
---     @deviceAddress@ is not zero, @stride@ /must/ be less than the size
---     of the buffer from which @deviceAddress@ was queried
+-- -   #VUID-VkStridedDeviceAddressRegionKHR-size-04632# If @size@ is not
+--     zero, @stride@ /must/ be less than the size of the buffer from which
+--     @deviceAddress@ was queried
 --
 -- = See Also
 --

@@ -96,9 +96,9 @@
 --
 -- The single @ShaderViewportIndexLayerEXT@ capability from the
 -- @SPV_EXT_shader_viewport_index_layer@ extension is replaced by the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-shader-viewport-index ShaderViewportIndex>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportIndex ShaderViewportIndex>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-shader-layer ShaderLayer>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderLayer ShaderLayer>
 -- capabilities from SPIR-V 1.5 which are enabled by the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderOutputViewportIndex shaderOutputViewportIndex>
 -- and
@@ -125,7 +125,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-shader-viewport-index-layer ShaderViewportIndexLayerEXT>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportIndexLayerEXT ShaderViewportIndexLayerEXT>
 --
 -- == Version History
 --

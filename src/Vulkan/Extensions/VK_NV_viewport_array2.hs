@@ -109,9 +109,9 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-viewportarray2 ShaderViewportIndexLayerNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportIndexLayerNV ShaderViewportIndexLayerNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-viewportarray2 ShaderViewportMaskNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportMaskNV ShaderViewportMaskNV>
 --
 -- == Version History
 --

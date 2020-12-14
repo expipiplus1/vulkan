@@ -250,9 +250,8 @@ data PhysicalDevicePortabilitySubsetFeaturesKHR = PhysicalDevicePortabilitySubse
   , -- | #features-shaderSampleRateInterpolationFunctions#
     -- @shaderSampleRateInterpolationFunctions@ indicates whether this
     -- implementation supports fragment shaders which use the
-    -- @InterpolationFunction@
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table capability>
-    -- and the extended instructions @InterpolateAtCentroid@,
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-InterpolationFunction InterpolationFunction>
+    -- capability and the extended instructions @InterpolateAtCentroid@,
     -- @InterpolateAtOffset@, and @InterpolateAtSample@ from the @GLSL.std.450@
     -- extended instruction set. This member is only meaningful if the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sampleRateShading sampleRateShading>

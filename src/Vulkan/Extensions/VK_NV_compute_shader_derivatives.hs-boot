@@ -84,9 +84,9 @@
 --
 -- == New SPIR-V Capability
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-computederivatives-quads ComputeDerivativeGroupQuadsNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupQuadsNV ComputeDerivativeGroupQuadsNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-computederivatives-linear ComputeDerivativeGroupLinearNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupLinearNV ComputeDerivativeGroupLinearNV>
 --
 -- == Issues
 --

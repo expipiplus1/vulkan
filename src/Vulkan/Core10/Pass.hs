@@ -2165,8 +2165,8 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     each element of @pAttachments@ that is used as an input, color,
 --     resolve, or depth\/stencil attachment by @renderPass@ /must/ have
 --     been created with a
---     VkImageViewCreateInfo::@subresourceRange.pname@:layerCount greater
---     than or equal to @layers@
+--     VkImageViewCreateInfo::@subresourceRange.layerCount@ greater than or
+--     equal to @layers@
 --
 -- -   #VUID-VkFramebufferCreateInfo-renderPass-04536# If @renderPass@ was
 --     specified with non-zero view masks, each element of @pAttachments@

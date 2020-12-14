@@ -515,8 +515,12 @@ instance Zero ImageSubresourceRange where
 -- particular, image view creation inherits the implicit parameter @usage@
 -- specifying the allowed usages of the image view that, by default, takes
 -- the value of the corresponding @usage@ parameter specified in
--- 'Vulkan.Core10.Image.ImageCreateInfo' at image creation time. If the
--- image was has a depth-stencil format and was created with a
+-- 'Vulkan.Core10.Image.ImageCreateInfo' at image creation time. The
+-- implicit @usage@ /can/ be overriden by adding a
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo'
+-- structure to the @pNext@ chain, but the view usage /must/ be a subset of
+-- the image usage. If the image was has a depth-stencil format and was
+-- created with a
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
 -- structure included in the @pNext@ chain of
 -- 'Vulkan.Core10.Image.ImageCreateInfo', the usage is calculated based on
@@ -536,9 +540,6 @@ instance Zero ImageSubresourceRange where
 --     is equal to the intersection of
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@usage@ and
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@.
---     The implicit @usage@ /can/ be overriden by adding a
---     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo'
---     structure to the @pNext@ chain.
 --
 -- If @image@ was created with the
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
