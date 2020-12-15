@@ -7,7 +7,6 @@ module OpenXR.VulkanTypes
   , PhysicalDevice(..)
   , Device_T
   , Device(..)
-  , Image_T
   , Image(..)
   , Result(..)
   , Format(..)
@@ -21,6 +20,11 @@ module OpenXR.VulkanTypes
 #if defined(USE_VULKAN_TYPES)
 
 import           Vulkan
+import           Vulkan.CStruct.Extends
+import           Foreign.C.String
+import           Foreign.Ptr
+
+type PFN_vkGetInstanceProcAddr = FunPtr (CString -> IO (FunPtr ()))
 
 #else
 
@@ -46,8 +50,7 @@ newtype Device = Device (Ptr Device_T)
   deriving stock (Eq, Show)
   deriving newtype (Zero, Storable)
 
-data Image_T
-newtype Image = Image (Ptr Image_T)
+newtype Image = Image Word64
   deriving stock (Eq, Show)
   deriving newtype (Zero, Storable)
 
