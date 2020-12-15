@@ -181,7 +181,11 @@ renderParams handles = r
           <+> "$"
           <+> sibling
       _ -> Nothing
-    , isExternalName                 = const Nothing
+    , isExternalName                 = \case
+      TyConName "Zero"        -> Just (ModName "Vulkan.Zero")
+      TyConName "ToCStruct"   -> Just (ModName "Vulkan.CStruct")
+      TyConName "FromCStruct" -> Just (ModName "Vulkan.CStruct")
+      _                       -> Nothing
     , externalDocHTML                =
       Just
         "https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html"

@@ -72,8 +72,8 @@ renderParams handles = r
     , lowerPrefix                    = "xr"
     , upperPrefix                    = "XR"
     , flagsTypeName                  = "XrFlags64"
-    , alwaysQualifiedNames = fromList (vulkanHaskellNames vulkanParams)
-    , extraNewtypes = fromList (vulkanHaskellNames vulkanParams)
+    , alwaysQualifiedNames           = vulkanHaskellNames vulkanParams
+    , extraNewtypes                  = vulkanNewtypes vulkanParams
     , mkIdiomaticType                =
       let
         dropVulkanModule = transformBi
@@ -156,7 +156,11 @@ renderParams handles = r
     , versionType                    = TypeName "XrVersion"
     , exceptionTypeName              = TyConName "OpenXrException"
     , complexMemberLengthFunction    = \_ _ _ -> Nothing
-    , isExternalName                 = const Nothing
+    , isExternalName                 = \case
+      TyConName "Zero"        -> Just (ModName "OpenXR.Zero")
+      TyConName "ToCStruct"   -> Just (ModName "OpenXR.CStruct")
+      TyConName "FromCStruct" -> Just (ModName "OpenXR.CStruct")
+      _                       -> Nothing
     , externalDocHTML                = Just
       "https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html"
     , objectTypePattern              = pure
@@ -202,52 +206,67 @@ vulkanTypesModule = "OpenXR.VulkanTypes"
 vulkanManifest
   :: ExtensibleStructStyle r -> RenderParams -> CType -> Maybe (Sem r Type)
 vulkanManifest _structStyle RenderParams {..} =
-  let vk =
-        Just
-          . pure
-          . ConT
-          . mkName
-          . T.unpack
-          . ((vulkanTypesModule <> ".") <>)
-          . unName
-          . mkTyName
-      someVk t = Just $ do
-        let structTyCon =
-              ConT
-                . mkName
-                . T.unpack
-                . ((vulkanTypesModule <> ".") <>)
-                . unName
-                . mkTyName
-                $ t
-        -- Never expose vulkan structs as applied
-        pure
-          $  ConT (mkName (T.unpack vulkanTypesModule <> "." <> "SomeStruct"))
-          :@ structTyCon
-  in  \case
-        TypeName n | n `elem` vulkanMonoNames -> vk n
-                   | n `elem` vulkanPolyNames -> someVk n
-        _ -> Nothing
+  let
+    vk =
+      Just
+        . pure
+        . ConT
+        . mkName
+        . T.unpack
+        . ((vulkanTypesModule <> ".") <>)
+        . unName
+        . mkTyName
+    someVk t = Just $ do
+      let structTyCon =
+            ConT
+              . mkName
+              . T.unpack
+              . ((vulkanTypesModule <> ".") <>)
+              . unName
+              . mkTyName
+              $ t
+      -- Never expose vulkan structs as applied
+      pure
+        $  ConT (mkName (T.unpack vulkanTypesModule <> "." <> "SomeStruct"))
+        :@ structTyCon
+    handle (CName t) = do
+      t' <- T.stripPrefix "Vk" t
+      pure . pure $ ConT ''Ptr :@ ConT
+        (mkName (T.unpack vulkanTypesModule <> "." <> T.unpack t' <> "_T"))
+  in
+    \case
+      TypeName n | n `elem` vulkanDispatchableHandleNames -> handle n
+                 | n `elem` vulkanMonoNames               -> vk n
+                 | n `elem` vulkanPolyNames               -> someVk n
+      _ -> Nothing
 
-vulkanMonoNames, vulkanPolyNames, vulkanNames :: [CName]
+vulkanDispatchableHandleNames, vulkanMonoNames, vulkanPolyNames, vulkanNames
+  :: [CName]
+vulkanDispatchableHandleNames = ["VkInstance", "VkPhysicalDevice", "VkDevice"]
 vulkanMonoNames =
-  [ "VkInstance"
-  , "VkPhysicalDevice"
-  , "VkDevice"
-  , "VkImage"
+  [ "VkImage"
   , "VkResult"
   , "VkFormat"
   , "VkAllocationCallbacks"
   , "PFN_vkGetInstanceProcAddr"
   ]
 vulkanPolyNames = ["VkInstanceCreateInfo", "VkDeviceCreateInfo"]
-vulkanNames = vulkanMonoNames <> vulkanPolyNames
+vulkanNames =
+  vulkanDispatchableHandleNames <> vulkanMonoNames <> vulkanPolyNames
 
-vulkanHaskellNames :: RenderParams -> [Name]
-vulkanHaskellNames RenderParams {..} =
-  mkName (T.unpack vulkanTypesModule <> "." <> "SomeStruct")
+vulkanNewtypes :: RenderParams -> Vector Name
+vulkanNewtypes RenderParams {..} =
+  fromList
+    $ mkName (T.unpack vulkanTypesModule <> "." <> "SomeStruct")
     : (typeNameWithModule (ModName vulkanTypesModule) . mkTyName <$> vulkanNames
       )
+
+vulkanHaskellNames :: RenderParams -> Vector Name
+vulkanHaskellNames ps@RenderParams {..} = vulkanNewtypes ps <> fromList
+  (   typeNameWithModule (ModName vulkanTypesModule)
+  .   mkEmptyDataName
+  <$> vulkanDispatchableHandleNames
+  )
 
 ----------------------------------------------------------------
 -- Bespoke commands

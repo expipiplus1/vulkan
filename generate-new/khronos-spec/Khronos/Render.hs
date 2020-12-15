@@ -23,7 +23,6 @@ import qualified Khronos.Versions.OpenXR       as Xr
 import           Marshal
 import           Render.Alias
 import           Render.Atom
-import           Render.CStruct
 import           Render.Command
 import           Render.Constant
 import           Render.Dynamic
@@ -134,9 +133,7 @@ renderSpec spec@Spec {..} getDoc brackets ss us cs = do
                                <$> filterConstants specExtensionConstants
     , rsOthers             = bespokeElements (specFlavor @t)
                              <> V.singleton (renderDynamicLoader (specFlavor @t) cs)
-                             <> cStructDocs
                              <> V.singleton marshalUtils
-                             <> V.singleton zeroClass
                              <> V.singleton hasObjectTypeClass
                              <> V.singleton (vkExceptionRenderElement getDoc vkResult)
                              <> case sSpecFlavor @t of

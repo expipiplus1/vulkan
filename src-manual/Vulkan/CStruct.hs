@@ -1,14 +1,15 @@
 {-# language CPP #-}
--- No documentation found for Chapter "CStruct"
-module Vulkan.CStruct  ( ToCStruct(..)
-                       , FromCStruct(..)
-                       ) where
 
-import Control.Exception.Base (bracket)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
-import Foreign.Marshal.Alloc (callocBytes)
-import Foreign.Marshal.Alloc (free)
-import Foreign.Ptr (Ptr)
+module Vulkan.CStruct
+  ( ToCStruct(..)
+  , FromCStruct(..)
+  ) where
+
+import           Control.Exception.Base         ( bracket )
+import           Foreign.Marshal.Alloc          ( allocaBytesAligned )
+import           Foreign.Marshal.Alloc          ( callocBytes )
+import           Foreign.Marshal.Alloc          ( free )
+import           Foreign.Ptr                    ( Ptr )
 
 -- | A class for types which can be marshalled into a C style
 -- structure.
@@ -50,4 +51,3 @@ class ToCStruct a where
 class FromCStruct a where
   -- | Read an @a@ and any other pointed to data from memory
   peekCStruct :: Ptr a -> IO a
-

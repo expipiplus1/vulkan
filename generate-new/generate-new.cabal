@@ -48,7 +48,6 @@ library
       Render.Atom
       Render.Command
       Render.Constant
-      Render.CStruct
       Render.Dynamic
       Render.Element
       Render.Element.Write

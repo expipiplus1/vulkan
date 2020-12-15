@@ -81,7 +81,6 @@ library
       OpenXR.Core10.Session
       OpenXR.Core10.Space
       OpenXR.Core10.ViewConfigurations
-      OpenXR.CStruct
       OpenXR.CStruct.Extends
       OpenXR.CStruct.Utils
       OpenXR.Dynamic
@@ -144,9 +143,10 @@ library
       OpenXR.Extensions.XR_VARJO_quad_views
       OpenXR.NamedType
       OpenXR.Version
-      OpenXR.Zero
+      OpenXR.CStruct
       OpenXR.Internal.Utils
       OpenXR.VulkanTypes
+      OpenXR.Zero
   hs-source-dirs:
       src
       src-manual

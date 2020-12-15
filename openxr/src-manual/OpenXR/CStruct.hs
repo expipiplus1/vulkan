@@ -1,14 +1,21 @@
 {-# language CPP #-}
--- No documentation found for Chapter "CStruct"
-module OpenXR.CStruct  ( ToCStruct(..)
-                       , FromCStruct(..)
-                       ) where
 
-import Control.Exception.Base (bracket)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
-import Foreign.Marshal.Alloc (callocBytes)
-import Foreign.Marshal.Alloc (free)
-import Foreign.Ptr (Ptr)
+module OpenXR.CStruct
+  ( ToCStruct(..)
+  , FromCStruct(..)
+  ) where
+
+#if defined(USE_VULKAN_TYPES)
+
+import           Vulkan.CStruct
+
+#else
+
+import           Control.Exception.Base         ( bracket )
+import           Foreign.Marshal.Alloc          ( allocaBytesAligned )
+import           Foreign.Marshal.Alloc          ( callocBytes )
+import           Foreign.Marshal.Alloc          ( free )
+import           Foreign.Ptr                    ( Ptr )
 
 -- | A class for types which can be marshalled into a C style
 -- structure.
@@ -51,3 +58,4 @@ class FromCStruct a where
   -- | Read an @a@ and any other pointed to data from memory
   peekCStruct :: Ptr a -> IO a
 
+#endif

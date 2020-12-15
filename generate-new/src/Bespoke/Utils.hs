@@ -1,7 +1,6 @@
 {-# language QuasiQuotes #-}
 module Bespoke.Utils
   ( marshalUtils
-  , zeroClass
   , hasObjectTypeClass
   ) where
 
@@ -41,96 +40,6 @@ hasObjectTypeClass = genRe "HasObjectType class" $ do
   tellDoc $ "class HasObjectType a where" <> line <> indent
     2
     ("objectTypeAndHandle :: a ->" <+> tupled [pretty objectType, "Word64"])
-
-zeroClass :: (HasErr r, HasRenderParams r) => Sem r RenderElement
-zeroClass = genRe "zero class" $ do
-  traverseV_
-    tellImport
-    [ 'nullPtr
-    , 'nullFunPtr
-    , ''CFloat
-    , ''CChar
-    , ''CSize
-    , ''CInt
-    , ''Int8
-    , ''Int16
-    , ''Int32
-    , ''Int64
-    , ''Word8
-    , ''Word16
-    , ''Word32
-    , ''Word64
-    , ''KnownNat
-    , ''Storable
-    , ''FunPtr
-    , ''Ptr
-    ]
-
-  tellExport (EClass (TyConName "Zero"))
-  tellExplicitModule =<< mkModuleName ["Zero"]
-  tellNotReexportable
-
-  tellDoc [qi|
-    -- | A class for initializing things with all zero data
-    --
-    -- Any instance should satisfy the following law:
-    --
-    -- @ new zero = calloc @ or @ with zero = withZeroCStruct @
-    --
-    -- i.e. Marshaling @zero@ to memory yeilds only zero-valued bytes, except
-    -- for structs which require a "type" tag
-    --
-    class Zero a where
-      zero :: a
-
-    instance Zero Bool where
-      zero = False
-
-    instance Zero (FunPtr a) where
-      zero = nullFunPtr
-
-    instance Zero (Ptr a) where
-      zero = nullPtr
-
-    instance Zero Int8 where
-      zero = 0
-
-    instance Zero Int16 where
-      zero = 0
-
-    instance Zero Int32 where
-      zero = 0
-
-    instance Zero Int64 where
-      zero = 0
-
-    instance Zero Word8 where
-      zero = 0
-
-    instance Zero Word16 where
-      zero = 0
-
-    instance Zero Word32 where
-      zero = 0
-
-    instance Zero Word64 where
-      zero = 0
-
-    instance Zero Float where
-      zero = 0
-
-    instance Zero CFloat where
-      zero = 0
-
-    instance Zero CChar where
-      zero = 0
-
-    instance Zero CSize where
-      zero = 0
-
-    instance Zero CInt where
-      zero = 0
-    |]
 
 marshalUtils :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 marshalUtils = genRe "marshal utils" $ do

@@ -2,11 +2,8 @@
 
 module OpenXR.VulkanTypes
   ( Instance_T
-  , Instance(..)
   , PhysicalDevice_T
-  , PhysicalDevice(..)
   , Device_T
-  , Device(..)
   , Image(..)
   , Result(..)
   , Format(..)
@@ -36,19 +33,10 @@ import           Foreign.Storable
 import           OpenXR.Zero
 
 data Instance_T
-newtype Instance = Instance (Ptr Instance_T)
-  deriving stock (Eq, Show)
-  deriving newtype (Zero, Storable)
 
 data PhysicalDevice_T
-newtype PhysicalDevice = PhysicalDevice (Ptr PhysicalDevice_T)
-  deriving stock (Eq, Show)
-  deriving newtype (Zero, Storable)
 
 data Device_T
-newtype Device = Device (Ptr Device_T)
-  deriving stock (Eq, Show)
-  deriving newtype (Zero, Storable)
 
 newtype Image = Image Word64
   deriving stock (Eq, Show)
