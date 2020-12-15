@@ -53,9 +53,10 @@ main =
                | Feature {..}      <- toList specFeatures
                , major : minor : _ <- pure $ versionBranch fVersion
                ]
-        doLoadDocs = False
+        doLoadDocs = True
     getDocumentation <- if doLoadDocs
-      then liftIO $ loadAllDocumentation allExtensionNames
+      then liftIO $ loadAllDocumentation SpecXr
+                                         allExtensionNames
                                          "./OpenXR-Docs/specification"
                                          "./OpenXR-Docs/specification/man"
       else pure (const Nothing)

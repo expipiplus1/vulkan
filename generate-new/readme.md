@@ -101,7 +101,7 @@ During development unfinished bits not to forget are listed here.
 - [ ] Remove vulkan stuff from bespokeSizes
   - Would be nice to generate it automatically, but it's fine as it is
 
-- [ ] Fix runAsciidoctor
+- [x] Fix runAsciidoctor
 
 - [x] These are passed as pointers ,(see Bespoke.MarshalParams.isPassAsPointerType')
 

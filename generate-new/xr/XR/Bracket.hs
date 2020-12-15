@@ -79,7 +79,6 @@ brackets marshaledCommands handles = context "brackets" $ do
     -- TODO:
     -- , cdBracket "VulkanInstanceKHR"
     -- , cdBracket "VulkanDeviceKHR"
-
     , beBracket "Session"
     , beBracket "Frame"
     ]

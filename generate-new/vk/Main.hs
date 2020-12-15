@@ -57,7 +57,8 @@ main =
                ]
         doLoadDocs = True
     getDocumentation <- if doLoadDocs
-      then liftIO $ loadAllDocumentation allExtensionNames
+      then liftIO $ loadAllDocumentation SpecVk
+                                         allExtensionNames
                                          "./Vulkan-Docs"
                                          "./Vulkan-Docs/gen/refpage"
       else pure (const Nothing)

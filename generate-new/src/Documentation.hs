@@ -23,6 +23,7 @@ import           Relude                  hiding ( elem
                                                 , rem
                                                 )
 import           Say
+import           Spec.Flavor
 import           Spec.Name
 import           System.Environment
 import           System.FilePath                ( takeBaseName )
@@ -44,16 +45,20 @@ data Documentee
   deriving (Show, Eq, Ord)
 
 docBookToDocumentation
-  :: Text
+  :: SpecFlavor
+  -> Text
   -- ^ The docbook string
   -> Text
   -- ^ The documentee name
   -> Either Text [Documentation]
-docBookToDocumentation db name = do
+docBookToDocumentation specFlavor db name = do
   let readerOptions = def
   pandoc <- first show $ runPure (readDocBook readerOptions db)
+  let prefix = case specFlavor of
+        SpecVk -> "VK_"
+        SpecXr -> "XR_"
 
-  if "VK_" `T.isPrefixOf` name && T.any isLower name
+  if prefix `T.isPrefixOf` name && T.any isLower name
     then pure [Documentation (Chapter name) pandoc]
     else do
       (removed, unmergedSubDocs) <- splitDocumentation (CName name) pandoc
@@ -181,11 +186,15 @@ dropBeginningSpan = \case
 
 main :: IO ()
 main = do
-  [vulkanDocsDir, manPage] <- getArgs
-  manTxtToDocbook [] vulkanDocsDir manPage >>= \case
+  [flavor, vulkanDocsDir, manPage] <- getArgs
+  let f = case flavor of
+        "vk" -> SpecVk
+        "xr" -> SpecXr
+        _    -> error "invalid flavor"
+  manTxtToDocbook f [] vulkanDocsDir manPage >>= \case
     Left e -> sayErr e
     Right d' ->
-      case docBookToDocumentation d' (T.pack (takeBaseName manPage)) of
+      case docBookToDocumentation f d' (T.pack (takeBaseName manPage)) of
         Left  e  -> sayErr e
         Right ds -> for_ ds pPrint
 
