@@ -148,8 +148,7 @@ During development unfinished bits not to forget are listed here.
 
 - [ ] make Xr stuff in `bespokeModules`
 
-- [ ] dual-use commands have a different style in OpenXR... they're wrong now
-  - [x] basically done, apart from eliding the (unused) length input parameter
+- [x] dual-use commands have a different style in OpenXR... they're wrong now
   - [ ] `xrEnumerateApiLayerProperties`
   - [ ] `xrEnumerateInstanceExtensionProperties`
   - [ ] `xrEnumerateSwapchainFormats`
@@ -180,7 +179,7 @@ During development unfinished bits not to forget are listed here.
 
 - [ ] Remove or improve special handling for `CompositionLayerBaseHeader`
 
-- [ ] Remove or improve special handling for `enumerateSwapchainImages`
+- [x] Remove or improve special handling for `enumerateSwapchainImages`
 
 - [ ] Remove uses of `schemeTypeNegativeWithContext` in `Render.Command` (there
   are TODOs) in the code.

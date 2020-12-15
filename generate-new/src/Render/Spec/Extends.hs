@@ -412,6 +412,7 @@ inheritanceClasses Spec{} = do
   tellExport (ETerm (TermName "withSomeChild"))
   tellExport (ETerm (TermName "lowerChildPointer"))
   tellExport (ETerm (TermName "peekSomeCChild"))
+  tellExport (EType (TyConName "Inherits"))
   tellImport (TyConName "ToCStruct")
   tellImport ''Relude.Type
   tellImport ''Ptr

@@ -20,6 +20,7 @@ import           Foreign.Ptr
 import           Haskell
 import           Language.Haskell.TH
 import           Polysemy
+import           Polysemy.Input
 import           Relude                  hiding ( Handle
                                                 , Type
                                                 , uncons
@@ -30,7 +31,19 @@ import           Render.Stmts.Poke              ( CmdsDoc(..) )
 import           Render.Type.Preserve
 import           Spec.Parse
 import           Text.Casing             hiding ( dropPrefix )
+import           Text.InterpolatedString.Perl6.Unindented
 import           VkModulePrefix
+
+import           Control.Exception
+import           Control.Monad.Trans.Cont
+import           Data.Vector                    ( generateM )
+import           Foreign.Marshal.Alloc          ( callocBytes
+                                                , free
+                                                )
+import           Foreign.Storable               ( Storable )
+import           GHC.IO.Exception               ( IOErrorType(..)
+                                                , IOException(..)
+                                                )
 
 renderParams :: Vector Handle -> RenderParams
 renderParams handles = r
@@ -141,12 +154,7 @@ renderParams handles = r
     , versionType                    = TypeName "XrVersion"
     , exceptionTypeName              = TyConName "OpenXrException"
     , complexMemberLengthFunction    = \_ _ _ -> Nothing
-    , isExternalName                 = let
-                                         vk s = Just (ModName $ vulkanModulePrefix <> "." <> s)
-                                         isVulkanName = const False
-                                       in
-                                         \n ->
-                                           if isVulkanName n then error "AAAAASD" else Nothing
+    , isExternalName                 = const Nothing
     , externalDocHTML                = Just
       "https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html"
     , objectTypePattern              = pure
@@ -185,6 +193,7 @@ dropPointer =
     . first (\p -> if T.all (== 'p') p then "" else p)
     . T.span isLower
 
+vulkanTypesModule :: Text
 vulkanTypesModule = "OpenXR.VulkanTypes"
 
 -- TODO: Generate this automatically
@@ -221,6 +230,7 @@ vulkanManifest structStyle RenderParams {..} =
                    | n `elem` vulkanPolyNames -> someVk n
         _ -> Nothing
 
+vulkanMonoNames, vulkanPolyNames, vulkanNames :: [CName]
 vulkanMonoNames =
   [ "VkInstance"
   , "VkPhysicalDevice"
@@ -244,10 +254,83 @@ vulkanHaskellNames RenderParams {..} =
 -- Bespoke commands
 ----------------------------------------------------------------
 
+-- xrEnumerateSwapchainImages needs special handling because its return value
+-- is polymorphic and in an array.
 commandOverrides'
   :: (HasRenderParams r, HasRenderElem r) => CName -> Maybe (Sem r ())
 commandOverrides' = \case
-  -- "xrEnumerateSwapchainImages" -> Just $ do
-  --   tellExport (ETerm (TermName "enumerateSwapchainImages"))
-  --   tellDoc "-- TODO xrEnumerateSwapchainImages"
+  "xrEnumerateSwapchainImages" -> Just $ do
+    RenderParams {..} <- input
+    tellExport (ETerm (TermName "enumerateSwapchainImages"))
+    traverse_
+      tellImport
+      [ ''FunPtr
+      , ''Ptr
+      , ''Word32
+      , ''MonadIO
+      , ''Vector
+      , 'liftIO
+      , 'evalContT
+      , 'lift
+      , 'unless
+      , 'nullFunPtr
+      , 'throwIO
+      , 'IOError
+      , 'InvalidArgument
+      , 'ContT
+      , 'bracket
+      , 'callocBytes
+      , 'free
+      , 'when
+      , 'generateM
+      , 'traverse_
+      ]
+    traverse_ tellImportWithAll [''ContT, ''Storable]
+    traverse_
+      (tellImport . TyConName)
+      [ "Swapchain_T"
+      , "SomeChild"
+      , "SwapchainImageBaseHeader"
+      , "Inherits"
+      , "FromCStruct"
+      , "Swapchain"
+      , ":::"
+      ]
+    traverse_ (tellImport . TermName) ["advancePtrBytes", "lowerChildPointer"]
+    tellImport
+      (mkName (T.unpack modulePrefix <> ".Internal.Utils.traceAroundEvent"))
+    traverse_ (tellImportWithAll . TyConName)
+              ["ToCStruct", "Result", "OpenXrException", "InstanceCmds"]
+    tellDocWithHaddock $ \getDoc -> [qqi|
+      foreign import ccall
+      #if !defined(SAFE_FOREIGN_CALLS)
+        unsafe
+      #endif
+        "dynamic" mkXrEnumerateSwapchainImages
+        :: FunPtr (Ptr Swapchain_T -> Word32 -> Ptr Word32 -> Ptr (SomeChild SwapchainImageBaseHeader) -> IO Result) -> Ptr Swapchain_T -> Word32 -> Ptr Word32 -> Ptr (SomeChild SwapchainImageBaseHeader) -> IO Result
+
+      {getDoc (TopLevel "xrEnumerateSwapchainImages")}
+      enumerateSwapchainImages :: forall a io
+                                . (Inherits SwapchainImageBaseHeader a, ToCStruct a, FromCStruct a, MonadIO io)
+                               => {getDoc (Nested "xrEnumerateSwapchainImages" "swapchain")}
+                                  Swapchain
+                               -> io (Result, "images" ::: Vector a)
+      enumerateSwapchainImages swapchain = liftIO . evalContT $ do
+        let xrEnumerateSwapchainImagesPtr = pXrEnumerateSwapchainImages (instanceCmds (swapchain :: Swapchain))
+        lift $ unless (xrEnumerateSwapchainImagesPtr /= nullFunPtr) $
+          throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateSwapchainImages is null" Nothing Nothing
+        let xrEnumerateSwapchainImages' = mkXrEnumerateSwapchainImages xrEnumerateSwapchainImagesPtr
+        let swapchain' = swapchainHandle swapchain
+        pImageCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
+        r <- lift $ traceAroundEvent "xrEnumerateSwapchainImages" (xrEnumerateSwapchainImages' swapchain' 0 pImageCountOutput nullPtr)
+        lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
+        imageCountOutput <- lift $ peek @Word32 pImageCountOutput
+        pImages <- ContT $ bracket (callocBytes @a (fromIntegral imageCountOutput * cStructSize @a)) free
+        traverse_ (\\i -> ContT $ pokeZeroCStruct (pImages `advancePtrBytes` (i * cStructSize @a) :: Ptr a) . ($ ())) [0..fromIntegral imageCountOutput - 1]
+        r' <- lift $ traceAroundEvent "xrEnumerateSwapchainImages" (xrEnumerateSwapchainImages' swapchain' imageCountOutput pImageCountOutput (lowerChildPointer pImages))
+        lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
+        imageCountOutput' <- lift $ peek @Word32 pImageCountOutput
+        images' <- lift $ generateM (fromIntegral imageCountOutput') (\\i -> peekCStruct @a (pImages `advancePtrBytes` (cStructSize @a * i) :: Ptr a))
+        pure (r', images')
+    |]
   _ -> Nothing
