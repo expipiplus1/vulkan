@@ -16,7 +16,9 @@ import           Data.Text.Extra                ( lowerCaseFirst
 import           Data.Text.Extra               as T
                                                 ( (<+>) )
 import           Data.Text.Prettyprint.Doc      ( pretty )
-import           Data.Vector                    ( Vector )
+import           Data.Vector                    ( Vector
+                                                , generateM
+                                                )
 import           Foreign.Ptr
 import           Haskell
 import           Language.Haskell.TH
@@ -37,7 +39,6 @@ import           VkModulePrefix
 
 import           Control.Exception
 import           Control.Monad.Trans.Cont
-import           Data.Vector                    ( generateM )
 import           Foreign.Marshal.Alloc          ( callocBytes
                                                 , free
                                                 )
@@ -53,13 +54,13 @@ renderParams handles = r
     [ hName | Handle {..} <- toList handles, hDispatchable == Dispatchable ]
   vulkanParams = Vk.renderParams handles
   r            = RenderParams
-    { mkTyName = \n -> TyConName . upperCaseFirst . dropXr $ n
-    , mkConName = \_ n -> ConName . upperCaseFirst . dropXr $ n
+    { mkTyName                       = TyConName . upperCaseFirst . dropXr
+    , mkConName                      = \_ -> ConName . upperCaseFirst . dropXr
     , mkMemberName                   = \_parent ->
                                          TermName . lowerCaseFirst . dropPointer . unCName
     , mkFunName                      = TermName . lowerCaseFirst . dropXr
     , mkParamName                    = TermName . dropPointer . unCName
-    , mkPatternName = \n -> ConName . upperCaseFirst . dropXr $ n
+    , mkPatternName                  = ConName . upperCaseFirst . dropXr
     , mkFuncPointerName              = TyConName . T.tail . unCName
     , mkFuncPointerMemberName = TermName . ("p" <>) . upperCaseFirst . unCName
     , mkEmptyDataName                = TyConName . (<> "_T") . dropXr
@@ -200,7 +201,7 @@ vulkanTypesModule = "OpenXR.VulkanTypes"
 -- TODO: Generate this automatically
 vulkanManifest
   :: ExtensibleStructStyle r -> RenderParams -> CType -> Maybe (Sem r Type)
-vulkanManifest structStyle RenderParams {..} =
+vulkanManifest _structStyle RenderParams {..} =
   let vk =
         Just
           . pure
@@ -219,13 +220,10 @@ vulkanManifest structStyle RenderParams {..} =
                 . unName
                 . mkTyName
                 $ t
-        case structStyle of
-          -- Never expose vulkan structs as applied
-          _ ->
-            pure
-              $  ConT
-                   (mkName (T.unpack vulkanTypesModule <> "." <> "SomeStruct"))
-              :@ structTyCon
+        -- Never expose vulkan structs as applied
+        pure
+          $  ConT (mkName (T.unpack vulkanTypesModule <> "." <> "SomeStruct"))
+          :@ structTyCon
   in  \case
         TypeName n | n `elem` vulkanMonoNames -> vk n
                    | n `elem` vulkanPolyNames -> someVk n
