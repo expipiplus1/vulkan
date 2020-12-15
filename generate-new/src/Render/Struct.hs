@@ -19,7 +19,11 @@ import           Foreign.Storable
 
 import           Bespoke
 import           CType
+import           Control.Exception              ( IOException
+                                                , throwIO
+                                                )
 import           Data.Char                      ( isUpper )
+import           Data.Traversable
 import           Data.Typeable
 import           Error
 import           Haskell                       as H
@@ -37,7 +41,8 @@ import           Render.Stmts
 import           Render.Stmts.Poke
 import           Render.Type
 import           Render.Utils
-import           Spec.Parse
+import           Spec.Types
+import           System.IO.Error                ( IOErrorType )
 
 renderStruct
   :: ( HasErr r
@@ -91,6 +96,7 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
       ]
     renderExtensibleInstance s
     renderInheritableClass s
+    renderInheritableParentInstance s
     renderInheritableInstance s
     let lookupMember :: CName -> Maybe (SiblingInfo StructMember)
         lookupMember = (`Map.lookup` memberMap)
@@ -171,25 +177,81 @@ renderInheritableClass MarshaledStruct {..} | null (sInheritedBy msStruct) =
 renderInheritableClass MarshaledStruct {..} = context "inheritable class" $ do
   RenderParams {..} <- input
   className         <- inheritClassName msName
-  let exisName = TyConName ("Some" <> unName (mkTyName msName))
-  let t        = mkTyName msName
+  let t = mkTyName msName
   tellExport (EClass className)
-  tellDataExport exisName
   if null (sExtendedBy msStruct)
     then tellDoc [qqi|
       class ToCStruct a => {className} a where
         to{t} :: a -> {t}
-
-      data {exisName} where
-        {exisName} :: {className} a => a -> {exisName}
     |]
     else tellDoc [qqi|
       class ToCStruct a => {className} a where
         to{t} :: a -> {t} '[]
-
-      data {exisName} where
-        {exisName} :: {className} a => a -> {exisName}
     |]
+
+renderInheritableParentInstance
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
+  => MarshaledStruct AStruct
+  -> Sem r ()
+renderInheritableParentInstance MarshaledStruct {..}
+  | null (sInheritedBy msStruct) = pure ()
+  | otherwise = do
+    RenderParams {..} <- input
+    let structType = mkTyName "XrStructureType"
+    let t          = mkTyName msName
+    let h = if null (sExtendedBy msStruct)
+          then pretty t
+          else parens (pretty t <+> "'[]")
+    tellImportWithAll (TyConName "Inheritable")
+    tellImport 'castPtr
+    tellImportWithAll (TyConName "SomeChild")
+    tellImport 'throwIO
+    tellImportWithAll ''IOException
+    tellImportWithAll ''IOErrorType
+    tellImport structType
+    cases <- fmap toList . for (sInheritedBy msStruct) $ \cName -> do
+      getStruct cName >>= \case
+        Nothing    -> throw "Unable to find child struct"
+        Just child -> do
+          let cHName = mkTyName (sName child)
+          tellSourceImport cHName
+          e <- mkPatternName <$> getStructTypeTag child
+          tellImport e
+          pure
+            [qqi|{e} -> SomeChild <$> peekCStruct (castPtr @(SomeChild {h}) @{cHName} p)|]
+    tellDoc [qqi|
+      instance Inheritable {h} where
+        peekSomeCChild :: Ptr (SomeChild {h}) -> IO (SomeChild {h})
+        peekSomeCChild p = do
+          ty <- peek @StructureType (castPtr @(SomeChild {h}) @{pretty structType} p)
+          case ty of
+      {indent 6 (vsep cases)}
+            c -> throwIO $
+              IOError
+                Nothing
+                InvalidArgument
+                "peekSomeCChild"
+                ("Illegal struct inheritance of {t} with " <> show c)
+                Nothing
+                Nothing
+    |]
+
+getStructTypeTag
+  :: (HasSpecInfo r, HasRenderParams r, HasErr r) => Struct -> Sem r CName
+getStructTypeTag Struct {..} = do
+  RenderParams {..} <- input
+  estt              <- maybe (throw "No extensible structure type tag type")
+                             pure
+                             extensibleStructTypeType
+
+  case sMembers V.!? 0 of
+    Just (StructMember smName (TypeName estt') vals _ _ _)
+      | Just smName == extensibleStructTypeMemberName, estt' == estt -> case
+          vals
+        of
+          V.Singleton typeEnum -> pure (CName typeEnum)
+          _                    -> throw "Multiple values for sType"
+    _ -> throw $ "Unable to find sType member in " <> show sName
 
 renderInheritableInstance
   :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)

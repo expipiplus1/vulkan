@@ -167,7 +167,6 @@ During development unfinished bits not to forget are listed here.
   - [x] `xrEnumerateDisplayRefreshRatesFB`
   - [x] `xrEnumerateColorSpacesFB`
 
-
 - [x] Implement OpenXR's polymorphic types
 
 - [x] change `\CFloat a -> a` to `coerce @CFloat @Float`

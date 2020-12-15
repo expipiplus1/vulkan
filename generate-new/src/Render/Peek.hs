@@ -296,15 +296,15 @@ wrappedChildStructPeek name addrRef toName fromPtr = case fromPtr of
     ty <- cToHsTypeWithHoles DoPreserve from
     stmtC (Just ty) name $ do
       AddrDoc addr <- use addrRef
-      tellImport (TermName "peekSomeCChild")
+      tellImportWith (TyConName "Inheritable") (TermName "peekSomeCChild")
       pure $ IOAction (ValueDoc ("peekSomeCChild" <+> addr))
 
   Ptr _ from@(Ptr Const (TypeName n)) | n == toName -> do
     ty <- cToHsTypeWithHoles DoPreserve from
     stmtC (Just ty) name $ do
       AddrDoc addr <- use addrRef
-      tellImport (TermName "peekSomeCChild")
-      tellImportWith ''Storable 'peek
+      tellImportWith (TyConName "Inheritable") (TermName "peekSomeCChild")
+      tellImportWith ''Storable                'peek
       pure $ IOAction (ValueDoc ("peekSomeCChild =<< peek" <+> addr))
 
   _ -> throw $ "Unhandled WrappedStruct peek from " <> show fromPtr

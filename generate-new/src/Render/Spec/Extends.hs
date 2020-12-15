@@ -23,6 +23,7 @@ import           GHC.TypeLits
 import           Type.Reflection
 
 import           CType
+import           Data.Traversable
 import           Error
 import           Haskell
 import           Render.Element
@@ -407,29 +408,47 @@ inheritanceClasses
    . (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderElem r)
   => Spec t
   -> Sem r ()
-inheritanceClasses Spec{} = do
+inheritanceClasses Spec {..} = do
+  RenderParams {..} <- input
   tellExport (EData (TyConName "SomeChild"))
   tellExport (ETerm (TermName "withSomeChild"))
   tellExport (ETerm (TermName "lowerChildPointer"))
-  tellExport (ETerm (TermName "peekSomeCChild"))
   tellExport (EType (TyConName "Inherits"))
+  tellExport (EClass (TyConName "Inheritable"))
   tellImport (TyConName "ToCStruct")
   tellImport ''Relude.Type
   tellImport ''Ptr
   tellImport 'castPtr
+  tellImport ''TypeError
+  tellImportWithAll ''ErrorMessage
+  let parentsAndChildren =
+        toList . flip V.concatMap specStructs $ \Struct {..} ->
+          (sName, ) <$> sInheritedBy
+  inheritsCases <- for parentsAndChildren $ \(p, c) -> do
+    let pTyName = mkTyName p
+        pTy     = case p of
+          "XrCompositionLayerBaseHeader" -> parens (pretty pTyName <+> "'[]")
+          _                              -> pretty pTyName
+        cTy = mkTyName c
+    tellSourceImport pTyName
+    tellSourceImport cTy
+    pure [qqi|Inherits {pTy} {cTy} = ()|]
   tellDoc [qqi|
     data SomeChild (a :: Type) where
-      SomeChild :: forall a b . (Inherits a b, ToCStruct b, Show b) => b -> SomeChild a
+      SomeChild :: forall a b . (Inherits a b, Typeable b, ToCStruct b, Show b) => b -> SomeChild a
     deriving instance Show (SomeChild a)
 
-    type family Inherits (a :: Type) (b :: Type) where
+    type family Inherits (a :: Type) (b :: Type) :: Constraint where
+    {indent 2 (vsep inheritsCases)}
+      Inherits parent child =
+        TypeError (ShowType parent :<>: Text " is not inherited by " :<>: ShowType child)
+
+    class Inheritable (a :: Type) where
+      peekSomeCChild :: Ptr (SomeChild a) -> IO (SomeChild a)
 
     withSomeChild :: SomeChild a -> (Ptr (SomeChild a) -> IO b) -> IO b
     withSomeChild (SomeChild c) f = withCStruct c (f . lowerChildPointer)
 
     lowerChildPointer :: Inherits a b => Ptr b -> Ptr (SomeChild a)
     lowerChildPointer = castPtr
-
-    peekSomeCChild :: Ptr (SomeChild a) -> IO (SomeChild a)
-    peekSomeCChild p = error "TODO"
   |]
