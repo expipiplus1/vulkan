@@ -189,7 +189,7 @@ During development unfinished bits not to forget are listed here.
   - [ ] affects at least xrGetVisibilityMaskKHR and a few extension functions.
   - [ ] Look at every use of "CapacityInput" or "CountOutput"
 
-- [ ] Fix or remove XR_EXT_conformance_automation
+- [x] Fix or remove `XR_EXT_conformance_automation`
   - Annoying to fix because it passes structs by value so would need a C shim
 
 ### 1.2.162

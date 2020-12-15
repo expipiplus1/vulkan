@@ -1060,10 +1060,13 @@ notDisabled = disabled NotDisabled
 
 disabled :: ParseDisabled -> Node -> Bool
 disabled p e =
-  let comp = case p of
-        NotDisabled  -> (/=)
-        OnlyDisabled -> (==)
-  in  Just "disabled" `comp` getAttr "supported" e
+  let markedDisabled = Just "disabled" == getAttr "supported" e
+      forceDisabled =
+        getAttr "name" e `elem` (Just <$> forceDisabledExtensions)
+      dis = markedDisabled || forceDisabled
+  in  case p of
+        NotDisabled  -> not dis
+        OnlyDisabled -> dis
 
 -- >>> parseAPIVersion "VK_API_VERSION_1_2"
 -- Just (Version {versionBranch = [1,2], versionTags = []})

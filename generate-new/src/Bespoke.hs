@@ -3,6 +3,7 @@
 {-# language TemplateHaskell #-}
 module Bespoke
   ( forbiddenConstants
+  , forceDisabledExtensions
   , assignBespokeModules
   , bespokeStructsAndUnions
   , bespokeElements
@@ -64,6 +65,9 @@ import           Spec.Types
 -- | These constants are defined elsewhere
 forbiddenConstants :: [CName]
 forbiddenConstants = ["VK_TRUE", "VK_FALSE", "XR_TRUE", "XR_FALSE"]
+
+forceDisabledExtensions :: [ByteString]
+forceDisabledExtensions = ["XR_EXT_conformance_automation"]
 
 ----------------------------------------------------------------
 -- Module assignments
