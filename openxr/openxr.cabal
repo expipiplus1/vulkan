@@ -38,7 +38,7 @@ flag trace-calls
   default: False
 
 flag use-vulkan-types
-  description: Reexport handles and structs from the 'vulkan' package instead of defining them in OpenXR.VulkanTypes. Disable this to avoid a dependency on 'vulkan'
+  description: Reexport handles and structs from the 'vulkan' package instead of defining them in OpenXR.VulkanTypes. Disable this to avoid a dependency. on 'vulkan'
   manual: True
   default: True
 
@@ -58,10 +58,6 @@ library
       OpenXR.Core10.Enums.InputSourceLocalizedNameFlags
       OpenXR.Core10.Enums.InstanceCreateFlags
       OpenXR.Core10.Enums.ObjectType
-      OpenXR.Core10.Enums.OverlayMainSessionFlagsEXTX
-      OpenXR.Core10.Enums.PerfSettingsDomainEXT
-      OpenXR.Core10.Enums.PerfSettingsNotificationLevelEXT
-      OpenXR.Core10.Enums.PerfSettingsSubDomainEXT
       OpenXR.Core10.Enums.ReferenceSpaceType
       OpenXR.Core10.Enums.Result
       OpenXR.Core10.Enums.SessionCreateFlags
