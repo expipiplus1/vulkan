@@ -33,7 +33,8 @@ let
       vulkan = self.developPackage {
         name = "vulkan";
         root = aggressiveFilter ../.;
-        modifier = drv: (mod drv).override { vulkan = pkgs.vulkan-loader; };
+        overrides = _: _: { vulkan = pkgs.vulkan-loader; };
+        modifier = mod;
         returnShellEnv = false;
         cabal2nixOptions = with pkgs.lib;
           concatStringsSep " "
@@ -71,6 +72,7 @@ let
       openxr = self.developPackage {
         name = "openxr";
         root = aggressiveFilter ../openxr;
+        overrides = _: _: { openxr_loader = pkgs.openxr-loader; };
         modifier = mod;
         returnShellEnv = false;
         cabal2nixOptions = with pkgs.lib;

@@ -21,6 +21,8 @@ library:
   - bytestring
   - transformers
   - vector
+  extra-libraries:
+    openxr_loader
   when:
   - condition: flag(safe-foreign-calls)
     cpp-options: -DSAFE_FOREIGN_CALLS
