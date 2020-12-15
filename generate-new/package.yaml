@@ -61,6 +61,8 @@ library:
 internal-libraries:
   khronos-spec:
     source-dirs: khronos-spec
+    dependencies:
+    - generate-new
 
 executables:
   vk:

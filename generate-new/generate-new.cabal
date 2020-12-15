@@ -167,6 +167,7 @@ library khronos-spec
     , directory
     , extra
     , filepath
+    , generate-new
     , inline-c
     , interpolatedstring-perl6
     , mtl

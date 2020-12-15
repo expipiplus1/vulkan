@@ -1,3 +1,4 @@
+{-# language QuasiQuotes #-}
 module XR.RenderParams
   ( renderParams
   ) where
