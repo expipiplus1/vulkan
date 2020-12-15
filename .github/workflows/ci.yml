@@ -274,6 +274,7 @@ jobs:
     - run: nix-build -A VulkanMemoryAllocator
     - run: nix-build -A vulkan-utils
     - run: nix-build -A openxr
+    - run: nix-build ./nix/haskell-packages.nix --arg openxrNoVulkan true -A openxr
     - run: nix-build -A vulkan-examples
     - run: nix-build nix/release.nix
     - run: nix-build nix/release.nix -A docs
