@@ -4,6 +4,7 @@ packages:
 - utils
 - examples
 - VulkanMemoryAllocator
+- openxr
 extra-deps:
 - sdl2-2.5.2.0
 - autoapply-0.4
