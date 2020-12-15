@@ -143,7 +143,7 @@ During development unfinished bits not to forget are listed here.
   - [ ] `MAY_ALIAS`
     - no need
 
-- [ ] Make Vulkan integration optional, have a module which either defines
+- [x] Make Vulkan integration optional, have a module which either defines
   opaque handles or reexports types from `vulkan`
 
 - [x] make Xr stuff in `bespokeModules`

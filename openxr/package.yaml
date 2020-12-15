@@ -28,6 +28,9 @@ library:
     cpp-options: -DGENERIC_INSTANCES
   - condition: flag(trace-calls)
     cpp-options: -DTRACE_CALLS
+  - condition: flag(use-vulkan-types)
+    cpp-options: -DUSE_VULKAN_TYPES
+    dependencies: vulkan >= 3.0
   ghc-options:
   - -Wall
   - -Wno-unticked-promoted-constructors
@@ -53,6 +56,13 @@ flags:
   trace-calls:
     description: Inserts calls to Debug.Trace.traceEventIO around every OpenXR call.
     default: no
+    manual: yes
+
+  use-vulkan-types:
+    description: Reexport handles and structs from the 'vulkan' package instead of
+      defining them in OpenXR.VulkanTypes. Disable this to avoid a dependency.
+      on 'vulkan'
+    default: yes
     manual: yes
 
 default-extensions:

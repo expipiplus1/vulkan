@@ -1,4 +1,28 @@
-module OpenXR.VulkanTypes where
+{-# LANGUAGE CPP #-}
+
+module OpenXR.VulkanTypes
+  ( Instance_T
+  , Instance(..)
+  , PhysicalDevice_T
+  , PhysicalDevice(..)
+  , Device_T
+  , Device(..)
+  , Image_T
+  , Image(..)
+  , Result(..)
+  , Format(..)
+  , InstanceCreateInfo
+  , DeviceCreateInfo
+  , AllocationCallbacks
+  , PFN_vkGetInstanceProcAddr
+  , SomeStruct(..)
+  ) where
+
+#if defined(USE_VULKAN_TYPES)
+
+import Vulkan
+
+#else // !defined(USE_VULKAN_TYPES)
 
 import           Data.Kind
 import           Data.Word
@@ -44,3 +68,5 @@ type PFN_vkGetInstanceProcAddr = FunPtr (CString -> IO (FunPtr ()))
 
 data SomeStruct (a :: [Type] -> Type) where
   SomeStruct :: forall a es. a es -> SomeStruct a
+
+#endif
