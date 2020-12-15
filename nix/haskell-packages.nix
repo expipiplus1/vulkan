@@ -71,6 +71,7 @@ let
       openxr = self.developPackage {
         name = "openxr";
         root = aggressiveFilter ../openxr;
+        modifier = mod;
         returnShellEnv = false;
         cabal2nixOptions = with pkgs.lib;
           concatStringsSep " "
