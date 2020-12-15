@@ -24,10 +24,30 @@ specVersions
   => Spec SpecXr
   -> Vector (Sem r RenderElement)
 specVersions Spec {..} = fromList
-  ( versionTypeElem
+  ( currentVersion specHeaderVersion
+  : versionTypeElem
   : versionConstruction
   : (featureVersion <$> toList specFeatures)
   )
+
+currentVersion
+  :: (HasRenderParams r, HasErr r)
+  => SpecHeaderVersion SpecXr
+  -> Sem r RenderElement
+currentVersion (XrVersion ma mi pa) = genRe "current version" $ do
+  RenderParams {..} <- input
+  tellExplicitModule =<< mkModuleName ["Version"]
+  let pat         = mkPatternName "XR_CURRENT_API_VERSION"
+      makeVersion = mkPatternName "XR_MAKE_VERSION"
+      ver         = mkTyName "XrVersion"
+  tellImport makeVersion
+  tellImport ver
+  tellExport (EPat pat)
+  tellDoc [qqi|
+    pattern {pat} :: {ver}
+    pattern {pat} = {makeVersion} {ma} {mi} {pa}
+  |]
+
 
 featureVersion
   :: (HasErr r, HasRenderParams r) => Feature -> Sem r RenderElement

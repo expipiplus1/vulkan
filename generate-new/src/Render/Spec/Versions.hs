@@ -1,5 +1,7 @@
 {-# language QuasiQuotes #-}
-module Render.Spec.Versions where
+module Render.Spec.Versions
+  ( specVersions
+  ) where
 
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
@@ -17,21 +19,16 @@ import           Render.Element
 import           Spec.Parse
 
 specVersions
-  :: forall r t
-   . (HasErr r, HasRenderParams r, KnownSpecFlavor t)
-  => Spec t
+  :: forall r
+   . (HasErr r, HasRenderParams r)
+  => Spec SpecVk
   -> Vector (Sem r RenderElement)
-specVersions Spec {..} = fromList
-  (  (case sSpecFlavor @t of
-       SSpecVk ->
-         [ headerVersion specHeaderVersion
-         , headerVersionComplete (fVersion (V.last specFeatures))
-                                 specHeaderVersion
-         ]
-       SSpecXr -> []
-     )
-  <> (versionConstruction : (featureVersion <$> toList specFeatures))
-  )
+specVersions Spec {..} =
+  fromList
+    $ [ headerVersion specHeaderVersion
+      , headerVersionComplete (fVersion (V.last specFeatures)) specHeaderVersion
+      ]
+    <> (versionConstruction : (featureVersion <$> toList specFeatures))
 
 headerVersion
   :: (HasErr r, HasRenderParams r)

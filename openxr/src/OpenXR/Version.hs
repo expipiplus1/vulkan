@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "Version"
-module OpenXR.Version  ( pattern MAKE_VERSION
+module OpenXR.Version  ( pattern CURRENT_API_VERSION
+                       , pattern MAKE_VERSION
                        , _VERSION_MAJOR
                        , _VERSION_MINOR
                        , _VERSION_PATCH
@@ -18,6 +19,10 @@ import Data.Word (Word16)
 import Data.Word (Word32)
 import Data.Word (Word64)
 import OpenXR.Zero (Zero)
+pattern CURRENT_API_VERSION :: Version
+pattern CURRENT_API_VERSION = MAKE_VERSION 1 0 13
+
+
 pattern MAKE_VERSION :: Word16 -> Word16 -> Word32 -> Version
 pattern MAKE_VERSION major minor patch <-
   (\v -> (_VERSION_MAJOR v, _VERSION_MINOR v, _VERSION_PATCH v) -> (major, minor, patch))

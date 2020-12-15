@@ -193,7 +193,7 @@ During development unfinished bits not to forget are listed here.
 - [x] Fix or remove `XR_EXT_conformance_automation`
   - Annoying to fix because it passes structs by value so would need a C shim
 
-- [ ] Expose XR_CURRENT_API_VERSION
+- [x] Expose XR_CURRENT_API_VERSION
 
 - [ ] Auto update functionality for OpenXR
 

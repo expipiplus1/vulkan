@@ -46,7 +46,7 @@ data Spec t = Spec
 
 data SpecHeaderVersion (t :: SpecFlavor) where
   VkVersion :: Word -> SpecHeaderVersion SpecVk
-  XRVersion :: SpecHeaderVersion SpecXr
+  XrVersion :: Word -> Word -> Word -> SpecHeaderVersion SpecXr
 
 deriving instance Show (SpecHeaderVersion t)
 

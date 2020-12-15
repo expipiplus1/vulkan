@@ -564,14 +564,30 @@ parseHeaderVersion es = do
       if name /= Just "VK_HEADER_VERSION"
         then pure Nothing
         else do
-          allText <- decode $ allText d
+          allText <- decode $ allNonCommentText d
           let ver = T.takeWhileEnd isNumber allText
           pure . fmap VkVersion $ readMaybe (T.unpack ver)
-    SSpecXr -> pure [XRVersion]
+    SSpecXr -> flip mapMaybeM defines $ \d -> do
+      name <- nameElemMaybe d
+      if name /= Just "XR_CURRENT_API_VERSION"
+        then pure Nothing
+        else do
+          allText <- decode $ allNonCommentText d
+          pure $ do
+            let nums =
+                  T.splitOn ","
+                    . T.init
+                    . T.tail
+                    . T.dropAround (`notElem` ['(', ')'])
+                    $ allText
+                r = readMaybe . T.unpack . T.strip
+            [ma, mi, pa] <- traverse r nums
+            pure $ XrVersion ma mi pa
   case vers of
     []  -> throw "No header version found in spec"
     [v] -> pure v
     vs  -> throw $ "Multiple header versions found in spec: " <> show vs
+
 
 ----------------------------------------------------------------
 -- Atoms
