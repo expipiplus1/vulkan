@@ -30,3 +30,4 @@ jobs:
           v package.yaml
           vma-v VulkanMemoryAllocator/package.yaml
           utils-v utils/package.yaml
+          xr-v openxr/package.yaml

@@ -62,7 +62,7 @@ fi
 ################################################################
 
 tagNames=(^v[0-9.]+$ ^vma-v[0-9.]+$ ^utils-v[0-9.]+$)
-funNames=(releaseVulkan releaseVMA releaseUtils)
+funNames=(releaseVulkan releaseVMA releaseUtils releaseOpenXR)
 
 # Get the tags on HEAD
 mapfile -t tags < <(git tag --points-at HEAD | sort)
@@ -121,6 +121,14 @@ releaseUtils() {
   ln -s "$(nix-build nix/release.nix -A docs.vulkan-utils --no-out-link)"/*.tar.gz "$assets/"
   awk '/## WIP/{flag=0;next};/##/{flag=flag+1};flag==1' <utils/changelog.md |
     sed "s/##/## vulkan-utils/" >>"$releaseNote"
+}
+
+releaseOpenXR() {
+  mkdir -p "$assets"
+  ln -s "$(nix-build nix/release.nix -A openxr --no-out-link)"/*.tar.gz "$assets/"
+  ln -s "$(nix-build nix/release.nix -A docs.openxr --no-out-link)"/*.tar.gz "$assets/"
+  awk '/## WIP/{flag=0;next};/##/{flag=flag+1};flag==1' <openxr/changelog.md |
+    sed "s/##/## OpenXR/" >>"$releaseNote"
 }
 
 for i in "${!tagMap[@]}"; do

@@ -1349,10 +1349,10 @@ instance ToCStruct ApplicationInfo where
 instance FromCStruct ApplicationInfo where
   peekCStruct p = do
     pApplicationName <- peek @(Ptr CChar) ((p `plusPtr` 16 :: Ptr (Ptr CChar)))
-    pApplicationName' <- maybePeek (\j -> packCString  (j)) pApplicationName
+    pApplicationName' <- maybePeek (\j -> packCString (j)) pApplicationName
     applicationVersion <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     pEngineName <- peek @(Ptr CChar) ((p `plusPtr` 32 :: Ptr (Ptr CChar)))
-    pEngineName' <- maybePeek (\j -> packCString  (j)) pEngineName
+    pEngineName' <- maybePeek (\j -> packCString (j)) pEngineName
     engineVersion <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
     apiVersion <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
     pure $ ApplicationInfo

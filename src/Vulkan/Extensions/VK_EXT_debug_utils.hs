@@ -1449,7 +1449,7 @@ instance FromCStruct DebugUtilsObjectNameInfoEXT where
     objectType <- peek @ObjectType ((p `plusPtr` 16 :: Ptr ObjectType))
     objectHandle <- peek @Word64 ((p `plusPtr` 24 :: Ptr Word64))
     pObjectName <- peek @(Ptr CChar) ((p `plusPtr` 32 :: Ptr (Ptr CChar)))
-    pObjectName' <- maybePeek (\j -> packCString  (j)) pObjectName
+    pObjectName' <- maybePeek (\j -> packCString (j)) pObjectName
     pure $ DebugUtilsObjectNameInfoEXT
              objectType objectHandle pObjectName'
 
@@ -1937,7 +1937,7 @@ instance FromCStruct DebugUtilsMessengerCallbackDataEXT where
   peekCStruct p = do
     flags <- peek @DebugUtilsMessengerCallbackDataFlagsEXT ((p `plusPtr` 16 :: Ptr DebugUtilsMessengerCallbackDataFlagsEXT))
     pMessageIdName <- peek @(Ptr CChar) ((p `plusPtr` 24 :: Ptr (Ptr CChar)))
-    pMessageIdName' <- maybePeek (\j -> packCString  (j)) pMessageIdName
+    pMessageIdName' <- maybePeek (\j -> packCString (j)) pMessageIdName
     messageIdNumber <- peek @Int32 ((p `plusPtr` 32 :: Ptr Int32))
     pMessage <- packCString =<< peek ((p `plusPtr` 40 :: Ptr (Ptr CChar)))
     queueLabelCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))

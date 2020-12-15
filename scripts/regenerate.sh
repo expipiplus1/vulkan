@@ -47,3 +47,25 @@ nix-shell -p haskellPackages.hpack --run 'hpack VulkanMemoryAllocator'
 echo "Cleaning VMA documentation"
 git -C VulkanMemoryAllocator/VulkanMemoryAllocator clean -dxf
 git -C VulkanMemoryAllocator/VulkanMemoryAllocator checkout .
+
+################################################################
+# OpenXR
+################################################################
+
+echo "Cleaning OpenXR Docs"
+git -C generate-new/OpenXR-Docs clean -dxf
+
+echo "Generating OpenXR-Docs documentation"
+(cd generate-new/OpenXR-Docs/specification &&
+  nix-shell -p \
+    python3 asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp \
+    --run "./makeAllExts man/apispec.txt generated")
+
+echo "Cleaning src"
+git rm --quiet -r openxr/src/OpenXR openxr/src/OpenXR.hs
+mkdir -p openxr/src
+test -f generate-new/out-xr || test -L generate-new/out-xr || ln -s ../openxr/src generate-new/out-xr
+echo "Generating openxr"
+nix-shell -p asciidoctor --run "sh -c 'cd generate-new && \"$generate/bin/xr\"'"
+git add openxr/src
+nix-shell -p haskellPackages.hpack --run 'hpack openxr'
