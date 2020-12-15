@@ -20,9 +20,9 @@ module OpenXR.VulkanTypes
 
 #if defined(USE_VULKAN_TYPES)
 
-import Vulkan
+import           Vulkan
 
-#else // !defined(USE_VULKAN_TYPES)
+#else
 
 import           Data.Kind
 import           Data.Word
