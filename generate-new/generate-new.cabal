@@ -326,6 +326,7 @@ executable vma
 executable xr
   main-is: Main.hs
   other-modules:
+      XR.Bracket
       XR.RenderParams
       Paths_generate_new
   hs-source-dirs:

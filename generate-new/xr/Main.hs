@@ -27,7 +27,7 @@ import           Render.State                   ( initialRenderState )
 import           Say
 import           Spec.Parse
 import           System.TimeIt
-import           Text.Show.Pretty
+import           XR.Bracket
 import           XR.RenderParams
 
 main :: IO ()
@@ -100,9 +100,3 @@ main =
 evalStateIO :: Member (Embed IO) r => s -> Sem (State s ': r) a -> Sem r a
 evalStateIO i = fmap snd . stateToIO i
 
-
-----------------------------------------------------------------
--- Todo
-----------------------------------------------------------------
-
-brackets _ _ = pure mempty

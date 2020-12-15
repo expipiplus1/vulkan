@@ -173,7 +173,7 @@ During development unfinished bits not to forget are listed here.
 
 - [x] Put modules under `OpenXR` instead of `Vulkan`
 
-- [ ] OpenXR brackets
+- [x] OpenXR brackets
 
 - [ ] Remove uses of WildCardT
 

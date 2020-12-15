@@ -37,6 +37,7 @@ data Bracket = Bracket
   , bDestroyArguments    :: [Argument]
   , bDestroyIndividually :: DestroyIndividually
   , bBracketType         :: BracketType
+  , bDestroyReturnTypes  :: [Type]
   }
   deriving Show
 
@@ -110,10 +111,8 @@ autoBracket bBracketType create destroy with = do
         , not (isElided mpScheme)
         , isNegative mpScheme
         ]
-  destroyReturnTypes <- marshaledCommandReturnTypes False destroy
-  unless (null destroyReturnTypes)
-    $ throw "TODO: Bracketing functions where the destructor returns a value"
-  bDestroyArguments <- forV destroyNegativeParams $ \MarshaledParam {..} ->
+  bDestroyReturnTypes <- toList <$> marshaledCommandReturnTypes False destroy
+  bDestroyArguments   <- forV destroyNegativeParams $ \MarshaledParam {..} ->
     let
       provided             = Provided (unCName (pName mpParam)) mpScheme
       providedForCreate    = provided `elem` bCreateArguments
@@ -198,7 +197,10 @@ renderBracket paramName b@Bracket {..} =
             noResource           = null bInnerTypes && noDestructorResource
             ioVar                = VarT (mkName "io")
             rVar                 = VarT (mkName "r")
-            userParamType        = case bBracketType of
+            rTy                  = case bDestroyReturnTypes of
+              [] -> rVar
+              ts -> foldl' (:@) (TupleT (length ts + 1)) (ts <> [rVar])
+            userParamType = case bBracketType of
               BracketCPS -> if noResource
                 then ioVar :@ innerHsType ~> (ioVar :@ ConT ''()) ~> rVar
                 else
@@ -210,8 +212,8 @@ renderBracket paramName b@Bracket {..} =
                 then ioVar :@ rVar
                 else innerHsType ~> ioVar :@ rVar
             returnType = case bBracketType of
-              BracketCPS     -> rVar
-              BracketBookend -> ioVar :@ rVar
+              BracketCPS     -> rTy
+              BracketBookend -> ioVar :@ rTy
 
             wrapperType = foldr (~>) returnType (argHsTypes <> [userParamType])
             bracketSuffix = bool "" "_" noResource
@@ -224,24 +226,38 @@ renderBracket paramName b@Bracket {..} =
         --
         createCall  <- renderCreate paramName b
         destroyCall <- renderDestroy paramName b
-        let
-          bracketBody =
-            pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
-              2
-              (case bBracketType of
-                BracketCPS -> "b"
-                  <+> indent 0 (vsep [parens createCall, parens destroyCall])
-                BracketBookend
-                  | noResource ->  parens createCall
-                  <+> "*> a <*"
-                  <+> parens destroyCall
-                  | otherwise -> doBlock
-                    [ "x <-" <+> createCall
-                    , "r <- a x"
-                    , parens destroyCall <+> "x"
-                    , "pure r"
-                    ]
-              )
+        bracketRHS  <- case bBracketType of
+          BracketCPS -> case bDestroyReturnTypes of
+            [] -> pure $ "b" <+> indent
+              0
+              (vsep [parens createCall, parens destroyCall])
+            _ ->
+              throw "TODO: Handle destructor return values with CPS brackets"
+          BracketBookend
+            | noResource -> pure $ case bDestroyReturnTypes of
+              [] -> parens createCall <+> "*> a <*" <+> parens destroyCall
+              _  -> doBlock
+                [createCall, "r <- a", "d <-" <+> destroyCall, "pure (d, r)"]
+            | otherwise -> pure $ case bDestroyReturnTypes of
+              [] -> doBlock
+                [ "x <-" <+> createCall
+                , "r <- a x"
+                , parens destroyCall <+> "x"
+                , "pure r"
+                ]
+              _ -> doBlock
+                [ "x <-" <+> createCall
+                , "r <- a x"
+                , "d <-" <+> parens destroyCall <+> "x"
+                , "pure (d, r)"
+                ]
+
+        let bracketBody =
+              pretty wrapperName
+                <+> sep argHsVars
+                <+> "="
+                <>  line
+                <>  indent 2 bracketRHS
 
         tellDoc $ vsep
           [ comment
