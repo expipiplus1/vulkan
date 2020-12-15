@@ -518,11 +518,6 @@ data CountParameter a
     -- ^ The InCapacity, OutCount and the vectors
   deriving (Show, Functor)
 
-countParameterVectors :: CountParameter a -> Vector a
-countParameterVectors = \case
-  SameIndex _ vs          -> vs
-  DifferentIndices _ _ vs -> vs
-
 data IndexedParam = IndexedParam
   { indexedParamIndex  :: Int
   , _indexedParamParam :: MarshaledParam
