@@ -111,23 +111,23 @@ During development unfinished bits not to forget are listed here.
 
 - [x] remove XR.RenderParams.vulkanNameOverrides
 
-- [ ] check
-  - [ ] `XrCompositionLayerBaseHeader` (the 'type' member doesn't have a single value)
-  - [ ] `XrEventDataBuffer->varying`
-  - [ ] `XrSpatialGraphNodeSpaceCreateInfoMSFT->nodeId`
-  - [ ] `XrSpatialGraphNodeSpaceCreateInfoMSFT`
-  - [ ] `XrEventDataBuffer`
-  - [ ] `xrCreateInstance`: Unable to find ref named cmds
-  - [ ] `xrResultToString`: Unhandled ByteString conversion to Ptr NonConst Char
-  - [ ] `xrStructureTypeToString`: Unhandled ByteString conversion to Ptr NonConst Char
-  - [ ] `xrPathToString`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
-  - [ ] `xrCreateSwapchainAndroidSurfaceKHR`: Unable to get size for TypeName `jobject`
-  - [ ] `xrGetInputSourceLocalizedName`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
-  - [ ] `xrGetVulkanInstanceExtensionsKHR`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
-  - [ ] `xrGetVulkanDeviceExtensionsKHR`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
-  - [ ] `xrCreateVulkanInstanceKHR`: Unable to get size for TypeName `VkResult`
-  - [ ] `xrCreateVulkanDeviceKHR`: Unable to get size for TypeName `VkResult`
-  - [ ] `xrCreateSpatialAnchorFromPerceptionAnchorMSFT`: Unable to get size for TypeName `IUnknown`
+- [x] check
+  - [x] `XrCompositionLayerBaseHeader` (the 'type' member doesn't have a single value)
+  - [x] `XrEventDataBuffer->varying`
+  - [x] `XrSpatialGraphNodeSpaceCreateInfoMSFT->nodeId`
+  - [x] `XrSpatialGraphNodeSpaceCreateInfoMSFT`
+  - [x] `XrEventDataBuffer`
+  - [x] `xrCreateInstance`: Unable to find ref named cmds
+  - [x] `xrResultToString`: Unhandled ByteString conversion to Ptr NonConst Char
+  - [x] `xrStructureTypeToString`: Unhandled ByteString conversion to Ptr NonConst Char
+  - [x] `xrPathToString`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [x] `xrCreateSwapchainAndroidSurfaceKHR`: Unable to get size for TypeName `jobject`
+  - [x] `xrGetInputSourceLocalizedName`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [x] `xrGetVulkanInstanceExtensionsKHR`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [x] `xrGetVulkanDeviceExtensionsKHR`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [x] `xrCreateVulkanInstanceKHR`: Unable to get size for TypeName `VkResult`
+  - [x] `xrCreateVulkanDeviceKHR`: Unable to get size for TypeName `VkResult`
+  - [x] `xrCreateSpatialAnchorFromPerceptionAnchorMSFT`: Unable to get size for TypeName `IUnknown`
 
 - [x] Check we have all of
   - [x] `NULL_SYSTEM_ID`
@@ -149,22 +149,23 @@ During development unfinished bits not to forget are listed here.
 - [x] make Xr stuff in `bespokeModules`
 
 - [x] dual-use commands have a different style in OpenXR... they're wrong now
-  - [ ] `xrEnumerateApiLayerProperties`
-  - [ ] `xrEnumerateInstanceExtensionProperties`
-  - [ ] `xrEnumerateSwapchainFormats`
-  - [ ] `xrEnumerateReferenceSpaces`
-  - [ ] `xrEnumerateViewConfigurations`
-  - [ ] `xrEnumerateEnvironmentBlendModes`
-  - [ ] `xrEnumerateViewConfigurationViews`
-  - [ ] `xrLocateViews`
-  - [ ] `xrPathToString`
-  - [ ] `xrEnumerateBoundSourcesForAction`
-  - [ ] `xrGetInputSourceLocalizedName`
-  - [ ] `xrGetVulkanInstanceExtensionsKHR`
-  - [ ] `xrGetVulkanDeviceExtensionsKHR`
+  - [x] `xrEnumerateApiLayerProperties`
+  - [x] `xrEnumerateInstanceExtensionProperties`
+  - [x] `xrEnumerateSwapchainFormats`
+  - [x] `xrEnumerateReferenceSpaces`
+  - [x] `xrEnumerateViewConfigurations`
+  - [x] `xrEnumerateEnvironmentBlendModes`
+  - [x] `xrEnumerateViewConfigurationViews`
+  - [x] `xrLocateViews`
+  - [x] `xrPathToString`
+  - [x] `xrEnumerateBoundSourcesForAction`
+  - [x] `xrGetInputSourceLocalizedName`
+  - [x] `xrGetVulkanInstanceExtensionsKHR`
+  - [x] `xrGetVulkanDeviceExtensionsKHR`
   - [ ] `xrLoadControllerModelMSFT`
-  - [ ] `xrEnumerateDisplayRefreshRatesFB`
-  - [ ] `xrEnumerateColorSpacesFB`
+    - Should return a bytestring or storable vector
+  - [x] `xrEnumerateDisplayRefreshRatesFB`
+  - [x] `xrEnumerateColorSpacesFB`
 
 
 - [x] Implement OpenXR's polymorphic types

@@ -368,7 +368,7 @@ byteStringPeek name lengths addrRef =
     Ptr _ Char -> do
       tellImport 'BS.packCString
       AddrDoc addr <- use addrRef
-      pure . IOAction $ ValueDoc ("packCString " <+> addr)
+      pure . IOAction $ ValueDoc ("packCString" <+> addr)
 
     Ptr _ Void | _ :<| V.Empty <- lengths -> do
       lenRef <- getLenRef @a lengths
