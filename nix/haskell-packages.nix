@@ -12,9 +12,14 @@ let
       "package.yaml"
       "changelog.md"
       "readme.md"
-    ]) || pkgs.lib.hasInfix "/src" path || pkgs.lib.hasInfix "/src-manual" path
-    || pkgs.lib.hasInfix "/vk" path || pkgs.lib.hasInfix "/vma" path);
-
+    ]) || pkgs.lib.any (i: pkgs.lib.hasInfix i path) [
+      "/src"
+      "/src-manual"
+      "/vk"
+      "/xr"
+      "/khronos-spec"
+      "/vma"
+    ]);
   mod = if buildProfiling then
     drv: doHaddock (enableLibraryProfiling drv)
   else
