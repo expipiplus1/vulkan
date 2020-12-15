@@ -129,7 +129,7 @@ During development unfinished bits not to forget are listed here.
   - [ ] `xrCreateVulkanDeviceKHR`: Unable to get size for TypeName `VkResult`
   - [ ] `xrCreateSpatialAnchorFromPerceptionAnchorMSFT`: Unable to get size for TypeName `IUnknown`
 
-- [ ] Check we have all of
+- [x] Check we have all of
   - [x] `NULL_SYSTEM_ID`
   - [x] `NULL_PATH`
   - [x] `SUCCEEDED`
@@ -146,7 +146,7 @@ During development unfinished bits not to forget are listed here.
 - [ ] Make Vulkan integration optional, have a module which either defines
   opaque handles or reexports types from `vulkan`
 
-- [ ] make Xr stuff in `bespokeModules`
+- [x] make Xr stuff in `bespokeModules`
 
 - [x] dual-use commands have a different style in OpenXR... they're wrong now
   - [ ] `xrEnumerateApiLayerProperties`
@@ -178,6 +178,7 @@ During development unfinished bits not to forget are listed here.
 - [ ] Remove uses of WildCardT
 
 - [ ] Remove or improve special handling for `CompositionLayerBaseHeader`
+  - Wait for https://github.com/KhronosGroup/OpenXR-Docs/issues/67
 
 - [x] Remove or improve special handling for `enumerateSwapchainImages`
 
@@ -187,6 +188,9 @@ During development unfinished bits not to forget are listed here.
 - [ ] Some structs have an in-out purpose, see https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#buffer-size-parameters
   - [ ] affects at least xrGetVisibilityMaskKHR and a few extension functions.
   - [ ] Look at every use of "CapacityInput" or "CountOutput"
+
+- [ ] Fix or remove XR_EXT_conformance_automation
+  - Annoying to fix because it passes structs by value so would need a C shim
 
 ### 1.2.162
 
