@@ -53,6 +53,10 @@ library
       OpenXR.Core10.Enums.InputSourceLocalizedNameFlags
       OpenXR.Core10.Enums.InstanceCreateFlags
       OpenXR.Core10.Enums.ObjectType
+      OpenXR.Core10.Enums.OverlayMainSessionFlagsEXTX
+      OpenXR.Core10.Enums.PerfSettingsDomainEXT
+      OpenXR.Core10.Enums.PerfSettingsNotificationLevelEXT
+      OpenXR.Core10.Enums.PerfSettingsSubDomainEXT
       OpenXR.Core10.Enums.ReferenceSpaceType
       OpenXR.Core10.Enums.Result
       OpenXR.Core10.Enums.SessionCreateFlags
@@ -145,7 +149,7 @@ library
   hs-source-dirs:
       src
       src-manual
-  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DeriveGeneric DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DeriveGeneric DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash MultiWayIf NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
   build-depends:
       base <5

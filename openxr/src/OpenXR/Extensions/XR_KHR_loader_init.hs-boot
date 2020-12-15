@@ -32,16 +32,12 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module OpenXR.Extensions.XR_KHR_loader_init  ( LoaderInitInfoBaseHeaderKHR
-                                             , SomeLoaderInitInfoBaseHeaderKHR
-                                             ) where
+module OpenXR.Extensions.XR_KHR_loader_init  (LoaderInitInfoBaseHeaderKHR) where
 
 import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
 data LoaderInitInfoBaseHeaderKHR
-
-data SomeLoaderInitInfoBaseHeaderKHR
 
 instance ToCStruct LoaderInitInfoBaseHeaderKHR
 instance Show LoaderInitInfoBaseHeaderKHR

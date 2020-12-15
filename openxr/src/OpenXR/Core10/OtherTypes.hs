@@ -6,14 +6,12 @@ module OpenXR.Core10.OtherTypes  ( Vector4f(..)
                                  , SwapchainSubImage(..)
                                  , CompositionLayerBaseHeader(..)
                                  , IsCompositionLayer(..)
-                                 , SomeCompositionLayerBaseHeader(..)
                                  , CompositionLayerProjectionView(..)
                                  , CompositionLayerProjection(..)
                                  , CompositionLayerQuad(..)
                                  , HapticVibration(..)
                                  , EventDataBaseHeader(..)
                                  , IsEventData(..)
-                                 , SomeEventDataBaseHeader(..)
                                  , EventDataEventsLost(..)
                                  , EventDataInstanceLossPending(..)
                                  , EventDataSessionStateChanged(..)
@@ -29,6 +27,7 @@ module OpenXR.Core10.OtherTypes  ( Vector4f(..)
 
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -48,6 +47,8 @@ import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -62,9 +63,17 @@ import OpenXR.CStruct.Extends (pokeSomeCStruct)
 import OpenXR.Core10.FundamentalTypes (Bool32)
 import OpenXR.CStruct.Extends (Chain)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias (CompositionLayerColorScaleBiasKHR)
+import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_cube (CompositionLayerCubeKHR)
+import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_cylinder (CompositionLayerCylinderKHR)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_depth (CompositionLayerDepthInfoKHR)
+import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_equirect2 (CompositionLayerEquirect2KHR)
+import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_equirect (CompositionLayerEquirectKHR)
 import OpenXR.Core10.Enums.CompositionLayerFlags (CompositionLayerFlags)
 import OpenXR.Core10.FundamentalTypes (Duration)
+import {-# SOURCE #-} OpenXR.Extensions.XR_FB_display_refresh_rate (EventDataDisplayRefreshRateChangedFB)
+import {-# SOURCE #-} OpenXR.Extensions.XR_EXTX_overlay (EventDataMainSessionVisibilityChangedEXTX)
+import {-# SOURCE #-} OpenXR.Extensions.XR_EXT_performance_settings (EventDataPerfSettingsEXT)
+import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_visibility_mask (EventDataVisibilityMaskChangedKHR)
 import OpenXR.CStruct.Extends (Extends)
 import OpenXR.CStruct.Extends (Extendss)
 import OpenXR.CStruct.Extends (Extensible(..))
@@ -73,6 +82,7 @@ import OpenXR.Core10.Enums.EyeVisibility (EyeVisibility)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (FromCStruct(..))
 import OpenXR.Core10.Haptics (HapticBaseHeader(..))
+import OpenXR.CStruct.Extends (Inheritable(..))
 import OpenXR.Core10.Haptics (IsHaptic(..))
 import OpenXR.CStruct.Extends (PeekChain)
 import OpenXR.CStruct.Extends (PeekChain(..))
@@ -83,6 +93,7 @@ import OpenXR.Core10.FundamentalTypes (Rect2Di)
 import OpenXR.Core10.Enums.ReferenceSpaceType (ReferenceSpaceType)
 import OpenXR.Core10.Enums.SessionState (SessionState)
 import OpenXR.Core10.Handles (Session_T)
+import OpenXR.CStruct.Extends (SomeChild(..))
 import OpenXR.CStruct.Extends (SomeStruct)
 import OpenXR.Core10.Handles (Space_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
@@ -91,14 +102,22 @@ import OpenXR.Core10.FundamentalTypes (Time)
 import OpenXR.CStruct (ToCStruct)
 import OpenXR.CStruct (ToCStruct(..))
 import OpenXR.Zero (Zero(..))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_CUBE_KHR))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_CYLINDER_KHR))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_EQUIRECT2_KHR))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_EQUIRECT_KHR))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_PROJECTION))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_PROJECTION_VIEW))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_QUAD))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_FB))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_EVENT_DATA_EVENTS_LOST))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_EVENT_DATA_INSTANCE_LOSS_PENDING))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_EVENT_DATA_PERF_SETTINGS_EXT))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_EVENT_DATA_SESSION_STATE_CHANGED))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_EVENT_DATA_VISIBILITY_MASK_CHANGED_KHR))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_HAPTIC_VIBRATION))
 import OpenXR.CStruct.Extends (BaseInStructure(..))
 import OpenXR.CStruct.Extends (BaseOutStructure(..))
@@ -481,8 +500,25 @@ instance Extensible CompositionLayerBaseHeader where
 class ToCStruct a => IsCompositionLayer a where
   toCompositionLayerBaseHeader :: a -> CompositionLayerBaseHeader '[]
 
-data SomeCompositionLayerBaseHeader where
-  SomeCompositionLayerBaseHeader :: IsCompositionLayer a => a -> SomeCompositionLayerBaseHeader
+instance Inheritable (CompositionLayerBaseHeader '[]) where
+  peekSomeCChild :: Ptr (SomeChild (CompositionLayerBaseHeader '[])) -> IO (SomeChild (CompositionLayerBaseHeader '[]))
+  peekSomeCChild p = do
+    ty <- peek @StructureType (castPtr @(SomeChild (CompositionLayerBaseHeader '[])) @StructureType p)
+    case ty of
+      TYPE_COMPOSITION_LAYER_EQUIRECT2_KHR -> SomeChild <$> peekCStruct (castPtr @(SomeChild (CompositionLayerBaseHeader '[])) @CompositionLayerEquirect2KHR p)
+      TYPE_COMPOSITION_LAYER_EQUIRECT_KHR -> SomeChild <$> peekCStruct (castPtr @(SomeChild (CompositionLayerBaseHeader '[])) @CompositionLayerEquirectKHR p)
+      TYPE_COMPOSITION_LAYER_CUBE_KHR -> SomeChild <$> peekCStruct (castPtr @(SomeChild (CompositionLayerBaseHeader '[])) @CompositionLayerCubeKHR p)
+      TYPE_COMPOSITION_LAYER_CYLINDER_KHR -> SomeChild <$> peekCStruct (castPtr @(SomeChild (CompositionLayerBaseHeader '[])) @CompositionLayerCylinderKHR p)
+      TYPE_COMPOSITION_LAYER_QUAD -> SomeChild <$> peekCStruct (castPtr @(SomeChild (CompositionLayerBaseHeader '[])) @CompositionLayerQuad p)
+      TYPE_COMPOSITION_LAYER_PROJECTION -> SomeChild <$> peekCStruct (castPtr @(SomeChild (CompositionLayerBaseHeader '[])) @CompositionLayerProjection p)
+      c -> throwIO $
+        IOError
+          Nothing
+          InvalidArgument
+          "peekSomeCChild"
+          ("Illegal struct inheritance of CompositionLayerBaseHeader with " <> show c)
+          Nothing
+          Nothing
 
 instance (Extendss CompositionLayerBaseHeader es, PokeChain es) => ToCStruct (CompositionLayerBaseHeader es) where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
@@ -983,8 +1019,28 @@ deriving instance Show EventDataBaseHeader
 class ToCStruct a => IsEventData a where
   toEventDataBaseHeader :: a -> EventDataBaseHeader
 
-data SomeEventDataBaseHeader where
-  SomeEventDataBaseHeader :: IsEventData a => a -> SomeEventDataBaseHeader
+instance Inheritable EventDataBaseHeader where
+  peekSomeCChild :: Ptr (SomeChild EventDataBaseHeader) -> IO (SomeChild EventDataBaseHeader)
+  peekSomeCChild p = do
+    ty <- peek @StructureType (castPtr @(SomeChild EventDataBaseHeader) @StructureType p)
+    case ty of
+      TYPE_EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_FB -> SomeChild <$> peekCStruct (castPtr @(SomeChild EventDataBaseHeader) @EventDataDisplayRefreshRateChangedFB p)
+      TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX -> SomeChild <$> peekCStruct (castPtr @(SomeChild EventDataBaseHeader) @EventDataMainSessionVisibilityChangedEXTX p)
+      TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED -> SomeChild <$> peekCStruct (castPtr @(SomeChild EventDataBaseHeader) @EventDataInteractionProfileChanged p)
+      TYPE_EVENT_DATA_VISIBILITY_MASK_CHANGED_KHR -> SomeChild <$> peekCStruct (castPtr @(SomeChild EventDataBaseHeader) @EventDataVisibilityMaskChangedKHR p)
+      TYPE_EVENT_DATA_PERF_SETTINGS_EXT -> SomeChild <$> peekCStruct (castPtr @(SomeChild EventDataBaseHeader) @EventDataPerfSettingsEXT p)
+      TYPE_EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING -> SomeChild <$> peekCStruct (castPtr @(SomeChild EventDataBaseHeader) @EventDataReferenceSpaceChangePending p)
+      TYPE_EVENT_DATA_SESSION_STATE_CHANGED -> SomeChild <$> peekCStruct (castPtr @(SomeChild EventDataBaseHeader) @EventDataSessionStateChanged p)
+      TYPE_EVENT_DATA_INSTANCE_LOSS_PENDING -> SomeChild <$> peekCStruct (castPtr @(SomeChild EventDataBaseHeader) @EventDataInstanceLossPending p)
+      TYPE_EVENT_DATA_EVENTS_LOST -> SomeChild <$> peekCStruct (castPtr @(SomeChild EventDataBaseHeader) @EventDataEventsLost p)
+      c -> throwIO $
+        IOError
+          Nothing
+          InvalidArgument
+          "peekSomeCChild"
+          ("Illegal struct inheritance of EventDataBaseHeader with " <> show c)
+          Nothing
+          Nothing
 
 instance ToCStruct EventDataBaseHeader where
   withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)

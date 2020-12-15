@@ -12,7 +12,6 @@ module OpenXR.Core10.Image  ( enumerateSwapchainFormats
                             , SwapchainCreateInfo(..)
                             , SwapchainImageBaseHeader(..)
                             , IsSwapchainImage(..)
-                            , SomeSwapchainImageBaseHeader(..)
                             , SwapchainImageAcquireInfo(..)
                             , SwapchainImageWaitInfo(..)
                             , SwapchainImageReleaseInfo(..)
@@ -68,6 +67,7 @@ import OpenXR.CStruct.Extends (Extendss)
 import OpenXR.CStruct.Extends (Extensible(..))
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (FromCStruct(..))
+import OpenXR.CStruct.Extends (Inheritable(..))
 import OpenXR.CStruct.Extends (Inherits)
 import OpenXR.Dynamic (InstanceCmds(..))
 import OpenXR.Dynamic (InstanceCmds(pXrAcquireSwapchainImage))
@@ -88,12 +88,18 @@ import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeChild)
+import OpenXR.CStruct.Extends (SomeChild(..))
 import OpenXR.CStruct.Extends (SomeStruct)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Handles (Swapchain)
 import OpenXR.Core10.Handles (Swapchain(..))
 import OpenXR.Core10.Handles (Swapchain(Swapchain))
 import OpenXR.Core10.Enums.SwapchainCreateFlags (SwapchainCreateFlags)
+import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_D3D11_enable (SwapchainImageD3D11KHR)
+import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_D3D12_enable (SwapchainImageD3D12KHR)
+import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_opengl_es_enable (SwapchainImageOpenGLESKHR)
+import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_opengl_enable (SwapchainImageOpenGLKHR)
+import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_vulkan_enable (SwapchainImageVulkanKHR)
 import OpenXR.Core10.Enums.SwapchainUsageFlags (SwapchainUsageFlags)
 import OpenXR.Core10.Handles (Swapchain_T)
 import OpenXR.CStruct (ToCStruct)
@@ -102,7 +108,12 @@ import OpenXR.Zero (Zero(..))
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SWAPCHAIN_CREATE_INFO))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SWAPCHAIN_IMAGE_D3D11_KHR))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SWAPCHAIN_IMAGE_D3D12_KHR))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SWAPCHAIN_IMAGE_OPENGL_ES_KHR))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SWAPCHAIN_IMAGE_VULKAN_KHR))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SWAPCHAIN_IMAGE_WAIT_INFO))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -958,8 +969,24 @@ deriving instance Show SwapchainImageBaseHeader
 class ToCStruct a => IsSwapchainImage a where
   toSwapchainImageBaseHeader :: a -> SwapchainImageBaseHeader
 
-data SomeSwapchainImageBaseHeader where
-  SomeSwapchainImageBaseHeader :: IsSwapchainImage a => a -> SomeSwapchainImageBaseHeader
+instance Inheritable SwapchainImageBaseHeader where
+  peekSomeCChild :: Ptr (SomeChild SwapchainImageBaseHeader) -> IO (SomeChild SwapchainImageBaseHeader)
+  peekSomeCChild p = do
+    ty <- peek @StructureType (castPtr @(SomeChild SwapchainImageBaseHeader) @StructureType p)
+    case ty of
+      TYPE_SWAPCHAIN_IMAGE_D3D12_KHR -> SomeChild <$> peekCStruct (castPtr @(SomeChild SwapchainImageBaseHeader) @SwapchainImageD3D12KHR p)
+      TYPE_SWAPCHAIN_IMAGE_D3D11_KHR -> SomeChild <$> peekCStruct (castPtr @(SomeChild SwapchainImageBaseHeader) @SwapchainImageD3D11KHR p)
+      TYPE_SWAPCHAIN_IMAGE_VULKAN_KHR -> SomeChild <$> peekCStruct (castPtr @(SomeChild SwapchainImageBaseHeader) @SwapchainImageVulkanKHR p)
+      TYPE_SWAPCHAIN_IMAGE_OPENGL_ES_KHR -> SomeChild <$> peekCStruct (castPtr @(SomeChild SwapchainImageBaseHeader) @SwapchainImageOpenGLESKHR p)
+      TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR -> SomeChild <$> peekCStruct (castPtr @(SomeChild SwapchainImageBaseHeader) @SwapchainImageOpenGLKHR p)
+      c -> throwIO $
+        IOError
+          Nothing
+          InvalidArgument
+          "peekSomeCChild"
+          ("Illegal struct inheritance of SwapchainImageBaseHeader with " <> show c)
+          Nothing
+          Nothing
 
 instance ToCStruct SwapchainImageBaseHeader where
   withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)

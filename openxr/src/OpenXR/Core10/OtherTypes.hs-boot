@@ -2,12 +2,10 @@
 -- No documentation found for Chapter "OtherTypes"
 module OpenXR.Core10.OtherTypes  ( Color4f
                                  , CompositionLayerBaseHeader
-                                 , SomeCompositionLayerBaseHeader
                                  , CompositionLayerProjection
                                  , CompositionLayerProjectionView
                                  , CompositionLayerQuad
                                  , EventDataBaseHeader
-                                 , SomeEventDataBaseHeader
                                  , EventDataEventsLost
                                  , EventDataInstanceLossPending
                                  , EventDataInteractionProfileChanged
@@ -36,8 +34,6 @@ instance FromCStruct Color4f
 
 type role CompositionLayerBaseHeader nominal
 data CompositionLayerBaseHeader (es :: [Type])
-
-data SomeCompositionLayerBaseHeader
 
 instance (Extendss CompositionLayerBaseHeader es, PokeChain es) => ToCStruct (CompositionLayerBaseHeader es)
 instance Show (Chain es) => Show (CompositionLayerBaseHeader es)
@@ -71,8 +67,6 @@ instance FromCStruct CompositionLayerQuad
 
 
 data EventDataBaseHeader
-
-data SomeEventDataBaseHeader
 
 instance ToCStruct EventDataBaseHeader
 instance Show EventDataBaseHeader

@@ -41,7 +41,6 @@ module OpenXR.Extensions.XR_KHR_loader_init_android  ( LoaderInitInfoAndroidKHR(
                                                      , pattern KHR_LOADER_INIT_ANDROID_EXTENSION_NAME
                                                      , IsLoaderInitInfoKHR(..)
                                                      , LoaderInitInfoBaseHeaderKHR(..)
-                                                     , SomeLoaderInitInfoBaseHeaderKHR(..)
                                                      ) where
 
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -67,7 +66,6 @@ import OpenXR.Zero (Zero(..))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_LOADER_INIT_INFO_ANDROID_KHR))
 import OpenXR.Extensions.XR_KHR_loader_init (IsLoaderInitInfoKHR(..))
 import OpenXR.Extensions.XR_KHR_loader_init (LoaderInitInfoBaseHeaderKHR(..))
-import OpenXR.Extensions.XR_KHR_loader_init (SomeLoaderInitInfoBaseHeaderKHR(..))
 -- | XrLoaderInitInfoAndroidKHR - Initializes OpenXR loader on Android
 --
 -- == Valid Usage (Implicit)

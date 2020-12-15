@@ -71,6 +71,7 @@ default-extensions:
 - InstanceSigs
 - LambdaCase
 - MagicHash
+- MultiWayIf
 - NoMonomorphismRestriction
 - OverloadedStrings
 - PartialTypeSignatures

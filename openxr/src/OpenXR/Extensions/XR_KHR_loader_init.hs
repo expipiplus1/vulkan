@@ -35,7 +35,6 @@
 module OpenXR.Extensions.XR_KHR_loader_init  ( initializeLoaderKHR
                                              , LoaderInitInfoBaseHeaderKHR(..)
                                              , IsLoaderInitInfoKHR(..)
-                                             , SomeLoaderInitInfoBaseHeaderKHR(..)
                                              , KHR_loader_init_SPEC_VERSION
                                              , pattern KHR_loader_init_SPEC_VERSION
                                              , KHR_LOADER_INIT_EXTENSION_NAME
@@ -74,15 +73,19 @@ import OpenXR.Dynamic (getInstanceProcAddr')
 import OpenXR.NamedType ((:::))
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (FromCStruct(..))
+import OpenXR.CStruct.Extends (Inheritable(..))
+import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_loader_init_android (LoaderInitInfoAndroidKHR)
 import OpenXR.Exception (OpenXrException(..))
 import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.CStruct.Extends (SomeChild)
+import OpenXR.CStruct.Extends (SomeChild(..))
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.CStruct (ToCStruct)
 import OpenXR.CStruct (ToCStruct(..))
 import OpenXR.Zero (Zero(..))
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_LOADER_INIT_INFO_ANDROID_KHR))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -148,8 +151,20 @@ deriving instance Show LoaderInitInfoBaseHeaderKHR
 class ToCStruct a => IsLoaderInitInfoKHR a where
   toLoaderInitInfoBaseHeaderKHR :: a -> LoaderInitInfoBaseHeaderKHR
 
-data SomeLoaderInitInfoBaseHeaderKHR where
-  SomeLoaderInitInfoBaseHeaderKHR :: IsLoaderInitInfoKHR a => a -> SomeLoaderInitInfoBaseHeaderKHR
+instance Inheritable LoaderInitInfoBaseHeaderKHR where
+  peekSomeCChild :: Ptr (SomeChild LoaderInitInfoBaseHeaderKHR) -> IO (SomeChild LoaderInitInfoBaseHeaderKHR)
+  peekSomeCChild p = do
+    ty <- peek @StructureType (castPtr @(SomeChild LoaderInitInfoBaseHeaderKHR) @StructureType p)
+    case ty of
+      TYPE_LOADER_INIT_INFO_ANDROID_KHR -> SomeChild <$> peekCStruct (castPtr @(SomeChild LoaderInitInfoBaseHeaderKHR) @LoaderInitInfoAndroidKHR p)
+      c -> throwIO $
+        IOError
+          Nothing
+          InvalidArgument
+          "peekSomeCChild"
+          ("Illegal struct inheritance of LoaderInitInfoBaseHeaderKHR with " <> show c)
+          Nothing
+          Nothing
 
 instance ToCStruct LoaderInitInfoBaseHeaderKHR where
   withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)

@@ -4,7 +4,6 @@ module OpenXR.Core10.Haptics  ( applyHapticFeedback
                               , stopHapticFeedback
                               , HapticBaseHeader(..)
                               , IsHaptic(..)
-                              , SomeHapticBaseHeader(..)
                               , HapticActionInfo(..)
                               ) where
 
@@ -37,6 +36,8 @@ import OpenXR.NamedType ((:::))
 import OpenXR.Core10.Handles (Action_T)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (FromCStruct(..))
+import {-# SOURCE #-} OpenXR.Core10.OtherTypes (HapticVibration)
+import OpenXR.CStruct.Extends (Inheritable(..))
 import OpenXR.Dynamic (InstanceCmds(pXrApplyHapticFeedback))
 import OpenXR.Dynamic (InstanceCmds(pXrStopHapticFeedback))
 import OpenXR.Exception (OpenXrException(..))
@@ -47,12 +48,14 @@ import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeChild)
+import OpenXR.CStruct.Extends (SomeChild(..))
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.CStruct (ToCStruct)
 import OpenXR.CStruct (ToCStruct(..))
 import OpenXR.Zero (Zero(..))
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_HAPTIC_ACTION_INFO))
+import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_HAPTIC_VIBRATION))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -245,8 +248,20 @@ deriving instance Show HapticBaseHeader
 class ToCStruct a => IsHaptic a where
   toHapticBaseHeader :: a -> HapticBaseHeader
 
-data SomeHapticBaseHeader where
-  SomeHapticBaseHeader :: IsHaptic a => a -> SomeHapticBaseHeader
+instance Inheritable HapticBaseHeader where
+  peekSomeCChild :: Ptr (SomeChild HapticBaseHeader) -> IO (SomeChild HapticBaseHeader)
+  peekSomeCChild p = do
+    ty <- peek @StructureType (castPtr @(SomeChild HapticBaseHeader) @StructureType p)
+    case ty of
+      TYPE_HAPTIC_VIBRATION -> SomeChild <$> peekCStruct (castPtr @(SomeChild HapticBaseHeader) @HapticVibration p)
+      c -> throwIO $
+        IOError
+          Nothing
+          InvalidArgument
+          "peekSomeCChild"
+          ("Illegal struct inheritance of HapticBaseHeader with " <> show c)
+          Nothing
+          Nothing
 
 instance ToCStruct HapticBaseHeader where
   withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)

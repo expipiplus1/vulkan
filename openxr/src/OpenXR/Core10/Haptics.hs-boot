@@ -2,7 +2,6 @@
 -- No documentation found for Chapter "Haptics"
 module OpenXR.Core10.Haptics  ( HapticActionInfo
                               , HapticBaseHeader
-                              , SomeHapticBaseHeader
                               ) where
 
 import Data.Kind (Type)
@@ -17,8 +16,6 @@ instance FromCStruct HapticActionInfo
 
 
 data HapticBaseHeader
-
-data SomeHapticBaseHeader
 
 instance ToCStruct HapticBaseHeader
 instance Show HapticBaseHeader

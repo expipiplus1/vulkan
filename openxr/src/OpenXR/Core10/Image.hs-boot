@@ -3,7 +3,6 @@
 module OpenXR.Core10.Image  ( SwapchainCreateInfo
                             , SwapchainImageAcquireInfo
                             , SwapchainImageBaseHeader
-                            , SomeSwapchainImageBaseHeader
                             , SwapchainImageReleaseInfo
                             , SwapchainImageWaitInfo
                             ) where
@@ -33,8 +32,6 @@ instance FromCStruct SwapchainImageAcquireInfo
 
 
 data SwapchainImageBaseHeader
-
-data SomeSwapchainImageBaseHeader
 
 instance ToCStruct SwapchainImageBaseHeader
 instance Show SwapchainImageBaseHeader

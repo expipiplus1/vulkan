@@ -20,8 +20,8 @@ module OpenXR.CStruct.Extends  ( BaseInStructure(..)
                                , SomeChild(..)
                                , withSomeChild
                                , lowerChildPointer
-                               , peekSomeCChild
                                , Inherits
+                               , Inheritable(..)
                                ) where
 
 import Data.Maybe (fromMaybe)
@@ -624,17 +624,41 @@ linkChain :: Ptr a -> Ptr b -> IO ()
 linkChain head' tail' = poke (head' `plusPtr` 8) tail'
 
 data SomeChild (a :: Type) where
-  SomeChild :: forall a b . (Inherits a b, ToCStruct b, Show b) => b -> SomeChild a
+  SomeChild :: forall a b . (Inherits a b, Typeable b, ToCStruct b, Show b) => b -> SomeChild a
 deriving instance Show (SomeChild a)
 
-type family Inherits (a :: Type) (b :: Type) where
+type family Inherits (a :: Type) (b :: Type) :: Constraint where
+  Inherits SwapchainImageBaseHeader SwapchainImageD3D12KHR = ()
+  Inherits SwapchainImageBaseHeader SwapchainImageD3D11KHR = ()
+  Inherits SwapchainImageBaseHeader SwapchainImageVulkanKHR = ()
+  Inherits SwapchainImageBaseHeader SwapchainImageOpenGLESKHR = ()
+  Inherits SwapchainImageBaseHeader SwapchainImageOpenGLKHR = ()
+  Inherits (CompositionLayerBaseHeader '[]) CompositionLayerEquirect2KHR = ()
+  Inherits (CompositionLayerBaseHeader '[]) CompositionLayerEquirectKHR = ()
+  Inherits (CompositionLayerBaseHeader '[]) CompositionLayerCubeKHR = ()
+  Inherits (CompositionLayerBaseHeader '[]) CompositionLayerCylinderKHR = ()
+  Inherits (CompositionLayerBaseHeader '[]) CompositionLayerQuad = ()
+  Inherits (CompositionLayerBaseHeader '[]) CompositionLayerProjection = ()
+  Inherits HapticBaseHeader HapticVibration = ()
+  Inherits EventDataBaseHeader EventDataDisplayRefreshRateChangedFB = ()
+  Inherits EventDataBaseHeader EventDataMainSessionVisibilityChangedEXTX = ()
+  Inherits EventDataBaseHeader EventDataInteractionProfileChanged = ()
+  Inherits EventDataBaseHeader EventDataVisibilityMaskChangedKHR = ()
+  Inherits EventDataBaseHeader EventDataPerfSettingsEXT = ()
+  Inherits EventDataBaseHeader EventDataReferenceSpaceChangePending = ()
+  Inherits EventDataBaseHeader EventDataSessionStateChanged = ()
+  Inherits EventDataBaseHeader EventDataInstanceLossPending = ()
+  Inherits EventDataBaseHeader EventDataEventsLost = ()
+  Inherits LoaderInitInfoBaseHeaderKHR LoaderInitInfoAndroidKHR = ()
+  Inherits parent child =
+    TypeError (ShowType parent :<>: Text " is not inherited by " :<>: ShowType child)
+
+class Inheritable (a :: Type) where
+  peekSomeCChild :: Ptr (SomeChild a) -> IO (SomeChild a)
 
 withSomeChild :: SomeChild a -> (Ptr (SomeChild a) -> IO b) -> IO b
 withSomeChild (SomeChild c) f = withCStruct c (f . lowerChildPointer)
 
 lowerChildPointer :: Inherits a b => Ptr b -> Ptr (SomeChild a)
 lowerChildPointer = castPtr
-
-peekSomeCChild :: Ptr (SomeChild a) -> IO (SomeChild a)
-peekSomeCChild p = error "TODO"
 
