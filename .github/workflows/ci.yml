@@ -98,6 +98,10 @@ jobs:
           extra-include-dirs: $VulkanSDK/Include/
         EOF
 
+    - name: Remove openxr
+      run: |
+        sed -ibak '/openxr/d' cabal.project
+
     - name: Remove examples for 8.6.5
       run: |
         sed -ibak '/examples/d' cabal.project
@@ -138,9 +142,6 @@ jobs:
     - name: Build vulkan-utils
       run: cabal build --enable-tests --enable-benchmarks vulkan-utils
 
-    - name: Build openxr
-      run: cabal build --enable-tests --enable-benchmarks openxr
-
     - name: Build vulkan-examples
       run: cabal build --enable-tests --enable-benchmarks vulkan-examples
       if: matrix.ghc != '8.6.5'
@@ -150,7 +151,6 @@ jobs:
         cabal haddock
         cabal haddock VulkanMemoryAllocator
         cabal haddock vulkan-utils
-        cabal haddock openxr
 
   stack:
 
@@ -159,7 +159,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, macOS-latest, windows-latest]
-        stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances --flag openxr:generic-instances --flag vulkan-examples:-raytracing --flag vulkan-examples:-have-shaderc --system-ghc']
+        stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances --flag vulkan-examples:-raytracing --flag vulkan-examples:-have-shaderc --system-ghc']
         exclude:
           # https://github.com/actions/setup-haskell/issues/49
           - os: windows-latest
@@ -239,6 +239,10 @@ jobs:
         brew cask install vulkan-sdk --verbose ||
           brew cask install vulkan-sdk --verbose ||
           brew cask install vulkan-sdk --verbose
+
+    - name: Remove openxr
+      run: |
+        sed -ibak '/openxr/d' stack.yaml
 
     - name: Install dependencies
       run: stack build $ARGS --test --bench --only-dependencies
