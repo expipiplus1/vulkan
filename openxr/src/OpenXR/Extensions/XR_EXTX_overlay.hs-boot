@@ -37,9 +37,10 @@ module OpenXR.Extensions.XR_EXTX_overlay  ( EventDataMainSessionVisibilityChange
                                           , SessionCreateInfoOverlayEXTX
                                           ) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data EventDataMainSessionVisibilityChangedEXTX
 
 instance ToCStruct EventDataMainSessionVisibilityChangedEXTX

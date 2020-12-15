@@ -45,9 +45,10 @@ module OpenXR.Extensions.XR_MSFT_secondary_view_configuration  ( SecondaryViewCo
                                                                , SecondaryViewConfigurationSwapchainCreateInfoMSFT
                                                                ) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data SecondaryViewConfigurationFrameEndInfoMSFT
 
 instance ToCStruct SecondaryViewConfigurationFrameEndInfoMSFT

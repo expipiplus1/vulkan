@@ -4,9 +4,10 @@ module Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve  ( PhysicalDevic
                                                                  , SubpassDescriptionDepthStencilResolve
                                                                  ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceDepthStencilResolveProperties
 
 instance ToCStruct PhysicalDeviceDepthStencilResolveProperties

@@ -88,9 +88,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing  (PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
 
 instance ToCStruct PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV

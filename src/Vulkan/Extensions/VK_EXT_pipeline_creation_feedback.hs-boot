@@ -119,9 +119,10 @@ module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback  ( PipelineCreationFe
                                                             , PipelineCreationFeedbackEXT
                                                             ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PipelineCreationFeedbackCreateInfoEXT
 
 instance ToCStruct PipelineCreationFeedbackCreateInfoEXT

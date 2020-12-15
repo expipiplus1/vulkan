@@ -16,11 +16,12 @@ module OpenXR.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
+import OpenXR.Zero (Zero)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
-import OpenXR.Zero (Zero)
+
 -- | XrObjectType - Specify an enumeration to track object handle types
 --
 -- = Description

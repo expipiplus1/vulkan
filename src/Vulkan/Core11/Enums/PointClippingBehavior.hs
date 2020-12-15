@@ -8,11 +8,12 @@ module Vulkan.Core11.Enums.PointClippingBehavior  (PointClippingBehavior( POINT_
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
+import Vulkan.Zero (Zero)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
-import Vulkan.Zero (Zero)
+
 -- | VkPointClippingBehavior - Enum specifying the point clipping behavior
 --
 -- = See Also

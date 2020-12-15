@@ -34,9 +34,10 @@
 -- the generator scripts, not directly.
 module OpenXR.Extensions.XR_KHR_composition_layer_equirect2  (CompositionLayerEquirect2KHR) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data CompositionLayerEquirect2KHR
 
 instance ToCStruct CompositionLayerEquirect2KHR

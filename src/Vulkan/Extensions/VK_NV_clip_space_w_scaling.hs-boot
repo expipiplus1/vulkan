@@ -207,9 +207,10 @@ module Vulkan.Extensions.VK_NV_clip_space_w_scaling  ( PipelineViewportWScalingS
                                                      , ViewportWScalingNV
                                                      ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PipelineViewportWScalingStateCreateInfoNV
 
 instance ToCStruct PipelineViewportWScalingStateCreateInfoNV

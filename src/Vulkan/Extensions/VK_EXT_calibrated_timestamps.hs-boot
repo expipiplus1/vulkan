@@ -168,9 +168,10 @@ module Vulkan.Extensions.VK_EXT_calibrated_timestamps  ( CalibratedTimestampInfo
                                                        , TimeDomainEXT
                                                        ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data CalibratedTimestampInfoEXT
 
 instance ToCStruct CalibratedTimestampInfoEXT

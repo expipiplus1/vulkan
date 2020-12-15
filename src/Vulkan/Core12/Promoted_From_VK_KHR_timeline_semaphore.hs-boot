@@ -8,9 +8,10 @@ module Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore  ( PhysicalDeviceTi
                                                               , TimelineSemaphoreSubmitInfo
                                                               ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceTimelineSemaphoreFeatures
 
 instance ToCStruct PhysicalDeviceTimelineSemaphoreFeatures

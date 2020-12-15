@@ -260,9 +260,10 @@ module Vulkan.Extensions.VK_NV_mesh_shader  ( DrawMeshTasksIndirectCommandNV
                                             , PhysicalDeviceMeshShaderPropertiesNV
                                             ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DrawMeshTasksIndirectCommandNV
 
 instance ToCStruct DrawMeshTasksIndirectCommandNV

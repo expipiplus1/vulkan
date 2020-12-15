@@ -521,9 +521,10 @@ module Vulkan.Extensions.VK_KHR_display  ( DisplayModeCreateInfoKHR
                                          , DisplaySurfaceCreateInfoKHR
                                          ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DisplayModeCreateInfoKHR
 
 instance ToCStruct DisplayModeCreateInfoKHR

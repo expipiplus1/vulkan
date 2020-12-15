@@ -99,9 +99,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_pci_bus_info  (PhysicalDevicePCIBusInfoPropertiesEXT) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDevicePCIBusInfoPropertiesEXT
 
 instance ToCStruct PhysicalDevicePCIBusInfoPropertiesEXT

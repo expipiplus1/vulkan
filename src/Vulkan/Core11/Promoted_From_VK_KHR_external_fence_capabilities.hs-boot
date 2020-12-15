@@ -4,9 +4,10 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities  ( Externa
                                                                        , PhysicalDeviceExternalFenceInfo
                                                                        ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ExternalFenceProperties
 
 instance ToCStruct ExternalFenceProperties

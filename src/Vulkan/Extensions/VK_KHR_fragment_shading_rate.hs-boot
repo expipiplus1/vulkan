@@ -207,9 +207,10 @@ module Vulkan.Extensions.VK_KHR_fragment_shading_rate  ( FragmentShadingRateAtta
                                                        , FragmentShadingRateCombinerOpKHR
                                                        ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data FragmentShadingRateAttachmentInfoKHR
 
 instance ToCStruct FragmentShadingRateAttachmentInfoKHR

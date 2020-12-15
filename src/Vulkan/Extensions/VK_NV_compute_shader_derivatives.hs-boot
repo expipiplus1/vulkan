@@ -119,9 +119,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_compute_shader_derivatives  (PhysicalDeviceComputeShaderDerivativesFeaturesNV) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceComputeShaderDerivativesFeaturesNV
 
 instance ToCStruct PhysicalDeviceComputeShaderDerivativesFeaturesNV

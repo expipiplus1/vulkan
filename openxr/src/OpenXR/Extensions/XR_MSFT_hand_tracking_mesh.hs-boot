@@ -49,9 +49,10 @@ module OpenXR.Extensions.XR_MSFT_hand_tracking_mesh  ( HandMeshIndexBufferMSFT
                                                      , SystemHandTrackingMeshPropertiesMSFT
                                                      ) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data HandMeshIndexBufferMSFT
 
 instance ToCStruct HandMeshIndexBufferMSFT

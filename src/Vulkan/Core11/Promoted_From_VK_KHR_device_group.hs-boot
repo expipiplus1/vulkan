@@ -7,9 +7,10 @@ module Vulkan.Core11.Promoted_From_VK_KHR_device_group  ( DeviceGroupBindSparseI
                                                         , MemoryAllocateFlagsInfo
                                                         ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DeviceGroupBindSparseInfo
 
 instance ToCStruct DeviceGroupBindSparseInfo

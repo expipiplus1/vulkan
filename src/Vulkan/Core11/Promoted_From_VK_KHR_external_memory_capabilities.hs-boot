@@ -8,9 +8,10 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities  ( Extern
                                                                         , PhysicalDeviceIDProperties
                                                                         ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ExternalBufferProperties
 
 instance ToCStruct ExternalBufferProperties

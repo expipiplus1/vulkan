@@ -5,9 +5,10 @@ module Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts  ( Atta
                                                                           , PhysicalDeviceSeparateDepthStencilLayoutsFeatures
                                                                           ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data AttachmentDescriptionStencilLayout
 
 instance ToCStruct AttachmentDescriptionStencilLayout

@@ -36,9 +36,10 @@
 -- the generator scripts, not directly.
 module OpenXR.Extensions.XR_KHR_loader_init_android  (LoaderInitInfoAndroidKHR) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data LoaderInitInfoAndroidKHR
 
 instance ToCStruct LoaderInitInfoAndroidKHR

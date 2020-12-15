@@ -40,9 +40,10 @@ module OpenXR.Extensions.XR_KHR_vulkan_enable  ( GraphicsBindingVulkanKHR
                                                , SwapchainImageVulkanKHR
                                                ) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data GraphicsBindingVulkanKHR
 
 instance ToCStruct GraphicsBindingVulkanKHR

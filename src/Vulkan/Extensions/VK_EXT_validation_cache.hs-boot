@@ -126,9 +126,10 @@ module Vulkan.Extensions.VK_EXT_validation_cache  ( ShaderModuleValidationCacheC
                                                   , ValidationCacheCreateInfoEXT
                                                   ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ShaderModuleValidationCacheCreateInfoEXT
 
 instance ToCStruct ShaderModuleValidationCacheCreateInfoEXT

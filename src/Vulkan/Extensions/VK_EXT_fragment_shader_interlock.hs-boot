@@ -126,9 +126,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_fragment_shader_interlock  (PhysicalDeviceFragmentShaderInterlockFeaturesEXT) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceFragmentShaderInterlockFeaturesEXT
 
 instance ToCStruct PhysicalDeviceFragmentShaderInterlockFeaturesEXT

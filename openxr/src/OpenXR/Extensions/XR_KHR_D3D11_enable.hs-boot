@@ -38,9 +38,10 @@ module OpenXR.Extensions.XR_KHR_D3D11_enable  ( GraphicsBindingD3D11KHR
                                               , SwapchainImageD3D11KHR
                                               ) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data GraphicsBindingD3D11KHR
 
 instance ToCStruct GraphicsBindingD3D11KHR

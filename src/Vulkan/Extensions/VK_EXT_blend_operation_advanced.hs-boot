@@ -285,9 +285,10 @@ module Vulkan.Extensions.VK_EXT_blend_operation_advanced  ( PhysicalDeviceBlendO
                                                           , PipelineColorBlendAdvancedStateCreateInfoEXT
                                                           ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceBlendOperationAdvancedFeaturesEXT
 
 instance ToCStruct PhysicalDeviceBlendOperationAdvancedFeaturesEXT

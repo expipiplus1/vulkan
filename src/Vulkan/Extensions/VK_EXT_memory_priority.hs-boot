@@ -95,9 +95,10 @@ module Vulkan.Extensions.VK_EXT_memory_priority  ( MemoryPriorityAllocateInfoEXT
                                                  , PhysicalDeviceMemoryPriorityFeaturesEXT
                                                  ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data MemoryPriorityAllocateInfoEXT
 
 instance ToCStruct MemoryPriorityAllocateInfoEXT

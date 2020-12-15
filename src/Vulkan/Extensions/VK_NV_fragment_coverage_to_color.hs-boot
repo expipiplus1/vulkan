@@ -92,9 +92,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_fragment_coverage_to_color  (PipelineCoverageToColorStateCreateInfoNV) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PipelineCoverageToColorStateCreateInfoNV
 
 instance ToCStruct PipelineCoverageToColorStateCreateInfoNV

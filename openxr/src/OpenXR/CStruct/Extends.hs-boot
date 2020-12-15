@@ -8,10 +8,11 @@ module OpenXR.CStruct.Extends  ( BaseInStructure
                                , Chain
                                ) where
 
-import Data.Kind (Constraint)
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Constraint)
+import Data.Kind (Type)
+
 data BaseInStructure
 
 instance ToCStruct BaseInStructure

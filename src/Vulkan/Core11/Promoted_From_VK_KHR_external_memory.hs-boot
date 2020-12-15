@@ -5,9 +5,10 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_memory  ( ExportMemoryAllocat
                                                            , ExternalMemoryImageCreateInfo
                                                            ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ExportMemoryAllocateInfo
 
 instance ToCStruct ExportMemoryAllocateInfo

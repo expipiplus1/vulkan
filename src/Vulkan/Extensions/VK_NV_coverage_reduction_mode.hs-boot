@@ -135,9 +135,10 @@ module Vulkan.Extensions.VK_NV_coverage_reduction_mode  ( FramebufferMixedSample
                                                         , PipelineCoverageReductionStateCreateInfoNV
                                                         ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data FramebufferMixedSamplesCombinationNV
 
 instance ToCStruct FramebufferMixedSamplesCombinationNV

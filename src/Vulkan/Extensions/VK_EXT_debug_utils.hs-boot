@@ -497,9 +497,10 @@ module Vulkan.Extensions.VK_EXT_debug_utils  ( DebugUtilsLabelEXT
                                              , DebugUtilsMessageTypeFlagBitsEXT
                                              ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DebugUtilsLabelEXT
 
 instance ToCStruct DebugUtilsLabelEXT

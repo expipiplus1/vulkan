@@ -176,9 +176,10 @@ module Vulkan.Extensions.VK_EXT_sample_locations  ( AttachmentSampleLocationsEXT
                                                   , SubpassSampleLocationsEXT
                                                   ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data AttachmentSampleLocationsEXT
 
 instance ToCStruct AttachmentSampleLocationsEXT

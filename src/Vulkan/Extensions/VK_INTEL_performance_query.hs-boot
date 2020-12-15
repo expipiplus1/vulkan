@@ -323,9 +323,10 @@ module Vulkan.Extensions.VK_INTEL_performance_query  ( InitializePerformanceApiI
                                                      , PerformanceParameterTypeINTEL
                                                      ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data InitializePerformanceApiInfoINTEL
 
 instance ToCStruct InitializePerformanceApiInfoINTEL

@@ -34,9 +34,10 @@
 -- the generator scripts, not directly.
 module OpenXR.Extensions.XR_EXT_view_configuration_depth_range  (ViewConfigurationDepthRangeEXT) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ViewConfigurationDepthRangeEXT
 
 instance ToCStruct ViewConfigurationDepthRangeEXT

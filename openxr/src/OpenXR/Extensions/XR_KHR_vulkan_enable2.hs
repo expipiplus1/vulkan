@@ -65,12 +65,12 @@ import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import OpenXR.Internal.Utils (traceAroundEvent)
 import qualified OpenXR.VulkanTypes (AllocationCallbacks)
-import qualified OpenXR.VulkanTypes (Device)
 import qualified OpenXR.VulkanTypes (DeviceCreateInfo)
-import qualified OpenXR.VulkanTypes (Instance)
+import qualified OpenXR.VulkanTypes (Device_T)
 import qualified OpenXR.VulkanTypes (InstanceCreateInfo)
+import qualified OpenXR.VulkanTypes (Instance_T)
 import qualified OpenXR.VulkanTypes (PFN_vkGetInstanceProcAddr)
-import qualified OpenXR.VulkanTypes (PhysicalDevice)
+import qualified OpenXR.VulkanTypes (PhysicalDevice_T)
 import qualified OpenXR.VulkanTypes (Result)
 import qualified OpenXR.VulkanTypes (SomeStruct)
 import Control.Exception.Base (bracket)
@@ -88,10 +88,13 @@ import GHC.Show (showString)
 import Numeric (showHex)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
-import qualified OpenXR.VulkanTypes (Device(..))
-import qualified OpenXR.VulkanTypes (Instance(..))
-import qualified OpenXR.VulkanTypes (PhysicalDevice(..))
+import OpenXR.CStruct (FromCStruct)
+import OpenXR.CStruct (FromCStruct(..))
+import OpenXR.CStruct (ToCStruct)
+import OpenXR.CStruct (ToCStruct(..))
 import qualified OpenXR.VulkanTypes (Result(..))
+import OpenXR.Zero (Zero)
+import OpenXR.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
@@ -113,8 +116,6 @@ import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.Extensions.XR_KHR_vulkan_enable (getVulkanGraphicsRequirementsKHR)
 import OpenXR.NamedType ((:::))
 import OpenXR.Core10.FundamentalTypes (Flags64)
-import OpenXR.CStruct (FromCStruct)
-import OpenXR.CStruct (FromCStruct(..))
 import OpenXR.Extensions.XR_KHR_vulkan_enable (GraphicsBindingVulkanKHR)
 import OpenXR.Extensions.XR_KHR_vulkan_enable (GraphicsRequirementsVulkanKHR)
 import OpenXR.Core10.Handles (Instance)
@@ -129,10 +130,6 @@ import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Extensions.XR_KHR_vulkan_enable (SwapchainImageVulkanKHR)
 import OpenXR.Core10.Device (SystemId)
-import OpenXR.CStruct (ToCStruct)
-import OpenXR.CStruct (ToCStruct(..))
-import OpenXR.Zero (Zero)
-import OpenXR.Zero (Zero(..))
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_GRAPHICS_BINDING_VULKAN_KHR))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_GRAPHICS_REQUIREMENTS_VULKAN_KHR))
@@ -149,7 +146,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkXrCreateVulkanInstanceKHR
-  :: FunPtr (Ptr Instance_T -> Ptr VulkanInstanceCreateInfoKHR -> Ptr OpenXR.VulkanTypes.Instance -> Ptr OpenXR.VulkanTypes.Result -> IO Result) -> Ptr Instance_T -> Ptr VulkanInstanceCreateInfoKHR -> Ptr OpenXR.VulkanTypes.Instance -> Ptr OpenXR.VulkanTypes.Result -> IO Result
+  :: FunPtr (Ptr Instance_T -> Ptr VulkanInstanceCreateInfoKHR -> Ptr (Ptr OpenXR.VulkanTypes.Instance_T) -> Ptr OpenXR.VulkanTypes.Result -> IO Result) -> Ptr Instance_T -> Ptr VulkanInstanceCreateInfoKHR -> Ptr (Ptr OpenXR.VulkanTypes.Instance_T) -> Ptr OpenXR.VulkanTypes.Result -> IO Result
 
 -- | xrCreateVulkanInstanceKHR - Create an OpenXR compatible VkInstance
 --
@@ -204,18 +201,18 @@ createVulkanInstanceKHR :: forall io
                         -> -- | @createInfo@ extensible input struct of type
                            -- @XrCreateVulkanInstanceCreateInfoKHR@
                            VulkanInstanceCreateInfoKHR
-                        -> io (("vulkanInstance" ::: OpenXR.VulkanTypes.Instance), ("vulkanResult" ::: OpenXR.VulkanTypes.Result))
+                        -> io (("vulkanInstance" ::: Ptr OpenXR.VulkanTypes.Instance_T), ("vulkanResult" ::: OpenXR.VulkanTypes.Result))
 createVulkanInstanceKHR instance' createInfo = liftIO . evalContT $ do
   let xrCreateVulkanInstanceKHRPtr = pXrCreateVulkanInstanceKHR (instanceCmds (instance' :: Instance))
   lift $ unless (xrCreateVulkanInstanceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateVulkanInstanceKHR is null" Nothing Nothing
   let xrCreateVulkanInstanceKHR' = mkXrCreateVulkanInstanceKHR xrCreateVulkanInstanceKHRPtr
   createInfo' <- ContT $ withCStruct (createInfo)
-  pVulkanInstance <- ContT $ bracket (callocBytes @OpenXR.VulkanTypes.Instance 8) free
+  pVulkanInstance <- ContT $ bracket (callocBytes @(Ptr OpenXR.VulkanTypes.Instance_T) 8) free
   pVulkanResult <- ContT $ bracket (callocBytes @OpenXR.VulkanTypes.Result 4) free
   r <- lift $ traceAroundEvent "xrCreateVulkanInstanceKHR" (xrCreateVulkanInstanceKHR' (instanceHandle (instance')) createInfo' (pVulkanInstance) (pVulkanResult))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
-  vulkanInstance <- lift $ peek @OpenXR.VulkanTypes.Instance pVulkanInstance
+  vulkanInstance <- lift $ peek @(Ptr OpenXR.VulkanTypes.Instance_T) pVulkanInstance
   vulkanResult <- lift $ peek @OpenXR.VulkanTypes.Result pVulkanResult
   pure $ (vulkanInstance, vulkanResult)
 
@@ -225,7 +222,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkXrCreateVulkanDeviceKHR
-  :: FunPtr (Ptr Instance_T -> Ptr VulkanDeviceCreateInfoKHR -> Ptr OpenXR.VulkanTypes.Device -> Ptr OpenXR.VulkanTypes.Result -> IO Result) -> Ptr Instance_T -> Ptr VulkanDeviceCreateInfoKHR -> Ptr OpenXR.VulkanTypes.Device -> Ptr OpenXR.VulkanTypes.Result -> IO Result
+  :: FunPtr (Ptr Instance_T -> Ptr VulkanDeviceCreateInfoKHR -> Ptr (Ptr OpenXR.VulkanTypes.Device_T) -> Ptr OpenXR.VulkanTypes.Result -> IO Result) -> Ptr Instance_T -> Ptr VulkanDeviceCreateInfoKHR -> Ptr (Ptr OpenXR.VulkanTypes.Device_T) -> Ptr OpenXR.VulkanTypes.Result -> IO Result
 
 -- | xrCreateVulkanDeviceKHR - Create an OpenXR compatible VkDevice
 --
@@ -278,18 +275,18 @@ createVulkanDeviceKHR :: forall io
                       -> -- | @createInfo@ extensible input struct of type
                          -- @XrCreateVulkanDeviceCreateInfoKHR@
                          VulkanDeviceCreateInfoKHR
-                      -> io (("vulkanDevice" ::: OpenXR.VulkanTypes.Device), ("vulkanResult" ::: OpenXR.VulkanTypes.Result))
+                      -> io (("vulkanDevice" ::: Ptr OpenXR.VulkanTypes.Device_T), ("vulkanResult" ::: OpenXR.VulkanTypes.Result))
 createVulkanDeviceKHR instance' createInfo = liftIO . evalContT $ do
   let xrCreateVulkanDeviceKHRPtr = pXrCreateVulkanDeviceKHR (instanceCmds (instance' :: Instance))
   lift $ unless (xrCreateVulkanDeviceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateVulkanDeviceKHR is null" Nothing Nothing
   let xrCreateVulkanDeviceKHR' = mkXrCreateVulkanDeviceKHR xrCreateVulkanDeviceKHRPtr
   createInfo' <- ContT $ withCStruct (createInfo)
-  pVulkanDevice <- ContT $ bracket (callocBytes @OpenXR.VulkanTypes.Device 8) free
+  pVulkanDevice <- ContT $ bracket (callocBytes @(Ptr OpenXR.VulkanTypes.Device_T) 8) free
   pVulkanResult <- ContT $ bracket (callocBytes @OpenXR.VulkanTypes.Result 4) free
   r <- lift $ traceAroundEvent "xrCreateVulkanDeviceKHR" (xrCreateVulkanDeviceKHR' (instanceHandle (instance')) createInfo' (pVulkanDevice) (pVulkanResult))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
-  vulkanDevice <- lift $ peek @OpenXR.VulkanTypes.Device pVulkanDevice
+  vulkanDevice <- lift $ peek @(Ptr OpenXR.VulkanTypes.Device_T) pVulkanDevice
   vulkanResult <- lift $ peek @OpenXR.VulkanTypes.Result pVulkanResult
   pure $ (vulkanDevice, vulkanResult)
 
@@ -299,7 +296,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkXrGetVulkanGraphicsDevice2KHR
-  :: FunPtr (Ptr Instance_T -> Ptr VulkanGraphicsDeviceGetInfoKHR -> Ptr OpenXR.VulkanTypes.PhysicalDevice -> IO Result) -> Ptr Instance_T -> Ptr VulkanGraphicsDeviceGetInfoKHR -> Ptr OpenXR.VulkanTypes.PhysicalDevice -> IO Result
+  :: FunPtr (Ptr Instance_T -> Ptr VulkanGraphicsDeviceGetInfoKHR -> Ptr (Ptr OpenXR.VulkanTypes.PhysicalDevice_T) -> IO Result) -> Ptr Instance_T -> Ptr VulkanGraphicsDeviceGetInfoKHR -> Ptr (Ptr OpenXR.VulkanTypes.PhysicalDevice_T) -> IO Result
 
 -- | xrGetVulkanGraphicsDevice2KHR - Retrieve the Vulkan physical device
 -- associated with an OpenXR instance and system
@@ -352,17 +349,17 @@ getVulkanGraphicsDevice2KHR :: forall io
                             -> -- | @getInfo@ extensible input struct of type
                                -- 'VulkanGraphicsDeviceGetInfoKHR'
                                VulkanGraphicsDeviceGetInfoKHR
-                            -> io (("vulkanPhysicalDevice" ::: OpenXR.VulkanTypes.PhysicalDevice))
+                            -> io (("vulkanPhysicalDevice" ::: Ptr OpenXR.VulkanTypes.PhysicalDevice_T))
 getVulkanGraphicsDevice2KHR instance' getInfo = liftIO . evalContT $ do
   let xrGetVulkanGraphicsDevice2KHRPtr = pXrGetVulkanGraphicsDevice2KHR (instanceCmds (instance' :: Instance))
   lift $ unless (xrGetVulkanGraphicsDevice2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanGraphicsDevice2KHR is null" Nothing Nothing
   let xrGetVulkanGraphicsDevice2KHR' = mkXrGetVulkanGraphicsDevice2KHR xrGetVulkanGraphicsDevice2KHRPtr
   getInfo' <- ContT $ withCStruct (getInfo)
-  pVulkanPhysicalDevice <- ContT $ bracket (callocBytes @OpenXR.VulkanTypes.PhysicalDevice 8) free
+  pVulkanPhysicalDevice <- ContT $ bracket (callocBytes @(Ptr OpenXR.VulkanTypes.PhysicalDevice_T) 8) free
   r <- lift $ traceAroundEvent "xrGetVulkanGraphicsDevice2KHR" (xrGetVulkanGraphicsDevice2KHR' (instanceHandle (instance')) getInfo' (pVulkanPhysicalDevice))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
-  vulkanPhysicalDevice <- lift $ peek @OpenXR.VulkanTypes.PhysicalDevice pVulkanPhysicalDevice
+  vulkanPhysicalDevice <- lift $ peek @(Ptr OpenXR.VulkanTypes.PhysicalDevice_T) pVulkanPhysicalDevice
   pure $ (vulkanPhysicalDevice)
 
 
@@ -606,7 +603,7 @@ data VulkanDeviceCreateInfoKHR = VulkanDeviceCreateInfoKHR
     pfnGetInstanceProcAddr :: OpenXR.VulkanTypes.PFN_vkGetInstanceProcAddr
   , -- | @vulkanPhysicalDevice@ /must/ match
     -- 'OpenXR.Extensions.XR_KHR_vulkan_enable.getVulkanGraphicsDeviceKHR'.
-    vulkanPhysicalDevice :: OpenXR.VulkanTypes.PhysicalDevice
+    vulkanPhysicalDevice :: Ptr OpenXR.VulkanTypes.PhysicalDevice_T
   , -- | @vulkanCreateInfo@ is the
     -- <{vkRefPageRoot}/VkDeviceCreateInfo.html VkDeviceCreateInfo as specified by Vulkan>.
     vulkanCreateInfo :: Ptr (OpenXR.VulkanTypes.SomeStruct OpenXR.VulkanTypes.DeviceCreateInfo)
@@ -628,7 +625,7 @@ instance ToCStruct VulkanDeviceCreateInfoKHR where
     poke ((p `plusPtr` 16 :: Ptr SystemId)) (systemId)
     poke ((p `plusPtr` 24 :: Ptr VulkanDeviceCreateFlagsKHR)) (createFlags)
     poke ((p `plusPtr` 32 :: Ptr OpenXR.VulkanTypes.PFN_vkGetInstanceProcAddr)) (pfnGetInstanceProcAddr)
-    poke ((p `plusPtr` 40 :: Ptr OpenXR.VulkanTypes.PhysicalDevice)) (vulkanPhysicalDevice)
+    poke ((p `plusPtr` 40 :: Ptr (Ptr OpenXR.VulkanTypes.PhysicalDevice_T))) (vulkanPhysicalDevice)
     poke ((p `plusPtr` 48 :: Ptr (Ptr (OpenXR.VulkanTypes.SomeStruct OpenXR.VulkanTypes.DeviceCreateInfo)))) (vulkanCreateInfo)
     poke ((p `plusPtr` 56 :: Ptr (Ptr OpenXR.VulkanTypes.AllocationCallbacks))) (vulkanAllocator)
     f
@@ -640,7 +637,7 @@ instance ToCStruct VulkanDeviceCreateInfoKHR where
     poke ((p `plusPtr` 16 :: Ptr SystemId)) (zero)
     poke ((p `plusPtr` 24 :: Ptr VulkanDeviceCreateFlagsKHR)) (zero)
     poke ((p `plusPtr` 32 :: Ptr OpenXR.VulkanTypes.PFN_vkGetInstanceProcAddr)) (zero)
-    poke ((p `plusPtr` 40 :: Ptr OpenXR.VulkanTypes.PhysicalDevice)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr (Ptr OpenXR.VulkanTypes.PhysicalDevice_T))) (zero)
     poke ((p `plusPtr` 48 :: Ptr (Ptr (OpenXR.VulkanTypes.SomeStruct OpenXR.VulkanTypes.DeviceCreateInfo)))) (zero)
     poke ((p `plusPtr` 56 :: Ptr (Ptr OpenXR.VulkanTypes.AllocationCallbacks))) (zero)
     f
@@ -650,7 +647,7 @@ instance FromCStruct VulkanDeviceCreateInfoKHR where
     systemId <- peek @SystemId ((p `plusPtr` 16 :: Ptr SystemId))
     createFlags <- peek @VulkanDeviceCreateFlagsKHR ((p `plusPtr` 24 :: Ptr VulkanDeviceCreateFlagsKHR))
     pfnGetInstanceProcAddr <- peek @OpenXR.VulkanTypes.PFN_vkGetInstanceProcAddr ((p `plusPtr` 32 :: Ptr OpenXR.VulkanTypes.PFN_vkGetInstanceProcAddr))
-    vulkanPhysicalDevice <- peek @OpenXR.VulkanTypes.PhysicalDevice ((p `plusPtr` 40 :: Ptr OpenXR.VulkanTypes.PhysicalDevice))
+    vulkanPhysicalDevice <- peek @(Ptr OpenXR.VulkanTypes.PhysicalDevice_T) ((p `plusPtr` 40 :: Ptr (Ptr OpenXR.VulkanTypes.PhysicalDevice_T)))
     vulkanCreateInfo <- peek @(Ptr (OpenXR.VulkanTypes.SomeStruct OpenXR.VulkanTypes.DeviceCreateInfo)) ((p `plusPtr` 48 :: Ptr (Ptr (OpenXR.VulkanTypes.SomeStruct OpenXR.VulkanTypes.DeviceCreateInfo))))
     vulkanAllocator <- peek @(Ptr OpenXR.VulkanTypes.AllocationCallbacks) ((p `plusPtr` 56 :: Ptr (Ptr OpenXR.VulkanTypes.AllocationCallbacks)))
     pure $ VulkanDeviceCreateInfoKHR
@@ -701,7 +698,7 @@ data VulkanGraphicsDeviceGetInfoKHR = VulkanGraphicsDeviceGetInfoKHR
     -- handle for the system which will be used to create a session.
     systemId :: SystemId
   , -- | @vulkanInstance@ is a valid Vulkan @VkInstance@.
-    vulkanInstance :: OpenXR.VulkanTypes.Instance
+    vulkanInstance :: Ptr OpenXR.VulkanTypes.Instance_T
   }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -715,7 +712,7 @@ instance ToCStruct VulkanGraphicsDeviceGetInfoKHR where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr SystemId)) (systemId)
-    poke ((p `plusPtr` 24 :: Ptr OpenXR.VulkanTypes.Instance)) (vulkanInstance)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr OpenXR.VulkanTypes.Instance_T))) (vulkanInstance)
     f
   cStructSize = 32
   cStructAlignment = 8
@@ -723,13 +720,13 @@ instance ToCStruct VulkanGraphicsDeviceGetInfoKHR where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr SystemId)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr OpenXR.VulkanTypes.Instance)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr OpenXR.VulkanTypes.Instance_T))) (zero)
     f
 
 instance FromCStruct VulkanGraphicsDeviceGetInfoKHR where
   peekCStruct p = do
     systemId <- peek @SystemId ((p `plusPtr` 16 :: Ptr SystemId))
-    vulkanInstance <- peek @OpenXR.VulkanTypes.Instance ((p `plusPtr` 24 :: Ptr OpenXR.VulkanTypes.Instance))
+    vulkanInstance <- peek @(Ptr OpenXR.VulkanTypes.Instance_T) ((p `plusPtr` 24 :: Ptr (Ptr OpenXR.VulkanTypes.Instance_T)))
     pure $ VulkanGraphicsDeviceGetInfoKHR
              systemId vulkanInstance
 

@@ -71,11 +71,12 @@ module OpenXR.Core10.Enums.Result  ( pattern SUCCEEDED
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
+import OpenXR.Zero (Zero)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
-import OpenXR.Zero (Zero)
+
 -- | XR_SUCCEEDED - Success convenience macro
 --
 -- = Description

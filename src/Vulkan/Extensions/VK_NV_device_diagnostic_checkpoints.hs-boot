@@ -108,9 +108,10 @@ module Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints  ( CheckpointDataNV
                                                               , QueueFamilyCheckpointPropertiesNV
                                                               ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data CheckpointDataNV
 
 instance ToCStruct CheckpointDataNV

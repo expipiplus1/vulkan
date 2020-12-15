@@ -36,9 +36,10 @@
 -- the generator scripts, not directly.
 module OpenXR.Extensions.XR_FB_display_refresh_rate  (EventDataDisplayRefreshRateChangedFB) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data EventDataDisplayRefreshRateChangedFB
 
 instance ToCStruct EventDataDisplayRefreshRateChangedFB

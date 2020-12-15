@@ -15,11 +15,12 @@ module Vulkan.Core10.Enums.QueryType  (QueryType( QUERY_TYPE_OCCLUSION
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
+import Vulkan.Zero (Zero)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
-import Vulkan.Zero (Zero)
+
 -- | VkQueryType - Specify the type of queries managed by a query pool
 --
 -- = See Also

@@ -4,9 +4,10 @@ module Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template  ( Descript
                                                                       , DescriptorUpdateTemplateEntry
                                                                       ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DescriptorUpdateTemplateCreateInfo
 
 instance ToCStruct DescriptorUpdateTemplateCreateInfo

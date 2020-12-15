@@ -184,9 +184,10 @@ module Vulkan.Extensions.VK_KHR_pipeline_executable_properties  ( PhysicalDevice
                                                                 , PipelineInfoKHR
                                                                 ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDevicePipelineExecutablePropertiesFeaturesKHR
 
 instance ToCStruct PhysicalDevicePipelineExecutablePropertiesFeaturesKHR

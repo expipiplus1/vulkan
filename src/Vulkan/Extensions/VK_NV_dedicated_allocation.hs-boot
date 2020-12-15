@@ -180,9 +180,10 @@ module Vulkan.Extensions.VK_NV_dedicated_allocation  ( DedicatedAllocationBuffer
                                                      , DedicatedAllocationMemoryAllocateInfoNV
                                                      ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DedicatedAllocationBufferCreateInfoNV
 
 instance ToCStruct DedicatedAllocationBufferCreateInfoNV

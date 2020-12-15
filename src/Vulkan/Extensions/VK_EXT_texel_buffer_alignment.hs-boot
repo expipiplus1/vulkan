@@ -94,9 +94,10 @@ module Vulkan.Extensions.VK_EXT_texel_buffer_alignment  ( PhysicalDeviceTexelBuf
                                                         , PhysicalDeviceTexelBufferAlignmentPropertiesEXT
                                                         ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceTexelBufferAlignmentFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTexelBufferAlignmentFeaturesEXT

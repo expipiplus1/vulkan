@@ -12,13 +12,14 @@ import Data.Bits ((.&.))
 import Data.Bits ((.|.))
 import Data.Bits (shiftL)
 import Data.Bits (shiftR)
+import OpenXR.Zero (Zero)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import GHC.Generics (Generic)
 import Data.Word (Word16)
 import Data.Word (Word32)
 import Data.Word (Word64)
-import OpenXR.Zero (Zero)
+
 pattern CURRENT_API_VERSION :: Version
 pattern CURRENT_API_VERSION = MAKE_VERSION 1 0 13
 

@@ -173,11 +173,12 @@ module Vulkan.Extensions.VK_KHR_xlib_surface  ( XlibSurfaceCreateInfoKHR
                                               , VisualID
                                               ) where
 
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word64)
 import Data.Kind (Type)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (ToCStruct)
+
 data XlibSurfaceCreateInfoKHR
 
 instance ToCStruct XlibSurfaceCreateInfoKHR

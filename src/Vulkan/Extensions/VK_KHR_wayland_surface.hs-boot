@@ -190,9 +190,10 @@ module Vulkan.Extensions.VK_KHR_wayland_surface  ( WaylandSurfaceCreateInfoKHR
                                                  , Wl_display
                                                  ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data WaylandSurfaceCreateInfoKHR
 
 instance ToCStruct WaylandSurfaceCreateInfoKHR

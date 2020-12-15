@@ -107,9 +107,10 @@ module Vulkan.Extensions.VK_KHR_external_fence_fd  ( FenceGetFdInfoKHR
                                                    , ImportFenceFdInfoKHR
                                                    ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data FenceGetFdInfoKHR
 
 instance ToCStruct FenceGetFdInfoKHR

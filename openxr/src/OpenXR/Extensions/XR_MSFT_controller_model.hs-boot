@@ -47,9 +47,10 @@ module OpenXR.Extensions.XR_MSFT_controller_model  ( ControllerModelKeyStateMSFT
                                                    , ControllerModelKeyMSFT
                                                    ) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ControllerModelKeyStateMSFT
 
 instance ToCStruct ControllerModelKeyStateMSFT

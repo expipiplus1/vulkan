@@ -159,9 +159,10 @@ module Vulkan.Extensions.VK_EXT_astc_decode_mode  ( ImageViewASTCDecodeModeEXT
                                                   , PhysicalDeviceASTCDecodeFeaturesEXT
                                                   ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ImageViewASTCDecodeModeEXT
 
 instance ToCStruct ImageViewASTCDecodeModeEXT

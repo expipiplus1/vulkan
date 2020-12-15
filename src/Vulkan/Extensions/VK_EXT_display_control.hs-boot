@@ -156,9 +156,10 @@ module Vulkan.Extensions.VK_EXT_display_control  ( DeviceEventInfoEXT
                                                  , SwapchainCounterCreateInfoEXT
                                                  ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DeviceEventInfoEXT
 
 instance ToCStruct DeviceEventInfoEXT

@@ -36,9 +36,10 @@
 -- the generator scripts, not directly.
 module OpenXR.Extensions.XR_KHR_vulkan_swapchain_format_list  (VulkanSwapchainFormatListCreateInfoKHR) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data VulkanSwapchainFormatListCreateInfoKHR
 
 instance ToCStruct VulkanSwapchainFormatListCreateInfoKHR

@@ -55,10 +55,10 @@ module OpenXR.Core10.APIConstants  ( pattern MIN_HAPTIC_DURATION
                                    , Bool32(..)
                                    ) where
 
+import OpenXR.Zero (Zero(..))
 import Data.Int (Int64)
 import Data.Word (Word64)
 import OpenXR.Core10.Enums.ObjectType (ObjectType)
-import OpenXR.Zero (Zero(..))
 import OpenXR.Core10.FundamentalTypes (Bool32(..))
 -- | XR_MIN_HAPTIC_DURATION - Indicates the shortest valid duration for the
 -- device

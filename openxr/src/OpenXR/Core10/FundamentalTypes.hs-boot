@@ -9,10 +9,11 @@ module OpenXR.Core10.FundamentalTypes  ( Extent2Df
                                        , Time
                                        ) where
 
-import Data.Int (Int64)
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Int (Int64)
+import Data.Kind (Type)
+
 data Extent2Df
 
 instance ToCStruct Extent2Df

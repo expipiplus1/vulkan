@@ -99,9 +99,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation  (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
 
 instance ToCStruct PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT

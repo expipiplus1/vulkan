@@ -149,9 +149,10 @@ module Vulkan.Extensions.VK_KHR_incremental_present  ( PresentRegionKHR
                                                      , RectLayerKHR
                                                      ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PresentRegionKHR
 
 instance ToCStruct PresentRegionKHR

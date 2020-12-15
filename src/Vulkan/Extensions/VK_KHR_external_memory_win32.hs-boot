@@ -141,9 +141,10 @@ module Vulkan.Extensions.VK_KHR_external_memory_win32  ( ExportMemoryWin32Handle
                                                        , MemoryWin32HandlePropertiesKHR
                                                        ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ExportMemoryWin32HandleInfoKHR
 
 instance ToCStruct ExportMemoryWin32HandleInfoKHR

@@ -152,9 +152,10 @@ module Vulkan.Extensions.VK_NV_cooperative_matrix  ( CooperativeMatrixProperties
                                                    , PhysicalDeviceCooperativeMatrixPropertiesNV
                                                    ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data CooperativeMatrixPropertiesNV
 
 instance ToCStruct CooperativeMatrixPropertiesNV

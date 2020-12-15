@@ -15,11 +15,12 @@ module OpenXR.Core10.Enums.SessionState  (SessionState( SESSION_STATE_UNKNOWN
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
+import OpenXR.Zero (Zero)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
-import OpenXR.Zero (Zero)
+
 -- | XrSessionState - Session lifecycle state
 --
 -- == Enumerant Descriptions

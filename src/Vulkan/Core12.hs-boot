@@ -6,9 +6,10 @@ module Vulkan.Core12  ( PhysicalDeviceVulkan11Features
                       , PhysicalDeviceVulkan12Properties
                       ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceVulkan11Features
 
 instance ToCStruct PhysicalDeviceVulkan11Features

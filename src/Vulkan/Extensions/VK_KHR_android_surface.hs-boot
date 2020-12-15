@@ -161,9 +161,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_android_surface  (AndroidSurfaceCreateInfoKHR) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data AndroidSurfaceCreateInfoKHR
 
 instance ToCStruct AndroidSurfaceCreateInfoKHR

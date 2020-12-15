@@ -6,9 +6,10 @@ module Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer  ( FramebufferAt
                                                                  , RenderPassAttachmentBeginInfo
                                                                  ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data FramebufferAttachmentImageInfo
 
 instance ToCStruct FramebufferAttachmentImageInfo

@@ -127,9 +127,10 @@ module Vulkan.Extensions.VK_KHR_external_fence_win32  ( ExportFenceWin32HandleIn
                                                       , ImportFenceWin32HandleInfoKHR
                                                       ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ExportFenceWin32HandleInfoKHR
 
 instance ToCStruct ExportFenceWin32HandleInfoKHR

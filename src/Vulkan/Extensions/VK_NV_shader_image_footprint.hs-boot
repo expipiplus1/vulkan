@@ -268,9 +268,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_shader_image_footprint  (PhysicalDeviceShaderImageFootprintFeaturesNV) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceShaderImageFootprintFeaturesNV
 
 instance ToCStruct PhysicalDeviceShaderImageFootprintFeaturesNV

@@ -8,11 +8,12 @@ module OpenXR.Core10.Enums.FormFactor  (FormFactor( FORM_FACTOR_HEAD_MOUNTED_DIS
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
+import OpenXR.Zero (Zero)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
-import OpenXR.Zero (Zero)
+
 -- | XrFormFactor - Supported form factors
 --
 -- = Description

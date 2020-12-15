@@ -155,9 +155,10 @@ module Vulkan.Extensions.VK_EXT_conservative_rasterization  ( PhysicalDeviceCons
                                                             , PipelineRasterizationConservativeStateCreateInfoEXT
                                                             ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceConservativeRasterizationPropertiesEXT
 
 instance ToCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT

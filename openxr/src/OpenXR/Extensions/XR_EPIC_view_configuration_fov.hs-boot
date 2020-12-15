@@ -34,9 +34,10 @@
 -- the generator scripts, not directly.
 module OpenXR.Extensions.XR_EPIC_view_configuration_fov  (ViewConfigurationViewFovEPIC) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ViewConfigurationViewFovEPIC
 
 instance ToCStruct ViewConfigurationViewFovEPIC

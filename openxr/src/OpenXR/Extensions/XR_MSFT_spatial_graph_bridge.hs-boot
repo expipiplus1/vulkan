@@ -35,9 +35,10 @@
 -- the generator scripts, not directly.
 module OpenXR.Extensions.XR_MSFT_spatial_graph_bridge  (SpatialGraphNodeSpaceCreateInfoMSFT) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data SpatialGraphNodeSpaceCreateInfoMSFT
 
 instance ToCStruct SpatialGraphNodeSpaceCreateInfoMSFT

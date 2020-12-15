@@ -2,13 +2,13 @@
 -- No documentation found for Chapter "Query"
 module Vulkan.Core10.Query  (QueryPoolCreateInfo) where
 
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
-import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-import Vulkan.CStruct (ToCStruct)
 type role QueryPoolCreateInfo nominal
 data QueryPoolCreateInfo (es :: [Type])
 

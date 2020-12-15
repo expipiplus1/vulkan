@@ -231,9 +231,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_win32_keyed_mutex  (Win32KeyedMutexAcquireReleaseInfoNV) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data Win32KeyedMutexAcquireReleaseInfoNV
 
 instance ToCStruct Win32KeyedMutexAcquireReleaseInfoNV

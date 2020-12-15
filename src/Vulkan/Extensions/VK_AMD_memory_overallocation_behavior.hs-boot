@@ -92,9 +92,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_AMD_memory_overallocation_behavior  (DeviceMemoryOverallocationCreateInfoAMD) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DeviceMemoryOverallocationCreateInfoAMD
 
 instance ToCStruct DeviceMemoryOverallocationCreateInfoAMD

@@ -38,9 +38,10 @@ module OpenXR.Extensions.XR_KHR_opengl_es_enable  ( GraphicsBindingOpenGLESAndro
                                                   , SwapchainImageOpenGLESKHR
                                                   ) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data GraphicsBindingOpenGLESAndroidKHR
 
 instance ToCStruct GraphicsBindingOpenGLESAndroidKHR

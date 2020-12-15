@@ -130,9 +130,10 @@ module Vulkan.Extensions.VK_EXT_filter_cubic  ( FilterCubicImageViewImageFormatP
                                               , PhysicalDeviceImageViewImageFormatInfoEXT
                                               ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data FilterCubicImageViewImageFormatPropertiesEXT
 
 instance ToCStruct FilterCubicImageViewImageFormatPropertiesEXT

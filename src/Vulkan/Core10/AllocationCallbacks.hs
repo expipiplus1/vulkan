@@ -4,6 +4,11 @@ module Vulkan.Core10.AllocationCallbacks  (AllocationCallbacks(..)) where
 
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (plusPtr)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -12,16 +17,11 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.FuncPointers (PFN_vkAllocationFunction)
 import Vulkan.Core10.FuncPointers (PFN_vkFreeFunction)
 import Vulkan.Core10.FuncPointers (PFN_vkInternalAllocationNotification)
 import Vulkan.Core10.FuncPointers (PFN_vkInternalFreeNotification)
 import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 -- | VkAllocationCallbacks - Structure containing callback function pointers
 -- for memory allocation
 --

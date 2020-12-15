@@ -103,9 +103,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_AMD_pipeline_compiler_control  (PipelineCompilerControlCreateInfoAMD) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PipelineCompilerControlCreateInfoAMD
 
 instance ToCStruct PipelineCompilerControlCreateInfoAMD

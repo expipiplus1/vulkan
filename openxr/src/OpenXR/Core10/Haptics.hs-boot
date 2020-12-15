@@ -4,9 +4,10 @@ module OpenXR.Core10.Haptics  ( HapticActionInfo
                               , HapticBaseHeader
                               ) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data HapticActionInfo
 
 instance ToCStruct HapticActionInfo

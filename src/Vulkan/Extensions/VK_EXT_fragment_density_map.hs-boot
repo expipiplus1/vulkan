@@ -179,9 +179,10 @@ module Vulkan.Extensions.VK_EXT_fragment_density_map  ( PhysicalDeviceFragmentDe
                                                       , RenderPassFragmentDensityMapCreateInfoEXT
                                                       ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceFragmentDensityMapFeaturesEXT
 
 instance ToCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT

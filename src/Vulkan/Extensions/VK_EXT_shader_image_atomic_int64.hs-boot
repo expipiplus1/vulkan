@@ -110,9 +110,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_shader_image_atomic_int64  (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceShaderImageAtomicInt64FeaturesEXT
 
 instance ToCStruct PhysicalDeviceShaderImageAtomicInt64FeaturesEXT

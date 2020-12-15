@@ -5,12 +5,10 @@ module OpenXR  ( module OpenXR.CStruct
                , module OpenXR.Extensions
                , module OpenXR.NamedType
                , module OpenXR.Version
-               , module OpenXR.Zero
                ) where
 import OpenXR.CStruct
 import OpenXR.Core10
 import OpenXR.Extensions
 import OpenXR.NamedType
 import OpenXR.Version
-import OpenXR.Zero
 

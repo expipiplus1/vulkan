@@ -11,11 +11,12 @@ module OpenXR.Core10.Enums.ActionType  (ActionType( ACTION_TYPE_BOOLEAN_INPUT
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
+import OpenXR.Zero (Zero)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
-import OpenXR.Zero (Zero)
+
 -- | XrActionType - XrAction type
 --
 -- == Enumerant Descriptions

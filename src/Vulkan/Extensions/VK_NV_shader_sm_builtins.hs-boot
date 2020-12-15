@@ -134,9 +134,10 @@ module Vulkan.Extensions.VK_NV_shader_sm_builtins  ( PhysicalDeviceShaderSMBuilt
                                                    , PhysicalDeviceShaderSMBuiltinsPropertiesNV
                                                    ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceShaderSMBuiltinsFeaturesNV
 
 instance ToCStruct PhysicalDeviceShaderSMBuiltinsFeaturesNV

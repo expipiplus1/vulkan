@@ -36,9 +36,10 @@ module OpenXR.Extensions.XR_KHR_binding_modification  ( BindingModificationBaseH
                                                       , BindingModificationsKHR
                                                       ) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data BindingModificationBaseHeaderKHR
 
 instance ToCStruct BindingModificationBaseHeaderKHR

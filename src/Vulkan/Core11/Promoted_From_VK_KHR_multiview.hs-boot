@@ -5,9 +5,10 @@ module Vulkan.Core11.Promoted_From_VK_KHR_multiview  ( PhysicalDeviceMultiviewFe
                                                      , RenderPassMultiviewCreateInfo
                                                      ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceMultiviewFeatures
 
 instance ToCStruct PhysicalDeviceMultiviewFeatures

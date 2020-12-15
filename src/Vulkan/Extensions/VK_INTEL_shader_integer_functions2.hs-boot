@@ -94,9 +94,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_INTEL_shader_integer_functions2  (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
 
 instance ToCStruct PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL

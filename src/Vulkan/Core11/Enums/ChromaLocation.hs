@@ -8,11 +8,12 @@ module Vulkan.Core11.Enums.ChromaLocation  (ChromaLocation( CHROMA_LOCATION_COSI
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
+import Vulkan.Zero (Zero)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
-import Vulkan.Zero (Zero)
+
 -- | VkChromaLocation - Position of downsampled chroma samples
 --
 -- = See Also

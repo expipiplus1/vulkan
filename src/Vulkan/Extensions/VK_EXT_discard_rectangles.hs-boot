@@ -128,9 +128,10 @@ module Vulkan.Extensions.VK_EXT_discard_rectangles  ( PhysicalDeviceDiscardRecta
                                                     , PipelineDiscardRectangleStateCreateInfoEXT
                                                     ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceDiscardRectanglePropertiesEXT
 
 instance ToCStruct PhysicalDeviceDiscardRectanglePropertiesEXT

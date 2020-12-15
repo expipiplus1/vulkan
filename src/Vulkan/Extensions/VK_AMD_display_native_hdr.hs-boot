@@ -128,9 +128,10 @@ module Vulkan.Extensions.VK_AMD_display_native_hdr  ( DisplayNativeHdrSurfaceCap
                                                     , SwapchainDisplayNativeHdrCreateInfoAMD
                                                     ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DisplayNativeHdrSurfaceCapabilitiesAMD
 
 instance ToCStruct DisplayNativeHdrSurfaceCapabilitiesAMD

@@ -8,11 +8,12 @@ module Vulkan.Core10.Enums.SharingMode  (SharingMode( SHARING_MODE_EXCLUSIVE
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
+import Vulkan.Zero (Zero)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
-import Vulkan.Zero (Zero)
+
 -- | VkSharingMode - Buffer and image sharing modes
 --
 -- = Description

@@ -34,9 +34,10 @@
 -- the generator scripts, not directly.
 module OpenXR.Extensions.XR_VALVE_analog_threshold  (InteractionProfileAnalogThresholdVALVE) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data InteractionProfileAnalogThresholdVALVE
 
 instance ToCStruct InteractionProfileAnalogThresholdVALVE

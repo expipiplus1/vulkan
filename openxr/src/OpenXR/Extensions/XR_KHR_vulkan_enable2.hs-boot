@@ -41,9 +41,10 @@ module OpenXR.Extensions.XR_KHR_vulkan_enable2  ( VulkanDeviceCreateInfoKHR
                                                 , VulkanInstanceCreateInfoKHR
                                                 ) where
 
-import Data.Kind (Type)
 import OpenXR.CStruct (FromCStruct)
 import OpenXR.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data VulkanDeviceCreateInfoKHR
 
 instance ToCStruct VulkanDeviceCreateInfoKHR

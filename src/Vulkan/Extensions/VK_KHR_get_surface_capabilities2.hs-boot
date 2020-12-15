@@ -146,13 +146,13 @@ module Vulkan.Extensions.VK_KHR_get_surface_capabilities2  ( PhysicalDeviceSurfa
                                                            , SurfaceFormat2KHR
                                                            ) where
 
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
-import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-import Vulkan.CStruct (ToCStruct)
 type role PhysicalDeviceSurfaceInfo2KHR nominal
 data PhysicalDeviceSurfaceInfo2KHR (es :: [Type])
 

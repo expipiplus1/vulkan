@@ -95,9 +95,10 @@ module Vulkan.Extensions.VK_NVX_image_view_handle  ( ImageViewAddressPropertiesN
                                                    , ImageViewHandleInfoNVX
                                                    ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ImageViewAddressPropertiesNVX
 
 instance ToCStruct ImageViewAddressPropertiesNVX

@@ -119,9 +119,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_GGP_stream_descriptor_surface  (StreamDescriptorSurfaceCreateInfoGGP) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data StreamDescriptorSurfaceCreateInfoGGP
 
 instance ToCStruct StreamDescriptorSurfaceCreateInfoGGP

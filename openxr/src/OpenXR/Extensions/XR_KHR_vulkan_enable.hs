@@ -49,10 +49,10 @@ module OpenXR.Extensions.XR_KHR_vulkan_enable  ( getVulkanInstanceExtensionsKHR
                                                ) where
 
 import OpenXR.Internal.Utils (traceAroundEvent)
-import qualified OpenXR.VulkanTypes (Device)
+import qualified OpenXR.VulkanTypes (Device_T)
 import qualified OpenXR.VulkanTypes (Image)
-import qualified OpenXR.VulkanTypes (Instance)
-import qualified OpenXR.VulkanTypes (PhysicalDevice)
+import qualified OpenXR.VulkanTypes (Instance_T)
+import qualified OpenXR.VulkanTypes (PhysicalDevice_T)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -68,8 +68,11 @@ import Data.ByteString (packCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Foreign.C.Types (CChar(..))
-import qualified OpenXR.VulkanTypes (Instance(..))
-import qualified OpenXR.VulkanTypes (PhysicalDevice(..))
+import OpenXR.CStruct (FromCStruct)
+import OpenXR.CStruct (FromCStruct(..))
+import OpenXR.CStruct (ToCStruct)
+import OpenXR.CStruct (ToCStruct(..))
+import OpenXR.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -88,8 +91,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.NamedType ((:::))
-import OpenXR.CStruct (FromCStruct)
-import OpenXR.CStruct (FromCStruct(..))
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
 import OpenXR.Dynamic (InstanceCmds(pXrGetVulkanDeviceExtensionsKHR))
@@ -105,10 +106,7 @@ import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Image (SwapchainImageBaseHeader(..))
 import OpenXR.Core10.Device (SystemId)
 import OpenXR.Core10.Device (SystemId(..))
-import OpenXR.CStruct (ToCStruct)
-import OpenXR.CStruct (ToCStruct(..))
 import OpenXR.Version (Version)
-import OpenXR.Zero (Zero(..))
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_GRAPHICS_BINDING_VULKAN_KHR))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_GRAPHICS_REQUIREMENTS_VULKAN_KHR))
@@ -322,7 +320,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkXrGetVulkanGraphicsDeviceKHR
-  :: FunPtr (Ptr Instance_T -> SystemId -> OpenXR.VulkanTypes.Instance -> Ptr OpenXR.VulkanTypes.PhysicalDevice -> IO Result) -> Ptr Instance_T -> SystemId -> OpenXR.VulkanTypes.Instance -> Ptr OpenXR.VulkanTypes.PhysicalDevice -> IO Result
+  :: FunPtr (Ptr Instance_T -> SystemId -> Ptr OpenXR.VulkanTypes.Instance_T -> Ptr (Ptr OpenXR.VulkanTypes.PhysicalDevice_T) -> IO Result) -> Ptr Instance_T -> SystemId -> Ptr OpenXR.VulkanTypes.Instance_T -> Ptr (Ptr OpenXR.VulkanTypes.PhysicalDevice_T) -> IO Result
 
 -- | xrGetVulkanGraphicsDeviceKHR - Retrieve the Vulkan physical device
 -- associated with an OpenXR instance and system
@@ -387,17 +385,17 @@ getVulkanGraphicsDeviceKHR :: forall io
                               -- handle for the system which will be used to create a session.
                               SystemId
                            -> -- | @vkInstance@ is a valid Vulkan @VkInstance@.
-                              ("vkInstance" ::: OpenXR.VulkanTypes.Instance)
-                           -> io (("vkPhysicalDevice" ::: OpenXR.VulkanTypes.PhysicalDevice))
+                              ("vkInstance" ::: Ptr OpenXR.VulkanTypes.Instance_T)
+                           -> io (("vkPhysicalDevice" ::: Ptr OpenXR.VulkanTypes.PhysicalDevice_T))
 getVulkanGraphicsDeviceKHR instance' systemId vkInstance = liftIO . evalContT $ do
   let xrGetVulkanGraphicsDeviceKHRPtr = pXrGetVulkanGraphicsDeviceKHR (instanceCmds (instance' :: Instance))
   lift $ unless (xrGetVulkanGraphicsDeviceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanGraphicsDeviceKHR is null" Nothing Nothing
   let xrGetVulkanGraphicsDeviceKHR' = mkXrGetVulkanGraphicsDeviceKHR xrGetVulkanGraphicsDeviceKHRPtr
-  pVkPhysicalDevice <- ContT $ bracket (callocBytes @OpenXR.VulkanTypes.PhysicalDevice 8) free
+  pVkPhysicalDevice <- ContT $ bracket (callocBytes @(Ptr OpenXR.VulkanTypes.PhysicalDevice_T) 8) free
   r <- lift $ traceAroundEvent "xrGetVulkanGraphicsDeviceKHR" (xrGetVulkanGraphicsDeviceKHR' (instanceHandle (instance')) (systemId) (vkInstance) (pVkPhysicalDevice))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
-  vkPhysicalDevice <- lift $ peek @OpenXR.VulkanTypes.PhysicalDevice pVkPhysicalDevice
+  vkPhysicalDevice <- lift $ peek @(Ptr OpenXR.VulkanTypes.PhysicalDevice_T) pVkPhysicalDevice
   pure $ (vkPhysicalDevice)
 
 
@@ -536,11 +534,11 @@ getVulkanGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
 -- 'OpenXR.Core10.Device.createSession'
 data GraphicsBindingVulkanKHR = GraphicsBindingVulkanKHR
   { -- | @instance@ is a valid Vulkan @VkInstance@.
-    instance' :: OpenXR.VulkanTypes.Instance
+    instance' :: Ptr OpenXR.VulkanTypes.Instance_T
   , -- | @physicalDevice@ is a valid Vulkan @VkPhysicalDevice@.
-    physicalDevice :: OpenXR.VulkanTypes.PhysicalDevice
+    physicalDevice :: Ptr OpenXR.VulkanTypes.PhysicalDevice_T
   , -- | @device@ is a valid Vulkan @VkDevice@.
-    device :: OpenXR.VulkanTypes.Device
+    device :: Ptr OpenXR.VulkanTypes.Device_T
   , -- | @queueFamilyIndex@ is a valid queue family index on @device@.
     queueFamilyIndex :: Word32
   , -- | @queueIndex@ is a valid queue index on @device@ to be used for
@@ -558,9 +556,9 @@ instance ToCStruct GraphicsBindingVulkanKHR where
   pokeCStruct p GraphicsBindingVulkanKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_VULKAN_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr OpenXR.VulkanTypes.Instance)) (instance')
-    poke ((p `plusPtr` 24 :: Ptr OpenXR.VulkanTypes.PhysicalDevice)) (physicalDevice)
-    poke ((p `plusPtr` 32 :: Ptr OpenXR.VulkanTypes.Device)) (device)
+    poke ((p `plusPtr` 16 :: Ptr (Ptr OpenXR.VulkanTypes.Instance_T))) (instance')
+    poke ((p `plusPtr` 24 :: Ptr (Ptr OpenXR.VulkanTypes.PhysicalDevice_T))) (physicalDevice)
+    poke ((p `plusPtr` 32 :: Ptr (Ptr OpenXR.VulkanTypes.Device_T))) (device)
     poke ((p `plusPtr` 40 :: Ptr Word32)) (queueFamilyIndex)
     poke ((p `plusPtr` 44 :: Ptr Word32)) (queueIndex)
     f
@@ -569,18 +567,18 @@ instance ToCStruct GraphicsBindingVulkanKHR where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_VULKAN_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr OpenXR.VulkanTypes.Instance)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr OpenXR.VulkanTypes.PhysicalDevice)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr OpenXR.VulkanTypes.Device)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr (Ptr OpenXR.VulkanTypes.Instance_T))) (zero)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr OpenXR.VulkanTypes.PhysicalDevice_T))) (zero)
+    poke ((p `plusPtr` 32 :: Ptr (Ptr OpenXR.VulkanTypes.Device_T))) (zero)
     poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct GraphicsBindingVulkanKHR where
   peekCStruct p = do
-    instance' <- peek @OpenXR.VulkanTypes.Instance ((p `plusPtr` 16 :: Ptr OpenXR.VulkanTypes.Instance))
-    physicalDevice <- peek @OpenXR.VulkanTypes.PhysicalDevice ((p `plusPtr` 24 :: Ptr OpenXR.VulkanTypes.PhysicalDevice))
-    device <- peek @OpenXR.VulkanTypes.Device ((p `plusPtr` 32 :: Ptr OpenXR.VulkanTypes.Device))
+    instance' <- peek @(Ptr OpenXR.VulkanTypes.Instance_T) ((p `plusPtr` 16 :: Ptr (Ptr OpenXR.VulkanTypes.Instance_T)))
+    physicalDevice <- peek @(Ptr OpenXR.VulkanTypes.PhysicalDevice_T) ((p `plusPtr` 24 :: Ptr (Ptr OpenXR.VulkanTypes.PhysicalDevice_T)))
+    device <- peek @(Ptr OpenXR.VulkanTypes.Device_T) ((p `plusPtr` 32 :: Ptr (Ptr OpenXR.VulkanTypes.Device_T)))
     queueFamilyIndex <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
     queueIndex <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
     pure $ GraphicsBindingVulkanKHR

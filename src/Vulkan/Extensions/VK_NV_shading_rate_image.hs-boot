@@ -284,9 +284,10 @@ module Vulkan.Extensions.VK_NV_shading_rate_image  ( CoarseSampleLocationNV
                                                    , CoarseSampleOrderTypeNV
                                                    ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data CoarseSampleLocationNV
 
 instance ToCStruct CoarseSampleLocationNV
