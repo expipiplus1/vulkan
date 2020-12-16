@@ -36,6 +36,11 @@ flag renderdoc
   manual: True
   default: False
 
+flag vr
+  description: Set this flag if you have a system with the OpenXR loader installed. It enables building the OpenXR examples.
+  manual: True
+  default: True
+
 library
   exposed-modules:
       Camera
@@ -321,4 +326,45 @@ executable timeline-semaphore
     , vulkan-utils >=0.3
   if os(windows)
     ghc-options: -optl-mconsole
+  default-language: Haskell2010
+
+executable vrcube
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      vrcube
+  default-extensions: DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveTraversable DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NamedFieldPuns NoMonomorphismRestriction NumDecimals OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances ViewPatterns
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N -eventlog
+  build-depends:
+      VulkanMemoryAllocator
+    , autoapply >=0.4
+    , base <5
+    , bytestring
+    , colour
+    , containers
+    , derive-storable >=0.3
+    , derive-storable-plugin >=0.2.3.3
+    , lens
+    , linear
+    , nothunks >=0.1.2
+    , opentelemetry
+    , openxr
+    , random
+    , resourcet >=1.2.4
+    , say
+    , sdl2 >=2.5.2.0
+    , template-haskell
+    , text
+    , transformers
+    , unagi-chan
+    , unliftio
+    , vector
+    , vulkan >=3.7
+    , vulkan-examples
+    , vulkan-utils >=0.3
+  if os(windows)
+    ghc-options: -optl-mconsole
+  if !flag(vr)
+    buildable: False
   default-language: Haskell2010

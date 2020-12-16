@@ -198,6 +198,41 @@ executables:
       buildable: false
     ghc-options: -eventlog
 
+  vrcube:
+    main: Main.hs
+    source-dirs: vrcube
+    dependencies:
+    - VulkanMemoryAllocator
+    - openxr
+    - autoapply >= 0.4
+    - base <5
+    - bytestring
+    - colour
+    - containers
+    - derive-storable >= 0.3
+    - derive-storable-plugin >= 0.2.3.3
+    - lens
+    - linear
+    - nothunks >= 0.1.2
+    - opentelemetry
+    - random
+    - resourcet >= 1.2.4
+    - say
+    - sdl2 >= 2.5.2.0
+    - template-haskell
+    - text
+    - transformers
+    - unagi-chan
+    - unliftio
+    - vector
+    - vulkan >= 3.7
+    - vulkan-examples
+    - vulkan-utils >= 0.3
+    when:
+    - condition: '!flag(vr)'
+      buildable: false
+    ghc-options: -eventlog
+
 when:
 - condition: os(windows)
   ghc-options: -optl-mconsole
@@ -217,6 +252,11 @@ flags:
     description: Set this flag if you have a version of glslValidator recent enough
       to compile ray tracing shaders. It enables building the examples which use ray
       tracing.
+    default: yes
+    manual: yes
+  vr:
+    description: Set this flag if you have a system with the OpenXR loader
+      installed. It enables building the OpenXR examples.
     default: yes
     manual: yes
 
