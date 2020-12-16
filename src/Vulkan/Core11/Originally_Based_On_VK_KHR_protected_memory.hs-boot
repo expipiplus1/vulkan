@@ -6,9 +6,10 @@ module Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory  ( DeviceQueueI
                                                                   , ProtectedSubmitInfo
                                                                   ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DeviceQueueInfo2
 
 instance ToCStruct DeviceQueueInfo2

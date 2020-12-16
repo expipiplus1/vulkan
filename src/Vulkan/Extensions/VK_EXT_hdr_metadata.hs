@@ -135,14 +135,21 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -162,14 +169,9 @@ import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkSetHdrMetadataEXT))
 import Vulkan.Core10.Handles (Device_T)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Extensions.Handles (SwapchainKHR)
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_HDR_METADATA_EXT))
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
 foreign import ccall
@@ -267,7 +269,7 @@ instance FromCStruct XYColorEXT where
     x <- peek @CFloat ((p `plusPtr` 0 :: Ptr CFloat))
     y <- peek @CFloat ((p `plusPtr` 4 :: Ptr CFloat))
     pure $ XYColorEXT
-             ((\(CFloat a) -> a) x) ((\(CFloat a) -> a) y)
+             (coerce @CFloat @Float x) (coerce @CFloat @Float y)
 
 instance Storable XYColorEXT where
   sizeOf ~_ = 8
@@ -362,7 +364,7 @@ instance FromCStruct HdrMetadataEXT where
     maxContentLightLevel <- peek @CFloat ((p `plusPtr` 56 :: Ptr CFloat))
     maxFrameAverageLightLevel <- peek @CFloat ((p `plusPtr` 60 :: Ptr CFloat))
     pure $ HdrMetadataEXT
-             displayPrimaryRed displayPrimaryGreen displayPrimaryBlue whitePoint ((\(CFloat a) -> a) maxLuminance) ((\(CFloat a) -> a) minLuminance) ((\(CFloat a) -> a) maxContentLightLevel) ((\(CFloat a) -> a) maxFrameAverageLightLevel)
+             displayPrimaryRed displayPrimaryGreen displayPrimaryBlue whitePoint (coerce @CFloat @Float maxLuminance) (coerce @CFloat @Float minLuminance) (coerce @CFloat @Float maxContentLightLevel) (coerce @CFloat @Float maxFrameAverageLightLevel)
 
 instance Storable HdrMetadataEXT where
   sizeOf ~_ = 64

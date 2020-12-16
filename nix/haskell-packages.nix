@@ -1,6 +1,7 @@
 # Haskell package overrides
-{ pkgs, compiler ? null, hoogle ? false, safeVulkanFFI ? false
-, buildProfiling ? false, buildInstrumented ? false }:
+{ pkgs ? import ./nixpkgs.nix, compiler ? null, hoogle ? false
+, safeVulkanFFI ? false, safeOpenXrFFI ? false, buildProfiling ? false
+, buildInstrumented ? false, openxrNoVulkan ? false }:
 
 with pkgs.haskell.lib;
 
@@ -11,9 +12,14 @@ let
       "package.yaml"
       "changelog.md"
       "readme.md"
-    ]) || pkgs.lib.hasInfix "/src" path || pkgs.lib.hasInfix "/src-manual" path
-    || pkgs.lib.hasInfix "/vk" path || pkgs.lib.hasInfix "/vma" path);
-
+    ]) || pkgs.lib.any (i: pkgs.lib.hasInfix i path) [
+      "/src"
+      "/src-manual"
+      "/vk"
+      "/xr"
+      "/khronos-spec"
+      "/vma"
+    ]);
   mod = if buildProfiling then
     drv: doHaddock (enableLibraryProfiling drv)
   else
@@ -32,7 +38,8 @@ let
       vulkan = self.developPackage {
         name = "vulkan";
         root = aggressiveFilter ../.;
-        modifier = drv: (mod drv).override { vulkan = pkgs.vulkan-loader; };
+        overrides = _: _: { vulkan = pkgs.vulkan-loader; };
+        modifier = mod;
         returnShellEnv = false;
         cabal2nixOptions = with pkgs.lib;
           concatStringsSep " "
@@ -66,6 +73,18 @@ let
         root = aggressiveFilter ../generate-new;
         modifier = drv: dontHaddock (mod drv);
         returnShellEnv = false;
+      };
+      openxr = self.developPackage {
+        name = "openxr";
+        root = aggressiveFilter ../openxr;
+        overrides = _: _: { openxr_loader = pkgs.openxr-loader; };
+        modifier = mod;
+        returnShellEnv = false;
+        cabal2nixOptions = with pkgs.lib;
+          concatStringsSep " "
+          (optional openxrNoVulkan "--flag=-use-vulkan-types"
+            ++ optional safeOpenXrFFI "--flag=safe-foreign-calls"
+            ++ optional buildInstrumented "--flag=trace-calls");
       };
 
       #
@@ -103,14 +122,15 @@ let
           name = "vega.patch";
           sha256 = "1lnbdscngb5g5b6ys0xhp7izdfkz6j3llnpirbfxck3sy3ssxph5";
         })));
-      hs-speedscope = markUnbroken (overrideSrc super.hs-speedscope {
-        src = pkgs.fetchFromGitHub {
-          owner = "mpickering";
-          repo = "hs-speedscope";
-          rev = "9e28b303993b79f3d943ccb89b148cb9a4fb6ca5";
-          sha256 = "105zk9w5lpn0m866m8y0lhrw2x6kym2f2ryjc56zxqzfr9b76jdn";
-        };
-      });
+      hs-speedscope = doJailbreak (markUnbroken
+        (overrideSrc super.hs-speedscope {
+          src = pkgs.fetchFromGitHub {
+            owner = "mpickering";
+            repo = "hs-speedscope";
+            rev = "9e28b303993b79f3d943ccb89b148cb9a4fb6ca5";
+            sha256 = "105zk9w5lpn0m866m8y0lhrw2x6kym2f2ryjc56zxqzfr9b76jdn";
+          };
+        }));
       hvega = doJailbreak (self.callHackageDirect {
         pkg = "hvega";
         ver = "0.6.0.0";

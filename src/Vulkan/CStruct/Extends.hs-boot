@@ -8,10 +8,11 @@ module Vulkan.CStruct.Extends  ( BaseInStructure
                                , Chain
                                ) where
 
-import Data.Kind (Constraint)
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Constraint)
+import Data.Kind (Type)
+
 data BaseInStructure
 
 instance ToCStruct BaseInStructure

@@ -4,13 +4,13 @@ module Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2  ( BindBufferMemoryInfo
                                                         , BindImageMemoryInfo
                                                         ) where
 
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
-import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-import Vulkan.CStruct (ToCStruct)
 type role BindBufferMemoryInfo nominal
 data BindBufferMemoryInfo (es :: [Type])
 

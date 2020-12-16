@@ -1,3 +1,5 @@
+{-# language AllowAmbiguousTypes #-}
+
 module Spec.Parse
   ( module Spec.Types
   , parseSpec
@@ -39,6 +41,8 @@ import           Xeno.DOM
 import           Bespoke
 import           CType
 import           CType.Size
+import           Data.ByteString.Extra          ( dropPrefix )
+import qualified Data.ByteString.Extra         as BS
 import           Error
 import           Marshal.Marshalable            ( ParameterLength(..) )
 import           Spec.APIConstant
@@ -52,10 +56,11 @@ type P a
   = forall r . (MemberWithError (Input TypeNames) r, HasErr r) => Sem r a
 
 parseSpec
-  :: HasErr r
+  :: forall t r
+   . (KnownSpecFlavor t, HasErr r)
   => ByteString
   -- ^ The spec xml
-  -> Sem r (Spec, CType -> Maybe (Int, Int))
+  -> Sem r (Spec t, CType -> Maybe (Int, Int))
   -- ^ Return the map from CType to size and alignment because it's useful later
 parseSpec bs = do
   n <- fromEither (first show (parse bs))
@@ -65,17 +70,20 @@ parseSpec bs = do
       typeNames <- allTypeNames types
       runInputConst typeNames $ do
         specHeaderVersion <- parseHeaderVersion types
-        specHandles       <- parseHandles types
-        specFuncPointers  <- parseFuncPointers types
-        unsizedStructs    <- parseStructs types
-        unsizedUnions     <- parseUnions types
-        specCommands      <- parseCommands . contents =<< oneChild "commands" n
-        emptyBitmasks     <- parseEmptyBitmasks types
-        nonEmptyEnums     <- parseEnums types . contents $ n
-        requires          <- allRequires NotDisabled . contents $ n
-        enumExtensions    <- parseEnumExtensions requires
-        constantAliases   <- parseConstantAliases (contents n)
-        typeAliases       <- parseTypeAliases
+        specAtoms         <- case sSpecFlavor @t of
+          SSpecVk -> pure mempty
+          SSpecXr -> parseAtoms types
+        specHandles      <- parseHandles @t types
+        specFuncPointers <- parseFuncPointers types
+        unsizedStructs   <- parseStructs types
+        unsizedUnions    <- parseUnions types
+        specCommands     <- parseCommands . contents =<< oneChild "commands" n
+        emptyBitmasks    <- parseEmptyBitmasks types
+        nonEmptyEnums    <- parseEnums types . contents $ n
+        requires         <- allRequires NotDisabled . contents $ n
+        enumExtensions   <- parseEnumExtensions requires
+        constantAliases  <- parseConstantAliases (contents n)
+        typeAliases      <- parseTypeAliases
           ["handle", "enum", "bitmask", "struct"]
           types
         enumAliases <-
@@ -85,7 +93,7 @@ parseSpec bs = do
           parseCommandAliases . contents =<< oneChild "commands" n
         let specEnums = appendEnumExtensions
               enumExtensions
-              (extraEnums <> emptyBitmasks <> nonEmptyEnums)
+              (extraEnums @t <> emptyBitmasks <> nonEmptyEnums)
             -- The spec can contain duplicate aliases (duplicated in different
             -- extensions), remove them here.
             specAliases =
@@ -99,23 +107,36 @@ parseSpec bs = do
           parseExtensions NotDisabled . contents =<< oneChild "extensions" n
         specDisabledExtensions <-
           parseExtensions OnlyDisabled . contents =<< oneChild "extensions" n
-        specAPIConstants       <- parseAPIConstants (contents n)
+        specAPIConstants <- case specFlavor @t of
+          SpecVk -> parseAPIConstants (contents n)
+          SpecXr -> liftA2 (<>)
+                           (parseAPIConstants (contents n))
+                           (parseDefinedConstants types)
         specExtensionConstants <- parseExtensionConstants (contents n)
-        specSPIRVExtensions    <-
-          parseSPIRVExtensions . contents =<< oneChild "spirvextensions" n
-        specSPIRVCapabilities <-
-          parseSPIRVCapabilities . contents =<< oneChild "spirvcapabilities" n
+        (specSPIRVExtensions, specSPIRVCapabilities) <- case sSpecFlavor @t of
+          SSpecVk ->
+            (,)
+              <$> (   parseSPIRVExtensions
+                  .   contents
+                  =<< oneChild "spirvextensions" n
+                  )
+              <*> (   parseSPIRVCapabilities
+                  .   contents
+                  =<< oneChild "spirvcapabilities" n
+                  )
+          SSpecXr -> pure mempty
         let
           sizeMap :: Map.Map CName (Int, Int)
           sizeMap =
             let
               baseMap =
                 Map.fromList
-                  $  bespokeSizes
+                  $  bespokeSizes (specFlavor @t)
                   <> [ (eName, (4, 4)) | Enum {..} <- V.toList specEnums ]
                   <> [ (n, (4, 4))
                      | Enum { eType = ABitmask n } <- V.toList specEnums
                      ]
+                  <> [ (atName, (8, 8)) | Atom {..} <- V.toList specAtoms ]
                   <> [ (hName, (8, 8)) | Handle {..} <- V.toList specHandles ]
                   <> [ (fpName, (8, 8))
                      | FuncPointer {..} <- V.toList specFuncPointers
@@ -218,7 +239,7 @@ structSizeOverrides
   -> Maybe (StructOrUnion AStruct 'WithSize sc)
 structSizeOverrides = \case
   -- This is provisional, so match exactly in case it changes
-  s@(Struct "VkAccelerationStructureInstanceKHR" ms () () _ _)
+  s@(Struct "VkAccelerationStructureInstanceKHR" ms () () _ _ _ _)
     | ms == V.fromList
       [ StructMember "transform"
                      (TypeName "VkTransformMatrixKHR")
@@ -320,9 +341,16 @@ withChildren ss =
         | s1 <- toList ss
         , e  <- toList (sExtends s1)
         ]
-  in
-    \s ->
-      s { sExtendedBy = fromMaybe mempty (Map.lookup (sName s) extendedByMap) }
+      inheritedByMap = Map.fromListWith
+        (<>)
+        [ (e, V.singleton (sName s1))
+        | s1 <- toList ss
+        , e  <- toList (sInherits s1)
+        ]
+  in  \s -> s
+        { sExtendedBy  = fromMaybe mempty (Map.lookup (sName s) extendedByMap)
+        , sInheritedBy = fromMaybe mempty (Map.lookup (sName s) inheritedByMap)
+        }
 
 ----------------------------------------------------------------
 -- Features and extensions
@@ -376,15 +404,19 @@ parseRequires n = V.fromList <$> traverseV
  where
   parseRequire :: Node -> P Require
   parseRequire r = do
-    rComment   <- traverse decode (getAttr "comment" r)
-    rTypeNames <- V.fromList . filter (not . isForbidden) <$> sequenceV
+    rComment  <- traverse decode (getAttr "comment" r)
+    typeNames <- V.fromList . filter (not . isForbidden) <$> sequenceV
       [ nameAttr "require type" t | Element t <- contents r, "type" == name t ]
+    let -- TODO: this should probably be all constants
+        isRequiredTypeActuallyAnEnum = (`elem` ["XR_MIN_HAPTIC_DURATION"])
+        (extraEnums, rTypeNames) =
+          V.partition isRequiredTypeActuallyAnEnum typeNames
     rCommandNames <- V.fromList <$> sequenceV
       [ nameAttr "require commands" t
       | Element t <- contents r
       , "command" == name t
       ]
-    rEnumValueNames <- V.fromList <$> sequenceV
+    rEnumValueNames <- (<> extraEnums) . V.fromList <$> sequenceV
       [ nameAttr "require enum" t | Element t <- contents r, "enum" == name t ]
     pure Require { .. }
 
@@ -401,6 +433,17 @@ parseAPIConstants es = V.fromList <$> sequenceV
   , "enums" == name e
   , Just "API Constants" <- pure $ getAttr "name" e
   , (n, v)               <- someConstants e
+  ]
+
+parseDefinedConstants :: [Content] -> P (Vector Constant)
+parseDefinedConstants es = V.fromList <$> sequenceV
+  [ do
+      n' <- decode n
+      context n' (Constant (CName n') <$> parseConstant v)
+  | Element e <- es
+  , "type" == name e
+  , Just "define" <- pure $ getAttr "category" e
+  , Just (n, v)   <- pure $ definedConstant e
   ]
 
 parseExtensionConstants :: [Content] -> P (Vector Constant)
@@ -427,6 +470,13 @@ someConstants r =
   , Just n <- pure (getAttr "name" ee)
   , Just v <- pure (getAttr "value" ee)
   ]
+
+definedConstant :: Node -> Maybe (ByteString, ByteString)
+definedConstant r =
+  let t = BS.strip $ allNonCommentText r
+  in  case BS.words t of
+        ["#define", n, v] -> Just (n, v)
+        _                 -> Nothing
 
 ---------------------------------------------------------------
 -- Aliases
@@ -498,7 +548,8 @@ parseConstantAliases es =
 -- Defines
 ----------------------------------------------------------------
 
-parseHeaderVersion :: [Content] -> P Word
+parseHeaderVersion
+  :: forall t . KnownSpecFlavor t => [Content] -> P (SpecHeaderVersion t)
 parseHeaderVersion es = do
   let defines :: [Node]
       defines =
@@ -507,24 +558,56 @@ parseHeaderVersion es = do
         , name n == "type"
         , Just "define" <- pure (getAttr "category" n)
         ]
-  vers <- flip mapMaybeM defines $ \d -> do
-    name <- nameElemMaybe d
-    if name /= Just "VK_HEADER_VERSION"
-      then pure Nothing
-      else do
-        allText <- decode $ allText d
-        let ver = T.takeWhileEnd isNumber allText
-        pure $ readMaybe (T.unpack ver)
+  vers <- case sSpecFlavor @t of
+    SSpecVk -> flip mapMaybeM defines $ \d -> do
+      name <- nameElemMaybe d
+      if name /= Just "VK_HEADER_VERSION"
+        then pure Nothing
+        else do
+          allText <- decode $ allNonCommentText d
+          let ver = T.takeWhileEnd isNumber allText
+          pure . fmap VkVersion $ readMaybe (T.unpack ver)
+    SSpecXr -> flip mapMaybeM defines $ \d -> do
+      name <- nameElemMaybe d
+      if name /= Just "XR_CURRENT_API_VERSION"
+        then pure Nothing
+        else do
+          allText <- decode $ allNonCommentText d
+          pure $ do
+            let nums =
+                  T.splitOn ","
+                    . T.init
+                    . T.tail
+                    . T.dropAround (`notElem` ['(', ')'])
+                    $ allText
+                r = readMaybe . T.unpack . T.strip
+            [ma, mi, pa] <- traverse r nums
+            pure $ XrVersion ma mi pa
   case vers of
     []  -> throw "No header version found in spec"
     [v] -> pure v
     vs  -> throw $ "Multiple header versions found in spec: " <> show vs
 
+
+----------------------------------------------------------------
+-- Atoms
+----------------------------------------------------------------
+
+parseAtoms :: [Content] -> P (Vector Atom)
+parseAtoms = fmap (V.mapMaybe id) . onTypes "basetype" parseAtom
+ where
+  parseAtom :: Node -> P (Maybe Atom)
+  parseAtom n = runMaybeT $ do
+    atName     <- lift $ nameElem "atom" n
+    typeString <- maybe empty pure (elemText "type" n)
+    guard (typeString == "XR_DEFINE_ATOM")
+    pure Atom { .. }
+
 ----------------------------------------------------------------
 -- Handles
 ----------------------------------------------------------------
 
-parseHandles :: [Content] -> P (Vector Handle)
+parseHandles :: forall t . KnownSpecFlavor t => [Content] -> P (Vector Handle)
 parseHandles = onTypes "handle" parseHandle
  where
 
@@ -533,13 +616,14 @@ parseHandles = onTypes "handle" parseHandle
     hName <- nameElem "handle" n
     context (unCName hName) $ do
       typeString    <- note "Handle has no type" (elemText "type" n)
-      hDispatchable <- case typeString of
-        "VK_DEFINE_HANDLE" -> pure Dispatchable
-        "VK_DEFINE_NON_DISPATCHABLE_HANDLE" -> pure NonDispatchable
-        _                  -> throw "Unable to parse handle type"
+      hDispatchable <- case dropPrefix (flavorPrefixCaps @t) typeString of
+        Just "_DEFINE_HANDLE" -> pure Dispatchable
+        Just "_DEFINE_NON_DISPATCHABLE_HANDLE" -> pure NonDispatchable
+        _ -> throw "Unable to parse handle type"
       hLevel <- case hName of
         "VkInstance" -> pure Instance
         "VkDevice"   -> pure Device
+        "XrInstance" -> pure Instance
         _            -> case getAttr "parent" n of
           Nothing                 -> pure NoHandleLevel
           -- TODO: derive this from the spec
@@ -550,6 +634,9 @@ parseHandles = onTypes "handle" parseHandle
           Just "VkDescriptorPool" -> pure Device
           Just "VkDisplayKHR"     -> pure Instance
           Just "VkSurfaceKHR"     -> pure Instance
+          Just "XrInstance"       -> pure Instance
+          Just "XrSession"        -> pure Instance
+          Just "XrActionSet"      -> pure Instance
           _                       -> throw "Unknown handle level"
       pure Handle { .. }
 
@@ -717,17 +804,19 @@ parseUnions = onTypes "union" parseStruct
 parseStruct :: Node -> P (StructOrUnion a WithoutSize WithoutChildren)
 parseStruct n = do
   sName <- nameAttr "struct" n
-  case find (\(Struct n _ _ _ _ _) -> n == sName) bespokeStructsAndUnions of
+  case find (\s -> sName == Spec.Types.sName s) bespokeStructsAndUnions of
     Just s  -> pure s
     Nothing -> context (unCName sName) $ do
       sMembers <-
         fmap fromList
         . traverseV (parseStructMember sName)
         $ [ m | Element m <- contents n, name m == "member" ]
-      let sSize       = ()
-          sAlignment  = ()
-          sExtendedBy = ()
-      sExtends <- listAttr (fmap CName . decode) "structextends" n
+      let sSize        = ()
+          sAlignment   = ()
+          sExtendedBy  = ()
+          sInheritedBy = ()
+      sExtends  <- listAttr (fmap CName . decode) "structextends" n
+      sInherits <- listAttr (fmap CName . decode) "parentstruct" n
       pure Struct { .. }
  where
 
@@ -908,32 +997,56 @@ allRequires parseDisabled es =
 -- Vulkan
 ----------------------------------------------------------------
 
-extraEnums :: Vector Enum'
-extraEnums = V.singleton Enum
-  { eName   = "VkBool32"
-  , eValues = V.fromList
-                [EnumValue "VK_FALSE" 0 False, EnumValue "VK_TRUE" 1 False]
-  , eType   = AnEnum
-  }
+extraEnums :: forall t . KnownSpecFlavor t => Vector Enum'
+extraEnums = case sSpecFlavor @t of
+  SSpecVk -> V.singleton Enum
+    { eName   = "VkBool32"
+    , eValues = V.fromList
+                  [EnumValue "VK_FALSE" 0 False, EnumValue "VK_TRUE" 1 False]
+    , eType   = AnEnum
+    }
+  SSpecXr -> V.singleton Enum
+    { eName   = "XrBool32"
+    , eValues = V.fromList
+                  [EnumValue "XR_FALSE" 0 False, EnumValue "XR_TRUE" 1 False]
+    , eType   = AnEnum
+    }
 
 isForbidden :: CName -> Bool
 isForbidden n =
-  (      n
-    `elem` [ "vk_platform"
-           , "VK_API_VERSION"
-           , "VK_VERSION_MAJOR"
-           , "VK_VERSION_MINOR"
-           , "VK_VERSION_PATCH"
-           , "VK_HEADER_VERSION"
-           , "VK_HEADER_VERSION_COMPLETE"
-           , "VK_NULL_HANDLE"
-           , "VK_DEFINE_HANDLE"
-           , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
-           , "VK_MAKE_VERSION"
-           ]
-    )
+  (n `elem` (vkForbidden <> xrForbidden))
     ||             "VK_API_VERSION_"
     `T.isPrefixOf` unCName n
+ where
+  vkForbidden =
+    [ "vk_platform"
+    , "VK_API_VERSION"
+    , "VK_VERSION_MAJOR"
+    , "VK_VERSION_MINOR"
+    , "VK_VERSION_PATCH"
+    , "VK_HEADER_VERSION"
+    , "VK_HEADER_VERSION_COMPLETE"
+    , "VK_NULL_HANDLE"
+    , "VK_DEFINE_HANDLE"
+    , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
+    , "VK_MAKE_VERSION"
+    ]
+  xrForbidden =
+    [ "openxr_platform_defines"
+    , "XR_CURRENT_API_VERSION"
+    , "XR_VERSION_MAJOR"
+    , "XR_VERSION_MINOR"
+    , "XR_VERSION_PATCH"
+    , "XR_DEFINE_HANDLE"
+    , "XR_MAKE_VERSION"
+    , "XR_MAY_ALIAS"
+    , "XR_NULL_HANDLE"
+    , "XR_NULL_PATH"
+    , "XR_NULL_SYSTEM_ID"
+    , "XR_SUCCEEDED"
+    , "XR_UNQUALIFIED_SUCCESS"
+    , "XR_FAILED"
+    ]
 
 onTypes
   :: HasErr r
@@ -963,10 +1076,13 @@ notDisabled = disabled NotDisabled
 
 disabled :: ParseDisabled -> Node -> Bool
 disabled p e =
-  let comp = case p of
-        NotDisabled  -> (/=)
-        OnlyDisabled -> (==)
-  in  Just "disabled" `comp` getAttr "supported" e
+  let markedDisabled = Just "disabled" == getAttr "supported" e
+      forceDisabled =
+        getAttr "name" e `elem` (Just <$> forceDisabledExtensions)
+      dis = markedDisabled || forceDisabled
+  in  case p of
+        NotDisabled  -> not dis
+        OnlyDisabled -> dis
 
 -- >>> parseAPIVersion "VK_API_VERSION_1_2"
 -- Just (Version {versionBranch = [1,2], versionTags = []})

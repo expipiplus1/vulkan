@@ -75,7 +75,7 @@ instance Monoid SpecInfo where
                     (const Nothing)
                     (const [])
 
-specSpecInfo :: Spec -> (CType -> Maybe (Int, Int)) -> SpecInfo
+specSpecInfo :: Spec t -> (CType -> Maybe (Int, Int)) -> SpecInfo
 specSpecInfo Spec {..} siTypeSize =
   let
     mkLookup n f =
@@ -163,7 +163,7 @@ specSpecInfo Spec {..} siTypeSize =
 
 withSpecInfo
   :: HasRenderParams r
-  => Spec
+  => Spec t
   -> (CType -> Maybe (Int, Int))
   -> Sem (Input SpecInfo ': r) a
   -> Sem r a

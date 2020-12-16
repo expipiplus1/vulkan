@@ -166,9 +166,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_AMD_rasterization_order  (PipelineRasterizationStateRasterizationOrderAMD) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PipelineRasterizationStateRasterizationOrderAMD
 
 instance ToCStruct PipelineRasterizationStateRasterizationOrderAMD

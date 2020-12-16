@@ -177,6 +177,11 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
@@ -202,8 +207,6 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_display_native_hdr (DisplayNative
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfaceCapabilities2KHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfaceFormats2KHR))
 import Vulkan.CStruct.Extends (PeekChain)
@@ -225,10 +228,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFul
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveWin32InfoEXT)
 import Vulkan.Extensions.Handles (SurfaceKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface_protected_capabilities (SurfaceProtectedCapabilitiesKHR)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR))
@@ -301,7 +301,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceSurfaceInfo2KHR',
 -- 'SurfaceCapabilities2KHR'
 getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io
-                                          . (Extendss PhysicalDeviceSurfaceInfo2KHR a, Extendss SurfaceCapabilities2KHR b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                                          . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, Extendss SurfaceCapabilities2KHR b, PokeChain b, PeekChain b, MonadIO io)
                                          => -- | @physicalDevice@ is the physical device that will be associated with the
                                             -- swapchain to be created, as described for
                                             -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
@@ -509,7 +509,7 @@ deriving instance Generic (PhysicalDeviceSurfaceInfo2KHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (PhysicalDeviceSurfaceInfo2KHR es)
 
 instance Extensible PhysicalDeviceSurfaceInfo2KHR where
-  extensibleType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR
+  extensibleTypeName = "PhysicalDeviceSurfaceInfo2KHR"
   setNext x next = x{next = next}
   getNext PhysicalDeviceSurfaceInfo2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceSurfaceInfo2KHR e => b) -> Maybe b
@@ -589,7 +589,7 @@ deriving instance Generic (SurfaceCapabilities2KHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (SurfaceCapabilities2KHR es)
 
 instance Extensible SurfaceCapabilities2KHR where
-  extensibleType = STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR
+  extensibleTypeName = "SurfaceCapabilities2KHR"
   setNext x next = x{next = next}
   getNext SurfaceCapabilities2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SurfaceCapabilities2KHR e => b) -> Maybe b

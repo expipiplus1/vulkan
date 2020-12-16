@@ -16,7 +16,7 @@ import           CType
 import           Marshal.Scheme
 import           Spec.Parse
 
-marshalParams :: Spec -> Sem r MarshalParams
+marshalParams :: KnownSpecFlavor t => Spec t -> Sem r MarshalParams
 marshalParams spec@Spec {..} = do
   bespokeSchemes <- bespokeSchemes spec
   let
@@ -59,12 +59,19 @@ marshalParams spec@Spec {..} = do
       TypeName n ->
         isDispatchableHandle n || isDispatchableHandle (resolveAlias n)
       _ -> False
+    atomNames :: HashSet CName
+    atomNames  = fromList [ atName | Atom {..} <- toList specAtoms ]
+    isAtomType = \case
+      TypeName n -> n `member` atomNames
+      _          -> False
   pure MarshalParams
     { isDefaultable       = isDefaultable'
                             <||> isBitmaskType
                             <||> isNonDispatchableHandleType
                             <||> isDispatchableHandleType
+                            <||> isAtomType
     , isPassAsPointerType = isPassAsPointerType'
+    , isForeignStruct     = isForeignStruct'
     , getBespokeScheme    = \p a ->
       asum . fmap (\(BespokeScheme f) -> f p a) $ bespokeSchemes
     }
@@ -74,7 +81,8 @@ marshalParams spec@Spec {..} = do
 ----------------------------------------------------------------
 
 isDefaultable' :: CType -> Bool
-isDefaultable' t = isDefaultableForeignType t || isIntegral t || hasUnknownEnum t
+isDefaultable' t =
+  isDefaultableForeignType t || isIntegral t || isFloating t || hasUnknownEnum t
 
 isIntegral :: CType -> Bool
 isIntegral =
@@ -94,8 +102,17 @@ isIntegral =
           , TypeName "VkDeviceOrHostAddressConstKHR"
           , TypeName "VkDeviceOrHostAddressKHR"
           , TypeName "VkBool32"
+          , TypeName "LARGE_INTEGER"
+          -- TODO: Get these from spec
+          -- Base types
+          , TypeName "XrTime"
+          , TypeName "XrDuration"
+          , TypeName "XrBool32"
           ]
   )
+
+isFloating :: CType -> Bool
+isFloating = (`elem` [Float, Double])
 
 isDefaultableForeignType :: CType -> Bool
 isDefaultableForeignType t =
@@ -110,6 +127,7 @@ isDefaultableForeignType t =
          TypeName (CName n) -> "PFN_" `T.isPrefixOf` n
          _                  -> False
 
+-- TODO: These shouldn't be defaultable, probably a spec oversight
 hasUnknownEnum :: CType -> Bool
 hasUnknownEnum = (`elem` [TypeName "VkFormat", TypeName "VkObjectType"])
 
@@ -129,12 +147,19 @@ isPassAsPointerType' = \case
              , "SECURITY_ATTRIBUTES"
              , "IDirectFB"
              , "IDirectFBSurface"
+             , "IUnknown"
+             , "jobject"
+             -- TODO: remove these
+             , "VkInstanceCreateInfo"
+             , "VkAllocationCallbacks"
+             , "VkDeviceCreateInfo"
+             , "VkAllocationCallbacks"
              ]
   _ -> False
 
-----------------------------------------------------------------
--- Utils
-----------------------------------------------------------------
-
-(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
-(<||>) = liftA2 (||)
+-- | Is this a foreign struct we've defined (not specified in the spec)
+isForeignStruct' :: CType -> Bool
+isForeignStruct' = \case
+  TypeName "LARGE_INTEGER" -> True
+  TypeName "timespec"      -> True
+  _                        -> False

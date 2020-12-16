@@ -179,9 +179,10 @@ module Vulkan.Extensions.VK_NV_fragment_shading_rate_enums  ( PhysicalDeviceFrag
                                                             , FragmentShadingRateNV
                                                             ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceFragmentShadingRateEnumsFeaturesNV
 
 instance ToCStruct PhysicalDeviceFragmentShadingRateEnumsFeaturesNV

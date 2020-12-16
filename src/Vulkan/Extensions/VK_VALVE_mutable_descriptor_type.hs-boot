@@ -139,9 +139,10 @@ module Vulkan.Extensions.VK_VALVE_mutable_descriptor_type  ( MutableDescriptorTy
                                                            , PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
                                                            ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data MutableDescriptorTypeCreateInfoVALVE
 
 instance ToCStruct MutableDescriptorTypeCreateInfoVALVE

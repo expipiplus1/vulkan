@@ -26,3 +26,6 @@ cradle:
 
     - path: "./rays/"
       component: "exe:rays"
+
+    - path: "./vrcube/"
+      component: "exe:vrcube"

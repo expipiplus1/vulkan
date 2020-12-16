@@ -1,5 +1,4 @@
-module Marshal.Scheme
-  where
+module Marshal.Scheme where
 
 import           Data.Text.Prettyprint.Doc
 import           Data.Vector.Extra              ( pattern (:<|)
@@ -18,6 +17,7 @@ import           Relude                  hiding ( Const
                                                 )
 
 import           CType
+import qualified Data.Text                     as T
 import           Error
 import           Haskell                       as H
 import           Marshal.Marshalable
@@ -74,7 +74,10 @@ data MarshalScheme a
     -- ^ A small fixed sized array, represented as a n-length tuple of the same
     -- element
   | WrappedStruct CName
-    -- ^ A struct to be wrapped in a GADT to hide a variable
+    -- ^ A extensible struct to be wrapped in a GADT to hide a variable
+  | WrappedChildStruct CName
+    -- ^ An inherited struct to be wrapped in a GADT to hide the precise
+    -- identity
   | Returned (MarshalScheme a)
     -- ^ A non-const pointer to some allocated memory, used to return
     -- additional values.
@@ -82,6 +85,10 @@ data MarshalScheme a
   | InOutCount (MarshalScheme a)
     -- ^ A non-const pointer to some count value, used to send and return
     -- additional the length of a vector.
+    -- - Not typically used for structs
+  | OutCount (MarshalScheme a)
+    -- ^ A non-const pointer to some count value, used to return the length of
+    -- a vector, which when input has a equal or longer length
     -- - Not typically used for structs
   | Custom (CustomScheme a)
     -- ^ A non-elided scheme with some complex behavior
@@ -93,9 +100,9 @@ data Nullable = Nullable | NotNullable
   deriving (Show, Eq, Ord)
 
 data CustomScheme a = CustomScheme
-  { csName :: Text
+  { csName       :: Text
     -- ^ A name for Eq and Ord, also useful for debugging
-  , csZero :: Maybe (Doc ())
+  , csZero       :: Maybe (Doc ())
     -- ^ The 'zero' value for this scheme if possible
   , csZeroIsZero :: Bool
     -- ^ Does the 'zero' value write zero bytes (and can be omitted if we know
@@ -202,6 +209,8 @@ type HasMarshalParams r = MemberWithError (Input MarshalParams) r
 data MarshalParams = MarshalParams
   { isDefaultable       :: CType -> Bool
   , isPassAsPointerType :: CType -> Bool
+  , isForeignStruct     :: CType -> Bool
+    -- ^ Foreign structs we've defined explicitly
   , getBespokeScheme
       :: forall a . Marshalable a => CName -> a -> Maybe (MarshalScheme a)
   }
@@ -210,6 +219,7 @@ instance Semigroup MarshalParams where
   mp1 <> mp2 = MarshalParams
     { isDefaultable       = getAny . concatBoth (Any .: isDefaultable)
     , isPassAsPointerType = getAny . concatBoth (Any .: isPassAsPointerType)
+    , isForeignStruct     = getAny . concatBoth (Any .: isPassAsPointerType)
     , getBespokeScheme    = \p x ->
                               getBespokeScheme mp1 p x <|> getBespokeScheme mp2 p x
     }
@@ -259,27 +269,60 @@ instance Semigroup MarshalParams where
 univaluedScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 univaluedScheme = fmap ElidedUnivalued . singleValue
 
--- | Matches if this parameter is the length of one or more vectors
-lengthScheme
+data ElideReturnedVectorLengths
+  = DoNotElideReturnedVectorLengths
+  | DoElideReturnedVectorLengths
+
+elidedInputCountScheme
   :: (Marshalable a, HasErr r)
   => Vector a
   -- ^ A set of things which have a length to draw from
   -> a
   -- ^ The potential length parameter
   -> ND r (MarshalScheme a)
-lengthScheme ps p = do
+elidedInputCountScheme ps p = do
   -- Get the vectors which are sized with this parameter
-  let vs = V.filter (not . isReturnPtr) . getSizedWith (name p) $ ps
+  let vs = getSizedWith (name p) ps
+  -- Make sure they are not all void pointer, those do not have the length
+  -- elided
+  guard (any (\v -> type' v /= Ptr Const Void) vs)
+  guard ("CapacityInput" `T.isSuffixOf` unCName (name p))
+  case V.partition isTopOptional vs of
+    -- Make sure they exist
+    (Empty, Empty) -> empty
+    (os   , rs   ) -> pure $ ElidedLength (type' p) os rs
+
+-- | Matches if this parameter is the length of one or more vectors
+lengthScheme
+  :: (Marshalable a, HasErr r)
+  => ElideReturnedVectorLengths
+  -- ^ Should we elide lengths which are specified just by returned vectors
+  -- we may want to do this if the lengths are specified in some other way
+  -- (like in a dual-purpose command)
+  -> Vector a
+  -- ^ A set of things which have a length to draw from
+  -> a
+  -- ^ The potential length parameter
+  -> ND r (MarshalScheme a)
+lengthScheme elideReturnVectorLengths ps p = do
+  -- Get the vectors which are sized with this parameter
+  let vs = case elideReturnVectorLengths of
+        DoNotElideReturnedVectorLengths ->
+          V.filter (not . isReturnPtr) . getSizedWith (name p) $ ps
+        DoElideReturnedVectorLengths -> getSizedWith (name p) ps
   -- Make sure they are not all void pointer, those do not have the length
   -- elided
   guard (any (\v -> type' v /= Ptr Const Void) vs)
   case V.partition isTopOptional vs of
     -- Make sure they exist
-    (Empty, Empty)                   -> empty
-    (Empty, rs) | all isReturnPtr rs -> empty
+    (Empty, Empty) -> empty
+    (Empty, rs)
+      | DoNotElideReturnedVectorLengths <- elideReturnVectorLengths
+      , all isReturnPtr rs
+      -> empty
     -- If we have a just optional vectors then preserve the length member
-    (os, rs@Empty)                   -> pure $ Length (type' p) os rs
-    (os, rs      )                   -> pure $ ElidedLength (type' p) os rs
+    (os, rs@Empty) -> pure $ Length (type' p) os rs
+    (os, rs      ) -> pure $ ElidedLength (type' p) os rs
 
 -- | Matches const and non-const void pointers, exposes them as 'Ptr ()'
 voidPointerScheme :: Marshalable a => a -> ND r (MarshalScheme a)
@@ -291,7 +334,7 @@ voidPointerScheme p = do
 returnPointerScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 returnPointerScheme p = do
   MarshalParams {..} <- input
-  Ptr NonConst t <- pure $ type' p
+  Ptr NonConst t     <- pure $ type' p
   guard (not (isPassAsPointerType t))
   let inout = do
         Empty                <- pure $ lengths p
@@ -299,17 +342,33 @@ returnPointerScheme p = do
         -- FIXME: Check if any siblings are sized by this
         guard (t == TypeName "uint32_t" || t == TypeName "size_t")
         pure $ InOutCount (Normal t)
+      outLength = do
+        Empty <- pure $ lengths p
+        Empty <- pure $ isOptional p
+        guard ("CountOutput" `T.isSuffixOf` unCName (name p))
+        guard (t == TypeName "uint32_t" || t == TypeName "size_t")
+        pure $ OutCount (Normal t)
       normal = do
         Empty <- pure $ lengths p
         pure $ Returned (Normal t)
       array = do
         _ :<| _ <- pure $ lengths p
         pure $ Returned (Vector NotNullable (Normal t))
-  asum [inout, normal, array]
+  asum [inout, outLength, normal, array]
+
+returnArrayScheme :: Marshalable a => a -> ND r (MarshalScheme a)
+returnArrayScheme p = do
+  MarshalParams {..}          <- input
+  Array NonConst _arraySize t <- pure $ type' p
+  guard (not (isPassAsPointerType t))
+  let string = do
+        Char  <- pure t
+        Empty <- pure $ lengths p
+        pure $ Returned ByteString
+  asum [string]
 
 -- | If we have a non-const pointer in a struct leave it as it is
-returnPointerInStructScheme
-  :: Marshalable a => a -> ND r (MarshalScheme a)
+returnPointerInStructScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 returnPointerInStructScheme p = do
   t@(Ptr NonConst _) <- pure $ type' p
   pure $ Preserve t
@@ -421,15 +480,23 @@ optionalScheme wes wdh p = do
 -- | A struct to be wrapped in "SomeStruct"
 extensibleStruct :: Marshalable a => a -> ND r (MarshalScheme a)
 extensibleStruct p = do
-  TypeName n         <- dropPtrToStruct (type' p)
-  Just     s         <- getStruct n
+  TypeName n <- dropPtrToStruct (type' p)
+  Just     s <- getStruct n
   guard (not (V.null (sExtendedBy s)))
   pure $ WrappedStruct n
 
+-- | A struct to be wrapped in "SomeHaptic"/"Some..."
+inheritingStruct :: Marshalable a => a -> ND r (MarshalScheme a)
+inheritingStruct p = do
+  TypeName n <- dropPtrToStruct (type' p)
+  Just     s <- getStruct n
+  guard (not (V.null (sInheritedBy s)))
+  pure $ WrappedChildStruct n
+
 rawDispatchableHandles :: Marshalable a => a -> ND r (MarshalScheme a)
 rawDispatchableHandles p = do
-  t@(TypeName n)     <- dropPtrToStruct (type' p)
-  Just h             <- getHandle n
+  t@(TypeName n) <- dropPtrToStruct (type' p)
+  Just h         <- getHandle n
   guard (Dispatchable == hDispatchable h)
   normalCheck t p
   pure . Preserve $ t
@@ -455,17 +522,18 @@ normalCheck t p = do
   guard . (/= Void) $ t
   guard $ not (isPtrType t) || isPassAsPointerType (unPtrType t)
 
-
 -- Sometimes pointers to non-optional structs are used, remove these for the
 -- marshalled version.
-dropPtrToStruct :: HasSpecInfo r => CType -> Sem r CType
+dropPtrToStruct :: (HasMarshalParams r, HasSpecInfo r) => CType -> Sem r CType
 dropPtrToStruct t = do
+  MarshalParams {..} <- input
   let stripConstPtr = \case
         Ptr Const t -> stripConstPtr t
         t           -> t
   case stripConstPtr t of
+    t | isForeignStruct t -> pure t
     TypeName n ->
-      liftA2 (||) (isJust <$> getStruct n) (isJust <$> getUnion n) <&> \case
+      (isJust <$> getStruct n) <||> (isJust <$> getUnion n) <&> \case
         True  -> TypeName n
         False -> t
     _ -> pure t
@@ -507,14 +575,19 @@ unwrapDispatchableHandles t = failToNonDet $ do
     Dispatchable    -> Preserve t
     NonDispatchable -> Normal t
 
--- If this is an extensible struct, wrap it, otherwise return Normal
+-- If this is an extensible or inherited struct, wrap it, otherwise return
+-- Normal
 wrapExtensibleStruct
-  :: (Member NonDet r, HasSpecInfo r) => CType -> Sem r (MarshalScheme a)
+  :: (Member NonDet r, HasSpecInfo r, HasMarshalParams r)
+  => CType
+  -> Sem r (MarshalScheme a)
 wrapExtensibleStruct t = failToNonDet $ do
   TypeName n <- dropPtrToStruct t
   Just     s <- getStruct n
-  guard (not (V.null (sExtendedBy s)))
-  pure $ WrappedStruct n
+  let isExtended  = not (V.null (sExtendedBy s))
+      isInherited = not (V.null (sInheritedBy s))
+  guard (isExtended || isInherited)
+  pure $ if isInherited then WrappedChildStruct n else WrappedStruct n
 
 ----------------------------------------------------------------
 -- Utils
@@ -550,46 +623,50 @@ isByteArrayElem = (`elem` [Void, Char, TypeName "uint8_t", TypeName "int8_t"])
 
 isElided :: MarshalScheme a -> Bool
 isElided = \case
-  Unit              -> False
-  Preserve _        -> False
-  Normal   _        -> False
-  Length{}          -> False
-  ElidedLength{}    -> True
-  ElidedUnivalued _ -> True
-  ElidedVoid        -> True
-  VoidPtr           -> False
-  ByteString        -> False
-  Maybe _           -> False
-  Vector _ _        -> False
-  EitherWord32 _    -> False
-  Tupled _ _        -> False
-  Returned      _   -> False
-  InOutCount    _   -> False
-  WrappedStruct _   -> False
-  Custom        _   -> False
-  ElidedCustom  _   -> True
+  Unit                 -> False
+  Preserve _           -> False
+  Normal   _           -> False
+  Length{}             -> False
+  ElidedLength{}       -> True
+  ElidedUnivalued _    -> True
+  ElidedVoid           -> True
+  VoidPtr              -> False
+  ByteString           -> False
+  Maybe _              -> False
+  Vector _ _           -> False
+  EitherWord32 _       -> False
+  Tupled _ _           -> False
+  Returned           _ -> False
+  InOutCount         _ -> False
+  OutCount           _ -> False
+  WrappedStruct      _ -> False
+  WrappedChildStruct _ -> False
+  Custom             _ -> False
+  ElidedCustom       _ -> True
 
 isNegative :: MarshalScheme a -> Bool
 isNegative = \case
-  Unit              -> True
-  Preserve _        -> True
-  Normal   _        -> True
-  Length{}          -> True
-  ElidedLength{}    -> False
-  ElidedUnivalued _ -> False
-  ElidedVoid        -> False
-  VoidPtr           -> True
-  ByteString        -> True
-  Maybe _           -> True
-  Vector _ _        -> True
-  EitherWord32 _    -> True
-  Tupled _ _        -> True
-  Returned      _   -> False
+  Unit                 -> True
+  Preserve _           -> True
+  Normal   _           -> True
+  Length{}             -> True
+  ElidedLength{}       -> False
+  ElidedUnivalued _    -> False
+  ElidedVoid           -> False
+  VoidPtr              -> True
+  ByteString           -> True
+  Maybe _              -> True
+  Vector _ _           -> True
+  EitherWord32 _       -> True
+  Tupled _ _           -> True
+  Returned           _ -> False
   -- TODO: We should probably be more careful with InOutCount
-  InOutCount    _   -> True
-  WrappedStruct _   -> True
-  Custom        _   -> True
-  ElidedCustom  _   -> False
+  InOutCount         _ -> True
+  OutCount           _ -> False
+  WrappedStruct      _ -> True
+  WrappedChildStruct _ -> True
+  Custom             _ -> True
+  ElidedCustom       _ -> False
 
 -- | A bit of an ad-hoc test
 isSimple :: HasSpecInfo r => MarshalScheme a -> Sem r Bool
@@ -598,22 +675,27 @@ isSimple = \case
   Preserve _ -> pure True
   Normal (TypeName n) ->
     (isNothing <$> getStruct n) <&&> (isNothing <$> getUnion n)
-  Normal _          -> pure True
-  Length{}          -> pure True
-  ElidedLength{}    -> pure True
-  ElidedUnivalued _ -> pure True
-  ElidedVoid        -> pure True
-  VoidPtr           -> pure False
-  ByteString        -> pure False
-  Maybe s           -> isSimple s
-  Vector _ _        -> pure False
-  EitherWord32 _    -> pure False
-  Tupled _ s        -> isSimple s
-  Returned      _   -> pure False
-  InOutCount    _   -> pure False
-  WrappedStruct _   -> pure False
-  Custom        _   -> pure False
-  ElidedCustom  _   -> pure False
+  Normal _             -> pure True
+  Length{}             -> pure True
+  ElidedLength{}       -> pure True
+  ElidedUnivalued _    -> pure True
+  ElidedVoid           -> pure True
+  VoidPtr              -> pure False
+  ByteString           -> pure False
+  Maybe s              -> isSimple s
+  Vector _ _           -> pure False
+  EitherWord32 _       -> pure False
+  Tupled _ s           -> isSimple s
+  Returned           _ -> pure False
+  InOutCount         _ -> pure False
+  OutCount           _ -> pure False
+  WrappedStruct      _ -> pure False
+  WrappedChildStruct _ -> pure False
+  Custom             _ -> pure False
+  ElidedCustom       _ -> pure False
 
 (<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
 (<&&>) = liftA2 (&&)
+
+(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
+(<||>) = liftA2 (||)

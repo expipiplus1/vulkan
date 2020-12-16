@@ -1,8 +1,8 @@
 module Render.Type.Preserve where
 
-import           Language.Haskell.TH            ( Type )
-import           Polysemy
-
+import           Language.Haskell.TH            ( Name
+                                                , Type
+                                                )
 data Preserve
   = DoNotPreserve
     -- ^ Use more idiomatic haskell types
@@ -12,7 +12,18 @@ data Preserve
     -- ^ Use the types from Foreign.C.Types and lower arrays to pointers
 
 data ExtensibleStructStyle r
-  = Applied (Sem r Type)
-  -- ^ A variable or hole of kind @[Type]@ to apply to the extensible struct
+  = Unwrapped
+  -- ^ A variable is applied to the extensible struct
+  --
+  -- Inheriting types are represented just by a var
+  | UnwrappedHole
+  -- ^ A hole is applied to extensible structs
+  --
+  -- Inheriting structs are just left as holes
   | Wrapped
   -- ^ Structs should be wrapped in @SomeStruct@
+
+data ConstrainedVar
+  = Extends {cVarBase :: Type, cVarName :: Name}
+  | Inherits {cVarBase :: Type, cVarName :: Name}
+  | Unconstrained {cVarName :: Name}

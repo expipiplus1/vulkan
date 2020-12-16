@@ -98,6 +98,10 @@ jobs:
           extra-include-dirs: $VulkanSDK/Include/
         EOF
 
+    - name: Remove openxr
+      run: |
+        sed -ibak '/openxr/d' cabal.project
+
     - name: Remove examples for 8.6.5
       run: |
         sed -ibak '/examples/d' cabal.project
@@ -236,6 +240,10 @@ jobs:
           brew cask install vulkan-sdk --verbose ||
           brew cask install vulkan-sdk --verbose
 
+    - name: Remove openxr
+      run: |
+        sed -ibak '/openxr/d' stack.yaml
+
     - name: Install dependencies
       run: stack build $ARGS --test --bench --only-dependencies
       env:
@@ -269,6 +277,8 @@ jobs:
     - run: nix-build -A vulkan
     - run: nix-build -A VulkanMemoryAllocator
     - run: nix-build -A vulkan-utils
+    - run: nix-build -A openxr
+    - run: nix-build ./nix/haskell-packages.nix --arg openxrNoVulkan true -A openxr
     - run: nix-build -A vulkan-examples
     - run: nix-build nix/release.nix
     - run: nix-build nix/release.nix -A docs
@@ -289,5 +299,6 @@ jobs:
         fdfind .sh$ . \
           --exclude VulkanMemoryAllocator/VulkanMemoryAllocator \
           --exclude generate-new/Vulkan-Docs \
+          --exclude generate-new/OpenXR-Docs \
           --exec shellcheck
 

@@ -3,15 +3,18 @@
 module Vulkan.CStruct.Utils  ( pokeFixedLengthByteString
                              , pokeFixedLengthNullTerminatedByteString
                              , peekByteStringFromSizedVectorPtr
+                             , callocFixedArray
                              , lowerArrayPtr
                              , advancePtrBytes
                              , FixedArray
                              ) where
 
+import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Array (allocaArray)
 import Foreign.Marshal.Utils (copyBytes)
 import Foreign.Storable (peekElemOff)
 import Foreign.Storable (pokeElemOff)
+import Foreign.Storable (sizeOf)
 import GHC.Ptr (castPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.TypeNats (natVal)
@@ -94,6 +97,15 @@ peekByteStringFromSizedVectorPtr
   => Ptr (FixedArray n Word8)
   -> IO ByteString
 peekByteStringFromSizedVectorPtr p = packCStringLen (castPtr p, fromIntegral (natVal (Proxy @n)))
+
+-- | Allocate a zero array with the size specified by the 'FixedArray'
+-- return type. Make sure to release the memory with 'free'
+callocFixedArray
+  :: forall n a . (KnownNat n, Storable a) => IO (Ptr (FixedArray n a))
+callocFixedArray = callocBytes
+  ( sizeOf (error "sizeOf evaluated its argument" :: a)
+  * fromIntegral (natVal (Proxy @n))
+  )
 
 -- | Get the pointer to the first element in the array
 lowerArrayPtr

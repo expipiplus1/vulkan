@@ -29,6 +29,11 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -66,8 +71,6 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardw
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory (ExternalMemoryImageCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory (ExternalMemoryImageCreateInfoNV)
 import Vulkan.Core10.Enums.Format (Format)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
@@ -91,10 +94,7 @@ import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
 import Vulkan.Core10.Enums.SharingMode (SharingMode)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Core10.Handles (Image(..))
@@ -1416,7 +1416,7 @@ deriving instance Generic (ImageCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (ImageCreateInfo es)
 
 instance Extensible ImageCreateInfo where
-  extensibleType = STRUCTURE_TYPE_IMAGE_CREATE_INFO
+  extensibleTypeName = "ImageCreateInfo"
   setNext x next = x{next = next}
   getNext ImageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageCreateInfo e => b) -> Maybe b

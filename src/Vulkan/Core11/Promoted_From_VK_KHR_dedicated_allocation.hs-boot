@@ -4,9 +4,10 @@ module Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation  ( MemoryDedicate
                                                                 , MemoryDedicatedRequirements
                                                                 ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data MemoryDedicatedAllocateInfo
 
 instance ToCStruct MemoryDedicatedAllocateInfo

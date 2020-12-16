@@ -190,6 +190,11 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
@@ -230,8 +235,6 @@ import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.FundamentalTypes (Extent3D)
 import Vulkan.Core10.Enums.Filter (Filter)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.CommandBufferBuilding (ImageSubresourceLayers)
@@ -242,9 +245,6 @@ import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BLIT_IMAGE_INFO_2_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_COPY_2_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR))
@@ -1048,7 +1048,7 @@ deriving instance Generic (ImageBlit2KHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (ImageBlit2KHR es)
 
 instance Extensible ImageBlit2KHR where
-  extensibleType = STRUCTURE_TYPE_IMAGE_BLIT_2_KHR
+  extensibleTypeName = "ImageBlit2KHR"
   setNext x next = x{next = next}
   getNext ImageBlit2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageBlit2KHR e => b) -> Maybe b
@@ -1199,7 +1199,7 @@ deriving instance Generic (BufferImageCopy2KHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (BufferImageCopy2KHR es)
 
 instance Extensible BufferImageCopy2KHR where
-  extensibleType = STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR
+  extensibleTypeName = "BufferImageCopy2KHR"
   setNext x next = x{next = next}
   getNext BufferImageCopy2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferImageCopy2KHR e => b) -> Maybe b
@@ -2251,7 +2251,7 @@ instance FromCStruct BlitImageInfo2KHR where
     dstImage <- peek @Image ((p `plusPtr` 32 :: Ptr Image))
     dstImageLayout <- peek @ImageLayout ((p `plusPtr` 40 :: Ptr ImageLayout))
     regionCount <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
-    pRegions <- peek @(Ptr (ImageBlit2KHR _)) ((p `plusPtr` 48 :: Ptr (Ptr (ImageBlit2KHR a))))
+    pRegions <- peek @(Ptr (ImageBlit2KHR _)) ((p `plusPtr` 48 :: Ptr (Ptr (ImageBlit2KHR _))))
     pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (96 * (i)) :: Ptr (ImageBlit2KHR _)))))
     filter' <- peek @Filter ((p `plusPtr` 56 :: Ptr Filter))
     pure $ BlitImageInfo2KHR
@@ -2602,7 +2602,7 @@ instance FromCStruct CopyBufferToImageInfo2KHR where
     dstImage <- peek @Image ((p `plusPtr` 24 :: Ptr Image))
     dstImageLayout <- peek @ImageLayout ((p `plusPtr` 32 :: Ptr ImageLayout))
     regionCount <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
-    pRegions <- peek @(Ptr (BufferImageCopy2KHR _)) ((p `plusPtr` 40 :: Ptr (Ptr (BufferImageCopy2KHR a))))
+    pRegions <- peek @(Ptr (BufferImageCopy2KHR _)) ((p `plusPtr` 40 :: Ptr (Ptr (BufferImageCopy2KHR _))))
     pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr (BufferImageCopy2KHR _)))))
     pure $ CopyBufferToImageInfo2KHR
              srcBuffer dstImage dstImageLayout pRegions'
@@ -2942,7 +2942,7 @@ instance FromCStruct CopyImageToBufferInfo2KHR where
     srcImageLayout <- peek @ImageLayout ((p `plusPtr` 24 :: Ptr ImageLayout))
     dstBuffer <- peek @Buffer ((p `plusPtr` 32 :: Ptr Buffer))
     regionCount <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
-    pRegions <- peek @(Ptr (BufferImageCopy2KHR _)) ((p `plusPtr` 48 :: Ptr (Ptr (BufferImageCopy2KHR a))))
+    pRegions <- peek @(Ptr (BufferImageCopy2KHR _)) ((p `plusPtr` 48 :: Ptr (Ptr (BufferImageCopy2KHR _))))
     pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr (BufferImageCopy2KHR _)))))
     pure $ CopyImageToBufferInfo2KHR
              srcImage srcImageLayout dstBuffer pRegions'

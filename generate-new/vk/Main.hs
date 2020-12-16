@@ -7,10 +7,10 @@ import           Polysemy.Fixpoint
 import           Polysemy.Input
 import           Polysemy.State
 import           Relude                  hiding ( Handle
+                                                , State
                                                 , Type
                                                 , evalState
                                                 , uncons
-                                                , State
                                                 )
 import           Say
 import           System.TimeIt
@@ -26,10 +26,11 @@ import           Render.Element.Write
 import           Render.Names
 import           Render.SpecInfo
 import           Spec.Parse
+import           VK.Bracket
 
+import           Khronos.AssignModules
+import           Khronos.Render
 import           Render.State                   ( initialRenderState )
-import           VK.AssignModules
-import           VK.Render
 
 main :: IO ()
 main =
@@ -45,7 +46,8 @@ main =
     specText <- timeItNamed "Reading spec"
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
 
-    (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec" $ parseSpec specText
+    (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec"
+      $ parseSpec @SpecVk specText
 
     let allExtensionNames =
           toList (exName <$> specExtensions)
@@ -55,7 +57,8 @@ main =
                ]
         doLoadDocs = True
     getDocumentation <- if doLoadDocs
-      then liftIO $ loadAllDocumentation allExtensionNames
+      then liftIO $ loadAllDocumentation SpecVk
+                                         allExtensionNames
                                          "./Vulkan-Docs"
                                          "./Vulkan-Docs/gen/refpage"
       else pure (const Nothing)
@@ -83,7 +86,7 @@ main =
           renderElements <-
             timeItNamed "Rendering" $ traverse evaluateWHNF =<< evalStateIO
               initialRenderState
-              (renderSpec spec getDocumentation ss us cs)
+              (renderSpec spec getDocumentation brackets ss us cs)
 
           groups <-
             timeItNamed "Segmenting"
@@ -91,7 +94,8 @@ main =
             =<< assignBespokeModules renderElements
 
           timeItNamed "writing"
-            $ renderSegments getDocumentation "out" (mergeElements groups)
+            $   renderSegments getDocumentation "out"
+            =<< mergeElements groups
 
 ----------------------------------------------------------------
 --

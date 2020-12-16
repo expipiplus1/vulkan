@@ -82,19 +82,27 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Foreign.C.Types (CChar(..))
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -142,8 +150,6 @@ import Vulkan.Core10.FundamentalTypes (Extent3D)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.Format (Format(..))
 import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(..))
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import Vulkan.Core10.Enums.ImageTiling (ImageTiling)
@@ -187,13 +193,10 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlags)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Core10.APIConstants (UUID_SIZE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_features (ValidationFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_flags (ValidationFlagsEXT)
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.APIConstants (pattern MAX_MEMORY_HEAPS)
 import Vulkan.Core10.APIConstants (pattern MAX_MEMORY_TYPES)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_APPLICATION_INFO))
@@ -1346,10 +1349,10 @@ instance ToCStruct ApplicationInfo where
 instance FromCStruct ApplicationInfo where
   peekCStruct p = do
     pApplicationName <- peek @(Ptr CChar) ((p `plusPtr` 16 :: Ptr (Ptr CChar)))
-    pApplicationName' <- maybePeek (\j -> packCString  (j)) pApplicationName
+    pApplicationName' <- maybePeek (\j -> packCString (j)) pApplicationName
     applicationVersion <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     pEngineName <- peek @(Ptr CChar) ((p `plusPtr` 32 :: Ptr (Ptr CChar)))
-    pEngineName' <- maybePeek (\j -> packCString  (j)) pEngineName
+    pEngineName' <- maybePeek (\j -> packCString (j)) pEngineName
     engineVersion <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
     apiVersion <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
     pure $ ApplicationInfo
@@ -1437,7 +1440,7 @@ deriving instance Generic (InstanceCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (InstanceCreateInfo es)
 
 instance Extensible InstanceCreateInfo where
-  extensibleType = STRUCTURE_TYPE_INSTANCE_CREATE_INFO
+  extensibleTypeName = "InstanceCreateInfo"
   setNext x next = x{next = next}
   getNext InstanceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends InstanceCreateInfo e => b) -> Maybe b
@@ -4855,7 +4858,7 @@ instance FromCStruct PhysicalDeviceLimits where
     optimalBufferCopyRowPitchAlignment <- peek @DeviceSize ((p `plusPtr` 488 :: Ptr DeviceSize))
     nonCoherentAtomSize <- peek @DeviceSize ((p `plusPtr` 496 :: Ptr DeviceSize))
     pure $ PhysicalDeviceLimits
-             maxImageDimension1D maxImageDimension2D maxImageDimension3D maxImageDimensionCube maxImageArrayLayers maxTexelBufferElements maxUniformBufferRange maxStorageBufferRange maxPushConstantsSize maxMemoryAllocationCount maxSamplerAllocationCount bufferImageGranularity sparseAddressSpaceSize maxBoundDescriptorSets maxPerStageDescriptorSamplers maxPerStageDescriptorUniformBuffers maxPerStageDescriptorStorageBuffers maxPerStageDescriptorSampledImages maxPerStageDescriptorStorageImages maxPerStageDescriptorInputAttachments maxPerStageResources maxDescriptorSetSamplers maxDescriptorSetUniformBuffers maxDescriptorSetUniformBuffersDynamic maxDescriptorSetStorageBuffers maxDescriptorSetStorageBuffersDynamic maxDescriptorSetSampledImages maxDescriptorSetStorageImages maxDescriptorSetInputAttachments maxVertexInputAttributes maxVertexInputBindings maxVertexInputAttributeOffset maxVertexInputBindingStride maxVertexOutputComponents maxTessellationGenerationLevel maxTessellationPatchSize maxTessellationControlPerVertexInputComponents maxTessellationControlPerVertexOutputComponents maxTessellationControlPerPatchOutputComponents maxTessellationControlTotalOutputComponents maxTessellationEvaluationInputComponents maxTessellationEvaluationOutputComponents maxGeometryShaderInvocations maxGeometryInputComponents maxGeometryOutputComponents maxGeometryOutputVertices maxGeometryTotalOutputComponents maxFragmentInputComponents maxFragmentOutputAttachments maxFragmentDualSrcAttachments maxFragmentCombinedOutputResources maxComputeSharedMemorySize ((maxComputeWorkGroupCount0, maxComputeWorkGroupCount1, maxComputeWorkGroupCount2)) maxComputeWorkGroupInvocations ((maxComputeWorkGroupSize0, maxComputeWorkGroupSize1, maxComputeWorkGroupSize2)) subPixelPrecisionBits subTexelPrecisionBits mipmapPrecisionBits maxDrawIndexedIndexValue maxDrawIndirectCount ((\(CFloat a) -> a) maxSamplerLodBias) ((\(CFloat a) -> a) maxSamplerAnisotropy) maxViewports ((maxViewportDimensions0, maxViewportDimensions1)) ((((\(CFloat a) -> a) viewportBoundsRange0), ((\(CFloat a) -> a) viewportBoundsRange1))) viewportSubPixelBits ((\(CSize a) -> a) minMemoryMapAlignment) minTexelBufferOffsetAlignment minUniformBufferOffsetAlignment minStorageBufferOffsetAlignment minTexelOffset maxTexelOffset minTexelGatherOffset maxTexelGatherOffset ((\(CFloat a) -> a) minInterpolationOffset) ((\(CFloat a) -> a) maxInterpolationOffset) subPixelInterpolationOffsetBits maxFramebufferWidth maxFramebufferHeight maxFramebufferLayers framebufferColorSampleCounts framebufferDepthSampleCounts framebufferStencilSampleCounts framebufferNoAttachmentsSampleCounts maxColorAttachments sampledImageColorSampleCounts sampledImageIntegerSampleCounts sampledImageDepthSampleCounts sampledImageStencilSampleCounts storageImageSampleCounts maxSampleMaskWords (bool32ToBool timestampComputeAndGraphics) ((\(CFloat a) -> a) timestampPeriod) maxClipDistances maxCullDistances maxCombinedClipAndCullDistances discreteQueuePriorities ((((\(CFloat a) -> a) pointSizeRange0), ((\(CFloat a) -> a) pointSizeRange1))) ((((\(CFloat a) -> a) lineWidthRange0), ((\(CFloat a) -> a) lineWidthRange1))) ((\(CFloat a) -> a) pointSizeGranularity) ((\(CFloat a) -> a) lineWidthGranularity) (bool32ToBool strictLines) (bool32ToBool standardSampleLocations) optimalBufferCopyOffsetAlignment optimalBufferCopyRowPitchAlignment nonCoherentAtomSize
+             maxImageDimension1D maxImageDimension2D maxImageDimension3D maxImageDimensionCube maxImageArrayLayers maxTexelBufferElements maxUniformBufferRange maxStorageBufferRange maxPushConstantsSize maxMemoryAllocationCount maxSamplerAllocationCount bufferImageGranularity sparseAddressSpaceSize maxBoundDescriptorSets maxPerStageDescriptorSamplers maxPerStageDescriptorUniformBuffers maxPerStageDescriptorStorageBuffers maxPerStageDescriptorSampledImages maxPerStageDescriptorStorageImages maxPerStageDescriptorInputAttachments maxPerStageResources maxDescriptorSetSamplers maxDescriptorSetUniformBuffers maxDescriptorSetUniformBuffersDynamic maxDescriptorSetStorageBuffers maxDescriptorSetStorageBuffersDynamic maxDescriptorSetSampledImages maxDescriptorSetStorageImages maxDescriptorSetInputAttachments maxVertexInputAttributes maxVertexInputBindings maxVertexInputAttributeOffset maxVertexInputBindingStride maxVertexOutputComponents maxTessellationGenerationLevel maxTessellationPatchSize maxTessellationControlPerVertexInputComponents maxTessellationControlPerVertexOutputComponents maxTessellationControlPerPatchOutputComponents maxTessellationControlTotalOutputComponents maxTessellationEvaluationInputComponents maxTessellationEvaluationOutputComponents maxGeometryShaderInvocations maxGeometryInputComponents maxGeometryOutputComponents maxGeometryOutputVertices maxGeometryTotalOutputComponents maxFragmentInputComponents maxFragmentOutputAttachments maxFragmentDualSrcAttachments maxFragmentCombinedOutputResources maxComputeSharedMemorySize ((maxComputeWorkGroupCount0, maxComputeWorkGroupCount1, maxComputeWorkGroupCount2)) maxComputeWorkGroupInvocations ((maxComputeWorkGroupSize0, maxComputeWorkGroupSize1, maxComputeWorkGroupSize2)) subPixelPrecisionBits subTexelPrecisionBits mipmapPrecisionBits maxDrawIndexedIndexValue maxDrawIndirectCount (coerce @CFloat @Float maxSamplerLodBias) (coerce @CFloat @Float maxSamplerAnisotropy) maxViewports ((maxViewportDimensions0, maxViewportDimensions1)) (((coerce @CFloat @Float viewportBoundsRange0), (coerce @CFloat @Float viewportBoundsRange1))) viewportSubPixelBits (coerce @CSize @Word64 minMemoryMapAlignment) minTexelBufferOffsetAlignment minUniformBufferOffsetAlignment minStorageBufferOffsetAlignment minTexelOffset maxTexelOffset minTexelGatherOffset maxTexelGatherOffset (coerce @CFloat @Float minInterpolationOffset) (coerce @CFloat @Float maxInterpolationOffset) subPixelInterpolationOffsetBits maxFramebufferWidth maxFramebufferHeight maxFramebufferLayers framebufferColorSampleCounts framebufferDepthSampleCounts framebufferStencilSampleCounts framebufferNoAttachmentsSampleCounts maxColorAttachments sampledImageColorSampleCounts sampledImageIntegerSampleCounts sampledImageDepthSampleCounts sampledImageStencilSampleCounts storageImageSampleCounts maxSampleMaskWords (bool32ToBool timestampComputeAndGraphics) (coerce @CFloat @Float timestampPeriod) maxClipDistances maxCullDistances maxCombinedClipAndCullDistances discreteQueuePriorities (((coerce @CFloat @Float pointSizeRange0), (coerce @CFloat @Float pointSizeRange1))) (((coerce @CFloat @Float lineWidthRange0), (coerce @CFloat @Float lineWidthRange1))) (coerce @CFloat @Float pointSizeGranularity) (coerce @CFloat @Float lineWidthGranularity) (bool32ToBool strictLines) (bool32ToBool standardSampleLocations) optimalBufferCopyOffsetAlignment optimalBufferCopyRowPitchAlignment nonCoherentAtomSize
 
 instance Storable PhysicalDeviceLimits where
   sizeOf ~_ = 504

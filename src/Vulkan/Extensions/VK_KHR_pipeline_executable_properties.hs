@@ -217,17 +217,26 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
 import Data.ByteString (packCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.Trans.Cont (runContT)
 import Data.Vector (generateM)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero)
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CDouble)
+import Foreign.C.Types (CDouble(..))
 import Foreign.C.Types (CDouble(CDouble))
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -261,19 +270,13 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetPipelineExecutableInternalRepresentation
 import Vulkan.Dynamic (DeviceCmds(pVkGetPipelineExecutablePropertiesKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPipelineExecutableStatisticsKHR))
 import Vulkan.Core10.Handles (Device_T)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.APIConstants (MAX_DESCRIPTION_SIZE)
 import Vulkan.Core10.Handles (Pipeline)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero)
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR))
@@ -1028,7 +1031,7 @@ instance FromCStruct PipelineExecutableInternalRepresentationKHR where
     dataSize <- peek @CSize ((p `plusPtr` 536 :: Ptr CSize))
     pData <- peek @(Ptr ()) ((p `plusPtr` 544 :: Ptr (Ptr ())))
     pure $ PipelineExecutableInternalRepresentationKHR
-             name description (bool32ToBool isText) ((\(CSize a) -> a) dataSize) pData
+             name description (bool32ToBool isText) (coerce @CSize @Word64 dataSize) pData
 
 instance Storable PipelineExecutableInternalRepresentationKHR where
   sizeOf ~_ = 552
@@ -1077,7 +1080,7 @@ peekPipelineExecutableStatisticValueKHR tag p = case tag of
   PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR -> U64 <$> (peek @Word64 (castPtr @_ @Word64 p))
   PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR -> F64 <$> (do
     f64 <- peek @CDouble (castPtr @_ @CDouble p)
-    pure $ (\(CDouble a) -> a) f64)
+    pure $ coerce @CDouble @Double f64)
 
 
 -- | VkPipelineExecutableStatisticFormatKHR - Enum describing a pipeline

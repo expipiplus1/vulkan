@@ -165,9 +165,10 @@ module Vulkan.Extensions.VK_EXT_conditional_rendering  ( CommandBufferInheritanc
                                                        , PhysicalDeviceConditionalRenderingFeaturesEXT
                                                        ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data CommandBufferInheritanceConditionalRenderingInfoEXT
 
 instance ToCStruct CommandBufferInheritanceConditionalRenderingInfoEXT

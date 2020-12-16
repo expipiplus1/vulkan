@@ -1,4 +1,4 @@
-cabal-version: 1.12
+cabal-version: 2.0
 
 -- This file has been generated from package.yaml by hpack version 0.34.2.
 --
@@ -26,6 +26,7 @@ library
       Bracket
       CType
       CType.Size
+      Data.ByteString.Extra
       Data.Text.Extra
       Data.Vector.Extra
       Data.Vector.TopTraverse
@@ -44,9 +45,9 @@ library
       Marshal.Struct
       Render.Aggregate
       Render.Alias
+      Render.Atom
       Render.Command
       Render.Constant
-      Render.CStruct
       Render.Dynamic
       Render.Element
       Render.Element.Write
@@ -72,6 +73,7 @@ library
       Render.Utils
       Render.VkException
       Spec.APIConstant
+      Spec.Flavor
       Spec.Name
       Spec.Parse
       Spec.Types
@@ -83,7 +85,7 @@ library
       Paths_generate_new
   hs-source-dirs:
       src
-  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveFunctor DeriveFoldable DeriveTraversable DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
   ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively
   build-depends:
       algebraic-graphs
@@ -134,20 +136,20 @@ library
     , xeno
   default-language: Haskell2010
 
-executable vk
-  main-is: Main.hs
+library khronos-spec
+  exposed-modules:
+      Khronos.AssignModules
+      Khronos.ExtensionDepElements
+      Khronos.Render
+      Khronos.SPIRVElements
+      Khronos.Utils
+      Khronos.Versions.OpenXR
   other-modules:
-      VK.AssignModules
-      VK.Bracket
-      VK.ExtensionDepElements
-      VK.Render
-      VK.SPIRVElements
-      VK.Utils
       Paths_generate_new
   hs-source-dirs:
-      vk
-  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
-  ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively -threaded -rtsopts -with-rtsopts=-N
+      khronos-spec
+  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveFunctor DeriveFoldable DeriveTraversable DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively
   build-depends:
       algebraic-graphs
     , ascii-progress
@@ -198,6 +200,66 @@ executable vk
     , xeno
   default-language: Haskell2010
 
+executable vk
+  main-is: Main.hs
+  other-modules:
+      VK.Bracket
+      Paths_generate_new
+  hs-source-dirs:
+      vk
+  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveFunctor DeriveFoldable DeriveTraversable DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      algebraic-graphs
+    , ascii-progress
+    , async-pool
+    , base
+    , brittany
+    , bytestring
+    , casing
+    , containers
+    , data-default
+    , deepseq
+    , dependent-map >=0.4
+    , dependent-sum >=0.7.1
+    , directory
+    , extra
+    , filepath
+    , generate-new
+    , inline-c
+    , interpolatedstring-perl6
+    , khronos-spec
+    , mtl
+    , pandoc
+    , parsec
+    , parsers
+    , polysemy >=1.4
+    , polysemy-plugin
+    , pretty-show
+    , prettyprinter
+    , regex-applicative
+    , relude
+    , safe
+    , say
+    , some
+    , tagsoup
+    , template-haskell
+    , text
+    , th-abstraction
+    , th-desugar >=1.11
+    , th-orphans
+    , timeit
+    , transformers
+    , typed-process
+    , uniplate
+    , unordered-containers
+    , validation-selective
+    , vector
+    , vector-algorithms
+    , word-wrap
+    , xeno
+  default-language: Haskell2010
+
 executable vma
   main-is: Main.hs
   other-modules:
@@ -208,7 +270,7 @@ executable vma
       Paths_generate_new
   hs-source-dirs:
       vma
-  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveFunctor DeriveFoldable DeriveTraversable DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
   ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       algebraic-graphs
@@ -230,6 +292,67 @@ executable vma
     , inline-c
     , interpolatedstring-perl6
     , language-c
+    , mtl
+    , pandoc
+    , parsec
+    , parsers
+    , polysemy >=1.4
+    , polysemy-plugin
+    , pretty-show
+    , prettyprinter
+    , regex-applicative
+    , relude
+    , safe
+    , say
+    , some
+    , tagsoup
+    , template-haskell
+    , text
+    , th-abstraction
+    , th-desugar >=1.11
+    , th-orphans
+    , timeit
+    , transformers
+    , typed-process
+    , uniplate
+    , unordered-containers
+    , validation-selective
+    , vector
+    , vector-algorithms
+    , word-wrap
+    , xeno
+  default-language: Haskell2010
+
+executable xr
+  main-is: Main.hs
+  other-modules:
+      XR.Bracket
+      XR.RenderParams
+      Paths_generate_new
+  hs-source-dirs:
+      xr
+  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveFunctor DeriveFoldable DeriveTraversable DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      algebraic-graphs
+    , ascii-progress
+    , async-pool
+    , base
+    , brittany
+    , bytestring
+    , casing
+    , containers
+    , data-default
+    , deepseq
+    , dependent-map >=0.4
+    , dependent-sum >=0.7.1
+    , directory
+    , extra
+    , filepath
+    , generate-new
+    , inline-c
+    , interpolatedstring-perl6
+    , khronos-spec
     , mtl
     , pandoc
     , parsec

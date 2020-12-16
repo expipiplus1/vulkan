@@ -29,6 +29,11 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Data.Proxy (Proxy(Proxy))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -226,8 +231,6 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (FramebufferAttachmentsCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.Pass (FramebufferCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (FramebufferMixedSamplesCombinationNV)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (GeneratedCommandsInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (GeneratedCommandsMemoryRequirementsInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (GeometryAABBNV)
@@ -600,8 +603,6 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (SwapchainCreateInfoKHR
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_display_native_hdr (SwapchainDisplayNativeHdrCreateInfoAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_texture_gather_bias_lod (TextureLODGatherFormatPropertiesAMD)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (TraceRaysIndirectCommandKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (TransformMatrixKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_cache (ValidationCacheCreateInfoEXT)
@@ -625,7 +626,6 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (WriteDescri
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_hdr_metadata (XYColorEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xcb_surface (XcbSurfaceCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xlib_surface (XlibSurfaceCreateInfoKHR)
-import Vulkan.Zero (Zero(..))
 -- | VkBaseOutStructure - Base structure for a read-only pointer chain
 --
 -- = Description
@@ -1471,7 +1471,7 @@ peekChainHead ty p c = case ty of
             InvalidArgument
             "peekChainHead"
             (  "Illegal struct extension of "
-            <> show (extensibleType @a)
+            <> extensibleTypeName @a
             <> " with "
             <> show ty
             )
@@ -1481,7 +1481,8 @@ peekChainHead ty p c = case ty of
           r
 
 class Extensible (a :: [Type] -> Type) where
-  extensibleType :: StructureType
+  extensibleTypeName :: String
+  -- ^ For error reporting an invalid extension
   getNext :: a es -> Chain es
   setNext :: a ds -> Chain es -> a es
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends a e => b) -> Maybe b

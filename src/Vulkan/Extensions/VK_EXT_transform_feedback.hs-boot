@@ -237,9 +237,10 @@ module Vulkan.Extensions.VK_EXT_transform_feedback  ( PhysicalDeviceTransformFee
                                                     , PipelineRasterizationStateStreamCreateInfoEXT
                                                     ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceTransformFeedbackFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTransformFeedbackFeaturesEXT

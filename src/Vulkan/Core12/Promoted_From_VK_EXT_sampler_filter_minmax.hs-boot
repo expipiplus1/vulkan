@@ -4,9 +4,10 @@ module Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax  ( PhysicalDevic
                                                                  , SamplerReductionModeCreateInfo
                                                                  ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceSamplerFilterMinmaxProperties
 
 instance ToCStruct PhysicalDeviceSamplerFilterMinmaxProperties

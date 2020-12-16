@@ -128,9 +128,10 @@ module Vulkan.Extensions.VK_GOOGLE_display_timing  ( PastPresentationTimingGOOGL
                                                    , RefreshCycleDurationGOOGLE
                                                    ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PastPresentationTimingGOOGLE
 
 instance ToCStruct PastPresentationTimingGOOGLE

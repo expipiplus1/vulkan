@@ -103,9 +103,10 @@ module Vulkan.Extensions.VK_EXT_display_surface_counter  ( SurfaceCapabilities2E
                                                          , SurfaceCounterFlagBitsEXT
                                                          ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data SurfaceCapabilities2EXT
 
 instance ToCStruct SurfaceCapabilities2EXT

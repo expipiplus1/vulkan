@@ -11,11 +11,12 @@ module Vulkan.Core11.Enums.SamplerYcbcrModelConversion  (SamplerYcbcrModelConver
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showsPrec)
+import Vulkan.Zero (Zero)
 import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
-import Vulkan.Zero (Zero)
+
 -- | VkSamplerYcbcrModelConversion - Color model component of a color space
 --
 -- = Description

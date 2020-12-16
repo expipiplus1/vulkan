@@ -237,9 +237,10 @@ module Vulkan.Extensions.VK_EXT_device_memory_report  ( DeviceDeviceMemoryReport
                                                       , PhysicalDeviceDeviceMemoryReportFeaturesEXT
                                                       ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DeviceDeviceMemoryReportCreateInfoEXT
 
 instance ToCStruct DeviceDeviceMemoryReportCreateInfoEXT

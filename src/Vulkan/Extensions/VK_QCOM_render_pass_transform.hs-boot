@@ -226,9 +226,10 @@ module Vulkan.Extensions.VK_QCOM_render_pass_transform  ( CommandBufferInheritan
                                                         , RenderPassTransformBeginInfoQCOM
                                                         ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data CommandBufferInheritanceRenderPassTransformInfoQCOM
 
 instance ToCStruct CommandBufferInheritanceRenderPassTransformInfoQCOM

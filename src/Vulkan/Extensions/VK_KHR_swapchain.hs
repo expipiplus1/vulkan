@@ -1145,6 +1145,12 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero)
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
@@ -1198,8 +1204,6 @@ import Vulkan.Core10.Handles (Fence)
 import Vulkan.Core10.Handles (Fence(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.Format (Format)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_image_format_list (ImageFormatListCreateInfo)
@@ -1237,11 +1241,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (SwapchainCounter
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_display_native_hdr (SwapchainDisplayNativeHdrCreateInfoAMD)
 import Vulkan.Extensions.Handles (SwapchainKHR)
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero)
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.APIConstants (pattern MAX_DEVICE_GROUP_SIZE)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR))
@@ -1601,8 +1601,7 @@ foreign import ccall
 -- | acquireNextImageKHR with selectable safeness
 acquireNextImageKHRSafeOrUnsafe :: forall io
                                  . (MonadIO io)
-                                => -- No documentation found for TopLevel ""
-                                   (FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result)
+                                => (FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result)
                                 -> -- | @device@ is the device associated with @swapchain@.
                                    Device
                                 -> -- | @swapchain@ is the non-retired swapchain from which an image is being
@@ -2087,8 +2086,7 @@ foreign import ccall
 -- | acquireNextImage2KHR with selectable safeness
 acquireNextImage2KHRSafeOrUnsafe :: forall io
                                   . (MonadIO io)
-                                 => -- No documentation found for TopLevel ""
-                                    (FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result)
+                                 => (FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result)
                                  -> -- | @device@ is the device associated with @swapchain@.
                                     Device
                                  -> -- | @pAcquireInfo@ is a pointer to a 'AcquireNextImageInfoKHR' structure
@@ -2720,7 +2718,7 @@ deriving instance Generic (SwapchainCreateInfoKHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (SwapchainCreateInfoKHR es)
 
 instance Extensible SwapchainCreateInfoKHR where
-  extensibleType = STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR
+  extensibleTypeName = "SwapchainCreateInfoKHR"
   setNext x next = x{next = next}
   getNext SwapchainCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfoKHR e => b) -> Maybe b
@@ -2942,7 +2940,7 @@ deriving instance Generic (PresentInfoKHR (es :: [Type]))
 deriving instance Show (Chain es) => Show (PresentInfoKHR es)
 
 instance Extensible PresentInfoKHR where
-  extensibleType = STRUCTURE_TYPE_PRESENT_INFO_KHR
+  extensibleTypeName = "PresentInfoKHR"
   setNext x next = x{next = next}
   getNext PresentInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PresentInfoKHR e => b) -> Maybe b

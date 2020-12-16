@@ -38,30 +38,35 @@ renderParams handles = r
   dispatchableHandleNames = Set.fromList
     [ hName | Handle {..} <- toList handles, hDispatchable == Dispatchable ]
   r = RenderParams
-    { mkTyName                    = TyConName . upperCaseFirst . dropVk
-    , mkConName                   = \parent ->
-                                      ConName
-                                        . (case parent of
-                                            "VkPerformanceCounterResultKHR" -> (<> "Counter")
-                                            "VkDeviceOrHostAddressConstKHR" -> (<> "Const")
-                                            _ -> id
-                                          )
-                                        . upperCaseFirst
-                                        . dropVk
-    , mkMemberName                = \_parent ->
-                                      TermName . lowerCaseFirst . dropPointer . unCName
-    , mkFunName                   = TermName . lowerCaseFirst . dropVk
-    , mkParamName                 = TermName . dropPointer . unCName
-    , mkPatternName               = ConName . upperCaseFirst . dropVk
-    , mkFuncPointerName           = TyConName . T.tail . unCName
+    { mkTyName                       = TyConName . upperCaseFirst . dropVk
+    , mkConName                      = \parent ->
+                                         ConName
+                                           . (case parent of
+                                               "VkPerformanceCounterResultKHR" -> (<> "Counter")
+                                               "VkDeviceOrHostAddressConstKHR" -> (<> "Const")
+                                               _ -> id
+                                             )
+                                           . upperCaseFirst
+                                           . dropVk
+    , mkMemberName                   = \_parent ->
+                                         TermName . lowerCaseFirst . dropPointer . unCName
+    , mkFunName                      = TermName . lowerCaseFirst . dropVk
+    , mkParamName                    = TermName . dropPointer . unCName
+    , mkPatternName                  = ConName . upperCaseFirst . dropVk
+    , mkFuncPointerName              = TyConName . T.tail . unCName
     , mkFuncPointerMemberName = TermName . ("p" <>) . upperCaseFirst . unCName
-    , mkEmptyDataName             = TyConName . (<> "_T") . dropVk
-    , mkDispatchableHandlePtrName = TermName
-                                    . (<> "Handle")
-                                    . lowerCaseFirst
-                                    . dropVk
-    , alwaysQualifiedNames        = mempty
-    , mkIdiomaticType             =
+    , mkEmptyDataName                = TyConName . (<> "_T") . dropVk
+    , mkDispatchableHandlePtrName    = TermName
+                                       . (<> "Handle")
+                                       . lowerCaseFirst
+                                       . dropVk
+    , camelPrefix                    = "Vk"
+    , lowerPrefix                    = "vk"
+    , upperPrefix                    = "VK"
+    , flagsTypeName                  = "VkFlags"
+    , alwaysQualifiedNames           = mempty
+    , extraNewtypes                  = mempty
+    , mkIdiomaticType                =
       (`List.lookup` (  [ wrappedIdiomaticType ''Float  ''CFloat  'CFloat
                         , wrappedIdiomaticType ''Int32  ''CInt    'CInt
                         , wrappedIdiomaticType ''Double ''CDouble 'CDouble
@@ -125,13 +130,13 @@ renderParams handles = r
                         ]
                      )
       )
-    , mkHsTypeOverride            = \_ preserve t -> pure <$> case preserve of
+    , mkHsTypeOverride = \_ _ preserve t -> pure <$> case preserve of
       DoNotPreserve -> Nothing
       _             -> case t of
         TypeName n | Set.member n dispatchableHandleNames ->
           Just $ ConT ''Ptr :@ ConT (typeName (mkEmptyDataName r n))
         _ -> Nothing
-    , unionDiscriminators         = V.fromList
+    , unionDiscriminators            = V.fromList
       [ UnionDiscriminator
         "VkPipelineExecutableStatisticValueKHR"
         "VkPipelineExecutableStatisticFormatKHR"
@@ -160,11 +165,12 @@ renderParams handles = r
         , ("VK_GEOMETRY_TYPE_INSTANCES_KHR", "instances")
         ]
       ]
-    , successCodeType             = TypeName "VkResult"
-    , isSuccessCodeReturned       = (/= "VK_SUCCESS")
-    , firstSuccessCode            = "VK_SUCCESS"
-    , exceptionTypeName           = TyConName "VulkanException"
-    , complexMemberLengthFunction = curry3 $ \case
+    , successCodeType                = TypeName "VkResult"
+    , isSuccessCodeReturned          = (/= "VK_SUCCESS")
+    , firstSuccessCode               = "VK_SUCCESS"
+    , versionType                    = TypeName "uint32_t"
+    , exceptionTypeName              = TyConName "VulkanException"
+    , complexMemberLengthFunction    = curry3 $ \case
       ("pAllocateInfo", "descriptorSetCount", sibling) -> Just $ do
         tellQualImport 'V.length
         tellImportWithAll (mkTyName r "VkDescriptorSetAllocateInfo")
@@ -175,28 +181,36 @@ renderParams handles = r
           <+> "$"
           <+> sibling
       _ -> Nothing
-    , isExternalName              = const Nothing
-    , externalDocHTML             =
+    , isExternalName                 = \case
+      TyConName "Zero"        -> Just (ModName "Vulkan.Zero")
+      TyConName "ToCStruct"   -> Just (ModName "Vulkan.CStruct")
+      TyConName "FromCStruct" -> Just (ModName "Vulkan.CStruct")
+      _                       -> Nothing
+    , externalDocHTML                =
       Just
         "https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html"
-    , objectTypePattern           = pure
-                                    . mkPatternName r
-                                    . CName
-                                    . ("VK_OBJECT_TYPE_" <>)
-                                    . T.pack
-                                    . toScreamingSnake
-                                    . fromHumps
-                                    . T.unpack
-                                    . dropVk
+    , objectTypePattern              = pure
+                                       . mkPatternName r
+                                       . CName
+                                       . ("VK_OBJECT_TYPE_" <>)
+                                       . T.pack
+                                       . toScreamingSnake
+                                       . fromHumps
+                                       . T.unpack
+                                       . dropVk
+    , extensibleStructTypeMemberName = Just "sType"
+    , extensibleStructTypeType       = Just "VkStructureType"
+    , modulePrefix                   = "Vulkan"
+    , commandOverrides               = const Nothing
     }
 
 wrappedIdiomaticType
   :: Name
   -- ^ Wrapped type
   -> Name
-  -- ^ Wrapping type constructor
+  -- ^ Wrapping type
   -> Name
-  -- ^ Wrapping constructor
+  -- ^ Constructor name
   -> (Type, IdiomaticType)
   -- ^ (Wrapping type (CFloat), idiomaticType)
 wrappedIdiomaticType t w c =
@@ -208,8 +222,11 @@ wrappedIdiomaticType t w c =
       pure (pretty (nameBase c))
     )
     (do
-      tellImportWith w c
-      pure . Constructor . pretty . nameBase $ c
+      tellImportWithAll w
+      tDoc <- renderTypeHighPrec (ConT t)
+      wDoc <- renderTypeHighPrec (ConT w)
+      tellImport 'coerce
+      pure $ PureFunction ("coerce @" <> wDoc <+> "@" <> tDoc)
     )
   )
 

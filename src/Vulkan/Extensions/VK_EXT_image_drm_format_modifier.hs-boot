@@ -534,9 +534,10 @@ module Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( DrmFormatModifierPr
                                                            , PhysicalDeviceImageDrmFormatModifierInfoEXT
                                                            ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DrmFormatModifierPropertiesEXT
 
 instance ToCStruct DrmFormatModifierPropertiesEXT

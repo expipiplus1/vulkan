@@ -1,5 +1,4 @@
-module Main
-  where
+module Main where
 
 import           Control.Exception              ( mapException )
 import qualified Data.List                     as List
@@ -74,14 +73,15 @@ main =
     -- We need information on the Vulkan spec
     specText <- timeItNamed "Reading spec"
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
-    (spec, specTypeSize) <- timeItNamed "Parsing spec" $ parseSpec specText
+    (spec, specTypeSize) <- timeItNamed "Parsing spec"
+      $ parseSpec @SpecVk specText
 
-    getDocumentation     <- loadAllDocumentation vmaDocbookDir
+    getDocumentation <- loadAllDocumentation vmaDocbookDir
 
-    (ds, state)          <- fileDecls DoNotIgnoreWarnings vmaHeader
-    enums                <- unitEnums state ds
-    structs              <- unitStructs state ds
-    commands             <- unitCommands ds
+    (ds, state)      <- fileDecls DoNotIgnoreWarnings vmaHeader
+    enums            <- unitEnums state ds
+    structs          <- unitStructs state ds
+    commands         <- unitCommands ds
     let handles = unitHandles ds
     funcPointers <- unitFuncPointers ds
 
@@ -132,23 +132,25 @@ main =
 
 marshalParams :: Vector Handle -> Sem r MarshalParams
 marshalParams handles =
-  let handleNames = Set.fromList [ hName | Handle {..} <- toList handles ]
-      isHandle    = \case
-        TypeName n -> Set.member n handleNames
-        _          -> False
-      isDefaultable = isHandle
-      isPassAsPointerType _ = False
-      getBespokeScheme :: Marshalable a => CName -> a -> Maybe (MarshalScheme a)
-      getBespokeScheme p a = case (p, name a) of
-        ("VmaAllocatorCreateInfo", "pHeapSizeLimit") ->
-          Just $ Preserve (type' a)
-        ("vmaBuildStatsString", "ppStatsString") | Ptr _ p <- type' a ->
-          Just $ Returned (Preserve p)
-        ("vmaGetPoolName", "ppName") | Ptr _ p <- type' a ->
-          Just $ Returned (Preserve p)
-        ("vmaFreeStatsString", "pStatsString") -> Just $ Preserve (type' a)
-        _ -> Nothing
-  in  pure MarshalParams { .. }
+  let
+    handleNames = Set.fromList [ hName | Handle {..} <- toList handles ]
+    isHandle    = \case
+      TypeName n -> Set.member n handleNames
+      _          -> False
+    isDefaultable = isHandle
+    isPassAsPointerType _ = False
+    getBespokeScheme :: Marshalable a => CName -> a -> Maybe (MarshalScheme a)
+    getBespokeScheme p a = case (p, name a) of
+      ("VmaAllocatorCreateInfo", "pHeapSizeLimit") -> Just $ Preserve (type' a)
+      ("vmaBuildStatsString", "ppStatsString") | Ptr _ p <- type' a ->
+        Just $ Returned (Preserve p)
+      ("vmaGetPoolName", "ppName") | Ptr _ p <- type' a ->
+        Just $ Returned (Preserve p)
+      ("vmaFreeStatsString", "pStatsString") -> Just $ Preserve (type' a)
+      _ -> Nothing
+    isForeignStruct = const False
+  in
+    pure MarshalParams { .. }
 
 ----------------------------------------------------------------
 -- Spec info
@@ -189,6 +191,8 @@ vmaSpecInfo enums structs handles commands = do
       siAppearsInNegativePosition = const False
       -- TODO: is there anything sensible to put in here
       siGetAliases                = const []
+      siExtensionType             = const Nothing
+      siExtensionDeps             = const []
   pure SpecInfo { .. }
 
 ----------------------------------------------------------------
@@ -196,7 +200,10 @@ vmaSpecInfo enums structs handles commands = do
 ----------------------------------------------------------------
 
 unitEnums
-  :: HasErr r => TravState Identity s -> GlobalDecls -> Sem r (Vector (NodeInfo, Enum'))
+  :: HasErr r
+  => TravState Identity s
+  -> GlobalDecls
+  -> Sem r (Vector (NodeInfo, Enum'))
 unitEnums state ds = do
   let ets = [ e | EnumDef e <- Map.elems (gTags ds) ]
   fmap fromList . forV ets $ \case
@@ -321,7 +328,10 @@ unitCommands ds =
         pure (nodeInfo, Command { .. })
 
 unitStructs
-  :: HasErr r => TravState Identity s -> GlobalDecls -> Sem r (Vector (NodeInfo, Struct))
+  :: HasErr r
+  => TravState Identity s
+  -> GlobalDecls
+  -> Sem r (Vector (NodeInfo, Struct))
 unitStructs state ds = do
   let sts =
         [ s | CompDef s@(CompType _ StructTag _ _ _) <- Map.elems (gTags ds) ]
@@ -329,9 +339,11 @@ unitStructs state ds = do
     CompType (AnonymousRef _) _ _ _ _ -> throw "Struct without a name"
     t@(CompType (NamedRef (Ident n _ nodeInfo)) _ ms _ _) ->
       context (T.pack n) $ do
-        let sName       = CName (T.pack n)
-            sExtends    = mempty
-            sExtendedBy = mempty
+        let sName        = CName (T.pack n)
+            sExtends     = mempty
+            sExtendedBy  = mempty
+            sInherits    = mempty
+            sInheritedBy = mempty
         sizedMembers <- forV ms $ \case
           m@(MemberDecl (VarDecl (VarName (Ident n _ _) _) _ ty) Nothing _) ->
             do
@@ -445,17 +457,17 @@ typeToCType' = \case
   opt q t = if nullable q then True : t else if nonnull q then False : t else t
   len as t =
     [ l
-      | Attr (Ident attrName _ _) [expr] _ <- as
-      , attrName == lenAttrName
-      , Just l <- pure $ case expr of
-        CConst (CStrConst (CString x _) _) -> case T.splitOn "::" (T.pack x) of
-          [x]    -> Just $ NamedLength (CName x)
-          [x, y] -> Just $ NamedMemberLength (CName x) (CName y)
-          _      -> error "bad len attribute"
-        CVar (Ident v _ _) _ -> Just $ NamedLength (CName (T.pack v))
-        _                    -> error "bad len attribute"
-      ]
-      ++ t
+    | Attr (Ident attrName _ _) [expr] _ <- as
+    , attrName == lenAttrName
+    , Just l <- pure $ case expr of
+      CConst (CStrConst (CString x _) _) -> case T.splitOn "::" (T.pack x) of
+        [x]    -> Just $ NamedLength (CName x)
+        [x, y] -> Just $ NamedMemberLength (CName x) (CName y)
+        _      -> error "bad len attribute"
+      CVar (Ident v _ _) _ -> Just $ NamedLength (CName (T.pack v))
+      _                    -> error "bad len attribute"
+    ]
+    ++ t
 
 x86_64 :: MachineDesc
 x86_64 =
@@ -571,7 +583,8 @@ lenAttrName = "len_if_not_null"
 -- Trav to Sem
 ----------------------------------------------------------------
 
-runTrav_' :: HasErr r => IgnoreWarnings -> TravState Identity s -> Trav s a -> Sem r a
+runTrav_'
+  :: HasErr r => IgnoreWarnings -> TravState Identity s -> Trav s a -> Sem r a
 runTrav_' iw s t = fst <$> runTrav' iw s t
 
 runTrav'

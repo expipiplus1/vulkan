@@ -1,8 +1,8 @@
 {-# language QuasiQuotes #-}
 
 module Render.VkException
-  ( vkExceptionRenderElement)
-  where
+  ( vkExceptionRenderElement
+  ) where
 
 import           Data.Text                     as T
 import           Data.Text.Prettyprint.Doc
@@ -22,7 +22,6 @@ import           Render.Element
 import           Render.SpecInfo
 import           Render.Type
 import           Spec.Types
-import           VkModulePrefix
 
 vkExceptionRenderElement
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -31,7 +30,7 @@ vkExceptionRenderElement
   -> Sem r RenderElement
 vkExceptionRenderElement getDocumentation vkResultEnum =
   genRe "VulkanException declaration" $ do
-    tellExplicitModule (vulkanModule ["Exception"])
+    tellExplicitModule =<< mkModuleName ["Exception"]
     tellNotReexportable
     RenderParams {..} <- input
     tellImportWithAll ''Control.Exception.Exception
@@ -85,18 +84,18 @@ fixupResultDescription =
 
 tailSafe :: [a] -> [a]
 tailSafe = \case
-  [] -> []
-  _:xs -> xs
+  []     -> []
+  _ : xs -> xs
 
 prepareForPlain :: Pandoc -> Pandoc
 prepareForPlain = topDown removeEmph
-  where
-    removeEmph :: [Inline] -> [Inline]
-    removeEmph is = removeEmphInline =<< is
-    removeEmphInline :: Inline -> [Inline]
-    removeEmphInline = \case
-      Emph is -> is
-      i -> [i]
+ where
+  removeEmph :: [Inline] -> [Inline]
+  removeEmph is = removeEmphInline =<< is
+  removeEmphInline :: Inline -> [Inline]
+  removeEmphInline = \case
+    Emph is -> is
+    i       -> [i]
 
 ----------------------------------------------------------------
 -- Utils

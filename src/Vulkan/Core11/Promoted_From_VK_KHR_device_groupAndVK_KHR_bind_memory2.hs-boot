@@ -4,9 +4,10 @@ module Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2  ( 
                                                                               , BindImageMemoryDeviceGroupInfo
                                                                               ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data BindBufferMemoryDeviceGroupInfo
 
 instance ToCStruct BindBufferMemoryDeviceGroupInfo

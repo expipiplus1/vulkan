@@ -18,6 +18,11 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -48,17 +53,12 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
@@ -109,7 +109,7 @@ foreign import ccall
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
 -- 'DescriptorSetLayoutSupport', 'Vulkan.Core10.Handles.Device'
 getDescriptorSetLayoutSupport :: forall a b io
-                               . (Extendss DescriptorSetLayoutCreateInfo a, Extendss DescriptorSetLayoutSupport b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                               . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, Extendss DescriptorSetLayoutSupport b, PokeChain b, PeekChain b, MonadIO io)
                               => -- | @device@ is the logical device that would create the descriptor set
                                  -- layout.
                                  --
@@ -254,7 +254,7 @@ deriving instance Generic (DescriptorSetLayoutSupport (es :: [Type]))
 deriving instance Show (Chain es) => Show (DescriptorSetLayoutSupport es)
 
 instance Extensible DescriptorSetLayoutSupport where
-  extensibleType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
+  extensibleTypeName = "DescriptorSetLayoutSupport"
   setNext x next = x{next = next}
   getNext DescriptorSetLayoutSupport{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetLayoutSupport e => b) -> Maybe b

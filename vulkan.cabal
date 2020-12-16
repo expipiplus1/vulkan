@@ -247,7 +247,6 @@ library
       Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
       Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout
       Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model
-      Vulkan.CStruct
       Vulkan.CStruct.Extends
       Vulkan.CStruct.Utils
       Vulkan.Dynamic
@@ -481,9 +480,10 @@ library
       Vulkan.NamedType
       Vulkan.SPIRVRequirements
       Vulkan.Version
-      Vulkan.Zero
+      Vulkan.CStruct
       Vulkan.Internal.Utils
       Vulkan.Requirement
+      Vulkan.Zero
   hs-source-dirs:
       src
       src-manual

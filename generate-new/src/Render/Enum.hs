@@ -1,7 +1,6 @@
 {-# language TemplateHaskell #-}
 {-# language QuasiQuotes #-}
-module Render.Enum
-  where
+module Render.Enum where
 
 import           Data.Text.Prettyprint.Doc
 import qualified Data.Vector                   as V
@@ -18,15 +17,15 @@ import           Numeric
 import           CType                          ( CType(TypeName) )
 import qualified Data.Text                     as T
 import           Error
+import           GHC.Read                       ( Read(readPrec) )
 import           Haskell                       as H
+import           Language.Haskell.TH            ( mkName )
 import qualified Prelude                       as P
 import           Render.Element
 import           Render.SpecInfo
 import           Render.Type
 import           Spec.Parse
 import           Text.InterpolatedString.Perl6.Unindented
-import           Language.Haskell.TH            ( mkName )
-import           GHC.Read                       ( Read(readPrec) )
 
 renderEnum
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -39,8 +38,7 @@ renderEnum e@Enum {..} = do
 
     innerTy <- case eType of
       AnEnum     -> pure $ ConT ''Int32
-      -- TODO: remove vulkan specific stuff
-      ABitmask _ -> cToHsType DoNotPreserve (TypeName "VkFlags")
+      ABitmask _ -> cToHsType DoNotPreserve (TypeName flagsTypeName)
     let n       = mkTyName eName
         conName = mkConName eName eName
 
@@ -199,9 +197,9 @@ renderShowInstance prefixString showTableName conNameName Enum {..} = do
   RenderParams {..} <- input
   let n       = mkTyName eName
       conName = mkConName eName eName
-  tellImportWith n conName
+  tellImportWith n      conName
   tellImportWith ''Show 'P.showsPrec
-  tellImport (mkName "Vulkan.Internal.Utils.enumShowsPrec")
+  tellImport (mkName (T.unpack modulePrefix <> ".Internal.Utils.enumShowsPrec"))
   shows <- case eType of
     AnEnum -> do
       tellImport 'showsPrec
@@ -226,9 +224,9 @@ renderReadInstance prefixString showTableName conNameName Enum {..} = do
   RenderParams {..} <- input
   let n       = mkTyName eName
       conName = mkConName eName eName
-  tellImportWith n conName
+  tellImportWith n      conName
   tellImportWith ''Read 'readPrec
-  tellImport (mkName "Vulkan.Internal.Utils.enumReadPrec")
+  tellImport (mkName (T.unpack modulePrefix <> ".Internal.Utils.enumReadPrec"))
   tellDoc [qqi|
     instance Read {n} where
       readPrec = enumReadPrec {prefixString} {showTableName} {conNameName} {conName}

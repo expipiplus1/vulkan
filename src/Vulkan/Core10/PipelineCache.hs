@@ -25,15 +25,22 @@ import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCStringLen)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Foreign.C.Types (CSize(..))
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -59,18 +66,13 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroyPipelineCache))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPipelineCacheData))
 import Vulkan.Dynamic (DeviceCmds(pVkMergePipelineCaches))
 import Vulkan.Core10.Handles (Device_T)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (PipelineCache)
 import Vulkan.Core10.Handles (PipelineCache(..))
 import Vulkan.Core10.Enums.PipelineCacheCreateFlagBits (PipelineCacheCreateFlags)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Core10.Handles (PipelineCache(..))
@@ -393,11 +395,11 @@ getPipelineCacheData device pipelineCache = liftIO . evalContT $ do
   r <- lift $ traceAroundEvent "vkGetPipelineCacheData" (vkGetPipelineCacheData' device' (pipelineCache) (pPDataSize) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDataSize <- lift $ peek @CSize pPDataSize
-  pPData <- ContT $ bracket (callocBytes @(()) (fromIntegral (((\(CSize a) -> a) pDataSize)))) free
+  pPData <- ContT $ bracket (callocBytes @(()) (fromIntegral ((coerce @CSize @Word64 pDataSize)))) free
   r' <- lift $ traceAroundEvent "vkGetPipelineCacheData" (vkGetPipelineCacheData' device' (pipelineCache) (pPDataSize) (pPData))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pDataSize'' <- lift $ peek @CSize pPDataSize
-  pData' <- lift $ packCStringLen  (castPtr @() @CChar pPData, (fromIntegral (((\(CSize a) -> a) pDataSize''))))
+  pData' <- lift $ packCStringLen  (castPtr @() @CChar pPData, (fromIntegral ((coerce @CSize @Word64 pDataSize''))))
   pure $ ((r'), pData')
 
 
@@ -570,7 +572,7 @@ instance FromCStruct PipelineCacheCreateInfo where
     initialDataSize <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     pInitialData <- peek @(Ptr ()) ((p `plusPtr` 32 :: Ptr (Ptr ())))
     pure $ PipelineCacheCreateInfo
-             flags ((\(CSize a) -> a) initialDataSize) pInitialData
+             flags (coerce @CSize @Word64 initialDataSize) pInitialData
 
 instance Storable PipelineCacheCreateInfo where
   sizeOf ~_ = 40

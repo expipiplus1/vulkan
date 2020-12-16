@@ -107,9 +107,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_shader_clock  (PhysicalDeviceShaderClockFeaturesKHR) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceShaderClockFeaturesKHR
 
 instance ToCStruct PhysicalDeviceShaderClockFeaturesKHR

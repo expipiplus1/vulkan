@@ -111,9 +111,10 @@ module Vulkan.Extensions.VK_KHR_external_semaphore_fd  ( ImportSemaphoreFdInfoKH
                                                        , SemaphoreGetFdInfoKHR
                                                        ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ImportSemaphoreFdInfoKHR
 
 instance ToCStruct ImportSemaphoreFdInfoKHR

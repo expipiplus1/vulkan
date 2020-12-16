@@ -152,9 +152,10 @@ module Vulkan.Extensions.VK_KHR_external_semaphore_win32  ( D3D12FenceSubmitInfo
                                                           , SemaphoreGetWin32HandleInfoKHR
                                                           ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data D3D12FenceSubmitInfoKHR
 
 instance ToCStruct D3D12FenceSubmitInfoKHR

@@ -111,9 +111,10 @@ module Vulkan.Extensions.VK_EXT_depth_clip_enable  ( PhysicalDeviceDepthClipEnab
                                                    , PipelineRasterizationDepthClipStateCreateInfoEXT
                                                    ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceDepthClipEnableFeaturesEXT
 
 instance ToCStruct PhysicalDeviceDepthClipEnableFeaturesEXT

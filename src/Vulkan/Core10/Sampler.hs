@@ -27,12 +27,19 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
@@ -61,8 +68,6 @@ import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Filter (Filter)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -79,10 +84,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax (
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (SamplerYcbcrConversionInfo)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Core10.Enums.BorderColor (BorderColor(..))
@@ -637,7 +639,7 @@ deriving instance Generic (SamplerCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (SamplerCreateInfo es)
 
 instance Extensible SamplerCreateInfo where
-  extensibleType = STRUCTURE_TYPE_SAMPLER_CREATE_INFO
+  extensibleTypeName = "SamplerCreateInfo"
   setNext x next = x{next = next}
   getNext SamplerCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerCreateInfo e => b) -> Maybe b
@@ -714,7 +716,7 @@ instance (Extendss SamplerCreateInfo es, PeekChain es) => FromCStruct (SamplerCr
     borderColor <- peek @BorderColor ((p `plusPtr` 72 :: Ptr BorderColor))
     unnormalizedCoordinates <- peek @Bool32 ((p `plusPtr` 76 :: Ptr Bool32))
     pure $ SamplerCreateInfo
-             next flags magFilter minFilter mipmapMode addressModeU addressModeV addressModeW ((\(CFloat a) -> a) mipLodBias) (bool32ToBool anisotropyEnable) ((\(CFloat a) -> a) maxAnisotropy) (bool32ToBool compareEnable) compareOp ((\(CFloat a) -> a) minLod) ((\(CFloat a) -> a) maxLod) borderColor (bool32ToBool unnormalizedCoordinates)
+             next flags magFilter minFilter mipmapMode addressModeU addressModeV addressModeW (coerce @CFloat @Float mipLodBias) (bool32ToBool anisotropyEnable) (coerce @CFloat @Float maxAnisotropy) (bool32ToBool compareEnable) compareOp (coerce @CFloat @Float minLod) (coerce @CFloat @Float maxLod) borderColor (bool32ToBool unnormalizedCoordinates)
 
 instance es ~ '[] => Zero (SamplerCreateInfo es) where
   zero = SamplerCreateInfo

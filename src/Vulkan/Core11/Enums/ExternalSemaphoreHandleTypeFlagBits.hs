@@ -15,13 +15,13 @@ import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Vulkan.Zero (Zero)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
-import Vulkan.Zero (Zero)
 -- No documentation found for TopLevel "VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_FENCE_BIT"
 pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_FENCE_BIT = EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT
 

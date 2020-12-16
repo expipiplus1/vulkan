@@ -102,9 +102,16 @@ module Vulkan.Extensions.VK_EXT_memory_priority  ( PhysicalDeviceMemoryPriorityF
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -116,12 +123,7 @@ import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT))
 -- | VkPhysicalDeviceMemoryPriorityFeaturesEXT - Structure describing memory
@@ -240,7 +242,7 @@ instance FromCStruct MemoryPriorityAllocateInfoEXT where
   peekCStruct p = do
     priority <- peek @CFloat ((p `plusPtr` 16 :: Ptr CFloat))
     pure $ MemoryPriorityAllocateInfoEXT
-             ((\(CFloat a) -> a) priority)
+             (coerce @CFloat @Float priority)
 
 instance Storable MemoryPriorityAllocateInfoEXT where
   sizeOf ~_ = 24

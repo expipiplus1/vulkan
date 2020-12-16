@@ -46,6 +46,8 @@ module Render.Element
   , thNameNamespace
   , nameNameSpace
   , nameSpacePrefix
+  , mkModuleName
+  , mkMkModuleName
   ) where
 
 import           Data.Char                      ( isAlpha
@@ -125,11 +127,11 @@ data NameSpace
   deriving (Show, Eq, Ord)
 
 data Import n = Import
-  { importName :: n
+  { importName      :: n
   , importQualified :: Bool
-  , importChildren :: Vector n
-  , importWithAll :: Bool
-  , importSource :: Bool
+  , importChildren  :: Vector n
+  , importWithAll   :: Bool
+  , importSource    :: Bool
   }
   deriving (Show, Eq, Ord)
 
@@ -242,13 +244,24 @@ data RenderParams = RenderParams
     -- types
   , mkDispatchableHandlePtrName :: CName -> HName
     -- ^ The record member name for the pointer member in dispatchable handles
+  , camelPrefix                 :: Text
+    -- ^ "Vk" or "Xr" or "Vma"
+  , lowerPrefix                 :: Text
+    -- ^ "vk" or "xr" or "vma"
+  , upperPrefix                 :: Text
+    -- ^ "VK" or "XR" or "VMA"
+  , flagsTypeName               :: CName
+    -- ^ "VkFlags" or "XrFlags64"
   , alwaysQualifiedNames        :: Vector Name
+  , extraNewtypes               :: Vector Name
   , mkIdiomaticType             :: Type -> Maybe IdiomaticType
     -- ^ Overrides for using a different type than default on the Haskell side
     -- than the C side
   , mkHsTypeOverride
       :: forall r
-       . ExtensibleStructStyle r
+       . ((Name -> ConstrainedVar) -> Sem r Name)
+      --  ^ Get a fresh variable
+      -> ExtensibleStructStyle r
       -> Preserve
       -> CType
       -> Maybe (Sem r Type)
@@ -261,6 +274,7 @@ data RenderParams = RenderParams
     -- use @const True@ to always return success codes
   , firstSuccessCode      :: CName
     -- Any code less than this is an error code
+  , versionType           :: CType
   , exceptionTypeName     :: HName
     -- The name for the exception wrapper
   , complexMemberLengthFunction
@@ -277,14 +291,27 @@ data RenderParams = RenderParams
     -- (other parameter or member). Sometimes also this isn't a trivial case of
     -- getting that member of the struct, so use this field for writing those
     -- complex overrides.
-  , isExternalName    :: HName -> Maybe ModName
+  , isExternalName                 :: HName -> Maybe ModName
     -- ^ If you want to refer to something in another package without using
     -- template haskell ''quotes, put the module in here
-  , externalDocHTML   :: Maybe Text
+  , externalDocHTML                :: Maybe Text
     -- ^ If we can't find a place in the generated source to link to, link to
     -- this documentation instead.
-  , objectTypePattern :: CName -> Maybe HName
+  , objectTypePattern              :: CName -> Maybe HName
     -- ^ An object type enumeration for a handle name, if any
+  , extensibleStructTypeMemberName :: Maybe CName
+    -- ^ "sType" or "type" or Nothing
+  , extensibleStructTypeType       :: Maybe CName
+    -- ^ "VkStructureType" or "XrStructureType"
+  , modulePrefix                   :: Text
+    -- ^ Where to put the generated module hierarchy
+  , commandOverrides
+      :: forall r
+       . (HasRenderParams r, HasRenderElem r)
+      => CName
+      -> Maybe (Sem r ())
+    -- ^ Instead of generating a command from the spec, use this definition
+    -- instead
   }
 
 data UnionDiscriminator = UnionDiscriminator
@@ -314,8 +341,7 @@ data IdiomaticType = IdiomaticType
   }
 
 data IdiomaticTypeTo
-  = Constructor (Doc ())
-  | PureFunction (Doc ())
+  = PureFunction (Doc ())
   | IOFunction (Doc ())
 
 ----------------------------------------------------------------
@@ -386,8 +412,7 @@ tellCanFormat :: MemberWithError (State RenderElement) r => Sem r ()
 tellCanFormat = modify' (\r -> r { reCanFormat = All True })
 
 tellDoc :: MemberWithError (State RenderElement) r => Doc () -> Sem r ()
-tellDoc d =
-  modify' (\r -> r { reDoc = \h -> reDoc r h `lineMaybe` Just d })
+tellDoc d = modify' (\r -> r { reDoc = \h -> reDoc r h `lineMaybe` Just d })
 
 tellDocWithHaddock
   :: MemberWithError (State RenderElement) r
@@ -407,6 +432,8 @@ class Importable a where
 instance Importable Name where
   addImport import'@(Import i qual children withAll source) = do
     RenderParams {..} <- input
+    -- TODO: Throw a an error here if we are not qual and i is in
+    -- alwaysQualifiedNames
     let mkLocalName n =
           let b = T.pack . nameBase $ n
           in  case nameSpace n of
@@ -492,3 +519,12 @@ wrapSymbol ns s = if isSymbol s && s /= ".."
   else pretty s
   where isSymbol = not . (\x -> isAlpha x || (x == '_')) . T.head
 
+mkModuleName :: HasRenderParams r => [Text] -> Sem r ModName
+mkModuleName cs = do
+  RenderParams {..} <- input
+  pure . ModName . T.intercalate "." . (modulePrefix :) $ cs
+
+mkMkModuleName :: HasRenderParams r => Sem r ([Text] -> ModName)
+mkMkModuleName = do
+  RenderParams {..} <- input
+  pure $ ModName . T.intercalate "." . (modulePrefix :)

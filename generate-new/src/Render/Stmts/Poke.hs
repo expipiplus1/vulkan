@@ -46,6 +46,7 @@ import           Foreign.Ptr
 
 import           CType                         as C
 import           Error
+import           Foreign.Marshal.Utils          ( with )
 import           Haskell
 import           Marshal.Marshalable
 import           Marshal.Scheme
@@ -59,6 +60,7 @@ import           Render.Stmts.Poke.SiblingInfo
 import           Render.Stmts.Utils
 import           Render.Type
 import           Render.Utils
+import           Spec.Types                     ( sInheritedBy )
 
 type HasPoke a r
   = ( Marshalable a
@@ -109,6 +111,8 @@ getPokeIndirect' name toType scheme value addr = runNonDetMaybe go >>= \case
       raise $ byteStringFixedArrayIndirect name size toElem value addr
     WrappedStruct from ->
       raise $ wrappedStructIndirect name toType from value addr
+    WrappedChildStruct from ->
+      raise $ wrappedChildStructIndirect name toType from value addr
     _ -> empty
 
 
@@ -144,21 +148,22 @@ getPokeDirect'
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 getPokeDirect' name toType fromType value = case fromType of
-  Unit                            -> throw "Getting poke for a unit member"
-  Normal from                     -> normal name toType from value
-  Length ty os rs                 -> nonElidedLength name ty os rs
-  Preserve _                      -> pure value
-  ElidedLength ty os rs           -> elidedLength name ty os rs
-  ElidedUnivalued value           -> elidedUnivalued name toType value
+  Unit                      -> throw "Getting poke for a unit member"
+  Normal from               -> normal name toType from value
+  Length ty os rs           -> nonElidedLength name ty os rs
+  Preserve _                -> pure value
+  ElidedLength ty os rs     -> elidedLength name ty os rs
+  ElidedUnivalued value     -> elidedUnivalued name toType value
   VoidPtr -> normal name (Ptr NonConst Void) (Ptr NonConst Void) value
-  ByteString                      -> byteString name toType value
-  Vector nullable fromElem        -> vector name toType fromElem nullable value
-  EitherWord32 fromElem           -> eitherWord32 name toType fromElem value
-  Maybe (Vector _ _) -> throw "TODO: optional vectors without length"
-  Maybe        from               -> maybe' name toType from value
-  Tupled size fromElem            -> tuple name size toType fromElem value
-  WrappedStruct fromName          -> wrappedStruct name toType fromName value
-  Custom        CustomScheme {..} -> case csDirectPoke of
+  ByteString                -> byteString name toType value
+  Vector nullable fromElem  -> vector name toType fromElem nullable value
+  EitherWord32 fromElem     -> eitherWord32 name toType fromElem value
+  Maybe        (Vector _ _) -> throw "TODO: optional vectors without length"
+  Maybe        from         -> maybe' name toType from value
+  Tupled size fromElem      -> tuple name size toType fromElem value
+  WrappedStruct fromName    -> wrappedStruct name toType fromName value
+  WrappedChildStruct fromName -> wrappedChildStruct name toType fromName value
+  Custom CustomScheme {..}  -> case csDirectPoke of
     NoPoke ->
       throw $ "Getting direct poke for custom scheme with no poke: " <> csName
     APoke p -> p value
@@ -188,13 +193,13 @@ normal
   -> Stmt s r (Ref s ValueDoc)
 normal name to from valueRef =
   note ("Unhandled " <> show from <> " conversion to: " <> show to)
-    =<< runNonDetMaybe (asum [idiomatic, same, indirectStruct])
+    =<< runNonDetMaybe (asum [idiomatic, same, indirect])
  where
   idiomatic = failToNonDet $ do
     RenderParams {..}                     <- input
     toTy                                  <- cToHsTypeWithHoles DoPreserve to
     Just (IdiomaticType fromTy fromFun _) <- pure $ mkIdiomaticType toTy
-    fromTy'                               <- cToHsTypeWithHoles DoNotPreserve from
+    fromTy' <- cToHsTypeWithHoles DoNotPreserve from
     guard (fromTy == fromTy')
     raise2 $ stmtC (Just toTy) name $ do
       fromDoc        <- fromFun
@@ -205,16 +210,27 @@ normal name to from valueRef =
     guard (from == to)
     pure valueRef
 
-  indirectStruct = failToNonDet $ do
+  indirect = failToNonDet $ do
     Ptr Const toElem@(TypeName n) <- pure to
     guard (from == toElem)
-    guard =<< ((isJust <$> getStruct n) <||> (isJust <$> getUnion n))
-    ty <- cToHsTypeWithHoles DoNotPreserve to
+    isStructOrUnion <- (isJust <$> getStruct n) <||> (isJust <$> getUnion n)
+    isInherited     <- maybe False (not . null . sInheritedBy) <$> getStruct n
+    ty              <- cToHsTypeWithHoles DoNotPreserve to
     raise2 $ stmtC (Just ty) name . fmap (ContTAction . ValueDoc) $ do
-      tellImportWithAll (TyConName "ToCStruct")
       tellImportWithAll ''ContT
-      ValueDoc value <- use valueRef
-      pure $ "ContT $ withCStruct" <+> value
+      if isStructOrUnion
+        then do
+          tellImportWithAll (TyConName "ToCStruct")
+          ValueDoc value <- use valueRef
+          if isInherited
+            then do
+              tellImport 'castPtr
+              pure $ "fmap castPtr $ ContT $ withCStruct" <+> value
+            else pure $ "ContT $ withCStruct" <+> value
+        else do
+          tellImport 'with
+          ValueDoc value <- use valueRef
+          pure $ "ContT $ with" <+> value
 
 wrappedStructIndirect
   :: ( HasErr r
@@ -249,6 +265,28 @@ wrappedStructIndirect name toType fromName valueRef addrRef = case toType of
         <+> ". ($ ())"
   _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
 
+wrappedChildStructIndirect
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderedNames r
+     , HasRenderState r
+     )
+  => CName
+  -> CType
+  -> CName
+  -> Ref s ValueDoc
+  -> Ref s AddrDoc
+  -> Stmt s r (Ref s ValueDoc)
+wrappedChildStructIndirect name toType fromName valueRef addrRef =
+  case toType of
+    Ptr Const (TypeName n) | n == fromName ->
+      storablePoke addrRef =<< wrappedChildStruct name toType fromName valueRef
+    TypeName n | n == fromName -> do
+      throw "TODO: implement wrappedChildStructIndirect"
+    _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
+
 wrappedStruct
   :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
   => CName
@@ -257,7 +295,11 @@ wrappedStruct
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 wrappedStruct name toType fromName valueRef = case toType of
-  Ptr Const (TypeName n) | n == fromName -> do
+  Ptr Const (TypeName n) | n == fromName -> extending n
+  _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
+
+ where
+  extending n = do
     RenderParams {..} <- input
     ty                <- cToHsTypeWithHoles DoNotPreserve toType
     stmtC (Just ty) name $ do
@@ -279,7 +321,26 @@ wrappedStruct name toType fromName valueRef = case toType of
         <>  headTDoc
         <+> val
         <+> "(cont . castPtr)"
+
+wrappedChildStruct
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
+  => CName
+  -> CType
+  -> CName
+  -> Ref s ValueDoc
+  -> Stmt s r (Ref s ValueDoc)
+wrappedChildStruct name toType fromName valueRef = case toType of
+  Ptr Const (TypeName n) | n == fromName -> inheriting
   _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
+
+ where
+  inheriting = do
+    ty <- cToHsTypeWithHoles DoNotPreserve toType
+    stmtC (Just ty) name $ do
+      ValueDoc val <- use valueRef
+      tellImport (TermName "withSomeChild")
+      tellImportWithAll ''ContT
+      pure . ContTAction . ValueDoc $ "ContT" <+> "$ withSomeChild" <+> val
 
 elidedLength, nonElidedLength
   :: forall r a s
@@ -453,6 +514,7 @@ elidedUnivalued name to value = do
       "nullPtr" -> do
         tellImport 'nullPtr
         pure (TermName value)
+      "0"                        -> pure (TermName value)
       _ | isUpper (T.head value) -> do
         let vName = mkPatternName (CName value)
         tellImport vName
@@ -473,8 +535,8 @@ eitherWord32 name toType fromElem valueRef = case toType of
     elemTy <- cToHsTypeWithHoles DoPreserve toElem
     stmtC (Just (ConT ''Ptr :@ elemTy)) name $ do
       ValueDoc value <- use valueRef
-      vecName <- freshName (Just "v")
-      subPoke <- renderSubStmts $ do
+      vecName        <- freshName (Just "v")
+      subPoke        <- renderSubStmts $ do
         valueRef' <- pureStmt . ValueDoc . pretty $ vecName
         getPokeDirect' name toType (Vector NotNullable fromElem) valueRef'
       freeNames [vecName]
@@ -719,8 +781,12 @@ byteStringFixedArrayIndirect
   -> Ref s AddrDoc
   -> Stmt s r (Ref s ValueDoc)
 byteStringFixedArrayIndirect _name size toElem valueRef addrRef = case size of
-  SymbolicArraySize _ -> unitStmt $ do
-    fn                <- case toElem of
+  SymbolicArraySize _ -> sized
+  NumericArraySize _ -> sized
+  t -> throw $ "Unhandled indirect ByteString conversion to: " <> show t
+ where
+  sized = unitStmt $ do
+    fn <- case toElem of
       Char -> do
         let fn = "pokeFixedLengthNullTerminatedByteString"
         tellImport (TermName fn)
@@ -733,7 +799,6 @@ byteStringFixedArrayIndirect _name size toElem valueRef addrRef = case size of
     ValueDoc value <- use valueRef
     pure . IOAction . ValueDoc $ pretty fn <+> addr <+> value
 
-  t -> throw $ "Unhandled indirect ByteString conversion to: " <> show t
 
 tupleIndirect
   :: HasPoke a r
@@ -917,11 +982,9 @@ elemAddrRef toElem addrRef index = stmt Nothing Nothing $ do
 -- Utils
 ----------------------------------------------------------------
 
-(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
-(<||>) = liftA2 (||)
-
 raise2 :: Sem r a -> Sem (e1 : e2 : r) a
 raise2 = raise . raise
 
-forVMaybes :: HasErr r => Vector a -> (a -> Sem r (Maybe b)) -> Sem r (Vector b)
+forVMaybes
+  :: HasErr r => Vector a -> (a -> Sem r (Maybe b)) -> Sem r (Vector b)
 forVMaybes xs f = V.mapMaybe id <$> traverseV f xs

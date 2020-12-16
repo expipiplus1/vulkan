@@ -8,13 +8,13 @@ module Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion  ( BindImageP
                                                                     , SamplerYcbcrConversionInfo
                                                                     ) where
 
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
-import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-import Vulkan.CStruct (ToCStruct)
 data BindImagePlaneMemoryInfo
 
 instance ToCStruct BindImagePlaneMemoryInfo

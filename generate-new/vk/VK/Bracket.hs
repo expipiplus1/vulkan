@@ -2,25 +2,25 @@ module VK.Bracket
   ( brackets
   ) where
 
+import           Data.List                      ( (\\) )
+import qualified Data.Map                      as Map
+import qualified Data.Text.Extra               as T
+import           Data.Vector                    ( Vector )
+import           Polysemy
 import           Relude                  hiding ( Handle
                                                 , Type
                                                 )
-import qualified Data.Text.Extra               as T
-import           Data.List                      ( (\\) )
-import           Polysemy
-import           Data.Vector                    ( Vector )
-import qualified Data.Map                      as Map
 
-import           Render.Element
-import           Render.Utils
-import           Render.SpecInfo
-import           Render.Names
+import           Bracket
+import           CType
+import           Error
 import           Marshal.Command
 import           Marshal.Scheme
+import           Render.Element
+import           Render.Names
+import           Render.SpecInfo
+import           Render.Utils
 import           Spec.Parse
-import           Error
-import           CType
-import           Bracket
 
 brackets
   :: forall r
@@ -141,7 +141,7 @@ brackets marshaledCommands handles = context "brackets" $ do
         | Bracket {..} <- bs
         , TypeName n   <-
           [ t | Normal t <- bInnerTypes ]
-            <> [ t | Vector _ (Normal t) <- bInnerTypes ]
+          <> [ t | Vector _ (Normal t) <- bInnerTypes ]
         ]
       unhandledHandles =
         toList handleNames \\ (createdBracketNames ++ ignoredHandles)
@@ -166,6 +166,7 @@ withCommmandBuffers = Bracket
                            ]
   , bDestroyIndividually = DoNotDestroyIndividually
   , bBracketType         = BracketCPS
+  , bDestroyReturnTypes  = []
   }
 
 withDescriptorSets :: Bracket
@@ -184,6 +185,7 @@ withDescriptorSets = Bracket
                            ]
   , bDestroyIndividually = DoNotDestroyIndividually
   , bBracketType         = BracketCPS
+  , bDestroyReturnTypes  = []
   }
 
 dropVk :: Text -> Text

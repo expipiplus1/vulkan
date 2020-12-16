@@ -78,19 +78,27 @@ import qualified Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import qualified Data.Vector (null)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -136,8 +144,6 @@ import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Format (Format)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.FrontFace (FrontFace)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (GraphicsPipelineShaderGroupsCreateInfoNV)
 import Vulkan.Core10.Enums.LogicOp (LogicOp)
@@ -200,11 +206,8 @@ import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.CStruct.Extends (SomeStruct(..))
 import Vulkan.Core10.Enums.StencilOp (StencilOp)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Core10.Enums.VertexInputRate (VertexInputRate)
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO))
@@ -738,7 +741,7 @@ instance FromCStruct Viewport where
     minDepth <- peek @CFloat ((p `plusPtr` 16 :: Ptr CFloat))
     maxDepth <- peek @CFloat ((p `plusPtr` 20 :: Ptr CFloat))
     pure $ Viewport
-             ((\(CFloat a) -> a) x) ((\(CFloat a) -> a) y) ((\(CFloat a) -> a) width) ((\(CFloat a) -> a) height) ((\(CFloat a) -> a) minDepth) ((\(CFloat a) -> a) maxDepth)
+             (coerce @CFloat @Float x) (coerce @CFloat @Float y) (coerce @CFloat @Float width) (coerce @CFloat @Float height) (coerce @CFloat @Float minDepth) (coerce @CFloat @Float maxDepth)
 
 instance Storable Viewport where
   sizeOf ~_ = 24
@@ -812,7 +815,7 @@ instance FromCStruct SpecializationMapEntry where
     offset <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
     size <- peek @CSize ((p `plusPtr` 8 :: Ptr CSize))
     pure $ SpecializationMapEntry
-             constantID offset ((\(CSize a) -> a) size)
+             constantID offset (coerce @CSize @Word64 size)
 
 instance Storable SpecializationMapEntry where
   sizeOf ~_ = 16
@@ -897,7 +900,7 @@ instance FromCStruct SpecializationInfo where
     dataSize <- peek @CSize ((p `plusPtr` 16 :: Ptr CSize))
     pData <- peek @(Ptr ()) ((p `plusPtr` 24 :: Ptr (Ptr ())))
     pure $ SpecializationInfo
-             pMapEntries' ((\(CSize a) -> a) dataSize) pData
+             pMapEntries' (coerce @CSize @Word64 dataSize) pData
 
 instance Zero SpecializationInfo where
   zero = SpecializationInfo
@@ -1183,7 +1186,7 @@ deriving instance Generic (PipelineShaderStageCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineShaderStageCreateInfo es)
 
 instance Extensible PipelineShaderStageCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO
+  extensibleTypeName = "PipelineShaderStageCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineShaderStageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineShaderStageCreateInfo e => b) -> Maybe b
@@ -1407,7 +1410,7 @@ deriving instance Generic (ComputePipelineCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (ComputePipelineCreateInfo es)
 
 instance Extensible ComputePipelineCreateInfo where
-  extensibleType = STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO
+  extensibleTypeName = "ComputePipelineCreateInfo"
   setNext x next = x{next = next}
   getNext ComputePipelineCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ComputePipelineCreateInfo e => b) -> Maybe b
@@ -1444,7 +1447,7 @@ instance (Extendss ComputePipelineCreateInfo es, PeekChain es) => FromCStruct (C
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
     flags <- peek @PipelineCreateFlags ((p `plusPtr` 16 :: Ptr PipelineCreateFlags))
-    stage <- peekSomeCStruct (forgetExtensions ((p `plusPtr` 24 :: Ptr (PipelineShaderStageCreateInfo a))))
+    stage <- peekSomeCStruct (forgetExtensions ((p `plusPtr` 24 :: Ptr (PipelineShaderStageCreateInfo _))))
     layout <- peek @PipelineLayout ((p `plusPtr` 72 :: Ptr PipelineLayout))
     basePipelineHandle <- peek @Pipeline ((p `plusPtr` 80 :: Ptr Pipeline))
     basePipelineIndex <- peek @Int32 ((p `plusPtr` 88 :: Ptr Int32))
@@ -1723,7 +1726,7 @@ deriving instance Generic (PipelineVertexInputStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineVertexInputStateCreateInfo es)
 
 instance Extensible PipelineVertexInputStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineVertexInputStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineVertexInputStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineVertexInputStateCreateInfo e => b) -> Maybe b
@@ -1964,7 +1967,7 @@ deriving instance Generic (PipelineTessellationStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineTessellationStateCreateInfo es)
 
 instance Extensible PipelineTessellationStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineTessellationStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineTessellationStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineTessellationStateCreateInfo e => b) -> Maybe b
@@ -2126,7 +2129,7 @@ deriving instance Generic (PipelineViewportStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineViewportStateCreateInfo es)
 
 instance Extensible PipelineViewportStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineViewportStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineViewportStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineViewportStateCreateInfo e => b) -> Maybe b
@@ -2341,7 +2344,7 @@ deriving instance Generic (PipelineRasterizationStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineRasterizationStateCreateInfo es)
 
 instance Extensible PipelineRasterizationStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineRasterizationStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineRasterizationStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineRasterizationStateCreateInfo e => b) -> Maybe b
@@ -2404,7 +2407,7 @@ instance (Extendss PipelineRasterizationStateCreateInfo es, PeekChain es) => Fro
     depthBiasSlopeFactor <- peek @CFloat ((p `plusPtr` 52 :: Ptr CFloat))
     lineWidth <- peek @CFloat ((p `plusPtr` 56 :: Ptr CFloat))
     pure $ PipelineRasterizationStateCreateInfo
-             next flags (bool32ToBool depthClampEnable) (bool32ToBool rasterizerDiscardEnable) polygonMode cullMode frontFace (bool32ToBool depthBiasEnable) ((\(CFloat a) -> a) depthBiasConstantFactor) ((\(CFloat a) -> a) depthBiasClamp) ((\(CFloat a) -> a) depthBiasSlopeFactor) ((\(CFloat a) -> a) lineWidth)
+             next flags (bool32ToBool depthClampEnable) (bool32ToBool rasterizerDiscardEnable) polygonMode cullMode frontFace (bool32ToBool depthBiasEnable) (coerce @CFloat @Float depthBiasConstantFactor) (coerce @CFloat @Float depthBiasClamp) (coerce @CFloat @Float depthBiasSlopeFactor) (coerce @CFloat @Float lineWidth)
 
 instance es ~ '[] => Zero (PipelineRasterizationStateCreateInfo es) where
   zero = PipelineRasterizationStateCreateInfo
@@ -2537,7 +2540,7 @@ deriving instance Generic (PipelineMultisampleStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineMultisampleStateCreateInfo es)
 
 instance Extensible PipelineMultisampleStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineMultisampleStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineMultisampleStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineMultisampleStateCreateInfo e => b) -> Maybe b
@@ -2602,7 +2605,7 @@ instance (Extendss PipelineMultisampleStateCreateInfo es, PeekChain es) => FromC
     alphaToCoverageEnable <- peek @Bool32 ((p `plusPtr` 40 :: Ptr Bool32))
     alphaToOneEnable <- peek @Bool32 ((p `plusPtr` 44 :: Ptr Bool32))
     pure $ PipelineMultisampleStateCreateInfo
-             next flags rasterizationSamples (bool32ToBool sampleShadingEnable) ((\(CFloat a) -> a) minSampleShading) pSampleMask' (bool32ToBool alphaToCoverageEnable) (bool32ToBool alphaToOneEnable)
+             next flags rasterizationSamples (bool32ToBool sampleShadingEnable) (coerce @CFloat @Float minSampleShading) pSampleMask' (bool32ToBool alphaToCoverageEnable) (bool32ToBool alphaToOneEnable)
 
 instance es ~ '[] => Zero (PipelineMultisampleStateCreateInfo es) where
   zero = PipelineMultisampleStateCreateInfo
@@ -2955,7 +2958,7 @@ deriving instance Generic (PipelineColorBlendStateCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (PipelineColorBlendStateCreateInfo es)
 
 instance Extensible PipelineColorBlendStateCreateInfo where
-  extensibleType = STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO
+  extensibleTypeName = "PipelineColorBlendStateCreateInfo"
   setNext x next = x{next = next}
   getNext PipelineColorBlendStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineColorBlendStateCreateInfo e => b) -> Maybe b
@@ -3020,7 +3023,7 @@ instance (Extendss PipelineColorBlendStateCreateInfo es, PeekChain es) => FromCS
     blendConstants2 <- peek @CFloat ((pblendConstants `advancePtrBytes` 8 :: Ptr CFloat))
     blendConstants3 <- peek @CFloat ((pblendConstants `advancePtrBytes` 12 :: Ptr CFloat))
     pure $ PipelineColorBlendStateCreateInfo
-             next flags (bool32ToBool logicOpEnable) logicOp pAttachments' ((((\(CFloat a) -> a) blendConstants0), ((\(CFloat a) -> a) blendConstants1), ((\(CFloat a) -> a) blendConstants2), ((\(CFloat a) -> a) blendConstants3)))
+             next flags (bool32ToBool logicOpEnable) logicOp pAttachments' (((coerce @CFloat @Float blendConstants0), (coerce @CFloat @Float blendConstants1), (coerce @CFloat @Float blendConstants2), (coerce @CFloat @Float blendConstants3)))
 
 instance es ~ '[] => Zero (PipelineColorBlendStateCreateInfo es) where
   zero = PipelineColorBlendStateCreateInfo
@@ -3356,7 +3359,7 @@ instance FromCStruct PipelineDepthStencilStateCreateInfo where
     minDepthBounds <- peek @CFloat ((p `plusPtr` 96 :: Ptr CFloat))
     maxDepthBounds <- peek @CFloat ((p `plusPtr` 100 :: Ptr CFloat))
     pure $ PipelineDepthStencilStateCreateInfo
-             flags (bool32ToBool depthTestEnable) (bool32ToBool depthWriteEnable) depthCompareOp (bool32ToBool depthBoundsTestEnable) (bool32ToBool stencilTestEnable) front back ((\(CFloat a) -> a) minDepthBounds) ((\(CFloat a) -> a) maxDepthBounds)
+             flags (bool32ToBool depthTestEnable) (bool32ToBool depthWriteEnable) depthCompareOp (bool32ToBool depthBoundsTestEnable) (bool32ToBool stencilTestEnable) front back (coerce @CFloat @Float minDepthBounds) (coerce @CFloat @Float maxDepthBounds)
 
 instance Storable PipelineDepthStencilStateCreateInfo where
   sizeOf ~_ = 104
@@ -4277,7 +4280,7 @@ deriving instance Generic (GraphicsPipelineCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (GraphicsPipelineCreateInfo es)
 
 instance Extensible GraphicsPipelineCreateInfo where
-  extensibleType = STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
+  extensibleTypeName = "GraphicsPipelineCreateInfo"
   setNext x next = x{next = next}
   getNext GraphicsPipelineCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends GraphicsPipelineCreateInfo e => b) -> Maybe b
@@ -4365,22 +4368,22 @@ instance (Extendss GraphicsPipelineCreateInfo es, PeekChain es) => FromCStruct (
     next <- peekChain (castPtr pNext)
     flags <- peek @PipelineCreateFlags ((p `plusPtr` 16 :: Ptr PipelineCreateFlags))
     stageCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
-    pStages <- peek @(Ptr (PipelineShaderStageCreateInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo a))))
+    pStages <- peek @(Ptr (PipelineShaderStageCreateInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _))))
     pStages' <- generateM (fromIntegral stageCount) (\i -> peekSomeCStruct (forgetExtensions ((pStages `advancePtrBytes` (48 * (i)) :: Ptr (PipelineShaderStageCreateInfo _)))))
-    pVertexInputState <- peek @(Ptr (PipelineVertexInputStateCreateInfo _)) ((p `plusPtr` 32 :: Ptr (Ptr (PipelineVertexInputStateCreateInfo a))))
+    pVertexInputState <- peek @(Ptr (PipelineVertexInputStateCreateInfo _)) ((p `plusPtr` 32 :: Ptr (Ptr (PipelineVertexInputStateCreateInfo _))))
     pVertexInputState' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pVertexInputState
     pInputAssemblyState <- peek @(Ptr PipelineInputAssemblyStateCreateInfo) ((p `plusPtr` 40 :: Ptr (Ptr PipelineInputAssemblyStateCreateInfo)))
     pInputAssemblyState' <- maybePeek (\j -> peekCStruct @PipelineInputAssemblyStateCreateInfo (j)) pInputAssemblyState
-    pTessellationState <- peek @(Ptr (PipelineTessellationStateCreateInfo _)) ((p `plusPtr` 48 :: Ptr (Ptr (PipelineTessellationStateCreateInfo a))))
+    pTessellationState <- peek @(Ptr (PipelineTessellationStateCreateInfo _)) ((p `plusPtr` 48 :: Ptr (Ptr (PipelineTessellationStateCreateInfo _))))
     pTessellationState' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pTessellationState
-    pViewportState <- peek @(Ptr (PipelineViewportStateCreateInfo _)) ((p `plusPtr` 56 :: Ptr (Ptr (PipelineViewportStateCreateInfo a))))
+    pViewportState <- peek @(Ptr (PipelineViewportStateCreateInfo _)) ((p `plusPtr` 56 :: Ptr (Ptr (PipelineViewportStateCreateInfo _))))
     pViewportState' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pViewportState
-    pRasterizationState <- peekSomeCStruct . forgetExtensions =<< peek ((p `plusPtr` 64 :: Ptr (Ptr (PipelineRasterizationStateCreateInfo a))))
-    pMultisampleState <- peek @(Ptr (PipelineMultisampleStateCreateInfo _)) ((p `plusPtr` 72 :: Ptr (Ptr (PipelineMultisampleStateCreateInfo a))))
+    pRasterizationState <- peekSomeCStruct . forgetExtensions =<< peek ((p `plusPtr` 64 :: Ptr (Ptr (PipelineRasterizationStateCreateInfo _))))
+    pMultisampleState <- peek @(Ptr (PipelineMultisampleStateCreateInfo _)) ((p `plusPtr` 72 :: Ptr (Ptr (PipelineMultisampleStateCreateInfo _))))
     pMultisampleState' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pMultisampleState
     pDepthStencilState <- peek @(Ptr PipelineDepthStencilStateCreateInfo) ((p `plusPtr` 80 :: Ptr (Ptr PipelineDepthStencilStateCreateInfo)))
     pDepthStencilState' <- maybePeek (\j -> peekCStruct @PipelineDepthStencilStateCreateInfo (j)) pDepthStencilState
-    pColorBlendState <- peek @(Ptr (PipelineColorBlendStateCreateInfo _)) ((p `plusPtr` 88 :: Ptr (Ptr (PipelineColorBlendStateCreateInfo a))))
+    pColorBlendState <- peek @(Ptr (PipelineColorBlendStateCreateInfo _)) ((p `plusPtr` 88 :: Ptr (Ptr (PipelineColorBlendStateCreateInfo _))))
     pColorBlendState' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pColorBlendState
     pDynamicState <- peek @(Ptr PipelineDynamicStateCreateInfo) ((p `plusPtr` 96 :: Ptr (Ptr PipelineDynamicStateCreateInfo)))
     pDynamicState' <- maybePeek (\j -> peekCStruct @PipelineDynamicStateCreateInfo (j)) pDynamicState

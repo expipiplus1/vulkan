@@ -100,9 +100,10 @@ module Vulkan.Extensions.VK_NV_device_diagnostics_config  ( DeviceDiagnosticsCon
                                                           , PhysicalDeviceDiagnosticsConfigFeaturesNV
                                                           ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DeviceDiagnosticsConfigCreateInfoNV
 
 instance ToCStruct DeviceDiagnosticsConfigCreateInfoNV

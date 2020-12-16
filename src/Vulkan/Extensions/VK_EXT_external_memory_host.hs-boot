@@ -174,9 +174,10 @@ module Vulkan.Extensions.VK_EXT_external_memory_host  ( ImportMemoryHostPointerI
                                                       , PhysicalDeviceExternalMemoryHostPropertiesEXT
                                                       ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ImportMemoryHostPointerInfoEXT
 
 instance ToCStruct ImportMemoryHostPointerInfoEXT

@@ -267,9 +267,10 @@ module Vulkan.Extensions.VK_NV_viewport_swizzle  ( PipelineViewportSwizzleStateC
                                                  , ViewportSwizzleNV
                                                  ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PipelineViewportSwizzleStateCreateInfoNV
 
 instance ToCStruct PipelineViewportSwizzleStateCreateInfoNV

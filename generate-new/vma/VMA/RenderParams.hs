@@ -2,20 +2,20 @@ module VMA.RenderParams
   ( renderParams
   ) where
 
-import           Relude                  hiding ( uncons
-                                                , Type
-                                                , Handle
-                                                )
+import           Data.Char                      ( isLower )
+import           Data.Generics.Uniplate.Data
 import qualified Data.HashSet                  as Set
-import           Data.Vector                    ( Vector )
 import qualified Data.Text                     as T
 import           Data.Text.Extra                ( lowerCaseFirst
                                                 , upperCaseFirst
                                                 )
-import           Data.Char                      ( isLower )
+import           Data.Vector                    ( Vector )
 import           Language.Haskell.TH
-import           Data.Generics.Uniplate.Data
 import           Polysemy
+import           Relude                  hiding ( Handle
+                                                , Type
+                                                , uncons
+                                                )
 
 import           Foreign.Ptr
 
@@ -38,21 +38,26 @@ renderParams handles = r
                                              (vulkanNameOverrides n)
     , mkConName = \_ n -> ConName $ fromMaybe (upperCaseFirst . dropVma $ n)
                                               (vulkanNameOverrides n)
-    , mkMemberName                = \_parent ->
-                                      TermName . lowerCaseFirst . dropPointer . unCName
-    , mkFunName                   = TermName . lowerCaseFirst . dropVma
-    , mkParamName                 = TermName . dropPointer . unCName
-    , mkPatternName               =
+    , mkMemberName                   = \_parent ->
+                                         TermName . lowerCaseFirst . dropPointer . unCName
+    , mkFunName                      = TermName . lowerCaseFirst . dropVma
+    , mkParamName                    = TermName . dropPointer . unCName
+    , mkPatternName                  =
       \n -> ConName
         $ fromMaybe (upperCaseFirst . dropVma $ n) (vulkanNameOverrides n)
-    , mkFuncPointerName           = TyConName . T.tail . unCName
+    , mkFuncPointerName              = TyConName . T.tail . unCName
     , mkFuncPointerMemberName = TermName . ("p" <>) . upperCaseFirst . unCName
-    , mkEmptyDataName             = TermName . (<> "_T") . dropVma
-    , mkDispatchableHandlePtrName = TermName
-                                    . (<> "Handle")
-                                    . lowerCaseFirst
-                                    . dropVma
-    , alwaysQualifiedNames        = mempty
+    , mkEmptyDataName                = TyConName . (<> "_T") . dropVma
+    , mkDispatchableHandlePtrName    = TermName
+                                       . (<> "Handle")
+                                       . lowerCaseFirst
+                                       . dropVma
+    , camelPrefix                    = "Vma"
+    , lowerPrefix                    = "vma"
+    , upperPrefix                    = "VMA"
+    , flagsTypeName                  = "VkFlags"
+    , alwaysQualifiedNames           = mempty
+    , extraNewtypes                  = mempty
     , mkIdiomaticType = let dropVulkanModule = transformBi
                               (\n ->
                                 if nameModule n
@@ -63,8 +68,8 @@ renderParams handles = r
                                   n
                               )
                         in  mkIdiomaticType vulkanParams . dropVulkanModule
-    , mkHsTypeOverride            = \structStyle preserve t ->
-      case vulkanManifest structStyle vulkanParams t of
+    , mkHsTypeOverride               = \getVar structStyle preserve t ->
+      case vulkanManifest getVar structStyle vulkanParams t of
         Just t -> Just $ do
           t <- t
           case preserve of
@@ -85,13 +90,14 @@ renderParams handles = r
                 $ n
                 )
             _ -> Nothing
-    , unionDiscriminators         = mempty
-    , successCodeType             = TypeName "VkResult"
-    , isSuccessCodeReturned       = (/= "VK_SUCCESS")
-    , firstSuccessCode            = "VK_SUCCESS"
-    , exceptionTypeName           = TyConName "VulkanException"
-    , complexMemberLengthFunction = \_ _ _ -> Nothing
-    , isExternalName              =
+    , unionDiscriminators            = mempty
+    , successCodeType                = TypeName "VkResult"
+    , isSuccessCodeReturned          = (/= "VK_SUCCESS")
+    , firstSuccessCode               = "VK_SUCCESS"
+    , versionType                    = TypeName "uint32_t"
+    , exceptionTypeName              = TyConName "VulkanException"
+    , complexMemberLengthFunction    = \_ _ _ -> Nothing
+    , isExternalName                 =
       let vk s = Just (ModName $ vulkanModulePrefix <> "." <> s)
       in  \case
             TermName  "advancePtrBytes"  -> vk "CStruct.Utils"
@@ -114,8 +120,12 @@ renderParams handles = r
             TyConName "VulkanException"  -> vk "Exception"
             ConName   "SUCCESS"          -> vk "Core10.Enums.Result"
             _                            -> Nothing
-    , externalDocHTML             = Nothing
-    , objectTypePattern           = const Nothing
+    , externalDocHTML                = Nothing
+    , objectTypePattern              = const Nothing
+    , extensibleStructTypeMemberName = Nothing
+    , extensibleStructTypeType       = Nothing
+    , modulePrefix                   = "VulkanMemoryAllocator"
+    , commandOverrides               = const Nothing
     }
 
 dropVma :: CName -> Text
@@ -148,8 +158,12 @@ dropPointer =
 
 -- TODO: Generate this automatically
 vulkanManifest
-  :: ExtensibleStructStyle r -> RenderParams -> CType -> Maybe (Sem r Type)
-vulkanManifest structStyle RenderParams {..} =
+  :: ((Name -> ConstrainedVar) -> Sem r Name)
+  -> ExtensibleStructStyle r
+  -> RenderParams
+  -> CType
+  -> Maybe (Sem r Type)
+vulkanManifest getVar structStyle RenderParams {..} =
   let vk =
         Just
           . pure
@@ -169,9 +183,8 @@ vulkanManifest structStyle RenderParams {..} =
                 . mkTyName
                 $ t
         case structStyle of
-          Applied getVar -> do
-            v <- getVar
-            pure $ structTyCon :@ v
+          Unwrapped -> (structTyCon :@) . VarT <$> getVar (Extends structTyCon)
+          UnwrappedHole -> pure $ structTyCon :@ WildCardT
           Wrapped -> pure $ ConT (mkName "SomeStruct") :@ structTyCon
   in  \case
         TypeName n

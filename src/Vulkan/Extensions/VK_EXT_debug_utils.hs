@@ -548,11 +548,18 @@ import GHC.Show (showString)
 import Numeric (showHex)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero)
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
@@ -560,8 +567,10 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -603,8 +612,6 @@ import Vulkan.Dynamic (DeviceCmds(pVkSetDebugUtilsObjectNameEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkSetDebugUtilsObjectTagEXT))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.FundamentalTypes (Flags)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateDebugUtilsMessengerEXT))
@@ -618,11 +625,7 @@ import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero)
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT))
@@ -1446,7 +1449,7 @@ instance FromCStruct DebugUtilsObjectNameInfoEXT where
     objectType <- peek @ObjectType ((p `plusPtr` 16 :: Ptr ObjectType))
     objectHandle <- peek @Word64 ((p `plusPtr` 24 :: Ptr Word64))
     pObjectName <- peek @(Ptr CChar) ((p `plusPtr` 32 :: Ptr (Ptr CChar)))
-    pObjectName' <- maybePeek (\j -> packCString  (j)) pObjectName
+    pObjectName' <- maybePeek (\j -> packCString (j)) pObjectName
     pure $ DebugUtilsObjectNameInfoEXT
              objectType objectHandle pObjectName'
 
@@ -1542,7 +1545,7 @@ instance FromCStruct DebugUtilsObjectTagInfoEXT where
     tagSize <- peek @CSize ((p `plusPtr` 40 :: Ptr CSize))
     pTag <- peek @(Ptr ()) ((p `plusPtr` 48 :: Ptr (Ptr ())))
     pure $ DebugUtilsObjectTagInfoEXT
-             objectType objectHandle tagName ((\(CSize a) -> a) tagSize) pTag
+             objectType objectHandle tagName (coerce @CSize @Word64 tagSize) pTag
 
 instance Storable DebugUtilsObjectTagInfoEXT where
   sizeOf ~_ = 56
@@ -1621,7 +1624,7 @@ instance FromCStruct DebugUtilsLabelEXT where
     color2 <- peek @CFloat ((pcolor `advancePtrBytes` 8 :: Ptr CFloat))
     color3 <- peek @CFloat ((pcolor `advancePtrBytes` 12 :: Ptr CFloat))
     pure $ DebugUtilsLabelEXT
-             pLabelName ((((\(CFloat a) -> a) color0), ((\(CFloat a) -> a) color1), ((\(CFloat a) -> a) color2), ((\(CFloat a) -> a) color3)))
+             pLabelName (((coerce @CFloat @Float color0), (coerce @CFloat @Float color1), (coerce @CFloat @Float color2), (coerce @CFloat @Float color3)))
 
 instance Zero DebugUtilsLabelEXT where
   zero = DebugUtilsLabelEXT
@@ -1934,7 +1937,7 @@ instance FromCStruct DebugUtilsMessengerCallbackDataEXT where
   peekCStruct p = do
     flags <- peek @DebugUtilsMessengerCallbackDataFlagsEXT ((p `plusPtr` 16 :: Ptr DebugUtilsMessengerCallbackDataFlagsEXT))
     pMessageIdName <- peek @(Ptr CChar) ((p `plusPtr` 24 :: Ptr (Ptr CChar)))
-    pMessageIdName' <- maybePeek (\j -> packCString  (j)) pMessageIdName
+    pMessageIdName' <- maybePeek (\j -> packCString (j)) pMessageIdName
     messageIdNumber <- peek @Int32 ((p `plusPtr` 32 :: Ptr Int32))
     pMessage <- packCString =<< peek ((p `plusPtr` 40 :: Ptr (Ptr CChar)))
     queueLabelCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))

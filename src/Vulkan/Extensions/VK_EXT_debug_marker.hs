@@ -299,15 +299,23 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -336,15 +344,10 @@ import Vulkan.Dynamic (DeviceCmds(pVkCmdDebugMarkerInsertEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkDebugMarkerSetObjectNameEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkDebugMarkerSetObjectTagEXT))
 import Vulkan.Core10.Handles (Device_T)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT))
@@ -850,7 +853,7 @@ instance FromCStruct DebugMarkerObjectTagInfoEXT where
     tagSize <- peek @CSize ((p `plusPtr` 40 :: Ptr CSize))
     pTag <- peek @(Ptr ()) ((p `plusPtr` 48 :: Ptr (Ptr ())))
     pure $ DebugMarkerObjectTagInfoEXT
-             objectType object tagName ((\(CSize a) -> a) tagSize) pTag
+             objectType object tagName (coerce @CSize @Word64 tagSize) pTag
 
 instance Storable DebugMarkerObjectTagInfoEXT where
   sizeOf ~_ = 56
@@ -928,7 +931,7 @@ instance FromCStruct DebugMarkerMarkerInfoEXT where
     color2 <- peek @CFloat ((pcolor `advancePtrBytes` 8 :: Ptr CFloat))
     color3 <- peek @CFloat ((pcolor `advancePtrBytes` 12 :: Ptr CFloat))
     pure $ DebugMarkerMarkerInfoEXT
-             pMarkerName ((((\(CFloat a) -> a) color0), ((\(CFloat a) -> a) color1), ((\(CFloat a) -> a) color2), ((\(CFloat a) -> a) color3)))
+             pMarkerName (((coerce @CFloat @Float color0), (coerce @CFloat @Float color1), (coerce @CFloat @Float color2), (coerce @CFloat @Float color3)))
 
 instance Zero DebugMarkerMarkerInfoEXT where
   zero = DebugMarkerMarkerInfoEXT

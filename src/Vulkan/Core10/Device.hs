@@ -28,16 +28,23 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
@@ -75,8 +82,6 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateDevice))
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
@@ -168,10 +173,7 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
@@ -468,7 +470,7 @@ deriving instance Generic (DeviceQueueCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (DeviceQueueCreateInfo es)
 
 instance Extensible DeviceQueueCreateInfo where
-  extensibleType = STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO
+  extensibleTypeName = "DeviceQueueCreateInfo"
   setNext x next = x{next = next}
   getNext DeviceQueueCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceQueueCreateInfo e => b) -> Maybe b
@@ -511,7 +513,7 @@ instance (Extendss DeviceQueueCreateInfo es, PeekChain es) => FromCStruct (Devic
     pQueuePriorities <- peek @(Ptr CFloat) ((p `plusPtr` 32 :: Ptr (Ptr CFloat)))
     pQueuePriorities' <- generateM (fromIntegral queueCount) (\i -> do
       pQueuePrioritiesElem <- peek @CFloat ((pQueuePriorities `advancePtrBytes` (4 * (i)) :: Ptr CFloat))
-      pure $ (\(CFloat a) -> a) pQueuePrioritiesElem)
+      pure $ coerce @CFloat @Float pQueuePrioritiesElem)
     pure $ DeviceQueueCreateInfo
              next flags queueFamilyIndex pQueuePriorities'
 
@@ -832,7 +834,7 @@ deriving instance Generic (DeviceCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (DeviceCreateInfo es)
 
 instance Extensible DeviceCreateInfo where
-  extensibleType = STRUCTURE_TYPE_DEVICE_CREATE_INFO
+  extensibleTypeName = "DeviceCreateInfo"
   setNext x next = x{next = next}
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b
@@ -977,7 +979,7 @@ instance (Extendss DeviceCreateInfo es, PeekChain es) => FromCStruct (DeviceCrea
     next <- peekChain (castPtr pNext)
     flags <- peek @DeviceCreateFlags ((p `plusPtr` 16 :: Ptr DeviceCreateFlags))
     queueCreateInfoCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
-    pQueueCreateInfos <- peek @(Ptr (DeviceQueueCreateInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (DeviceQueueCreateInfo a))))
+    pQueueCreateInfos <- peek @(Ptr (DeviceQueueCreateInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (DeviceQueueCreateInfo _))))
     pQueueCreateInfos' <- generateM (fromIntegral queueCreateInfoCount) (\i -> peekSomeCStruct (forgetExtensions ((pQueueCreateInfos `advancePtrBytes` (40 * (i)) :: Ptr (DeviceQueueCreateInfo _)))))
     enabledLayerCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     ppEnabledLayerNames <- peek @(Ptr (Ptr CChar)) ((p `plusPtr` 40 :: Ptr (Ptr (Ptr CChar))))

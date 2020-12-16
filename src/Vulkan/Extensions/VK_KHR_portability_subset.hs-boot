@@ -138,9 +138,10 @@ module Vulkan.Extensions.VK_KHR_portability_subset  ( PhysicalDevicePortabilityS
                                                     , PhysicalDevicePortabilitySubsetPropertiesKHR
                                                     ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDevicePortabilitySubsetFeaturesKHR
 
 instance ToCStruct PhysicalDevicePortabilitySubsetFeaturesKHR

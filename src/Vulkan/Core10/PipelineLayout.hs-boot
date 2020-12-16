@@ -4,9 +4,10 @@ module Vulkan.Core10.PipelineLayout  ( PipelineLayoutCreateInfo
                                      , PushConstantRange
                                      ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PipelineLayoutCreateInfo
 
 instance ToCStruct PipelineLayoutCreateInfo

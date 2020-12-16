@@ -129,9 +129,10 @@ module Vulkan.Extensions.VK_KHR_external_memory_fd  ( ImportMemoryFdInfoKHR
                                                     , MemoryGetFdInfoKHR
                                                     ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ImportMemoryFdInfoKHR
 
 instance ToCStruct ImportMemoryFdInfoKHR

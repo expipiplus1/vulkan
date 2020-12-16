@@ -12,6 +12,9 @@ default-extensions:
 - BlockArguments
 - ConstraintKinds
 - DataKinds
+- DeriveFunctor
+- DeriveFoldable
+- DeriveTraversable
 - DeriveGeneric
 - DerivingVia
 - DisambiguateRecordFields
@@ -49,77 +52,96 @@ name: generate-new
 synopsis: A program to generate the vulkan package from the vulkan docs.
 author: Joe Hermaszewski
 extra-source-files:
-  - readme.md
-  - package.yaml
+- readme.md
+- package.yaml
 
 library:
   source-dirs: src
+
+internal-libraries:
+  khronos-spec:
+    source-dirs: khronos-spec
+    dependencies:
+    - generate-new
 
 executables:
   vk:
     main: Main.hs
     source-dirs: vk
     dependencies:
-      - generate-new
+    - generate-new
+    - khronos-spec
     ghc-options:
-      - -threaded
-      - -rtsopts
-      - -with-rtsopts=-N
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+
+  xr:
+    main: Main.hs
+    source-dirs: xr
+    dependencies:
+    - generate-new
+    - khronos-spec
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+
   vma:
     main: Main.hs
     source-dirs: vma
     dependencies:
-      - generate-new
-      - language-c
+    - generate-new
+    - language-c
     ghc-options:
-      - -threaded
-      - -rtsopts
-      - -with-rtsopts=-N
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
 
 dependencies:
-  - algebraic-graphs
-  - ascii-progress
-  - async-pool
-  - base
-  - bytestring
-  - brittany
-  - casing
-  - containers
-  - data-default
-  - deepseq
-  - dependent-map >= 0.4
-  - dependent-sum >= 0.7.1
-  - directory
-  - extra
-  - filepath
-  - inline-c
-  - interpolatedstring-perl6
-  - mtl
-  - pandoc
-  - parsec
-  - parsers
-  - polysemy >= 1.4
-  - polysemy-plugin
-  - pretty-show
-  - prettyprinter
-  - regex-applicative
-  - relude
-  - safe
-  - say
-  - some
-  - tagsoup
-  - template-haskell
-  - text
-  - th-abstraction
-  - th-desugar >= 1.11
-  - th-orphans
-  - timeit
-  - transformers
-  - typed-process
-  - uniplate
-  - unordered-containers
-  - validation-selective
-  - vector
-  - vector-algorithms
-  - word-wrap
-  - xeno
+- algebraic-graphs
+- ascii-progress
+- async-pool
+- base
+- bytestring
+- brittany
+- casing
+- containers
+- data-default
+- deepseq
+- dependent-map >= 0.4
+- dependent-sum >= 0.7.1
+- directory
+- extra
+- filepath
+- inline-c
+- interpolatedstring-perl6
+- mtl
+- pandoc
+- parsec
+- parsers
+- polysemy >= 1.4
+- polysemy-plugin
+- pretty-show
+- prettyprinter
+- regex-applicative
+- relude
+- safe
+- say
+- some
+- tagsoup
+- template-haskell
+- text
+- th-abstraction
+- th-desugar >= 1.11
+- th-orphans
+- timeit
+- transformers
+- typed-process
+- uniplate
+- unordered-containers
+- validation-selective
+- vector
+- vector-algorithms
+- word-wrap
+- xeno

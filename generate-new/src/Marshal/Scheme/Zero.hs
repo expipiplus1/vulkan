@@ -1,17 +1,17 @@
-module Marshal.Scheme.Zero
-  where
+module Marshal.Scheme.Zero where
 
-import           Relude
+import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.NonDet
-import           Data.Text.Prettyprint.Doc
+import           Relude
 
+import           Error
+import           Haskell.Name
 import           Marshal.Scheme
 import           Render.Element
-import           Haskell.Name
 
 zeroScheme
-  :: (HasRenderElem r, HasRenderParams r)
+  :: (HasRenderElem r, HasRenderParams r, HasErr r)
   => MarshalScheme a
   -> Sem r (Maybe (Doc ()))
 zeroScheme = runNonDetMaybe . go
@@ -20,7 +20,7 @@ zeroScheme = runNonDetMaybe . go
     Unit              -> pure "()"
     Preserve _        -> pure "zero"
     Normal   _        -> pure "zero"
-    Length _ _ _      -> pure "zero"
+    Length{}          -> pure "zero"
     ElidedLength{}    -> empty
     ElidedUnivalued _ -> empty
     ElidedVoid        -> empty
@@ -34,9 +34,11 @@ zeroScheme = runNonDetMaybe . go
       pure $ tupled (replicate (fromIntegral n) z)
     Returned      _ -> empty
     InOutCount    _ -> empty
+    OutCount      _ -> empty
     WrappedStruct _ -> do
       tellImportWithAll (TyConName "SomeStruct")
       pure $ parens "SomeStruct zero"
-    Custom       CustomScheme {..} -> maybe empty pure csZero
-    ElidedCustom _                 -> empty
+    WrappedChildStruct _ -> throw "Unable to get a zero inheriting struct"
+    Custom CustomScheme {..} -> maybe empty pure csZero
+    ElidedCustom _ -> empty
 

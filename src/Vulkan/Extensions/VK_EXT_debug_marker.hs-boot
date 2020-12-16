@@ -277,9 +277,10 @@ module Vulkan.Extensions.VK_EXT_debug_marker  ( DebugMarkerMarkerInfoEXT
                                               , DebugMarkerObjectTagInfoEXT
                                               ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DebugMarkerMarkerInfoEXT
 
 instance ToCStruct DebugMarkerMarkerInfoEXT

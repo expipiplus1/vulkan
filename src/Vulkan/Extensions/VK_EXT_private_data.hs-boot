@@ -141,9 +141,10 @@ module Vulkan.Extensions.VK_EXT_private_data  ( DevicePrivateDataCreateInfoEXT
                                               , PrivateDataSlotCreateInfoEXT
                                               ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DevicePrivateDataCreateInfoEXT
 
 instance ToCStruct DevicePrivateDataCreateInfoEXT

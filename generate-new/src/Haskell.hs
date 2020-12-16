@@ -8,12 +8,12 @@ module Haskell
   , allTypeNames
   , pattern (:@)
   , typeName
+  , typeNameWithModule
   , mkVar
   , (~>)
   , arrowUniqueVars
   , module Haskell.Name
-  )
-where
+  ) where
 
 import           Data.Char                      ( isLower )
 import           Data.Generics.Uniplate.Data
@@ -41,10 +41,15 @@ import           Render.Element
 typeName :: HName -> Name
 typeName = mkName . T.unpack . unName
 
+typeNameWithModule :: ModName -> HName -> Name
+typeNameWithModule (ModName mod') =
+  mkName . T.unpack . ((mod' <> ".") <>) . unName
+
 mkVar :: Text -> Type
 mkVar = VarT . mkName . T.unpack
 
-renderType, renderTypeSource :: (HasRenderElem r, HasRenderParams r) => Type -> Sem r (Doc ())
+renderType, renderTypeSource
+  :: (HasRenderElem r, HasRenderParams r) => Type -> Sem r (Doc ())
 renderType = renderType' tellImport
 renderTypeSource = renderType'
   (\case
@@ -77,11 +82,7 @@ renderType' importer t = do
 
 -- TODO, do this properly lol
 renderTypeHighPrec, renderTypeHighPrecSource
-  :: ( HasRenderElem r
-     , HasRenderParams r
-     )
-  => Type
-  -> Sem r (Doc ())
+  :: (HasRenderElem r, HasRenderParams r) => Type -> Sem r (Doc ())
 renderTypeHighPrec = \case
   t@(ConT    _) -> renderType t
   t@(VarT    _) -> renderType t
@@ -96,7 +97,10 @@ renderTypeHighPrecSource = \case
 
 neverBootTypes :: [Name]
 neverBootTypes =
-  [typeName (TyConName ":::"), typeName (TyConName "SomeStruct")]
+  [ typeName (TyConName ":::")
+  , typeName (TyConName "SomeStruct")
+  , typeName (TyConName "SomeChild")
+  ]
 
 allTypeNames :: Type -> [Name]
 allTypeNames = childrenBi

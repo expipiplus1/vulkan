@@ -10,10 +10,11 @@ module Vulkan.Core10.FundamentalTypes  ( Extent2D
                                        , DeviceSize
                                        ) where
 
-import Data.Word (Word64)
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Word (Word64)
+import Data.Kind (Type)
+
 data Extent2D
 
 instance ToCStruct Extent2D

@@ -125,9 +125,10 @@ module Vulkan.Extensions.VK_NV_scissor_exclusive  ( PhysicalDeviceExclusiveSciss
                                                   , PipelineViewportExclusiveScissorStateCreateInfoNV
                                                   ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceExclusiveScissorFeaturesNV
 
 instance ToCStruct PhysicalDeviceExclusiveScissorFeaturesNV

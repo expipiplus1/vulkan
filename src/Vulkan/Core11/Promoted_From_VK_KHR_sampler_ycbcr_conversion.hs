@@ -40,6 +40,11 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -75,8 +80,6 @@ import Vulkan.CStruct.Extends (Extensible(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ExternalFormatANDROID)
 import Vulkan.Core10.Enums.Filter (Filter)
 import Vulkan.Core10.Enums.Format (Format)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlagBits)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
@@ -90,10 +93,7 @@ import Vulkan.Core11.Enums.SamplerYcbcrModelConversion (SamplerYcbcrModelConvers
 import Vulkan.Core11.Enums.SamplerYcbcrRange (SamplerYcbcrRange)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES))
@@ -560,7 +560,7 @@ deriving instance Generic (SamplerYcbcrConversionCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (SamplerYcbcrConversionCreateInfo es)
 
 instance Extensible SamplerYcbcrConversionCreateInfo where
-  extensibleType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
+  extensibleTypeName = "SamplerYcbcrConversionCreateInfo"
   setNext x next = x{next = next}
   getNext SamplerYcbcrConversionCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerYcbcrConversionCreateInfo e => b) -> Maybe b

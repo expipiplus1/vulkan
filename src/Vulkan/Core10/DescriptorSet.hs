@@ -51,6 +51,11 @@ import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import qualified Data.Vector (null)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -104,8 +109,6 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.Handles (ImageView)
 import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (MutableDescriptorTypeCreateInfoVALVE)
@@ -119,13 +122,10 @@ import Vulkan.Core10.Handles (Sampler)
 import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (WriteDescriptorSetAccelerationStructureKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (WriteDescriptorSetAccelerationStructureNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (WriteDescriptorSetInlineUniformBlockEXT)
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_DESCRIPTOR_SET))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO))
@@ -1592,7 +1592,7 @@ deriving instance Generic (WriteDescriptorSet (es :: [Type]))
 deriving instance Show (Chain es) => Show (WriteDescriptorSet es)
 
 instance Extensible WriteDescriptorSet where
-  extensibleType = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
+  extensibleTypeName = "WriteDescriptorSet"
   setNext x next = x{next = next}
   getNext WriteDescriptorSet{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends WriteDescriptorSet e => b) -> Maybe b
@@ -2277,7 +2277,7 @@ deriving instance Generic (DescriptorSetLayoutCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (DescriptorSetLayoutCreateInfo es)
 
 instance Extensible DescriptorSetLayoutCreateInfo where
-  extensibleType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
+  extensibleTypeName = "DescriptorSetLayoutCreateInfo"
   setNext x next = x{next = next}
   getNext DescriptorSetLayoutCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetLayoutCreateInfo e => b) -> Maybe b
@@ -2546,7 +2546,7 @@ deriving instance Generic (DescriptorPoolCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (DescriptorPoolCreateInfo es)
 
 instance Extensible DescriptorPoolCreateInfo where
-  extensibleType = STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO
+  extensibleTypeName = "DescriptorPoolCreateInfo"
   setNext x next = x{next = next}
   getNext DescriptorPoolCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorPoolCreateInfo e => b) -> Maybe b
@@ -2671,7 +2671,7 @@ deriving instance Generic (DescriptorSetAllocateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (DescriptorSetAllocateInfo es)
 
 instance Extensible DescriptorSetAllocateInfo where
-  extensibleType = STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO
+  extensibleTypeName = "DescriptorSetAllocateInfo"
   setNext x next = x{next = next}
   getNext DescriptorSetAllocateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetAllocateInfo e => b) -> Maybe b

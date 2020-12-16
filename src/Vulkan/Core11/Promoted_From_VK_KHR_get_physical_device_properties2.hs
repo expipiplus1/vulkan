@@ -36,6 +36,11 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -66,8 +71,6 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_filter_cubic (FilterCubicImageVie
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.Format (Format(..))
 import Vulkan.Core10.DeviceInitialization (FormatProperties)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_image_format_list (ImageFormatListCreateInfo)
 import Vulkan.Core10.DeviceInitialization (ImageFormatProperties)
@@ -229,10 +232,7 @@ import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.SparseResourceMemoryManagement (SparseImageFormatProperties)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_texture_gather_bias_lod (TextureLODGatherFormatPropertiesAMD)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_FORMAT_PROPERTIES_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2))
@@ -437,7 +437,7 @@ foreign import ccall
 -- 'ImageFormatProperties2', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceImageFormatInfo2'
 getPhysicalDeviceImageFormatProperties2 :: forall a b io
-                                         . (Extendss PhysicalDeviceImageFormatInfo2 a, Extendss ImageFormatProperties2 b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                                         . (Extendss PhysicalDeviceImageFormatInfo2 a, PokeChain a, Extendss ImageFormatProperties2 b, PokeChain b, PeekChain b, MonadIO io)
                                         => -- | @physicalDevice@ is the physical device from which to query the image
                                            -- capabilities.
                                            PhysicalDevice
@@ -667,7 +667,7 @@ deriving instance Generic (PhysicalDeviceFeatures2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (PhysicalDeviceFeatures2 es)
 
 instance Extensible PhysicalDeviceFeatures2 where
-  extensibleType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
+  extensibleTypeName = "PhysicalDeviceFeatures2"
   setNext x next = x{next = next}
   getNext PhysicalDeviceFeatures2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceFeatures2 e => b) -> Maybe b
@@ -871,7 +871,7 @@ deriving instance Generic (PhysicalDeviceProperties2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (PhysicalDeviceProperties2 es)
 
 instance Extensible PhysicalDeviceProperties2 where
-  extensibleType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
+  extensibleTypeName = "PhysicalDeviceProperties2"
   setNext x next = x{next = next}
   getNext PhysicalDeviceProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceProperties2 e => b) -> Maybe b
@@ -990,7 +990,7 @@ deriving instance Generic (FormatProperties2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (FormatProperties2 es)
 
 instance Extensible FormatProperties2 where
-  extensibleType = STRUCTURE_TYPE_FORMAT_PROPERTIES_2
+  extensibleTypeName = "FormatProperties2"
   setNext x next = x{next = next}
   getNext FormatProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FormatProperties2 e => b) -> Maybe b
@@ -1090,7 +1090,7 @@ deriving instance Generic (ImageFormatProperties2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (ImageFormatProperties2 es)
 
 instance Extensible ImageFormatProperties2 where
-  extensibleType = STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2
+  extensibleTypeName = "ImageFormatProperties2"
   setNext x next = x{next = next}
   getNext ImageFormatProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageFormatProperties2 e => b) -> Maybe b
@@ -1245,7 +1245,7 @@ deriving instance Generic (PhysicalDeviceImageFormatInfo2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (PhysicalDeviceImageFormatInfo2 es)
 
 instance Extensible PhysicalDeviceImageFormatInfo2 where
-  extensibleType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2
+  extensibleTypeName = "PhysicalDeviceImageFormatInfo2"
   setNext x next = x{next = next}
   getNext PhysicalDeviceImageFormatInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceImageFormatInfo2 e => b) -> Maybe b
@@ -1340,7 +1340,7 @@ deriving instance Generic (QueueFamilyProperties2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (QueueFamilyProperties2 es)
 
 instance Extensible QueueFamilyProperties2 where
-  extensibleType = STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2
+  extensibleTypeName = "QueueFamilyProperties2"
   setNext x next = x{next = next}
   getNext QueueFamilyProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends QueueFamilyProperties2 e => b) -> Maybe b
@@ -1417,7 +1417,7 @@ deriving instance Generic (PhysicalDeviceMemoryProperties2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (PhysicalDeviceMemoryProperties2 es)
 
 instance Extensible PhysicalDeviceMemoryProperties2 where
-  extensibleType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2
+  extensibleTypeName = "PhysicalDeviceMemoryProperties2"
   setNext x next = x{next = next}
   getNext PhysicalDeviceMemoryProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceMemoryProperties2 e => b) -> Maybe b

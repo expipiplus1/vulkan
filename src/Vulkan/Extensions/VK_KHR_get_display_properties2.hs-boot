@@ -154,9 +154,10 @@ module Vulkan.Extensions.VK_KHR_get_display_properties2  ( DisplayModeProperties
                                                          , DisplayProperties2KHR
                                                          ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data DisplayModeProperties2KHR
 
 instance ToCStruct DisplayModeProperties2KHR

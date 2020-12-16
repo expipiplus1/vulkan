@@ -170,9 +170,10 @@ module Vulkan.Extensions.VK_EXT_vertex_attribute_divisor  ( PhysicalDeviceVertex
                                                           , VertexInputBindingDivisorDescriptionEXT
                                                           ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceVertexAttributeDivisorFeaturesEXT
 
 instance ToCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT

@@ -376,9 +376,10 @@ module Vulkan.Extensions.VK_KHR_surface  ( SurfaceCapabilitiesKHR
                                          , PresentModeKHR
                                          ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data SurfaceCapabilitiesKHR
 
 instance ToCStruct SurfaceCapabilitiesKHR

@@ -11,13 +11,13 @@ import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Vulkan.Zero (Zero)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
-import Vulkan.Zero (Zero)
 type SamplerCreateFlags = SamplerCreateFlagBits
 
 -- | VkSamplerCreateFlagBits - Bitmask specifying additional parameters of

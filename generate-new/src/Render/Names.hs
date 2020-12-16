@@ -27,6 +27,7 @@ data RenderedNames = RenderedNames
   , rnEnums                  :: HashSet HName
   , rnNonDispatchableHandles :: HashSet HName
   , rnDispatchableHandles    :: HashSet HName
+  , rnAtoms                  :: HashSet HName
   , rnResolveAlias           :: HName -> HName
   }
 
@@ -37,6 +38,7 @@ instance Semigroup RenderedNames where
     , rnEnums                  = concatBoth rnEnums
     , rnNonDispatchableHandles = concatBoth rnNonDispatchableHandles
     , rnDispatchableHandles    = concatBoth rnDispatchableHandles
+    , rnAtoms                  = concatBoth rnAtoms
     , rnResolveAlias           = appEndo (concatBoth (Endo . rnResolveAlias))
     }
    where
@@ -44,9 +46,9 @@ instance Semigroup RenderedNames where
     concatBoth f = f rn1 <> f rn2
 
 instance Monoid RenderedNames where
-  mempty = RenderedNames mempty mempty mempty mempty mempty id
+  mempty = RenderedNames mempty mempty mempty mempty mempty mempty id
 
-specRenderedNames :: HasRenderParams r => Spec -> Sem r RenderedNames
+specRenderedNames :: HasRenderParams r => Spec t -> Sem r RenderedNames
 specRenderedNames Spec {..} = do
   RenderParams {..} <- input
   let
@@ -61,6 +63,7 @@ specRenderedNames Spec {..} = do
     (dispHandles, nonDispHandles) =
       partition ((== Dispatchable) . hDispatchable) $ toList specHandles
     rnDispatchableHandles = Set.fromList (mkTyName . hName <$> dispHandles)
+    rnAtoms = Set.fromList (mkTyName . atName <$> toList specAtoms)
     rnNonDispatchableHandles =
       Set.fromList (mkTyName . hName <$> nonDispHandles)
     aliasMap = Map.fromList
@@ -79,7 +82,7 @@ specRenderedNames Spec {..} = do
   pure RenderedNames { .. }
 
 withRenderedNames
-  :: HasRenderParams r => Spec -> Sem (Input RenderedNames ': r) a -> Sem r a
+  :: HasRenderParams r => Spec t -> Sem (Input RenderedNames ': r) a -> Sem r a
 withRenderedNames spec a = do
   rns <- specRenderedNames spec
   runInputConst rns a
@@ -100,7 +103,11 @@ isNewtype :: HasRenderedNames r => HName -> Sem r Bool
 isNewtype n = do
   RenderedNames {..} <- input
   let n' = rnResolveAlias n
-  pure (Set.member n' rnNonDispatchableHandles || Set.member n' rnEnums)
+  pure
+    (  Set.member n' rnNonDispatchableHandles
+    || Set.member n' rnEnums
+    || Set.member n' rnAtoms
+    )
 
 getResolveAlias :: HasRenderedNames r => Sem r (HName -> HName)
 getResolveAlias = rnResolveAlias <$> input

@@ -36,6 +36,11 @@ import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import qualified Data.Vector (null)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -83,8 +88,6 @@ import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Format (Format)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (FragmentShadingRateAttachmentInfoKHR)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.CStruct.Extends (PeekChain)
@@ -106,10 +109,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.SubpassContents (SubpassContents)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve (SubpassDescriptionDepthStencilResolve)
 import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlags)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2))
@@ -853,7 +853,7 @@ deriving instance Generic (AttachmentDescription2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (AttachmentDescription2 es)
 
 instance Extensible AttachmentDescription2 where
-  extensibleType = STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2
+  extensibleTypeName = "AttachmentDescription2"
   setNext x next = x{next = next}
   getNext AttachmentDescription2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AttachmentDescription2 e => b) -> Maybe b
@@ -1013,7 +1013,7 @@ deriving instance Generic (AttachmentReference2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (AttachmentReference2 es)
 
 instance Extensible AttachmentReference2 where
-  extensibleType = STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2
+  extensibleTypeName = "AttachmentReference2"
   setNext x next = x{next = next}
   getNext AttachmentReference2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AttachmentReference2 e => b) -> Maybe b
@@ -1323,7 +1323,7 @@ deriving instance Generic (SubpassDescription2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (SubpassDescription2 es)
 
 instance Extensible SubpassDescription2 where
-  extensibleType = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2
+  extensibleTypeName = "SubpassDescription2"
   setNext x next = x{next = next}
   getNext SubpassDescription2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassDescription2 e => b) -> Maybe b
@@ -1396,15 +1396,15 @@ instance (Extendss SubpassDescription2 es, PeekChain es) => FromCStruct (Subpass
     pipelineBindPoint <- peek @PipelineBindPoint ((p `plusPtr` 20 :: Ptr PipelineBindPoint))
     viewMask <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     inputAttachmentCount <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
-    pInputAttachments <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 32 :: Ptr (Ptr (AttachmentReference2 a))))
+    pInputAttachments <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 32 :: Ptr (Ptr (AttachmentReference2 _))))
     pInputAttachments' <- generateM (fromIntegral inputAttachmentCount) (\i -> peekSomeCStruct (forgetExtensions ((pInputAttachments `advancePtrBytes` (32 * (i)) :: Ptr (AttachmentReference2 _)))))
     colorAttachmentCount <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
-    pColorAttachments <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 48 :: Ptr (Ptr (AttachmentReference2 a))))
+    pColorAttachments <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 48 :: Ptr (Ptr (AttachmentReference2 _))))
     pColorAttachments' <- generateM (fromIntegral colorAttachmentCount) (\i -> peekSomeCStruct (forgetExtensions ((pColorAttachments `advancePtrBytes` (32 * (i)) :: Ptr (AttachmentReference2 _)))))
-    pResolveAttachments <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 56 :: Ptr (Ptr (AttachmentReference2 a))))
+    pResolveAttachments <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 56 :: Ptr (Ptr (AttachmentReference2 _))))
     let pResolveAttachmentsLength = if pResolveAttachments == nullPtr then 0 else (fromIntegral colorAttachmentCount)
     pResolveAttachments' <- generateM pResolveAttachmentsLength (\i -> peekSomeCStruct (forgetExtensions ((pResolveAttachments `advancePtrBytes` (32 * (i)) :: Ptr (AttachmentReference2 _)))))
-    pDepthStencilAttachment <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 64 :: Ptr (Ptr (AttachmentReference2 a))))
+    pDepthStencilAttachment <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 64 :: Ptr (Ptr (AttachmentReference2 _))))
     pDepthStencilAttachment' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pDepthStencilAttachment
     preserveAttachmentCount <- peek @Word32 ((p `plusPtr` 72 :: Ptr Word32))
     pPreserveAttachments <- peek @(Ptr Word32) ((p `plusPtr` 80 :: Ptr (Ptr Word32)))
@@ -1896,7 +1896,7 @@ deriving instance Generic (RenderPassCreateInfo2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (RenderPassCreateInfo2 es)
 
 instance Extensible RenderPassCreateInfo2 where
-  extensibleType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2
+  extensibleTypeName = "RenderPassCreateInfo2"
   setNext x next = x{next = next}
   getNext RenderPassCreateInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassCreateInfo2 e => b) -> Maybe b
@@ -1954,10 +1954,10 @@ instance (Extendss RenderPassCreateInfo2 es, PeekChain es) => FromCStruct (Rende
     next <- peekChain (castPtr pNext)
     flags <- peek @RenderPassCreateFlags ((p `plusPtr` 16 :: Ptr RenderPassCreateFlags))
     attachmentCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
-    pAttachments <- peek @(Ptr (AttachmentDescription2 _)) ((p `plusPtr` 24 :: Ptr (Ptr (AttachmentDescription2 a))))
+    pAttachments <- peek @(Ptr (AttachmentDescription2 _)) ((p `plusPtr` 24 :: Ptr (Ptr (AttachmentDescription2 _))))
     pAttachments' <- generateM (fromIntegral attachmentCount) (\i -> peekSomeCStruct (forgetExtensions ((pAttachments `advancePtrBytes` (56 * (i)) :: Ptr (AttachmentDescription2 _)))))
     subpassCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
-    pSubpasses <- peek @(Ptr (SubpassDescription2 _)) ((p `plusPtr` 40 :: Ptr (Ptr (SubpassDescription2 a))))
+    pSubpasses <- peek @(Ptr (SubpassDescription2 _)) ((p `plusPtr` 40 :: Ptr (Ptr (SubpassDescription2 _))))
     pSubpasses' <- generateM (fromIntegral subpassCount) (\i -> peekSomeCStruct (forgetExtensions ((pSubpasses `advancePtrBytes` (88 * (i)) :: Ptr (SubpassDescription2 _)))))
     dependencyCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     pDependencies <- peek @(Ptr SubpassDependency2) ((p `plusPtr` 56 :: Ptr (Ptr SubpassDependency2)))

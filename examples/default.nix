@@ -1,6 +1,7 @@
 { pkgs ? import ../nix/nixpkgs.nix, compiler ? null
 , forShell ? pkgs.lib.inNixShell, hoogle ? forShell, withSwiftshader ? false
-, buildProfiling ? false, buildInstrumented ? false, safeVulkanFFI ? false }:
+, buildProfiling ? false, buildInstrumented ? false, safeVulkanFFI ? false
+, withOpenXR ? true }:
 
 let
   haskellPackages = import ../nix/haskell-packages.nix {
@@ -11,6 +12,7 @@ in if forShell then
     packages = p: [ p.vulkan-examples ];
     buildInputs = with pkgs;
       [ vulkan-tools-lunarg vulkan-validation-layers shaderc ]
+      ++ pkgs.lib.optional withOpenXR libglvnd
       ++ pkgs.lib.optional withSwiftshader vulkan-extension-layer
       ++ pkgs.lib.optional buildProfiling [
         haskellPackages.eventlog2html

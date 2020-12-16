@@ -1,7 +1,8 @@
 {-# language TemplateHaskellQuotes #-}
 {-# language QuasiQuotes #-}
 module Render.Dynamic
-  where
+  ( renderDynamicLoader
+  ) where
 
 import qualified Data.List.Extra               as List
 import           Data.Text.Prettyprint.Doc
@@ -21,7 +22,10 @@ import           Foreign.Ptr
 import           GHC.Ptr
 
 import qualified CType                         as C
+import           Control.Exception              ( throwIO )
 import           Error
+import           Foreign.Marshal                ( alloca )
+import           Foreign.Storable               ( Storable )
 import           Haskell                       as H
 import           Haskell.Name                   ( )
 import           Marshal
@@ -31,16 +35,16 @@ import           Render.SpecInfo
 import           Render.Type
 import           Render.Utils
 import           Spec.Parse
-import           VkModulePrefix
 
 renderDynamicLoader
   :: (HasErr r, HasRenderParams r, HasTypeInfo r, HasSpecInfo r)
-  => Vector MarshaledCommand
+  => SpecFlavor
+  -> Vector MarshaledCommand
   -> Sem r RenderElement
-renderDynamicLoader cs = do
+renderDynamicLoader t cs = do
   RenderParams {..} <- input
   genRe "dynamic loader" $ do
-    tellExplicitModule (vulkanModule ["Dynamic"])
+    tellExplicitModule =<< mkModuleName ["Dynamic"]
     tellLanguageExtension (LanguageExtension "NoDuplicateRecordFields")
     tellNotReexportable
     enabledCommands <- V.filterM
@@ -50,25 +54,33 @@ renderDynamicLoader cs = do
                                 enabledCommands
     instanceCommands <- V.filterM (fmap (== Instance) . getCommandLevel)
                                   enabledCommands
-    loader "Instance"
-           (ConT ''Ptr :@ ConT (typeName (mkEmptyDataName "VkInstance")))
-           instanceCommands
-    writeGetInstanceProcAddr
-    writeInitInstanceCmds instanceCommands
-    loader "device"
-           (ConT ''Ptr :@ ConT (typeName (mkEmptyDataName "VkDevice")))
-           deviceCommands
-    writeMkGetDeviceProcAddr
-    writeInitDeviceCmds deviceCommands
 
-getCommandLevel
-  :: HasSpecInfo r => MarshaledCommand -> Sem r HandleLevel
+    unless (null instanceCommands) $ do
+      loader
+        "Instance"
+        (ConT ''Ptr :@ ConT
+          (typeName (mkEmptyDataName (CName $ camelPrefix <> "Instance")))
+        )
+        instanceCommands
+      writeGetInstanceProcAddr t
+      writeInitInstanceCmds instanceCommands
+
+    unless (null deviceCommands) $ do
+      loader
+        "device"
+        (ConT ''Ptr :@ ConT
+          (typeName (mkEmptyDataName (CName $ camelPrefix <> "Device")))
+        )
+        deviceCommands
+      writeMkGetDeviceProcAddr
+      writeInitDeviceCmds deviceCommands
+
+getCommandLevel :: HasSpecInfo r => MarshaledCommand -> Sem r HandleLevel
 getCommandLevel MarshaledCommand { mcCommand = Command {..} } =
   case cParameters of
-    Parameter { pType = C.TypeName n } :<| _ ->
-      getHandle n >>= \case
-        Just h  -> pure $ hLevel h
-        Nothing -> pure NoHandleLevel
+    Parameter { pType = C.TypeName n } :<| _ -> getHandle n >>= \case
+      Just h  -> pure $ hLevel h
+      Nothing -> pure NoHandleLevel
     _ -> pure NoHandleLevel
 
 loader
@@ -134,12 +146,15 @@ writeInitInstanceCmds instanceCommands = do
   RenderParams {..} <- input
   let n = mkFunName "initInstanceCmds"
   tDoc <- renderTypeSource
-    (  (ConT ''Ptr :@ ConT (typeName (mkEmptyDataName "VkInstance")))
+    (  (ConT ''Ptr :@ ConT
+         (typeName (mkEmptyDataName (CName $ camelPrefix <> "Instance")))
+       )
     ~> (ConT ''IO :@ ConT (typeName (mkTyName "InstanceCmds")))
     )
   tellImport 'castFunPtr
   tellImport 'nullFunPtr
-  let getInstanceProcAddr'     = mkFunName "vkGetInstanceProcAddr'"
+  let getInstanceProcAddr' =
+        mkFunName (CName $ lowerPrefix <> "GetInstanceProcAddr'")
       getFirstInstanceProcAddr = "getFirstInstanceProcAddr" :: Text
   (binds, apps) <- initCmdsStmts (pretty getFirstInstanceProcAddr)
                                  (pretty getInstanceProcAddr')
@@ -174,27 +189,30 @@ writeInitDeviceCmds deviceCommands = do
   let n = mkFunName "initDeviceCmds"
   tDoc <- renderTypeSource
     (  ConT (typeName (mkTyName "InstanceCmds"))
-    ~> (ConT ''Ptr :@ ConT (typeName (mkEmptyDataName "VkDevice")))
+    ~> (ConT ''Ptr :@ ConT
+         (typeName (mkEmptyDataName (CName $ camelPrefix <> "Device")))
+       )
     ~> (ConT ''IO :@ ConT (typeName (mkTyName "DeviceCmds")))
     )
   tellImport 'castFunPtr
   tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
   getDeviceProcAddrTDoc <- do
-    c <- maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
-      =<< getCommand "vkGetDeviceProcAddr"
+    c <- maybe (throw "Unable to find GetDeviceProcAddr command") pure
+      =<< getCommand (CName $ lowerPrefix <> "GetDeviceProcAddr")
     renderTypeHighPrecSource =<< cToHsTypeWrapped DoLower (commandType c)
   let getFirstDeviceProcAddr = "getFirstDeviceProcAddr" :: Text
   (binds, apps) <- initCmdsStmts (pretty getFirstDeviceProcAddr)
                                  "getDeviceProcAddr'"
                                  deviceCommands
   tellExport (ETerm n)
-  let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'"
+  let getInstanceProcAddr' =
+        mkFunName (CName $ lowerPrefix <> "GetInstanceProcAddr'")
   tellDoc [qqi|
     {n} :: {tDoc}
     {n} instanceCmds handle = do
       pGetDeviceProcAddr <- castFunPtr @_ @{getDeviceProcAddrTDoc}
-          <$> {getInstanceProcAddr'} (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr"#)
-      let getDeviceProcAddr' = mkVkGetDeviceProcAddr pGetDeviceProcAddr
+          <$> {getInstanceProcAddr'} (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "{lowerPrefix}GetDeviceProcAddr"#)
+      let getDeviceProcAddr' = mk{camelPrefix}GetDeviceProcAddr pGetDeviceProcAddr
           {getFirstDeviceProcAddr} = \\case
             []   -> pure nullFunPtr
             x:xs -> do
@@ -224,7 +242,8 @@ initCmdsStmts getFirstProcAddr getProcAddr commands = do
   tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
   let binds = commands <&> \MarshaledCommand { mcCommand = Command {..} } ->
         let otherNames = siGetAliases cName
-            nameString name = parens $ "Ptr \"" <> pretty (unCName name) <> "\"#"
+            nameString name =
+              parens $ "Ptr \"" <> pretty (unCName name) <> "\"#"
             nameStrings names = list (nameString <$> names)
         in  case otherNames of
               [] ->
@@ -255,24 +274,56 @@ writeGetInstanceProcAddr
      , MemberWithError (State RenderElement) r
      , HasRenderParams r
      )
-  => Sem r ()
-writeGetInstanceProcAddr = do
+  => SpecFlavor
+  -> Sem r ()
+writeGetInstanceProcAddr t = do
   RenderParams {..} <- input
-  c <- maybe (throw "Unable to find vkGetInstanceProcAddr command") pure
-    =<< getCommand "vkGetInstanceProcAddr"
+  c <- maybe (throw "Unable to find GetInstanceProcAddr command") pure
+    =<< getCommand (CName $ lowerPrefix <> "GetInstanceProcAddr")
   ty   <- cToHsTypeWrapped DoLower (commandType c)
   tDoc <- renderTypeSource ty
-  let n = mkFunName "vkGetInstanceProcAddr'"
+  let n = mkFunName (CName $ lowerPrefix <> "GetInstanceProcAddr'")
   tellExport (ETerm n)
-  tellDoc [qqi|
-    -- | A version of '{mkFunName "vkGetInstanceProcAddr"}' which can be called
-    -- with a null pointer for the instance.
-    foreign import ccall
-    #if !defined(SAFE_FOREIGN_CALLS)
-      unsafe
-    #endif
-      "vkGetInstanceProcAddr" {n} :: {tDoc}
-  |]
+  case t of
+    SpecVk -> tellDoc [qqi|
+        -- | A version of '{mkFunName (CName $ lowerPrefix <> "GetInstanceProcAddr")}' which can be called
+        -- with a null pointer for the instance.
+        foreign import ccall
+        #if !defined(SAFE_FOREIGN_CALLS)
+          unsafe
+        #endif
+          "{lowerPrefix}GetInstanceProcAddr" {n} :: {tDoc}
+      |]
+    SpecXr -> do
+      tellImportWithAll ''Storable
+      tellImportWithAll (mkTyName "XrResult")
+      tellImport 'alloca
+      tellImport 'throwIO
+      let succeeded   = mkPatternName "XR_SUCCEEDED"
+          unsupported = mkPatternName "XR_ERROR_FUNCTION_UNSUPPORTED"
+          failed      = mkPatternName "XR_FAILED"
+      tellImport succeeded
+      tellImport unsupported
+      tellImport failed
+      tellImportWithAll exceptionTypeName
+      tellDoc [qqi|
+        foreign import ccall
+        #if !defined(SAFE_FOREIGN_CALLS)
+          unsafe
+        #endif
+          "{lowerPrefix}GetInstanceProcAddr" {n}' :: {tDoc}
+
+        -- | A version of '{mkFunName (CName $ lowerPrefix <> "GetInstanceProcAddr")}' which can be called
+        -- with a null pointer for the instance.
+        {n}
+          :: Ptr Instance_T -> ("name" ::: Ptr CChar) -> IO PFN_xrVoidFunction
+        {n} inst name = do
+          alloca $ \\r -> {n}' inst name r >>= \\case
+            {succeeded}                  -> peek r
+            {unsupported}                -> pure nullFunPtr
+            e@{failed}                   -> throwIO ({exceptionTypeName} e)
+
+      |]
 
 writeMkGetDeviceProcAddr
   :: ( HasTypeInfo r
@@ -283,8 +334,9 @@ writeMkGetDeviceProcAddr
      )
   => Sem r ()
 writeMkGetDeviceProcAddr = do
-  c <- maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
-    =<< getCommand "vkGetDeviceProcAddr"
+  RenderParams {..} <- input
+  c <- maybe (throw "Unable to find GetDeviceProcAddr command") pure
+    =<< getCommand (CName $ lowerPrefix <> "GetDeviceProcAddr")
   ty   <- cToHsTypeWrapped DoLower (commandType c)
   tDoc <- renderTypeSource (ConT ''FunPtr :@ ty ~> ty)
   tellDoc [qqi|
@@ -292,7 +344,7 @@ writeMkGetDeviceProcAddr = do
     #if !defined(SAFE_FOREIGN_CALLS)
       unsafe
     #endif
-      "dynamic" mkVkGetDeviceProcAddr
+      "dynamic" mk{camelPrefix}GetDeviceProcAddr
       :: {tDoc}
   |]
 

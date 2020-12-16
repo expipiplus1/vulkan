@@ -9,13 +9,13 @@ module Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2  ( AttachmentDescri
                                                               , SubpassEndInfo
                                                               ) where
 
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
-import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-import Vulkan.CStruct (ToCStruct)
 type role AttachmentDescription2 nominal
 data AttachmentDescription2 (es :: [Type])
 

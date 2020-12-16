@@ -4,9 +4,10 @@ module Vulkan.Core12.Promoted_From_VK_KHR_driver_properties  ( ConformanceVersio
                                                              , PhysicalDeviceDriverProperties
                                                              ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ConformanceVersion
 
 instance ToCStruct ConformanceVersion

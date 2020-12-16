@@ -53,6 +53,11 @@ import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import qualified Data.Vector (null)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -96,8 +101,6 @@ import Vulkan.Core10.Handles (Framebuffer)
 import Vulkan.Core10.Handles (Framebuffer(..))
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (FramebufferAttachmentsCreateInfo)
 import Vulkan.Core10.Enums.FramebufferCreateFlagBits (FramebufferCreateFlags)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.Handles (ImageView)
 import Vulkan.CStruct.Extends (PeekChain)
@@ -118,10 +121,7 @@ import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlags)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
@@ -1941,7 +1941,7 @@ deriving instance Generic (RenderPassCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (RenderPassCreateInfo es)
 
 instance Extensible RenderPassCreateInfo where
-  extensibleType = STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
+  extensibleTypeName = "RenderPassCreateInfo"
   setNext x next = x{next = next}
   getNext RenderPassCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassCreateInfo e => b) -> Maybe b
@@ -2541,7 +2541,7 @@ deriving instance Generic (FramebufferCreateInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (FramebufferCreateInfo es)
 
 instance Extensible FramebufferCreateInfo where
-  extensibleType = STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
+  extensibleTypeName = "FramebufferCreateInfo"
   setNext x next = x{next = next}
   getNext FramebufferCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FramebufferCreateInfo e => b) -> Maybe b

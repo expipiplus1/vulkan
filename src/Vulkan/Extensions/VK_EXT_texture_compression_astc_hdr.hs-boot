@@ -142,9 +142,10 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr  (PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT

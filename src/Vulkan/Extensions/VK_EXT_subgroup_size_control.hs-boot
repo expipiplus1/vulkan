@@ -166,9 +166,10 @@ module Vulkan.Extensions.VK_EXT_subgroup_size_control  ( PhysicalDeviceSubgroupS
                                                        , PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
                                                        ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceSubgroupSizeControlFeaturesEXT
 
 instance ToCStruct PhysicalDeviceSubgroupSizeControlFeaturesEXT

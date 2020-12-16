@@ -3,18 +3,18 @@ module Documentation.RunAsciiDoctor
   , main
   ) where
 
-import           Relude
 import qualified Data.List                     as L
 import qualified Data.Text                     as T
 import qualified Data.Text.Lazy                as T
                                                 ( toStrict )
--- import           Data.Text.Lazy.Encoding
+import           Relude
 import           Say
+import           Spec.Flavor
+import           System.Directory
 import           System.Environment
 import           System.Exit
 import           System.FilePath
 import           System.Process.Typed
-import           System.Directory
 
 -- | Convert a man page from the Vulkan-Docs repo into docbook format using
 -- 'asciidoctor'
@@ -22,7 +22,8 @@ import           System.Directory
 -- This function also applies a few fixes to the output to make it more
 -- friendly for Pandoc.
 manTxtToDocbook
-  :: [Text]
+  :: SpecFlavor
+  -> [Text]
   -- ^ A list of extension names to enable
   -> FilePath
   -- ^ The 'Vulkan-Docs' directory, necessary to find plugins
@@ -30,18 +31,19 @@ manTxtToDocbook
   -- ^ The path to the man page to translate
   -> IO (Either Text Text)
   -- ^ Either an error if something went wrong, or the docbook xml
-manTxtToDocbook extensions vkPath manTxt =
-  fmap fixupDocbookOutput <$> asciidoctor extensions vkPath manTxt
+manTxtToDocbook specFlavor extensions vkPath manTxt =
+  fmap fixupDocbookOutput <$> asciidoctor specFlavor extensions vkPath manTxt
 
 asciidoctor
-  :: [Text]
+  :: SpecFlavor
+  -> [Text]
   -- ^ Extension names
   -> FilePath
   -- ^ The 'Vulkan-Docs' directory, necessary to find plugins
   -> FilePath
   -- ^ The path to the man page to translate
   -> IO (Either Text Text)
-asciidoctor extensions vkPathRelative manTxt = do
+asciidoctor specFlavor extensions vkPathRelative manTxt = do
   vkPath <- makeAbsolute vkPathRelative
   let
     asciidoctorPath = "asciidoctor"
@@ -68,12 +70,14 @@ asciidoctor extensions vkPathRelative manTxt = do
       ]
 
     noteOpts = []
-    adocExts =
-      [ "-r"
-      , vkPath </> "config/spec-macros.rb"
-      , "-r"
-      , vkPath </> "config/tilde_open_block.rb"
-      ]
+    adocExts = case specFlavor of
+      SpecVk ->
+        [ "-r"
+        , vkPath </> "config/spec-macros.rb"
+        , "-r"
+        , vkPath </> "config/tilde_open_block.rb"
+        ]
+      SpecXr -> ["-r", vkPath </> "scripts/openxr-macros.rb"]
     adocOpts           = attribOpts ++ noteOpts ++ adocExts
     mathAsInlineImages = False
     mathemeticalOpts   = if mathAsInlineImages
@@ -132,9 +136,13 @@ replaceTag needle maybeAttr replacement =
 
 main :: IO ()
 main = do
-  [d, m] <- getArgs
-  manTxtToDocbook [] d m >>= \case
-    Left  e -> sayErr e
+  [flavor, d, m] <- getArgs
+  let f = case flavor of
+        "vk" -> SpecVk
+        "xr" -> SpecXr
+        _    -> error "invalid flavor"
+  manTxtToDocbook f [] d m >>= \case
+    Left  e  -> sayErr e
     Right d' -> say d'
 
 -- | @preceedAll x xs@ inserts @x@ before every element in @xs@

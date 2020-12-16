@@ -164,9 +164,10 @@ module Vulkan.Extensions.VK_NV_representative_fragment_test  ( PhysicalDeviceRep
                                                              , PipelineRepresentativeFragmentTestStateCreateInfoNV
                                                              ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceRepresentativeFragmentTestFeaturesNV
 
 instance ToCStruct PhysicalDeviceRepresentativeFragmentTestFeaturesNV

@@ -30,6 +30,11 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -64,8 +69,6 @@ import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Handles (Fence)
 import Vulkan.Core10.Handles (Fence(..))
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PerformanceQuerySubmitInfoKHR)
@@ -83,12 +86,9 @@ import Vulkan.Core10.Handles (Semaphore)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_win32_keyed_mutex (Win32KeyedMutexAcquireReleaseInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_win32_keyed_mutex (Win32KeyedMutexAcquireReleaseInfoNV)
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBMIT_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(..))
@@ -424,8 +424,7 @@ foreign import ccall
 -- | queueWaitIdle with selectable safeness
 queueWaitIdleSafeOrUnsafe :: forall io
                            . (MonadIO io)
-                          => -- No documentation found for TopLevel ""
-                             (FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result)
+                          => (FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result)
                           -> -- | @queue@ is the queue on which to wait.
                              Queue
                           -> io ()
@@ -510,8 +509,7 @@ foreign import ccall
 -- | deviceWaitIdle with selectable safeness
 deviceWaitIdleSafeOrUnsafe :: forall io
                             . (MonadIO io)
-                           => -- No documentation found for TopLevel ""
-                              (FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result)
+                           => (FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result)
                            -> -- | @device@ is the logical device to idle.
                               Device
                            -> io ()
@@ -780,7 +778,7 @@ deriving instance Generic (SubmitInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (SubmitInfo es)
 
 instance Extensible SubmitInfo where
-  extensibleType = STRUCTURE_TYPE_SUBMIT_INFO
+  extensibleTypeName = "SubmitInfo"
   setNext x next = x{next = next}
   getNext SubmitInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubmitInfo e => b) -> Maybe b

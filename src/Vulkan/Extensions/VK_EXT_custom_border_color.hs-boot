@@ -249,9 +249,10 @@ module Vulkan.Extensions.VK_EXT_custom_border_color  ( PhysicalDeviceCustomBorde
                                                      , SamplerCustomBorderColorCreateInfoEXT
                                                      ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceCustomBorderColorFeaturesEXT
 
 instance ToCStruct PhysicalDeviceCustomBorderColorFeaturesEXT

@@ -27,6 +27,11 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -57,8 +62,6 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Image)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (ImagePlaneMemoryRequirementsInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation (MemoryDedicatedRequirements)
@@ -70,9 +73,6 @@ import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.SparseResourceMemoryManagement (SparseImageMemoryRequirements)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2))
@@ -138,7 +138,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'ImageMemoryRequirementsInfo2',
 -- 'MemoryRequirements2'
 getImageMemoryRequirements2 :: forall a b io
-                             . (Extendss ImageMemoryRequirementsInfo2 a, Extendss MemoryRequirements2 b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                             . (Extendss ImageMemoryRequirementsInfo2 a, PokeChain a, Extendss MemoryRequirements2 b, PokeChain b, PeekChain b, MonadIO io)
                             => -- | @device@ is the logical device that owns the image.
                                --
                                -- #VUID-vkGetImageMemoryRequirements2-device-parameter# @device@ /must/ be
@@ -354,7 +354,7 @@ deriving instance Generic (ImageMemoryRequirementsInfo2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (ImageMemoryRequirementsInfo2 es)
 
 instance Extensible ImageMemoryRequirementsInfo2 where
-  extensibleType = STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2
+  extensibleTypeName = "ImageMemoryRequirementsInfo2"
   setNext x next = x{next = next}
   getNext ImageMemoryRequirementsInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageMemoryRequirementsInfo2 e => b) -> Maybe b
@@ -485,7 +485,7 @@ deriving instance Generic (MemoryRequirements2 (es :: [Type]))
 deriving instance Show (Chain es) => Show (MemoryRequirements2 es)
 
 instance Extensible MemoryRequirements2 where
-  extensibleType = STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2
+  extensibleTypeName = "MemoryRequirements2"
   setNext x next = x{next = next}
   getNext MemoryRequirements2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends MemoryRequirements2 e => b) -> Maybe b

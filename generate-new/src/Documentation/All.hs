@@ -2,38 +2,40 @@ module Documentation.All
   ( loadAllDocumentation
   ) where
 
-import           Relude
-import qualified Data.Text.Extra               as T
-import           Control.Monad.Except
-import qualified Data.Map                      as Map
-import           Data.Text.Extra                ( (<+>) )
-import           Say
-import           System.FilePath
-import           System.Directory
-import qualified Data.List                     as List
 import           Control.Concurrent.Async.Pool
+import           Control.Monad.Except
+import qualified Data.List                     as List
+import qualified Data.Map                      as Map
+import qualified Data.Text.Extra               as T
+import           Data.Text.Extra                ( (<+>) )
+import           GHC.Conc                       ( numCapabilities )
+import           Relude
+import           Say
 import           System.Console.AsciiProgress   ( Options(..)
-                                                , displayConsoleRegions
                                                 , def
+                                                , displayConsoleRegions
                                                 , newProgressBar
                                                 , tick
                                                 )
-import           GHC.Conc                       ( numCapabilities )
+import           System.Directory
+import           System.FilePath
 
 import           Documentation
 import           Documentation.RunAsciiDoctor
+import           Spec.Flavor
 
 -- | Creat a function which can be used to query for documentation
 -- Might take a few seconds to run, as vulkan has lots of documentation.
 loadAllDocumentation
-  :: [Text]
+  :: SpecFlavor
+  -> [Text]
   -- ^ List of extensions
   -> FilePath
   -- ^ Path to the 'Vulkan-Docs' directory
   -> FilePath
   -- ^ Directory where the documentation ".txt" (asciidoc) files are located
   -> IO (Documentee -> Maybe Documentation)
-loadAllDocumentation extensions vkDocs manDir = do
+loadAllDocumentation specFlavor extensions vkDocs manDir = do
   let notDocs = ["apispec.txt", "copyright-ccby.txt", "footer.txt"]
   allDocs <-
     filter ((`notElem` notDocs) . takeFileName)
@@ -48,9 +50,10 @@ loadAllDocumentation extensions vkDocs manDir = do
     <+> "threads"
   (errors, documentations) <-
     partitionEithers
-      <$> withProgress numDocumentationThreads
-                       (runExceptT . loadDocumentation extensions vkDocs)
-                       allDocs
+      <$> withProgress
+            numDocumentationThreads
+            (runExceptT . loadDocumentation specFlavor extensions vkDocs)
+            allDocs
   unless (null errors) $ do
     sayErr "Errors while loading documentation:"
     traverse_ sayErr errors
@@ -59,20 +62,21 @@ loadAllDocumentation extensions vkDocs manDir = do
   pure (`Map.lookup` docMap)
 
 loadDocumentation
-  :: [Text]
+  :: SpecFlavor
+  -> [Text]
   -- ^ Extension names
   -> FilePath
   -- ^ Path to the 'Vulkan-Docs' directory
   -> FilePath
   -- ^ The asciidoc .txt file to load
   -> ExceptT Text IO [Documentation]
-loadDocumentation extensions vkDocs doc = do
-  docbook <- ExceptT $ manTxtToDocbook extensions vkDocs doc
+loadDocumentation specFlavor extensions vkDocs doc = do
+  docbook <- ExceptT $ manTxtToDocbook specFlavor extensions vkDocs doc
   let name = takeBaseName doc
   withExceptT (("Error while parsing documentation for" <+> show doc) <+>)
     . ExceptT
     . pure
-    $ docBookToDocumentation docbook (T.pack name)
+    $ docBookToDocumentation specFlavor docbook (T.pack name)
 
 ----------------------------------------------------------------
 -- Utils

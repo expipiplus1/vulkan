@@ -1,10 +1,9 @@
-module Bracket
-  where
+module Bracket where
 
+import           Data.List                      ( findIndex )
 import           Data.List.Extra                ( elemIndex
                                                 , nubOrd
                                                 )
-import           Data.List                      ( findIndex )
 import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
                                          hiding ( brackets
@@ -38,6 +37,7 @@ data Bracket = Bracket
   , bDestroyArguments    :: [Argument]
   , bDestroyIndividually :: DestroyIndividually
   , bBracketType         :: BracketType
+  , bDestroyReturnTypes  :: [Type]
   }
   deriving Show
 
@@ -71,8 +71,8 @@ data ResourceType
 
 isResource :: Argument -> Bool
 isResource = \case
-  Resource     _ _ -> True
-  _                -> False
+  Resource _ _ -> True
+  _            -> False
 
 -- | Try to generate a bracket automatically from the types of a pair of
 -- marshaled commands.
@@ -93,11 +93,11 @@ autoBracket bBracketType create destroy with = do
       bDestroy     = mcName destroy
       bInnerTypes =
         [ Normal t | beginHasReturnType, let t = mcReturn create ]
-          <> [ s
-             | MarshaledParam {..} <- toList (mcParams create)
-             , not (isElided mpScheme)
-             , Returned s <- pure mpScheme
-             ]
+        <> [ s
+           | MarshaledParam {..} <- toList (mcParams create)
+           , not (isElided mpScheme)
+           , Returned s <- pure mpScheme
+           ]
       bCreateArguments =
         [ Provided (unCName (pName mpParam)) mpScheme
         | MarshaledParam {..} <- toList (mcParams create)
@@ -111,10 +111,8 @@ autoBracket bBracketType create destroy with = do
         , not (isElided mpScheme)
         , isNegative mpScheme
         ]
-  destroyReturnTypes <- marshaledCommandReturnTypes False destroy
-  unless (null destroyReturnTypes)
-    $ throw "TODO: Bracketing functions where the destructor returns a value"
-  bDestroyArguments <- forV destroyNegativeParams $ \MarshaledParam {..} ->
+  bDestroyReturnTypes <- toList <$> marshaledCommandReturnTypes False destroy
+  bDestroyArguments   <- forV destroyNegativeParams $ \MarshaledParam {..} ->
     let
       provided             = Provided (unCName (pName mpParam)) mpScheme
       providedForCreate    = provided `elem` bCreateArguments
@@ -178,28 +176,31 @@ renderBracket paramName b@Bracket {..} =
         --
         argHsTypes <- traverseV
           (   note "argument type has no representation in a negative position"
-          <=< schemeTypeNegative
+          <=< schemeTypeNegativeIgnoreContext
           )
           [ t | Provided _ t <- arguments ]
         let argHsVars =
               [ pretty (paramName v) | Provided v _ <- arguments ]
-                <> case bBracketType of
-                     BracketCPS     -> ["b"]
-                     BracketBookend -> ["a"]
+              <> case bBracketType of
+                   BracketCPS     -> ["b"]
+                   BracketBookend -> ["a"]
         innerHsType <- do
           ts <- traverse
             (   note "Inner type has no representation in a negative position"
-            <=< schemeTypeNegative
+            <=< schemeTypeNegativeIgnoreContext
             )
             bInnerTypes
           pure $ case ts of
-                   [x] -> x
-                   _ -> foldl' (:@) (TupleT (length ts)) ts
+            [x] -> x
+            _   -> foldl' (:@) (TupleT (length ts)) ts
         let noDestructorResource = not (any isResource bDestroyArguments)
             noResource           = null bInnerTypes && noDestructorResource
             ioVar                = VarT (mkName "io")
             rVar                 = VarT (mkName "r")
-            userParamType        = case bBracketType of
+            rTy                  = case bDestroyReturnTypes of
+              [] -> rVar
+              ts -> foldl' (:@) (TupleT (length ts + 1)) (ts <> [rVar])
+            userParamType = case bBracketType of
               BracketCPS -> if noResource
                 then ioVar :@ innerHsType ~> (ioVar :@ ConT ''()) ~> rVar
                 else
@@ -211,8 +212,8 @@ renderBracket paramName b@Bracket {..} =
                 then ioVar :@ rVar
                 else innerHsType ~> ioVar :@ rVar
             returnType = case bBracketType of
-              BracketCPS     -> rVar
-              BracketBookend -> ioVar :@ rVar
+              BracketCPS     -> rTy
+              BracketBookend -> ioVar :@ rTy
 
             wrapperType = foldr (~>) returnType (argHsTypes <> [userParamType])
             bracketSuffix = bool "" "_" noResource
@@ -225,24 +226,38 @@ renderBracket paramName b@Bracket {..} =
         --
         createCall  <- renderCreate paramName b
         destroyCall <- renderDestroy paramName b
-        let
-          bracketBody =
-            pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
-              2
-              (case bBracketType of
-                BracketCPS -> "b"
-                  <+> indent 0 (vsep [parens createCall, parens destroyCall])
-                BracketBookend
-                  | noResource ->  parens createCall
-                  <+> "*> a <*"
-                  <+> parens destroyCall
-                  | otherwise -> doBlock
-                    [ "x <-" <+> createCall
-                    , "r <- a x"
-                    , parens destroyCall <+> "x"
-                    , "pure r"
-                    ]
-              )
+        bracketRHS  <- case bBracketType of
+          BracketCPS -> case bDestroyReturnTypes of
+            [] -> pure $ "b" <+> indent
+              0
+              (vsep [parens createCall, parens destroyCall])
+            _ ->
+              throw "TODO: Handle destructor return values with CPS brackets"
+          BracketBookend
+            | noResource -> pure $ case bDestroyReturnTypes of
+              [] -> parens createCall <+> "*> a <*" <+> parens destroyCall
+              _  -> doBlock
+                [createCall, "r <- a", "d <-" <+> destroyCall, "pure (d, r)"]
+            | otherwise -> pure $ case bDestroyReturnTypes of
+              [] -> doBlock
+                [ "x <-" <+> createCall
+                , "r <- a x"
+                , parens destroyCall <+> "x"
+                , "pure r"
+                ]
+              _ -> doBlock
+                [ "x <-" <+> createCall
+                , "r <- a x"
+                , "d <-" <+> parens destroyCall <+> "x"
+                , "pure (d, r)"
+                ]
+
+        let bracketBody =
+              pretty wrapperName
+                <+> sep argHsVars
+                <+> "="
+                <>  line
+                <>  indent 2 bracketRHS
 
         tellDoc $ vsep
           [ comment
@@ -332,7 +347,7 @@ renderDestroy paramName Bracket {..} = do
             _                           -> Nothing
       case mapMaybe correctSibling bCreateArguments of
         []  -> throw $ "Unable to find sibling " <> sibling
-        [s] -> schemeTypeNegative s >>= \case
+        [s] -> schemeTypeNegativeIgnoreContext s >>= \case
           Nothing ->
             throw
               $  "Unable to get type for sibling member "

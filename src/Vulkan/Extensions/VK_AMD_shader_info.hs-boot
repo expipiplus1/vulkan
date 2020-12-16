@@ -157,9 +157,10 @@ module Vulkan.Extensions.VK_AMD_shader_info  ( ShaderResourceUsageAMD
                                              , ShaderInfoTypeAMD
                                              ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data ShaderResourceUsageAMD
 
 instance ToCStruct ShaderResourceUsageAMD

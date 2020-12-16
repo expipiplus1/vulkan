@@ -91,6 +91,111 @@ The docbook documentation will be in `docs/docbook`.
 
 During development unfinished bits not to forget are listed here.
 
+### OpenXR
+
+- [x] Handle levels
+  - They are all "session"
+
+- [x] Bespoke vulkan types should be just in sizes
+
+- [ ] Remove vulkan stuff from bespokeSizes
+  - Would be nice to generate it automatically, but it's fine as it is
+
+- [x] Fix runAsciidoctor
+
+- [x] These are passed as pointers ,(see Bespoke.MarshalParams.isPassAsPointerType')
+
+  - [ ] `VkInstanceCreateInfo`, `VkAllocationCallbacks`, `VkDeviceCreateInfo`
+  - [x] `LARGE_INTEGER`
+  - [x] `timespec`
+
+- [x] remove XR.RenderParams.vulkanNameOverrides
+
+- [x] check
+  - [x] `XrCompositionLayerBaseHeader` (the 'type' member doesn't have a single value)
+  - [x] `XrEventDataBuffer->varying`
+  - [x] `XrSpatialGraphNodeSpaceCreateInfoMSFT->nodeId`
+  - [x] `XrSpatialGraphNodeSpaceCreateInfoMSFT`
+  - [x] `XrEventDataBuffer`
+  - [x] `xrCreateInstance`: Unable to find ref named cmds
+  - [x] `xrResultToString`: Unhandled ByteString conversion to Ptr NonConst Char
+  - [x] `xrStructureTypeToString`: Unhandled ByteString conversion to Ptr NonConst Char
+  - [x] `xrPathToString`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [x] `xrCreateSwapchainAndroidSurfaceKHR`: Unable to get size for TypeName `jobject`
+  - [x] `xrGetInputSourceLocalizedName`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [x] `xrGetVulkanInstanceExtensionsKHR`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [x] `xrGetVulkanDeviceExtensionsKHR`: Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring
+  - [x] `xrCreateVulkanInstanceKHR`: Unable to get size for TypeName `VkResult`
+  - [x] `xrCreateVulkanDeviceKHR`: Unable to get size for TypeName `VkResult`
+  - [x] `xrCreateSpatialAnchorFromPerceptionAnchorMSFT`: Unable to get size for TypeName `IUnknown`
+
+- [x] Check we have all of
+  - [x] `NULL_SYSTEM_ID`
+  - [x] `NULL_PATH`
+  - [x] `SUCCEEDED`
+  - [x] `FAILED`
+  - [x] `UNQUALIFIED_SUCCESS`
+  - [x] `NO_DURATION`
+  - [x] `INFINITE_DURATION`
+  - [x] `MIN_HAPTIC_DURATION`
+  - [x] `FREQUENCY_UNSPECIFIED`
+  - [x] `MAX_EVENT_DATA_SIZE`
+  - [ ] `MAY_ALIAS`
+    - no need
+
+- [x] Make Vulkan integration optional, have a module which either defines
+  opaque handles or reexports types from `vulkan`
+
+- [x] make Xr stuff in `bespokeModules`
+
+- [x] dual-use commands have a different style in OpenXR... they're wrong now
+  - [x] `xrEnumerateApiLayerProperties`
+  - [x] `xrEnumerateInstanceExtensionProperties`
+  - [x] `xrEnumerateSwapchainFormats`
+  - [x] `xrEnumerateReferenceSpaces`
+  - [x] `xrEnumerateViewConfigurations`
+  - [x] `xrEnumerateEnvironmentBlendModes`
+  - [x] `xrEnumerateViewConfigurationViews`
+  - [x] `xrLocateViews`
+  - [x] `xrPathToString`
+  - [x] `xrEnumerateBoundSourcesForAction`
+  - [x] `xrGetInputSourceLocalizedName`
+  - [x] `xrGetVulkanInstanceExtensionsKHR`
+  - [x] `xrGetVulkanDeviceExtensionsKHR`
+  - [ ] `xrLoadControllerModelMSFT`
+    - Should return a bytestring or storable vector
+  - [x] `xrEnumerateDisplayRefreshRatesFB`
+  - [x] `xrEnumerateColorSpacesFB`
+
+- [x] Implement OpenXR's polymorphic types
+
+- [x] change `\CFloat a -> a` to `coerce @CFloat @Float`
+
+- [x] Put modules under `OpenXR` instead of `Vulkan`
+
+- [x] OpenXR brackets
+
+- [ ] Remove uses of WildCardT
+
+- [ ] Remove or improve special handling for `CompositionLayerBaseHeader`
+  - Wait for https://github.com/KhronosGroup/OpenXR-Docs/issues/67
+
+- [x] Remove or improve special handling for `enumerateSwapchainImages`
+
+- [ ] Remove uses of `schemeTypeNegativeWithContext` in `Render.Command` (there
+  are TODOs) in the code.
+
+- [ ] Some structs have an in-out purpose, see https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#buffer-size-parameters
+  - [ ] affects at least xrGetVisibilityMaskKHR and a few extension functions.
+  - [ ] Look at every use of "CapacityInput" or "CountOutput"
+
+- [x] Fix or remove `XR_EXT_conformance_automation`
+  - Annoying to fix because it passes structs by value so would need a C shim
+
+- [x] Expose XR_CURRENT_API_VERSION
+
+- [ ] Auto update functionality for OpenXR
+
 ### 1.2.162
 
 - [x] optionalness on VkWriteDescriptorSetAccelerationStructureKHR->pAccelerationStructures

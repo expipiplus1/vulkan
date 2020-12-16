@@ -159,11 +159,18 @@ import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
 import Data.ByteString (packCStringLen)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Foreign.C.Types (CSize(..))
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero)
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
@@ -171,6 +178,7 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
+import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -200,18 +208,12 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetValidationCacheDataEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkMergeValidationCachesEXT))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.FundamentalTypes (Flags)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Extensions.Handles (ValidationCacheEXT)
 import Vulkan.Extensions.Handles (ValidationCacheEXT(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero)
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
@@ -529,11 +531,11 @@ getValidationCacheDataEXT device validationCache = liftIO . evalContT $ do
   r <- lift $ traceAroundEvent "vkGetValidationCacheDataEXT" (vkGetValidationCacheDataEXT' device' (validationCache) (pPDataSize) (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDataSize <- lift $ peek @CSize pPDataSize
-  pPData <- ContT $ bracket (callocBytes @(()) (fromIntegral (((\(CSize a) -> a) pDataSize)))) free
+  pPData <- ContT $ bracket (callocBytes @(()) (fromIntegral ((coerce @CSize @Word64 pDataSize)))) free
   r' <- lift $ traceAroundEvent "vkGetValidationCacheDataEXT" (vkGetValidationCacheDataEXT' device' (validationCache) (pPDataSize) (pPData))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pDataSize'' <- lift $ peek @CSize pPDataSize
-  pData' <- lift $ packCStringLen  (castPtr @() @CChar pPData, (fromIntegral (((\(CSize a) -> a) pDataSize''))))
+  pData' <- lift $ packCStringLen  (castPtr @() @CChar pPData, (fromIntegral ((coerce @CSize @Word64 pDataSize''))))
   pure $ ((r'), pData')
 
 
@@ -699,7 +701,7 @@ instance FromCStruct ValidationCacheCreateInfoEXT where
     initialDataSize <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     pInitialData <- peek @(Ptr ()) ((p `plusPtr` 32 :: Ptr (Ptr ())))
     pure $ ValidationCacheCreateInfoEXT
-             flags ((\(CSize a) -> a) initialDataSize) pInitialData
+             flags (coerce @CSize @Word64 initialDataSize) pInitialData
 
 instance Storable ValidationCacheCreateInfoEXT where
   sizeOf ~_ = 40

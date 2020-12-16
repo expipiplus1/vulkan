@@ -121,9 +121,10 @@ module Vulkan.Extensions.VK_EXT_hdr_metadata  ( HdrMetadataEXT
                                               , XYColorEXT
                                               ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data HdrMetadataEXT
 
 instance ToCStruct HdrMetadataEXT

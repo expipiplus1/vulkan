@@ -35,17 +35,19 @@ import           System.FilePath
 import qualified Data.Vector.Generic           as VG
 import           Type.Reflection
 
+import           Control.Exception              ( IOException )
+import           Control.Exception.Base         ( catch )
 import           Documentation
 import           Documentation.Haddock
 import           Error
 import           Haskell.Name
+import qualified Prelude
 import           Render.Element
 import           Render.Names
 import           Render.SpecInfo
 import           Render.Utils
 import           Spec.Types
 import           Write.Segment
-import qualified Prelude
 
 ----------------------------------------------------------------
 -- Rendering
@@ -169,7 +171,7 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
       findModule' n =
         note ("Unable to find module for " <> show n) (findModule n)
       findLocalModule' n =
-        note ("Unable to find module for " <> show n) (findLocalModule n)
+        note ("Unable to find local module for " <> show n) (findLocalModule n)
     imports <- vsep <$> traverseV
       (renderImport findModule' (T.pack . nameBase) thNameNamespace id)
       ( mapMaybe
@@ -280,24 +282,28 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
         let t = layoutDoc (d <> line <> line)
         if getAll (reCanFormat e)
           then liftIO (parsePrintModule brittanyConfig t) >>= \case
-            Left  err -> error $ "Fail: Brittany failed to handle module:\n" <>
-                                    T.intercalate "\n" (fmap (T.pack . showBError) err)
-                                    <> "\n\n\n" <> t
-              where showBError = \case
-                      ErrorInput x -> "ErrorInput " <> x
-                      ErrorUnusedComment x -> "ErrorUnusedComent " <> x
-                      ErrorMacroConfig x y -> "ErrorMacroConfig " <> x <> " " <> y
-                      LayoutWarning x -> "LayoutWarning " <> x
-                      ErrorUnknownNode x _ -> "ErrorUnknownNode " <> x <> " <<>>"
-                      ErrorOutputCheck -> "ErrorOutputCheck"
-            Right f   -> pure f
+            Left err ->
+              error
+                $  "Fail: Brittany failed to handle module:\n"
+                <> T.intercalate "\n" (fmap (T.pack . showBError) err)
+                <> "\n\n\n"
+                <> t
+             where
+              showBError = \case
+                ErrorInput         x -> "ErrorInput " <> x
+                ErrorUnusedComment x -> "ErrorUnusedComent " <> x
+                ErrorMacroConfig x y -> "ErrorMacroConfig " <> x <> " " <> y
+                LayoutWarning x      -> "LayoutWarning " <> x
+                ErrorUnknownNode x _ -> "ErrorUnknownNode " <> x <> " <<>>"
+                ErrorOutputCheck     -> "ErrorOutputCheck"
+            Right f -> pure f
           else pure t
     contentsTexts <- mapMaybeM layoutContent (V.toList es)
     let moduleText =
           T.intercalate "\n" (layoutDoc headerContents : contentsTexts)
 
     liftIO $ createDirectoryIfMissing True (takeDirectory f)
-    liftIO $ withFile f WriteMode $ \h -> T.hPutStr h moduleText
+    writeIfChanged f moduleText
 
 allExports :: Vector Export -> Vector HName
 allExports =
@@ -411,12 +417,12 @@ newtype TypeInfo = TypeInfo
 type HasTypeInfo r = MemberWithError (Input TypeInfo) r
 
 withTypeInfo
-  :: HasRenderParams r => Spec -> Sem (Input TypeInfo ': r) a -> Sem r a
+  :: HasRenderParams r => Spec t -> Sem (Input TypeInfo ': r) a -> Sem r a
 withTypeInfo spec a = do
   ti <- specTypeInfo spec
   runInputConst ti a
 
-specTypeInfo :: HasRenderParams r => Spec -> Sem r TypeInfo
+specTypeInfo :: HasRenderParams r => Spec t -> Sem r TypeInfo
 specTypeInfo Spec {..} = do
   RenderParams {..} <- input
   let tyMap :: Map HName HName
@@ -443,6 +449,15 @@ adoptConstructors = \case
 
 nubOrdOnV :: Ord b => (a -> b) -> Vector a -> Vector a
 nubOrdOnV p = fromList . nubOrdOn p . toList
+
+writeIfChanged :: MonadIO m => FilePath -> Text -> m ()
+writeIfChanged f t' = liftIO $ do
+  t <- readFileMaybe f
+  when (t /= Just t') $ T.writeFile f t'
+
+readFileMaybe :: FilePath -> IO (Maybe Text)
+readFileMaybe f =
+  (Just <$> T.readFile f) `catch` (\(_ :: IOException) -> pure Nothing)
 
 brittanyConfig :: CConfig Identity
 brittanyConfig = staticDefaultConfig

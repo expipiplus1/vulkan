@@ -280,10 +280,11 @@ module Vulkan.Extensions.VK_NV_external_memory_win32  ( ExportMemoryWin32HandleI
                                                       , HANDLE
                                                       ) where
 
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Foreign.Ptr (Ptr)
+import Data.Kind (Type)
+
 data ExportMemoryWin32HandleInfoNV
 
 instance ToCStruct ExportMemoryWin32HandleInfoNV

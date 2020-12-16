@@ -1,8 +1,9 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# language QuasiQuotes #-}
-{-# language TemplateHaskellQuotes #-}
+{-# language TemplateHaskell #-}
 module Bespoke
   ( forbiddenConstants
+  , forceDisabledExtensions
   , assignBespokeModules
   , bespokeStructsAndUnions
   , bespokeElements
@@ -24,6 +25,7 @@ import qualified Data.Vector.Extra             as V
 import           Foreign.C.Types
 import           Foreign.Ptr
 import           Language.Haskell.TH            ( mkName )
+import qualified Language.Haskell.TH.Syntax    as TH
 import           Polysemy
 import           Polysemy.Input
 import           Relude                  hiding ( Const )
@@ -39,6 +41,8 @@ import           Numeric
 
 import           CType
 import           Error
+import           Foreign.C.String               ( CString )
+import           Foreign.Storable               ( Storable )
 import           Haskell                       as H
 import           Marshal.Marshalable
 import           Marshal.Scheme
@@ -53,7 +57,6 @@ import           Render.Stmts.Utils
 import           Render.Type
 import           Render.Utils
 import           Spec.Types
-import           VkModulePrefix
 
 ----------------------------------------------------------------
 -- Changes to the spec
@@ -61,7 +64,10 @@ import           VkModulePrefix
 
 -- | These constants are defined elsewhere
 forbiddenConstants :: [CName]
-forbiddenConstants = ["VK_TRUE", "VK_FALSE"]
+forbiddenConstants = ["VK_TRUE", "VK_FALSE", "XR_TRUE", "XR_FALSE"]
+
+forceDisabledExtensions :: [ByteString]
+forceDisabledExtensions = ["XR_EXT_conformance_automation"]
 
 ----------------------------------------------------------------
 -- Module assignments
@@ -90,17 +96,29 @@ assignBespokeModules es = do
 bespokeModules :: HasRenderParams r => Sem r [(HName, ModName)]
 bespokeModules = do
   RenderParams {..} <- input
+  mod'              <- mkMkModuleName
   pure
     $  [ ( mkTyName "VkAllocationCallbacks"
-         , vulkanModule ["Core10", "AllocationCallbacks"]
+         , mod' ["Core10", "AllocationCallbacks"]
          )
-       , (mkTyName "VkBaseInStructure" , vulkanModule ["CStruct", "Extends"])
-       , (mkTyName "VkBaseOutStructure", vulkanModule ["CStruct", "Extends"])
+       , (mkTyName "VkBaseInStructure" , mod' ["CStruct", "Extends"])
+       , (mkTyName "VkBaseOutStructure", mod' ["CStruct", "Extends"])
+       , (mkTyName "XrBaseInStructure" , mod' ["CStruct", "Extends"])
+       , (mkTyName "XrBaseOutStructure", mod' ["CStruct", "Extends"])
+       , (mkTyName "XrFovf"            , mod' ["Core10", "OtherTypes"])
+       , (mkTyName "XrPosef"           , mod' ["Core10", "Space"])
        ]
-    <> (   (, vulkanModule ["Core10", "FundamentalTypes"])
+    <> (   (, mod' ["Core10", "FundamentalTypes"])
        <$> [ mkTyName "VkBool32"
            , TermName "boolToBool32"
            , TermName "bool32ToBool"
+           , mkTyName "XrBool32"
+           , mkTyName "XrOffset2Df"
+           , mkTyName "XrExtent2Df"
+           , mkTyName "XrRect2Df"
+           , mkTyName "XrOffset2Di"
+           , mkTyName "XrExtent2Di"
+           , mkTyName "XrRect2Di"
            ]
        )
 
@@ -112,7 +130,7 @@ data BespokeScheme where
   BespokeScheme ::(forall a. Marshalable a => CName -> a -> Maybe (MarshalScheme a)) -> BespokeScheme
   --- ^ Parent name -> child -> scheme
 
-bespokeSchemes :: Spec -> Sem r [BespokeScheme]
+bespokeSchemes :: KnownSpecFlavor t => Spec t -> Sem r [BespokeScheme]
 bespokeSchemes spec =
   pure
     $  [baseInOut, wsiScheme, dualPurposeBytestrings, nextPointers spec]
@@ -120,22 +138,25 @@ bespokeSchemes spec =
     <> [bitfields]
     <> [accelerationStructureGeometry]
     <> [buildingAccelerationStructures]
+    <> openXRSchemes
 
 baseInOut :: BespokeScheme
 baseInOut = BespokeScheme $ \case
   n | n `elem` ["VkBaseInStructure", "VkBaseOutStructure"] -> \case
     m | "pNext" <- name m -> Just $ Normal (type' m)
     _                     -> Nothing
+  n | n `elem` ["XrBaseInStructure", "XrBaseOutStructure"] -> \case
+    m | "next" <- name m -> Just $ Normal (type' m)
+    _                    -> Nothing
   _ -> const Nothing
-
 
 data NextType = NextElided | NextChain
 
-nextPointers :: Spec -> BespokeScheme
+nextPointers :: forall t . KnownSpecFlavor t => Spec t -> BespokeScheme
 nextPointers Spec {..} =
   let schemeMap :: Map (CName, CName) NextType
       schemeMap = Map.fromList
-        [ ((sName s, "pNext"), scheme)
+        [ ((sName s, nextName), scheme)
         | s <- toList specStructs
         , let scheme = case sExtendedBy s of
                 V.Empty -> NextElided
@@ -146,6 +167,10 @@ nextPointers Spec {..} =
         Just NextElided -> Just (ElidedUnivalued "nullPtr")
         Just NextChain  -> Just (Custom chainScheme)
  where
+  nextName :: CName
+  nextName = case specFlavor @t of
+    SpecVk -> "pNext"
+    SpecXr -> "next"
   chainVarT   = VarT (mkName structChainVar)
   chainT      = ConT (mkName "Chain") :@ chainVarT
   chainScheme = CustomScheme
@@ -155,7 +180,7 @@ nextPointers Spec {..} =
     -- , csType = pure $ ForallT [] [ConT (mkName "PokeChain") :@ chainVarT] chainT
     , csType       = pure $ ForallT [] [] chainT
     , csDirectPoke = APoke $ \chainRef ->
-      stmt (Just (ConT ''Ptr :@ chainT)) (Just "pNext") $ do
+      stmt (Just (ConT ''Ptr :@ chainT)) (Just (unCName nextName)) $ do
         tellImportWithAll (TyConName "PokeChain")
         tellImport (TyConName "Chain")
         tellImport 'castPtr
@@ -168,7 +193,7 @@ nextPointers Spec {..} =
           <+> chain
     , csPeek       = \addrRef -> stmt (Just chainT) (Just "next") $ do
       chainPtr <- use
-        =<< storablePeek "pNext" addrRef (Ptr Const (Ptr Const Void))
+        =<< storablePeek nextName addrRef (Ptr Const (Ptr Const Void))
       tellImportWithAll (TyConName "PeekChain")
       tellImport (TyConName "Chain")
       tellImport 'castPtr
@@ -679,48 +704,78 @@ structChainVar = "es"
 bespokeStructsAndUnions :: [StructOrUnion a WithoutSize WithoutChildren]
 bespokeStructsAndUnions =
   [ Struct
-      { sName       = "VkTransformMatrixKHR"
-      , sMembers    = V.fromList
-                        [ StructMember
-                          { smName       = "matrixRow0"
-                          , smType = Array NonConst (NumericArraySize 4) Float
-                          , smValues     = mempty
-                          , smLengths    = mempty
-                          , smIsOptional = mempty
-                          , smOffset     = ()
-                          }
-                        , StructMember
-                          { smName       = "matrixRow1"
-                          , smType = Array NonConst (NumericArraySize 4) Float
-                          , smValues     = mempty
-                          , smLengths    = mempty
-                          , smIsOptional = mempty
-                          , smOffset     = ()
-                          }
-                        , StructMember
-                          { smName       = "matrixRow2"
-                          , smType = Array NonConst (NumericArraySize 4) Float
-                          , smValues     = mempty
-                          , smLengths    = mempty
-                          , smIsOptional = mempty
-                          , smOffset     = ()
-                          }
-                        ]
-      , sSize       = ()
-      , sAlignment  = ()
-      , sExtends    = mempty
-      , sExtendedBy = mempty
+      { sName        = "VkTransformMatrixKHR"
+      , sMembers     = V.fromList
+                         [ StructMember
+                           { smName       = "matrixRow0"
+                           , smType = Array NonConst (NumericArraySize 4) Float
+                           , smValues     = mempty
+                           , smLengths    = mempty
+                           , smIsOptional = mempty
+                           , smOffset     = ()
+                           }
+                         , StructMember
+                           { smName       = "matrixRow1"
+                           , smType = Array NonConst (NumericArraySize 4) Float
+                           , smValues     = mempty
+                           , smLengths    = mempty
+                           , smIsOptional = mempty
+                           , smOffset     = ()
+                           }
+                         , StructMember
+                           { smName       = "matrixRow2"
+                           , smType = Array NonConst (NumericArraySize 4) Float
+                           , smValues     = mempty
+                           , smLengths    = mempty
+                           , smIsOptional = mempty
+                           , smOffset     = ()
+                           }
+                         ]
+      , sSize        = ()
+      , sAlignment   = ()
+      , sExtends     = mempty
+      , sExtendedBy  = mempty
+      , sInherits    = mempty
+      , sInheritedBy = mempty
       }
   ]
 
-bespokeSizes :: [(CName, (Int, Int))]
-bespokeSizes =
-  (fst <$> concat [win32 @'[Input RenderParams], x11, xcb2, zircon, ggp])
-    <> [ ("VkSampleMask"   , (4, 4))
-       , ("VkFlags"        , (4, 4))
-       , ("VkDeviceSize"   , (8, 8))
-       , ("VkDeviceAddress", (8, 8))
-       ]
+bespokeSizes :: SpecFlavor -> [(CName, (Int, Int))]
+bespokeSizes t =
+  let
+    xrSizes =
+      [ ("XrFlags64"                , (8, 8))
+        , ("XrTime"                   , (8, 8))
+        , ("XrDuration"               , (8, 8))
+        , ("XrVersion"                , (8, 8))
+        , ("timespec"                 , (16, 8))
+        -- TODO: Can these be got elsewhere?
+        , ("VkResult"                 , (4, 4))
+        , ("VkFormat"                 , (4, 4))
+        , ("VkInstance"               , (8, 8))
+        , ("VkPhysicalDevice"         , (8, 8))
+        , ("VkImage"                  , (8, 8))
+        , ("VkDevice"                 , (8, 8))
+        , ("PFN_vkGetDeviceProcAddr"  , (8, 8))
+        , ("PFN_vkGetInstanceProcAddr", (8, 8))
+        ]
+        <> (fst <$> concat
+             [win32Xr @'[Input RenderParams], x11Shared, xcb2Xr, egl, gl, d3d]
+           )
+    vkSizes =
+      [ ("VkSampleMask"   , (4, 4))
+        , ("VkFlags"        , (4, 4))
+        , ("VkDeviceSize"   , (8, 8))
+        , ("VkDeviceAddress", (8, 8))
+        ]
+        <> (fst <$> concat
+             [win32 @'[Input RenderParams], x11Shared, x11, xcb2, zircon, ggp]
+           )
+    sharedSizes = []
+  in
+    sharedSizes <> case t of
+      SpecVk -> vkSizes
+      SpecXr -> xrSizes
 
 bespokeOptionality :: CName -> CName -> Maybe (Vector Bool)
 bespokeOptionality = \case
@@ -743,29 +798,39 @@ bespokeLengths = \case
   _ -> const Nothing
 
 bespokeElements
-  :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
-bespokeElements =
-  fromList
-    $  [ namedType
-       , baseType "VkSampleMask"    ''Word32
-       , baseType "VkFlags"         ''Word32
-       , baseType "VkDeviceSize"    ''Word64
-       , baseType "VkDeviceAddress" ''Word64
-       , nullHandle
-       , boolConversion
-       ]
-    <> wsiTypes
+  :: (HasErr r, HasRenderParams r) => SpecFlavor -> Vector (Sem r RenderElement)
+bespokeElements = \case
+  SpecVk ->
+    fromList
+      $  shared
+      <> [ baseType "VkSampleMask"    ''Word32
+         , baseType "VkFlags"         ''Word32
+         , baseType "VkDeviceSize"    ''Word64
+         , baseType "VkDeviceAddress" ''Word64
+         ]
+      <> wsiTypes SpecVk
+  SpecXr ->
+    fromList
+      $  shared
+      <> [ baseType "XrFlags64"  ''Word64
+         , baseType "XrTime"     ''Int64
+         , baseType "XrDuration" ''Int64
+         ]
+      <> wsiTypes SpecXr
+      <> [resultMatchers]
+  where shared = fromList [namedType, nullHandle, boolConversion]
 
 boolConversion :: HasRenderParams r => Sem r RenderElement
 boolConversion = genRe "Bool conversion" $ do
   RenderParams {..} <- input
   tellNotReexportable
-  let true   = mkPatternName "VK_TRUE"
-      false  = mkPatternName "VK_FALSE"
-      bool32 = mkTyName "VkBool32"
+  let true   = mkPatternName (CName $ upperPrefix <> "_TRUE")
+      false  = mkPatternName (CName $ upperPrefix <> "_FALSE")
+      bool32 = mkTyName (CName $ camelPrefix <> "Bool32")
   tellExport (ETerm (TermName "boolToBool32"))
   tellExport (ETerm (TermName "bool32ToBool"))
   tellImport 'bool
+  tellImportWithAll bool32
   tellDoc [qqi|
     boolToBool32 :: Bool -> {bool32}
     boolToBool32 = bool {false} {true}
@@ -776,14 +841,17 @@ boolConversion = genRe "Bool conversion" $ do
       {true}  -> True
   |]
 
+wsiTypes
+  :: (HasErr r, HasRenderParams r) => SpecFlavor -> [Sem r RenderElement]
+wsiTypes = \case
+  SpecVk -> (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp])
+    <> concat [win32', xcb1, waylandShared, wayland, metal, android, directfb]
+  SpecXr -> (snd <$> concat [win32Xr, x11Shared, xcb2Xr, egl, gl, d3d])
+    <> concat [win32Xr', xcb1, waylandShared, d3d', jni, timespec]
 
-wsiTypes :: (HasErr r, HasRenderParams r) => [Sem r RenderElement]
-wsiTypes = (snd <$> concat [win32, x11, xcb2, zircon, ggp])
-  <> concat [win32', xcb1, wayland, metal, android, directfb]
-
-namedType :: HasErr r => Sem r RenderElement
+namedType :: (HasRenderParams r, HasErr r) => Sem r RenderElement
 namedType = genRe "namedType" $ do
-  tellExplicitModule (vulkanModule ["NamedType"])
+  tellExplicitModule =<< mkModuleName ["NamedType"]
   tellNotReexportable
   tellExport (EType (TyConName ":::"))
   tellDoc "-- | Annotate a type with a name\ntype (name :: k) ::: a = a"
@@ -793,7 +861,7 @@ baseType
 baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
   RenderParams {..} <- input
   let n' = mkTyName n
-  tellExplicitModule (vulkanModule ["Core10", "FundamentalTypes"])
+  tellExplicitModule =<< mkModuleName ["Core10", "FundamentalTypes"]
   tellExport (EType n')
   tDoc <- renderType (ConT t)
   tellDocWithHaddock $ \getDoc ->
@@ -807,7 +875,7 @@ nullHandle :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 nullHandle = genRe "null handle" $ do
   RenderParams {..} <- input
   let patName = mkPatternName "VK_NULL_HANDLE"
-  tellExplicitModule (vulkanModule ["Core10", "APIConstants"])
+  tellExplicitModule =<< mkModuleName ["Core10", "APIConstants"]
   tellNotReexportable
   tellExport (EPat patName)
   tellExport (EType (TyConName "IsHandle"))
@@ -821,6 +889,38 @@ nullHandle = genRe "null handle" $ do
 
     -- | A class for things which can be created with '{patName}'.
     class (Eq a, Zero a) => IsHandle a where
+  |]
+
+
+----------------------------------------------------------------
+-- Base XR stuff
+----------------------------------------------------------------
+
+resultMatchers :: (HasErr r, HasRenderParams r) => Sem r RenderElement
+resultMatchers = genRe "xr result matchers" $ do
+  RenderParams {..} <- input
+  let succName = mkPatternName "XR_SUCCEEDED"
+      unquName = mkPatternName "XR_UNQUALIFIED_SUCCESS"
+      failName = mkPatternName "XR_FAILED"
+  tellExplicitModule =<< mkModuleName ["Core10", "Enums", "Result"]
+  tellNotReexportable
+  tellExport (EPat succName)
+  tellExport (EPat unquName)
+  tellExport (EPat failName)
+  tellDocWithHaddock $ \getDoc -> [qqi|
+    {getDoc (TopLevel "XR_SUCCEEDED")}
+    pattern SUCCEEDED :: Result
+    pattern SUCCEEDED <- ((SUCCESS <=) -> True)
+
+    {getDoc (TopLevel "XR_UNQUALIFIED_SUCCESS")}
+    pattern UNQUALIFIED_SUCCESS :: Result
+    pattern UNQUALIFIED_SUCCESS <- ((SUCCESS ==) -> True)
+
+    {getDoc (TopLevel "XR_FAILED")}
+    pattern FAILED :: Result
+    pattern FAILED <- ((SUCCESS >) -> True)
+
+    \{-# complete SUCCEEDED, FAILED #-}
   |]
 
 ----------------------------------------------------------------
@@ -843,13 +943,23 @@ win32 =
 win32' :: HasRenderParams r => [Sem r RenderElement]
 win32' = [voidData "SECURITY_ATTRIBUTES"]
 
+win32Xr :: HasRenderParams r => [BespokeAlias r]
+win32Xr =
+  [ alias (APtr ''()) "HDC" -- TODO: should be an alias for HANDLE
+  , alias (APtr ''()) "HGLRC" -- TODO: check this
+  , alias AWord64     "LUID"
+  , alias AWord64     "LARGE_INTEGER"
+  ]
+
+win32Xr' :: HasRenderParams r => [Sem r RenderElement]
+win32Xr' = [voidData "IUnknown"]
+
+x11Shared :: HasRenderParams r => [BespokeAlias r]
+x11Shared = [alias (APtr ''()) "Display"]
+
 x11 :: HasRenderParams r => [BespokeAlias r]
 x11 =
-  [ alias (APtr ''()) "Display"
-  , alias AWord64     "VisualID"
-  , alias AWord64     "Window"
-  , alias AWord64     "RROutput"
-  ]
+  [alias AWord64 "VisualID", alias AWord64 "Window", alias AWord64 "RROutput"]
 
 xcb1 :: HasRenderParams r => [Sem r RenderElement]
 xcb1 = [voidData "xcb_connection_t"]
@@ -857,14 +967,26 @@ xcb1 = [voidData "xcb_connection_t"]
 xcb2 :: HasRenderParams r => [BespokeAlias r]
 xcb2 = [alias AWord32 "xcb_visualid_t", alias AWord32 "xcb_window_t"]
 
+xcb2Xr :: HasRenderParams r => [BespokeAlias r]
+xcb2Xr =
+  [ alias AWord32 "xcb_visualid_t"
+  , alias AWord32 "xcb_glx_fbconfig_t"
+  , alias AWord32 "xcb_glx_drawable_t"
+  , alias AWord32 "xcb_glx_context_t"
+  ]
+
+
 ggp :: HasRenderParams r => [BespokeAlias r]
 ggp = [alias AWord32 "GgpStreamDescriptor", alias AWord32 "GgpFrameToken"]
 
 metal :: HasRenderParams r => [Sem r RenderElement]
 metal = [voidData "CAMetalLayer"]
 
+waylandShared :: HasRenderParams r => [Sem r RenderElement]
+waylandShared = [voidData "wl_display"]
+
 wayland :: HasRenderParams r => [Sem r RenderElement]
-wayland = [voidData "wl_display", voidData "wl_surface"]
+wayland = [voidData "wl_surface"]
 
 zircon :: HasRenderParams r => [BespokeAlias r]
 zircon = [alias AWord32 "zx_handle_t"]
@@ -876,22 +998,115 @@ directfb :: HasRenderParams r => [Sem r RenderElement]
 directfb = [voidData "IDirectFB", voidData "IDirectFBSurface"]
 
 ----------------------------------------------------------------
+-- OpenXR platform stuff
+----------------------------------------------------------------
+
+egl :: HasRenderParams r => [BespokeAlias r]
+egl =
+  [ alias (AFunPtr $(TH.lift =<< [t|CString -> IO (FunPtr (IO ()))|]))
+          "PFNEGLGETPROCADDRESSPROC"
+  , alias (APtr ''()) "EGLDisplay"
+  , alias (APtr ''()) "EGLConfig"
+  , alias (APtr ''()) "EGLContext"
+  ]
+
+gl :: HasRenderParams r => [BespokeAlias r]
+gl =
+  [ alias (APtr ''()) "GLXFBConfig"
+  , alias AWord64     "GLXDrawable"
+  , alias (APtr ''()) "GLXContext"
+  ]
+
+d3d :: HasRenderParams r => [BespokeAlias r]
+d3d = [alias AWord32 "D3D_FEATURE_LEVEL"]
+
+d3d' :: HasRenderParams r => [Sem r RenderElement]
+d3d' =
+  [ voidData "ID3D11Device"
+  , voidData "ID3D11Texture2D"
+  , voidData "ID3D12CommandQueue"
+  , voidData "ID3D12Device"
+  , voidData "ID3D12Resource"
+  ]
+
+jni :: HasRenderParams r => [Sem r RenderElement]
+jni = [voidData "jobject"]
+
+timespec :: HasRenderParams r => [Sem r RenderElement]
+timespec = pure $ genRe "timespec" $ do
+  tellImport ''CTime
+  tellImport ''Int64
+  tellImport ''Typeable
+  tellImport ''Generic
+  tellImportWithAll ''Storable
+  tellImport 'castPtr
+  tellImport 'plusPtr
+  tellDataExport (TyConName "Timespec")
+  tellDoc [qqi|
+    data Timespec = Timespec
+      \{ tv_sec :: CTime
+      , tv_nsec :: Int64
+      }
+      deriving (Typeable, Generic, Read, Show, Eq, Ord)
+
+    instance Storable Timespec where
+      sizeOf ~_ = 16
+      alignment ~_ = 8
+      peek p = Timespec
+        <$> peek (castPtr @Timespec @CTime p)
+        <*> peek (plusPtr @Timespec @Int64 p 8)
+      poke p (Timespec s n) = do
+        poke (castPtr @Timespec @CTime p) s
+        poke (plusPtr @Timespec @Int64 p 8) n
+  |]
+
+----------------------------------------------------------------
+-- OpenXR stuff
+----------------------------------------------------------------
+
+openXRSchemes :: [BespokeScheme]
+openXRSchemes =
+  [ BespokeScheme $ \case
+      "XrEventDataBuffer" -> \case
+        a | "varying" <- name a -> Just ByteString
+        _                       -> Nothing
+      "XrSpatialGraphNodeSpaceCreateInfoMSFT" -> \case
+        a | "nodeId" <- name a -> Just ByteString
+        _                      -> Nothing
+      -- Work around https://github.com/KhronosGroup/OpenXR-Docs/issues/69
+      f
+        | f
+          `elem` [ "xrPathToString"
+                 , "xrGetInputSourceLocalizedName"
+                 , "xrGetVulkanInstanceExtensionsKHR"
+                 , "xrGetVulkanDeviceExtensionsKHR"
+                 ]
+        -> \case
+          a | "buffer" <- name a -> Just (Returned ByteString)
+          _                      -> Nothing
+
+      _ -> const Nothing
+  ]
+
+----------------------------------------------------------------
 -- Helpers
 ----------------------------------------------------------------
 
-data AType = AWord32 | AWord64 | APtr Name
+data AType = AWord32 | AWord64 | APtr Name | AFunPtr H.Type
 
 aTypeSize :: AType -> (Int, Int)
 aTypeSize = \case
-  AWord32 -> (4, 4)
-  AWord64 -> (8, 8)
-  APtr _  -> (8, 8)
+  AWord32   -> (4, 4)
+  AWord64   -> (8, 8)
+  APtr    _ -> (8, 8)
+  AFunPtr _ -> (8, 8)
 
 aTypeType :: AType -> H.Type
 aTypeType = \case
-  AWord32 -> ConT ''Word32
-  AWord64 -> ConT ''Word64
-  APtr n  -> ConT ''Ptr :@ ConT n
+  AWord32   -> ConT ''Word32
+  AWord64   -> ConT ''Word64
+  APtr    n -> ConT ''Ptr :@ ConT n
+  AFunPtr t -> ConT ''FunPtr :@ t
 
 voidData :: HasRenderParams r => CName -> Sem r RenderElement
 voidData n = fmap identicalBoot . genRe ("data " <> unCName n) $ do

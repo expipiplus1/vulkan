@@ -548,9 +548,10 @@ module Vulkan.Extensions.VK_NV_device_generated_commands  ( BindIndexBufferIndir
                                                           , SetStateFlagsIndirectCommandNV
                                                           ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data BindIndexBufferIndirectCommandNV
 
 instance ToCStruct BindIndexBufferIndirectCommandNV

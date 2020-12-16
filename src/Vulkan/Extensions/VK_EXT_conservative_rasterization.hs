@@ -173,11 +173,19 @@ import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
+import Data.Coerce (coerce)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero)
+import Vulkan.Zero (Zero(..))
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -193,13 +201,7 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.FundamentalTypes (Flags)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero)
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT))
 -- | VkPhysicalDeviceConservativeRasterizationPropertiesEXT - Structure
@@ -352,7 +354,7 @@ instance FromCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT where
     fullyCoveredFragmentShaderInputVariable <- peek @Bool32 ((p `plusPtr` 44 :: Ptr Bool32))
     conservativeRasterizationPostDepthCoverage <- peek @Bool32 ((p `plusPtr` 48 :: Ptr Bool32))
     pure $ PhysicalDeviceConservativeRasterizationPropertiesEXT
-             ((\(CFloat a) -> a) primitiveOverestimationSize) ((\(CFloat a) -> a) maxExtraPrimitiveOverestimationSize) ((\(CFloat a) -> a) extraPrimitiveOverestimationSizeGranularity) (bool32ToBool primitiveUnderestimation) (bool32ToBool conservativePointAndLineRasterization) (bool32ToBool degenerateTrianglesRasterized) (bool32ToBool degenerateLinesRasterized) (bool32ToBool fullyCoveredFragmentShaderInputVariable) (bool32ToBool conservativeRasterizationPostDepthCoverage)
+             (coerce @CFloat @Float primitiveOverestimationSize) (coerce @CFloat @Float maxExtraPrimitiveOverestimationSize) (coerce @CFloat @Float extraPrimitiveOverestimationSizeGranularity) (bool32ToBool primitiveUnderestimation) (bool32ToBool conservativePointAndLineRasterization) (bool32ToBool degenerateTrianglesRasterized) (bool32ToBool degenerateLinesRasterized) (bool32ToBool fullyCoveredFragmentShaderInputVariable) (bool32ToBool conservativeRasterizationPostDepthCoverage)
 
 instance Storable PhysicalDeviceConservativeRasterizationPropertiesEXT where
   sizeOf ~_ = 56
@@ -438,7 +440,7 @@ instance FromCStruct PipelineRasterizationConservativeStateCreateInfoEXT where
     conservativeRasterizationMode <- peek @ConservativeRasterizationModeEXT ((p `plusPtr` 20 :: Ptr ConservativeRasterizationModeEXT))
     extraPrimitiveOverestimationSize <- peek @CFloat ((p `plusPtr` 24 :: Ptr CFloat))
     pure $ PipelineRasterizationConservativeStateCreateInfoEXT
-             flags conservativeRasterizationMode ((\(CFloat a) -> a) extraPrimitiveOverestimationSize)
+             flags conservativeRasterizationMode (coerce @CFloat @Float extraPrimitiveOverestimationSize)
 
 instance Storable PipelineRasterizationConservativeStateCreateInfoEXT where
   sizeOf ~_ = 32

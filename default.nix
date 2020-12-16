@@ -15,7 +15,7 @@ let
 
   packages = p:
     with p;
-    [ vulkan vulkan-utils VulkanMemoryAllocator vulkan-examples ]
+    [ vulkan vulkan-utils VulkanMemoryAllocator vulkan-examples openxr ]
     ++ pkgs.lib.optional (p.ghc.version == "8.10.2") generate-new;
 
 in if forShell then

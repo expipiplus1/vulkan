@@ -23,6 +23,11 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -56,8 +61,6 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Image)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
@@ -67,10 +70,7 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
@@ -373,7 +373,7 @@ deriving instance Generic (BindBufferMemoryInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (BindBufferMemoryInfo es)
 
 instance Extensible BindBufferMemoryInfo where
-  extensibleType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
+  extensibleTypeName = "BindBufferMemoryInfo"
   setNext x next = x{next = next}
   getNext BindBufferMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindBufferMemoryInfo e => b) -> Maybe b
@@ -711,7 +711,7 @@ deriving instance Generic (BindImageMemoryInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (BindImageMemoryInfo es)
 
 instance Extensible BindImageMemoryInfo where
-  extensibleType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
+  extensibleTypeName = "BindImageMemoryInfo"
   setNext x next = x{next = next}
   getNext BindImageMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindImageMemoryInfo e => b) -> Maybe b

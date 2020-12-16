@@ -12,6 +12,7 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Foreign.Ptr (castFunPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
+import Vulkan.Zero (Zero(..))
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
 import Foreign.C.Types (CInt)
@@ -347,7 +348,6 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xcb_surface (XcbSurfaceCreateInfo
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xcb_surface (Xcb_connection_t)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xcb_surface (Xcb_visualid_t)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xlib_surface (XlibSurfaceCreateInfoKHR)
-import Vulkan.Zero (Zero(..))
 data InstanceCmds = InstanceCmds
   { instanceCmdsHandle :: Ptr Instance_T
   , pVkDestroyInstance :: FunPtr (Ptr Instance_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())

@@ -260,9 +260,10 @@ module Vulkan.Extensions.VK_EXT_full_screen_exclusive  ( SurfaceCapabilitiesFull
                                                        , SurfaceFullScreenExclusiveWin32InfoEXT
                                                        ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data SurfaceCapabilitiesFullScreenExclusiveEXT
 
 instance ToCStruct SurfaceCapabilitiesFullScreenExclusiveEXT

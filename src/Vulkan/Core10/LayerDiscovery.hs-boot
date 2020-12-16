@@ -2,9 +2,10 @@
 -- No documentation found for Chapter "LayerDiscovery"
 module Vulkan.Core10.LayerDiscovery  (LayerProperties) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data LayerProperties
 
 instance ToCStruct LayerProperties

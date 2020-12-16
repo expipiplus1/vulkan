@@ -1,6 +1,7 @@
 {-# language QuasiQuotes #-}
 module Render.Spec.Versions
-  where
+  ( specVersions
+  ) where
 
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
@@ -16,25 +17,26 @@ import           Error
 import           Haskell.Name
 import           Render.Element
 import           Spec.Parse
-import           VkModulePrefix
 
 specVersions
   :: forall r
    . (HasErr r, HasRenderParams r)
-  => Spec
+  => Spec SpecVk
   -> Vector (Sem r RenderElement)
-specVersions Spec {..} = fromList
-  ( headerVersion specHeaderVersion
-  : headerVersionComplete (fVersion (V.last specFeatures))
-                          specHeaderVersion
-  : versionConstruction
-  : (featureVersion <$> toList specFeatures)
-  )
+specVersions Spec {..} =
+  fromList
+    $ [ headerVersion specHeaderVersion
+      , headerVersionComplete (fVersion (V.last specFeatures)) specHeaderVersion
+      ]
+    <> (versionConstruction : (featureVersion <$> toList specFeatures))
 
-headerVersion :: (HasErr r, HasRenderParams r) => Word -> Sem r RenderElement
-headerVersion version = genRe "header version" $ do
+headerVersion
+  :: (HasErr r, HasRenderParams r)
+  => SpecHeaderVersion SpecVk
+  -> Sem r RenderElement
+headerVersion (VkVersion version) = genRe "header version" $ do
   RenderParams {..} <- input
-  tellExplicitModule (vulkanModule ["Version"])
+  tellExplicitModule =<< mkModuleName ["Version"]
   let pat = mkPatternName "VK_HEADER_VERSION"
   tellExport (EPat pat)
   tellImport ''Word32
@@ -44,11 +46,14 @@ headerVersion version = genRe "header version" $ do
   |]
 
 headerVersionComplete
-  :: (HasErr r, HasRenderParams r) => Version -> Word -> Sem r RenderElement
-headerVersionComplete lastFeatureVersion headerVersion =
+  :: (HasErr r, HasRenderParams r)
+  => Version
+  -> SpecHeaderVersion SpecVk
+  -> Sem r RenderElement
+headerVersionComplete lastFeatureVersion (VkVersion headerVersion) =
   genRe "header version complete" $ do
     RenderParams {..} <- input
-    tellExplicitModule (vulkanModule ["Version"])
+    tellExplicitModule =<< mkModuleName ["Version"]
     let pat               = mkPatternName "VK_HEADER_VERSION_COMPLETE"
         major : minor : _ = versionBranch lastFeatureVersion
         makeVersion       = mkPatternName "VK_MAKE_VERSION"
@@ -70,7 +75,7 @@ featureVersion Feature {..} = genRe "feature version" $ do
   tellExport (EPat pat)
   tellImport ''Word32
   tellImport make
-  tellExplicitModule (vulkanModule ["Core" <> show major <> show minor])
+  tellExplicitModule =<< mkModuleName ["Core" <> show major <> show minor]
   tellDoc [qqi|
     pattern {pat} :: Word32
     pattern {pat} = {make} {major} {minor} 0
@@ -79,7 +84,7 @@ featureVersion Feature {..} = genRe "feature version" $ do
 versionConstruction :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 versionConstruction = genRe "version construction" $ do
   RenderParams {..} <- input
-  tellExplicitModule (vulkanModule ["Version"])
+  tellExplicitModule =<< mkModuleName ["Version"]
   tellImport ''Word32
   tellImport '(.&.)
   tellImport '(.|.)

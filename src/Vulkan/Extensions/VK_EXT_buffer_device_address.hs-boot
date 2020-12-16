@@ -163,9 +163,10 @@ module Vulkan.Extensions.VK_EXT_buffer_device_address  ( BufferDeviceAddressCrea
                                                        , PhysicalDeviceBufferDeviceAddressFeaturesEXT
                                                        ) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data BufferDeviceAddressCreateInfoEXT
 
 instance ToCStruct BufferDeviceAddressCreateInfoEXT

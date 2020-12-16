@@ -78,16 +78,23 @@ import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (plusPtr)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.Trans.Cont (runContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Foreign.C.Types (CFloat(..))
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -174,8 +181,6 @@ import Vulkan.Core10.FundamentalTypes (Extent3D)
 import Vulkan.Core10.Enums.Filter (Filter)
 import Vulkan.Core10.Enums.Filter (Filter(..))
 import Vulkan.Core10.Handles (Framebuffer)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
 import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
@@ -217,10 +222,7 @@ import Vulkan.Core10.Enums.StencilFaceFlagBits (StencilFaceFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.SubpassContents (SubpassContents)
 import Vulkan.Core10.Enums.SubpassContents (SubpassContents(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Core10.Pipeline (Viewport)
-import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO))
 import Vulkan.Core10.Enums.IndexType (IndexType(..))
 import Vulkan.Core10.Enums.StencilFaceFlagBits (StencilFaceFlagBits(..))
@@ -7744,8 +7746,7 @@ foreign import ccall
 -- | cmdWaitEvents with selectable safeness
 cmdWaitEventsSafeOrUnsafe :: forall io
                            . (MonadIO io)
-                          => -- No documentation found for TopLevel ""
-                             (FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ())
+                          => (FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ())
                           -> -- | @commandBuffer@ is the command buffer into which the command is
                              -- recorded.
                              CommandBuffer
@@ -11246,7 +11247,7 @@ deriving instance Generic (RenderPassBeginInfo (es :: [Type]))
 deriving instance Show (Chain es) => Show (RenderPassBeginInfo es)
 
 instance Extensible RenderPassBeginInfo where
-  extensibleType = STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
+  extensibleTypeName = "RenderPassBeginInfo"
   setNext x next = x{next = next}
   getNext RenderPassBeginInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassBeginInfo e => b) -> Maybe b
@@ -11341,7 +11342,7 @@ instance FromCStruct ClearDepthStencilValue where
     depth <- peek @CFloat ((p `plusPtr` 0 :: Ptr CFloat))
     stencil <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
     pure $ ClearDepthStencilValue
-             ((\(CFloat a) -> a) depth) stencil
+             (coerce @CFloat @Float depth) stencil
 
 instance Storable ClearDepthStencilValue where
   sizeOf ~_ = 8

@@ -1,8 +1,10 @@
 {-# language UndecidableInstances #-}
+{-# language AllowAmbiguousTypes #-}
 {-# language TypeFamilyDependencies #-}
 module Spec.Types
   ( CName(..)
   , module Spec.Types
+  , module Spec.Flavor
   ) where
 
 import           Data.Vector                    ( Vector )
@@ -13,10 +15,17 @@ import           CType
 import qualified Marshal.Marshalable           as M
 import           Spec.APIConstant
 import           Spec.Name
+import           Spec.Flavor
 
-data Spec = Spec
-  { specHeaderVersion      :: Word
+----------------------------------------------------------------
+-- The spec
+----------------------------------------------------------------
+
+data Spec t = Spec
+  { specHeaderVersion      :: SpecHeaderVersion t
   , specHandles            :: Vector Handle
+  , specAtoms              :: Vector Atom
+    -- ^ Not present in Vulkan specs
   , specFuncPointers       :: Vector FuncPointer
   , specStructs            :: Vector Struct
   , specUnions             :: Vector Union
@@ -29,9 +38,17 @@ data Spec = Spec
   , specAPIConstants       :: Vector Constant
   , specExtensionConstants :: Vector Constant
   , specSPIRVExtensions    :: Vector SPIRVExtension
+    -- ^ Only present in Vulkan specs
   , specSPIRVCapabilities  :: Vector SPIRVCapability
+    -- ^ Only present in Vulkan specs
   }
   deriving Show
+
+data SpecHeaderVersion (t :: SpecFlavor) where
+  VkVersion :: Word -> SpecHeaderVersion SpecVk
+  XrVersion :: Word -> Word -> Word -> SpecHeaderVersion SpecXr
+
+deriving instance Show (SpecHeaderVersion t)
 
 --
 -- Features and Extensions
@@ -105,6 +122,15 @@ data FuncPointer = FuncPointer
   deriving (Show)
 
 --
+-- Atoms
+--
+
+newtype Atom = Atom
+  { atName :: CName
+  }
+  deriving (Show)
+
+--
 -- Handles
 --
 
@@ -150,12 +176,15 @@ type family ChildrenType (su :: StructOrUnionType) (a :: WithChildren) where
 
 data StructOrUnion (t :: StructOrUnionType) (s :: WithSize) (c :: WithChildren)
   = Struct
-    { sName       :: CName
-    , sMembers    :: Vector (StructMember' s)
-    , sSize       :: SizeType s
-    , sAlignment  :: SizeType s
-    , sExtends    :: Vector CName
-    , sExtendedBy :: ChildrenType t c
+    { sName        :: CName
+    , sMembers     :: Vector (StructMember' s)
+    , sSize        :: SizeType s
+    , sAlignment   :: SizeType s
+    , sExtends     :: Vector CName
+    , sExtendedBy  :: ChildrenType t c
+    , sInherits    :: Vector CName
+    , sInheritedBy :: ChildrenType t c
+      -- ^ parentstruct stuff
     }
 
 deriving instance Show (ChildrenType t 'WithChildren) => Show (StructOrUnion t 'WithSize 'WithChildren)

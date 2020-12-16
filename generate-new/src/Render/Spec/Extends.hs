@@ -23,28 +23,31 @@ import           GHC.TypeLits
 import           Type.Reflection
 
 import           CType
+import           Data.Traversable
 import           Error
 import           Haskell
 import           Render.Element
 import           Render.SpecInfo
 import           Spec.Types
-import           VkModulePrefix
 
 structExtends
-  :: forall r
-   . (HasErr r, HasRenderParams r, HasSpecInfo r)
-  => Spec
+  :: forall r t
+   . (HasErr r, HasRenderParams r, HasSpecInfo r, KnownSpecFlavor t)
+  => Spec t
   -> Sem r RenderElement
 structExtends spec = genRe "Extends type family" $ do
-  tellExplicitModule (vulkanModule ["CStruct", "Extends"])
+  tellExplicitModule =<< mkModuleName ["CStruct", "Extends"]
   tellNotReexportable
   typeFamily spec
   classes spec
+  case specFlavor @t of
+    SpecVk -> pure ()
+    SpecXr -> inheritanceClasses spec
 
 typeFamily
-  :: forall r
+  :: forall r t
    . (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderElem r)
-  => Spec
+  => Spec t
   -> Sem r ()
 typeFamily Spec {..} = do
   RenderParams {..} <- input
@@ -79,9 +82,9 @@ typeFamily Spec {..} = do
          )
 
 classes
-  :: forall r
+  :: forall r t
    . (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderElem r)
-  => Spec
+  => Spec t
   -> Sem r ()
 classes Spec {..} = do
   RenderParams {..} <- input
@@ -106,6 +109,7 @@ classes Spec {..} = do
   tellImport ''Relude.Type
   tellImportWith ''Proxy 'Proxy
   tellImport ''Constraint
+  tellImport ''Typeable
   tellImport ''Ptr
   tellImport 'nullPtr
   tellImport 'castPtr
@@ -121,45 +125,49 @@ classes Spec {..} = do
   tellImportWithAll ''IOErrorType
   tellImport 'typeRep
   tellImport 'fromMaybe
+  estt <- maybe (throw "No extensible structure type tag type")
+                pure
+                extensibleStructTypeType
   peekChainCases <- fmap (V.mapMaybe id) . forV specStructs $ \Struct {..} ->
     if V.null sExtends
       then pure Nothing
       else Just <$> case sMembers V.!? 0 of
-        Just (StructMember "sType" (TypeName "VkStructureType") vals _ _ _) ->
-          case vals of
+        Just (StructMember smName (TypeName estt') vals _ _ _)
+          | Just smName == extensibleStructTypeMemberName, estt' == estt -> case
+              vals
+            of
             -- GHC complains if this match is inline...
-            V.Singleton typeEnum -> do
-              -- If this type contains a union then it doesn't have a PeekCStruct
-              -- instance
-              --
-              -- TODO: Actually check here for the instance, and don't repeat this
-              -- union checking logic.
-              let isDiscriminated u =
-                    Spec.Types.sName u
-                      `elem` (udUnionType <$> toList unionDiscriminators)
-              unions <- filter (not . isDiscriminated) <$> containsUnion sName
+              V.Singleton typeEnum -> do
+                -- If this type contains a union then it doesn't have a PeekCStruct
+                -- instance
+                --
+                -- TODO: Actually check here for the instance, and don't repeat this
+                -- union checking logic.
+                let isDiscriminated u =
+                      Spec.Types.sName u
+                        `elem` (udUnionType <$> toList unionDiscriminators)
+                unions <- filter (not . isDiscriminated) <$> containsUnion sName
 
-              let tagCon =
-                    pretty (mkConName "VkStructureType" (CName typeEnum))
-                  match = tagCon <+> "->"
-              case unions of
-                [] -> do
-                  let n = mkTyName sName
-                  tDoc <- renderTypeHighPrecSource $ if V.null sExtendedBy
-                    then ConT (typeName n)
-                    else ConT (typeName n) :@ PromotedNilT
-                  tellImportWithAll (mkTyName "VkStructureType")
-                  tellSourceImport n
-                  pure $ match <+> "go @" <> tDoc
-                u : _ ->
-                  pure
-                    $   match
-                    <+> "throwIO $ IOError Nothing InvalidArgument \"peekChainHead\" (\"struct type"
-                    <+> tagCon
-                    <+> "contains an undiscriminated union ("
-                    <>  pretty (mkTyName (Spec.Types.sName u))
-                    <>  ") and can't be safely peeked\") Nothing Nothing"
-            _ -> throw "Multiple values for sType"
+                let tagCon = pretty (mkConName estt (CName typeEnum))
+                    match  = tagCon <+> "->"
+                case unions of
+                  [] -> do
+                    let n = mkTyName sName
+                    tDoc <- renderTypeHighPrecSource $ if V.null sExtendedBy
+                      then ConT (typeName n)
+                      else ConT (typeName n) :@ PromotedNilT
+                    tellImportWithAll (mkTyName estt)
+                    tellSourceImport n
+                    pure $ match <+> "go @" <> tDoc
+                  u : _ ->
+                    pure
+                      $   match
+                      <+> "throwIO $ IOError Nothing InvalidArgument \"peekChainHead\" (\"struct type"
+                      <+> tagCon
+                      <+> "contains an undiscriminated union ("
+                      <>  pretty (mkTyName (Spec.Types.sName u))
+                      <>  ") and can't be safely peeked\") Nothing Nothing"
+              _ -> throw "Multiple values for sType"
         _ -> throw $ "Unable to find sType member in " <> show sName
   completeStructTailPragmas <-
     fmap (V.mapMaybe id) . forV specStructs $ \Struct {..} -> if V.null sExtends
@@ -186,6 +194,9 @@ classes Spec {..} = do
         Chain '[]    = ()
         Chain (x:xs) = (x, Chain xs)
     |]
+  estmn <- maybe (throw "No extensible struct member name")
+                 (pure . pretty . mkMemberName "XrBaseOutStructure")
+                 extensibleStructTypeMemberName
   tellDoc [qqi|
     data SomeStruct (a :: [Type] -> Type) where
       SomeStruct
@@ -274,7 +285,7 @@ classes Spec {..} = do
       else do
         baseOut <- peek p
         join
-          $ peekChainHead @a (sType (baseOut :: BaseOutStructure))
+          $ peekChainHead @a ({estmn} (baseOut :: BaseOutStructure))
                              (castPtr @BaseOutStructure @() p)
           $ \\head' -> peekSomeChain @a (next (baseOut :: BaseOutStructure))
                                       (\\tail' -> c (head', tail'))
@@ -301,7 +312,7 @@ classes Spec {..} = do
                 InvalidArgument
                 "peekChainHead"
                 (  "Illegal struct extension of "
-                <> show (extensibleType @a)
+                <> extensibleTypeName @a
                 <> " with "
                 <> show ty
                 )
@@ -311,7 +322,8 @@ classes Spec {..} = do
               r
 
     class Extensible (a :: [Type] -> Type) where
-      extensibleType :: StructureType
+      extensibleTypeName :: String
+      -- ^ For error reporting an invalid extension
       getNext :: a es -> Chain es
       setNext :: a ds -> Chain es -> a es
       extends :: forall e b proxy. Typeable e => proxy e -> (Extends a e => b) -> Maybe b
@@ -389,4 +401,54 @@ classes Spec {..} = do
 
     linkChain :: Ptr a -> Ptr b -> IO ()
     linkChain head' tail' = poke (head' `plusPtr` 8) tail'
+  |]
+
+inheritanceClasses
+  :: forall r t
+   . (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderElem r)
+  => Spec t
+  -> Sem r ()
+inheritanceClasses Spec {..} = do
+  RenderParams {..} <- input
+  tellExport (EData (TyConName "SomeChild"))
+  tellExport (ETerm (TermName "withSomeChild"))
+  tellExport (ETerm (TermName "lowerChildPointer"))
+  tellExport (EType (TyConName "Inherits"))
+  tellExport (EClass (TyConName "Inheritable"))
+  tellImport (TyConName "ToCStruct")
+  tellImport ''Relude.Type
+  tellImport ''Ptr
+  tellImport 'castPtr
+  tellImport ''TypeError
+  tellImportWithAll ''ErrorMessage
+  let parentsAndChildren =
+        toList . flip V.concatMap specStructs $ \Struct {..} ->
+          (sName, ) <$> sInheritedBy
+  inheritsCases <- for parentsAndChildren $ \(p, c) -> do
+    let pTyName = mkTyName p
+        pTy     = case p of
+          "XrCompositionLayerBaseHeader" -> parens (pretty pTyName <+> "'[]")
+          _                              -> pretty pTyName
+        cTy = mkTyName c
+    tellSourceImport pTyName
+    tellSourceImport cTy
+    pure [qqi|Inherits {pTy} {cTy} = ()|]
+  tellDoc [qqi|
+    data SomeChild (a :: Type) where
+      SomeChild :: forall a b . (Inherits a b, Typeable b, ToCStruct b, Show b) => b -> SomeChild a
+    deriving instance Show (SomeChild a)
+
+    type family Inherits (a :: Type) (b :: Type) :: Constraint where
+    {indent 2 (vsep inheritsCases)}
+      Inherits parent child =
+        TypeError (ShowType parent :<>: Text " is not inherited by " :<>: ShowType child)
+
+    class Inheritable (a :: Type) where
+      peekSomeCChild :: Ptr (SomeChild a) -> IO (SomeChild a)
+
+    withSomeChild :: SomeChild a -> (Ptr (SomeChild a) -> IO b) -> IO b
+    withSomeChild (SomeChild c) f = withCStruct c (f . lowerChildPointer)
+
+    lowerChildPointer :: Inherits a b => Ptr b -> Ptr (SomeChild a)
+    lowerChildPointer = castPtr
   |]

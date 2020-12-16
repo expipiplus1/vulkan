@@ -2,9 +2,10 @@
 -- No documentation found for Chapter "Promoted_From_VK_KHR_shader_atomic_int64"
 module Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64  (PhysicalDeviceShaderAtomicInt64Features) where
 
-import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
 data PhysicalDeviceShaderAtomicInt64Features
 
 instance ToCStruct PhysicalDeviceShaderAtomicInt64Features
