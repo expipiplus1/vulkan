@@ -446,7 +446,7 @@ data DescriptorUpdateTemplateEntry = DescriptorUpdateTemplateEntry
     -- descriptor update template.
     dstBinding :: Word32
   , -- | @dstArrayElement@ is the starting element in the array belonging to
-    -- @dstBinding@. If the descriptor binding identified by @srcBinding@ has a
+    -- @dstBinding@. If the descriptor binding identified by @dstBinding@ has a
     -- descriptor type of
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
     -- then @dstArrayElement@ specifies the starting byte offset to update.

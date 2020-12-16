@@ -3831,17 +3831,17 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@
 --     value other than zero is specified, all variables in the output
 --     interface of the entry point being compiled decorated with
---     @Position@, @PointSize@, @ClipDistance@, or @CullDistance@ /must/
---     all be decorated with identical @Stream@ values that match the
+--     @Position@, @PointSize@, @ClipDistance@, or @CullDistance@ /must/ be
+--     decorated with identical @Stream@ values that match the
 --     @rasterizationStream@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-rasterizationStream-02320# If
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@
 --     is zero, or not specified, all variables in the output interface of
 --     the entry point being compiled decorated with @Position@,
---     @PointSize@, @ClipDistance@, or @CullDistance@ /must/ all be
---     decorated with a @Stream@ value of zero, or /must/ not specify the
---     @Stream@ decoration
+--     @PointSize@, @ClipDistance@, or @CullDistance@ /must/ be decorated
+--     with a @Stream@ value of zero, or /must/ not specify the @Stream@
+--     decoration
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-geometryStreams-02321# If the
 --     last vertex processing stage is a geometry shader, and that geometry

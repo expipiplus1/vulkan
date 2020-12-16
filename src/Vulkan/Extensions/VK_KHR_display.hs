@@ -1743,7 +1743,7 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 --     to @displayMode@
 --
 -- -   #VUID-VkDisplaySurfaceCreateInfoKHR-width-01256# The @width@ and
---     @height@ members of @imageExtent@ /must/ be less than
+--     @height@ members of @imageExtent@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxImageDimension2D@
 --
 -- == Valid Usage (Implicit)

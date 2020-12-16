@@ -97,11 +97,11 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-8bitstorage StorageBuffer8BitAccess>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-StorageBuffer8BitAccess StorageBuffer8BitAccess>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-8bitstorage UniformAndStorageBuffer8BitAccess>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-UniformAndStorageBuffer8BitAccess UniformAndStorageBuffer8BitAccess>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-8bitstorage StoragePushConstant8>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-StoragePushConstant8 StoragePushConstant8>
 --
 -- == Version History
 --

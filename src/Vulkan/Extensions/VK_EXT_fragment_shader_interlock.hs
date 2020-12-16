@@ -101,11 +101,11 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-fragmentShaderInterlock FragmentShaderInterlockEXT>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderSampleInterlockEXT FragmentShaderInterlockEXT>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-fragmentShaderInterlock FragmentShaderPixelInterlockEXT>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderPixelInterlockEXT FragmentShaderPixelInterlockEXT>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-fragmentShaderInterlock FragmentShaderShadingRateInterlockEXT>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderShadingRateInterlockEXT FragmentShaderShadingRateInterlockEXT>
 --
 -- == Version History
 --

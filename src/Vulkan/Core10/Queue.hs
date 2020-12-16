@@ -334,6 +334,11 @@ foreign import ccall
 --     any queue family other than the one which @queue@ belongs to, at the
 --     time it is executed
 --
+-- -   #VUID-vkQueueSubmit-pSubmits-04626# Any resource created with
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT' that is
+--     accessed by an operation specified by @pSubmits@ /must/ have
+--     included the queue family of @queue@ at resource creation time
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkQueueSubmit-queue-parameter# @queue@ /must/ be a valid

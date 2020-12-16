@@ -7862,10 +7862,14 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --
 -- Applications /should/ be careful to avoid race conditions when using
 -- events. There is no direct ordering guarantee between a 'cmdResetEvent'
--- command and a 'cmdWaitEvents' command submitted after it. Another
--- execution dependency (e.g. a pipeline barrier or semaphore with
+-- command and 'cmdSetEvent' or 'cmdWaitEvents' commands submitted after
+-- it. Similarly, there is no ordering guarantee between sequential
+-- 'cmdSetEvent' commands, leading to a race condition on the event status.
+-- Waiting on an event in these cases without additional synchronization
+-- can result in a data race. Another execution dependency (e.g. a pipeline
+-- barrier or semaphore with
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ALL_COMMANDS_BIT')
--- is needed to prevent such a race condition.
+-- is needed to prevent such race conditions.
 --
 -- == Valid Usage
 --
@@ -11057,20 +11061,20 @@ instance Zero ImageResolve where
 --     'Vulkan.Core10.Handles.ImageView' of an image created with a value
 --     of 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ equal to the
 --     @flags@ member of the corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachments@
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachmentImageInfos@
 --     used to create @framebuffer@
 --
--- -   #VUID-VkRenderPassBeginInfo-framebuffer-03210# If @framebuffer@ was
+-- -   #VUID-VkRenderPassBeginInfo-framebuffer-04627# If @framebuffer@ was
 --     created with a 'Vulkan.Core10.Pass.FramebufferCreateInfo'::@flags@
 --     value that included
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     each element of the @pAttachments@ member of a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.RenderPassAttachmentBeginInfo'
 --     structure included in the @pNext@ chain /must/ be a
---     'Vulkan.Core10.Handles.ImageView' of an image created with a value
---     of 'Vulkan.Core10.Image.ImageCreateInfo'::@usage@ equal to the
---     @usage@ member of the corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachments@
+--     'Vulkan.Core10.Handles.ImageView' with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-inherited-usage an inherited usage>
+--     equal to the @usage@ member of the corresponding element of
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachmentImageInfos@
 --     used to create @framebuffer@
 --
 -- -   #VUID-VkRenderPassBeginInfo-framebuffer-03211# If @framebuffer@ was
@@ -11082,7 +11086,7 @@ instance Zero ImageResolve where
 --     structure included in the @pNext@ chain /must/ be a
 --     'Vulkan.Core10.Handles.ImageView' with a width equal to the @width@
 --     member of the corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachments@
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachmentImageInfos@
 --     used to create @framebuffer@
 --
 -- -   #VUID-VkRenderPassBeginInfo-framebuffer-03212# If @framebuffer@ was
@@ -11094,7 +11098,7 @@ instance Zero ImageResolve where
 --     structure included in the @pNext@ chain /must/ be a
 --     'Vulkan.Core10.Handles.ImageView' with a height equal to the
 --     @height@ member of the corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachments@
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachmentImageInfos@
 --     used to create @framebuffer@
 --
 -- -   #VUID-VkRenderPassBeginInfo-framebuffer-03213# If @framebuffer@ was
@@ -11108,7 +11112,7 @@ instance Zero ImageResolve where
 --     of
 --     'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@subresourceRange.layerCount@
 --     equal to the @layerCount@ member of the corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachments@
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachmentImageInfos@
 --     used to create @framebuffer@
 --
 -- -   #VUID-VkRenderPassBeginInfo-framebuffer-03214# If @framebuffer@ was
@@ -11123,7 +11127,7 @@ instance Zero ImageResolve where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
 --     equal to the @viewFormatCount@ member of the corresponding element
 --     of
---     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachments@
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachmentImageInfos@
 --     used to create @framebuffer@
 --
 -- -   #VUID-VkRenderPassBeginInfo-framebuffer-03215# If @framebuffer@ was
@@ -11138,7 +11142,7 @@ instance Zero ImageResolve where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
 --     equal to the set of elements in the @pViewFormats@ member of the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachments@
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachmentImageInfos@
 --     used to create @framebuffer@
 --
 -- -   #VUID-VkRenderPassBeginInfo-framebuffer-03216# If @framebuffer@ was

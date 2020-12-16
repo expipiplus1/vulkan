@@ -2641,12 +2641,17 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --     'Vulkan.Core10.Handles.DescriptorPool' handle
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-parameter#
---     @pSetLayouts@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.Handles.DescriptorSetLayout' handle
+--     @pSetLayouts@ /must/ be a valid pointer to an array of
+--     @descriptorSetCount@ valid
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' handles
+--
+-- -   #VUID-VkDescriptorSetAllocateInfo-descriptorSetCount-arraylength#
+--     @descriptorSetCount@ /must/ be greater than @0@
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-commonparent# Both of
---     @descriptorPool@, and @pSetLayouts@ /must/ have been created,
---     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
+--     @descriptorPool@, and the elements of @pSetLayouts@ /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
