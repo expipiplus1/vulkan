@@ -257,7 +257,7 @@ flags:
   vr:
     description: Set this flag if you have a system with the OpenXR loader
       installed. It enables building the OpenXR examples.
-    default: yes
+    default: no
     manual: yes
 
 default-extensions:

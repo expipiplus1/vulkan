@@ -39,7 +39,7 @@ flag renderdoc
 flag vr
   description: Set this flag if you have a system with the OpenXR loader installed. It enables building the OpenXR examples.
   manual: True
-  default: True
+  default: False
 
 library
   exposed-modules:
